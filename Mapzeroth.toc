@@ -1,0 +1,31 @@
+## Interface: 110207
+## Title: Mapzeroth
+## Notes: Google Maps for Azeroth - Intelligent travel routing addon
+## Author: tr0tsky
+## Version: 1.1.1
+## SavedVariables: MapzerothDB
+## IconTexture: Interface\AddOns\Mapzeroth\Mapzeroth_Logo
+
+# Libraries (must load first)
+Libs\LibStub.lua
+Libs\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0.lua
+
+# Core data and systems
+Mapzeroth_Data.lua
+PlayerAbilities.lua
+TravelGraph.lua
+Pathfinder.lua
+LocationService.lua
+WaypointService.lua
+
+# UI components
+DestinationSelector.lua
+SettingsPanel.lua
+GUI.lua
+MinimapButton.lua
+
+# Commands and initialization
+Commands.lua
+Mapzeroth.lua
