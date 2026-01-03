@@ -5253,6 +5253,12 @@ ns.Nodes = {
             mapID = 554,
             x = 0.225,
             y = 0.381
+        },
+        GRIM_CAMPFIRE_PANDARIA = {
+            name = "Grim Campfire",
+            mapID = 554,
+            x = 0.6790,
+            y = 0.7690
         }
     },
 
@@ -6128,6 +6134,12 @@ ns.Nodes = {
             mapID = 543,
             x = 0.4545,
             y = 0.6932
+        },
+        GRIM_CAMPFIRE_GORGROND = {
+            name = "Grim Campfire",
+            mapID = 543,
+            x = 0.740,
+            y = 0.245 
         },
         WILDWOOD_WASH_FLIGHT = {
             name = "Wildwood Wash",
@@ -7753,6 +7765,15 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "SHADOPAN_ISLE_OF_THUNDER_PORTAL_ALLIANCE",
     to = "KIRIN_TOR_BASE",
+    method = "teleport"
+}, {
+    from = "NORTHPASS_TOWER_FLIGHT",
+    to = "ZULAMAN_FLIGHT",
+    method = "flight",
+    cost = 60
+}, {
+    from = "GRIM_CAMPFIRE_PANDARIA",
+    to = "GRIM_CAMPFIRE_GORGROND",
     method = "teleport"
 }}
 
