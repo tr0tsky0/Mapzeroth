@@ -2,7 +2,7 @@
 ## Title: Mapzeroth
 ## Notes: Google Maps for Azeroth - Intelligent travel routing addon
 ## Author: tr0tsky
-## Version: 1.2.0
+## Version: 1.2.1
 ## SavedVariables: MapzerothDB
 ## IconTexture: Interface\AddOns\Mapzeroth\Mapzeroth_Logo
 
@@ -19,7 +19,6 @@ TravelGraph.lua
 Pathfinder.lua
 LocationService.lua
 WaypointService.lua
-ActionHandlers.lua
 
 # UI components
 SettingsPanel.lua
