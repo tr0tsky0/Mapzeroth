@@ -3,35 +3,118 @@
 local addonName, addon = ...
 
 local GetTraversalGroupForMap = addon.GetTraversalGroupForMap
+local superTrackingMap = nil
+
+-----------------------------------------------------------
+-- SAVE SUPER TRACKING MAP
+-----------------------------------------------------------
+function addon:UpdateSuperTrackingMap()
+    if WorldMapFrame and WorldMapFrame:IsShown() then
+        superTrackingMap = WorldMapFrame:GetMapID()
+
+        if addon.DEBUG then
+            local pinType, typeID = C_SuperTrack.GetSuperTrackedMapPin()
+            if pinType then
+                print(string.format("[Mapzeroth] DEBUG: Supertracked %s (ID: %d) on map %d", tostring(pinType),
+                    typeID or 0, superTrackingMap or 0))
+            end
+        end
+    else
+        superTrackingMap = nil
+
+        if addon.DEBUG then
+            print("[Mapzeroth] DEBUG: Supertracking cleared (map not open)")
+        end
+    end
+end
 
 -----------------------------------------------------------
 -- GET ACTIVE WAYPOINT
 -----------------------------------------------------------
-
 function addon:GetActiveWaypoint()
-    -- Try Blizzard's native waypoint first
-    local waypoint = C_Map.GetUserWaypoint()
+    -- Check for supertracked map pin
+    local pinType, typeID = C_SuperTrack.GetSuperTrackedMapPin()
 
+    if pinType and typeID then
+        -- Dispatch based on pin type
+        if pinType == Enum.SuperTrackingMapPinType.AreaPOI then
+            local poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(nil, typeID)
+
+            if poiInfo and poiInfo.position and superTrackingMap then
+                return {
+                    mapID = superTrackingMap,
+                    x = poiInfo.position.x,
+                    y = poiInfo.position.y,
+                    name = poiInfo.name or "Area POI",
+                    source = "area_poi"
+                }
+            end
+
+        elseif pinType == Enum.SuperTrackingMapPinType.TaxiNode then
+            if superTrackingMap then
+                local taxiNodes = C_TaxiMap.GetTaxiNodesForMap(superTrackingMap)
+
+                if addon.DEBUG then
+                    print("[Mapzeroth] DEBUG: Looking for taxi node", typeID, "on map", superTrackingMap)
+                    print("[Mapzeroth] DEBUG: Found", taxiNodes and #taxiNodes or 0, "taxi nodes on this map")
+                    if taxiNodes then
+                        for i, node in ipairs(taxiNodes) do
+                            print(string.format("  [%d] nodeID=%s, name=%s", i, tostring(node.nodeID),
+                                node.name or "nil"))
+                        end
+                    end
+                end
+
+                for _, node in ipairs(taxiNodes or {}) do
+                    if node.nodeID == typeID then
+                        return {
+                            mapID = superTrackingMap,
+                            x = node.position.x,
+                            y = node.position.y,
+                            name = node.name or "Flight Path",
+                            source = "taxi_node"
+                        }
+                    end
+                end
+
+                if self.DEBUG then
+                    print("[Mapzeroth] DEBUG: Taxi node", typeID, "not found in list, falling through")
+                end
+            end
+
+        elseif pinType == Enum.SuperTrackingMapPinType.QuestOffer then
+            -- Quest POIs - probably ignore these for routing
+
+        elseif pinType == Enum.SuperTrackingMapPinType.DigSite then
+            -- Archaeology - similar to quests, probably skip
+
+        elseif pinType == Enum.SuperTrackingMapPinType.HousingPlot then
+            -- Housing PLots - probably unnecessary
+        end
+    end
+
+    -- Fallback: Check for user waypoint (Ctrl+click placed pin)
+    local waypoint = C_Map.GetUserWaypoint()
     if waypoint and waypoint.uiMapID and waypoint.position then
         return {
             mapID = waypoint.uiMapID,
             x = waypoint.position.x,
             y = waypoint.position.y,
-            source = "native"
+            name = "User Waypoint",
+            source = "user_waypoint"
         }
     end
 
-    -- Try TomTom if installed
+    -- Fallback: TomTom if installed
     if TomTom and TomTom.waypoints then
-        -- Iterate through all map tables
         for mapID, waypointsOnMap in pairs(TomTom.waypoints) do
-            for uid, waypoint in pairs(waypointsOnMap) do
-                -- TomTom stores coords as [1]=mapID, [2]=x, [3]=y
-                if waypoint[1] and waypoint[2] and waypoint[3] then
+            for uid, waypointData in pairs(waypointsOnMap) do
+                if waypointData[1] and waypointData[2] and waypointData[3] then
                     return {
-                        mapID = waypoint[1],
-                        x = waypoint[2],
-                        y = waypoint[3],
+                        mapID = waypointData[1],
+                        x = waypointData[2],
+                        y = waypointData[3],
+                        name = waypointData.title or "TomTom Waypoint",
                         source = "tomtom"
                     }
                 end
@@ -39,7 +122,7 @@ function addon:GetActiveWaypoint()
         end
     end
 
-    return nil, "No active waypoint found"
+    return nil, "No active waypoint found."
 end
 
 -----------------------------------------------------------

@@ -80,21 +80,10 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         return
     end
 
-    if command == "debug" then
-        addon.DEBUG = not addon.DEBUG
-        print(string.format("[Mapzeroth] Debug mode: %s", addon.DEBUG and "ON" or "OFF"))
-        return
-    end
-
     -- Debug Commands
 
     if command == "map" then
         addon:ShowMapInfo()
-        return
-    end
-
-    if command == "pos" then
-        addon:ShowPosition()
         return
     end
 
@@ -108,6 +97,12 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         return
     end
 
+    if command == "debug" then
+        addon.DEBUG = not addon.DEBUG
+        print(string.format("[Mapzeroth] Debug mode: %s", addon.DEBUG and "ON" or "OFF"))
+        return
+    end
+    
     if command == "debug-groups" then
         print("[Mapzeroth] Traversal groups in graph:")
         local groups = {}
@@ -143,23 +138,6 @@ SlashCmdList["MAPZEROTH"] = function(msg)
     end
 
     print("[Mapzeroth] Unknown command. Type /mapzeroth help for usage.")
-end
-
------------------------------------------------------------
--- COMMAND: Show Current Position
------------------------------------------------------------
-
-function addon:ShowPosition()
-    local node, distance = self:FindNearestNode()
-
-    if not node then
-        print("[Mapzeroth] " .. distance) -- distance contains error message
-        return
-    end
-
-    local mapName = self:GetMapName(node.mapID)
-    print(string.format("[Mapzeroth] Current location: %s", mapName))
-    print(string.format("  Nearest node: %s (%.1f yards away)", node.name, distance * 1000))
 end
 
 -----------------------------------------------------------
@@ -269,13 +247,6 @@ function addon:FindRoute(destinationID)
     end
 
     local playerAbilities = self:GetAvailableTravelAbilities()
-    local startNode, startDistance = self:FindNearestNode()
-
-    if not startNode then
-        print("[Mapzeroth] Error: " .. startDistance)
-        return
-    end
-
     local location = self:GetPlayerLocation()
 
     -- Build synthetic edges (includes waypoint node)
@@ -317,9 +288,6 @@ function addon:FindRoute(destinationID)
         print("[Mapzeroth] " .. cost)
         return
     end
-
-    -- NORMALIZE: Inject initial step
-    -- path, cost, previous = self:NormalizePath(path, cost, previous, startNode, location)
 
     -- Output (simplified!)
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then

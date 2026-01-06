@@ -347,7 +347,7 @@ ns.Nodes = {
             y = 0.365
         },
         FUSELIGHT_FLIGHT = {
-            name = "Fuselight",
+            name = "Fuselight, Badlands",
             mapID = 15,
             x = 0.647,
             y = 0.351
@@ -828,6 +828,80 @@ ns.Nodes = {
             x = 0.399,
             y = 0.388
         },
+        VASHJIR = {
+            name = "Vashj'ir",
+            mapID = 1272,
+            x = 0.580,
+            y = 0.628
+        },
+        DARKBREAK_COVE_FLIGHT = {
+            name = "Darkbreak Cove",
+            faction = "ALLIANCE",
+            mapID = 204,
+            x = 0.578,
+            y = 0.786
+        },
+        TRANQUIL_WASH_FLIGHT = {
+            name = "Tranquil Wash",
+            faction = "ALLIANCE",
+            mapID = 205,
+            x = 0.487,
+            y = 0.576
+        },
+        SANDY_BEACH_FLIGHT_ALLIANCE = {
+            name = "Sandy Beach",
+            faction = "ALLIANCE",
+            mapID = 205,
+            x = 0.569,
+            y = 0.173
+        },
+        SANDY_BEACH_FLIGHT_HORDE = {
+            name = "Sandy Beach",
+            faction = "HORDE",
+            mapID = 205,
+            x = 0.6075,
+            y = 0.2754
+        },
+        SILVER_TIDE_HOLLOW_FLIGHT = {
+            name = "Silver Tide Hollow",
+            mapID = 205,
+            x = 0.493,
+            y = 0.400
+        },
+        LEGIONS_REST_FLIGHT = {
+            name = "Legion's Rest",
+            faction = "HORDE",
+            mapID = 205,
+            x = 0.5027,
+            y = 0.6639
+        },
+        STYGIAN_BOUNTY_FLIGHT = {
+            name = "Stygian Bounty",
+            faction = "HORDE",
+            mapID = 205,
+            x = 0.5381,
+            y = 0.6551
+        },
+        SMUGGLERS_SCAR_FLIGHT = {
+            name = "Smuggler's Scar",
+            mapID = 201,
+            x = 0.557,
+            y = 0.342
+        },
+        VOLDRINS_HOLD_FLIGHT = {
+            name = "Voldrin's Hold",
+            faction = "ALLIANCE",
+            mapID = 205,
+            x = 0.566,
+            y = 0.756
+        },
+        TENEBROUS_CAVERN_FLIGHT = {
+            name = "Tenebrous Cavern",
+            faction = "HORDE",
+            mapID = 204,
+            x = 0.6004,
+            y = 0.5625
+        },
         -- Dungeons
         SHADOWFANG_KEEP_DUNGEON = {
             name = "Shadowfang Keep",
@@ -955,6 +1029,12 @@ ns.Nodes = {
             x = 0.670,
             y = 0.320
         },
+        THRONE_OF_THE_TIDES_DUNGEON = {
+            name = "Throne of the Tides",
+            mapID = 204, -- Abyssal Depths
+            x = 0.700,
+            y = 0.300
+        },
         -- Raids
         MOLTEN_CORE_RAID = {
             name = "Molten Core",
@@ -992,90 +1072,6 @@ ns.Nodes = {
             y = 0.770
         }
     },
-
-    VASHJIR = {
-        VASHJIR = {
-            name = "Vashj'ir",
-            mapID = 1272,
-            x = 0.580,
-            y = 0.628
-        },
-        DARKBREAK_COVE_FLIGHT = {
-            name = "Darkbreak Cove",
-            faction = "ALLIANCE",
-            mapID = 204,
-            x = 0.578,
-            y = 0.786
-        },
-        TRANQUIL_WASH_FLIGHT = {
-            name = "Tranquil Wash",
-            faction = "ALLIANCE",
-            mapID = 205,
-            x = 0.487,
-            y = 0.576
-        },
-        SANDY_BEACH_FLIGHT_ALLIANCE = {
-            name = "Sandy Beach",
-            faction = "ALLIANCE",
-            mapID = 205,
-            x = 0.569,
-            y = 0.173
-        },
-        SANDY_BEACH_FLIGHT_HORDE = {
-            name = "Sandy Beach",
-            faction = "HORDE",
-            mapID = 205,
-            x = 0.6075,
-            y = 0.2754
-        },
-        SILVER_TIDE_HOLLOW_FLIGHT = {
-            name = "Silver Tide Hollow",
-            mapID = 205,
-            x = 0.493,
-            y = 0.400
-        },
-        LEGIONS_REST_FLIGHT = {
-            name = "Legion's Rest",
-            faction = "HORDE",
-            mapID = 205,
-            x = 0.5027,
-            y = 0.6639
-        },
-        STYGIAN_BOUNTY_FLIGHT = {
-            name = "Stygian Bounty",
-            faction = "HORDE",
-            mapID = 205,
-            x = 0.5381,
-            y = 0.6551
-        },
-        SMUGGLERS_SCAR_FLIGHT = {
-            name = "Smuggler's Scar",
-            mapID = 201,
-            x = 0.557,
-            y = 0.342
-        },
-        VOLDRINS_HOLD_FLIGHT = {
-            name = "Voldrin's Hold",
-            faction = "ALLIANCE",
-            mapID = 205,
-            x = 0.566,
-            y = 0.756
-        },
-        TENEBROUS_CAVERN_FLIGHT = {
-            name = "Tenebrous Cavern",
-            faction = "HORDE",
-            mapID = 204,
-            x = 0.6004,
-            y = 0.5625
-        },
-        THRONE_OF_THE_TIDES_DUNGEON = {
-            name = "Throne of the Tides",
-            mapID = 204, -- Abyssal Depths
-            x = 0.700,
-            y = 0.300
-        }
-    },
-
     TOL_BARAD = {
         TOL_BARAD_ALLIANCE = {
             name = "Tol Barad",
@@ -4062,6 +4058,12 @@ ns.Nodes = {
             mapID = 2112,
             x = 0.4436,
             y = 0.6798
+        },
+        VALDRAKKEN_BADLANDS_PORTAL = {
+            name = "Badlands Portal, Valdrakken",
+            mapID = 2112,
+            x = 0.2597,
+            y = 0.4078
         },
         BELAMETH = {
             name = "Bel'ameth",
@@ -7246,44 +7248,74 @@ ns.Edges = { -- Stormwind Internal Navigation
 {
     from = "STORMWIND_PORTAL_ROOM",
     to = "BORALUS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "DALARAN_NORTHREND",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "ORIBOS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "STORMSHIELD_ASHRAN",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "SHATTRATH_OUTLAND",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "VALDRAKKEN",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, -- Stormwind Mage Tower → Zones
 {
     from = "STORMWIND_PORTAL_ROOM",
     to = "EXODAR",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "AZSUNA",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "JADE_FOREST",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "CAVERNS_OF_TIME",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "DARK_PORTAL_BL",
@@ -7292,46 +7324,78 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "BELAMETH",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
     to = "FOUNDERS_POINT",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, -- Stormwind Eastern Earthshrine → Cataclysm Zones
 {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "VASHJIR",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 14482
+    }
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "HIGHBANK",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
+    
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "TOL_BARAD_ALLIANCE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "DEEPHOLM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "ULDUM",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "MOUNT_HYJAL",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, -- Stormwind Embassy & Harbour
 {
     from = "SW_EMBASSY",
     to = "VINDICAAR_AZEROTH",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_HARBOR",
     to = "DARKSHORE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "STORMWIND_HARBOR",
     to = "BORALUS_DOCK",
@@ -7356,25 +7420,41 @@ ns.Edges = { -- Stormwind Internal Navigation
 {
     from = "EXODAR",
     to = "STORMWIND_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "BORALUS",
     to = "SILITHUS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "BORALUS",
     to = "NAZJATAR_ALLIANCE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 54972
+    }
 }, {
     from = "BORALUS",
     to = "IRONFORGE",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "BORALUS",
     to = "EXODAR",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, -- Dalaran (Broken Isles)
 {
     from = "DALARAN_BROKEN_ISLES",
@@ -7384,12 +7464,18 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "DALARAN_BROKEN_ISLES_PORTAL_ALLIANCE",
     to = "STORMWIND_PORTAL_ROOM",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "DALARAN_BROKEN_ISLES_PORTAL_HORDE",
     to = "ORGRIMMAR_PORTAL_ROOM",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
 }, -- Oribos
 {
     from = "ORIBOS",
@@ -7427,7 +7513,10 @@ ns.Edges = { -- Stormwind Internal Navigation
 {
     from = "STORMSHIELD_ASHRAN",
     to = "DARK_PORTAL_BL",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "SHATTRATH_OUTLAND",
     to = "QUELDANAS",
@@ -7441,16 +7530,25 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "DARK_PORTAL_OUTLAND",
     to = "STORMWIND_PORTAL_ROOM",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "DARNASSUS",
     to = "DARK_PORTAL_OUTLAND",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "RUTTHERAN_VILLAGE_DOCK",
     to = "AZUREMYST_ISLE_DOCK",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, -- Valdrakken
 {
     from = "VALDRAKKEN",
@@ -7458,8 +7556,8 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true
 }, {
-    from = "VALDRAKKEN",
-    to = "BADLANDS",
+    from = "VALDRAKKEN_BADLANDS_PORTAL",
+    to = "FUSELIGHT_FLIGHT",
     method = "portal",
     oneway = true
 }, -- Night Elf Network
@@ -7470,11 +7568,17 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "BELAMETH",
     to = "VALSHARAH",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "BELAMETH",
     to = "DARKSHORE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "BELAMETH",
     to = "BELANAAR",
@@ -7487,21 +7591,34 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "BELANAAR",
     to = "FERALAS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "DORNOGAL_PORTAL_ROOM",
     to = "STORMWIND_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        minLevel = 68
+    }
 }, {
     from = "TUSHUI_LANDING_FLIGHT",
     to = "PEARLFIN_VILLAGE_FLIGHT",
     method = "flight",
-    cost = 81
+    cost = 81,
+    requirements = {
+        faction = "Alliance"
+    }
 }, {
     from = "HUOJIN_LANDING_FLIGHT",
     to = "JADE_TEMPLE_GROUNDS_FLIGHT",
     method = "flight",
-    cost = 120
+    cost = 120,
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "SHATTERED_SUN_STAGING_AREA_FLIGHT",
     to = "LIGHTS_HOPE_CHAPEL",
@@ -7510,20 +7627,42 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DORNOGAL_UNDERMINE_PORTAL",
     to = "UNDERMINE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        minLevel = 68,
+        quest = 86535
+    }
 }, {
     from = "DORNOGAL_AZJKAHET_PORTAL",
     to = "AZJKAHET",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        minLevel = 68
+    }
 }, {
     from = "DORNOGAL_KARESH_PORTAL",
     to = "KARESH",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        minLevel = 68,
+        quest = 84957
+    }
 }, {
     from = "OVERSPARK_EXPEDITION_CAMP_FLIGHT",
     to = "FORT_DAELIN_FLIGHT",
     method = "flight",
-    cost = 30
+    cost = 30,
+    requirements = {
+        faction = "Alliance"
+    }
+}, {
+    from = "PROSPECTUS_BAY_FLIGHT",
+    to = "SEEKERS_VISTA_FLIGHT",
+    method = "flight",
+    cost = 45,
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "THERAMORE_DOCK",
     to = "MENETHIL_HARBOR_DOCK",
@@ -7547,94 +7686,162 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DALARAN_NORTHREND",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "HONEYDEW_VILLAGE",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DORNOGAL_PORTAL_ROOM",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        minLevel = 68
+    }
 }, {
     from = "RAZORWIND_SHORES",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "ORIBOS",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "VALDRAKKEN",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "CAVERNS_OF_TIME",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DAZARALOR_PORTAL_ROOM",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DAZARALOR_PORTAL_ROOM",
     to = "THUNDER_BLUFF",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DAZARALOR_PORTAL_ROOM",
     to = "SILVERMOON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DAZARALOR_PORTAL_ROOM",
     to = "NAZJATAR_HORDE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "DAZARALOR_PORTAL_ROOM",
     to = "SILITHUS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "AZSUNA",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WARSPEAR_ASHRAN",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "SHATTRATH_OUTLAND",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "SILVERMOON",
     to = "ORGRIMMAR_PORTAL_ROOM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "VASHJIR",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        quest = 25924
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "DRAGONMAW_PORT",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "TOL_BARAD_HORDE",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "DEEPHOLM",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "ULDUM",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
     to = "MOUNT_HYJAL",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
 }, {
     from = "UNUPE_FLIGHT",
     to = "MOAKI_FLIGHT",
@@ -7654,77 +7861,132 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "DALARAN_BROKEN_ISLES_PET",
     to = "WAILING_CAVERNS_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        quest = 45423
+    }
 }, {
     from = "DALARAN_BROKEN_ISLES_PET",
     to = "GNOMEREGAN_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        quest = 54185
+    }
 }, {
     from = "DALARAN_BROKEN_ISLES_PET",
     to = "DEADMINES_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        quest = 46291
+    }
+}, {
+    from = "DALARAN_BROKEN_ISLES_PET",
+    to = "BLACKROCK_DEPTHS_DUNGEON",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        quest = 58457
+    }
+}, {
+    from = "DALARAN_BROKEN_ISLES_PET",
+    to = "STRATHOLME_DUNGEON",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        quest = 56491
+    }
 }, {
     from = "BORALUS_PET",
     to = "WAILING_CAVERNS_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        quest = 45423
+    }
 }, {
     from = "BORALUS_PET",
     to = "GNOMEREGAN_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        quest = 54185
+    }
 }, {
     from = "BORALUS_PET",
     to = "DEADMINES_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        quest = 46291
+    }
 }, {
     from = "DAZARALOR_PET",
     to = "WAILING_CAVERNS_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        quest = 45423
+    }
 }, {
     from = "DAZARALOR_PET",
     to = "GNOMEREGAN_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        quest = 54185
+    }
 }, {
     from = "DAZARALOR_PET",
     to = "DEADMINES_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        quest = 46291
+    }
 }, {
     from = "DAZARALOR_PET",
     to = "STRATHOLME_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        quest = 56491
+    }
 }, {
     from = "BORALUS_PET",
     to = "STRATHOLME_DUNGEON",
     method = "portal",
-    oneway = true
-}, {
-    from = "DALARAN_BROKEN_ISLES_PET",
-    to = "STRATHOLME_DUNGEON",
-    method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        quest = 56491
+    }
 }, {
     from = "DAZARALOR_PET",
     to = "BLACKROCK_DEPTHS_DUNGEON",
     method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        quest = 58457
+    }
 }, {
     from = "BORALUS_PET",
     to = "BLACKROCK_DEPTHS_DUNGEON",
     method = "portal",
-    oneway = true
-}, {
-    from = "DALARAN_BROKEN_ISLES_PET",
-    to = "BLACKROCK_DEPTHS_DUNGEON",
-    method = "portal",
-    oneway = true
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        quest = 58457
+    }
 }, {
     from = "UNDERCITY",
     to = "VENGEANCE_LANDING_ZEPPELIN",
@@ -7740,55 +8002,93 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DAZARALOR_DOCK",
     to = "WARFANG_HOLD_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        quest = 51802
+    }
 }, {
     from = "DAZARALOR_DOCK",
     to = "PLUNDER_HARBOR_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        quest = 51800
+    }
 }, {
     from = "DAZARALOR_DOCK",
     to = "ANYPORT_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        quest = 51801
+    }
 }, {
     from = "BORALUS_DOCK",
     to = "SHATTERSTONE_HARBOR_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 51572
+    }
 }, {
     from = "BORALUS_DOCK",
     to = "XIBALA_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 51570
+    }
 }, {
     from = "BORALUS_DOCK",
     to = "FORT_VICTORY_DOCK",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 51571
+    }
 }, {
     from = "UNDERMINE_ROCKET_LAUNCH",
     to = "GUTTERVILLE_ROCKET",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        quest = 83151
+    }
 }, {
     from = "UNDERMINE_ROCKET_LAUNCH",
     to = "KAJACOAST_ROCKET",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        quest = 83933
+    }
 }, {
     from = "VINDICAAR_ARGUS",
     to = "VINDICAAR_EREDATH_FLIGHT",
-    method = "teleport"
+    method = "portal"
 }, {
     from = "VINDICAAR_ARGUS",
     to = "VINDICAAR_ANTORAN_WASTES_FLIGHT",
-    method = "teleport"
+    method = "portal"
 }, {
     from = "VINDICAAR_ARGUS",
     to = "VINDICAAR_KROKUUN_FLIGHT",
-    method = "teleport"
+    method = "portal"
 }, {
     from = "SHADOPAN_ISLE_OF_THUNDER_PORTAL_HORDE",
     to = "SUNREAVER_BASE",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        quest = 32680
+    }
 }, {
     from = "SHADOPAN_ISLE_OF_THUNDER_PORTAL_ALLIANCE",
     to = "KIRIN_TOR_BASE",
-    method = "teleport"
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        quest = 32681
+    }
 }, {
     from = "NORTHPASS_TOWER_FLIGHT",
     to = "ZULAMAN_FLIGHT",
@@ -7797,11 +8097,11 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "GRIM_CAMPFIRE_PANDARIA",
     to = "GRIM_CAMPFIRE_GORGROND",
-    method = "teleport"
+    method = "portal"
 }, {
     from = "DARKMOON_FAIRE_ENTRANCE_ELWYNN",
     to = "DARKMOON_ENTRANCE",
-    method = "teleport",
+    method = "portal",
     requirements = {
         holiday = "Darkmoon Faire",
         faction = "Alliance"
@@ -7809,7 +8109,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARKMOON_FAIRE_ENTRANCE_ELWYNN",
     to = "DARKMOON_ENTRANCE",
-    method = "teleport",
+    method = "portal",
     oneway = true,
     requirements = {
         holiday = "Darkmoon Faire",
@@ -7818,7 +8118,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARKMOON_FAIRE_ENTRANCE_MULGORE",
     to = "DARKMOON_ENTRANCE",
-    method = "teleport",
+    method = "portal",
     requirements = {
         holiday = "Darkmoon Faire",
         faction = "Horde"
@@ -7826,7 +8126,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARKMOON_FAIRE_ENTRANCE_MULGORE",
     to = "DARKMOON_ENTRANCE",
-    method = "teleport",
+    method = "portal",
     oneway = true,
     requirements = {
         holiday = "Darkmoon Faire",
@@ -7835,7 +8135,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARKMOON_DOCK_EXIT",
     to = "DARKMOON_FAIRE_ENTRANCE_ELWYNN",
-    method = "teleport",
+    method = "portal",
     oneway = true,
     requirements = {
         holiday = "Darkmoon Faire",
@@ -7844,7 +8144,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARKMOON_DOCK_EXIT",
     to = "DARKMOON_FAIRE_ENTRANCE_MULGORE",
-    method = "teleport",
+    method = "portal",
     oneway = true,
     requirements = {
         holiday = "Darkmoon Faire",
@@ -7885,7 +8185,6 @@ ns.MapToTraversal = {
     [1282] = "DEATH_KNIGHT_HALL",
     [2351] = "RAZORWIND_SHORES",
     [1270] = "QUELDANAS",
-    [1272] = "VASHJIR",
     [1355] = "NAZJATAR",
     [1462] = "MECHAGON",
     [1670] = "SL_ORIBOS",
