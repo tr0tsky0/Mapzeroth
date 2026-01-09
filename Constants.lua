@@ -28,6 +28,12 @@ addon.MAX_AUTO_EDGE_DISTANCE = 3000 -- Maximum distance for auto-generated trave
 -- Used by both static graph generation and synthetic edge creation
 
 addon.NO_FLY_MAPS = {
+    -- Burning Crusade
+    [94] = true, -- Eversong Woods
+    [95] = true, -- Ghostlands
+    [110] = true, -- Silvermoon City
+    [122] = true, -- Isle of Quel'Danas
+
     -- Shadowlands
     [1670] = true, -- Oribos
     [1671] = true, -- Oribos (Ring)

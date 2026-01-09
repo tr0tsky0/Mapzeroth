@@ -102,7 +102,7 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         print(string.format("[Mapzeroth] Debug mode: %s", addon.DEBUG and "ON" or "OFF"))
         return
     end
-    
+
     if command == "debug-groups" then
         print("[Mapzeroth] Traversal groups in graph:")
         local groups = {}
@@ -175,11 +175,11 @@ end
 -----------------------------------------------------------
 -- BuildStepList
 -----------------------------------------------------------
-function addon:BuildStepList(path, totalCost, previous, waypoint)
+local function BuildStepList(path, totalCost, previous, waypoint)
     local steps = {}
 
     for i, nodeID in ipairs(path) do
-        local node = self.TravelGraph:GetNodeByID(nodeID)
+        local node = addon:GetTravelNode(nodeID)
         local prevInfo = previous[nodeID]
 
         if not prevInfo then
@@ -230,6 +230,44 @@ function addon:BuildStepList(path, totalCost, previous, waypoint)
 end
 
 -----------------------------------------------------------
+-- UTILITY: Format Optimized Steps for Chat Display
+-----------------------------------------------------------
+local function FormatPathFromSteps(steps, totalCost)
+    if not steps or #steps == 0 then
+        return "No path found"
+    end
+
+    local output = {}
+    table.insert(output, string.format("[Mapzeroth] Route found (%.0f seconds):", totalCost))
+
+    for i, step in ipairs(steps) do
+        local actionText
+        
+        if step.abilityName then
+            -- Ability-based travel (portals, hearthstone, etc.)
+            if step.destinationName then
+                actionText = string.format("Use %s to %s", step.abilityName, step.destinationName)
+            else
+                actionText = string.format("Use %s", step.abilityName)
+            end
+        else
+            -- Regular movement or other methods
+            local methodText = addon.METHOD_DISPLAY_TEXT[step.method] or "Travel to"
+            actionText = string.format("%s %s", methodText, step.destination)
+        end
+        
+        -- Add collapse indicator only in debug mode
+        if addon.DEBUG and step.collapsedFrom and step.collapsedFrom > 1 then
+            actionText = actionText .. string.format(" (direct, collapsed %d hops)", step.collapsedFrom)
+        end
+        
+        table.insert(output, string.format("  %d. %s (%.0fs)", i, actionText, step.time))
+    end
+
+    return table.concat(output, "\n")
+end
+
+-----------------------------------------------------------
 -- COMMAND: Find Route
 -----------------------------------------------------------
 
@@ -238,7 +276,7 @@ function addon:FindRoute(destinationID)
 
     if destinationID == "_WAYPOINT_DESTINATION" then
         local err
-        waypoint, err = self:GetActiveWaypoint()
+        waypoint, err = addon:GetActiveWaypoint()
         if not waypoint then
             print("[Mapzeroth] " .. err)
             print("[Mapzeroth] Set a waypoint using Shift+Click on the map, or use TomTom")
@@ -246,11 +284,11 @@ function addon:FindRoute(destinationID)
         end
     end
 
-    local playerAbilities = self:GetAvailableTravelAbilities()
-    local location = self:GetPlayerLocation()
+    local playerAbilities = addon:GetAvailableTravelAbilities()
+    local location = addon:GetPlayerLocation()
 
     -- Build synthetic edges (includes waypoint node)
-    local synthetic = self:BuildSyntheticEdges(location, playerAbilities, waypoint)
+    local synthetic = addon:BuildSyntheticEdges(location, playerAbilities, waypoint)
 
     -- Add edges from player to nearby nodes
     local MAX_PLAYER_RANGE = 2.0
@@ -262,7 +300,7 @@ function addon:FindRoute(destinationID)
                 local dist = math.sqrt(dx * dx + dy * dy)
 
                 if dist <= MAX_PLAYER_RANGE then
-                    local travelTime, travelMethod = self:CalculateTravelToNode(dist, location.mapID)
+                    local travelTime, travelMethod = addon:CalculateTravelToNode(dist, location.mapID)
                     table.insert(synthetic.edges, {
                         from = "_PLAYER_POSITION",
                         to = nodeID,
@@ -276,7 +314,7 @@ function addon:FindRoute(destinationID)
     end
 
     -- Find path
-    local path, cost, previous = self:FindPath("_PLAYER_POSITION", destinationID, playerAbilities, synthetic)
+    local path, cost, previous = addon:FindPath("_PLAYER_POSITION", destinationID, playerAbilities, synthetic)
     if addon.DEBUG then
         print("[Mapzeroth] Path nodes:")
         for i, nodeID in ipairs(path) do
@@ -290,11 +328,13 @@ function addon:FindRoute(destinationID)
     end
 
     -- Output (simplified!)
+    local steps = BuildStepList(path, cost, previous, waypoint)
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then
-        local steps = self:BuildStepList(path, cost, previous, waypoint)
-        self:ShowRouteExecutionFrame(steps, cost)
+        steps = addon:OptimizeConsecutiveMovement(steps)
+        addon:ShowRouteExecutionFrame(steps, cost)
     else
-        print(self:FormatPath(path, cost, previous))
+        steps = addon:OptimizeConsecutiveMovement(steps)
+        print(FormatPathFromSteps(steps, cost))
     end
 end
 

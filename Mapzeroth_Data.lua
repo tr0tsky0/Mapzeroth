@@ -178,6 +178,7 @@ ns.Nodes = {
         },
         UNDERCITY = {
             name = "Undercity",
+            category = "city",
             faction = "HORDE",
             mapID = 90,
             x = 0.663,
@@ -1179,6 +1180,7 @@ ns.Nodes = {
         },
         THUNDER_BLUFF = {
             name = "Thunder Bluff",
+            category = "city",
             faction = "HORDE",
             mapID = 88,
             x = 0.2221,
@@ -1672,6 +1674,7 @@ ns.Nodes = {
         -- Orgrimmar (KALIMDOR_OVERWORLD)
         ORGRIMMAR_FLIGHT = {
             name = "Orgrimmar",
+            category = "city",
             faction = "HORDE",
             mapID = 85,
             x = 0.5204,
@@ -5929,6 +5932,7 @@ ns.Nodes = {
     QUELTHALAS = {
         SILVERMOON = {
             name = "Silvermoon City",
+            category = "city",
             faction = "HORDE",
             mapID = 110,
             x = 0.5826,
@@ -7351,7 +7355,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-    
+
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "TOL_BARAD_ALLIANCE",
@@ -8150,6 +8154,11 @@ ns.Edges = { -- Stormwind Internal Navigation
         holiday = "Darkmoon Faire",
         faction = "Horde"
     }
+}, {
+    from = "SHATTERED_SUN_STAGING_AREA_FLIGHT",
+    to = "ZULAMAN_FLIGHT",
+    method = "flight",
+    cost = 215
 }}
 
 -----------------------------------------------------------
@@ -8184,7 +8193,7 @@ ns.MapToTraversal = {
     [554] = "TIMELESS_ISLE",
     [1282] = "DEATH_KNIGHT_HALL",
     [2351] = "RAZORWIND_SHORES",
-    [1270] = "QUELDANAS",
+    [122] = "QUELDANAS",
     [1355] = "NAZJATAR",
     [1462] = "MECHAGON",
     [1670] = "SL_ORIBOS",

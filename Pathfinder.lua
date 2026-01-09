@@ -315,57 +315,110 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
 end
 
 -----------------------------------------------------------
--- UTILITY: Format Path for Display
+-- OPTIMIZE CONSECUTIVE MOVEMENT STEPS
 -----------------------------------------------------------
-
-function addon:FormatPath(path, totalCost, previous)
-    if not path then
-        return "No path found"
+function addon:OptimizeConsecutiveMovement(steps)
+    if not steps or #steps == 0 then
+        return steps
     end
-
-    local output = {}
-    table.insert(output, string.format("[Mapzeroth] Route found (%.0f seconds):", totalCost))
-
-    for i, nodeID in ipairs(path) do
-        if addon.DEBUG then
-            print(string.format("  FormatPath processing i=%d, nodeID=%s, prevInfo=%s", i, nodeID,
-                previous[nodeID] and "exists" or "nil"))
-        end
-        local node = self.TravelGraph:GetNodeByID(nodeID)
-        local prevInfo = previous[nodeID]
-
-        if not prevInfo then
-            -- Skip
-        elseif nodeID == "_INITIAL_STEP" then
-            local methodText = prevInfo.method == "fly" and "Fly to" or "Walk to"
-            table.insert(output,
-                string.format("  %d. %s %s (%.0fs)", i, methodText, prevInfo.destination, prevInfo.cost))
-        elseif nodeID == "_WAYPOINT_DESTINATION" then
-            local actionText
-            if prevInfo.abilityName then
-                actionText = string.format("Use %s", prevInfo.abilityName)
-            else
-                local methodText = addon.METHOD_DISPLAY_TEXT[prevInfo.method] or "Travel to"
-                actionText = string.format("%s waypoint", methodText)
+    
+    local optimized = {}
+    local i = 1
+    
+    while i <= #steps do
+        local step = steps[i]
+        
+        -- Check if this is a collapsible movement step
+        if step.method == "walk" or step.method == "fly" then
+            -- Find end of consecutive same-method chain
+            local chainEnd = i
+            while chainEnd < #steps and steps[chainEnd + 1].method == step.method do
+                chainEnd = chainEnd + 1
             end
-            table.insert(output, string.format("  %d. %s (%.0fs)", i, actionText, prevInfo.cost))
-        elseif node then
-            local actionText
-            if prevInfo.abilityName then
-                if prevInfo.destinationName then
-                    actionText = string.format("Use %s to %s", prevInfo.abilityName, prevInfo.destinationName)
-                else
-                    actionText = string.format("Use %s", prevInfo.abilityName)
+            
+            if chainEnd > i then
+                -- We have a chain of 2+ steps, try to collapse it
+                local startStep = steps[i]
+                local endStep = steps[chainEnd]
+                
+                -- Get start node
+                local startNode = addon:GetTravelNode(startStep.nodeID)
+                local canOptimize = false
+                local directTime, endNodeID, collapsedStep
+                
+                if startNode then
+                    -- Get end node (either regular node or waypoint)
+                    if endStep.nodeID == "_WAYPOINT_DESTINATION" then
+                        -- Waypoint destination - create temporary node-like structure
+                        endNodeID = "_WAYPOINT_DESTINATION"
+                        local waypointNode = {
+                            id = "_WAYPOINT_DESTINATION",
+                            mapID = endStep.waypointData.mapID,
+                            x = endStep.waypointData.x,
+                            y = endStep.waypointData.y
+                        }
+                        directTime = addon:GetTravelTime(
+                            startNode.id,
+                            waypointNode,
+                            step.method
+                        )
+                        canOptimize = (directTime ~= nil)
+                    else
+                        -- Regular node
+                        endNodeID = endStep.nodeID
+                        local endNode = addon:GetTravelNode(endNodeID)
+                        if endNode then
+                            directTime = addon:GetTravelTime(
+                                startNode.id,
+                                endNode.id,
+                                step.method
+                            )
+                            canOptimize = (directTime ~= nil)
+                        end
+                    end
                 end
+                
+                if canOptimize then
+                    -- Create collapsed step
+                    collapsedStep = {
+                        num = #optimized + 1,
+                        method = step.method,
+                        destination = endStep.destination,
+                        time = directTime,
+                        nodeID = endNodeID,
+                        collapsedFrom = chainEnd - i + 1
+                    }
+                    
+                    -- Preserve waypoint data if this is a waypoint destination
+                    if endStep.waypointData then
+                        collapsedStep.waypointData = endStep.waypointData
+                    end
+                    
+                    table.insert(optimized, collapsedStep)
+                else
+                    -- Can't optimize, keep original chain
+                    for j = i, chainEnd do
+                        steps[j].num = #optimized + 1
+                        table.insert(optimized, steps[j])
+                    end
+                end
+                
+                i = chainEnd + 1
             else
-                local methodText = addon.METHOD_DISPLAY_TEXT[prevInfo.method] or "Travel to"
-                actionText = string.format("%s %s", methodText, node.name)
+                -- Single step, keep as-is
+                step.num = #optimized + 1
+                table.insert(optimized, step)
+                i = i + 1
             end
-            table.insert(output, string.format("  %d. %s (%.0fs)", i, actionText, prevInfo.cost))
+        else
+            -- Non-movement step (portal, hearthstone, etc.), keep as-is
+            step.num = #optimized + 1
+            table.insert(optimized, step)
+            i = i + 1
         end
     end
-
-    return table.concat(output, "\n")
+    
+    return optimized
 end
 
 -----------------------------------------------------------

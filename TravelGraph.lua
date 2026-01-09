@@ -281,3 +281,7 @@ end
 function addon:GetTravelNode(nodeID)
     return self.TravelGraph:GetNodeByID(nodeID)
 end
+
+function addon:GetTravelTime(node1, node2, method)
+    return calculateTravelTime(node1, node2, method)
+end
