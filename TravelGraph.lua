@@ -9,6 +9,11 @@ TravelGraph.__index = TravelGraph
 local rawNodes = addon.Nodes or {}
 local rawEdges = addon.Edges or {}
 
+-- Enrich node names with zone information
+if addon.MapNames then
+    addon.MapNames:EnrichNodes(rawNodes)
+end
+
 -- Constants
 local TRAVEL_COSTS = addon.TRAVEL_COSTS
 local WALK_SPEED = addon.WALK_SPEED
@@ -156,6 +161,7 @@ local function buildGraph(hierarchicalNodes, edgeList)
             graph.nodes[traversalGroup][nodeID] = {
                 id = nodeID,
                 name = nodeData.name,
+                displayName = nodeData.displayName or nodeData.name,
                 category = nodeData.category,
                 traversalGroup = traversalGroup,
                 faction = nodeData.faction,

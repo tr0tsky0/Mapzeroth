@@ -15,6 +15,7 @@ Libs\LibDBIcon-1.0.lua
 # Core data and systems
 Constants.lua
 Mapzeroth_Data.lua
+MapNames.lua
 PlayerAbilities.lua
 TravelGraph.lua
 EdgeRequirements.lua

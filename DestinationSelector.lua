@@ -219,20 +219,16 @@ function addon:RefreshDestinationResults(selector)
     for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
         for nodeID, node in pairs(groupData) do
             local category = node.category or "other"
-
-            -- UPDATED: Match category filtering (no more "other" tab)
-            -- If activeCategory is "all", show everything
-            -- Otherwise, only show nodes that match the selected category
             local matchesCategory = (selector.activeCategory == "all") or (category == selector.activeCategory)
 
             local matchesSearch = true
             if selector.searchText and selector.searchText ~= "" then
                 local lowerName = string.lower(node.name)
+                local lowerDisplayName = string.lower(node.displayName)
                 local lowerSearch = string.lower(selector.searchText)
-                matchesSearch = string.find(lowerName, lowerSearch, 1, true) ~= nil
+                matchesSearch = string.find(lowerName, lowerSearch, 1, true) ~= nil or string.find(lowerDisplayName, lowerSearch, 1, true) ~= nil
             end
 
-            -- NEW: Faction filtering
             local matchesFaction = true
             if node.faction then
                 -- Node is faction-specific, must match player faction
@@ -243,7 +239,7 @@ function addon:RefreshDestinationResults(selector)
             if matchesCategory and matchesSearch and matchesFaction then
                 table.insert(nodeList, {
                     id = nodeID,
-                    name = node.name,
+                    name = node.displayName or node.name,
                     category = category
                 })
             end

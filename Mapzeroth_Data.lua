@@ -12,14 +12,14 @@ ns.Nodes = {
     EK_OVERWORLD = {
         -- Stormwind Portal Hub
         STORMWIND_PORTAL_ROOM = {
-            name = "Mage Tower, Stormwind",
+            name = "Mage Tower",
             faction = "ALLIANCE",
             mapID = 84,
             x = 0.480,
             y = 0.844
         },
         EASTERN_EARTHSHRINE_SW = {
-            name = "Eastern Earthshrine, Stormwind",
+            name = "Eastern Earthshrine",
             faction = "ALLIANCE",
             mapID = 84,
             x = 0.724,
@@ -27,42 +27,42 @@ ns.Nodes = {
         },
         -- Stormwind City Locations
         SW_EMBASSY = {
-            name = "Stormwind Embassy",
+            name = "Embassy",
             faction = "ALLIANCE",
             mapID = 84,
             x = 0.661,
             y = 0.228
         },
         SW_TRAM = {
-            name = "Stormwind Deeprun Tram",
+            name = "Deeprun Tram",
             faction = "ALLIANCE",
             mapID = 84,
             x = 0.650,
             y = 0.323
         },
         STORMWIND_HARBOR = {
-            name = "Stormwind Harbour",
+            name = "Harbour",
             faction = "ALLIANCE",
             mapID = 84,
             x = 0.268,
             y = 0.355
         },
         DARKMOON_FAIRE_ENTRANCE_ELWYNN = {
-            name = "Darkmoon Faire Entrance, Elwynn Forest",
+            name = "Darkmoon Faire Entrance",
             mapID = 37,
             x = 0.4179,
             y = 0.6940
         },
         -- Ironforge
         IF_TRAM = {
-            name = "Ironforge Deeprun Tram",
+            name = "Deeprun Tram",
             faction = "ALLIANCE",
             mapID = 87,
             x = 0.706,
             y = 0.487
         },
         IRONFORGE = {
-            name = "Ironforge Entrance",
+            name = "Entrance",
             faction = "ALLIANCE",
             mapID = 87,
             x = 0.144,
@@ -70,7 +70,7 @@ ns.Nodes = {
         },
         -- Cataclysm Zones (via Eastern Earthshrine)
         HIGHBANK = {
-            name = "Twilight Highlands",
+            name = "Highbank",
             faction = "ALLIANCE",
             mapID = 1275,
             x = 0.800,
@@ -112,7 +112,7 @@ ns.Nodes = {
             y = 0.1758
         },
         DRAGONMAW_PORT_FLIGHT = {
-            name = "Dragonmaw Port",
+            name = "Dragonmaw Port Flightmaster",
             faction = "HORDE",
             mapID = 1275,
             x = 0.7347,
@@ -120,7 +120,7 @@ ns.Nodes = {
         },
         -- Miscellaneous EK
         DARK_PORTAL_BL = {
-            name = "The Dark Portal (Blasted Lands)",
+            name = "The Dark Portal",
             mapID = 1246,
             x = 0.541,
             y = 0.512
@@ -133,19 +133,19 @@ ns.Nodes = {
             y = 0.4838
         },
         BADLANDS = {
-            name = "Badlands",
+            name = "Uldaman",
             mapID = 15,
             x = 0.452,
             y = 0.125
         },
         GILNEAS = {
-            name = "Ruins of Gilneas",
+            name = "Gilneas City",
             mapID = 217,
             x = 0.5890,
             y = 0.4746
         },
         GILNEAS_DOCK = {
-            name = "Ruins of Gilneas Dock",
+            name = "Dock",
             mapID = 217,
             x = 0.636,
             y = 0.956
@@ -177,7 +177,7 @@ ns.Nodes = {
             y = 0.5581
         },
         UNDERCITY = {
-            name = "Undercity",
+            name = "Entrance",
             category = "city",
             faction = "HORDE",
             mapID = 90,
@@ -321,7 +321,7 @@ ns.Nodes = {
             y = 0.444
         },
         DUSKWOOD_DRUID = {
-            name = "Twilight Grove, Duskwood",
+            name = "Twilight Grove",
             mapID = 47,
             x = 0.4659,
             y = 0.3706
@@ -348,7 +348,7 @@ ns.Nodes = {
             y = 0.365
         },
         FUSELIGHT_FLIGHT = {
-            name = "Fuselight, Badlands",
+            name = "Fuselight",
             mapID = 15,
             x = 0.647,
             y = 0.351
@@ -423,14 +423,14 @@ ns.Nodes = {
             y = 0.417
         },
         HIGHBANK_FLIGHT = {
-            name = "Highbank",
+            name = "Highbank Flightmaster",
             faction = "ALLIANCE",
             mapID = 241,
             x = 0.813,
             y = 0.766
         },
         IRONFORGE_FLIGHT = {
-            name = "Ironforge",
+            name = "Flightmaster",
             category = "city",
             faction = "ALLIANCE",
             mapID = 87,
@@ -515,7 +515,7 @@ ns.Nodes = {
             y = 0.124
         },
         MENETHIL_HARBOR_FLIGHT = {
-            name = "Menethil Harbor",
+            name = "Menethil Harbor Flightmaster",
             faction = "ALLIANCE",
             mapID = 56,
             x = 0.090,
@@ -603,7 +603,7 @@ ns.Nodes = {
             y = 0.447
         },
         STORMWIND_FLIGHT = {
-            name = "Stormwind",
+            name = "Flightmaster",
             category = "city",
             faction = "ALLIANCE",
             mapID = 84,
@@ -829,11 +829,11 @@ ns.Nodes = {
             x = 0.399,
             y = 0.388
         },
-        VASHJIR = {
-            name = "Vashj'ir",
-            mapID = 1272,
-            x = 0.580,
-            y = 0.628
+        DARKBREAK_COVE_PORTAL = {
+            name = "Darkbreak Cove Portal",
+            mapID = 204,
+            x = 0.5570,
+            y = 0.7280
         },
         DARKBREAK_COVE_FLIGHT = {
             name = "Darkbreak Cove",
@@ -895,6 +895,13 @@ ns.Nodes = {
             mapID = 205,
             x = 0.566,
             y = 0.756
+        },
+        TENEBROUS_CAVERN_PORTAL = {
+            name = "Tenebrous Cavern Portal",
+            faction = "HORDE",
+            mapID = 204,
+            x = 0.6004,
+            y = 0.5625
         },
         TENEBROUS_CAVERN_FLIGHT = {
             name = "Tenebrous Cavern",
@@ -1075,14 +1082,14 @@ ns.Nodes = {
     },
     TOL_BARAD = {
         TOL_BARAD_ALLIANCE = {
-            name = "Tol Barad",
+            name = "Tol Barad Camp",
             faction = "ALLIANCE",
             mapID = 245,
             x = 0.724,
             y = 0.562
         },
         TOL_BARAD_HORDE = {
-            name = "Tol Barad",
+            name = "Tol Barad Camp",
             faction = "HORDE",
             mapID = 245,
             x = 0.531,
@@ -1098,11 +1105,31 @@ ns.Nodes = {
     },
 
     DEEPHOLM = {
-        DEEPHOLM = {
-            name = "Deepholm",
+        DEEPHOLM_STORMWIND_PORTAL = {
+            name = "Stormwind Portal",
+            faction = "ALLIANCE",
             mapID = 207,
-            x = 0.488,
-            y = 0.535
+            x = 0.4855,
+            y = 0.5380
+        },
+        DEEPHOLM_ORGRIMMAR_PORTAL = {
+            name = "Orgrimmar Portal",
+            faction = "HORDE",
+            mapID = 207,
+            x = 0.5089,
+            y = 0.5307
+        },
+        TEMPLE_OF_EARTH_PORTAL = {
+            name = "Portal to Therazane's Throne",
+            mapID = 207,
+            x = 0.4928,
+            y = 0.5040
+        },
+        THERAZANES_THRONE_PORTAL = {
+            name = "Portal to Temple of Earth",
+            mapID = 207,
+            x = 0.5703,
+            y = 0.1346
         },
         THE_STONECORE_DUNGEON = {
             name = "The Stonecore",
@@ -1114,7 +1141,7 @@ ns.Nodes = {
 
     FOUNDERS_POINT = {
         FOUNDERS_POINT = {
-            name = "Founder's Point",
+            name = "Entrance Portal",
             faction = "ALLIANCE",
             mapID = 2352,
             x = 0.574,
@@ -1132,14 +1159,14 @@ ns.Nodes = {
             y = 0.1877
         },
         FERALAS = {
-            name = "Feralas",
+            name = "Feathermoon Stronghold",
             faction = "ALLIANCE",
             mapID = 69,
             x = 0.4514,
             y = 0.4173
         },
         FERALAS_DRUID = {
-            name = "Dream Bough, Feralas",
+            name = "Dream Bough",
             mapID = 69,
             x = 0.5120,
             y = 0.1103
@@ -1159,27 +1186,27 @@ ns.Nodes = {
         },
         -- Horde Cities & Zones
         ORGRIMMAR_PORTAL_ROOM = {
-            name = "Mage Tower, Orgrimmar",
+            name = "Portal Room",
             faction = "HORDE",
             mapID = 85,
             x = 0.5710,
             y = 0.8981
         },
         WESTERN_EARTHSHRINE_OG = {
-            name = "Western Earthshrine, Orgrimmar",
+            name = "Western Earthshrine",
             faction = "HORDE",
             mapID = 85,
             x = 0.5007,
             y = 0.3779
         },
         ORGRIMMAR_ZEP = {
-            name = "Orgrimmar Zeppelin",
+            name = "Zeppelin Tower",
             mapID = 85,
             x = 0.4827,
             y = 0.5791
         },
         THUNDER_BLUFF = {
-            name = "Thunder Bluff",
+            name = "Entrance",
             category = "city",
             faction = "HORDE",
             mapID = 88,
@@ -1187,13 +1214,13 @@ ns.Nodes = {
             y = 0.1687
         },
         THUNDER_BLUFF_ZEP = {
-            name = "Thunder Bluff Zeppelin",
+            name = "Zeppelin Dock",
             mapID = 88,
             x = 0.1879,
             y = 0.2564
         },
         DARKMOON_FAIRE_ENTRANCE_MULGORE = {
-            name = "Darkmoon Faire Entrance, Mulgore",
+            name = "Darkmoon Faire Entrance",
             mapID = 7,
             x = 0.3680,
             y = 0.3582
@@ -1213,7 +1240,7 @@ ns.Nodes = {
             y = 0.7338
         },
         ECHO_ISLES_DOCK = {
-            name = "Echo Isles Dock",
+            name = "Dock",
             mapID = 1,
             x = 0.7182,
             y = 0.7885
@@ -1260,19 +1287,19 @@ ns.Nodes = {
         },
         -- Neutral Zones
         MOONGLADE = {
-            name = "Moonglade",
+            name = "Nighthaven",
             mapID = 80,
             x = 0.567,
             y = 0.355
         },
         MOONGLADE_DRUID = {
-            name = "Stormrage Barrow, Moonglade",
+            name = "Stormrage Barrow",
             mapID = 80,
             x = 0.6759,
             y = 0.6019
         },
         SILITHUS = {
-            name = "Silithus",
+            name = "Magni's Camp",
             mapID = 81,
             x = 0.415,
             y = 0.449
@@ -1284,46 +1311,46 @@ ns.Nodes = {
             y = 0.283
         },
         ULDUM = {
-            name = "Uldum",
+            name = "Ramkahen",
             mapID = 1527,
             x = 0.549,
             y = 0.342
         },
         MOUNT_HYJAL = {
-            name = "Mount Hyjal",
+            name = "Nordrassil",
             mapID = 198,
             x = 0.635,
             y = 0.234
         },
         MOUNT_HYJAL_DRUID = {
-            name = "Nordrassil, Mount Hyjal",
+            name = "Nordrassil",
             mapID = 198,
             x = 0.5929,
             y = 0.2583
         },
         MOONGLADE_FLIGHT_ALLIANCE = {
-            name = "Moonglade",
+            name = "Lake Elune'ara",
             faction = "ALLIANCE",
             mapID = 80,
             x = 0.476,
             y = 0.669
         },
         MOONGLADE_FLIGHT_HORDE = {
-            name = "Moonglade",
+            name = "Lake Elune'ara",
             faction = "HORDE",
             mapID = 80,
             x = 0.3179,
             y = 0.6639
         },
         NIGHTHAVEN_FLIGHT_ALLIANCE = {
-            name = "Nighthaven",
+            name = "Nighthaven Flightmaster",
             faction = "ALLIANCE",
             mapID = 80,
             x = 0.440,
             y = 0.452
         },
         NIGHTHAVEN_FLIGHT_HORDE = {
-            name = "Nighthaven",
+            name = "Nighthaven Flightmaster",
             faction = "HORDE",
             mapID = 80,
             x = 0.4403,
@@ -1628,7 +1655,7 @@ ns.Nodes = {
             y = 0.630
         },
         RAMKAHEN_FLIGHT = {
-            name = "Ramkahen",
+            name = "Ramkahen Flightmaster",
             mapID = 249,
             x = 0.561,
             y = 0.334
@@ -1665,7 +1692,7 @@ ns.Nodes = {
         },
         -- Thunder Bluff (KALIMDOR_OVERWORLD)
         THUNDER_BLUFF_FLIGHT = {
-            name = "Thunder Bluff",
+            name = "Flightmaster",
             faction = "HORDE",
             mapID = 88,
             x = 0.4627,
@@ -1673,7 +1700,7 @@ ns.Nodes = {
         },
         -- Orgrimmar (KALIMDOR_OVERWORLD)
         ORGRIMMAR_FLIGHT = {
-            name = "Orgrimmar",
+            name = "Flightmaster",
             category = "city",
             faction = "HORDE",
             mapID = 85,
@@ -2025,7 +2052,7 @@ ns.Nodes = {
             y = 0.710
         },
         NYALOTHA_THE_WAKING_CITY_RAID_ULDUM = {
-            name = "Ny'alotha, the Waking City (Uldum)",
+            name = "Ny'alotha, the Waking City",
             category = "raid",
             mapID = 249,
             x = 0.380,
@@ -2056,7 +2083,7 @@ ns.Nodes = {
 
     TELDRASSIL = {
         DARNASSUS = {
-            name = "Darnassus",
+            name = "Entrance",
             faction = "ALLIANCE",
             mapID = 89,
             x = 0.435,
@@ -2070,7 +2097,7 @@ ns.Nodes = {
             y = 0.501
         },
         DARNASSUS_FLIGHT = {
-            name = "Darnassus",
+            name = "Flightmaster",
             category = "city",
             faction = "ALLIANCE",
             mapID = 89,
@@ -2095,14 +2122,14 @@ ns.Nodes = {
 
     DRAENEI_HOME = {
         EXODAR = {
-            name = "The Exodar",
+            name = "Entrance",
             faction = "ALLIANCE",
             mapID = 103,
             x = 0.476,
             y = 0.598
         },
         THE_EXODAR_FLIGHT = {
-            name = "The Exodar",
+            name = "Flightmaster",
             category = "city",
             faction = "ALLIANCE",
             mapID = 103,
@@ -2134,7 +2161,7 @@ ns.Nodes = {
 
     RAZORWIND_SHORES = {
         RAZORWIND_SHORES = {
-            name = "Razorwind Shores",
+            name = "Entrance Portal",
             faction = "HORDE",
             mapID = 2351,
             x = 0.540,
@@ -2145,7 +2172,7 @@ ns.Nodes = {
     OUTLAND = {
         -- Dark Portal
         DARK_PORTAL_OUTLAND = {
-            name = "The Dark Portal (Outland)",
+            name = "The Dark Portal",
             mapID = 100,
             x = 0.892,
             y = 0.502
@@ -2171,7 +2198,7 @@ ns.Nodes = {
             y = 0.316
         },
         BLACK_TEMPLE = {
-            name = "Shadowmoon Valley",
+            name = "The Black Temple",
             mapID = 104,
             x = 0.662,
             y = 0.440
@@ -2210,7 +2237,7 @@ ns.Nodes = {
             y = 0.68
         },
         TOSHLEYS_STATION_FLIGHT = {
-            name = "Toshley's Station",
+            name = "Toshley's Station Flightmaster",
             faction = "ALLIANCE",
             mapID = 105,
             x = 0.607,
@@ -2265,14 +2292,14 @@ ns.Nodes = {
             y = 0.349
         },
         HELLFIRE_PENINSULA_FLIGHT_ALLIANCE = {
-            name = "Hellfire Peninsula",
+            name = "Dark Portal Flightmaster",
             faction = "ALLIANCE",
             mapID = 100,
             x = 0.874,
             y = 0.494
         },
         HELLFIRE_PENINSULA_FLIGHT_HORDE = {
-            name = "Hellfire Peninsula",
+            name = "Dark Portal Flightmaster",
             faction = "HORDE",
             mapID = 100,
             x = 0.8747,
@@ -2778,7 +2805,7 @@ ns.Nodes = {
             y = 0.809
         },
         DALARAN_NORTHREND_FLIGHT = {
-            name = "Dalaran - Northrend",
+            name = "Dalaran (Northrend) Flightmaster",
             category = "city",
             mapID = 127,
             x = 0.366,
@@ -3138,8 +3165,8 @@ ns.Nodes = {
     },
 
     PANDARIA = {
-        JADE_FOREST = {
-            name = "The Jade Forest",
+        PAWDON_VILLAGE_PORTAL = {
+            name = "Paw'Don Village Portal",
             mapID = 371,
             x = 0.462,
             y = 0.851
@@ -3585,14 +3612,14 @@ ns.Nodes = {
 
     ISLE_OF_THUNDER = {
         KIRIN_TOR_BASE = {
-            name = "Kirin Tor Base, Isle of Thunder",
+            name = "Kirin Tor Base",
             faction = "ALLIANCE",
             mapID = 504,
             x = 0.6408,
             y = 0.7248
         },
         SUNREAVER_BASE = {
-            name = "Sunreaver Base, Isle of Thunder",
+            name = "Sunreaver Base",
             faction = "HORDE",
             mapID = 504,
             x = 0.3262,
@@ -3610,7 +3637,7 @@ ns.Nodes = {
 
     BROKEN_ISLES = {
         AZSUNA = {
-            name = "Azsuna",
+            name = "Faronaar",
             mapID = 630,
             x = 0.4682,
             y = 0.4136
@@ -3622,21 +3649,21 @@ ns.Nodes = {
             y = 0.447
         },
         DALARAN_BROKEN_ISLES_FLIGHT = {
-            name = "Dalaran (Broken Isles)",
+            name = "Dalaran (Broken Isles) Flightmaster",
             category = "city",
             mapID = 627,
             x = 0.6985,
             y = 0.5108
         },
         DALARAN_BROKEN_ISLES_PORTAL_ALLIANCE = {
-            name = "Dalaran (Broken Isles)",
+            name = "Dalaran (Broken Isles) Portal",
             faction = "ALLIANCE",
             mapID = 627,
             x = 0.3908,
             y = 0.6280
         },
         DALARAN_BROKEN_ISLES_PORTAL_HORDE = {
-            name = "Dalaran (Broken Isles)",
+            name = "Dalaran (Broken Isles) Portal",
             faction = "HORDE",
             mapID = 627,
             x = 0.5781,
@@ -3649,7 +3676,7 @@ ns.Nodes = {
             y = 0.3960
         },
         VALSHARAH = {
-            name = "Val'sharah",
+            name = "Lorlathil Portal",
             faction = "ALLIANCE",
             mapID = 641,
             x = 0.548,
@@ -3662,20 +3689,20 @@ ns.Nodes = {
             y = 0.2497
         },
         THE_BROKEN_SHORE = {
-            name = "Broken Shore",
+            name = "Aalgen Point",
             mapID = 646,
             x = 0.717,
             y = 0.480
         },
         THE_BROKEN_SHORE_MOLE = {
-            name = "Broken Shore",
+            name = "Allgen Point",
             faction = "ALLIANCE",
             mapID = 646,
             x = 0.717,
             y = 0.480
         },
         HIGHMOUNTAIN_MOLE = {
-            name = "Highmountain",
+            name = "Frosthoof Watch",
             faction = "ALLIANCE",
             mapID = 650,
             x = 0.446,
@@ -4041,7 +4068,7 @@ ns.Nodes = {
 
     EYE_OF_AZSHARA = {
         EYE_OF_AZSHARA_FLIGHT = {
-            name = "Eye of Azshara",
+            name = "Eye of Azshara Flightmaster",
             mapID = 790,
             x = 0.3816,
             y = 0.4567
@@ -4050,20 +4077,20 @@ ns.Nodes = {
 
     DRAGON_ISLES = {
         VALDRAKKEN = {
-            name = "Valdrakken",
+            name = "Portal Room",
             mapID = 2112,
             x = 0.596,
             y = 0.414
         },
         VALDRAKKEN_FLIGHT = {
-            name = "Valdrakken",
+            name = "Flightmaster",
             category = "city",
             mapID = 2112,
             x = 0.4436,
             y = 0.6798
         },
         VALDRAKKEN_BADLANDS_PORTAL = {
-            name = "Badlands Portal, Valdrakken",
+            name = "Badlands Portal",
             mapID = 2112,
             x = 0.2597,
             y = 0.4078
@@ -4076,7 +4103,7 @@ ns.Nodes = {
             y = 0.6388
         },
         BELAMETH_FLIGHT = {
-            name = "Bel'ameth",
+            name = "Bel'ameth Flightmaster",
             mapID = 2239,
             x = 0.5010,
             y = 0.5582
@@ -4089,7 +4116,7 @@ ns.Nodes = {
             y = 0.158
         },
         AMIRDRASSIL_DRUID = {
-            name = "Amirdrassil, Dragon Isles",
+            name = "Amirdrassil",
             mapID = 2239,
             x = 0.5834,
             y = 0.8477
@@ -4102,7 +4129,7 @@ ns.Nodes = {
             y = 0.549
         },
         WAKING_SHORES_DOCK = {
-            name = "The Waking Shores Dock",
+            name = "Alliance Dock",
             mapID = 2022,
             x = 0.8194,
             y = 0.3065
@@ -4481,44 +4508,44 @@ ns.Nodes = {
 
     KHAZ_ALGAR = {
         DORNOGAL_PORTAL_ROOM = {
-            name = "Dornogal",
+            name = "Portal Room",
             mapID = 2339,
             x = 0.4127,
             y = 0.2743
         },
         DORNOGAL_FLIGHT = {
-            name = "Dornogal",
+            name = "Flightmaster",
             category = "city",
             mapID = 2339,
             x = 0.4471,
             y = 0.5100
         },
         DORNOGAL_UNDERMINE_PORTAL = {
-            name = "Dornogal Undermine Portal",
+            name = "Undermine Portal",
             mapID = 2339,
             x = 0.523,
             y = 0.507
         },
         DORNOGAL_AZJKAHET_PORTAL = {
-            name = "Dornogal Azj-Kahet Portal",
+            name = "Azj-Kahet Portal",
             mapID = 2339,
             x = 0.636,
             y = 0.521
         },
         DORNOGAL_KARESH_PORTAL = {
-            name = "Dornogal Karesh Portal",
+            name = "Karesh Portal",
             mapID = 2339,
             x = 0.404,
             y = 0.404
         },
         DORNOGAL_DELVE_HALL = {
-            name = "Dornogal Delver's Office",
+            name = "Delver's Office",
             mapID = 2339,
             x = 0.4946,
             y = 0.4441
         },
         AZJKAHET = {
-            name = "Azj-Kahet",
+            name = "The Weaver's Lair",
             mapID = 2255,
             x = 0.574,
             y = 0.418
@@ -4745,13 +4772,13 @@ ns.Nodes = {
 
     UNDERMINE = {
         UNDERMINE = {
-            name = "Undermine",
+            name = "Dornogal Portal",
             mapID = 2346,
             x = 0.276,
             y = 0.538
         },
         UNDERMINE_ROCKET_LAUNCH = {
-            name = "Undermine Rocket Launch",
+            name = "Rocket Launch",
             mapID = 2346,
             x = 0.1892,
             y = 0.5099
@@ -4798,13 +4825,13 @@ ns.Nodes = {
 
     SL_ORIBOS = {
         ORIBOS = {
-            name = "Oribos",
+            name = "Entrance",
             mapID = 1670,
             x = 0.203,
             y = 0.503
         },
         ORIBOS_FLIGHT = {
-            name = "Oribos",
+            name = "Flightmaster",
             category = "city",
             mapID = 1671,
             x = 0.607,
@@ -4819,14 +4846,14 @@ ns.Nodes = {
     },
     SL_MALDRAXXUS = {
         MALDRAXXUS_MOLE = {
-            name = "Maldraxxus (Valley of a Thousand Legs)",
+            name = "Valley of a Thousand Legs",
             faction = "ALLIANCE",
             mapID = 1536,
             x = 0.535,
             y = 0.598
         },
         MALDRAXXUS_WORMHOLE = {
-            name = "Maldraxxus, Citadel of the Necrolords",
+            name = "Citadel of the Necrolords",
             mapID = 1536,
             x = 0.4244,
             y = 0.4399
@@ -4891,14 +4918,14 @@ ns.Nodes = {
     },
     SL_BASTION = {
         BASTION_MOLE = {
-            name = "Bastion (The Eternal Forge)",
+            name = "The Eternal Forge",
             faction = "ALLIANCE",
             mapID = 1533,
             x = 0.518,
             y = 0.132
         },
         BASTION_WORMHOLE = {
-            name = "Bastion, Home of the Kyrian",
+            name = "Home of the Kyrian",
             mapID = 1533,
             x = 0.5186,
             y = 0.8776
@@ -4953,14 +4980,14 @@ ns.Nodes = {
     },
     SL_REVENDRETH = {
         REVENDRETH_MOLE = {
-            name = "Revendreth (Scorched Crypt)",
+            name = "Scorched Crypt",
             faction = "ALLIANCE",
             mapID = 1525,
             x = 0.199,
             y = 0.388
         },
         REVENDRETH_WORMHOLE = {
-            name = "Revendreth, Court of the Venthyr",
+            name = "Court of the Venthyr",
             mapID = 1525,
             x = 0.3750,
             y = 0.7655
@@ -5053,14 +5080,14 @@ ns.Nodes = {
     },
     SL_ARDENWEALD = {
         ARDENWEALD_MOLE = {
-            name = "Ardenweald (Soryn's Meadow)",
+            name = "Soryn's Meadow",
             faction = "ALLIANCE",
             mapID = 1565,
             x = 0.665,
             y = 0.505
         },
         ARDENWEALD_WORMHOLE = {
-            name = "Ardenweald, Forest of the Night Fae",
+            name = "Forest of the Night Fae",
             mapID = 1565,
             x = 0.5443,
             y = 0.6033
@@ -5127,7 +5154,7 @@ ns.Nodes = {
     },
     SL_ZM = {
         ZERETH_MORTIS = {
-            name = "Zereth Mortis",
+            name = "Entrance Portal",
             mapID = 1970,
             x = 0.333,
             y = 0.694
@@ -5185,19 +5212,19 @@ ns.Nodes = {
     },
     SL_THE_MAW = {
         KORTHIA = {
-            name = "Korthia",
+            name = "Entrance Portal",
             mapID = 1961,
             x = 0.644,
             y = 0.241
         },
         THE_MAW = {
-            name = "The Maw",
+            name = "Entrance",
             mapID = 1543,
             x = 0.450,
             y = 0.410
         },
         THE_MAW_WORMHOLE = {
-            name = "The Maw, Wasteland of the Damned",
+            name = "Wasteland of the Damned",
             mapID = 1543,
             x = 0.2246,
             y = 0.2816
@@ -5252,7 +5279,7 @@ ns.Nodes = {
     -- Special Zones
     TIMELESS_ISLE = {
         TIMELESS_ISLE = {
-            name = "Timeless Isle",
+            name = "The Celestial Court",
             mapID = 554,
             x = 0.342,
             y = 0.553
@@ -5298,7 +5325,7 @@ ns.Nodes = {
 
     QUELDANAS = {
         QUELDANAS = {
-            name = "Isle of Quel'Danas",
+            name = "Entrance Portal",
             mapID = 122,
             x = 0.500,
             y = 0.366
@@ -5329,14 +5356,14 @@ ns.Nodes = {
 
     NAZJATAR = {
         NAZJATAR_ALLIANCE = {
-            name = "Nazjatar",
+            name = "Mezzamere",
             faction = "ALLIANCE",
             mapID = 1355,
             x = 0.3996,
             y = 0.5884
         },
         NAZJATAR_HORDE = {
-            name = "Nazjatar",
+            name = "Newhome",
             faction = "HORDE",
             mapID = 1355,
             x = 0.4719,
@@ -5444,7 +5471,7 @@ ns.Nodes = {
 
     KUL_TIRAS = {
         BORALUS = {
-            name = "Boralus",
+            name = "Portal Room",
             category = "city",
             faction = "ALLIANCE",
             mapID = 1161,
@@ -5452,33 +5479,33 @@ ns.Nodes = {
             y = 0.170
         },
         BORALUS_PET = {
-            name = "Boralus Pet Shop",
+            name = "Pet Shop",
             faction = "ALLIANCE",
             mapID = 1161,
             x = 0.5002,
             y = 0.4677
         },
         BORALUS_DOCK = {
-            name = "Boralus Dock",
+            name = "Dock",
             mapID = 1161,
             x = 0.6805,
             y = 0.2651
         },
         TORTOLLAN_BASE_CAMP = {
-            name = "Stormsong Valley",
+            name = "Seekers Vista",
             mapID = 942,
             x = 0.403,
             y = 0.365
         },
         TIRAGARDE_SOUND_MOLE = {
-            name = "Tiragarde Sound (Wailing Tideways)",
+            name = "Wailing Tideways",
             faction = "ALLIANCE",
             mapID = 895,
             x = 0.882,
             y = 0.715
         },
         STORMSONG_VALLEY_MOLE = {
-            name = "Stormsong Valley (Tidebreak Summit)",
+            name = "Tidebreak Summit",
             faction = "ALLIANCE",
             mapID = 942,
             x = 0.642,
@@ -5876,7 +5903,7 @@ ns.Nodes = {
 
     MECHAGON = {
         MECHAGON = {
-            name = "Mechagon Island",
+            name = "Rustbolt",
             mapID = 1462,
             x = 0.739,
             y = 0.365
@@ -5906,14 +5933,14 @@ ns.Nodes = {
 
     TOL_DAGOR = {
         TOL_DAGOR_FLIGHT_ALLIANCE = {
-            name = "Tol Dagor",
+            name = "Tol Dagor Flightmaster",
             faction = "ALLIANCE",
             mapID = 974,
             x = 0.3744,
             y = 0.9210
         },
         TOL_DAGOR_FLIGHT_HORDE = {
-            name = "Tol Dagor",
+            name = "Tol Dagor Flightmaster",
             faction = "HORDE",
             mapID = 974,
             x = 0.2296,
@@ -5931,7 +5958,7 @@ ns.Nodes = {
 
     QUELTHALAS = {
         SILVERMOON = {
-            name = "Silvermoon City",
+            name = "Orgrimmar Portal",
             category = "city",
             faction = "HORDE",
             mapID = 110,
@@ -5946,7 +5973,7 @@ ns.Nodes = {
         },
         -- Silvermoon City (QUELTHALAS)
         SILVERMOON_CITY_FLIGHT = {
-            name = "Silvermoon City",
+            name = "Flightmaster",
             faction = "HORDE",
             mapID = 110,
             x = 0.6275,
@@ -5984,7 +6011,7 @@ ns.Nodes = {
 
     DRAENOR = {
         LUNARFALL = {
-            name = "Lunarfall, Shadowmoon Valley",
+            name = "Lunarfall",
             faction = "ALLIANCE",
             mapID = 582,
             x = 0.299,
@@ -5998,7 +6025,7 @@ ns.Nodes = {
             y = 0.112
         },
         LUNARFALL_GARRISON_FLIGHT = {
-            name = "Lunarfall",
+            name = "Lunarfall Flightmaster",
             category = "city",
             faction = "ALLIANCE",
             mapID = 582,
@@ -6006,7 +6033,7 @@ ns.Nodes = {
             y = 0.339
         },
         FROSTWALL = {
-            name = "Frostwall, Frostfire Ridge",
+            name = "Frostwall",
             faction = "HORDE",
             mapID = 525,
             x = 0.4792,
@@ -6020,7 +6047,7 @@ ns.Nodes = {
             y = 0.7356
         },
         STORMSHIELD_ASHRAN = {
-            name = "Stormshield, Ashran",
+            name = "Stormshield",
             faction = "ALLIANCE",
             mapID = 622,
             x = 0.615,
@@ -6028,21 +6055,21 @@ ns.Nodes = {
         },
         -- Ashran (DRAENOR)
         STORMSHIELD_ALLIANCE_FLIGHT = {
-            name = "Stormshield (Alliance)",
+            name = "Stormshield Flightmaster",
             faction = "ALLIANCE",
             mapID = 622,
             x = 0.3076,
             y = 0.4862
         },
         WARSPEAR_ASHRAN = {
-            name = "Warspear, Ashran",
+            name = "Warspear",
             faction = "HORDE",
             mapID = 624,
             x = 0.5884,
             y = 0.5135
         },
         WARSPEAR_ASHRAN_FLIGHT = {
-            name = "Warspear (Horde)",
+            name = "Warspear Flightmaster",
             faction = "HORDE",
             mapID = 624,
             x = 0.4420,
@@ -6639,7 +6666,7 @@ ns.Nodes = {
 
     ZANDALAR = {
         DAZARALOR_PORTAL_ROOM = {
-            name = "Dazar'alor",
+            name = "Portal Room",
             category = "city",
             faction = "HORDE",
             mapID = 1165,
@@ -6647,14 +6674,14 @@ ns.Nodes = {
             y = 0.7433
         },
         ZULDAZAR_MOLE = {
-            name = "Zuldazar (Xibala Incursion)",
+            name = "Xibala Incursion",
             faction = "ALLIANCE",
             mapID = 862,
             x = 0.382,
             y = 0.724
         },
         DAZARALOR_PET = {
-            name = "Dazar'alor Pet Shop",
+            name = "Pet Shop",
             faction = "HORDE",
             mapID = 1165,
             x = 0.5633,
@@ -6668,7 +6695,7 @@ ns.Nodes = {
             y = 0.6480
         },
         NAZMIR_MOLE = {
-            name = "Nazmir (Zalamar Invasion)",
+            name = "Zalamar Invasion",
             faction = "ALLIANCE",
             mapID = 863,
             x = 0.344,
@@ -7131,13 +7158,13 @@ ns.Nodes = {
 
     KARESH = {
         KARESH = {
-            name = "Karesh",
+            name = "Tazavesh Entrance Portal",
             mapID = 2472,
             x = 0.597,
             y = 0.840
         },
         TAZAVESH_FLIGHT = {
-            name = "Tazavesh",
+            name = "Tazavesh Flightmaster",
             mapID = 2472,
             x = 0.6330,
             y = 0.6843
@@ -7205,13 +7232,13 @@ ns.Nodes = {
 
     DARKMOON_FAIRE = {
         DARKMOON_ENTRANCE = {
-            name = "Darkmoon Faire Entrance, Darkmoon Island",
+            name = "Entrance",
             mapID = 407,
             x = 0.5129,
             y = 0.2386
         },
         DARKMOON_DOCK_EXIT = {
-            name = "Darkmoon Faire Dock, Darkmoon Island",
+            name = "Dock",
             mapID = 407,
             x = 0.5056,
             y = 0.9055
@@ -7308,7 +7335,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "STORMWIND_PORTAL_ROOM",
-    to = "JADE_FOREST",
+    to = "PAWDON_VILLAGE_PORTAL",
     method = "portal",
     requirements = {
         faction = "Alliance"
@@ -7342,8 +7369,9 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, -- Stormwind Eastern Earthshrine → Cataclysm Zones
 {
     from = "EASTERN_EARTHSHRINE_SW",
-    to = "VASHJIR",
+    to = "DARKBREAK_COVE_PORTAL",
     method = "portal",
+    oneway = true,
     requirements = {
         faction = "Alliance",
         quest = 14482
@@ -7365,7 +7393,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "EASTERN_EARTHSHRINE_SW",
-    to = "DEEPHOLM",
+    to = "DEEPHOLM_STORMWIND_PORTAL",
     method = "portal",
     requirements = {
         faction = "Alliance"
@@ -7804,8 +7832,9 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
-    to = "VASHJIR",
+    to = "TENEBROUS_CAVERN_PORTAL",
     method = "portal",
+    oneway = true,
     requirements = {
         faction = "Horde",
         quest = 25924
@@ -7826,7 +7855,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "WESTERN_EARTHSHRINE_OG",
-    to = "DEEPHOLM",
+    to = "DEEPHOLM_ORGRIMMAR_PORTAL",
     method = "portal",
     requirements = {
         faction = "Horde"
@@ -8159,6 +8188,10 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "ZULAMAN_FLIGHT",
     method = "flight",
     cost = 215
+}, {
+    from = "TEMPLE_OF_EARTH_PORTAL",
+    to = "THERAZANES_THRONE_PORTAL",
+    method = "portal"
 }}
 
 -----------------------------------------------------------

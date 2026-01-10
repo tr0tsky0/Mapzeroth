@@ -215,7 +215,7 @@ local function BuildStepList(path, totalCost, previous, waypoint)
             table.insert(steps, {
                 num = #steps + 1,
                 method = prevInfo.method,
-                destination = node.name,
+                destination = node.displayName or node.name,
                 time = prevInfo.cost,
                 abilityName = prevInfo.abilityName,
                 destinationName = prevInfo.destinationName,
@@ -387,7 +387,7 @@ function addon:ListNodes()
     for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
         print(string.format("  %s:", traversalGroup))
         for nodeID, node in pairs(groupData) do
-            print(string.format("    - %s (id: %s)", node.name, node.id))
+            print(string.format("    - %s (id: %s)", node.displayName or node.name, node.id))
         end
     end
 end

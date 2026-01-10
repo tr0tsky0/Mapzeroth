@@ -232,7 +232,7 @@ local function CreateStepButton(parent, stepData, stepNum)
             -- Regular node - look it up
             local node = stepData.nodeID and addon.TravelGraph:GetNodeByID(stepData.nodeID)
             if node then
-                SetWaypoint(node.mapID, node.x, node.y, node.name, stepData.method)
+                SetWaypoint(node.mapID, node.x, node.y, node.displayName or node.name, stepData.method)
             else
                 print("[Mapzeroth] Error: Could not find node")
             end
