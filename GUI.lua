@@ -100,6 +100,23 @@ local function CreateCloseButton(parent)
 end
 
 -----------------------------------------------------------
+-- HELPER: APPLY WINDOW SCALE TO ALL FRAMES
+-----------------------------------------------------------
+
+function addon:ApplyWindowScale(scale)
+    if addon.MapzerothFrame then
+        addon.MapzerothFrame:SetScale(scale)
+    end
+    if addon.AboutFrame then
+        addon.AboutFrame:SetScale(scale)
+    end
+    -- Route execution frame is in RouteExecutionFrame.lua module
+    if addon.RouteExecutionFrame then
+        addon.RouteExecutionFrame:SetScale(scale)
+    end
+end
+
+-----------------------------------------------------------
 -- MAIN FRAME CREATION
 -----------------------------------------------------------
 
@@ -119,6 +136,10 @@ function addon:CreateGUI()
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
     frame:SetClampedToScreen(true)
+
+    -- Apply saved scale
+    local savedScale = MapzerothDB.settings.windowScale or 1.0
+    frame:SetScale(savedScale)
 
     -- Backdrop (flat dark material)
     frame:SetBackdrop({
@@ -295,6 +316,10 @@ function addon:CreateAboutFrame()
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
     frame:SetClampedToScreen(true)
+
+    -- Apply saved scale
+    local savedScale = MapzerothDB.settings.windowScale or 1.0
+    frame:SetScale(savedScale)
 
     -- Backdrop
     frame:SetBackdrop({

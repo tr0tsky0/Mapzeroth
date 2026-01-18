@@ -11,8 +11,9 @@ local function CreateSettingsPanel()
     MapzerothDB = MapzerothDB or {}
     MapzerothDB.settings = MapzerothDB.settings or {}
     MapzerothDB.minimap = MapzerothDB.minimap or {}
-    
+
     local initialTax = MapzerothDB.settings.loadingScreenTax or 15
+    local initialCooldown = MapzerothDB.settings.maxCooldownValue or 8
 
     -- Main panel frame
     local panel = CreateFrame("Frame")
@@ -76,14 +77,111 @@ local function CreateSettingsPanel()
     panel.taxSlider = taxSlider
 
     -----------------------------------------------------------
+    -- COOLDOWN MAX SLIDER
+    -----------------------------------------------------------
+
+    local cooldownSlider = CreateFrame("Slider", "MapzerothCooldownMaxSlider", panel, "OptionsSliderTemplate")
+    cooldownSlider:SetPoint("TOPLEFT", taxSlider, "BOTTOMLEFT", 4, -70)
+    cooldownSlider:SetMinMaxValues(1, 8)
+    cooldownSlider:SetValueStep(1)
+    cooldownSlider:SetObeyStepOnDrag(true)
+    cooldownSlider:SetWidth(300)
+
+    -- Slider label
+    _G[cooldownSlider:GetName() .. "Text"]:SetText("Max Usable Cooldown")
+
+    -- Low/High labels
+    _G[cooldownSlider:GetName() .. "Low"]:SetText("1h")
+    _G[cooldownSlider:GetName() .. "High"]:SetText("8h")
+
+    cooldownSlider:SetValue(initialCooldown)
+
+    -- Current value display
+    local cooldownValue = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    cooldownValue:SetPoint("TOP", cooldownSlider, "BOTTOM", 0, -4)
+    cooldownValue:SetText(initialCooldown .. " hours")
+    cooldownSlider.valueText = cooldownValue
+
+    -- Tooltip
+    local cooldownTooltip = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    cooldownTooltip:SetPoint("TOPLEFT", cooldownSlider, "BOTTOMLEFT", 0, -16)
+    cooldownTooltip:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
+    cooldownTooltip:SetJustifyH("LEFT")
+    cooldownTooltip:SetTextColor(0.7, 0.7, 0.7)
+    cooldownTooltip:SetText(
+        "Set the maximum cooldown length to be considered for routing. Any items or abilities with higher cooldown will be ignored")
+
+    -- Slider change handler
+    cooldownSlider:SetScript("OnValueChanged", function(self, value)
+        value = math.floor(value)
+        self.valueText:SetText(value .. " hours")
+
+        -- Update saved variable
+        MapzerothDB.settings.maxCooldownValue = value
+    end)
+
+    -- Initialize slider value
+    panel.cooldownSlider = cooldownSlider
+
+    -----------------------------------------------------------
+    -- WINDOW SCALE SLIDER
+    -----------------------------------------------------------
+
+    local scaleSlider = CreateFrame("Slider", "MapzerothScaleSlider", panel, "OptionsSliderTemplate")
+    scaleSlider:SetPoint("TOPLEFT", cooldownSlider, "BOTTOMLEFT", 4, -70)
+    scaleSlider:SetMinMaxValues(0.75, 1.5)
+    scaleSlider:SetValueStep(0.05)
+    scaleSlider:SetObeyStepOnDrag(true)
+    scaleSlider:SetWidth(300)
+
+    -- Slider label
+    _G[scaleSlider:GetName() .. "Text"]:SetText("Window Scale")
+
+    -- Low/High labels
+    _G[scaleSlider:GetName() .. "Low"]:SetText("75%")
+    _G[scaleSlider:GetName() .. "High"]:SetText("150%")
+
+    local initialScale = MapzerothDB.settings.windowScale or 1.0
+    scaleSlider:SetValue(initialScale)
+
+    -- Current value display
+    local scaleValue = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    scaleValue:SetPoint("TOP", scaleSlider, "BOTTOM", 0, -4)
+    scaleValue:SetText(math.floor(initialScale * 100) .. "%")
+    scaleSlider.valueText = scaleValue
+
+    -- Tooltip
+    local scaleTooltip = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    scaleTooltip:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 0, -16)
+    scaleTooltip:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
+    scaleTooltip:SetJustifyH("LEFT")
+    scaleTooltip:SetTextColor(0.7, 0.7, 0.7)
+    scaleTooltip:SetText("Adjust the size of all Mapzeroth windows. Changes take effect immediately.")
+
+    -- Slider change handler
+    scaleSlider:SetScript("OnValueChanged", function(self, value)
+        value = tonumber(string.format("%.2f", value)) -- Round to 2 decimals
+        self.valueText:SetText(math.floor(value * 100) .. "%")
+
+        -- Update saved variable
+        MapzerothDB.settings.windowScale = value
+
+        -- Apply immediately to all frames
+        addon:ApplyWindowScale(value)
+    end)
+
+    -- Store reference
+    panel.scaleSlider = scaleSlider
+
+    -----------------------------------------------------------
     -- MINIMAP BUTTON CHECKBOX
     -----------------------------------------------------------
 
     local minimapCheckbox = CreateFrame("CheckButton", "MapzerothMinimapCheckbox", panel,
         "InterfaceOptionsCheckButtonTemplate")
-        minimapCheckbox:SetPoint("TOPLEFT", taxSlider, "BOTTOMLEFT", 0, -40)
-        _G[minimapCheckbox:GetName() .. "Text"]:SetText("Show Minimap Button")
-        minimapCheckbox:SetChecked(not MapzerothDB.minimap.hide)
+    minimapCheckbox:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 0, -50)
+    _G[minimapCheckbox:GetName() .. "Text"]:SetText("Show Minimap Button")
+    minimapCheckbox:SetChecked(not MapzerothDB.minimap.hide)
 
     minimapCheckbox:SetScript("OnClick", function(self)
         local show = self:GetChecked()
@@ -108,6 +206,14 @@ local function CreateSettingsPanel()
         taxSlider:SetValue(tax)
         taxValue:SetText(tax .. " seconds")
 
+        local cooldown = MapzerothDB.settings.maxCooldownValue or 8
+        cooldownSlider:SetValue(cooldown)
+        cooldownValue:SetText(cooldown .. " hours")
+
+        local scale = MapzerothDB.settings.windowScale or 1.0
+        scaleSlider:SetValue(scale)
+        scaleValue:SetText(math.floor(scale * 100) .. "%")
+
         -- Minimap button
         local minimapShown = not (MapzerothDB.minimap and MapzerothDB.minimap.hide)
         minimapCheckbox:SetChecked(minimapShown)
@@ -120,10 +226,15 @@ local function CreateSettingsPanel()
     panel.default = function()
         -- Reset GUI to defaults
         taxSlider:SetValue(10)
+        cooldownSlider:SetValue(8)
+        scaleSlider:SetValue(1.0)
         minimapCheckbox:SetChecked(true)
 
         -- Apply defaults
         MapzerothDB.settings.loadingScreenTax = 10
+        MapzerothDB.settings.maxCooldownValue = 8
+        MapzerothDB.settings.windowScale = 1.0
+        addon:ApplyWindowScale(1.0)
         addon:ShowMinimapButton()
 
         print("[Mapzeroth] Settings reset to defaults")

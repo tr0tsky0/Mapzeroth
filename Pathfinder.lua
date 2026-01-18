@@ -107,19 +107,19 @@ local function findNodeInHierarchy(hierarchicalGraph, nodeIdentifier)
             return groupData[nodeIdentifier], nodeIdentifier
         end
     end
-    
+
     -- Slow path: search by name (case-insensitive)
     local searchName = nodeIdentifier:lower()
     for traversalGroup, groupData in pairs(hierarchicalGraph.nodes) do
         if groupData then
             for nodeID, nodeData in pairs(groupData) do
                 if nodeData.name and nodeData.name:lower() == searchName then
-                    return nodeData, nodeID  -- Return both!
+                    return nodeData, nodeID -- Return both!
                 end
             end
         end
     end
-    
+
     return nil, nil
 end
 
@@ -337,13 +337,13 @@ function addon:OptimizeConsecutiveMovement(steps)
     if not steps or #steps == 0 then
         return steps
     end
-    
+
     local optimized = {}
     local i = 1
-    
+
     while i <= #steps do
         local step = steps[i]
-        
+
         -- Check if this is a collapsible movement step
         if step.method == "walk" or step.method == "fly" then
             -- Find end of consecutive same-method chain
@@ -351,17 +351,17 @@ function addon:OptimizeConsecutiveMovement(steps)
             while chainEnd < #steps and steps[chainEnd + 1].method == step.method do
                 chainEnd = chainEnd + 1
             end
-            
+
             if chainEnd > i then
                 -- We have a chain of 2+ steps, try to collapse it
                 local startStep = steps[i]
                 local endStep = steps[chainEnd]
-                
+
                 -- Get start node
                 local startNode = addon:GetTravelNode(startStep.nodeID)
                 local canOptimize = false
                 local directTime, endNodeID, collapsedStep
-                
+
                 if startNode then
                     -- Get end node (either regular node or waypoint)
                     if endStep.nodeID == "_WAYPOINT_DESTINATION" then
@@ -373,27 +373,19 @@ function addon:OptimizeConsecutiveMovement(steps)
                             x = endStep.waypointData.x,
                             y = endStep.waypointData.y
                         }
-                        directTime = addon:GetTravelTime(
-                            startNode.id,
-                            waypointNode,
-                            step.method
-                        )
+                        directTime = addon:GetTravelTime(startNode.id, waypointNode, step.method)
                         canOptimize = (directTime ~= nil)
                     else
                         -- Regular node
                         endNodeID = endStep.nodeID
                         local endNode = addon:GetTravelNode(endNodeID)
                         if endNode then
-                            directTime = addon:GetTravelTime(
-                                startNode.id,
-                                endNode.id,
-                                step.method
-                            )
+                            directTime = addon:GetTravelTime(startNode.id, endNode.id, step.method)
                             canOptimize = (directTime ~= nil)
                         end
                     end
                 end
-                
+
                 if canOptimize then
                     -- Create collapsed step
                     collapsedStep = {
@@ -404,12 +396,12 @@ function addon:OptimizeConsecutiveMovement(steps)
                         nodeID = endNodeID,
                         collapsedFrom = chainEnd - i + 1
                     }
-                    
+
                     -- Preserve waypoint data if this is a waypoint destination
                     if endStep.waypointData then
                         collapsedStep.waypointData = endStep.waypointData
                     end
-                    
+
                     table.insert(optimized, collapsedStep)
                 else
                     -- Can't optimize, keep original chain
@@ -418,7 +410,7 @@ function addon:OptimizeConsecutiveMovement(steps)
                         table.insert(optimized, steps[j])
                     end
                 end
-                
+
                 i = chainEnd + 1
             else
                 -- Single step, keep as-is
@@ -433,7 +425,7 @@ function addon:OptimizeConsecutiveMovement(steps)
             i = i + 1
         end
     end
-    
+
     return optimized
 end
 
@@ -450,6 +442,10 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
         edges = {}
     }
     local VIRTUAL_START = "_PLAYER_POSITION"
+    
+    -- maxCooldownValue is in hours, multiply by 3600 for seconds
+    local maxCooldownSeconds = MapzerothDB.settings.maxCooldownValue * 3600
+    local acceptableCooldown = false
 
     synthetic.nodes[VIRTUAL_START] = true
 
@@ -471,6 +467,8 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
 
     if playerAbilities then
         for _, ability in ipairs(playerAbilities) do
+            acceptableCooldown = not ability.cooldown or ability.cooldown <= maxCooldownSeconds
+
             if ability.isHearthstone and ability.hearthstone then
                 local cost = ability.castTime
 
@@ -479,18 +477,20 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
                     cost = cost - (ability.cooldown / 100000)
                 end
 
-                table.insert(coordDestinations, {
-                    nodeID = "_HEARTHSTONE_DESTINATION",
-                    coords = ability.hearthstone,
-                    method = "hearthstone",
-                    fromPlayer = true,
-                    cost = cost,
-                    abilityName = ability.name,
-                    itemID = ability.itemID,
-                    itemType = ability.type
-                })
+                if acceptableCooldown then
+                    table.insert(coordDestinations, {
+                        nodeID = "_HEARTHSTONE_DESTINATION",
+                        coords = ability.hearthstone,
+                        method = "hearthstone",
+                        fromPlayer = true,
+                        cost = cost,
+                        abilityName = ability.name,
+                        itemID = ability.itemID,
+                        itemType = ability.type
+                    })
+                end
 
-            -- Multi-destination teleports
+                -- Multi-destination teleports
             elseif ability.destinations then
                 for _, dest in ipairs(ability.destinations) do
                     local destNode = self:GetTravelNode(dest)
@@ -502,22 +502,24 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
                             cost = cost + (ability.cooldown / 100000)
                         end
 
-                        table.insert(synthetic.edges, {
-                            from = VIRTUAL_START,
-                            to = dest,
-                            method = "teleport",
-                            cost = cost,
-                            abilityName = ability.name,
-                            destinationName = destNode.name,
-                            isSynthetic = true,
-                            itemID = ability.itemID,
-                            itemType = ability.type,
-                            spellID = ability.spellID
-                        })
+                        if acceptableCooldown then
+                            table.insert(synthetic.edges, {
+                                from = VIRTUAL_START,
+                                to = dest,
+                                method = "teleport",
+                                cost = cost,
+                                abilityName = ability.name,
+                                destinationName = destNode.name,
+                                isSynthetic = true,
+                                itemID = ability.itemID,
+                                itemType = ability.type,
+                                spellID = ability.spellID
+                            })
+                        end
                     end
                 end
 
-            -- Single-destination teleports
+                -- Single-destination teleports
             elseif ability.destination then
                 if self:GetTravelNode(ability.destination) then
                     local cost = ability.castTime
@@ -527,17 +529,19 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
                         cost = cost - (ability.cooldown / 100000)
                     end
 
-                    table.insert(synthetic.edges, {
-                        from = VIRTUAL_START,
-                        to = ability.destination,
-                        method = "teleport",
-                        cost = cost,
-                        abilityName = ability.name,
-                        isSynthetic = true,
-                        itemID = ability.itemID,
-                        itemType = ability.type,
-                        spellID = ability.spellID
-                    })
+                    if acceptableCooldown then
+                        table.insert(synthetic.edges, {
+                            from = VIRTUAL_START,
+                            to = ability.destination,
+                            method = "teleport",
+                            cost = cost,
+                            abilityName = ability.name,
+                            isSynthetic = true,
+                            itemID = ability.itemID,
+                            itemType = ability.type,
+                            spellID = ability.spellID
+                        })
+                    end
                 end
             end
         end
@@ -554,10 +558,10 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
     -- ADD WALKING/FLYING EDGES TO NEARBY NODES
     -----------------------------------------------------------
     -- Only if we have a valid player location (nil in instances)
-    
+
     if playerLocation then
         local MAX_PLAYER_RANGE = 2.0
-        
+
         for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
             for nodeID, node in pairs(groupData) do
                 if node.mapID == playerLocation.mapID and node.x and node.y then

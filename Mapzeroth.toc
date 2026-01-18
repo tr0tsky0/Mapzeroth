@@ -1,8 +1,8 @@
-## Interface: 110207
+## Interface: 120000
 ## Title: Mapzeroth
 ## Notes: Google Maps for Azeroth - Intelligent travel routing addon
 ## Author: tr0tsky
-## Version: 1.2.5
+## Version: 1.3
 ## SavedVariables: MapzerothDB
 ## IconTexture: Interface\AddOns\Mapzeroth\Mapzeroth_Logo
 

@@ -19,7 +19,6 @@ local COLOURS = {
     cardBg = {0.1, 0.1, 0.1, 0.8}
 }
 
-local executionFrame = nil
 local stepButtons = {}
 
 -----------------------------------------------------------
@@ -102,8 +101,8 @@ end
 -----------------------------------------------------------
 
 local function CreateExecutionFrame()
-    if executionFrame then
-        return executionFrame
+    if addon.RouteExecutionFrame then
+        return addon.RouteExecutionFrame
     end
 
     local frame = CreateFrame("Frame", "MapzerothRouteExecutionFrame", UIParent, "BackdropTemplate")
@@ -182,7 +181,11 @@ local function CreateExecutionFrame()
     container:SetClipsChildren(true)
     frame.container = container
     
-    executionFrame = frame
+    -- Apply saved scale
+    local savedScale = MapzerothDB.settings.windowScale or 1.0
+    frame:SetScale(savedScale)
+    
+    addon.RouteExecutionFrame = frame
     return frame
 end
 
@@ -397,7 +400,7 @@ end
 -----------------------------------------------------------
 
 function addon:HideRouteExecutionFrame()
-    if executionFrame then
-        executionFrame:Hide()
+    if addon.RouteExecutionFrame then
+        addon.RouteExecutionFrame:Hide()
     end
 end

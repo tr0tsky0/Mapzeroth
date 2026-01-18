@@ -392,7 +392,7 @@ addon.TravelItems = {
         type = "inventory_item",
         castTime = 5,
         cooldown = 300,
-        destination = "MALDRAXXUS"
+        destination = "MALDRAXXUS_POCKET_PORTAL"
     },
 
     ATTENDANTS_POCKET_PORTAL_ARDENWEALD = {
@@ -402,7 +402,7 @@ addon.TravelItems = {
         type = "inventory_item",
         castTime = 5,
         cooldown = 300,
-        destination = "ARDENWEALD"
+        destination = "ARDENWEALD_POCKET_PORTAL"
     },
 
     ATTENDANTS_POCKET_PORTAL_BASTION = {
@@ -412,7 +412,7 @@ addon.TravelItems = {
         type = "inventory_item",
         castTime = 5,
         cooldown = 300,
-        destination = "BASTION"
+        destination = "BASTION_POCKET_PORTAL"
     },
 
     ATTENDANTS_POCKET_PORTAL_ORIBOS = {
@@ -432,7 +432,7 @@ addon.TravelItems = {
         type = "inventory_item",
         castTime = 5,
         cooldown = 300,
-        destination = "REVENDRETH"
+        destination = "REVENDRETH_POCKET_PORTAL"
     },
 }
 

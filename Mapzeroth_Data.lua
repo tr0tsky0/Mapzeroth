@@ -4116,7 +4116,7 @@ ns.Nodes = {
             y = 0.158
         },
         AMIRDRASSIL_DRUID = {
-            name = "Amirdrassil",
+            name = "Amirdrassil, Dragon Isles",
             mapID = 2239,
             x = 0.5834,
             y = 0.8477
@@ -4858,6 +4858,12 @@ ns.Nodes = {
             x = 0.4244,
             y = 0.4399
         },
+        MALDRAXXUS_POCKET_PORTAL = {
+            name = "Theater of Pain",
+            mapID = 1536,
+            x = 0.520,
+            y = 0.540
+        },
         THEATER_OF_PAIN_FLIGHT = {
             name = "Theater of Pain",
             mapID = 1536,
@@ -4930,6 +4936,12 @@ ns.Nodes = {
             x = 0.5186,
             y = 0.8776
         },
+        BASTION_POCKET_PORTAL = {
+            name = "Temple of Courage",
+            mapID = 1533,
+            x = 0.420,
+            y = 0.480
+        },
         -- Bastion (SL_BASTION)
         ELYSIAN_HOLD_FLIGHT = {
             name = "Elysian Hold",
@@ -4991,6 +5003,12 @@ ns.Nodes = {
             mapID = 1525,
             x = 0.3750,
             y = 0.7655
+        },
+        REVENDRETH_POCKET_PORTAL = {
+            name = "Castle Nathria",
+            mapID = 1525,
+            x = 0.570,
+            y = 0.510
         },
         -- Revendreth (SL_REVENDRETH)
         SINFALL_FLIGHT = {
@@ -5091,6 +5109,12 @@ ns.Nodes = {
             mapID = 1565,
             x = 0.5443,
             y = 0.6033
+        },
+        ARDENWEALD_POCKET_PORTAL = {
+            name = "Heart of the Forest",
+            mapID = 1565,
+            x = 0.480,
+            y = 0.480
         },
         -- Ardenweald (SL_ARDENWEALD)
         HEART_OF_THE_FOREST_FLIGHT = {
