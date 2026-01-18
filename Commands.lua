@@ -200,6 +200,11 @@ local function BuildStepList(path, totalCost, previous, waypoint)
         local node = addon:GetTravelNode(nodeID)
         local prevInfo = previous[nodeID]
 
+        if addon.DEBUG and prevInfo then
+            print(string.format("[Mapzeroth] Step %d: %s <- %s (method=%s, cost=%.0f)", i, nodeID,
+                prevInfo.fromNode or "?", prevInfo.method, prevInfo.cost))
+        end
+
         if not prevInfo then
             -- Skip nodes without previous info (shouldn't happen)
             if addon.DEBUG then
@@ -326,7 +331,7 @@ function addon:FindRoute(destinationID)
     -- Output
     local steps = BuildStepList(path, cost, previous, waypoint)
     local optimizedSteps, optimizedCost = addon:OptimizeConsecutiveMovement(steps)
-    
+
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then
         addon:ShowRouteExecutionFrame(optimizedSteps, optimizedCost)
     else
@@ -438,49 +443,58 @@ function addon:VerifyNodeReferences()
     local missingNodes = {}
     local edgeCount = 0
     local errorCount = 0
-    
+
     -- Check base graph edges
     if self.Edges then
         for _, edge in ipairs(self.Edges) do
             edgeCount = edgeCount + 1
-            
+
             -- Check 'from' node
             if not self:GetTravelNode(edge.from) then
                 local key = edge.from
                 if not missingNodes[key] then
-                    missingNodes[key] = {count = 0, type = "edge"}
+                    missingNodes[key] = {
+                        count = 0,
+                        type = "edge"
+                    }
                 end
                 missingNodes[key].count = missingNodes[key].count + 1
                 errorCount = errorCount + 1
             end
-            
+
             -- Check 'to' node
             if not self:GetTravelNode(edge.to) then
                 local key = edge.to
                 if not missingNodes[key] then
-                    missingNodes[key] = {count = 0, type = "edge"}
+                    missingNodes[key] = {
+                        count = 0,
+                        type = "edge"
+                    }
                 end
                 missingNodes[key].count = missingNodes[key].count + 1
                 errorCount = errorCount + 1
             end
         end
     end
-    
+
     -- Helper to check destinations
     local function checkDestination(dest, sourceType)
         if dest and not self:GetTravelNode(dest) then
             if not missingNodes[dest] then
-                missingNodes[dest] = {count = 0, type = sourceType}
+                missingNodes[dest] = {
+                    count = 0,
+                    type = sourceType
+                }
             end
             missingNodes[dest].count = missingNodes[dest].count + 1
             errorCount = errorCount + 1
         end
     end
-    
+
     local abilityCount = 0
-    
+
     -- Check ALL player abilities (not just available ones)
-    
+
     -- TravelItems (toys, hearthstones)
     if self.TravelItems then
         for _, item in pairs(self.TravelItems) do
@@ -493,7 +507,7 @@ function addon:VerifyNodeReferences()
             end
         end
     end
-    
+
     -- ClassTeleports
     if self.ClassTeleports then
         for _, spell in pairs(self.ClassTeleports) do
@@ -506,7 +520,7 @@ function addon:VerifyNodeReferences()
             end
         end
     end
-    
+
     -- RacialAbilities
     if self.RacialAbilities then
         for _, racial in pairs(self.RacialAbilities) do
@@ -519,7 +533,7 @@ function addon:VerifyNodeReferences()
             end
         end
     end
-    
+
     -- DungeonTeleports
     if self.DungeonTeleports then
         for _, teleport in pairs(self.DungeonTeleports) do
@@ -532,14 +546,20 @@ function addon:VerifyNodeReferences()
             end
         end
     end
-    
+
     -- Sort by count (most referenced first)
     local sortedMissing = {}
     for nodeID, data in pairs(missingNodes) do
-        table.insert(sortedMissing, {id = nodeID, count = data.count, type = data.type})
+        table.insert(sortedMissing, {
+            id = nodeID,
+            count = data.count,
+            type = data.type
+        })
     end
-    table.sort(sortedMissing, function(a, b) return a.count > b.count end)
-    
+    table.sort(sortedMissing, function(a, b)
+        return a.count > b.count
+    end)
+
     return {
         valid = (errorCount == 0),
         edgeCount = edgeCount,

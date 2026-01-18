@@ -380,13 +380,17 @@ function addon:OptimizeConsecutiveMovement(steps)
                         endNodeID = endStep.nodeID
                         local endNode = addon:GetTravelNode(endNodeID)
                         if endNode then
-                            directTime = addon:GetTravelTime(startNode.id, endNode.id, step.method)
+                            directTime = addon:GetTravelTime(startNode, endNode, step.method)
                             canOptimize = (directTime ~= nil)
                         end
                     end
                 end
 
                 if canOptimize then
+                    if addon.DEBUG then
+                        print(string.format("[Mapzeroth] Optimizing chain: %s -> %s, directTime=%.0fs", startNode.id,
+                            endNodeID, directTime))
+                    end
                     -- Create collapsed step
                     collapsedStep = {
                         num = #optimized + 1,

@@ -121,9 +121,9 @@ ns.Nodes = {
         -- Miscellaneous EK
         DARK_PORTAL_BL = {
             name = "The Dark Portal",
-            mapID = 1246,
-            x = 0.541,
-            y = 0.512
+            mapID = 17,
+            x = 0.5489,
+            y = 0.5011
         },
         SHATTERED_LANDING_FLIGHT = {
             name = "Shattered Landing",
