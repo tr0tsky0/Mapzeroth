@@ -367,13 +367,7 @@ function addon:OptimizeConsecutiveMovement(steps)
                     if endStep.nodeID == "_WAYPOINT_DESTINATION" then
                         -- Waypoint destination - create temporary node-like structure
                         endNodeID = "_WAYPOINT_DESTINATION"
-                        local waypointNode = {
-                            id = "_WAYPOINT_DESTINATION",
-                            mapID = endStep.waypointData.mapID,
-                            x = endStep.waypointData.x,
-                            y = endStep.waypointData.y
-                        }
-                        directTime = addon:GetTravelTime(startNode.id, waypointNode, step.method)
+                        directTime = addon:GetTravelTime(startNode, endStep.waypointData, step.method)
                         canOptimize = (directTime ~= nil)
                     else
                         -- Regular node
@@ -561,7 +555,48 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
     for _, dest in ipairs(coordDestinations) do
         synthetic.nodes[dest.nodeID] = true
 
-        -- ... (rest of coordinate destination handling - keep as-is)
+        if dest.fromPlayer then
+            -- Player → coordinate destination (hearthstone)
+            table.insert(synthetic.edges, {
+                from = VIRTUAL_START,
+                to = dest.nodeID,
+                method = dest.method,
+                cost = dest.cost,
+                abilityName = dest.abilityName,
+                isSynthetic = true,
+                itemType = dest.type
+            })
+        end
+
+        -- Coordinate destination → nearby nodes (both directions)
+        for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
+            for nodeID, node in pairs(groupData) do
+                local travelTime, travelMethod = self:CalculateTravelToCoords(node, dest.coords.mapID, dest.coords.x,
+                    dest.coords.y)
+
+                if travelTime then
+                    if dest.fromPlayer then
+                        -- Hearthstone: edges FROM destination TO nodes
+                        table.insert(synthetic.edges, {
+                            from = dest.nodeID,
+                            to = nodeID,
+                            method = travelMethod,
+                            cost = travelTime,
+                            isSynthetic = true
+                        })
+                    else
+                        -- Waypoint: edges FROM nodes TO destination
+                        table.insert(synthetic.edges, {
+                            from = nodeID,
+                            to = dest.nodeID,
+                            method = travelMethod,
+                            cost = travelTime,
+                            isSynthetic = true
+                        })
+                    end
+                end
+            end
+        end
     end
 
     -----------------------------------------------------------
