@@ -160,7 +160,7 @@ local function CreateSettingsPanel()
 
     -- Slider change handler
     scaleSlider:SetScript("OnValueChanged", function(self, value)
-        value = tonumber(string.format("%.2f", value)) -- Round to 2 decimals
+        value = tonumber(string.format("%.2f", value))
         self.valueText:SetText(math.floor(value * 100) .. "%")
 
         -- Update saved variable
@@ -244,13 +244,12 @@ local function CreateSettingsPanel()
 end
 
 -----------------------------------------------------------
--- INITIALIZE SETTINGS PANEL (Modern API)
+-- INITIALIZE SETTINGS PANEL
 -----------------------------------------------------------
 
 function addon:InitializeSettingsPanel()
     local panel = CreateSettingsPanel()
 
-    -- Use new Settings API (10.0+)
     local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
     Settings.RegisterAddOnCategory(category)
 
@@ -264,7 +263,7 @@ function addon:InitializeSettingsPanel()
 end
 
 -----------------------------------------------------------
--- OPEN SETTINGS PANEL (Modern API)
+-- OPEN SETTINGS PANEL
 -----------------------------------------------------------
 
 function addon:OpenSettings()

@@ -17,6 +17,17 @@ frame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_LOGIN" then
         print("[Mapzeroth] Loaded successfully! Type /mapzeroth help for commands.")
 
+        -- Initialize SavedVariables structure if it doesn't exist
+        if not MapzerothDB then
+            MapzerothDB = {}
+        end
+        if not MapzerothDB.settings then
+            MapzerothDB.settings = {}
+        end
+        if not MapzerothDB.minimap then
+            MapzerothDB.minimap = {}
+        end
+
         -- Set defaults for any missing settings values
         if MapzerothDB.settings.loadingScreenTax == nil then
             MapzerothDB.settings.loadingScreenTax = 15

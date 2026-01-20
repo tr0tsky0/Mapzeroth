@@ -114,7 +114,7 @@ local function findNodeInHierarchy(hierarchicalGraph, nodeIdentifier)
         if groupData then
             for nodeID, nodeData in pairs(groupData) do
                 if nodeData.name and nodeData.name:lower() == searchName then
-                    return nodeData, nodeID -- Return both!
+                    return nodeData, nodeID
                 end
             end
         end
@@ -127,7 +127,6 @@ end
 -- BUILD AUGMENTED GRAPH WITH SYNTHETIC EDGES
 -----------------------------------------------------------
 -- This keeps the hierarchy intact and just adds synthetic edges.
--- We create a new graph object with .nodes property that holds the hierarchy.
 -- Synthetic edges get attached to their source nodes.
 
 local function buildAugmentedGraph(baseGraph, syntheticEdges)
@@ -139,7 +138,7 @@ local function buildAugmentedGraph(baseGraph, syntheticEdges)
     for traversalGroup, groupData in pairs(baseGraph.nodes) do
         augmented.nodes[traversalGroup] = {}
         for nodeID, node in pairs(groupData) do
-            -- Shallow copy the node so we don't mutate the original
+            -- Shallow copy the node to preserve the original
             local nodeCopy = {
                 id = node.id,
                 name = node.name,
@@ -148,7 +147,7 @@ local function buildAugmentedGraph(baseGraph, syntheticEdges)
                 mapID = node.mapID,
                 x = node.x,
                 y = node.y,
-                edges = {} -- Fresh edge list
+                edges = {}
             }
 
             -- Copy all existing edges from the original
@@ -353,7 +352,7 @@ function addon:OptimizeConsecutiveMovement(steps)
             end
 
             if chainEnd > i then
-                -- We have a chain of 2+ steps, try to collapse it
+                -- Try to collapse it
                 local startStep = steps[i]
                 local endStep = steps[chainEnd]
 
@@ -365,7 +364,7 @@ function addon:OptimizeConsecutiveMovement(steps)
                 if startNode then
                     -- Get end node (either regular node or waypoint)
                     if endStep.nodeID == "_WAYPOINT_DESTINATION" then
-                        -- Waypoint destination - create temporary node-like structure
+                        -- Waypoint destination
                         endNodeID = "_WAYPOINT_DESTINATION"
                         directTime = addon:GetTravelTime(startNode, endStep.waypointData, step.method)
                         canOptimize = (directTime ~= nil)
@@ -501,9 +500,9 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
                     if destNode then
                         local cost = ability.castTime
 
-                        -- Prefer shorter cooldowns
+                        -- Prefer longer cooldowns
                         if ability.cooldown and ability.cooldown > 0 then
-                            cost = cost + (ability.cooldown / 100000)
+                            cost = cost - (ability.cooldown / 100000)
                         end
 
                         if acceptableCooldown then
@@ -602,7 +601,7 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
     -----------------------------------------------------------
     -- ADD WALKING/FLYING EDGES TO NEARBY NODES
     -----------------------------------------------------------
-    -- Only if we have a valid player location (nil in instances)
+    -- Only if valid player location (nil in instances)
 
     if playerLocation then
         local MAX_PLAYER_RANGE = 2.0

@@ -243,7 +243,6 @@ local function injectAutoTraversalEdges(graph)
                 if not edgeExists(n1, n2.id) and not edgeExists(n2, n1.id) then
                     local distance = calculateDistance(n1, n2)
                     if distance and distance <= MAX_AUTO_EDGE_DISTANCE then
-                        -- NEW: Determine correct method based on no-fly zones
                         local method = "fly"
                         if NO_FLY_MAPS[n1.mapID] or NO_FLY_MAPS[n2.mapID] then
                             method = "walk"

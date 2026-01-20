@@ -83,13 +83,13 @@ function addon:GetActiveWaypoint()
             end
 
         elseif pinType == Enum.SuperTrackingMapPinType.QuestOffer then
-            -- Quest POIs - probably ignore these for routing
+            -- Quest POIs - ignore for now
 
         elseif pinType == Enum.SuperTrackingMapPinType.DigSite then
-            -- Archaeology - similar to quests, probably skip
+            -- Archaeology - ignore for now
 
         elseif pinType == Enum.SuperTrackingMapPinType.HousingPlot then
-            -- Housing PLots - probably unnecessary
+            -- Housing PLots - ignore for now
         end
     end
 
@@ -172,7 +172,7 @@ function addon:CalculateTravelToCoords(fromNode, toMapID, toX, toY)
     if fromNode.traversalGroup then
         local toTraversalGroup = addon.GetTraversalGroupForMap(toMapID)
         if toTraversalGroup and fromNode.traversalGroup ~= toTraversalGroup then
-            return nil -- Different traversal groups, no route
+            return nil
         end
     end
 
@@ -185,7 +185,7 @@ function addon:CalculateTravelToCoords(fromNode, toMapID, toX, toY)
         if toTraversalGroup and fromNode.traversalGroup == toTraversalGroup then
             return 45, "fly"
         end
-        return nil -- Can't route at all
+        return nil
     end
 
     -- Calculate time based on distance

@@ -46,7 +46,7 @@ function addon:UpdateHearthstoneLocation()
         return
     end
 
-    -- Get current player location (should be at the inn)
+    -- Get current player location
     local location, err = self:GetPlayerLocation()
 
     if not location then
@@ -194,14 +194,12 @@ function addon:CalculateTravelToNode(distance, mapID)
     local canFly = not addon.NO_FLY_MAPS[mapID]
     local speed = canFly and addon.FLY_SPEED or addon.WALK_SPEED
 
-    -- Calculate time
     local time = yards / speed
 
-    -- Round up to nearest 5 seconds
-    time = math.ceil(time / 5) * 5
+    time = math.ceil(time / 2) * 2
 
     -- Clamp between 5 and 300 seconds
-    time = math.max(5, math.min(300, time))
+    time = math.max(2, math.min(300, time))
 
     return time, canFly and "fly" or "walk"
 end
@@ -257,7 +255,7 @@ function addon:GetAvailableTravelAbilities()
         end
     end
 
-    -- Check class abilities (always single destination)
+    -- Check class abilities
     for id, spell in pairs(self.ClassTeleports) do
         if spell.class == playerClass then
             local hasSpell = IsPlayerSpell(spell.spellID)
@@ -277,8 +275,8 @@ function addon:GetAvailableTravelAbilities()
                     table.insert(available, {
                         id = id,
                         name = spell.name,
-                        destination = spell.destination, -- Single destination (if exists)
-                        destinations = spell.destinations, -- Multi destinations (if exists)
+                        destination = spell.destination,
+                        destinations = spell.destinations,
                         castTime = spell.castTime,
                         cooldown = spell.cooldown,
                         type = "spell",
@@ -295,7 +293,6 @@ function addon:GetAvailableTravelAbilities()
         local playerRace = select(2, UnitRace("player"))
 
         if racial.race == playerRace then
-            -- Check if player knows this racial spell
             local hasRacial = IsPlayerSpell(racial.spellID)
 
             if hasRacial then
@@ -324,7 +321,7 @@ function addon:GetAvailableTravelAbilities()
         end
     end
 
-    -- Check dungeon teleports (always single destination)
+    -- Check dungeon teleports
     for id, spell in pairs(self.DungeonTeleports) do
         local hasSpell = IsPlayerSpell(spell.spellID)
 
@@ -340,7 +337,7 @@ function addon:GetAvailableTravelAbilities()
                 table.insert(available, {
                     id = id,
                     name = spell.name,
-                    destination = spell.destination, -- Always single for dungeons
+                    destination = spell.destination,
                     castTime = spell.castTime,
                     cooldown = spell.cooldown,
                     type = "spell",
@@ -394,7 +391,7 @@ function addon:SetHearthstoneLocation()
         return
     end
 
-    -- Store the raw coordinates, not a node ID
+    -- Store the raw coordinates
     MapzerothDB = MapzerothDB or {}
     MapzerothDB.hearthstone = {
         mapID = location.mapID,
@@ -412,9 +409,6 @@ function addon:GetHearthstoneDestination()
     if MapzerothDB and MapzerothDB.hearthstone then
         return MapzerothDB.hearthstone
     end
-
-    -- Could fall back to parsing GetBindLocation() here if you wanted,
-    -- but honestly why bother when this is cleaner
 
     return nil
 end

@@ -41,7 +41,7 @@ end
 
 function addon:OnCalendarReady()
     calendarReady = true
-    holidayCache = {}  -- Clear cache when calendar updates
+    holidayCache = {}
 end
 
 -- ============================================================================
@@ -112,7 +112,7 @@ local requirementCheckers = {
 -- Called when calendar is ready
 function addon:OnCalendarReady()
     calendarReady = true
-    holidayCache = {} -- Clear cache on calendar update
+    holidayCache = {}
 end
 
 -- Main checker: evaluates all requirements on an edge

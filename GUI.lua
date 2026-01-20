@@ -22,7 +22,7 @@ local COLOURS = {
     border = {0.3, 0.3, 0.3, 1},
     text = {1, 1, 1, 1},
     textSecondary = {0.7, 0.7, 0.7, 1},
-    accent = {0.2, 0.5, 0.9, 1}, -- Blue for interactables
+    accent = {0.2, 0.5, 0.9, 1},
     accentHover = {0.3, 0.6, 1, 1},
     hoverBg = {0.2, 0.4, 0.6, 0.5},
     cardBg = {0.1, 0.1, 0.1, 0.8}
@@ -88,7 +88,7 @@ local function CreateCloseButton(parent)
 
     -- Hover effect
     btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.4, 0.1, 0.1, 0.8) -- Red tint
+        self:SetBackdropColor(0.4, 0.1, 0.1, 0.8)
         symbol:SetTextColor(1, 1, 1, 1)
     end)
     btn:SetScript("OnLeave", function(self)
@@ -110,7 +110,7 @@ function addon:ApplyWindowScale(scale)
     if addon.AboutFrame then
         addon.AboutFrame:SetScale(scale)
     end
-    -- Route execution frame is in RouteExecutionFrame.lua module
+
     if addon.RouteExecutionFrame then
         addon.RouteExecutionFrame:SetScale(scale)
     end
@@ -122,7 +122,7 @@ end
 
 function addon:CreateGUI()
     if addon.MapzerothFrame then
-        return addon.MapzerothFrame -- Already exists
+        return addon.MapzerothFrame
     end
 
     -- Create main frame (flat material panel)
@@ -196,7 +196,7 @@ function addon:CreateGUI()
         GameTooltip:Show()
     end)
     logoButton:SetScript("OnLeave", function(self)
-        logo:SetVertexColor(1, 1, 1) -- Back to normal
+        logo:SetVertexColor(1, 1, 1)
         GameTooltip:Hide()
     end)
 
@@ -244,8 +244,6 @@ function addon:CreateGUI()
     frame.selectorToggleBtn = selectorToggleBtn
 
     -- Create the actual destination selector (hidden by default)
-    -- Instead of creating it as a child of the frame positioned outside,
-    -- we'll position it to overlay the route container area
     local destinationSelector = addon:CreateDestinationSelector(frame)
 
     -- Clear the fixed size and let it stretch to fill the space
@@ -282,13 +280,13 @@ function addon:CreateGUI()
     frame.routeContainer = routeContainer
 
     -- No scroll child needed - route steps go directly in routeContainer
-    frame.routeScrollChild = routeContainer -- Keep same reference for compatibility
+    frame.routeScrollChild = routeContainer
 
     -----------------------------------------------------------
     -- STORAGE & STATE
     -----------------------------------------------------------
 
-    frame.routeSteps = {} -- Will hold step frames
+    frame.routeSteps = {}
     frame.isExpanded = false
     frame.selectedDest = nil
 
@@ -337,21 +335,21 @@ function addon:CreateAboutFrame()
     frame:SetBackdropColor(unpack(COLOURS.background))
     frame:SetBackdropBorderColor(unpack(COLOURS.border))
 
-    -- Close button (top-right corner of frame, using our flat material style)
+    -- Close button
     local closeBtn = CreateCloseButton(frame)
     closeBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -8)
     closeBtn:SetScript("OnClick", function()
         frame:Hide()
     end)
 
-    -- Logo in About frame (start higher since no header bar)
+    -- Logo in About frame
     local aboutLogo = frame:CreateTexture(nil, "ARTWORK")
     aboutLogo:SetTexture("Interface\\AddOns\\Mapzeroth\\Mapzeroth_Logo")
     aboutLogo:SetSize(48, 48)
-    aboutLogo:SetPoint("TOP", frame, "TOP", 0, -30) -- Closer to top now
+    aboutLogo:SetPoint("TOP", frame, "TOP", 0, -30)
 
-    -- Content area (start below the logo)
-    local yOffset = -90 -- Start below logo
+    -- Content area
+    local yOffset = -90
 
     -- Version info (pulled from TOC)
     local versionNumber = C_AddOns.GetAddOnMetadata("Mapzeroth", "Version") or "Unknown"
@@ -379,8 +377,8 @@ function addon:CreateAboutFrame()
     -- CurseForge link
     local curseLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     curseLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
-    curseLabel:SetWidth(60) -- Fixed width
-    curseLabel:SetJustifyH("RIGHT") -- Right-aligned text
+    curseLabel:SetWidth(60) 
+    curseLabel:SetJustifyH("RIGHT")
     curseLabel:SetText("Share:")
     curseLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
@@ -400,8 +398,8 @@ function addon:CreateAboutFrame()
     -- Ko-fi link
     local kofiLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     kofiLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
-    kofiLabel:SetWidth(60) -- Fixed width
-    kofiLabel:SetJustifyH("RIGHT") -- Right-aligned text
+    kofiLabel:SetWidth(60)
+    kofiLabel:SetJustifyH("RIGHT")
     kofiLabel:SetText("Support:")
     kofiLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
@@ -421,8 +419,8 @@ function addon:CreateAboutFrame()
     -- Discord (placeholder for future)
     local discordLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     discordLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
-    discordLabel:SetWidth(60) -- Fixed width
-    discordLabel:SetJustifyH("RIGHT") -- Right-aligned text
+    discordLabel:SetWidth(60)
+    discordLabel:SetJustifyH("RIGHT")
     discordLabel:SetText("Chat:")
     discordLabel:SetTextColor(unpack(COLOURS.textSecondary))
 

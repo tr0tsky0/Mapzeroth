@@ -17,8 +17,6 @@ local function GetZoneNameForMap(mapID)
     local mapInfo = C_Map.GetMapInfo(mapID)
     if not mapInfo then return nil end
     
-    -- For micro-maps or dungeons, walk up to the parent zone
-    -- This gives us "Elwynn Forest" instead of "Goldshire"
     if mapInfo.mapType == Enum.UIMapType.Micro or 
        mapInfo.mapType == Enum.UIMapType.Dungeon then
         local parentInfo = C_Map.GetMapInfo(mapInfo.parentMapID)

@@ -2,7 +2,6 @@
 -- Categorised, filterable destination picker for Mapzeroth (MATERIAL EDITION)
 local addonName, addon = ...
 
--- UPDATED: Removed "other" from tabs
 local CATEGORY_ORDER = {"all", "city", "dungeon", "raid"}
 local CATEGORY_LABELS = {
     all = "All",
@@ -11,7 +10,6 @@ local CATEGORY_LABELS = {
     raid = "Raids"
 }
 
--- NEW: Dynamic placeholder text based on category
 local SEARCH_PLACEHOLDERS = {
     all = "Search destinations...",
     city = "Search cities...",
@@ -78,9 +76,9 @@ function addon:CreateDestinationSelector(parentFrame)
         -- Visual state
         local function UpdateTabAppearance()
             if selector.activeCategory == category then
-                tab:SetBackdropColor(0.2, 0.4, 0.6, 1) -- Active: blue
+                tab:SetBackdropColor(0.2, 0.4, 0.6, 1)
             else
-                tab:SetBackdropColor(0.15, 0.15, 0.15, 1) -- Inactive: dark grey
+                tab:SetBackdropColor(0.15, 0.15, 0.15, 1)
             end
         end
 
@@ -100,7 +98,6 @@ function addon:CreateDestinationSelector(parentFrame)
                 t.updateAppearance()
             end
 
-            -- NEW: Update search placeholder when category changes
             local newPlaceholder = SEARCH_PLACEHOLDERS[category] or "Search destinations..."
             selector.placeholder:SetText(newPlaceholder)
 
@@ -137,7 +134,7 @@ function addon:CreateDestinationSelector(parentFrame)
     local placeholder = searchBox:CreateFontString(nil, "OVERLAY", "GameFontDisable")
     placeholder:SetPoint("LEFT", searchBox, "LEFT", 5, 0)
     placeholder:SetText(SEARCH_PLACEHOLDERS["all"])
-    selector.placeholder = placeholder -- Store reference so we can update it
+    selector.placeholder = placeholder
 
     searchBox:SetScript("OnTextChanged", function(self, userInput)
         if userInput then
@@ -178,7 +175,7 @@ function addon:CreateDestinationSelector(parentFrame)
     scrollFrame:SetPoint("BOTTOMRIGHT", selector, "BOTTOMRIGHT", -30, 10)
 
     local scrollChild = CreateFrame("Frame", nil, scrollFrame)
-    scrollChild:SetSize(SELECTOR_WIDTH - 60, 1) -- Height grows dynamically
+    scrollChild:SetSize(SELECTOR_WIDTH - 60, 1)
     scrollFrame:SetScrollChild(scrollChild)
 
     selector.scrollFrame = scrollFrame
@@ -212,7 +209,7 @@ function addon:RefreshDestinationResults(selector)
     table.insert(nodeList, {
         id = "_WAYPOINT",
         name = "[WAYPOINT] Active Waypoint",
-        category = nil -- Always shows in "all"
+        category = nil
     })
 
     -- Gather all nodes with filtering
@@ -234,7 +231,6 @@ function addon:RefreshDestinationResults(selector)
                 -- Node is faction-specific, must match player faction
                 matchesFaction = (node.faction == addon.GetPlayerFaction())
             end
-            -- If node.faction is nil, it's neutral and matchesFaction stays true
 
             if matchesCategory and matchesSearch and matchesFaction then
                 table.insert(nodeList, {

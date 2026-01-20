@@ -551,7 +551,7 @@ addon.ClassTeleports = {
         class = "MAGE",
         castTime = 10,
         cooldown = 0,
-        destination = "SHATTRATH_OUTLAND"
+        destination = "SHATTRATH_OUTLANDS"
     },
 
     MAGE_TP_SHATTRATH_2 = {
@@ -561,7 +561,7 @@ addon.ClassTeleports = {
         class = "MAGE",
         castTime = 10,
         cooldown = 0,
-        destination = "SHATTRATH_OUTLAND"
+        destination = "SHATTRATH_OUTLANDS"
     },
 
     MAGE_TP_DALARAN_NORTHREND = {
@@ -732,16 +732,7 @@ addon.ClassTeleports = {
         class = "DRUID",
         castTime = 10,
         cooldown = 60,
-        destinations = { 
-            "FERALAS_DRUID",
-            "GRIZZLY_HILLS_DRUID",
-            "MOUNT_HYJAL_DRUID",
-            "HINTERLANDS_DRUID",
-            "DUSKWOOD_DRUID",
-            "MOONGLADE_DRUID",
-            "AMIRDRASSIL_DRUID",
-            "VALSHARAH_DRUID",
-        },
+        destination = "EMERALD_DREAMWAY"
     },
 
     -- DEATH KNIGHT
@@ -805,7 +796,7 @@ addon.RacialAbilities = {
             "THRONE_OF_FLAME_MOLE",
             "HONOR_HOLD_MOLE",
             "BLADES_EDGE_MOUNTAINS_MOLE",
-            "SHADOWMOON_VALLEY_OUTLAND_MOLE",
+            "SHADOWMOON_VALLEY_OUTLANDS_MOLE",
             "RUBY_DRAGONSHRINE_MOLE",
             "ARGENT_TOURNAMENT_GROUNDS_MOLE",
             "VALLEY_OF_THE_FOUR_WINDS_MOLE",

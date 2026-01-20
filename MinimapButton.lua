@@ -81,10 +81,3 @@ function addon:ToggleMinimapButton()
         end
     end
 end
-
------------------------------------------------------------
--- SLASH COMMAND SUPPORT
------------------------------------------------------------
-
--- Add to Commands.lua later:
--- /mz minimap - toggle minimap button visibility

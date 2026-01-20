@@ -32,7 +32,7 @@ local function BuildStepMacro(stepData)
         if spellInfo then
             return string.format("/cast %s", spellInfo.name)
         else
-            -- Fallback to ID (might not work, but worth trying)
+            -- Fallback to ID
             return string.format("/cast %d", stepData.spellID)
         end
 
@@ -43,7 +43,7 @@ local function BuildStepMacro(stepData)
         if itemName then
             return string.format("/use %s", itemName)
         else
-            -- Fallback to ID (might not work, but worth trying)
+            -- Fallback to ID
             return string.format("/use %d", stepData.itemID)
         end
     end
@@ -106,7 +106,7 @@ local function CreateExecutionFrame()
     end
 
     local frame = CreateFrame("Frame", "MapzerothRouteExecutionFrame", UIParent, "BackdropTemplate")
-    frame:SetSize(FRAME_WIDTH, 200) -- Will be resized based on steps
+    frame:SetSize(FRAME_WIDTH, 200)
     frame:SetFrameStrata("HIGH")
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
@@ -138,7 +138,7 @@ local function CreateExecutionFrame()
     local headerBar = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     headerBar:SetPoint("TOPLEFT", frame, "TOPLEFT", 6, -6)
     headerBar:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -6, -6)
-    headerBar:SetHeight(40) -- Increase height to fit two lines
+    headerBar:SetHeight(40)
     headerBar:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
         tile = false
@@ -404,12 +404,12 @@ function addon:ShowRouteExecutionFrame(steps, totalTime)
         totalText:SetText("Total Time: N/A")
     end
 
-    table.insert(stepButtons, footer) -- Track for cleanup
+    table.insert(stepButtons, footer)
     yOffset = yOffset + 35
 
     -- Resize frame to fit content
-    local frameHeight = yOffset + 60 -- 30 for header, 30 for padding
-    frame:SetHeight(math.min(frameHeight, 600)) -- Cap at 600px
+    local frameHeight = yOffset + 60
+    frame:SetHeight(math.min(frameHeight, 600))
 
     -- Position frame
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then

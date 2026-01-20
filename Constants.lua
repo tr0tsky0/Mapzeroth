@@ -63,7 +63,7 @@ addon.NO_FLY_MAPS = {
 -- Portal/teleport costs should be instant (cast time only)
 
 addon.TRAVEL_COSTS = {
-    portal = 0,      -- Instant (assuming cast time is tracked separately)
+    portal = 0,      -- Instant (cast time tracked separately)
     teleport = 0,    -- Instant (cast time tracked separately)
     hearthstone = 0, -- Cast time tracked separately
     racial = 0,      -- Cast time tracked separately
@@ -75,7 +75,7 @@ addon.TRAVEL_COSTS = {
     fly = 10,        -- Fallback if distance calc fails
 }
 
--- Travel method icons
+-- Travel method icons and text
 addon.TRAVEL_ICONS = {
     portal = "Interface\\Icons\\Spell_Arcane_PortalOrgrimmar",
     ship = "Interface\\Icons\\Spell_Frost_SummonWaterElemental",
@@ -97,5 +97,5 @@ addon.METHOD_DISPLAY_TEXT = {
     walk = "Walk to",
     teleport = "Teleport to",
     hearthstone = "Hearth to",
-    racial = "Use" -- Will be "Use Mole Machine"
+    racial = "Use"
 }

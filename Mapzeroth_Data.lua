@@ -1318,14 +1318,6 @@ ns.Nodes = {
             x = 0.7123,
             y = 0.5590
         },
-        -- Horde Cities & Zones
-        ORGRIMMAR_PORTAL_ROOM_UPPER = {
-            name = "Portal Room",
-            faction = "HORDE",
-            mapID = 85,
-            x = 0.5710,
-            y = 0.8981
-        },
         WESTERN_EARTHSHRINE_OG = {
             name = "Western Earthshrine",
             faction = "HORDE",
@@ -1333,17 +1325,194 @@ ns.Nodes = {
             x = 0.5007,
             y = 0.3779
         },
-        ORGRIMMAR_ZEP = {
-            name = "Zeppelin Tower",
+        ORGRIMMAR_GROMGOL_ZEP = {
+            name = "Zeppelin to Grom'gol",
             mapID = 85,
-            x = 0.4827,
-            y = 0.5791
+            x = 0.5236,
+            y = 0.5334
+        },
+        ORGRIMMAR_UNDERCITY_PORTAL = {
+            name = "Portal to Undercity",
+            mapID = 85,
+            x = 0.5081,
+            y = 0.5547
+        },
+        ORGRIMMAR_THUNDER_BLUFF_ZEP = {
+            name = "Zeppelin to Thunder Bluff",
+            mapID = 85,
+            x = 0.4310,
+            y = 0.6487
+        },
+        ORGRIMMAR_WARSONG_ZEP = {
+            name = "Zeppelin to Warsong Hold",
+            mapID = 85,
+            x = 0.4469,
+            y = 0.6241
+        },
+        ORGRIMMAR_WAKING_SHORES_ZEP = {
+            name = "Zeppelin to the Waking Shores",
+            mapID = 1,
+            x = 0.5599,
+            y = 0.1310
         },
         BRAWLGAR_ARENA = {
             name = "Brawl'gar Arena",
             mapID = 85,
             x = 0.7055,
             y = 0.3117
+        },
+        ORGRIMMAR_EMBASSY = {
+            name = "Embassy",
+            mapID = 85,
+            x = 0.4024,
+            y = 0.7812
+        },
+        ORGRIMMAR_THUNDER_TOTEM_PORTAL = {
+            name = "Portal to Thunder Totem",
+            mapID = 85,
+            x = 0.3813,
+            y = 0.7536
+        },
+        ORGRIMMAR_NIGHTHOLD_PORTAL = {
+            name = "Portal to The Nighthold",
+            mapID = 85,
+            x = 0.3813,
+            y = 0.7536
+        },
+        ORGRIMMAR_PORTAL_ROOM_ENTRANCE = {
+            name = "Entrance to Portal Room",
+            mapID = 85,
+            x = 0.5334,
+            y = 0.9047
+        },
+        -- Orgrimmar Portal Room
+        ORGRIMMAR_PORTAL_ROOM_STAIRS = {
+            name = "Portal Room (Stairs)",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5484,
+            y = 0.9017
+        },
+        ORGRIMMAR_PORTAL_ROOM_UPPER = {
+            name = "Portal Room (Upper)",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5710,
+            y = 0.8981
+        },
+        ORGRIMMAR_VALDRAKKEN_PORTAL = {
+            name = "Portal to Valdrakken",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5712,
+            y = 0.8754
+        },
+        ORGRIMMAR_ORIBOS_PORTAL = {
+            name = "Portal to Oribos",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5822,
+            y = 0.8803
+        },
+        ORGRIMMAR_RAZORWIND_SHORES_PORTAL = {
+            name = "Portal to Razorwind Shores",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5877,
+            y = 0.8953
+        },
+        ORGRIMMAR_DORNOGAL_PORTAL = {
+            name = "Portal to Dornogal",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5847,
+            y = 0.9121
+        },
+        ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL = {
+            name = "Portal to Honeydew Village",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5745,
+            y = 0.9193
+        },
+        ORGRIMMAR_DALARAN_NORTHREND_PORTAL = {
+            name = "Portal to Northrend Dalaran",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5634,
+            y = 0.9148
+        },
+        ORGRIMMAR_PORTAL_ROOM_LOWER = {
+            name = "Portal Room (Lower)",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5625,
+            y = 0.9031
+        },
+        ORGRIMMAR_AZSUNA_PORTAL = {
+            name = "Portal to Azsuna",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5716,
+            y = 0.8836
+        },
+        ORGRIMMAR_DAZARALOR_PORTAL = {
+            name = "Portal to Dazar'alor",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5768,
+            y = 0.8987
+        },
+        ORGRIMMAR_SHATTRATH_OUTLANDS_PORTAL = {
+            name = "Portal to Shattrath (Outlands)",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5739,
+            y = 0.9143
+        },
+        ORGRIMMAR_CAVERNS_OF_TIME_PORTAL = {
+            name = "Portal to Caverns of Time",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5640,
+            y = 0.9228
+        },
+        ORGRIMMAR_WARSPEAR_PORTAL = {
+            name = "Portal to Warspear",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5529,
+            y = 0.9178
+        },
+        ORGRIMMAR_SILVERMOON_PORTAL = {
+            name = "Portal to Silvermoon",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5478,
+            y = 0.9032
+        },
+        ORGRIMMAR_DARK_PORTAL_BL_NPC = {
+            name = "Thrallmar Mage",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5704,
+            y = 0.9062
         },
         THUNDER_BLUFF = {
             name = "Entrance",
@@ -2322,22 +2491,22 @@ ns.Nodes = {
         }
     },
 
-    OUTLAND = {
+    OUTLANDS = {
         -- Dark Portal
-        DARK_PORTAL_OUTLAND = {
+        DARK_PORTAL_OUTLANDS = {
             name = "The Dark Portal",
             mapID = 100,
             x = 0.892,
             y = 0.502
         },
         -- Hub
-        SHATTRATH_OUTLAND = {
+        SHATTRATH_OUTLANDS = {
             name = "Shattrath",
             mapID = 111,
             x = 0.5497,
             y = 0.4023
         },
-        SHATTRATH_OUTLAND_FLIGHT = {
+        SHATTRATH_OUTLANDS_FLIGHT = {
             name = "Shattrath (Outland)",
             category = "city",
             mapID = 111,
@@ -2370,7 +2539,7 @@ ns.Nodes = {
             x = 0.725,
             y = 0.176
         },
-        SHADOWMOON_VALLEY_OUTLAND_MOLE = {
+        SHADOWMOON_VALLEY_OUTLANDS_MOLE = {
             name = "Shadowmoon Valley (Outland - Fel Pits)",
             faction = "ALLIANCE",
             mapID = 104,
@@ -2510,7 +2679,7 @@ ns.Nodes = {
             x = 0.446,
             y = 0.365
         },
-        -- Hellfire Peninsula (OUTLAND)
+        -- Hellfire Peninsula (OUTLANDS)
         THRALLMAR_FLIGHT = {
             name = "Thrallmar",
             faction = "HORDE",
@@ -2525,7 +2694,7 @@ ns.Nodes = {
             x = 0.2802,
             y = 0.6109
         },
-        -- Zangarmarsh (OUTLAND)
+        -- Zangarmarsh (OUTLANDS)
         ZABRAJIN_FLIGHT = {
             name = "Zabra'jin",
             faction = "HORDE",
@@ -2540,7 +2709,7 @@ ns.Nodes = {
             x = 0.8606,
             y = 0.5325
         },
-        -- Nagrand - Outland (OUTLAND)
+        -- Nagrand - Outland (OUTLANDS)
         GARADAR_FLIGHT = {
             name = "Garadar",
             faction = "HORDE",
@@ -2548,7 +2717,7 @@ ns.Nodes = {
             x = 0.5793,
             y = 0.3584
         },
-        -- Shadowmoon Valley - Outland (OUTLAND)
+        -- Shadowmoon Valley - Outland (OUTLANDS)
         SHADOWMOON_VILLAGE_FLIGHT = {
             name = "Shadowmoon Village",
             faction = "HORDE",
@@ -2556,7 +2725,7 @@ ns.Nodes = {
             x = 0.3109,
             y = 0.2924
         },
-        -- Blade's Edge Mountains (OUTLAND)
+        -- Blade's Edge Mountains (OUTLANDS)
         THUNDERLORD_STRONGHOLD_FLIGHT = {
             name = "Thunderlord Stronghold",
             faction = "HORDE",
@@ -2571,7 +2740,7 @@ ns.Nodes = {
             x = 0.7594,
             y = 0.6561
         },
-        -- Terokkar Forest (OUTLAND)
+        -- Terokkar Forest (OUTLANDS)
         STONEBREAKER_HOLD_FLIGHT = {
             name = "Stonebreaker Hold",
             faction = "HORDE",
@@ -3842,6 +4011,13 @@ ns.Nodes = {
             x = 0.5835,
             y = 0.3960
         },
+        HALL_OF_THE_GUARDIAN = {
+            name = "Hall of the Guardian",
+            mapID = 734,
+            interior = true,
+            x = 0.5763,
+            y = 0.8614
+        },
         DALARAN_PALADIN_PORTAL_ALLIANCE = {
             name = "Sanctum of Light Portal",
             faction = "ALLIANCE",
@@ -3855,6 +4031,75 @@ ns.Nodes = {
             mapID = 627,
             x = 0.3285,
             y = 0.6952
+        },
+        ACHERUS = {
+            name = "Acherus",
+            mapID = 648,
+            x = 0.2743,
+            y = 0.3043
+        },
+        EMERALD_DREAMWAY = {
+            name = "Emerald Dreamway",
+            mapID = 715,
+            interior = true,
+            x = 0.3533,
+            y = 0.5315
+        },
+        EMERALD_DREAMWAY_MOONGLADE_PORTAL = {
+            name = "Portal to Moonglade",
+            mapID = 715,
+            interior = true,
+            x = 0.2651,
+            y = 0.7818
+        },
+        EMERALD_DREAMWAY_AMIRDRASSIL_PORTAL = {
+            name = "Portal to Amirdrassil",
+            mapID = 715,
+            interior = true,
+            x = 0.1998,
+            y = 0.5910
+        },
+        EMERALD_DREAMWAY_FERALAS_PORTAL = {
+            name = "Portal to Feralas",
+            mapID = 715,
+            interior = true,
+            x = 0.2358,
+            y = 0.3881
+        },
+        EMERALD_DREAMWAY_GRIZZLY_HILLS_PORTAL = {
+            name = "Portal to Grizzly Hills",
+            mapID = 715,
+            interior = true,
+            x = 0.3189,
+            y = 0.2692
+        },
+        EMERALD_DREAMWAY_DREAMGROVE_PORTAL = {
+            name = "Portal to The Dreamgrove",
+            mapID = 715,
+            interior = true,
+            x = 0.4538,
+            y = 0.2500
+        },
+        EMERALD_DREAMWAY_HYJAL_PORTAL = {
+            name = "Portal to Mount Hyjal",
+            mapID = 715,
+            interior = true,
+            x = 0.5284,
+            y = 0.5256
+        },
+        EMERALD_DREAMWAY_HINTERLANDS_PORTAL = {
+            name = "Portal to Moonglade",
+            mapID = 715,
+            interior = true,
+            x = 0.5029,
+            y = 0.6520
+        },
+        EMERALD_DREAMWAY_DUSKWOOD_PORTAL = {
+            name = "Portal to Moonglade",
+            mapID = 715,
+            interior = true,
+            x = 0.3981,
+            y = 0.6892
         },
         VALSHARAH = {
             name = "Lorlathil Portal",
@@ -3942,6 +4187,12 @@ ns.Nodes = {
             mapID = 650,
             x = 0.4689,
             y = 0.5920
+        },
+        THUNDER_TOTEM_ORGRIMMAR_PORTAL = {
+            name = "Portal to Orgrimmar",
+            mapID = 652,
+            x = 0.4546,
+            y = 0.6388
         },
         STONEHOOF_WATCH_FLIGHT = {
             name = "Stonehoof Watch",
@@ -4066,6 +4317,26 @@ ns.Nodes = {
             mapID = 630,
             x = 0.6364,
             y = 0.2845
+        },
+        THE_NIGHTHOLD = {
+            name = "The Nighthold",
+            mapID = 680,
+            x = 0.5957,
+            y = 0.8526
+        },
+        NIGHTHOLD_ORGRIMMAR_PORTAL = {
+            name = "Portal to Orgrimmar",
+            mapID = 680,
+            faction = "HORDE",
+            x = 0.5821,
+            y = 0.8729
+        },
+        NIGHTHOLD_SHALARAN_PORTAL = {
+            name = "Portal to Shal'Aran",
+            mapID = 680,
+            faction = "HORDE",
+            x = 0.5803,
+            y = 0.8660
         },
         IRONGROVE_RETREAT_FLIGHT = {
             name = "Irongrove Retreat",
@@ -4247,6 +4518,21 @@ ns.Nodes = {
         }
     },
 
+    TEMPLE_OF_FIVE_DAWNS = {
+        PEAK_OF_SERENITY = {
+            name = "Peak of Serenity",
+            mapID = 709,
+            x = 0.5145,
+            y = 0.4865
+        },
+        MONK_DALARAN_PORTAL = {
+            name = "Portal to Dalaran",
+            mapID = 709,
+            x = 0.5236,
+            y = 0.5722
+        }
+    },
+
     EYE_OF_AZSHARA = {
         EYE_OF_AZSHARA_FLIGHT = {
             name = "Eye of Azshara Flightmaster",
@@ -4314,6 +4600,12 @@ ns.Nodes = {
             mapID = 2022,
             x = 0.8194,
             y = 0.3065
+        },
+        WAKING_SHORES_ORGRIMMAR_ZEP = {
+            name = "Zeppelin to Orgrimmar",
+            mapID = 2022,
+            x = 0.8162,
+            y = 0.2796
         },
         AZURE_SPAN_MOLE = {
             name = "The Azure Span (Vakthros Summit)",
@@ -7532,7 +7824,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "STORMWIND_SHATTRATH_OUTLANDS_PORTAL",
-    to = "SHATTRATH_OUTLAND",
+    to = "SHATTRATH_OUTLANDS",
     method = "portal",
     oneway = true,
     requirements = {
@@ -7605,6 +7897,14 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "STORMWIND_EXODAR_PORTAL",
     to = "EXODAR",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
+},{
+    from = "EXODAR",
+    to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
     oneway = true,
     requirements = {
@@ -7747,7 +8047,6 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 },
-
 -- Stormwind Eastern Earthshrine → Cataclysm Zones
 {
     from = "EASTERN_EARTHSHRINE_SW",
@@ -7795,7 +8094,8 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-}, -- Stormwind Embassy & Harbour
+}, 
+-- Stormwind Embassy & Harbour
 {
     from = "SW_EMBASSY",
     to = "VINDICAAR_AZEROTH",
@@ -7826,20 +8126,278 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "ship",
     cost = 135
 }, {
-    from = "ORGRIMMAR_ZEP",
+    from = "ORGRIMMAR_GROMGOL_ZEP",
     to = "GROMGOL_ZEPPELIN",
     method = "zeppelin",
     cost = 120
-}, -- Exodar
+}, 
+-- Orgrimmar
 {
-    from = "EXODAR",
-    to = "STORMWIND_PORTAL_ROOM_LOWER",
+    from = "ORGRIMMAR_PORTAL_ROOM_ENTRANCE",
+    to = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_VALDRAKKEN_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_ORIBOS_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_RAZORWIND_SHORES_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_DORNOGAL_PORTAL",
+    method = "walk",
+    requirements = {
+        minLevel = 68,
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_DALARAN_NORTHREND_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_VALDRAKKEN_PORTAL",
+    to = "VALDRAKKEN",
     method = "portal",
     oneway = true,
     requirements = {
-        faction = "Alliance"
+        faction = "Horde"
     }
 }, {
+    from = "ORGRIMMAR_ORIBOS_PORTAL",
+    to = "ORIBOS",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_RAZORWIND_SHORES_PORTAL",
+    to = "RAZORWIND_SHORES",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_DORNOGAL_PORTAL",
+    to = "DORNOGAL_PORTAL_ROOM",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL",
+    to = "HONEYDEW_VILLAGE",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_DALARAN_NORTHREND_PORTAL",
+    to = "DALARAN_NORTHREND",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "DALARAN_NORTHREND_ORGRIMMAR_PORTAL",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
+    to = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_AZSUNA_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_DAZARALOR_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_SHATTRATH_OUTLANDS_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_CAVERNS_OF_TIME_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_WARSPEAR_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+},
+{
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_SILVERMOON_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
+    to = "ORGRIMMAR_DARK_PORTAL_BL_NPC",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_AZSUNA_PORTAL",
+    to = "AZSUNA",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "AZSUNA",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+},{
+    from = "ORGRIMMAR_DAZARALOR_PORTAL",
+    to = "DAZARALOR_DOCK",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_SHATTRATH_OUTLANDS_PORTAL",
+    to = "SHATTRATH_OUTLANDS",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_CAVERNS_OF_TIME_PORTAL",
+    to = "CAVERNS_OF_TIME",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+},{
+    from = "ORGRIMMAR_WARSPEAR_PORTAL",
+    to = "WARSPEAR_ASHRAN",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "WARSPEAR_ASHRAN",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_SILVERMOON_PORTAL",
+    to = "SILVERMOON",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "SILVERMOON",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_DARK_PORTAL_BL_NPC",
+    to = "DARK_PORTAL_BL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+},
+-- Boralus
+{
     from = "BORALUS",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
@@ -7852,6 +8410,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "SILITHUS",
     method = "portal",
     requirements = {
+        quest = 47189,
         faction = "Alliance"
     }
 }, {
@@ -7900,6 +8459,22 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Horde"
     }
 }, {
+    from = "ACHERUS",
+    to = "DALARAN_BROKEN_ISLES",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        class = "DEATHKNIGHT"
+    }
+}, {
+    from = "MONK_DALARAN_PORTAL",
+    to = "DALARAN_BROKEN_ISLES",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        class = "MONK"
+    }
+}, {
     from = "DALARAN_PALADIN_PORTAL_HORDE",
     to = "SANCTUM_OF_LIGHT",
     method = "portal",
@@ -7928,6 +8503,14 @@ ns.Edges = { -- Stormwind Internal Navigation
     oneway = true,
     requirements = {
         faction = "Alliance"
+    }
+},  {
+    from = "ORIBOS",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
     }
 }, {
     from = "ORIBOS_FLIGHT",
@@ -7974,12 +8557,12 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 }, {
-    from = "SHATTRATH_OUTLAND",
+    from = "SHATTRATH_OUTLANDS",
     to = "QUELDANAS",
     method = "portal",
     oneway = true
 }, {
-    from = "SHATTRATH_OUTLAND",
+    from = "SHATTRATH_OUTLANDS",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
     oneway = true,
@@ -7987,11 +8570,19 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 }, {
+    from = "SHATTRATH_OUTLANDS",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+},{
     from = "DARK_PORTAL_BL",
-    to = "DARK_PORTAL_OUTLAND",
+    to = "DARK_PORTAL_OUTLANDS",
     method = "portal"
 }, {
-    from = "DARK_PORTAL_OUTLAND",
+    from = "DARK_PORTAL_OUTLANDS",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
     oneway = true,
@@ -8000,7 +8591,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "DARNASSUS",
-    to = "DARK_PORTAL_OUTLAND",
+    to = "DARK_PORTAL_OUTLANDS",
     method = "portal",
     oneway = true,
     requirements = {
@@ -8161,29 +8752,14 @@ ns.Edges = { -- Stormwind Internal Navigation
     cost = 115
 }, {
     from = "THUNDER_BLUFF_ZEP",
-    to = "ORGRIMMAR_ZEP",
+    to = "ORGRIMMAR_THUNDER_BLUFF_ZEP",
     method = "zeppelin",
     cost = 275
-}, {
-    from = "DALARAN_NORTHREND_ORGRIMMAR_PORTAL",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
-    oneway = true,
-    requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "ORGRIMMAR_NORTHREND_DALARAN_PORTAL",
-    to = "DALARAN_NORTHREND",
-    method = "portal",
-    oneway = true,
-    requirements = {
-        faction = "Horde"
-    }
 }, {
     from = "HONEYDEW_VILLAGE",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
+    oneway = true,
     requirements = {
         faction = "Horde"
     }
@@ -8199,13 +8775,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "RAZORWIND_SHORES",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
-    requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "ORIBOS",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
+    oneway = true,
     requirements = {
         faction = "Horde"
     }
@@ -8213,6 +8783,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "VALDRAKKEN",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
+    oneway = true,
     requirements = {
         faction = "Horde"
     }
@@ -8241,16 +8812,48 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Horde"
     }
 }, {
-    from = "DAZARALOR_PORTAL_ROOM",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "DARK_PORTAL_BL",
     method = "portal",
     oneway = true,
     requirements = {
         faction = "Horde"
     }
 }, {
-    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    to = "DARK_PORTAL_BL",
+    from = "ORGRIMMAR_THUNDER_TOTEM_PORTAL",
+    to = "THUNDER_TOTEM_ORGRIMMAR_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "THUNDER_TOTEM_ORGRIMMAR_PORTAL",
+    to = "ORGRIMMAR_EMBASSY",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_NIGHTHOLD_PORTAL",
+    to = "THE_NIGHTHOLD",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "NIGHTHOLD_ORGRIMMAR_PORTAL",
+    to = "ORGRIMMAR_EMBASSY",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "DAZARALOR_PORTAL_ROOM",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
     oneway = true,
     requirements = {
@@ -8277,6 +8880,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "NAZJATAR_HORDE",
     method = "portal",
     requirements = {
+        quest = 55053,
         faction = "Horde"
     }
 }, {
@@ -8284,34 +8888,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "SILITHUS",
     method = "portal",
     requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "AZSUNA",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
-    requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "WARSPEAR_ASHRAN",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
-    requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "SHATTRATH_OUTLAND",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
-    requirements = {
-        faction = "Horde"
-    }
-}, {
-    from = "SILVERMOON",
-    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
-    method = "portal",
-    requirements = {
+        quest = 46931,
         faction = "Horde"
     }
 }, {
@@ -8509,10 +9086,22 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "VENGEANCE_LANDING_ZEPPELIN",
     method = "zeppelin"
 }, {
-    from = "ORGRIMMAR_ZEP",
+    from = "ORGRIMMAR_WARSONG_ZEP",
     to = "WARSONG_HOLD_ZEPPELIN",
     method = "zeppelin"
 }, {
+    from = "ORGRIMMAR_WAKING_SHORES_ZEP",
+    to = "WAKING_SHORES_ORGRIMMAR_ZEP",
+    method = "zeppelin",
+    cost = 350
+}, {
+    from = "ORGRIMMAR_UNDERCITY_PORTAL",
+    to = "UNDERCITY",
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
+}, { 
     from = "ECHO_ISLES_DOCK",
     to = "DAZARALOR_DOCK",
     method = "ship"
@@ -8676,7 +9265,74 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "TEMPLE_OF_EARTH_PORTAL",
     to = "THERAZANES_THRONE_PORTAL",
     method = "portal"
-}}
+},
+-- DRUID EMERALD DREAMWAY
+{
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_AMIRDRASSIL_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_FERALAS_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_GRIZZLY_HILLS_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_DREAMGROVE_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_HYJAL_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_HINTERLANDS_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY",
+    to = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL",
+    method = "walk"
+}, {
+    from = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
+    to = "MOONGLADE_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_AMIRDRASSIL_PORTAL",
+    to = "AMIRDRASSIL_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_FERALAS_PORTAL",
+    to = "FERALAS_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_GRIZZLY_HILLS_PORTAL",
+    to = "GRIZZLY_HILLS_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_DREAMGROVE_PORTAL",
+    to = "VALSHARAH_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_HYJAL_PORTAL",
+    to = "MOUNT_HYJAL_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_HINTERLANDS_PORTAL",
+    to = "HINTERLANDS_DRUID",
+    method = "portal",
+}, {
+    from = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL",
+    to = "DUSKWOOD_DRUID",
+    method = "portal",
+}
+}
 
 -----------------------------------------------------------
 -- TRAVERSAL GROUPS
@@ -8686,7 +9342,7 @@ ns.MapToTraversal = {
     -- Continent-level definitions
     [13] = "EK_OVERWORLD",
     [12] = "KALIMDOR_OVERWORLD",
-    [101] = "OUTLAND",
+    [101] = "OUTLANDS",
     [113] = "NORTHREND",
     [424] = "PANDARIA",
     [572] = "DRAENOR",

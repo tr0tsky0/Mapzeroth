@@ -165,27 +165,10 @@ end
 function addon:ListNodes()
     print("[Mapzeroth] Available destination nodes:")
 
-    local nodesByMap = {}
-
-    -- Group nodes by map
-    for nodeID, node in pairs(self.TravelGraph.nodes) do
-        local mapName = self:GetMapName(node.mapID)
-
-        if not nodesByMap[mapName] then
-            nodesByMap[mapName] = {}
-        end
-
-        table.insert(nodesByMap[mapName], {
-            id = nodeID,
-            name = node.name
-        })
-    end
-
-    -- Print grouped by map
-    for mapName, nodes in pairs(nodesByMap) do
-        print(string.format("  %s:", mapName))
-        for _, node in ipairs(nodes) do
-            print(string.format("    - %s (id: %s)", node.name, node.id))
+    for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
+        print(string.format("  %s:", traversalGroup))
+        for nodeID, node in pairs(groupData) do
+            print(string.format("    - %s (id: %s)", node.displayName or node.name, node.id))
         end
     end
 end
@@ -308,7 +291,7 @@ function addon:FindRoute(destinationID)
     end
 
     local playerAbilities = addon:GetAvailableTravelAbilities()
-    local location = addon:GetPlayerLocation() -- Can be nil in instances - that's fine!
+    local location = addon:GetPlayerLocation() -- Can be nil in instances
 
     -- Build ALL synthetic edges (abilities + walking, if location exists)
     local synthetic = addon:BuildSyntheticEdges(location, playerAbilities, waypoint)
@@ -379,17 +362,6 @@ function addon:ShowStats()
 
     if maxNode then
         print(string.format("  Most connected: %s (%d connections)", maxNode.name, maxEdges))
-    end
-end
-
-function addon:ListNodes()
-    print("[Mapzeroth] Available destination nodes:")
-
-    for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
-        print(string.format("  %s:", traversalGroup))
-        for nodeID, node in pairs(groupData) do
-            print(string.format("    - %s (id: %s)", node.displayName or node.name, node.id))
-        end
     end
 end
 
@@ -492,8 +464,6 @@ function addon:VerifyNodeReferences()
     end
 
     local abilityCount = 0
-
-    -- Check ALL player abilities (not just available ones)
 
     -- TravelItems (toys, hearthstones)
     if self.TravelItems then
