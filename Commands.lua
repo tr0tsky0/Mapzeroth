@@ -290,6 +290,12 @@ function addon:FindRoute(destinationID)
         end
     end
 
+    if not addon.bagsFullyLoaded then
+        print(
+            "[Mapzeroth] |cFFFFAA00Warning: Bags still loading - route may not include all travel items. Try again in a moment!|r")
+        -- Continue anyway—route will just be suboptimal
+    end
+
     local playerAbilities = addon:GetAvailableTravelAbilities()
     local location = addon:GetPlayerLocation() -- Can be nil in instances
 

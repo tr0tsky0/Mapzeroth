@@ -6,17 +6,17 @@ local addonName, addon = ...
 _G["Mapzeroth"] = addon
 
 addon.DEBUG = false
+addon.bagsFullyLoaded = false
 
 -- Simple load confirmation
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
+frame:RegisterEvent("BAG_UPDATE_DELAYED")
 frame:RegisterEvent("HEARTHSTONE_BOUND")
 frame:RegisterEvent("SUPER_TRACKING_CHANGED")
 frame:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
 frame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_LOGIN" then
-        print("[Mapzeroth] Loaded successfully! Type /mapzeroth help for commands.")
-
         -- Initialize SavedVariables structure if it doesn't exist
         if not MapzerothDB then
             MapzerothDB = {}
@@ -46,17 +46,15 @@ frame:SetScript("OnEvent", function(self, event)
         addon:InitializeMinimapButton()
         -- Initialize settings panel
         addon:InitializeSettingsPanel()
+        print("[Mapzeroth] Loaded successfully! Type /mapzeroth help for commands.")
+    elseif event == "BAG_UPDATE_DELAYED" then
+        addon.bagsFullyLoaded = true
 
-        -- Prime the item cache by calling GetAvailableTravelAbilities once
-        -- This triggers the client to query item data, so subsequent calls work properly
-        C_Timer.After(1, function()
-            if addon.GetAvailableTravelAbilities then
-                addon:GetAvailableTravelAbilities()
-                if addon.DEBUG then
-                    print("[Mapzeroth] DEBUG: Item cache primed")
-                end
-            end
-        end)
+        if addon.DEBUG then
+            print("[Mapzeroth] DEBUG: Bags fully loaded, all travel items should be available")
+        end
+
+        frame:UnregisterEvent("BAG_UPDATE_DELAYED")
     elseif event == "HEARTHSTONE_BOUND" then
         if addon.DEBUG then
             print("[Mapzeroth] DEBUG: HEARTHSTONE_BOUND event fired!")

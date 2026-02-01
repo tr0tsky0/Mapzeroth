@@ -213,7 +213,7 @@ local function CreateStepButton(parent, stepData, stepNum)
     if needsSecure then
         frame = CreateFrame("Button", nil, parent, "SecureActionButtonTemplate,BackdropTemplate")
         frame:SetAttribute("type", "macro")
-        frame:RegisterForClicks("LeftButtonUp")
+        frame:RegisterForClicks("LeftButtonDown","LeftButtonUp")
 
         -- Set macro
         local macroText = BuildStepMacro(stepData)

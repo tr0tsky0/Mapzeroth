@@ -56,8 +56,8 @@ ns.Nodes = {
             faction = "ALLIANCE",
             mapID = 84,
             interior = true,
-            x = 0.4864,
-            y = 0.9497
+            x = 0.4097,
+            y = 0.9262
         },
         STORMWIND_ORIBOS_PORTAL = {
             name = "Portal to Oribos",
@@ -1498,8 +1498,8 @@ ns.Nodes = {
             x = 0.5529,
             y = 0.9178
         },
-        ORGRIMMAR_SILVERMOON_PORTAL = {
-            name = "Portal to Silvermoon",
+        ORGRIMMAR_BC_SILVERMOON_PORTAL = {
+            name = "Portal to Burning Crusade Silvermoon",
             faction = "HORDE",
             interior = true,
             mapID = 85,
@@ -2488,6 +2488,12 @@ ns.Nodes = {
             mapID = 2351,
             x = 0.540,
             y = 0.496
+        },
+        RAZORWIND_PORTAL_TO_FORBIDDEN_REACH = {
+            name = "Portal to the Forbidden Reach",
+            mapID = 2351,
+            x = 0.5424,
+            y = 0.5589
         }
     },
 
@@ -4627,6 +4633,18 @@ ns.Nodes = {
             x = 0.3552,
             y = 0.5920
         },
+        FORBIDDEN_REACH = {
+            name = "Morqut Village Entrance",
+            mapID = 2151,
+            x = 0.3495,
+            y = 0.6095
+        },
+        FORBIDDEN_REACH_WAYGATE = {
+            name = "Morqut Islet",
+            mapID = 2151,
+            x = 0.2909,
+            y = 0.6245
+        },
         OBSIDIAN_THRONE_FLIGHT = {
             name = "Obsidian Throne",
             mapID = 2022,
@@ -4862,6 +4880,12 @@ ns.Nodes = {
             mapID = 2133,
             x = 0.5102,
             y = 0.2587
+        },
+        TYRHOLD_RESERVOIR_WAYGATE = {
+            name = "Tyrhold Reservoir",
+            mapID = 2133,
+            x = 0.5234,
+            y = 0.7854
         },
         -- Dungeons
         RUBY_LIFE_POOLS_DUNGEON = {
@@ -7806,7 +7830,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},{
+}, {
     from = "STORMWIND_ORIBOS_PORTAL",
     to = "ORIBOS",
     method = "portal",
@@ -7838,8 +7862,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},
-{
+}, {
     from = "STORMWIND_EXODAR_PORTAL",
     to = "EXODAR",
     method = "portal",
@@ -7902,7 +7925,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},{
+}, {
     from = "EXODAR",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
@@ -7910,7 +7933,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},{
+}, {
     from = "STORMWIND_BELAMETH_PORTAL",
     to = "BELAMETH",
     method = "portal",
@@ -7964,7 +7987,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     }
 }, {
     from = "STORMWIND_BORALUS_PORTAL",
-    to = "STORMWIND_PORTAL_ROOM_LOWER",
+    to = "STORMWIND_PORTAL_ROOM_UPPER",
     method = "walk",
     requirements = {
         faction = "Alliance"
@@ -8046,8 +8069,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},
--- Stormwind Eastern Earthshrine → Cataclysm Zones
+}, -- Stormwind Eastern Earthshrine → Cataclysm Zones
 {
     from = "EASTERN_EARTHSHRINE_SW",
     to = "DARKBREAK_COVE_PORTAL",
@@ -8094,8 +8116,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-}, 
--- Stormwind Embassy & Harbour
+}, -- Stormwind Embassy & Harbour
 {
     from = "SW_EMBASSY",
     to = "VINDICAAR_AZEROTH",
@@ -8130,8 +8151,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "GROMGOL_ZEPPELIN",
     method = "zeppelin",
     cost = 120
-}, 
--- Orgrimmar
+}, -- Orgrimmar
 {
     from = "ORGRIMMAR_PORTAL_ROOM_ENTRANCE",
     to = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
@@ -8139,40 +8159,35 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_VALDRAKKEN_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_ORIBOS_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_RAZORWIND_SHORES_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_DORNOGAL_PORTAL",
     method = "walk",
@@ -8180,16 +8195,14 @@ ns.Edges = { -- Stormwind Internal Navigation
         minLevel = 68,
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     to = "ORGRIMMAR_DALARAN_NORTHREND_PORTAL",
     method = "walk",
@@ -8252,58 +8265,51 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
     to = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     to = "ORGRIMMAR_AZSUNA_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     to = "ORGRIMMAR_DAZARALOR_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     to = "ORGRIMMAR_SHATTRATH_OUTLANDS_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     to = "ORGRIMMAR_CAVERNS_OF_TIME_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
     to = "ORGRIMMAR_WARSPEAR_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
     }
-},
-{
+}, {
     from = "ORGRIMMAR_PORTAL_ROOM_LOWER",
-    to = "ORGRIMMAR_SILVERMOON_PORTAL",
+    to = "ORGRIMMAR_BC_SILVERMOON_PORTAL",
     method = "walk",
     requirements = {
         faction = "Horde"
@@ -8331,7 +8337,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},{
+}, {
     from = "ORGRIMMAR_DAZARALOR_PORTAL",
     to = "DAZARALOR_DOCK",
     method = "portal",
@@ -8355,7 +8361,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},{
+}, {
     from = "ORGRIMMAR_WARSPEAR_PORTAL",
     to = "WARSPEAR_ASHRAN",
     method = "portal",
@@ -8372,7 +8378,7 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Horde"
     }
 }, {
-    from = "ORGRIMMAR_SILVERMOON_PORTAL",
+    from = "ORGRIMMAR_BC_SILVERMOON_PORTAL",
     to = "SILVERMOON",
     method = "portal",
     oneway = true,
@@ -8395,8 +8401,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},
--- Boralus
+}, -- Boralus
 {
     from = "BORALUS",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
@@ -8405,7 +8410,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},{
+}, {
     from = "BORALUS",
     to = "SILITHUS",
     method = "portal",
@@ -8490,8 +8495,7 @@ ns.Edges = { -- Stormwind Internal Navigation
         class = "PALADIN",
         faction = "Alliance"
     }
-},
--- Oribos
+}, -- Oribos
 {
     from = "ORIBOS",
     to = "ORIBOS_FLIGHT",
@@ -8504,7 +8508,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},  {
+}, {
     from = "ORIBOS",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
@@ -8577,7 +8581,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-},{
+}, {
     from = "DARK_PORTAL_BL",
     to = "DARK_PORTAL_OUTLANDS",
     method = "portal"
@@ -8632,7 +8636,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-},{
+}, {
     from = "BELAMETH",
     to = "MOUNT_HYJAL",
     method = "portal"
@@ -8777,6 +8781,23 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "RAZORWIND_PORTAL_TO_FORBIDDEN_REACH",
+    to = "FORBIDDEN_REACH",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        endeavor = "Dracthyr",
+        faction = "Horde"
+    }
+}, {
+    from = "FORBIDDEN_REACH",
+    to = "RAZORWIND_SHORES",
+    method = "portal",
+    requirements = {
+        endeavor = "Dracthyr",
         faction = "Horde"
     }
 }, {
@@ -9101,7 +9122,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-}, { 
+}, {
     from = "ECHO_ISLES_DOCK",
     to = "DAZARALOR_DOCK",
     method = "ship"
@@ -9265,8 +9286,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "TEMPLE_OF_EARTH_PORTAL",
     to = "THERAZANES_THRONE_PORTAL",
     method = "portal"
-},
--- DRUID EMERALD DREAMWAY
+}, -- DRUID EMERALD DREAMWAY
 {
     from = "EMERALD_DREAMWAY",
     to = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
@@ -9302,37 +9322,36 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
     to = "MOONGLADE_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_AMIRDRASSIL_PORTAL",
     to = "AMIRDRASSIL_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_FERALAS_PORTAL",
     to = "FERALAS_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_GRIZZLY_HILLS_PORTAL",
     to = "GRIZZLY_HILLS_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_DREAMGROVE_PORTAL",
     to = "VALSHARAH_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_HYJAL_PORTAL",
     to = "MOUNT_HYJAL_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_HINTERLANDS_PORTAL",
     to = "HINTERLANDS_DRUID",
-    method = "portal",
+    method = "portal"
 }, {
     from = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL",
     to = "DUSKWOOD_DRUID",
-    method = "portal",
-}
-}
+    method = "portal"
+}}
 
 -----------------------------------------------------------
 -- TRAVERSAL GROUPS
