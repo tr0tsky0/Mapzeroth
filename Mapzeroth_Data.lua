@@ -175,6 +175,12 @@ ns.Nodes = {
             x = 0.268,
             y = 0.355
         },
+        STORMWIND_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 37,
+            x = 0.3448,
+            y = 0.5142
+        },
         DARKMOON_FAIRE_ENTRANCE_ELWYNN = {
             name = "Darkmoon Faire Entrance",
             mapID = 37,
@@ -312,6 +318,34 @@ ns.Nodes = {
             x = 0.663,
             y = 0.384
         },
+        UNDERCITY_STRANGLETHORN_VALE_PORTAL = {
+            name = "Portal to Stranglethorn Vale",
+            faction = "HORDE",
+            mapID = 2070,
+            x = 0.5955,
+            y = 0.6789
+        },
+        UNDERCITY_SILVERMOON_PORTAL = {
+            name = "Translocation Orb",
+            faction = "HORDE",
+            mapID = 2070,
+            x = 0.5946,
+            y = 0.6744
+        },
+        UNDERCITY_ORGRIMMAR_PORTAL = {
+            name = "Portal to Orgrimmar",
+            faction = "HORDE",
+            mapID = 2070,
+            x = 0.5953,
+            y = 0.6701
+        },
+        UNDERCITY_HOWLING_FJORD_PORTAL = {
+            name = "Portal to Howling Fjord",
+            faction = "HORDE",
+            mapID = 2070,
+            x = 0.6007,
+            y = 0.6697
+        },
         THE_BULWARK_FLIGHT = {
             name = "The Bulwark",
             faction = "HORDE",
@@ -334,9 +368,9 @@ ns.Nodes = {
         BIZMOS_BRAWLPUB = {
             name = "Bizmo's Brawlpub",
             faction = "ALLIANCE",
-            mapID = 500,
-            x = 0.511,
-            y = 0.273
+            mapID = 84,
+            x = 0.6654,
+            y = 0.3481
         },
         STORMWIND_CITY_MOLE = {
             name = "Stormwind (Eastern Kingdoms)",
@@ -527,6 +561,12 @@ ns.Nodes = {
             mapID = 50,
             x = 0.4180,
             y = 0.3365
+        },
+        STRANGLETHORN_VALE_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 50,
+            x = 0.7960,
+            y = 0.7733
         },
         FURLBROWS_PUMPKIN_FARM_FLIGHT = {
             name = "Furlbrow's Pumpkin Farm",
@@ -1385,6 +1425,12 @@ ns.Nodes = {
             x = 0.5334,
             y = 0.9047
         },
+        ORGRIMMAR_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 1,
+            x = 0.4154,
+            y = 0.1611
+        },
         -- Orgrimmar Portal Room
         ORGRIMMAR_PORTAL_ROOM_STAIRS = {
             name = "Portal Room (Stairs)",
@@ -1593,6 +1639,12 @@ ns.Nodes = {
             mapID = 83,
             x = 0.61,
             y = 0.39
+        },
+        WINTERSPRING_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 83,
+            x = 0.2257,
+            y = 0.4655
         },
         -- Neutral Zones
         MOONGLADE = {
@@ -2647,6 +2699,12 @@ ns.Nodes = {
             x = 0.540,
             y = 0.728
         },
+        NAGRAND_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 107,
+            x = 0.4960,
+            y = 0.4640
+        },
         ALLERIAN_STRONGHOLD_FLIGHT = {
             name = "Allerian Stronghold",
             faction = "ALLIANCE",
@@ -3576,6 +3634,12 @@ ns.Nodes = {
             x = 0.555,
             y = 0.627
         },
+        JADE_FOREST_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 371,
+            x = 0.4382,
+            y = 0.4177
+        },
         VALLEY_OF_THE_FOUR_WINDS_MOLE = {
             name = "Valley of the Four Winds (Stormstout Brewery)",
             faction = "ALLIANCE",
@@ -4119,6 +4183,12 @@ ns.Nodes = {
             mapID = 747,
             x = 0.5430,
             y = 0.2497
+        },
+        VALSHARAH_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 641,
+            x = 0.5181,
+            y = 0.5863
         },
         THE_BROKEN_SHORE = {
             name = "Aalgen Point",
@@ -5040,6 +5110,12 @@ ns.Nodes = {
             mapID = 2339,
             x = 0.4946,
             y = 0.4441
+        },
+        DORNOGAL_GALA_OF_GIFTS_PORTAL = {
+            name = "Gala of Gifts Portal",
+            mapID = 2339,
+            x = 0.4863,
+            y = 0.4832
         },
         AZJKAHET = {
             name = "The Weaver's Lair",
@@ -6485,6 +6561,13 @@ ns.Nodes = {
             mapID = 110,
             x = 0.5826,
             y = 0.1924
+        },
+        SILVERMOON_UNDERCITY_PORTAL = {
+            name = "Orb of Translocation",
+            faction = "HORDE",
+            mapID = 110,
+            x = 0.5062,
+            y = 0.1645
         },
         ZULAMAN_FLIGHT = {
             name = "Zul'Aman",
@@ -8084,6 +8167,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "HIGHBANK",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Alliance"
     }
 
@@ -8092,6 +8176,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "TOL_BARAD_ALLIANCE",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Alliance"
     }
 }, {
@@ -8099,6 +8184,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "DEEPHOLM_STORMWIND_PORTAL",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Alliance"
     }
 }, {
@@ -8107,6 +8193,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
+        minLevel = 48,
         faction = "Alliance"
     }
 }, {
@@ -8114,6 +8201,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "MOUNT_HYJAL",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Alliance"
     }
 }, -- Stormwind Embassy & Harbour
@@ -8783,24 +8871,26 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-}, {
-    from = "RAZORWIND_PORTAL_TO_FORBIDDEN_REACH",
-    to = "FORBIDDEN_REACH",
-    method = "portal",
-    oneway = true,
-    requirements = {
-        endeavor = "Dracthyr",
-        faction = "Horde"
-    }
-}, {
-    from = "FORBIDDEN_REACH",
-    to = "RAZORWIND_SHORES",
-    method = "portal",
-    requirements = {
-        endeavor = "Dracthyr",
-        faction = "Horde"
-    }
-}, {
+}, -- {
+--    from = "RAZORWIND_PORTAL_TO_FORBIDDEN_REACH",
+--    to = "FORBIDDEN_REACH",
+--    method = "portal",
+--    oneway = true,
+--    requirements = {
+--        endeavor = "Dracthyr",
+--        faction = "Horde"
+--    }
+-- }, 
+-- {
+--    from = "FORBIDDEN_REACH",
+--    to = "RAZORWIND_SHORES",
+--    method = "portal",
+--    requirements = {
+--        endeavor = "Dracthyr",
+--        faction = "Horde"
+--    }
+-- }, 
+{
     from = "VALDRAKKEN",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
     method = "portal",
@@ -8926,6 +9016,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "DRAGONMAW_PORT",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Horde"
     }
 }, {
@@ -8933,6 +9024,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "TOL_BARAD_HORDE",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Horde"
     }
 }, {
@@ -8940,6 +9032,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "DEEPHOLM_ORGRIMMAR_PORTAL",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Horde"
     }
 }, {
@@ -8948,6 +9041,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
+        minLevel = 48,
         faction = "Horde"
     }
 }, {
@@ -8955,6 +9049,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "MOUNT_HYJAL",
     method = "portal",
     requirements = {
+        minLevel = 48,
         faction = "Horde"
     }
 }, {
@@ -9107,6 +9202,29 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "VENGEANCE_LANDING_ZEPPELIN",
     method = "zeppelin"
 }, {
+    from = "UNDERCITY_STRANGLETHORN_VALE_PORTAL",
+    to = "GROMGOL_ZEPPELIN",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "UNDERCITY_SILVERMOON_PORTAL",
+    to = "SILVERMOON_UNDERCITY_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Horde"
+    }
+}, {
+    from = "UNDERCITY_HOWLING_FJORD_PORTAL",
+    to = "VENGEANCE_LANDING_FLIGHT",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde"
+    }
+}, {
     from = "ORGRIMMAR_WARSONG_ZEP",
     to = "WARSONG_HOLD_ZEPPELIN",
     method = "zeppelin"
@@ -9230,7 +9348,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "DARKMOON_ENTRANCE",
     method = "portal",
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Alliance"
     }
 }, {
@@ -9239,7 +9357,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Horde"
     }
 }, {
@@ -9247,7 +9365,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "DARKMOON_ENTRANCE",
     method = "portal",
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Horde"
     }
 }, {
@@ -9256,7 +9374,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Alliance"
     }
 }, {
@@ -9265,7 +9383,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Alliance"
     }
 }, {
@@ -9274,7 +9392,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     oneway = true,
     requirements = {
-        holiday = "Darkmoon Faire",
+        holiday = "darkmoon_faire",
         faction = "Horde"
     }
 }, {
@@ -9374,6 +9492,143 @@ ns.Edges = { -- Stormwind Internal Navigation
     method = "portal",
     requirements = {
         class = "DRUID"
+    }
+}, -- love_is_in_the_air
+{
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "NAGRAND_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "VALSHARAH_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "JADE_FOREST_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "WINTERSPRING_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "STORMWIND_GALA_OF_GIFTS_PORTAL",
+    to = "STRANGLETHORN_VALE_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Horde",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "NAGRAND_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "VALSHARAH_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "JADE_FOREST_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "WINTERSPRING_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "ORGRIMMAR_GALA_OF_GIFTS_PORTAL",
+    to = "STRANGLETHORN_VALE_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    to = "NAGRAND_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    to = "VALSHARAH_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    to = "JADE_FOREST_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    to = "WINTERSPRING_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        holiday = "love_is_in_the_air"
+    }
+}, {
+    from = "DORNOGAL_GALA_OF_GIFTS_PORTAL",
+    to = "STRANGLETHORN_VALE_GALA_OF_GIFTS_PORTAL",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        holiday = "love_is_in_the_air"
     }
 }}
 

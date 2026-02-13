@@ -99,3 +99,9 @@ addon.METHOD_DISPLAY_TEXT = {
     hearthstone = "Hearth to",
     racial = "Use"
 }
+
+addon.HOLIDAYS = {
+    love_is_in_the_air = { 235466, 235467, 235468 },
+    darkmoon_faire = { 235446, 235447, 235448 },
+    feast_of_winters_veil = { 235482, 235484, 235485 }
+}

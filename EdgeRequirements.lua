@@ -13,13 +13,20 @@ local calendarReady = false
 -- INTERNAL FUNCTIONS (local)
 -- ============================================================================
 
-local function IsHolidayActive(holidayName)
+local function IsHolidayActive(holidayKey)
     -- Return cached result
-    if holidayCache[holidayName] ~= nil then
-        return holidayCache[holidayName]
+    if holidayCache[holidayKey] ~= nil then
+        return holidayCache[holidayKey]
     end
     
     if not calendarReady then
+        return false
+    end
+    
+    local icons = addon.HOLIDAYS[holidayKey]
+    if not icons then
+        -- Invalid key, bail early
+        holidayCache[holidayKey] = false
         return false
     end
     
@@ -29,13 +36,18 @@ local function IsHolidayActive(holidayName)
     for i = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, currentCalendarTime.monthDay, i)
         
-        if event and event.calendarType == "HOLIDAY" and event.title == holidayName then
-            holidayCache[holidayName] = true
-            return true
+        if event and event.calendarType == "HOLIDAY" and event.iconTexture then
+            -- Check if icon matches any in the array
+            for _, iconID in ipairs(icons) do
+                if event.iconTexture == iconID then
+                    holidayCache[holidayKey] = true
+                    return true
+                end
+            end
         end
     end
     
-    holidayCache[holidayName] = false
+    holidayCache[holidayKey] = false
     return false
 end
 
@@ -49,7 +61,7 @@ end
 -- ============================================================================
 
 local requirementCheckers = {
-    -- Holiday requirement (must match Blizzard's exact calendar event title)
+    -- Holiday requirement
     holiday = function(requiredHoliday)
         return IsHolidayActive(requiredHoliday)
     end,
