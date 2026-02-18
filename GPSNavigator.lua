@@ -656,17 +656,109 @@ function addon:InitializeGPSNavigator()
     actionButton:Hide()
 
     local actionIcon = actionButton:CreateTexture(nil, "ARTWORK")
-    actionIcon:SetAllPoints(actionButton)
-    actionIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    actionIcon:SetTexCoord(0, 1, 0, 1)
     actionIcon:SetVertexColor(0.95, 0.95, 0.95, 1)
     actionButton.icon = actionIcon
 
+    local actionBorder = actionButton:CreateTexture(nil, "OVERLAY", nil, 1)
+    actionBorder:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    actionButton.border = actionBorder
+
+    local actionHover = actionButton:CreateTexture(nil, "OVERLAY", nil, 2)
+    actionHover:SetTexture("Interface\\Buttons\\ButtonHilight-Square")
+    actionHover:SetBlendMode("ADD")
+    actionHover:SetAlpha(0.38)
+    actionHover:Hide()
+    actionButton.hover = actionHover
+
+    local actionPressed = actionButton:CreateTexture(nil, "OVERLAY", nil, 3)
+    actionPressed:SetTexture("Interface\\Buttons\\WHITE8x8")
+    actionPressed:SetBlendMode("BLEND")
+    actionPressed:SetVertexColor(0, 0, 0, 0.28)
+    actionPressed:Hide()
+    actionButton.pressed = actionPressed
+
+    local function ApplyActionButtonLayout()
+        local size = actionButton:GetWidth() or 56
+        local iconInset = math.max(3, math.floor(size * 0.06 + 0.5))
+        local borderOutset = math.max(8, math.floor(size * 0.22 + 0.5))
+        local hoverOutset = math.max(2, math.floor(size * 0.04 + 0.5))
+        local iconSize = math.max(1, size - (iconInset * 2))
+
+        actionIcon:ClearAllPoints()
+        actionIcon:SetSize(iconSize, iconSize)
+        actionIcon:SetPoint("CENTER", actionButton, "CENTER", 0, 0)
+
+        actionBorder:ClearAllPoints()
+        actionBorder:SetPoint("TOPLEFT", actionButton, "TOPLEFT", -borderOutset, borderOutset)
+        actionBorder:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", borderOutset, -borderOutset)
+
+        actionHover:ClearAllPoints()
+        actionHover:SetPoint("TOPLEFT", actionButton, "TOPLEFT", -hoverOutset, hoverOutset)
+        actionHover:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", hoverOutset, -hoverOutset)
+
+        actionPressed:ClearAllPoints()
+        actionPressed:SetPoint("TOPLEFT", actionButton, "TOPLEFT", iconInset, -iconInset)
+        actionPressed:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", -iconInset, iconInset)
+    end
+
+    ApplyActionButtonLayout()
+
+    local function UpdateActionButtonVisual(self)
+        local hovered = self.isHovered and true or false
+        local pressed = self.isPressed and true or false
+
+        if self.hover then
+            if hovered then
+                self.hover:Show()
+            else
+                self.hover:Hide()
+            end
+        end
+
+        if self.pressed then
+            if pressed then
+                self.pressed:Show()
+            else
+                self.pressed:Hide()
+            end
+        end
+
+        if pressed then
+            self.icon:SetVertexColor(0.84, 0.84, 0.84, 1)
+        elseif hovered then
+            self.icon:SetVertexColor(1, 1, 1, 1)
+        else
+            self.icon:SetVertexColor(0.95, 0.95, 0.95, 1)
+        end
+    end
+
     actionButton:SetScript("OnEnter", function(self)
-        self.icon:SetVertexColor(1, 1, 1, 1)
+        self.isHovered = true
+        UpdateActionButtonVisual(self)
     end)
 
     actionButton:SetScript("OnLeave", function(self)
-        self.icon:SetVertexColor(0.95, 0.95, 0.95, 1)
+        self.isHovered = false
+        self.isPressed = false
+        UpdateActionButtonVisual(self)
+    end)
+
+    actionButton:SetScript("OnMouseDown", function(self)
+        self.isPressed = true
+        UpdateActionButtonVisual(self)
+    end)
+
+    actionButton:SetScript("OnMouseUp", function(self)
+        self.isPressed = false
+        self.isHovered = self:IsMouseOver()
+        UpdateActionButtonVisual(self)
+    end)
+
+    actionButton:SetScript("OnHide", function(self)
+        self.isHovered = false
+        self.isPressed = false
+        UpdateActionButtonVisual(self)
     end)
 
     actionButton:SetScript("OnDragStart", function()
