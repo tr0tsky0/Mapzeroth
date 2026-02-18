@@ -24,6 +24,7 @@ LocationService.lua
 WaypointService.lua
 
 # UI components
+GPSNavigator.lua
 SettingsPanel.lua
 DestinationSelector.lua
 RouteExecutionFrame.lua

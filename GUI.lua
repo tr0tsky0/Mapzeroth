@@ -114,6 +114,10 @@ function addon:ApplyWindowScale(scale)
     if addon.RouteExecutionFrame then
         addon.RouteExecutionFrame:SetScale(scale)
     end
+
+    if addon.ApplyGPSScale then
+        addon:ApplyGPSScale(scale)
+    end
 end
 
 -----------------------------------------------------------

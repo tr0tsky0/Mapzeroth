@@ -38,12 +38,20 @@ frame:SetScript("OnEvent", function(self, event)
         if MapzerothDB.settings.windowScale == nil then
             MapzerothDB.settings.windowScale = 1.0
         end
+        if MapzerothDB.settings.mapClickModifier == nil then
+            MapzerothDB.settings.mapClickModifier = "ALT"
+        end
+        if MapzerothDB.settings.mapClickMouseButton == nil then
+            MapzerothDB.settings.mapClickMouseButton = "LeftButton"
+        end
         if MapzerothDB.minimap.hide == nil then
             MapzerothDB.minimap.hide = false
         end
 
         -- Initialize minimap button
         addon:InitializeMinimapButton()
+        -- Initialize standalone GPS navigator
+        addon:InitializeGPSNavigator()
         -- Initialize settings panel
         addon:InitializeSettingsPanel()
         print("[Mapzeroth] Loaded successfully! Type /mapzeroth help for commands.")

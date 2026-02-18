@@ -197,6 +197,44 @@ local function CreateSettingsPanel()
     panel.minimapCheckbox = minimapCheckbox
 
     -----------------------------------------------------------
+    -- MAP CLICK NAVIGATION BINDING
+    -----------------------------------------------------------
+
+    local mapClickTitle = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    mapClickTitle:SetPoint("TOPLEFT", minimapCheckbox, "BOTTOMLEFT", 4, -28)
+    mapClickTitle:SetText("Map Click Navigation")
+
+    local mapClickDescription = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    mapClickDescription:SetPoint("TOPLEFT", mapClickTitle, "BOTTOMLEFT", 0, -6)
+    mapClickDescription:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
+    mapClickDescription:SetJustifyH("LEFT")
+    mapClickDescription:SetTextColor(0.7, 0.7, 0.7)
+    mapClickDescription:SetText(
+        "Click on the world map with your configured key combo to create a waypoint and immediately start navigation.")
+
+    local bindingValue = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    bindingValue:SetPoint("TOPLEFT", mapClickDescription, "BOTTOMLEFT", 0, -10)
+    bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+
+    local modifierButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+    modifierButton:SetSize(140, 24)
+    modifierButton:SetPoint("TOPLEFT", bindingValue, "BOTTOMLEFT", 0, -10)
+    modifierButton:SetText("Change Modifier")
+    modifierButton:SetScript("OnClick", function()
+        addon:CycleMapClickModifier()
+        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+    end)
+
+    local mouseButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+    mouseButton:SetSize(140, 24)
+    mouseButton:SetPoint("LEFT", modifierButton, "RIGHT", 10, 0)
+    mouseButton:SetText("Change Mouse")
+    mouseButton:SetScript("OnClick", function()
+        addon:CycleMapClickMouseButton()
+        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+    end)
+
+    -----------------------------------------------------------
     -- REFRESH CALLBACK (called when panel is opened)
     -----------------------------------------------------------
 
@@ -217,6 +255,7 @@ local function CreateSettingsPanel()
         -- Minimap button
         local minimapShown = not (MapzerothDB.minimap and MapzerothDB.minimap.hide)
         minimapCheckbox:SetChecked(minimapShown)
+        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
     end
 
     -----------------------------------------------------------
@@ -234,8 +273,11 @@ local function CreateSettingsPanel()
         MapzerothDB.settings.loadingScreenTax = 10
         MapzerothDB.settings.maxCooldownValue = 8
         MapzerothDB.settings.windowScale = 1.0
+        MapzerothDB.settings.mapClickModifier = "ALT"
+        MapzerothDB.settings.mapClickMouseButton = "LeftButton"
         addon:ApplyWindowScale(1.0)
         addon:ShowMinimapButton()
+        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
 
         print("[Mapzeroth] Settings reset to defaults")
     end

@@ -200,7 +200,8 @@ local function BuildStepList(path, totalCost, previous, waypoint)
                 method = prevInfo.method,
                 destination = prevInfo.destination,
                 time = prevInfo.cost,
-                nodeID = prevInfo.nodeID
+                nodeID = prevInfo.nodeID,
+                fromNodeID = prevInfo.fromNode
             })
         elseif nodeID == "_WAYPOINT_DESTINATION" then
             -- Waypoint destination
@@ -214,6 +215,7 @@ local function BuildStepList(path, totalCost, previous, waypoint)
                 itemID = prevInfo.itemID,
                 spellID = prevInfo.spellID,
                 nodeID = nodeID,
+                fromNodeID = prevInfo.fromNode,
                 waypointData = waypoint
             })
         elseif node then
@@ -227,7 +229,8 @@ local function BuildStepList(path, totalCost, previous, waypoint)
                 destinationName = prevInfo.destinationName,
                 itemID = prevInfo.itemID,
                 spellID = prevInfo.spellID,
-                nodeID = nodeID
+                nodeID = nodeID,
+                fromNodeID = prevInfo.fromNode
             })
         end
     end
@@ -320,6 +323,7 @@ function addon:FindRoute(destinationID)
     -- Output
     local steps = BuildStepList(path, cost, previous, waypoint)
     local optimizedSteps, optimizedCost = addon:OptimizeConsecutiveMovement(steps)
+    addon:ShowGPSNavigator(optimizedSteps, optimizedCost)
 
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then
         addon:ShowRouteExecutionFrame(optimizedSteps, optimizedCost)
