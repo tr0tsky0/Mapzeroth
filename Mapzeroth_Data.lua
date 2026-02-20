@@ -8001,14 +8001,6 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 }, {
-    from = "STORMWIND_EXODAR_PORTAL",
-    to = "EXODAR",
-    method = "portal",
-    oneway = true,
-    requirements = {
-        faction = "Alliance"
-    }
-}, {
     from = "EXODAR",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "portal",
@@ -8684,6 +8676,14 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "DARNASSUS",
     to = "DARK_PORTAL_OUTLANDS",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance"
+    }
+}, {
+    from = "DARNASSUS",
+    to = "EXODAR",
     method = "portal",
     oneway = true,
     requirements = {

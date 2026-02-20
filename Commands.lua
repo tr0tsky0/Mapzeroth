@@ -380,6 +380,7 @@ function addon:ShowMapInfo()
     end
 
     local mapInfo = C_Map.GetMapInfo(mapID)
+    local mapArtID = C_Map.GetMapArtID(mapID)
     local mapName = mapInfo and mapInfo.name or "Unknown"
 
     local position = C_Map.GetPlayerMapPosition(mapID, "player")
@@ -406,6 +407,7 @@ function addon:ShowMapInfo()
     print(string.format("    traversalGroup = \"UNKNOWN\","))
     print(string.format("    faction = \"NEUTRAL\","))
     print(string.format("    mapID = %d,", mapID))
+    print(string.format("    mapArtID = %d,", mapArtID))
     print(string.format("    x = %.3f,", x))
     print(string.format("    y = %.3f,", y))
     print(string.format("},"))
