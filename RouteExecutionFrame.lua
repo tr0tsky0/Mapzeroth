@@ -115,6 +115,21 @@ end
 -----------------------------------------------------------
 
 local function GetStepActionText(stepData)
+    if stepData and stepData.itemID and addon:IsCityCloakItemID(stepData.itemID) then
+        local cloakName = stepData.abilityName or C_Item.GetItemInfo(stepData.itemID) or "city cloak"
+        local equippedCloakID = GetInventoryItemID("player", INVSLOT_BACK or 15)
+
+        if equippedCloakID ~= stepData.itemID then
+            return string.format("Equip %s", cloakName)
+        end
+
+        if stepData.destinationName then
+            return string.format("Use %s to %s", cloakName, stepData.destinationName)
+        end
+
+        return string.format("Use %s", cloakName)
+    end
+
     if stepData.abilityName then
         if stepData.destinationName then
             return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
@@ -227,34 +242,21 @@ function addon:GetRouteNavigationState()
     return routeSteps, currentRouteStep, routeTotalTime
 end
 
------------------------------------------------------------
--- BUILD MACRO TEXT FOR STEP
+-- BUILD SECURE ACTION FOR STEP
 -----------------------------------------------------------
 
-local function BuildStepMacro(stepData)
+local function GetSecureStepAction(stepData)
     if stepData.spellID then
         local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-
-        if spellInfo then
-            return string.format("/cast %s", spellInfo.name)
-        else
-            -- Fallback to ID
-            return string.format("/cast %d", stepData.spellID)
-        end
-
-    elseif stepData.itemID then
-        -- Get localized item name from ID
-        local itemName = C_Item.GetItemInfo(stepData.itemID)
-
-        if itemName then
-            return string.format("/use %s", itemName)
-        else
-            -- Fallback to ID
-            return string.format("/use %d", stepData.itemID)
-        end
+        return "spell", (spellInfo and spellInfo.name) or stepData.spellID
     end
 
-    return nil
+    if stepData.itemID then
+        local itemName = C_Item.GetItemInfo(stepData.itemID)
+        return "item", itemName or string.format("item:%d", stepData.itemID)
+    end
+
+    return nil, nil
 end
 
 -----------------------------------------------------------
@@ -612,20 +614,51 @@ local function CreateStepButton(parent, stepData, stepNum)
     local frame
     if needsSecure then
         frame = CreateFrame("Button", nil, parent, "SecureActionButtonTemplate,BackdropTemplate")
-        frame:SetAttribute("type", "macro")
         frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
 
-        -- Set macro
-        local macroText = BuildStepMacro(stepData)
-        if macroText then
-            frame:SetAttribute("macrotext", macroText)
+        local actionType, actionValue = GetSecureStepAction(stepData)
+        if actionType == "spell" then
+            frame:SetAttribute("type", "spell")
+            frame:SetAttribute("spell", actionValue)
+            frame:SetAttribute("item", nil)
+        elseif actionType == "item" then
+            frame:SetAttribute("type", "item")
+            frame:SetAttribute("item", actionValue)
+            frame:SetAttribute("spell", nil)
         end
 
         frame:SetScript("PreClick", function(self)
             addon:SetActiveRouteStep(self.stepNum)
+            self.cityCloakWasEquipped = nil
+
+            if self.stepData and self.stepData.itemID and addon:IsCityCloakItemID(self.stepData.itemID) then
+                addon:DebugCityCloak(string.format(
+                    "Route PreClick: step=%s itemID=%d",
+                    tostring(self.stepNum),
+                    self.stepData.itemID
+                ))
+                self.cityCloakWasEquipped = addon:PrepareCityCloakClick(self.stepData.itemID)
+            end
         end)
 
         frame:SetScript("PostClick", function(self)
+            if self.stepData and self.stepData.itemID and addon:IsCityCloakItemID(self.stepData.itemID) then
+                addon:DebugCityCloak(string.format(
+                    "Route PostClick: step=%s itemID=%d wasEquippedBefore=%s",
+                    tostring(self.stepNum),
+                    self.stepData.itemID,
+                    tostring(self.cityCloakWasEquipped)
+                ))
+                addon:FinalizeCityCloakClick(self.stepData.itemID, self.cityCloakWasEquipped)
+                if self.cityCloakWasEquipped == false then
+                    addon:DebugCityCloak("Route PostClick: first click detected, step not advanced")
+                    if self.actionTextLabel then
+                        self.actionTextLabel:SetText(GetStepActionText(self.stepData))
+                    end
+                    return
+                end
+            end
+
             addon:CompleteRouteStep(self.stepNum)
         end)
     else
@@ -719,6 +752,7 @@ local function CreateStepButton(parent, stepData, stepNum)
     destText:SetJustifyH("LEFT")
     destText:SetText(actionText)
     destText:SetTextColor(unpack(COLOURS.text))
+    frame.actionTextLabel = destText
 
     -- Time text
     local timeText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -742,10 +776,20 @@ local function CreateStepButton(parent, stepData, stepNum)
             local dest = stepData.destinationName or stepData.destination or "destination"
             tooltipText = string.format("Click to set waypoint to %s", dest)
         elseif stepData.itemID or stepData.spellID then
-            tooltipText = string.format("Click to use %s", stepData.abilityName or "ability")
+            if stepData.itemID and addon:IsCityCloakItemID(stepData.itemID) then
+                local cloakName = stepData.abilityName or C_Item.GetItemInfo(stepData.itemID) or "city cloak"
+                local equippedCloakID = GetInventoryItemID("player", INVSLOT_BACK or 15)
+                if equippedCloakID ~= stepData.itemID then
+                    tooltipText = string.format("Click to equip %s", cloakName)
+                else
+                    tooltipText = string.format("Click to use %s", cloakName)
+                end
+            else
+                tooltipText = string.format("Click to use %s", stepData.abilityName or "ability")
+            end
         else
             -- Fallback for any other method
-            tooltipText = actionText
+            tooltipText = GetStepActionText(stepData)
         end
 
         GameTooltip:SetText(tooltipText, 1, 1, 1, 1, true)
