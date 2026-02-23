@@ -2,8 +2,12 @@
 -- Standalone draggable GPS navigator for active route guidance.
 local addonName, addon = ...
 
-local GPS_WIDTH = 320
-local GPS_HEIGHT = 150
+local GPS_WIDTH          = 400
+local GPS_HEADER_HEIGHT  = 26    -- title strip
+local GPS_CONTENT_HEIGHT = 56    -- arrow / text row (= arrowSize)
+local GPS_PADDING_V      = 10    -- vertical padding above and below content row
+local GPS_HEIGHT = GPS_HEADER_HEIGHT + 12 + GPS_CONTENT_HEIGHT + GPS_PADDING_V + 8
+--                 header            gap  content               bottom pad      border
 local GPS_UPDATE_INTERVAL = 0.1
 local STEP_COMPLETION_DISTANCE_YARDS = 55
 
@@ -320,69 +324,37 @@ local function UpdateActionButton(step)
         return
     end
 
-    local button = gpsFrame.actionButton
+    local button         = gpsFrame.actionButton
     local arrowDragButton = gpsFrame.arrowDragButton
-    local statusText = gpsFrame.statusText
-    local macroText = step and BuildStepMacro(step)
-
-    local function AnchorStatusTo(target, yOffset)
-        if not statusText or not target then
-            return
-        end
-        statusText:ClearAllPoints()
-        statusText:SetPoint("TOP", target, "BOTTOM", 0, yOffset or -1)
-        statusText:SetPoint("LEFT", gpsFrame, "LEFT", 10, 0)
-        statusText:SetPoint("RIGHT", gpsFrame, "RIGHT", -10, 0)
-    end
+    local macroText      = step and BuildStepMacro(step)
 
     if step and macroText then
         button.icon:SetTexture(GetStepActionIcon(step))
 
         if InCombatLockdown() then
-            local combatKey = "combat_hide"
-            if lastActionButtonDebugKey ~= combatKey then
-                GPSDebugPrint("Action button hidden (combat lockdown)")
-                lastActionButtonDebugKey = combatKey
-            end
+            GPSDebugPrint("Action button hidden (combat lockdown)")
             button:Hide()
             gpsFrame.arrow:Show()
-            if arrowDragButton then
-                arrowDragButton:Show()
-            end
-            AnchorStatusTo(gpsFrame.arrow, 5)
+            if arrowDragButton then arrowDragButton:Show() end
             return
         end
 
         button:SetAttribute("type1", "macro")
         button:SetAttribute("macrotext1", macroText)
         button.stepNum = gpsFrame.currentStepIndex
-        local showKey = string.format("show:%s:%s", tostring(button.stepNum), tostring(macroText))
-        if lastActionButtonDebugKey ~= showKey then
-            GPSDebugPrint(string.format("Action button show step=%s type=%s macro=%s",
-                tostring(button.stepNum), tostring(button:GetAttribute("type1")), tostring(button:GetAttribute("macrotext1"))))
-            lastActionButtonDebugKey = showKey
-        end
+        GPSDebugPrint(string.format("Action button show step=%s macro=%s",
+            tostring(button.stepNum), tostring(macroText)))
         button:Show()
         gpsFrame.arrow:Hide()
-        if arrowDragButton then
-            arrowDragButton:Hide()
-        end
-        AnchorStatusTo(button, -6)
+        if arrowDragButton then arrowDragButton:Hide() end
         return
     end
 
     if InCombatLockdown() then
-        local combatKey = "combat_hide"
-        if lastActionButtonDebugKey ~= combatKey then
-            GPSDebugPrint("Action button hidden (combat lockdown)")
-            lastActionButtonDebugKey = combatKey
-        end
+        GPSDebugPrint("Action button hidden (combat lockdown)")
         button:Hide()
         gpsFrame.arrow:Show()
-        if arrowDragButton then
-            arrowDragButton:Show()
-        end
-        AnchorStatusTo(gpsFrame.arrow, 5)
+        if arrowDragButton then arrowDragButton:Show() end
         return
     end
 
@@ -390,16 +362,10 @@ local function UpdateActionButton(step)
     button:SetAttribute("macrotext1", nil)
     button.stepNum = nil
     button.icon:SetTexture(nil)
-    if lastActionButtonDebugKey ~= "hide:no_macro" then
-        GPSDebugPrint("Action button hidden (no macro step)")
-        lastActionButtonDebugKey = "hide:no_macro"
-    end
+    GPSDebugPrint("Action button hidden (no macro step)")
     button:Hide()
     gpsFrame.arrow:Show()
-    if arrowDragButton then
-        arrowDragButton:Show()
-    end
-    AnchorStatusTo(gpsFrame.arrow, 5)
+    if arrowDragButton then arrowDragButton:Show() end
 end
 
 local function UpdateGPS()
@@ -420,11 +386,8 @@ local function UpdateGPS()
     end
 
     if currentStep > #steps then
-        gpsFrame.statusText:SetText("Route completed")
-        gpsFrame.detailText:SetText("All steps done")
-        gpsFrame.distanceText:SetText("")
-        gpsFrame.arrow:SetAlpha(0.25)
         UpdateActionButton(nil)
+        gpsFrame:Hide()
         return
     end
 
@@ -678,37 +641,116 @@ function addon:InitializeGPSNavigator()
     if frame.SetPropagateMouseMotion then
         frame:SetPropagateMouseMotion(true)
     end
+
+    -- Dark card backdrop matching the route frame
+    frame:SetBackdrop({
+        bgFile   = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile     = false,
+        edgeSize = 8,
+        insets   = { left = 2, right = 2, top = 2, bottom = 2 }
+    })
+    frame:SetBackdropColor(unpack(COLOURS.bg))
+    frame:SetBackdropBorderColor(unpack(COLOURS.border))
+
     frame:SetScript("OnMouseUp", function(self, button)
         if button == "RightButton" and not (IsMouselooking and IsMouselooking()) then
             ShowGPSContextMenu(self)
         end
     end)
 
-    local arrow = frame:CreateTexture(nil, "ARTWORK")
-    arrow:SetTexture("Interface\\MINIMAP\\ROTATING-MINIMAPARROW")
-    arrow:SetSize(76, 76)
-    arrow:SetPoint("TOP", frame, "TOP", 0, -8)
+    -- ── Header strip (also the primary drag handle) ────────────────
+    local headerBar = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    headerBar:SetPoint("TOPLEFT",  frame, "TOPLEFT",  6, -6)
+    headerBar:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -6, -6)
+    headerBar:SetHeight(GPS_HEADER_HEIGHT)
+    headerBar:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8", tile = false })
+    headerBar:SetBackdropColor(0.1, 0.1, 0.1, 1)
+    -- Header is the primary drag handle
+    headerBar:EnableMouse(true)
+    headerBar:RegisterForDrag("LeftButton")
+    headerBar:SetScript("OnDragStart", function() frame:StartMoving() end)
+    headerBar:SetScript("OnDragStop",  function() StopMovingAndPersist(frame) end)
 
-    local arrowDragButton = CreateFrame("Frame", nil, frame)
-    arrowDragButton:SetPoint("TOP", frame, "TOP", 0, -8)
-    arrowDragButton:SetSize(76, 76)
+    local titleText = headerBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    titleText:SetPoint("LEFT", headerBar, "LEFT", 8, 0)
+    titleText:SetTextColor(0.5, 0.7, 0.9, 1)
+    titleText:SetText("Navigation")
+    frame.titleText = titleText
+
+    -- Close button in the header
+    local closeBtn = CreateFrame("Button", nil, headerBar, "BackdropTemplate")
+    closeBtn:SetSize(20, 20)
+    closeBtn:SetPoint("RIGHT", headerBar, "RIGHT", -3, 0)
+    closeBtn:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8", tile = false })
+    closeBtn:SetBackdropColor(0, 0, 0, 0)
+    local closeSym = closeBtn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    closeSym:SetPoint("CENTER", 0, 1)
+    closeSym:SetText("x")
+    closeSym:SetTextColor(0.6, 0.6, 0.6, 1)
+    closeBtn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.4, 0.1, 0.1, 0.8)
+        closeSym:SetTextColor(1, 1, 1, 1)
+    end)
+    closeBtn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0, 0, 0, 0)
+        closeSym:SetTextColor(0.6, 0.6, 0.6, 1)
+    end)
+    closeBtn:SetScript("OnClick", function() frame:Hide() end)
+
+    -- ── Content area (below header) ─────────────────────────────────
+    -- A plain frame that fills the space below the header.
+    -- Everything inside is positioned relative to this.
+    local contentArea = CreateFrame("Frame", nil, frame)
+    contentArea:SetPoint("TOPLEFT",     headerBar, "BOTTOMLEFT",  0, -6)
+    contentArea:SetPoint("BOTTOMRIGHT", frame,     "BOTTOMRIGHT", -6, 6)
+
+    -- Transparent drag overlay covering the full content area.
+    -- Sits at a lower level than the arrow/button so it only catches
+    -- clicks on the text side. Uses propagation so mouse wheel still
+    -- reaches the parent.
+    local contentDrag = CreateFrame("Frame", nil, contentArea)
+    contentDrag:SetAllPoints(contentArea)
+    contentDrag:EnableMouse(true)
+    contentDrag:RegisterForDrag("LeftButton")
+    contentDrag:SetScript("OnDragStart", function() frame:StartMoving() end)
+    contentDrag:SetScript("OnDragStop",  function() StopMovingAndPersist(frame) end)
+    contentDrag:SetScript("OnMouseUp", function(self, button)
+        if button == "RightButton" then ShowGPSContextMenu(self) end
+    end)
+
+    -- ── Arrow anchor (left column, vertically centred in contentArea) ─
+    -- SecureActionButtonTemplate must anchor to a Frame, never a Texture.
+    local arrowSize = GPS_CONTENT_HEIGHT   -- 56 px — matches content row height
+
+    local arrowAnchor = CreateFrame("Frame", nil, contentArea)
+    arrowAnchor:SetSize(arrowSize, arrowSize)
+    arrowAnchor:SetPoint("LEFT",   contentArea, "LEFT",   8, 0)
+    arrowAnchor:SetPoint("TOP",    contentArea, "TOP",    0, 0)
+    arrowAnchor:SetPoint("BOTTOM", contentArea, "BOTTOM", 0, 0)
+    -- Width is fixed; top/bottom stretch vertically so the anchor fills
+    -- the content height. Arrow texture is centred within it.
+
+    local arrow = arrowAnchor:CreateTexture(nil, "ARTWORK")
+    arrow:SetTexture("Interface\\MINIMAP\\ROTATING-MINIMAPARROW")
+    arrow:SetSize(arrowSize, arrowSize)
+    arrow:SetPoint("CENTER", arrowAnchor, "CENTER")
+
+    -- Non-secure drag button over the arrow (sits above contentDrag)
+    local arrowDragButton = CreateFrame("Frame", nil, contentArea)
+    arrowDragButton:SetAllPoints(arrowAnchor)
     arrowDragButton:EnableMouse(true)
     arrowDragButton:RegisterForDrag("LeftButton")
-    arrowDragButton:SetScript("OnDragStart", function()
-        frame:StartMoving()
-    end)
-    arrowDragButton:SetScript("OnDragStop", function()
-        StopMovingAndPersist(frame)
-    end)
+    arrowDragButton:SetScript("OnDragStart", function() frame:StartMoving() end)
+    arrowDragButton:SetScript("OnDragStop",  function() StopMovingAndPersist(frame) end)
     arrowDragButton:SetScript("OnMouseUp", function(self, button)
-        if button == "RightButton" then
-            ShowGPSContextMenu(self)
-        end
+        if button == "RightButton" then ShowGPSContextMenu(self) end
     end)
 
+    -- Secure action button: overlays arrowAnchor when step has item/spell.
+    -- MUST anchor to a Frame (arrowAnchor), not to the arrow Texture.
     local actionButton = CreateFrame("Button", nil, frame, "SecureActionButtonTemplate,BackdropTemplate")
-    actionButton:SetPoint("TOP", frame, "TOP", 0, -8)
-    actionButton:SetSize(56, 56)
+    actionButton:SetAllPoints(arrowAnchor)
     actionButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
     actionButton:RegisterForDrag("LeftButton")
     actionButton:SetMovable(false)
@@ -738,147 +780,110 @@ function addon:InitializeGPSNavigator()
     actionButton.pressed = actionPressed
 
     local function ApplyActionButtonLayout()
-        local size = actionButton:GetWidth() or 56
+        local size      = arrowSize   -- use the known size; GetWidth() returns 0 before first layout
         local iconInset = math.max(3, math.floor(size * 0.06 + 0.5))
-        local borderOutset = math.max(8, math.floor(size * 0.22 + 0.5))
-        local hoverOutset = math.max(2, math.floor(size * 0.04 + 0.5))
-        local iconSize = math.max(1, size - (iconInset * 2))
+        local borderOut = math.max(8, math.floor(size * 0.22 + 0.5))
+        local hoverOut  = math.max(2, math.floor(size * 0.04 + 0.5))
+        local iconSize  = math.max(1, size - (iconInset * 2))
 
         actionIcon:ClearAllPoints()
         actionIcon:SetSize(iconSize, iconSize)
         actionIcon:SetPoint("CENTER", actionButton, "CENTER", 0, 0)
 
         actionBorder:ClearAllPoints()
-        actionBorder:SetPoint("TOPLEFT", actionButton, "TOPLEFT", -borderOutset, borderOutset)
-        actionBorder:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", borderOutset, -borderOutset)
+        actionBorder:SetPoint("TOPLEFT",     actionButton, "TOPLEFT",     -borderOut,  borderOut)
+        actionBorder:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT",  borderOut, -borderOut)
 
         actionHover:ClearAllPoints()
-        actionHover:SetPoint("TOPLEFT", actionButton, "TOPLEFT", -hoverOutset, hoverOutset)
-        actionHover:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", hoverOutset, -hoverOutset)
+        actionHover:SetPoint("TOPLEFT",     actionButton, "TOPLEFT",     -hoverOut,  hoverOut)
+        actionHover:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT",  hoverOut, -hoverOut)
 
         actionPressed:ClearAllPoints()
-        actionPressed:SetPoint("TOPLEFT", actionButton, "TOPLEFT", iconInset, -iconInset)
-        actionPressed:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", -iconInset, iconInset)
+        actionPressed:SetPoint("TOPLEFT",     actionButton, "TOPLEFT",      iconInset, -iconInset)
+        actionPressed:SetPoint("BOTTOMRIGHT", actionButton, "BOTTOMRIGHT", -iconInset,  iconInset)
     end
-
     ApplyActionButtonLayout()
 
     local function UpdateActionButtonVisual(self)
         local hovered = self.isHovered and true or false
         local pressed = self.isPressed and true or false
-
-        if self.hover then
-            if hovered then
-                self.hover:Show()
-            else
-                self.hover:Hide()
-            end
-        end
-
-        if self.pressed then
-            if pressed then
-                self.pressed:Show()
-            else
-                self.pressed:Hide()
-            end
-        end
-
-        if pressed then
-            self.icon:SetVertexColor(0.84, 0.84, 0.84, 1)
-        elseif hovered then
-            self.icon:SetVertexColor(1, 1, 1, 1)
-        else
-            self.icon:SetVertexColor(0.95, 0.95, 0.95, 1)
-        end
+        if self.hover   then if hovered then self.hover:Show()   else self.hover:Hide()   end end
+        if self.pressed then if pressed then self.pressed:Show() else self.pressed:Hide() end end
+        if pressed     then self.icon:SetVertexColor(0.84, 0.84, 0.84, 1)
+        elseif hovered then self.icon:SetVertexColor(1, 1, 1, 1)
+        else                self.icon:SetVertexColor(0.95, 0.95, 0.95, 1) end
     end
 
-    actionButton:SetScript("OnEnter", function(self)
-        self.isHovered = true
-        UpdateActionButtonVisual(self)
-    end)
-
-    actionButton:SetScript("OnLeave", function(self)
-        self.isHovered = false
-        self.isPressed = false
-        UpdateActionButtonVisual(self)
-    end)
-
-    actionButton:SetScript("OnMouseDown", function(self)
-        self.isPressed = true
-        UpdateActionButtonVisual(self)
-    end)
-
-    actionButton:SetScript("OnMouseUp", function(self, mouseButton)
-        if mouseButton == "RightButton" then
-            self.isPressed = false
-            self.isHovered = self:IsMouseOver()
-            UpdateActionButtonVisual(self)
-            ShowGPSContextMenu(self)
-            return
+    actionButton:SetScript("OnEnter",     function(self) self.isHovered = true;  UpdateActionButtonVisual(self) end)
+    actionButton:SetScript("OnLeave",     function(self) self.isHovered = false; self.isPressed = false; UpdateActionButtonVisual(self) end)
+    actionButton:SetScript("OnMouseDown", function(self) self.isPressed = true;  UpdateActionButtonVisual(self) end)
+    actionButton:SetScript("OnMouseUp", function(self, btn)
+        if btn == "RightButton" then
+            self.isPressed = false; self.isHovered = self:IsMouseOver()
+            UpdateActionButtonVisual(self); ShowGPSContextMenu(self); return
         end
-
-        self.isPressed = false
-        self.isHovered = self:IsMouseOver()
+        self.isPressed = false; self.isHovered = self:IsMouseOver()
         UpdateActionButtonVisual(self)
     end)
-
     actionButton:SetScript("OnHide", function(self)
-        self.isHovered = false
-        self.isPressed = false
-        UpdateActionButtonVisual(self)
+        self.isHovered = false; self.isPressed = false; UpdateActionButtonVisual(self)
     end)
+    actionButton:SetScript("OnDragStart", function() frame:StartMoving() end)
+    actionButton:SetScript("OnDragStop",  function() StopMovingAndPersist(frame); UpdateGPS() end)
 
-    actionButton:SetScript("OnDragStart", function()
-        frame:StartMoving()
-    end)
+    -- ── Text column (right of arrow, vertically centred) ────────────
+    -- Anchored to arrowAnchor so they share the same vertical centre.
+    local textLeft = arrowSize + 16
+    local textRight = -10
 
-    actionButton:SetScript("OnDragStop", function()
-        StopMovingAndPersist(frame)
-        UpdateGPS()
-    end)
+    -- Wrap the three text strings in a container so we can centre the
+    -- whole block vertically against the arrow.
+    local textBlock = CreateFrame("Frame", nil, contentArea)
+    textBlock:SetPoint("LEFT",   contentArea, "LEFT",   textLeft,  0)
+    textBlock:SetPoint("RIGHT",  contentArea, "RIGHT",  textRight, 0)
+    textBlock:SetPoint("TOP",    contentArea, "TOP",    0, 0)
+    textBlock:SetPoint("BOTTOM", contentArea, "BOTTOM", 0, 0)
 
-    local statusText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    statusText:SetPoint("TOP", arrow, "BOTTOM", 0, -1)
-    statusText:SetPoint("LEFT", frame, "LEFT", 10, 0)
-    statusText:SetPoint("RIGHT", frame, "RIGHT", -10, 0)
-    statusText:SetJustifyH("CENTER")
+    local statusText = textBlock:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    statusText:SetPoint("TOPLEFT",  textBlock, "CENTER", 0, 22)  -- above centre
+    statusText:SetPoint("TOPRIGHT", textBlock, "CENTER", textBlock:GetRight() and (textBlock:GetRight() - textBlock:GetLeft()) or 200, 22)
+    statusText:SetJustifyH("LEFT")
     statusText:SetTextColor(unpack(COLOURS.accent))
 
-    local detailText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    detailText:SetPoint("TOP", statusText, "BOTTOM", 0, -6)
-    detailText:SetPoint("LEFT", frame, "LEFT", 10, 0)
-    detailText:SetPoint("RIGHT", frame, "RIGHT", -10, 0)
-    detailText:SetJustifyH("CENTER")
+    -- Simpler: just stack from top with fixed offsets from the vertical centre
+    statusText:ClearAllPoints()
+    statusText:SetPoint("LEFT",  textBlock, "LEFT",  0,  20)
+    statusText:SetPoint("RIGHT", textBlock, "RIGHT", 0,  20)
+    statusText:SetJustifyH("LEFT")
+    statusText:SetTextColor(unpack(COLOURS.accent))
+
+    local detailText = textBlock:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    detailText:SetPoint("LEFT",  textBlock, "LEFT",  0,  4)
+    detailText:SetPoint("RIGHT", textBlock, "RIGHT", 0,  4)
+    detailText:SetJustifyH("LEFT")
     detailText:SetTextColor(unpack(COLOURS.text))
 
-    local distanceText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    distanceText:SetPoint("TOP", detailText, "BOTTOM", 0, -6)
-    distanceText:SetPoint("LEFT", frame, "LEFT", 10, 0)
-    distanceText:SetPoint("RIGHT", frame, "RIGHT", -10, 0)
-    distanceText:SetJustifyH("CENTER")
+    local distanceText = textBlock:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    distanceText:SetPoint("LEFT",  textBlock, "LEFT",  0, -12)
+    distanceText:SetPoint("RIGHT", textBlock, "RIGHT", 0, -12)
+    distanceText:SetJustifyH("LEFT")
     distanceText:SetTextColor(unpack(COLOURS.textSecondary))
 
-    frame.arrow = arrow
+    frame.arrow           = arrow
     frame.arrowDragButton = arrowDragButton
-    frame.actionButton = actionButton
-    frame.statusText = statusText
-    frame.detailText = detailText
-    frame.distanceText = distanceText
+    frame.actionButton    = actionButton
+    frame.statusText      = statusText
+    frame.detailText      = detailText
+    frame.distanceText    = distanceText
     frame.currentStepIndex = nil
 
     ApplyGPSPosition(frame)
     addon:ApplyGPSScale(MapzerothDB.settings.windowScale or 1.0)
 
     frame:SetScript("OnUpdate", function(self, elapsed)
-        if not self:IsShown() then
-            return
-        end
-
+        if not self:IsShown() then return end
         gpsElapsed = gpsElapsed + elapsed
-        if gpsElapsed < GPS_UPDATE_INTERVAL then
-            return
-        end
-
+        if gpsElapsed < GPS_UPDATE_INTERVAL then return end
         gpsElapsed = 0
         UpdateGPS()
     end)

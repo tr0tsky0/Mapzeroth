@@ -26,19 +26,13 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         print("[Mapzeroth] Commands:")
         print("  /mz route <destination> - Find route to destination node")
         print("  /mz waypoint (or wp) - Route to active waypoint")
-        print("  /mz sethearth (or sh) - Manually save your hearthstone destination (auto-detected otherwise)")
-        print("  /mz toggle - Toggle Mapzeroth GUI")
+        print("  /mz toggle (or show/hide) - Toggle Mapzeroth GUI")
         print("  /mz minimap - Toggle minimap button visibility")
         return
     end
 
     if command == "waypoint" or command == "wp" then
         addon:FindRoute("_WAYPOINT_DESTINATION")
-        return
-    end
-
-    if command == "sethearth" or command == "sh" then
-        addon:SetHearthstoneLocation()
         return
     end
 
@@ -176,7 +170,7 @@ end
 -----------------------------------------------------------
 -- BuildStepList
 -----------------------------------------------------------
-local function BuildStepList(path, totalCost, previous, waypoint)
+function addon:BuildStepList(path, totalCost, previous, waypoint)
     local steps = {}
 
     for i, nodeID in ipairs(path) do
@@ -208,7 +202,7 @@ local function BuildStepList(path, totalCost, previous, waypoint)
             table.insert(steps, {
                 num = #steps + 1,
                 method = prevInfo.method,
-                destination = "Waypoint",
+                destination = (waypoint and waypoint.name) or "Waypoint",
                 time = prevInfo.cost,
                 abilityName = prevInfo.abilityName,
                 destinationName = prevInfo.destinationName,
@@ -280,16 +274,20 @@ end
 -- COMMAND: Find Route
 -----------------------------------------------------------
 
-function addon:FindRoute(destinationID)
+function addon:FindRoute(destinationID, coords)
     local waypoint
 
     if destinationID == "_WAYPOINT_DESTINATION" then
-        local err
-        waypoint, err = addon:GetActiveWaypoint()
-        if not waypoint then
-            print("[Mapzeroth] " .. err)
-            print("[Mapzeroth] Set a waypoint using Shift+Click on the map, or use TomTom")
-            return
+        if coords then
+            waypoint = coords
+        else
+            local err
+            waypoint, err = addon:GetActiveWaypoint()
+            if not waypoint then
+                print("[Mapzeroth] " .. err)
+                print("[Mapzeroth] Set a waypoint using Shift+Click on the map, or use TomTom")
+                return
+            end
         end
     end
 
@@ -321,7 +319,7 @@ function addon:FindRoute(destinationID)
     end
 
     -- Output
-    local steps = BuildStepList(path, cost, previous, waypoint)
+    local steps = addon:BuildStepList(path, cost, previous, waypoint)
     local optimizedSteps, optimizedCost = addon:OptimizeConsecutiveMovement(steps)
     addon:ShowGPSNavigator(optimizedSteps, optimizedCost)
 
@@ -384,7 +382,6 @@ function addon:ShowMapInfo()
     end
 
     local mapInfo = C_Map.GetMapInfo(mapID)
-    local mapArtID = C_Map.GetMapArtID(mapID)
     local mapName = mapInfo and mapInfo.name or "Unknown"
 
     local position = C_Map.GetPlayerMapPosition(mapID, "player")
@@ -411,7 +408,6 @@ function addon:ShowMapInfo()
     print(string.format("    traversalGroup = \"UNKNOWN\","))
     print(string.format("    faction = \"NEUTRAL\","))
     print(string.format("    mapID = %d,", mapID))
-    print(string.format("    mapArtID = %d,", mapArtID))
     print(string.format("    x = %.3f,", x))
     print(string.format("    y = %.3f,", y))
     print(string.format("},"))

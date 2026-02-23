@@ -11,8 +11,8 @@ local UIParent = UIParent
 -----------------------------------------------------------
 
 local FRAME_WIDTH = 400
-local FRAME_HEIGHT_COLLAPSED = 100
-local FRAME_HEIGHT_EXPANDED = 400 -- Will grow dynamically
+local FRAME_HEIGHT_COLLAPSED = 170
+local FRAME_HEIGHT_EXPANDED = 470 -- Will grow dynamically
 local STEP_HEIGHT = 40
 
 -- Material colour palette (matching DestinationSelector)
@@ -252,7 +252,7 @@ function addon:CreateGUI()
 
     -- Clear the fixed size and let it stretch to fill the space
     destinationSelector:ClearAllPoints()
-    destinationSelector:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -10)
+    destinationSelector:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -68)
     destinationSelector:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
 
     destinationSelector:Hide()
@@ -273,11 +273,49 @@ function addon:CreateGUI()
     frame.navButton = navButton
 
     -----------------------------------------------------------
+    -- PET TRAINER QUICK-ROUTE BUTTONS
+    -----------------------------------------------------------
+
+    local petTrainersLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    petTrainersLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
+    petTrainersLabel:SetText("Pet Trainers:")
+    petTrainersLabel:SetTextColor(unpack(COLOURS.textSecondary))
+
+    -- Three equal-width buttons across the frame (accounting for 10px left padding + 10px right)
+    local PTB_WIDTH  = 116
+    local PTB_HEIGHT = 26
+    local PTB_GAP    = 6
+
+    local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Kalimdor")
+    ptKalimdor:SetPoint("TOPLEFT", petTrainersLabel, "BOTTOMLEFT", 0, -6)
+    ptKalimdor:SetScript("OnClick", function()
+        addon:RouteMultiDestination(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
+    end)
+
+    local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Eastern Kingdoms")
+    ptEK:SetPoint("LEFT", ptKalimdor, "RIGHT", PTB_GAP, 0)
+    ptEK:SetScript("OnClick", function()
+        addon:RouteMultiDestination(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
+    end)
+
+    local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Northrend")
+    ptNorthrend:SetPoint("LEFT", ptEK, "RIGHT", PTB_GAP, 0)
+    ptNorthrend:SetScript("OnClick", function()
+        addon:RouteMultiDestination(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
+    end)
+
+    -- Store references in case we want to show/hide them later
+    frame.ptKalimdor   = ptKalimdor
+    frame.ptEK         = ptEK
+    frame.ptNorthrend  = ptNorthrend
+
+    -----------------------------------------------------------
     -- ROUTE DISPLAY CONTAINER (initially hidden)
     -----------------------------------------------------------
 
     local routeContainer = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    routeContainer:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -10)
+    -- Anchor below the pet trainer buttons, not the selector toggle
+    routeContainer:SetPoint("TOPLEFT", ptKalimdor, "BOTTOMLEFT", 0, -10)
     routeContainer:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
     routeContainer:Hide()
     routeContainer:SetClipsChildren(true) -- Clip overflow if route is too long

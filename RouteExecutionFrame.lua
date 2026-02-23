@@ -8,6 +8,8 @@ local FRAME_PADDING = 10
 local NAVIGATOR_HEIGHT = 0
 local STEP_COMPLETION_DISTANCE_YARDS = 55
 local ARROW_UPDATE_INTERVAL = 0.1
+local MAX_FRAME_HEIGHT = 520   -- caps the visible area; content scrolls beyond this
+local SCROLLBAR_WIDTH = 16     -- UIPanelScrollFrameTemplate scrollbar
 
 -- Material colour palette (matching main GUI)
 local COLOURS = {
@@ -507,12 +509,87 @@ local function CreateExecutionFrame()
     }
     navigator:Hide()
 
-    -- Container for step buttons
-    local container = CreateFrame("Frame", nil, frame)
-    container:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", 0, -10)
-    container:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
-    container:SetClipsChildren(true)
-    frame.container = container
+    -- ScrollFrame (no template — we manage scrolling ourselves so the
+    -- scrollbar renders correctly above the backdrop)
+    local scrollFrame = CreateFrame("ScrollFrame", "MapzerothRouteScrollFrame", frame)
+    scrollFrame:SetPoint("TOPLEFT",     headerBar, "BOTTOMLEFT",           0,   -10)
+    scrollFrame:SetPoint("BOTTOMRIGHT", frame,     "BOTTOMRIGHT", -(SCROLLBAR_WIDTH + 6), 10)
+    scrollFrame:EnableMouseWheel(true)
+
+    local scrollChild = CreateFrame("Frame", nil, scrollFrame)
+    scrollChild:SetWidth(FRAME_WIDTH - SCROLLBAR_WIDTH - 20)
+    scrollChild:SetHeight(1)   -- updated in ShowRouteExecutionFrame
+    scrollFrame:SetScrollChild(scrollChild)
+
+    -- Manual scrollbar (Slider) — sits to the right of the scrollFrame,
+    -- inside the outer frame, above the backdrop so it's always visible.
+    local scrollBar = CreateFrame("Slider", nil, frame, "BackdropTemplate")
+    scrollBar:SetOrientation("VERTICAL")
+    scrollBar:SetPoint("TOPRIGHT",    frame, "TOPRIGHT",    -4, -50)
+    scrollBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4,  10)
+    scrollBar:SetWidth(SCROLLBAR_WIDTH - 4)
+    scrollBar:SetMinMaxValues(0, 0)
+    scrollBar:SetValue(0)
+    scrollBar:SetValueStep(STEP_HEIGHT)
+    scrollBar:SetObeyStepOnDrag(true)
+    scrollBar:SetBackdrop({
+        bgFile   = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile     = false,
+        edgeSize = 6,
+        insets   = { left = 2, right = 2, top = 2, bottom = 2 }
+    })
+    scrollBar:SetBackdropColor(0.08, 0.08, 0.08, 0.8)
+    scrollBar:SetBackdropBorderColor(0.25, 0.25, 0.25, 1)
+
+    -- Thumb texture
+    local thumb = scrollBar:CreateTexture(nil, "OVERLAY")
+    thumb:SetTexture("Interface\\Buttons\\WHITE8x8")
+    thumb:SetVertexColor(0.3, 0.5, 0.85, 0.9)
+    thumb:SetWidth(SCROLLBAR_WIDTH - 8)
+    scrollBar:SetThumbTexture(thumb)
+
+    -- Wire scrollbar → scrollframe
+    scrollBar:SetScript("OnValueChanged", function(self, value)
+        scrollFrame:SetVerticalScroll(value)
+    end)
+
+    -- Wire mousewheel → scrollbar
+    scrollFrame:SetScript("OnMouseWheel", function(self, delta)
+        local current = scrollBar:GetValue()
+        local min, max = scrollBar:GetMinMaxValues()
+        local newVal = math.max(min, math.min(max, current - (delta * STEP_HEIGHT * 2)))
+        scrollBar:SetValue(newVal)
+    end)
+
+    -- Helper called after content height is known to update scrollbar range
+    local function UpdateScrollBarRange()
+        local childHeight = scrollChild:GetHeight()
+        local viewHeight  = scrollFrame:GetHeight()
+        local maxScroll   = math.max(0, childHeight - viewHeight)
+        scrollBar:SetMinMaxValues(0, maxScroll)
+        scrollBar:SetValue(math.min(scrollBar:GetValue(), maxScroll))
+        -- Hide the bar when content fits without scrolling
+        if maxScroll <= 0 then
+            scrollBar:Hide()
+        else
+            scrollBar:Show()
+        end
+    end
+    frame.UpdateScrollBarRange = UpdateScrollBarRange
+
+    frame.scrollFrame  = scrollFrame
+    frame.container    = scrollChild   -- rest of the code still targets frame.container
+
+    -- Re-show the frame (with its existing route) after any loading screen.
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    frame:SetScript("OnEvent", function(self, event)
+        if event == "PLAYER_ENTERING_WORLD" then
+            if routeSteps and #routeSteps > 0 then
+                self:Show()
+            end
+        end
+    end)
 
     -- Apply saved scale
     local savedScale = MapzerothDB.settings.windowScale or 1.0
@@ -743,9 +820,20 @@ function addon:ShowRouteExecutionFrame(steps, totalTime)
 
     yOffset = yOffset + 35
 
-    -- Resize frame to fit content
-    local frameHeight = yOffset + 60
-    frame:SetHeight(math.min(frameHeight, 600))
+    -- Tell the scroll child how tall its content actually is.
+    -- The outer frame is capped; anything beyond MAX_FRAME_HEIGHT becomes scrollable.
+    local contentHeight = yOffset
+    frame.container:SetHeight(contentHeight)
+
+    -- Update the scrollbar range now that we know the content height.
+    if frame.UpdateScrollBarRange then
+        frame.UpdateScrollBarRange()
+    end
+
+    -- Outer frame height: fit content exactly, but never taller than MAX_FRAME_HEIGHT.
+    -- The +60 accounts for the header bar and outer padding.
+    local frameHeight = math.min(contentHeight + 60, MAX_FRAME_HEIGHT)
+    frame:SetHeight(frameHeight)
 
     -- Position frame
     if addon.MapzerothFrame and addon.MapzerothFrame:IsShown() then
