@@ -115,6 +115,21 @@ end
 -----------------------------------------------------------
 
 local function GetStepActionText(stepData)
+    if stepData and stepData.itemID and addon:IsCityCloakItemID(stepData.itemID) then
+        local cloakName = stepData.abilityName or C_Item.GetItemInfo(stepData.itemID) or "city cloak"
+        local equippedCloakID = GetInventoryItemID("player", INVSLOT_BACK or 15)
+
+        if equippedCloakID ~= stepData.itemID then
+            return string.format("Equip %s", cloakName)
+        end
+
+        if stepData.destinationName then
+            return string.format("Use %s to %s", cloakName, stepData.destinationName)
+        end
+
+        return string.format("Use %s", cloakName)
+    end
+
     if stepData.abilityName then
         if stepData.destinationName then
             return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
@@ -637,6 +652,9 @@ local function CreateStepButton(parent, stepData, stepNum)
                 addon:FinalizeCityCloakClick(self.stepData.itemID, self.cityCloakWasEquipped)
                 if self.cityCloakWasEquipped == false then
                     addon:DebugCityCloak("Route PostClick: first click detected, step not advanced")
+                    if self.actionTextLabel then
+                        self.actionTextLabel:SetText(GetStepActionText(self.stepData))
+                    end
                     return
                 end
             end
@@ -734,6 +752,7 @@ local function CreateStepButton(parent, stepData, stepNum)
     destText:SetJustifyH("LEFT")
     destText:SetText(actionText)
     destText:SetTextColor(unpack(COLOURS.text))
+    frame.actionTextLabel = destText
 
     -- Time text
     local timeText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -757,10 +776,20 @@ local function CreateStepButton(parent, stepData, stepNum)
             local dest = stepData.destinationName or stepData.destination or "destination"
             tooltipText = string.format("Click to set waypoint to %s", dest)
         elseif stepData.itemID or stepData.spellID then
-            tooltipText = string.format("Click to use %s", stepData.abilityName or "ability")
+            if stepData.itemID and addon:IsCityCloakItemID(stepData.itemID) then
+                local cloakName = stepData.abilityName or C_Item.GetItemInfo(stepData.itemID) or "city cloak"
+                local equippedCloakID = GetInventoryItemID("player", INVSLOT_BACK or 15)
+                if equippedCloakID ~= stepData.itemID then
+                    tooltipText = string.format("Click to equip %s", cloakName)
+                else
+                    tooltipText = string.format("Click to use %s", cloakName)
+                end
+            else
+                tooltipText = string.format("Click to use %s", stepData.abilityName or "ability")
+            end
         else
             -- Fallback for any other method
-            tooltipText = actionText
+            tooltipText = GetStepActionText(stepData)
         end
 
         GameTooltip:SetText(tooltipText, 1, 1, 1, 1, true)

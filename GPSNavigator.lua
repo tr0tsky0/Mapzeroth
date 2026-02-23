@@ -103,6 +103,21 @@ local function GetStepActionText(stepData)
         return "No active step"
     end
 
+    if stepData.itemID and addon:IsCityCloakItemID(stepData.itemID) then
+        local cloakName = stepData.abilityName or C_Item.GetItemInfo(stepData.itemID) or "city cloak"
+        local equippedCloakID = GetInventoryItemID("player", INVSLOT_BACK or 15)
+
+        if equippedCloakID ~= stepData.itemID then
+            return string.format("Equip %s", cloakName)
+        end
+
+        if stepData.destinationName then
+            return string.format("Use %s to %s", cloakName, stepData.destinationName)
+        end
+
+        return string.format("Use %s", cloakName)
+    end
+
     if stepData.abilityName then
         if stepData.destinationName then
             return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
