@@ -60,24 +60,20 @@ local function Atan2(y, x)
     return 0
 end
 
-local function BuildStepMacro(stepData)
+local function GetSecureStepAction(stepData)
     if stepData.spellID then
         local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-        if spellInfo then
-            return string.format("/cast %s", spellInfo.name)
-        end
-        return string.format("/cast %d", stepData.spellID)
+        local spellName = (spellInfo and spellInfo.name) or stepData.spellID
+        return "spell", spellName, string.format("/cast %s", tostring(spellName))
     end
 
     if stepData.itemID then
         local itemName = C_Item.GetItemInfo(stepData.itemID)
-        if itemName then
-            return string.format("/use %s", itemName)
-        end
-        return string.format("/use %d", stepData.itemID)
+        local itemToken = itemName or string.format("item:%d", stepData.itemID)
+        return "item", itemToken, string.format("/use %s", tostring(itemName or stepData.itemID))
     end
 
-    return nil
+    return nil, nil, nil
 end
 
 local function GetStepActionIcon(stepData)
@@ -85,21 +81,21 @@ local function GetStepActionIcon(stepData)
         return nil
     end
 
-    if stepData.spellID then
-        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-        if spellInfo and spellInfo.iconID then
-            return spellInfo.iconID
-        end
-    end
-
+    local iconPath
     if stepData.itemID then
-        local itemIcon = C_Item.GetItemIconByID(stepData.itemID)
-        if itemIcon then
-            return itemIcon
+        iconPath = C_Item.GetItemIconByID(stepData.itemID)
+    elseif stepData.spellID then
+        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
+        if spellInfo then
+            iconPath = spellInfo.iconID
         end
     end
 
-    return addon.TRAVEL_ICONS[stepData.method] or addon.TRAVEL_ICONS.walk
+    if not iconPath then
+        iconPath = addon.TRAVEL_ICONS[stepData.method] or addon.TRAVEL_ICONS["walk"]
+    end
+
+    return iconPath
 end
 
 local function GetStepActionText(stepData)
@@ -324,26 +320,33 @@ local function UpdateActionButton(step)
         return
     end
 
-    local button         = gpsFrame.actionButton
+    local button = gpsFrame.actionButton
     local arrowDragButton = gpsFrame.arrowDragButton
-    local macroText      = step and BuildStepMacro(step)
+    local hasActionStep = step and (step.itemID or step.spellID)
+    local actionType, actionValue, actionDebugText = hasActionStep and GetSecureStepAction(step)
 
-    if step and macroText then
+    if hasActionStep then
         button.icon:SetTexture(GetStepActionIcon(step))
 
         if InCombatLockdown() then
-            GPSDebugPrint("Action button hidden (combat lockdown)")
+            if lastActionButtonDebugKey ~= "__combat__" then
+                GPSDebugPrint("Action button hidden (combat lockdown)")
+                lastActionButtonDebugKey = "__combat__"
+            end
             button:Hide()
             gpsFrame.arrow:Show()
             if arrowDragButton then arrowDragButton:Show() end
             return
         end
 
-        button:SetAttribute("type1", "macro")
-        button:SetAttribute("macrotext1", macroText)
+        -- Secure attributes are finalized in PreClick for reliability.
         button.stepNum = gpsFrame.currentStepIndex
-        GPSDebugPrint(string.format("Action button show step=%s macro=%s",
-            tostring(button.stepNum), tostring(macroText)))
+        local debugKey = string.format("%s|%s|%s", tostring(button.stepNum), tostring(actionType), tostring(actionValue))
+        if lastActionButtonDebugKey ~= debugKey then
+            GPSDebugPrint(string.format("Action button show step=%s action=%s",
+                tostring(button.stepNum), tostring(actionDebugText or "visual-only")))
+            lastActionButtonDebugKey = debugKey
+        end
         button:Show()
         gpsFrame.arrow:Hide()
         if arrowDragButton then arrowDragButton:Hide() end
@@ -351,18 +354,25 @@ local function UpdateActionButton(step)
     end
 
     if InCombatLockdown() then
-        GPSDebugPrint("Action button hidden (combat lockdown)")
+        if lastActionButtonDebugKey ~= "__combat__" then
+            GPSDebugPrint("Action button hidden (combat lockdown)")
+            lastActionButtonDebugKey = "__combat__"
+        end
         button:Hide()
         gpsFrame.arrow:Show()
         if arrowDragButton then arrowDragButton:Show() end
         return
     end
 
-    button:SetAttribute("type1", nil)
-    button:SetAttribute("macrotext1", nil)
+    button:SetAttribute("type", nil)
+    button:SetAttribute("spell", nil)
+    button:SetAttribute("item", nil)
     button.stepNum = nil
     button.icon:SetTexture(nil)
-    GPSDebugPrint("Action button hidden (no macro step)")
+    if lastActionButtonDebugKey ~= "__hidden__" then
+        GPSDebugPrint("Action button hidden (no action step)")
+        lastActionButtonDebugKey = "__hidden__"
+    end
     button:Hide()
     gpsFrame.arrow:Show()
     if arrowDragButton then arrowDragButton:Show() end
@@ -705,12 +715,16 @@ function addon:InitializeGPSNavigator()
     contentArea:SetPoint("TOPLEFT",     headerBar, "BOTTOMLEFT",  0, -6)
     contentArea:SetPoint("BOTTOMRIGHT", frame,     "BOTTOMRIGHT", -6, 6)
 
-    -- Transparent drag overlay covering the full content area.
+    -- Arrow/action column width (left side).
+    local arrowSize = GPS_CONTENT_HEIGHT   -- 56 px — matches content row height
+
+    -- Transparent drag overlay covering the text area only.
     -- Sits at a lower level than the arrow/button so it only catches
     -- clicks on the text side. Uses propagation so mouse wheel still
     -- reaches the parent.
     local contentDrag = CreateFrame("Frame", nil, contentArea)
     contentDrag:SetAllPoints(contentArea)
+    contentDrag:SetHitRectInsets(arrowSize + 12, 0, 0, 0)
     contentDrag:EnableMouse(true)
     contentDrag:RegisterForDrag("LeftButton")
     contentDrag:SetScript("OnDragStart", function() frame:StartMoving() end)
@@ -721,15 +735,11 @@ function addon:InitializeGPSNavigator()
 
     -- ── Arrow anchor (left column, vertically centred in contentArea) ─
     -- SecureActionButtonTemplate must anchor to a Frame, never a Texture.
-    local arrowSize = GPS_CONTENT_HEIGHT   -- 56 px — matches content row height
-
     local arrowAnchor = CreateFrame("Frame", nil, contentArea)
     arrowAnchor:SetSize(arrowSize, arrowSize)
     arrowAnchor:SetPoint("LEFT",   contentArea, "LEFT",   8, 0)
-    arrowAnchor:SetPoint("TOP",    contentArea, "TOP",    0, 0)
-    arrowAnchor:SetPoint("BOTTOM", contentArea, "BOTTOM", 0, 0)
-    -- Width is fixed; top/bottom stretch vertically so the anchor fills
-    -- the content height. Arrow texture is centred within it.
+    arrowAnchor:SetPoint("CENTER", contentArea, "CENTER", 0, 0)
+    -- Keep arrow anchor strictly square to avoid icon stretch.
 
     local arrow = arrowAnchor:CreateTexture(nil, "ARTWORK")
     arrow:SetTexture("Interface\\MINIMAP\\ROTATING-MINIMAPARROW")
@@ -749,11 +759,12 @@ function addon:InitializeGPSNavigator()
 
     -- Secure action button: overlays arrowAnchor when step has item/spell.
     -- MUST anchor to a Frame (arrowAnchor), not to the arrow Texture.
-    local actionButton = CreateFrame("Button", nil, frame, "SecureActionButtonTemplate,BackdropTemplate")
+    local actionButton = CreateFrame("Button", nil, contentArea, "SecureActionButtonTemplate,BackdropTemplate")
     actionButton:SetAllPoints(arrowAnchor)
     actionButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
-    actionButton:RegisterForDrag("LeftButton")
     actionButton:SetMovable(false)
+    actionButton:SetFrameStrata(frame:GetFrameStrata())
+    actionButton:SetFrameLevel(math.max(contentDrag:GetFrameLevel(), arrowDragButton:GetFrameLevel()) + 2)
     actionButton:Hide()
 
     local actionIcon = actionButton:CreateTexture(nil, "ARTWORK")
@@ -816,21 +827,70 @@ function addon:InitializeGPSNavigator()
 
     actionButton:SetScript("OnEnter",     function(self) self.isHovered = true;  UpdateActionButtonVisual(self) end)
     actionButton:SetScript("OnLeave",     function(self) self.isHovered = false; self.isPressed = false; UpdateActionButtonVisual(self) end)
-    actionButton:SetScript("OnMouseDown", function(self) self.isPressed = true;  UpdateActionButtonVisual(self) end)
-    actionButton:SetScript("OnMouseUp", function(self, btn)
-        if btn == "RightButton" then
-            self.isPressed = false; self.isHovered = self:IsMouseOver()
-            UpdateActionButtonVisual(self); ShowGPSContextMenu(self); return
-        end
-        self.isPressed = false; self.isHovered = self:IsMouseOver()
-        UpdateActionButtonVisual(self)
-    end)
     actionButton:SetScript("OnHide", function(self)
         self.isHovered = false; self.isPressed = false; UpdateActionButtonVisual(self)
     end)
-    actionButton:SetScript("OnDragStart", function() frame:StartMoving() end)
-    actionButton:SetScript("OnDragStop",  function() StopMovingAndPersist(frame); UpdateGPS() end)
+    actionButton:SetScript("PreClick", function(self)
+        self.cityCloakItemID = nil
+        self.cityCloakWasEquipped = nil
 
+        local stepNum = self.stepNum
+        if not stepNum then
+            return
+        end
+
+        local steps = select(1, addon:GetRouteNavigationState())
+        local step = steps and steps[stepNum]
+        if not step then
+            return
+        end
+
+        addon:SetActiveRouteStep(stepNum)
+
+        local actionType, actionValue = GetSecureStepAction(step)
+        if actionType and actionValue then
+            self:SetAttribute("type", actionType)
+            self:SetAttribute("spell", actionType == "spell" and actionValue or nil)
+            self:SetAttribute("item", actionType == "item" and actionValue or nil)
+        else
+            self:SetAttribute("type", nil)
+            self:SetAttribute("spell", nil)
+            self:SetAttribute("item", nil)
+        end
+
+        addon:DebugCityCloak(string.format(
+            "GPS PreClick: step=%s itemID=%s spellID=%s",
+            tostring(stepNum),
+            tostring(step.itemID),
+            tostring(step.spellID)
+        ))
+
+        if not step.itemID or not addon:IsCityCloakItemID(step.itemID) then
+            return
+        end
+
+        self.cityCloakItemID = step.itemID
+        self.cityCloakWasEquipped = addon:PrepareCityCloakClick(step.itemID)
+    end)
+    actionButton:SetScript("PostClick", function(self)
+        addon:DebugCityCloak(string.format(
+            "GPS PostClick: step=%s cloakItemID=%s wasEquippedBefore=%s",
+            tostring(self.stepNum),
+            tostring(self.cityCloakItemID),
+            tostring(self.cityCloakWasEquipped)
+        ))
+
+        if self.cityCloakItemID then
+            addon:FinalizeCityCloakClick(self.cityCloakItemID, self.cityCloakWasEquipped)
+            if self.cityCloakWasEquipped == false then
+                return
+            end
+        end
+
+        if self.stepNum then
+            addon:CompleteRouteStep(self.stepNum)
+        end
+    end)
     -- ── Text column (right of arrow, vertically centred) ────────────
     -- Anchored to arrowAnchor so they share the same vertical centre.
     local textLeft = arrowSize + 16
