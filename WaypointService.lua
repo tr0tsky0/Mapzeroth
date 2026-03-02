@@ -188,9 +188,9 @@ function addon:CalculateTravelToCoords(fromNode, toMapID, toX, toY)
         return nil
     end
 
-    -- Calculate time based on distance
-    local canFly = not addon.NO_FLY_MAPS[mapID]
+    -- Calculate time based on distance (distance is already in yards from worldpos)
+    local canFly = not addon.NO_FLY_MAPS[toMapID]
     local speed = canFly and addon.FLY_SPEED or addon.WALK_SPEED
-    local time = math.ceil(distance / speed / 5) * 5
-    return math.max(1.5, math.min(300, time)), canFly and "fly" or "walk"
+    local time = math.ceil(distance / speed / 2) * 2
+    return math.max(2, math.min(300, time)), canFly and "fly" or "walk"
 end

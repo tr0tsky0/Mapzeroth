@@ -51,6 +51,14 @@ ns.Nodes = {
             x = 0.4874,
             y = 0.9356
         },
+        STORMWIND_SILVERMOON_PORTAL = {
+            name = "Portal to Silvermoon City",
+            faction = "ALLIANCE",
+            mapID = 84,
+            interior = true,
+            x = 0.4865,
+            y = 0.9497
+        },
         STORMWIND_BORALUS_PORTAL = {
             name = "Portal to Boralus",
             faction = "ALLIANCE",
@@ -190,11 +198,18 @@ ns.Nodes = {
             y = 0.487
         },
         IRONFORGE = {
+            name = "Hall of Mysteries",
+            faction = "ALLIANCE",
+            mapID = 87,
+            x = 0.2551,
+            y = 0.0843
+        },
+        IRONFORGE_ENTRANCE = {
             name = "Entrance",
             faction = "ALLIANCE",
             mapID = 87,
-            x = 0.144,
-            y = 0.833
+            x = 0.1734,
+            y = 0.8316
         },
         -- Cataclysm Zones (via Eastern Earthshrine)
         HIGHBANK = {
@@ -334,9 +349,9 @@ ns.Nodes = {
         BIZMOS_BRAWLPUB = {
             name = "Bizmo's Brawlpub",
             faction = "ALLIANCE",
-            mapID = 500,
-            x = 0.511,
-            y = 0.273
+            mapID = 84,
+            x = 0.6943,
+            y = 0.3133
         },
         STORMWIND_CITY_MOLE = {
             name = "Stormwind (Eastern Kingdoms)",
@@ -357,7 +372,8 @@ ns.Nodes = {
             faction = "ALLIANCE",
             mapID = 35,
             x = 0.332,
-            y = 0.251
+            y = 0.251,
+            interior = true
         },
         AERIE_PEAK_MOLE = {
             name = "Aerie Peak (Eastern Kingdoms)",
@@ -1044,6 +1060,132 @@ ns.Nodes = {
             x = 0.6004,
             y = 0.5625
         },
+        BLACKROCK_QUARRY_EXTERIOR = {
+            name = "Blackrock Quarry Interior",
+            mapID = 35,
+            x = 0.5513,
+            y = 0.8454,
+            interior = false
+        },
+        SILVERMOON_CITY_FLIGHT = {
+            name = "Silvermoon City Flightmaster",
+            mapID = 2393,
+            x = 0.5107,
+            y = 0.7108
+        },
+        SILVERMOON_STORMWIND_PORTAL = {
+            name = "Portal to Stormwind",
+            faction = "ALLIANCE",
+            mapID = 2393,
+            x = 0.5275,
+            y = 0.6471
+        },
+        SILVERMOON_ORGRIMMAR_PORTAL = {
+            name = "Portal to Orgrimmar",
+            faction = "HORDE",
+            mapID = 2393,
+            x = 0.5225,
+            y = 0.6532
+        },
+        SILVERMOON_HARANDAR_PORTAL = {
+            name = "Rootway to Harandar",
+            mapID = 2393,
+            mapArtID = 1932,
+            x = 0.3689,
+            y = 0.6811
+        },
+        SILVERMOON_VOIDSTORM_PORTAL = {
+            name = "Portal to Voidstorm",
+            mapID = 2393,
+            mapArtID = 1932,
+            x = 0.3526,
+            y = 0.6584
+        },
+        SILVERMOON_PORTAL_ROOM = {
+            name = "Portal Room",
+            mapID = 2393,
+            mapArtID = 1932,
+            x = 0.5274,
+            y = 0.6535
+        },
+        FAIRBREEZE_VILLAGE_FLIGHT = {
+            name = "Fairbreeze Village Flightmaster",
+            mapID = 2395,
+            mapArtID = 1933,
+            x = 0.4468,
+            y = 0.4499
+        },
+        EVERSONG_HARANDAR_PORTAL = {
+            name = "Rootway to Harandar",
+            mapID = 2395,
+            mapArtID = 1933,
+            x = 0.4524,
+            y = 0.4689
+        },
+        TRANQUILLIEN_FLIGHT = {
+            name = "Tranquillien Flightmaster",
+            mapID = 2395,
+            mapArtID = 1933,
+            x = 0.4784,
+            y = 0.6715
+        },
+        SILVERGLADE_REFUGE_FLIGHT = {
+            name = "Silverglade Refuge Flightmaster",
+            faction = "ALLIANCE",
+            mapID = 2395,
+            mapArtID = 1933,
+            x = 0.3103,
+            y = 0.9008
+        },
+        ATALAMAN_FLIGHT = {
+            name = "Atal'Aman Flightmaster",
+            mapID = 2536,
+            mapArtID = 2045,
+            x = 0.4006,
+            y = 0.4113
+        },
+        AMANIZAR_FLIGHT = {
+            name = "Amani'Zar Flightmaster",
+            mapID = 2437,
+            mapArtID = 1963,
+            x = 0.4483,
+            y = 0.6544
+        },
+        TORNTUSK_OVERLOOK_FLIGHT = {
+            name = "Torntusk Overlook Flightmaster",
+            mapID = 2437,
+            mapArtID = 1963,
+            x = 0.3388,
+            y = 0.7836
+        },
+        WITHERBARK_BLUFFS_FLIGHT = {
+            name = "Witherbark Bluffs Flightmaster",
+            mapID = 2437,
+            mapArtID = 1963,
+            x = 0.3887,
+            y = 0.2323
+        },
+        SHADEBASIN_WATCH_FLIGHT = {
+            name = "Shadebasin Watch Flightmaster",
+            mapID = 2437,
+            mapArtID = 1963,
+            x = 0.4402,
+            y = 0.3367
+        },
+        CAMP_STONEWASH_FLIGHT = {
+            name = "Camp Stonewash Flightmaster",
+            mapID = 2437,
+            mapArtID = 1963,
+            x = 0.4729,
+            y = 0.2550
+        },
+        TERRACE_OF_THE_SUN_FLIGHT = {
+            name = "Terrace of the Sun",
+            mapID = 2424,
+            mapArtID = 1950,
+            x = 0.5762,
+            y = 0.3382
+        },
         -- Dungeons
         SHADOWFANG_KEEP_DUNGEON = {
             name = "Shadowfang Keep",
@@ -1078,7 +1220,8 @@ ns.Nodes = {
             category = "dungeon",
             mapID = 35,
             x = 0.3353,
-            y = 0.2391
+            y = 0.2391,
+            interior = true
         },
         LOWER_BLACKROCK_SPIRE_DUNGEON = {
             name = "Lower Blackrock Spire",
@@ -1173,9 +1316,46 @@ ns.Nodes = {
         },
         THRONE_OF_THE_TIDES_DUNGEON = {
             name = "Throne of the Tides",
+            category = "dungeon",
             mapID = 204, -- Abyssal Depths
             x = 0.700,
             y = 0.300
+        },
+        MURDER_ROW_DUNGEON = {
+            name = "Murder Row",
+            category = "dungeon",
+            mapID = 2393, -- Silvermoon City
+            x = 0.5702,
+            y = 0.6108
+        },
+        WINDRUNNER_SPIRE_DUNGEON = {
+            name = "Windrunner Spire",
+            category = "dungeon",
+            mapID = 2395, -- Isle of Quel'Danas
+            x = 0.3548,
+            y = 0.7883
+        },
+        DEN_OF_NALORAKK_DUNGEON = {
+            name = "Den of Nalorakk",
+            category = "dungeon",
+            mapID = 2437, -- Zul'Aman
+            x = 0.2987,
+            y = 0.8449
+        },
+        MAISARA_CAVERNS_DUNGEON = {
+            name = "Maisara Caverns",
+            category = "dungeon",
+            mapID = 2437, -- Zul'Aman
+            x = 0.4385,
+            y = 0.3953
+        },
+        MAGISTERS_TERRACE_DUNGEON = {
+            name = "Magisters' Terrace",
+            category = "dungeon",
+            mapID = 2424, -- Isle of Quel'Danas
+            mapArtID = 1950,
+            x = 0.6331,
+            y = 0.1527
         },
         -- Raids
         MOLTEN_CORE_RAID = {
@@ -1206,12 +1386,20 @@ ns.Nodes = {
             x = 0.4688,
             y = 0.7468
         },
-        BASTION_OF_TWILIGHT = {
+        BASTION_OF_TWILIGHT_RAID = {
             name = "Bastion of Twilight",
             category = "raid",
             mapID = 241,
             x = 0.340,
             y = 0.770
+        },
+        MARCH_ON_QUELDANAS_RAID = {
+            name = "March on Quel'Danas",
+            category = "raid",
+            mapID = 2424,
+            mapArtID = 1950,
+            x = 0.5230,
+            y = 0.8537
         }
     },
     TOL_BARAD = {
@@ -1436,6 +1624,14 @@ ns.Nodes = {
         },
         ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL = {
             name = "Portal to Honeydew Village",
+            faction = "HORDE",
+            interior = true,
+            mapID = 85,
+            x = 0.5745,
+            y = 0.9193
+        },
+        ORGRIMMAR_SILVERMOON_PORTAL = {
+            name = "Portal to Silvermoon",
             faction = "HORDE",
             interior = true,
             mapID = 85,
@@ -5858,7 +6054,7 @@ ns.Nodes = {
             y = 0.251
         },
         -- Dungeons
-        MAGISTERS_TERRACE_DUNGEON = {
+        MAGISTERS_TERRACE_BC_DUNGEON = {
             name = "Magisters' Terrace",
             category = "dungeon",
             mapID = 122,
@@ -6515,7 +6711,7 @@ ns.Nodes = {
             y = 0.6985
         },
         -- Ghostlands (QUELTHALAS)
-        TRANQUILLIEN_FLIGHT = {
+        TRANQUILLIEN_BC_FLIGHT = {
             name = "Tranquillien",
             faction = "HORDE",
             mapID = 95,
@@ -7751,6 +7947,147 @@ ns.Nodes = {
         }
     },
 
+    HARANDAR = {
+        HARANDAR_EVERSONG_PORTAL = {
+            name = "Rootway to Eversong",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.7589,
+            y = 0.5477
+        },
+        HARANDAR_SILVERMOON_PORTAL = {
+            name = "Rootway to Silvermoon City",
+            mapID = 2576,
+            mapArtID = 2078,
+            x = 0.6413,
+            y = 0.7066
+        },
+        HARATHIR_FLIGHT = {
+            name = "Har'athir Flightmaster",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.6940,
+            y = 0.5257
+        },
+        HARMARA_FLIGHT = {
+            name = "Har'mara Flightmaster",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.3552,
+            y = 0.2375
+        },
+        HARKUAI_FLIGHT = {
+            name = "Har'kuai Flightmaster",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.6461,
+            y = 0.2319
+        },
+        THE_DEN_FLIGHT = {
+            name = "The Den Flightmaster",
+            mapID = 2576,
+            mapArtID = 2078,
+            x = 0.7090,
+            y = 0.5321
+        },
+        HARALNOR_FLIGHT = {
+            name = "Har'alnor Flightmaster",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.3175,
+            y = 0.6737
+        },
+        -- Dungeons
+        THE_BLINDING_VALE_DUNGEON = {
+            name = "The Blinding Vale",
+            category = "dungeon",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.2659,
+            y = 0.7804
+        },
+        -- Raids
+        THE_DREAMRIFT_RAID = {
+            name = "The Dreamrift",
+            category = "raid",
+            mapID = 2413,
+            mapArtID = 1942,
+            x = 0.6102,
+            y = 0.6266
+        }
+    },
+
+    VOIDSTORM = {
+        VOIDSTORM_INGRESS_PORTAL = {
+            name = "Portal to Silvermoon",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.3415,
+            y = 0.6060
+        },
+        VOIDSTORM_SILVERMOON_PORTAL = {
+            name = "Portal to Silvermoon",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.5164,
+            y = 0.7020
+        },
+        THE_INGRESS_FLIGHT = {
+            name = "The Ingress Flightmaster",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.3688,
+            y = 0.5895
+        },
+        LOCUS_POINT_FLIGHT = {
+            name = "Locus Point Flightmaster",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.4223,
+            y = 0.7368
+        },
+        HOWLING_RIDGE_FLIGHT = {
+            name = "Howling Ridge Flightmaster",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.5118,
+            y = 0.6921
+        },
+        MASTERS_PERCH_FLIGHT = {
+            name = "Masters' Perch Flightmaster",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.4459,
+            y = 0.3945
+        },
+        -- Dungeons
+        VOIDSCAR_ARENA_DUNGEON = {
+            name = "Voidscar Arena",
+            category = "dungeon",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.5156,
+            y = 0.1901
+        },
+        NEXUS_POINT_XENAS_DUNGEON = {
+            name = "Nexus Point Xenas",
+            category = "dungeon",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.6477,
+            y = 0.6163
+        },
+        -- Raids
+        VOIDSPIRE_RAID = {
+            name = "Voidspire",
+            category = "raid",
+            mapID = 2405,
+            mapArtID = 1936,
+            x = 0.4520,
+            y = 0.6494
+        }
+    },
+
     DARKMOON_FAIRE = {
         DARKMOON_ENTRANCE = {
             name = "Entrance",
@@ -7763,6 +8100,23 @@ ns.Nodes = {
             mapID = 407,
             x = 0.5056,
             y = 0.9055
+        }
+    },
+
+    ARCANTINA = {
+        ARCANTINA_ENTRANCE = {
+            name = "The Arcantina",
+            mapID = 2541,
+            mapArtID = 2048,
+            x = 0.5093,
+            y = 0.7880
+        },
+        ARCANTINA_EXIT = {
+            name = "Exit",
+            mapID = 2541,
+            mapArtID = 2048,
+            x = 0.5067,
+            y = 0.8530
         }
     }
 }
@@ -7958,6 +8312,24 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 }, {
+    from = "STORMWIND_SILVERMOON_PORTAL",
+    to = "SILVERMOON_PORTAL_ROOM",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        minLevel = 78
+    }
+}, {
+    from = "SILVERMOON_STORMWIND_PORTAL",
+    to = "STORMWIND_PORTAL_ROOM_LOWER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        minLevel = 78
+    }
+}, {
     from = "STORMWIND_MAGE_TOWER_ENTRANCE",
     to = "STORMWIND_DARK_PORTAL_BL_NPC",
     method = "walk",
@@ -7979,15 +8351,15 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Alliance"
     }
 }, {
-    from = "STORMWIND_VALDRAKKEN_PORTAL",
+    from = "STORMWIND_SILVERMOON_PORTAL",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "walk",
     requirements = {
         faction = "Alliance"
     }
 }, {
-    from = "STORMWIND_BORALUS_PORTAL",
-    to = "STORMWIND_PORTAL_ROOM_UPPER",
+    from = "STORMWIND_VALDRAKKEN_PORTAL",
+    to = "STORMWIND_PORTAL_ROOM_LOWER",
     method = "walk",
     requirements = {
         faction = "Alliance"
@@ -8037,6 +8409,13 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "STORMWIND_DALARAN_NORTHREND_PORTAL",
     to = "STORMWIND_PORTAL_ROOM_LOWER",
+    method = "walk",
+    requirements = {
+        faction = "Alliance"
+    }
+}, {
+    from = "STORMWIND_BORALUS_PORTAL",
+    to = "STORMWIND_PORTAL_ROOM_UPPER",
     method = "walk",
     requirements = {
         faction = "Alliance"
@@ -8210,6 +8589,13 @@ ns.Edges = { -- Stormwind Internal Navigation
         faction = "Horde"
     }
 }, {
+    from = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    to = "ORGRIMMAR_SILVERMOON_PORTAL",
+    method = "walk",
+    requirements = {
+        faction = "Horde"
+    }
+}, {
     from = "ORGRIMMAR_VALDRAKKEN_PORTAL",
     to = "VALDRAKKEN",
     method = "portal",
@@ -8264,6 +8650,24 @@ ns.Edges = { -- Stormwind Internal Navigation
     oneway = true,
     requirements = {
         faction = "Horde"
+    }
+}, {
+    from = "ORGRIMMAR_SILVERMOON_PORTAL",
+    to = "SILVERMOON_PORTAL_ROOM",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        minLevel = 78
+    }
+}, {
+    from = "SILVERMOON_ORGRIMMAR_PORTAL",
+    to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        minLevel = 78
     }
 }, {
     from = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
@@ -8783,8 +9187,7 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Horde"
     }
-}, 
---{
+}, -- {
 --    from = "RAZORWIND_PORTAL_TO_FORBIDDEN_REACH",
 --    to = "FORBIDDEN_REACH",
 --    method = "portal",
@@ -8793,7 +9196,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 --        endeavor = "Dracthyr",
 --        faction = "Horde"
 --    }
---}, {
+-- }, {
 --    from = "FORBIDDEN_REACH",
 --    to = "RAZORWIND_SHORES",
 --    method = "portal",
@@ -8801,7 +9204,7 @@ ns.Edges = { -- Stormwind Internal Navigation
 --        endeavor = "Dracthyr",
 --        faction = "Horde"
 --    }
---}, 
+-- }, 
 {
     from = "VALDRAKKEN",
     to = "ORGRIMMAR_PORTAL_ROOM_UPPER",
@@ -9006,6 +9409,14 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         quest = 58457
     }
+}, {
+    from = "BLACKROCK_QUARRY_EXTERIOR",
+    to = "BLACKROCK_DEPTHS_DUNGEON",
+    method = "walk"
+}, {
+    from = "BLACKROCK_MOUNTAIN_MOLE",
+    to = "BLACKROCK_DEPTHS_DUNGEON",
+    method = "walk"
 }, {
     from = "DALARAN_BROKEN_ISLES_PET",
     to = "STRATHOLME_DUNGEON",
@@ -9288,8 +9699,41 @@ ns.Edges = { -- Stormwind Internal Navigation
     from = "TEMPLE_OF_EARTH_PORTAL",
     to = "THERAZANES_THRONE_PORTAL",
     method = "portal"
-}, -- DRUID EMERALD DREAMWAY
-{
+}, {
+    from = "ARCANTINA_EXIT",
+    to = "SILVERMOON_PORTAL_ROOM",
+    method = "portal"
+}, {
+    from = "HARANDAR_EVERSONG_PORTAL",
+    to = "EVERSONG_HARANDAR_PORTAL",
+    method = "portal",
+    requirements = {
+        quest = 89402,
+        questNotCompleted = 86898
+    }
+}, {
+    from = "HARANDAR_SILVERMOON_PORTAL",
+    to = "SILVERMOON_HARANDAR_PORTAL",
+    method = "portal",
+    requirements = {
+        quest = 86898
+    }
+}, {
+    from = "SILVERMOON_VOIDSTORM_PORTAL",
+    to = "VOIDSTORM_INGRESS_PORTAL",
+    method = "portal",
+    requirements = {
+        quest = 86549,
+        questNotCompleted = 86510
+    }
+}, {
+    from = "SILVERMOON_VOIDSTORM_PORTAL",
+    to = "VOIDSTORM_SILVERMOON_PORTAL",
+    method = "portal",
+    requirements = {
+        quest = 86510
+    }
+}, { -- DRUID EMERALD DREAMWAY
     from = "EMERALD_DREAMWAY",
     to = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
     method = "walk"
@@ -9429,6 +9873,8 @@ ns.MapToTraversal = {
     [2200] = "EMERALD_DREAM",
     [2346] = "UNDERMINE",
     [2472] = "KARESH",
+    [2413] = "HARANDAR",
+    [2405] = "VOIDSTORM",
 
     -- City-specific overrides
     [84] = "EK_OVERWORLD",

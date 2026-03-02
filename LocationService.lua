@@ -189,16 +189,16 @@ end
 -- CALCULATE TIME TO REACH NEAREST NODE
 -----------------------------------------------------------
 
-function addon:CalculateTravelToNode(distance, mapID)
-    local yards = distance * addon.MAP_SCALE
+function addon:CalculateTravelToNode(distanceYards, mapID)
+    -- distanceYards is already in yards (from C_Map.GetWorldPosFromMapPos)
     local canFly = not addon.NO_FLY_MAPS[mapID]
     local speed = canFly and addon.FLY_SPEED or addon.WALK_SPEED
 
-    local time = yards / speed
+    local time = distanceYards / speed
 
     time = math.ceil(time / 2) * 2
 
-    -- Clamp between 5 and 300 seconds
+    -- Clamp between 2 and 300 seconds
     time = math.max(2, math.min(300, time))
 
     return time, canFly and "fly" or "walk"

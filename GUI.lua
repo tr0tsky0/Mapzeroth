@@ -133,13 +133,29 @@ function addon:CreateGUI()
     local frame = CreateFrame("Frame", "MapzerothMainFrame", UIParent, "BackdropTemplate")
     addon.MapzerothFrame = frame
     frame:SetSize(FRAME_WIDTH, FRAME_HEIGHT_COLLAPSED)
-    frame:SetPoint("CENTER", UIParent, "CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", frame.StartMoving)
-    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
     frame:SetClampedToScreen(true)
+
+    local pos = MapzerothDB.settings.mainFramePoint
+    if pos and pos.point then
+        frame:SetPoint(pos.point, UIParent, pos.relativePoint, pos.x, pos.y)
+    else
+        frame:SetPoint("CENTER", UIParent, "CENTER")
+    end
+
+    frame:SetScript("OnDragStart", frame.StartMoving)
+    frame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        local point, _, relativePoint, x, y = self:GetPoint(1)
+        MapzerothDB.settings.mainFramePoint = {
+            point = point,
+            relativePoint = relativePoint,
+            x = math.floor(x),
+            y = math.floor(y)
+        }
+    end)
 
     -- Apply saved scale
     local savedScale = MapzerothDB.settings.windowScale or 1.0
@@ -262,60 +278,107 @@ function addon:CreateGUI()
     frame.selectedDest = "_WAYPOINT"
 
     -----------------------------------------------------------
-    -- NAVIGATE BUTTON
+    -- NAVIGATE / SHOW ROUTE BUTTON
     -----------------------------------------------------------
 
     local navButton = CreateFlatButton(frame, 90, 26, "Navigate")
     navButton:SetPoint("LEFT", selectorToggleBtn, "RIGHT", 10, 0)
     navButton:SetScript("OnClick", function()
-        addon:OnNavigateClicked()
+        local steps = addon:GetRouteNavigationState()
+        if steps and #steps > 0 then
+            -- Route exists — just restore the frames
+            if addon.RouteExecutionFrame then
+                addon.RouteExecutionFrame:Show()
+            end
+            if addon.GPSNavigatorFrame then
+                addon.GPSNavigatorFrame:Show()
+            end
+        else
+            addon:OnNavigateClicked()
+        end
     end)
     frame.navButton = navButton
 
     -----------------------------------------------------------
+    -- CLEAR ROUTE BUTTON
+    -----------------------------------------------------------
+
+    local clearRouteBtn = CreateFlatButton(frame, 90, 26, "Clear Route")
+    clearRouteBtn:SetPoint("LEFT", navButton, "RIGHT", 10, 0)
+    clearRouteBtn:SetScript("OnClick", function()
+        addon:ClearRoute()
+    end)
+    -- Start greyed out — no route on load
+    clearRouteBtn:EnableMouse(false)
+    clearRouteBtn:SetAlpha(0.35)
+    clearRouteBtn.label:SetTextColor(unpack(COLOURS.textSecondary))
+    frame.clearRouteBtn = clearRouteBtn
+
+    --[[-----------------------------------------------------------
     -- PET TRAINER QUICK-ROUTE BUTTONS
     -----------------------------------------------------------
 
     local petTrainersLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     petTrainersLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
-    petTrainersLabel:SetText("Pet Trainers:")
+    petTrainersLabel:SetText("Multiroute:")
     petTrainersLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
     -- Three equal-width buttons across the frame (accounting for 10px left padding + 10px right)
-    local PTB_WIDTH  = 116
+    local PTB_WIDTH = 60
     local PTB_HEIGHT = 26
-    local PTB_GAP    = 6
+    local PTB_GAP = 6
 
-    local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Kalimdor")
+    local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "KL Pet")
     ptKalimdor:SetPoint("TOPLEFT", petTrainersLabel, "BOTTOMLEFT", 0, -6)
     ptKalimdor:SetScript("OnClick", function()
-        addon:RouteMultiDestination(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
+        addon:RouteMultiDestinationV2(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
     end)
 
-    local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Eastern Kingdoms")
+    local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "EK Pet")
     ptEK:SetPoint("LEFT", ptKalimdor, "RIGHT", PTB_GAP, 0)
     ptEK:SetScript("OnClick", function()
-        addon:RouteMultiDestination(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
+        addon:RouteMultiDestinationV2(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
     end)
 
-    local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "Northrend")
+    local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "NR Pet")
     ptNorthrend:SetPoint("LEFT", ptEK, "RIGHT", PTB_GAP, 0)
     ptNorthrend:SetScript("OnClick", function()
-        addon:RouteMultiDestination(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
+        addon:RouteMultiDestinationV2(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
+    end)
+
+    local srOutland = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "OL Sky")
+    srOutland:SetPoint("LEFT", ptNorthrend, "RIGHT", PTB_GAP, 0)
+    srOutland:SetScript("OnClick", function()
+        addon:RouteMultiDestinationV2(addon.Skyriding.OUTLAND, "Outland Skyriding Races")
+    end)
+
+    local tomtomBtn = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "TomTom")
+    tomtomBtn:SetPoint("LEFT", srOutland, "RIGHT", PTB_GAP, 0)
+    tomtomBtn:SetScript("OnClick", function()
+        local points, err = addon:GetTomTomWaypoints()
+        if not points then
+            print("[Mapzeroth] " .. (err or "Unknown error reading TomTom waypoints."))
+            return
+        end
+        print(string.format("[Mapzeroth] Routing to %d TomTom waypoint(s)...", #points))
+        addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
     end)
 
     -- Store references in case we want to show/hide them later
-    frame.ptKalimdor   = ptKalimdor
-    frame.ptEK         = ptEK
-    frame.ptNorthrend  = ptNorthrend
-
+    frame.ptKalimdor = ptKalimdor
+    frame.ptEK = ptEK
+    frame.ptNorthrend = ptNorthrend
+    frame.srOutland = srOutland
+    frame.tomtomBtn = tomtomBtn
+--]]
     -----------------------------------------------------------
     -- ROUTE DISPLAY CONTAINER (initially hidden)
     -----------------------------------------------------------
 
     local routeContainer = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     -- Anchor below the pet trainer buttons, not the selector toggle
-    routeContainer:SetPoint("TOPLEFT", ptKalimdor, "BOTTOMLEFT", 0, -10)
+    -- routeContainer:SetPoint("TOPLEFT", ptKalimdor, "BOTTOMLEFT", 0, -10)
+    routeContainer:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -10)
     routeContainer:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
     routeContainer:Hide()
     routeContainer:SetClipsChildren(true) -- Clip overflow if route is too long
@@ -419,7 +482,7 @@ function addon:CreateAboutFrame()
     -- CurseForge link
     local curseLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     curseLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
-    curseLabel:SetWidth(60) 
+    curseLabel:SetWidth(60)
     curseLabel:SetJustifyH("RIGHT")
     curseLabel:SetText("Share:")
     curseLabel:SetTextColor(unpack(COLOURS.textSecondary))
@@ -499,6 +562,30 @@ end
 -- SHOW/HIDE FUNCTIONS
 -----------------------------------------------------------
 
+function addon:RefreshMainWindowButtons()
+    local frame = addon.MapzerothFrame
+    if not frame then
+        return
+    end
+
+    local steps = addon:GetRouteNavigationState()
+    local hasRoute = steps and #steps > 0
+
+    if hasRoute then
+        frame.navButton.label:SetText("Show Route")
+        frame.navButton.label:SetTextColor(unpack(COLOURS.accent))
+        frame.clearRouteBtn:EnableMouse(true)
+        frame.clearRouteBtn:SetAlpha(1)
+        frame.clearRouteBtn.label:SetTextColor(unpack(COLOURS.accent))
+    else
+        frame.navButton.label:SetText("Navigate")
+        frame.navButton.label:SetTextColor(unpack(COLOURS.accent))
+        frame.clearRouteBtn:EnableMouse(false)
+        frame.clearRouteBtn:SetAlpha(0.35)
+        frame.clearRouteBtn.label:SetTextColor(unpack(COLOURS.textSecondary))
+    end
+end
+
 function addon:ShowGUI()
     if not addon.MapzerothFrame then
         self:CreateGUI()
@@ -511,6 +598,7 @@ function addon:ShowGUI()
     end
 
     addon.MapzerothFrame:Show()
+    addon:RefreshMainWindowButtons()
 end
 
 function addon:HideGUI()

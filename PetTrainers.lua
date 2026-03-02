@@ -59,3 +59,25 @@ addon.PetTrainers = {
         { name = "Gutretch",            mapID = 121, x = 0.132, y = 0.668 },
     },
 }
+
+addon.Skyriding = {
+    -----------------------------------------------------------
+    -- OUTLAND
+    -- 13 races
+    -----------------------------------------------------------
+    OUTLAND = {
+        { name = "Hellfire Hustle",        mapID = 100, x = 0.760, y = 0.430 },
+        { name = "Coilfang Caper",         mapID = 102, x = 0.370, y = 0.370 },
+        { name = "Fel Pit Fracas",         mapID = 104, x = 0.520, y = 0.400 },
+        { name = "Shadowmoon Slam",        mapID = 104, x = 0.620, y = 0.490 },
+        { name = "Blade's Edge Brawl",     mapID = 105, x = 0.610, y = 0.280 },
+        { name = "Telaar Tear",            mapID = 107, x = 0.590, y = 0.760 },
+        { name = "Warmaul Wingding",       mapID = 107, x = 0.300, y = 0.250 },
+        { name = "Auchindoun Coaster",     mapID = 108, x = 0.420, y = 0.680 },
+        { name = "Razorthorn Rise Rush",   mapID = 108, x = 0.600, y = 0.050 },
+        { name = "Skettis Scramble",       mapID = 108, x = 0.670, y = 0.660 },
+        { name = "Eco-Dome Excursion",     mapID = 109, x = 0.510, y = 0.420 },
+        { name = "Tempest Keep Sweep",     mapID = 109, x = 0.690, y = 0.480 },
+        { name = "Shattrath City Sashay",  mapID = 111, x = 0.720, y = 0.710 },
+    }
+}

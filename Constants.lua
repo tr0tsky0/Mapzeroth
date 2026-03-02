@@ -8,18 +8,19 @@ local addonName, addon = ...
 -- TRAVEL SPEEDS (yards per second)
 -----------------------------------------------------------
 -- Based on actual WoW player movement speeds:
--- - Base run speed: ~12 yards/sec
--- - Flying mount (skyriding): ~60 yards/sec
+-- - Base run speed: ~7 yards/sec
+-- - Flying mount (skyriding): ~50 yards/sec
 
-addon.WALK_SPEED = 12
-addon.FLY_SPEED = 60
+addon.WALK_SPEED = 7
+addon.FLY_SPEED = 50
 
 -----------------------------------------------------------
 -- DISTANCE CALCULATIONS
 -----------------------------------------------------------
 
-addon.MAP_SCALE = 1000 -- yards per map coordinate unit
-addon.MAX_AUTO_EDGE_DISTANCE = 3000 -- Maximum distance for auto-generated traversal edges
+-- MAP_SCALE removed: all distances now use C_Map.GetWorldPosFromMapPos() directly,
+-- which returns actual yard coordinates. No scaling constant needed.
+addon.MAX_AUTO_EDGE_DISTANCE = 3000 -- Maximum distance (yards) for auto-generated traversal edges
 
 -----------------------------------------------------------
 -- NO-FLY ZONES

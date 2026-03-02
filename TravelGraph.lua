@@ -18,7 +18,6 @@ end
 local TRAVEL_COSTS = addon.TRAVEL_COSTS
 local WALK_SPEED = addon.WALK_SPEED
 local FLY_SPEED = addon.FLY_SPEED
-local MAP_SCALE = addon.MAP_SCALE
 local MAX_AUTO_EDGE_DISTANCE = addon.MAX_AUTO_EDGE_DISTANCE
 local NO_FLY_MAPS = addon.NO_FLY_MAPS
 
@@ -41,25 +40,19 @@ local function calculateDistanceToCoords(node, targetMapID, targetX, targetY)
         return nil
     end
 
-    -- Both on same map? Use map-space distance (fast path)
-    if node.mapID == targetMapID then
-        local dx = (targetX - node.x) * MAP_SCALE
-        local dy = (targetY - node.y) * MAP_SCALE
-        return math.sqrt(dx * dx + dy * dy)
-    end
-
-    -- Different maps — try world coordinates
-    local nodeVector = CreateVector2D(node.x, node.y)
+    -- Always use world coordinates — they return actual yards and work for both
+    -- same-map and cross-map cases. Falls back to nil for maps that don't share
+    -- a world coordinate system (instances, Argus, etc.).
+    local nodeVector   = CreateVector2D(node.x, node.y)
     local targetVector = CreateVector2D(targetX, targetY)
 
     if not nodeVector or not targetVector then
         return nil
     end
 
-    local success1, pos1 = C_Map.GetWorldPosFromMapPos(node.mapID, nodeVector)
-    local success2, pos2 = C_Map.GetWorldPosFromMapPos(targetMapID, targetVector)
+    local _, pos1 = C_Map.GetWorldPosFromMapPos(node.mapID, nodeVector)
+    local _, pos2 = C_Map.GetWorldPosFromMapPos(targetMapID, targetVector)
 
-    -- If EITHER conversion failed, these maps don't share a world coordinate system
     if not pos1 or not pos2 then
         return nil
     end

@@ -87,6 +87,16 @@ addon.TravelItems = {
         faction = "ALLIANCE"
     },
 
+    KEY_TO_THE_ARCANTINA = {
+        id = "KEY_TO_THE_ARCANTINA",
+        name = "Personal Key to the Arcantina",
+        itemID = 253629,
+        type = "toy",
+        castTime = 5,
+        cooldown = 90,
+        destination = "ARCANTINA_ENTRANCE"
+    },
+
     -----------------------------------------------------------
     -- ENGINEERING TOYS
     -----------------------------------------------------------

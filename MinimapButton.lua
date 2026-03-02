@@ -5,6 +5,14 @@ local addonName, addon = ...
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
 
+function Mapzeroth_OnAddonCompartmentClick(addonName, buttonName)
+        if buttonName == "LeftButton" then
+            addon:ToggleGUI()
+        elseif buttonName == "RightButton" then
+            addon:OpenSettings()
+        end
+end
+
 -----------------------------------------------------------
 -- CREATE DATA BROKER OBJECT
 -----------------------------------------------------------
@@ -26,7 +34,7 @@ local MapzerothLDB = LDB:NewDataObject("Mapzeroth", {
         tooltip:AddLine("|cffaaaaaa< Left-Click >|r Toggle window", 0.2, 1, 0.2)
         tooltip:AddLine("|cffaaaaaa< Right-Click >|r Settings (coming soon)", 0.2, 1, 0.2)
         tooltip:AddLine("|cffaaaaaa< Drag >|r Move button", 0.2, 1, 0.2)
-    end,
+    end
 })
 
 -----------------------------------------------------------
@@ -38,17 +46,17 @@ function addon:InitializeMinimapButton()
     if not MapzerothDB then
         MapzerothDB = {}
     end
-    
+
     if not MapzerothDB.minimap then
         MapzerothDB.minimap = {
             hide = false,
-            minimapPos = 220,  -- Default position (degrees around minimap)
+            minimapPos = 220 -- Default position (degrees around minimap)
         }
     end
-    
+
     -- Register with LibDBIcon
     LDBIcon:Register("Mapzeroth", MapzerothLDB, MapzerothDB.minimap)
-    
+
     if addon.DEBUG then
         print("[Mapzeroth] Minimap button initialized")
     end

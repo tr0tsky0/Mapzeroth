@@ -48,6 +48,7 @@ frame:SetScript("OnEvent", function(self, event)
             MapzerothDB.minimap.hide = false
         end
 
+        -- mainFramePoint intentionally has no default — nil means "use CENTER"
         -- Initialize minimap button
         addon:InitializeMinimapButton()
         -- Initialize standalone GPS navigator

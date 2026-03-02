@@ -568,30 +568,34 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
         end
 
         -- Coordinate destination → nearby nodes (both directions)
+        -- Interior nodes are excluded: they can't be flown to/from directly
+        -- and must be reached via their manually-defined walk edges only.
         for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
             for nodeID, node in pairs(groupData) do
-                local travelTime, travelMethod = self:CalculateTravelToCoords(node, dest.coords.mapID, dest.coords.x,
-                    dest.coords.y)
+                if not node.interior then
+                    local travelTime, travelMethod = self:CalculateTravelToCoords(node, dest.coords.mapID,
+                        dest.coords.x, dest.coords.y)
 
-                if travelTime then
-                    if dest.fromPlayer then
-                        -- Hearthstone: edges FROM destination TO nodes
-                        table.insert(synthetic.edges, {
-                            from = dest.nodeID,
-                            to = nodeID,
-                            method = travelMethod,
-                            cost = travelTime,
-                            isSynthetic = true
-                        })
-                    else
-                        -- Waypoint: edges FROM nodes TO destination
-                        table.insert(synthetic.edges, {
-                            from = nodeID,
-                            to = dest.nodeID,
-                            method = travelMethod,
-                            cost = travelTime,
-                            isSynthetic = true
-                        })
+                    if travelTime then
+                        if dest.fromPlayer then
+                            -- Hearthstone: edges FROM destination TO nodes
+                            table.insert(synthetic.edges, {
+                                from = dest.nodeID,
+                                to = nodeID,
+                                method = travelMethod,
+                                cost = travelTime,
+                                isSynthetic = true
+                            })
+                        else
+                            -- Waypoint: edges FROM nodes TO destination
+                            table.insert(synthetic.edges, {
+                                from = nodeID,
+                                to = dest.nodeID,
+                                method = travelMethod,
+                                cost = travelTime,
+                                isSynthetic = true
+                            })
+                        end
                     end
                 end
             end
@@ -604,24 +608,38 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
     -- Only if valid player location (nil in instances)
 
     if playerLocation then
-        local MAX_PLAYER_RANGE = 2.0
+        -- MAX_PLAYER_RANGE is in yards. Nodes beyond this aren't worth a walk/fly
+        -- synthetic edge — the pathfinder will reach them via the graph instead.
+        local MAX_PLAYER_RANGE = 3000
 
-        for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
-            for nodeID, node in pairs(groupData) do
-                if node.mapID == playerLocation.mapID and node.x and node.y and not node.interior then
-                    local dx = node.x - playerLocation.x
-                    local dy = node.y - playerLocation.y
-                    local dist = math.sqrt(dx * dx + dy * dy)
+        -- Convert player position to world coordinates once, outside the loop
+        local _, playerWorld = C_Map.GetWorldPosFromMapPos(playerLocation.mapID,
+            CreateVector2D(playerLocation.x, playerLocation.y))
 
-                    if dist <= MAX_PLAYER_RANGE then
-                        local travelTime, travelMethod = addon:CalculateTravelToNode(dist, playerLocation.mapID)
-                        table.insert(synthetic.edges, {
-                            from = VIRTUAL_START,
-                            to = nodeID,
-                            method = travelMethod,
-                            cost = travelTime,
-                            isSynthetic = true
-                        })
+        if playerWorld then
+            for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
+                for nodeID, node in pairs(groupData) do
+                    if node.mapID == playerLocation.mapID and node.x and node.y then
+                        local _, nodeWorld = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
+
+                        if nodeWorld then
+                            local dx = nodeWorld.x - playerWorld.x
+                            local dy = nodeWorld.y - playerWorld.y
+                            local dist = math.sqrt(dx * dx + dy * dy)
+
+                            if dist <= MAX_PLAYER_RANGE then
+                                local travelTime, travelMethod = addon:CalculateTravelToNode(dist, playerLocation.mapID)
+                                -- Interior nodes must be walked to regardless of zone fly rules
+                                local method = node.interior and "walk" or travelMethod
+                                table.insert(synthetic.edges, {
+                                    from = VIRTUAL_START,
+                                    to = nodeID,
+                                    method = method,
+                                    cost = travelTime,
+                                    isSynthetic = true
+                                })
+                            end
+                        end
                     end
                 end
             end

@@ -6,7 +6,7 @@ local addonName, addon = ...
 -- HOLIDAY DETECTION SYSTEM
 -- ============================================================================
 
-local holidayCache = {}  -- Just { [holidayName] = boolean }
+local holidayCache = {} -- Just { [holidayName] = boolean }
 local calendarReady = false
 
 -- ============================================================================
@@ -18,24 +18,24 @@ local function IsHolidayActive(holidayKey)
     if holidayCache[holidayKey] ~= nil then
         return holidayCache[holidayKey]
     end
-    
+
     if not calendarReady then
         return false
     end
-    
+
     local icons = addon.HOLIDAYS[holidayKey]
     if not icons then
         -- Invalid key, bail early
         holidayCache[holidayKey] = false
         return false
     end
-    
+
     local currentCalendarTime = C_DateAndTime.GetCurrentCalendarTime()
     local numEvents = C_Calendar.GetNumDayEvents(0, currentCalendarTime.monthDay)
-    
+
     for i = 1, numEvents do
         local event = C_Calendar.GetDayEvent(0, currentCalendarTime.monthDay, i)
-        
+
         if event and event.calendarType == "HOLIDAY" and event.iconTexture then
             -- Check if icon matches any in the array
             for _, iconID in ipairs(icons) do
@@ -46,7 +46,7 @@ local function IsHolidayActive(holidayKey)
             end
         end
     end
-    
+
     holidayCache[holidayKey] = false
     return false
 end
@@ -65,22 +65,26 @@ local requirementCheckers = {
     holiday = function(requiredHoliday)
         return IsHolidayActive(requiredHoliday)
     end,
-    
+
     -- Quest completion
     quest = function(questID)
         return C_QuestLog.IsQuestFlaggedCompleted(questID)
     end,
-    
+
+    questNotCompleted = function(questID)
+        return not C_QuestLog.IsQuestFlaggedCompleted(questID)
+    end,
+
     -- Minimum character level
     minLevel = function(level)
         return UnitLevel("player") >= level
     end,
-    
+
     -- Maximum character level
     maxLevel = function(level)
         return UnitLevel("player") <= level
     end,
-    
+
     -- Class requirement
     class = function(requiredClass)
         local _, classToken = UnitClass("player")
@@ -92,19 +96,21 @@ local requirementCheckers = {
         local playerFaction = UnitFactionGroup("player")
         return playerFaction == requiredFaction
     end,
-    
+
     -- Reputation requirement
     reputation = function(repReq)
         local factionData = C_Reputation.GetFactionDataByID(repReq.factionID)
-        if not factionData then return false end
+        if not factionData then
+            return false
+        end
         return factionData.reaction >= repReq.standing
     end,
-    
+
     -- Covenant requirement
     covenant = function(covenantID)
         return C_Covenants.GetActiveCovenantID() == covenantID
     end,
-    
+
     -- Multiple requirements (ANY)
     anyOf = function(subRequirements)
         for requirementType, value in pairs(subRequirements) do
@@ -114,7 +120,7 @@ local requirementCheckers = {
             end
         end
         return false
-    end,
+    end
 }
 
 -- ============================================================================
@@ -132,21 +138,21 @@ function addon:CheckEdgeRequirements(edge)
     if not edge.requirements then
         return true
     end
-    
+
     for requirementType, value in pairs(edge.requirements) do
         local checker = requirementCheckers[requirementType]
-        
+
         if not checker then
-            print(string.format("[Mapzeroth] WARNING: Unknown requirement type '%s' on edge %s -> %s", 
-                requirementType, edge.from or "?", edge.to or "?"))
+            print(string.format("[Mapzeroth] WARNING: Unknown requirement type '%s' on edge %s -> %s", requirementType,
+                edge.from or "?", edge.to or "?"))
             return false
         end
-        
+
         if not checker(value) then
             return false
         end
     end
-    
+
     return true
 end
 
@@ -155,11 +161,11 @@ function addon:ExplainEdgeRequirements(edge)
     if not edge.requirements then
         return "No requirements"
     end
-    
+
     local reasons = {}
     for requirementType, value in pairs(edge.requirements) do
         local passed = false
-        
+
         if requirementType == "holiday" then
             passed = IsHolidayActive(value)
         elseif requirementType == "quest" then
@@ -178,9 +184,9 @@ function addon:ExplainEdgeRequirements(edge)
         elseif requirementType == "covenant" then
             passed = C_Covenants.GetActiveCovenantID() == value
         end
-        
+
         table.insert(reasons, string.format("%s: %s", requirementType, passed and "✓" or "✗"))
     end
-    
+
     return table.concat(reasons, ", ")
 end
