@@ -31,7 +31,6 @@ Data\Mapzeroth_Data_Nodes_BfA.lua
 Data\Mapzeroth_Data_Nodes_Draenor.lua
 Data\Mapzeroth_Data_Nodes_Zandalar.lua
 Data\Mapzeroth_Data_Nodes_Argus.lua
-Data\Mapzeroth_Data_Nodes_Special.lua
 Data\Mapzeroth_Data_Edges.lua
 PetTrainers.lua
 MapNames.lua
