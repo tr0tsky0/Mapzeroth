@@ -965,98 +965,84 @@ ns.Nodes.EK_OVERWORLD = {
     SILVERMOON_HARANDAR_PORTAL = {
         name = "Rootway to Harandar",
         mapID = 2393,
-        mapArtID = 1932,
         x = 0.3689,
         y = 0.6811
     },
     SILVERMOON_VOIDSTORM_PORTAL = {
         name = "Portal to Voidstorm",
         mapID = 2393,
-        mapArtID = 1932,
         x = 0.3526,
         y = 0.6584
     },
     SILVERMOON_PORTAL_ROOM = {
         name = "Portal Room",
         mapID = 2393,
-        mapArtID = 1932,
         x = 0.5274,
         y = 0.6535
     },
     FAIRBREEZE_VILLAGE_FLIGHT = {
         name = "Fairbreeze Village Flightmaster",
         mapID = 2395,
-        mapArtID = 1933,
         x = 0.4468,
         y = 0.4499
     },
     EVERSONG_HARANDAR_PORTAL = {
         name = "Rootway to Harandar",
         mapID = 2395,
-        mapArtID = 1933,
         x = 0.4524,
         y = 0.4689
     },
     TRANQUILLIEN_FLIGHT = {
         name = "Tranquillien Flightmaster",
         mapID = 2395,
-        mapArtID = 1933,
         x = 0.4784,
         y = 0.6715
     },
     SILVERGLADE_REFUGE_FLIGHT = {
         name = "Silverglade Refuge Flightmaster",
         mapID = 2395,
-        mapArtID = 1933,
         x = 0.3103,
         y = 0.9008
     },
     ATALAMAN_FLIGHT = {
         name = "Atal'Aman Flightmaster",
         mapID = 2536,
-        mapArtID = 2045,
         x = 0.4006,
         y = 0.4113
     },
     AMANIZAR_FLIGHT = {
         name = "Amani'Zar Flightmaster",
         mapID = 2437,
-        mapArtID = 1963,
         x = 0.4483,
         y = 0.6544
     },
     TORNTUSK_OVERLOOK_FLIGHT = {
         name = "Torntusk Overlook Flightmaster",
         mapID = 2437,
-        mapArtID = 1963,
         x = 0.3388,
         y = 0.7836
     },
     WITHERBARK_BLUFFS_FLIGHT = {
         name = "Witherbark Bluffs Flightmaster",
         mapID = 2437,
-        mapArtID = 1963,
         x = 0.3887,
         y = 0.2323
     },
     SHADEBASIN_WATCH_FLIGHT = {
         name = "Shadebasin Watch Flightmaster",
         mapID = 2437,
-        mapArtID = 1963,
         x = 0.4402,
         y = 0.3367
     },
     CAMP_STONEWASH_FLIGHT = {
         name = "Camp Stonewash Flightmaster",
         mapID = 2437,
-        mapArtID = 1963,
         x = 0.4729,
         y = 0.2550
     },
     TERRACE_OF_THE_SUN_FLIGHT = {
         name = "Terrace of the Sun",
         mapID = 2424,
-        mapArtID = 1950,
         x = 0.5762,
         y = 0.3382
     },
@@ -1227,7 +1213,6 @@ ns.Nodes.EK_OVERWORLD = {
         name = "Magisters' Terrace",
         category = "dungeon",
         mapID = 2424, -- Isle of Quel'Danas
-        mapArtID = 1950,
         x = 0.6331,
         y = 0.1527
     },
@@ -1271,7 +1256,6 @@ ns.Nodes.EK_OVERWORLD = {
         name = "March on Quel'Danas",
         category = "raid",
         mapID = 2424,
-        mapArtID = 1950,
         x = 0.5230,
         y = 0.8537
     }

@@ -298,49 +298,42 @@ ns.Nodes.HARANDAR = {
     HARANDAR_EVERSONG_PORTAL = {
         name = "Rootway to Eversong",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.7589,
         y = 0.5477
     },
     HARANDAR_SILVERMOON_PORTAL = {
         name = "Rootway to Silvermoon City",
         mapID = 2576,
-        mapArtID = 2078,
         x = 0.6413,
         y = 0.7066
     },
     HARATHIR_FLIGHT = {
         name = "Har'athir Flightmaster",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.6940,
         y = 0.5257
     },
     HARMARA_FLIGHT = {
         name = "Har'mara Flightmaster",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.3552,
         y = 0.2375
     },
     HARKUAI_FLIGHT = {
         name = "Har'kuai Flightmaster",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.6461,
         y = 0.2319
     },
     THE_DEN_FLIGHT = {
         name = "The Den Flightmaster",
         mapID = 2576,
-        mapArtID = 2078,
         x = 0.7090,
         y = 0.5321
     },
     HARALNOR_FLIGHT = {
         name = "Har'alnor Flightmaster",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.3175,
         y = 0.6737
     },
@@ -349,7 +342,6 @@ ns.Nodes.HARANDAR = {
         name = "The Blinding Vale",
         category = "dungeon",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.2659,
         y = 0.7804
     },
@@ -358,7 +350,6 @@ ns.Nodes.HARANDAR = {
         name = "The Dreamrift",
         category = "raid",
         mapID = 2413,
-        mapArtID = 1942,
         x = 0.6102,
         y = 0.6266
     }
@@ -369,42 +360,36 @@ ns.Nodes.VOIDSTORM = {
     VOIDSTORM_INGRESS_PORTAL = {
         name = "Portal to Silvermoon",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.3415,
         y = 0.6060
     },
     VOIDSTORM_SILVERMOON_PORTAL = {
         name = "Portal to Silvermoon",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.5164,
         y = 0.7020
     },
     THE_INGRESS_FLIGHT = {
         name = "The Ingress Flightmaster",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.3688,
         y = 0.5895
     },
     LOCUS_POINT_FLIGHT = {
         name = "Locus Point Flightmaster",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.4223,
         y = 0.7368
     },
     HOWLING_RIDGE_FLIGHT = {
         name = "Howling Ridge Flightmaster",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.5118,
         y = 0.6921
     },
     MASTERS_PERCH_FLIGHT = {
         name = "Masters' Perch Flightmaster",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.4459,
         y = 0.3945
     },
@@ -413,7 +398,6 @@ ns.Nodes.VOIDSTORM = {
         name = "Voidscar Arena",
         category = "dungeon",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.5156,
         y = 0.1901
     },
@@ -421,7 +405,6 @@ ns.Nodes.VOIDSTORM = {
         name = "Nexus Point Xenas",
         category = "dungeon",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.6477,
         y = 0.6163
     },
@@ -430,7 +413,6 @@ ns.Nodes.VOIDSTORM = {
         name = "Voidspire",
         category = "raid",
         mapID = 2405,
-        mapArtID = 1936,
         x = 0.4520,
         y = 0.6494
     }
@@ -441,14 +423,12 @@ ns.Nodes.ARCANTINA = {
     ARCANTINA_ENTRANCE = {
         name = "The Arcantina",
         mapID = 2541,
-        mapArtID = 2048,
         x = 0.5093,
         y = 0.7880
     },
     ARCANTINA_EXIT = {
         name = "Exit",
         mapID = 2541,
-        mapArtID = 2048,
         x = 0.5067,
         y = 0.8530
     }
