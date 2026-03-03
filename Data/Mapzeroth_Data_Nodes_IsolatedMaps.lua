@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_IsolatedMaps.lua
+-- Mapzeroth_Data_Nodes_IsolatedMaps.lua
 -- Isolated zones with no continental connection: Vindicaar, Dark Iron City, Timeless Isle,
 -- Isle of Giants, Quel'danas, Nazjatar, Darkmoon Faire, Karesh, Harandar, Voidstorm, Arcantina
 local _, ns = ...
@@ -8,7 +8,6 @@ ns.Nodes = ns.Nodes or {}
 ns.Nodes.VINDICAAR_AZEROTH = {
     VINDICAAR_AZEROTH = {
         name = "The Vindicaar (Azeroth)",
-        faction = "ALLIANCE",
         mapID = 940,
         x = 0.750,
         y = 0.750
@@ -19,7 +18,6 @@ ns.Nodes.VINDICAAR_AZEROTH = {
 ns.Nodes.DARK_IRON_CITY = {
     SHADOWFORGE_CITY_MOLE = {
         name = "Shadowforge City",
-        faction = "ALLIANCE",
         mapID = 1186,
         x = 0.614,
         y = 0.244
@@ -36,14 +34,12 @@ ns.Nodes.TIMELESS_ISLE = {
     },
     TUSHUI_LANDING_FLIGHT = {
         name = "Tushui Landing",
-        faction = "ALLIANCE",
         mapID = 554,
         x = 0.230,
         y = 0.710
     },
     HUOJIN_LANDING_FLIGHT = {
         name = "Huojin Landing",
-        faction = "HORDE",
         mapID = 554,
         x = 0.225,
         y = 0.381
@@ -60,14 +56,12 @@ ns.Nodes.TIMELESS_ISLE = {
 ns.Nodes.ISLE_OF_GIANTS = {
     BEEBLES_WRECK_FLIGHT = {
         name = "Beeble's Wreck",
-        faction = "ALLIANCE",
         mapID = 507,
         x = 0.416,
         y = 0.792
     },
     BOZZLES_WRECK_FLIGHT = {
         name = "Bozzle's Wreck",
-        faction = "HORDE",
         mapID = 507,
         x = 0.5157,
         y = 0.7504
@@ -110,70 +104,60 @@ ns.Nodes.QUELDANAS = {
 ns.Nodes.NAZJATAR = {
     NAZJATAR_ALLIANCE = {
         name = "Mezzamere",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.3996,
         y = 0.5884
     },
     NAZJATAR_HORDE = {
         name = "Newhome",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.4719,
         y = 0.6263
     },
     ASHEN_STRAND_FLIGHT_ALLIANCE = {
         name = "Ashen Strand",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.316,
         y = 0.382
     },
     ASHEN_STRAND_FLIGHT_HORDE = {
         name = "Ashen Strand",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.3426,
         y = 0.3690
     },
     MEZZAMERE_FLIGHT = {
         name = "Mezzamere",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.399,
         y = 0.542
     },
     WRECK_OF_THE_OLD_BLANCHY_FLIGHT = {
         name = "Wreck of the Old Blanchy",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.441,
         y = 0.857
     },
     THE_TIDAL_CONFLUX_FLIGHT_ALLIANCE = {
         name = "The Tidal Conflux",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.496,
         y = 0.236
     },
     THE_TIDAL_CONFLUX_FLIGHT_HORDE = {
         name = "The Tidal Conflux",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.5086,
         y = 0.2376
     },
     UTAMAS_STAND_FLIGHT = {
         name = "Utama's Stand",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.614,
         y = 0.366
     },
     ORISES_VIGIL_FLIGHT = {
         name = "Orise's Vigil",
-        faction = "ALLIANCE",
         mapID = 1355,
         x = 0.736,
         y = 0.399
@@ -186,28 +170,24 @@ ns.Nodes.NAZJATAR = {
     },
     ZINAZSHARI_FLIGHT = {
         name = "Zin'Azshari",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.7912,
         y = 0.3806
     },
     EKKAS_HIDEAWAY_FLIGHT = {
         name = "Ekka's Hideaway",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.6358,
         y = 0.5166
     },
     NEWHOME_FLIGHT = {
         name = "Newhome",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.4721,
         y = 0.6314
     },
     WRECK_OF_THE_HUNGRY_RIVERBEAST_FLIGHT = {
         name = "Wreck of the Hungry Riverbeast",
-        faction = "HORDE",
         mapID = 1355,
         x = 0.3568,
         y = 0.8263

@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Shadowlands.lua
+-- Mapzeroth_Data_Nodes_Shadowlands.lua
 -- Shadowlands zones
 local _, ns = ...
 
@@ -30,7 +30,6 @@ ns.Nodes.SL_ORIBOS = {
 ns.Nodes.SL_MALDRAXXUS = {
     MALDRAXXUS_MOLE = {
         name = "Valley of a Thousand Legs",
-        faction = "ALLIANCE",
         mapID = 1536,
         x = 0.535,
         y = 0.598
@@ -110,7 +109,6 @@ ns.Nodes.SL_MALDRAXXUS = {
 ns.Nodes.SL_BASTION = {
     BASTION_MOLE = {
         name = "The Eternal Forge",
-        faction = "ALLIANCE",
         mapID = 1533,
         x = 0.518,
         y = 0.132
@@ -180,7 +178,6 @@ ns.Nodes.SL_BASTION = {
 ns.Nodes.SL_REVENDRETH = {
     REVENDRETH_MOLE = {
         name = "Scorched Crypt",
-        faction = "ALLIANCE",
         mapID = 1525,
         x = 0.199,
         y = 0.388
@@ -288,7 +285,6 @@ ns.Nodes.SL_REVENDRETH = {
 ns.Nodes.SL_ARDENWEALD = {
     ARDENWEALD_MOLE = {
         name = "Soryn's Meadow",
-        faction = "ALLIANCE",
         mapID = 1565,
         x = 0.665,
         y = 0.505

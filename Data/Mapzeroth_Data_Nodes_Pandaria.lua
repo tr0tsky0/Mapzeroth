@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Pandaria.lua
+-- Mapzeroth_Data_Nodes_Pandaria.lua
 -- Pandaria and Isle of Thunder (Mists of Pandaria)
 local _, ns = ...
 
@@ -13,21 +13,18 @@ ns.Nodes.PANDARIA = {
     },
     SHRINE_OF_SEVEN_STARS = {
         name = "Shrine of Seven Stars",
-        faction = "ALLIANCE",
         mapID = 390,
         x = 0.863,
         y = 0.611
     },
     SHRINE_OF_TWO_MOONS = {
         name = "Shrine of Two Moons",
-        faction = "HORDE",
         mapID = 390,
         x = 0.6250,
         y = 0.2182
     },
     PEARLFIN_VILLAGE_FLIGHT = {
         name = "Pearlfin Village",
-        faction = "ALLIANCE",
         mapID = 371,
         x = 0.588,
         y = 0.834
@@ -76,35 +73,30 @@ ns.Nodes.PANDARIA = {
     },
     VALLEY_OF_THE_FOUR_WINDS_MOLE = {
         name = "Valley of the Four Winds (Stormstout Brewery)",
-        faction = "ALLIANCE",
         mapID = 376,
         x = 0.315,
         y = 0.736
     },
     KUN_LAI_SUMMIT_MOLE = {
         name = "Kun-Lai Summit (One Keg)",
-        faction = "ALLIANCE",
         mapID = 379,
         x = 0.577,
         y = 0.628
     },
     PAWDON_VILLAGE_FLIGHT = {
         name = "Paw'Don Village",
-        faction = "ALLIANCE",
         mapID = 371,
         x = 0.469,
         y = 0.861
     },
     LIONS_LANDING_FLIGHT = {
         name = "Lion's Landing",
-        faction = "ALLIANCE",
         mapID = 418,
         x = 0.880,
         y = 0.344
     },
     THE_INCURSION_FLIGHT = {
         name = "The Incursion",
-        faction = "ALLIANCE",
         mapID = 418,
         x = 0.676,
         y = 0.322
@@ -129,14 +121,12 @@ ns.Nodes.PANDARIA = {
     },
     SENTINEL_BASECAMP_FLIGHT = {
         name = "Sentinel Basecamp",
-        faction = "ALLIANCE",
         mapID = 418,
         x = 0.249,
         y = 0.332
     },
     THE_LIONS_REDOUBT_FLIGHT = {
         name = "The Lion's Redoubt",
-        faction = "ALLIANCE",
         mapID = 422,
         x = 0.735,
         y = 0.329
@@ -168,7 +158,6 @@ ns.Nodes.PANDARIA = {
     SHRINE_OF_SEVEN_STARS_FLIGHT = {
         name = "Shrine of Seven Stars",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 390,
         x = 0.850,
         y = 0.601
@@ -176,28 +165,24 @@ ns.Nodes.PANDARIA = {
     SHRINE_OF_TWO_MOONS_FLIGHT = {
         name = "Shrine of Two Moons",
         category = "city",
-        faction = "HORDE",
         mapID = 390,
         x = 0.6281,
         y = 0.2181
     },
     SERPENTS_SPINE_FLIGHT_ALLIANCE = {
         name = "Serpent's Spine",
-        faction = "ALLIANCE",
         mapID = 390,
         x = 0.136,
         y = 0.772
     },
     SERPENTS_SPINE_FLIGHT_HORDE = {
         name = "Serpent's Spine",
-        faction = "HORDE",
         mapID = 379,
         x = 0.3577,
         y = 0.8358
     },
     EASTWIND_REST_FLIGHT = {
         name = "Eastwind Rest",
-        faction = "HORDE",
         mapID = 379,
         x = 0.6205,
         y = 0.8062
@@ -210,7 +195,6 @@ ns.Nodes.PANDARIA = {
     },
     WESTWIND_REST_FLIGHT = {
         name = "Westwind Rest",
-        faction = "ALLIANCE",
         mapID = 379,
         x = 0.537,
         y = 0.842
@@ -308,21 +292,18 @@ ns.Nodes.PANDARIA = {
     -- Jade Forest (PANDARIA)
     GROOKIN_HILL_FLIGHT = {
         name = "Grookin Hill",
-        faction = "HORDE",
         mapID = 371,
         x = 0.2838,
         y = 0.4891
     },
     HONEYDEW_VILLAGE_FLIGHT = {
         name = "Honeydew Village",
-        faction = "HORDE",
         mapID = 371,
         x = 0.2744,
         y = 0.1571
     },
     HONEYDEW_VILLAGE = {
         name = "Honeydew Village",
-        faction = "HORDE",
         mapID = 371,
         x = 0.2826,
         y = 0.1359
@@ -330,21 +311,18 @@ ns.Nodes.PANDARIA = {
     -- Krasarang Wilds (PANDARIA)
     THUNDER_CLEFT_FLIGHT = {
         name = "Thunder Cleft",
-        faction = "HORDE",
         mapID = 418,
         x = 0.5887,
         y = 0.2436
     },
     DOMINATION_POINT_FLIGHT = {
         name = "Domination Point",
-        faction = "HORDE",
         mapID = 418,
         x = 0.0943,
         y = 0.5244
     },
     DAWNCHASER_RETREAT_FLIGHT = {
         name = "Dawnchaser Retreat",
-        faction = "HORDE",
         mapID = 418,
         x = 0.2850,
         y = 0.5050
@@ -357,14 +335,12 @@ ns.Nodes.PANDARIA = {
     },
     SHADOPAN_ISLE_OF_THUNDER_PORTAL_HORDE = {
         name = "Isle of Thunder Portal",
-        faction = "HORDE",
         mapID = 388,
         x = 0.5065,
         y = 0.7336
     },
     SHADOPAN_ISLE_OF_THUNDER_PORTAL_ALLIANCE = {
         name = "Isle of Thunder Portal",
-        faction = "ALLIANCE",
         mapID = 388,
         x = 0.4974,
         y = 0.6871
@@ -454,14 +430,12 @@ ns.Nodes.PANDARIA = {
 ns.Nodes.ISLE_OF_THUNDER = {
     KIRIN_TOR_BASE = {
         name = "Kirin Tor Base",
-        faction = "ALLIANCE",
         mapID = 504,
         x = 0.6408,
         y = 0.7248
     },
     SUNREAVER_BASE = {
         name = "Sunreaver Base",
-        faction = "HORDE",
         mapID = 504,
         x = 0.3262,
         y = 0.3425

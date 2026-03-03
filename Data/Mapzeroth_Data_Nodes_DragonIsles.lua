@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_DragonIsles.lua
+-- Mapzeroth_Data_Nodes_DragonIsles.lua
 -- Dragon Isles and Emerald Dream (Dragonflight)
 local _, ns = ...
 
@@ -26,7 +26,6 @@ ns.Nodes.DRAGON_ISLES = {
     },
     BELAMETH = {
         name = "Bel'ameth",
-        faction = "ALLIANCE",
         mapID = 2239,
         x = 0.5493,
         y = 0.6388
@@ -39,7 +38,6 @@ ns.Nodes.DRAGON_ISLES = {
     },
     BELANAAR = {
         name = "Belanaar",
-        faction = "ALLIANCE",
         mapID = 2239,
         x = 0.514,
         y = 0.158
@@ -52,7 +50,6 @@ ns.Nodes.DRAGON_ISLES = {
     },
     THE_WAKING_SHORES_MOLE = {
         name = "The Waking Shores (The Slagmire)",
-        faction = "ALLIANCE",
         mapID = 2022,
         x = 0.323,
         y = 0.549
@@ -71,14 +68,12 @@ ns.Nodes.DRAGON_ISLES = {
     },
     AZURE_SPAN_MOLE = {
         name = "The Azure Span (Vakthros Summit)",
-        faction = "ALLIANCE",
         mapID = 2024,
         x = 0.801,
         y = 0.390
     },
     ZARALEK_CAVERN_MOLE = {
         name = "Zaralek Cavern (Obsidian Rest)",
-        faction = "ALLIANCE",
         mapID = 2133,
         x = 0.527,
         y = 0.277

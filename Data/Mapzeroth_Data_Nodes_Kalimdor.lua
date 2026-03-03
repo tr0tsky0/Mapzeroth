@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Kalimdor.lua
+-- Mapzeroth_Data_Nodes_Kalimdor.lua
 -- Kalimdor, Teldrassil, Exodar, Razorwind Shores
 local _, ns = ...
 
@@ -8,14 +8,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Alliance Cities & Zones
     DARKSHORE = {
         name = "Darkshore",
-        faction = "ALLIANCE",
         mapID = 62,
         x = 0.5362,
         y = 0.1877
     },
     FERALAS = {
         name = "Feathermoon Stronghold",
-        faction = "ALLIANCE",
         mapID = 69,
         x = 0.4514,
         y = 0.4173
@@ -28,7 +26,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     THERAMORE = {
         name = "Theramore",
-        faction = "ALLIANCE",
         mapID = 70,
         x = 0.660,
         y = 0.490
@@ -41,7 +38,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     WESTERN_EARTHSHRINE_OG = {
         name = "Western Earthshrine",
-        faction = "HORDE",
         mapID = 85,
         x = 0.5007,
         y = 0.3779
@@ -109,7 +105,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Orgrimmar Portal Room
     ORGRIMMAR_PORTAL_ROOM_STAIRS = {
         name = "Portal Room (Stairs)",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5484,
@@ -117,7 +112,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_PORTAL_ROOM_UPPER = {
         name = "Portal Room (Upper)",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5710,
@@ -125,7 +119,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_VALDRAKKEN_PORTAL = {
         name = "Portal to Valdrakken",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5712,
@@ -133,7 +126,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_ORIBOS_PORTAL = {
         name = "Portal to Oribos",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5822,
@@ -141,7 +133,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_RAZORWIND_SHORES_PORTAL = {
         name = "Portal to Razorwind Shores",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5877,
@@ -149,7 +140,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_DORNOGAL_PORTAL = {
         name = "Portal to Dornogal",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5847,
@@ -157,7 +147,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_HONEYDEW_VILLAGE_PORTAL = {
         name = "Portal to Honeydew Village",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5745,
@@ -165,7 +154,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_SILVERMOON_PORTAL = {
         name = "Portal to Silvermoon",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5745,
@@ -173,7 +161,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_DALARAN_NORTHREND_PORTAL = {
         name = "Portal to Northrend Dalaran",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5634,
@@ -181,7 +168,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_PORTAL_ROOM_LOWER = {
         name = "Portal Room (Lower)",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5625,
@@ -189,7 +175,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_AZSUNA_PORTAL = {
         name = "Portal to Azsuna",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5716,
@@ -197,7 +182,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_DAZARALOR_PORTAL = {
         name = "Portal to Dazar'alor",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5768,
@@ -205,7 +189,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_SHATTRATH_OUTLANDS_PORTAL = {
         name = "Portal to Shattrath (Outlands)",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5739,
@@ -213,7 +196,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_CAVERNS_OF_TIME_PORTAL = {
         name = "Portal to Caverns of Time",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5640,
@@ -221,7 +203,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_WARSPEAR_PORTAL = {
         name = "Portal to Warspear",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5529,
@@ -229,7 +210,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_BC_SILVERMOON_PORTAL = {
         name = "Portal to Burning Crusade Silvermoon",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5478,
@@ -237,7 +217,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     ORGRIMMAR_DARK_PORTAL_BL_NPC = {
         name = "Thrallmar Mage",
-        faction = "HORDE",
         interior = true,
         mapID = 85,
         x = 0.5704,
@@ -246,7 +225,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     THUNDER_BLUFF = {
         name = "Entrance",
         category = "city",
-        faction = "HORDE",
         mapID = 88,
         x = 0.2221,
         y = 0.1687
@@ -265,14 +243,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     BLOODHOOF_VILLAGE_FLIGHT = {
         name = "Bloodhoof Village",
-        faction = "HORDE",
         mapID = 7,
         x = 0.4768,
         y = 0.5872
     },
     SENJIN_VILLAGE_FLIGHT = {
         name = "Sen'jin Village",
-        faction = "HORDE",
         mapID = 1,
         x = 0.5475,
         y = 0.7338
@@ -285,28 +261,24 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     RAZOR_HILL_FLIGHT = {
         name = "Razor Hill",
-        faction = "HORDE",
         mapID = 1,
         x = 0.5263,
         y = 0.4266
     },
     FIRE_PLUME_RIDGE_MOLE = {
         name = "Un'Goro Crater (Kalimdor - Fire Plume Ridge)",
-        faction = "ALLIANCE",
         mapID = 78,
         x = 0.529,
         y = 0.559
     },
     THE_GREAT_DIVIDE_MOLE = {
         name = "Southern Barrens (Kalimdor - The Great Divide)",
-        faction = "ALLIANCE",
         mapID = 199,
         x = 0.391,
         y = 0.093
     },
     THRONE_OF_FLAME_MOLE = {
         name = "Mount Hyjal (Kalimdor - Throne of Flame)",
-        faction = "ALLIANCE",
         mapID = 198,
         x = 0.572,
         y = 0.771
@@ -351,7 +323,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     CAVERNS_OF_TIME_STORMWIND_PORTAL = {
         name = "Portal to Stormwind",
         mapID = 74,
-        faction = "ALLIANCE",
         x = 0.5883,
         y = 0.2689
     },
@@ -381,49 +352,42 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     MOONGLADE_FLIGHT_ALLIANCE = {
         name = "Lake Elune'ara",
-        faction = "ALLIANCE",
         mapID = 80,
         x = 0.476,
         y = 0.669
     },
     MOONGLADE_FLIGHT_HORDE = {
         name = "Lake Elune'ara",
-        faction = "HORDE",
         mapID = 80,
         x = 0.3179,
         y = 0.6639
     },
     NIGHTHAVEN_FLIGHT_ALLIANCE = {
         name = "Nighthaven Flightmaster",
-        faction = "ALLIANCE",
         mapID = 80,
         x = 0.440,
         y = 0.452
     },
     NIGHTHAVEN_FLIGHT_HORDE = {
         name = "Nighthaven Flightmaster",
-        faction = "HORDE",
         mapID = 80,
         x = 0.4403,
         y = 0.4538
     },
     EVERLOOK_FLIGHT_ALLIANCE = {
         name = "Everlook",
-        faction = "ALLIANCE",
         mapID = 83,
         x = 0.608,
         y = 0.496
     },
     EVERLOOK_FLIGHT_HORDE = {
         name = "Everlook",
-        faction = "HORDE",
         mapID = 83,
         x = 0.5828,
         y = 0.4884
     },
     TALONBRANCH_GLADE_FLIGHT = {
         name = "Talonbranch Glade",
-        faction = "ALLIANCE",
         mapID = 77,
         x = 0.606,
         y = 0.254
@@ -448,105 +412,90 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     LORDANEL_FLIGHT = {
         name = "Lor'danel",
-        faction = "ALLIANCE",
         mapID = 62,
         x = 0.515,
         y = 0.193
     },
     GROVE_OF_THE_ANCIENTS_FLIGHT = {
         name = "Grove of the Ancients",
-        faction = "ALLIANCE",
         mapID = 62,
         x = 0.436,
         y = 0.754
     },
     BLACKFATHOM_CAMP_FLIGHT = {
         name = "Blackfathom Camp",
-        faction = "ALLIANCE",
         mapID = 63,
         x = 0.178,
         y = 0.205
     },
     ASTRANAAR_FLIGHT = {
         name = "Astranaar",
-        faction = "ALLIANCE",
         mapID = 63,
         x = 0.344,
         y = 0.480
     },
     STARDUST_SPIRE_FLIGHT = {
         name = "Stardust Spire",
-        faction = "ALLIANCE",
         mapID = 63,
         x = 0.360,
         y = 0.706
     },
     FOREST_SONG_FLIGHT = {
         name = "Forest Song",
-        faction = "ALLIANCE",
         mapID = 63,
         x = 0.845,
         y = 0.449
     },
     THALDARAH_OVERLOOK_FLIGHT = {
         name = "Thal'darah Overlook",
-        faction = "ALLIANCE",
         mapID = 65,
         x = 0.383,
         y = 0.320
     },
     MIRKFALLON_POST_FLIGHT = {
         name = "Mirkfallon Post",
-        faction = "ALLIANCE",
         mapID = 65,
         x = 0.493,
         y = 0.525
     },
     WINDSHEAR_HOLD_FLIGHT = {
         name = "Windshear Hold",
-        faction = "ALLIANCE",
         mapID = 65,
         x = 0.586,
         y = 0.544
     },
     FARWATCHERS_GLEN_FLIGHT = {
         name = "Farwatcher's Glen",
-        faction = "ALLIANCE",
         mapID = 65,
         x = 0.336,
         y = 0.608
     },
     NORTHWATCH_EXPEDITION_BASE_CAMP_FLIGHT = {
         name = "Northwatch Expedition Base Camp",
-        faction = "ALLIANCE",
         mapID = 65,
         x = 0.708,
         y = 0.806
     },
     HONORS_STAND_FLIGHT = {
         name = "Honor's Stand",
-        faction = "ALLIANCE",
         mapID = 199,
         x = 0.390,
         y = 0.097
     },
     NORTHWATCH_HOLD_FLIGHT = {
         name = "Northwatch Hold",
-        faction = "ALLIANCE",
         mapID = 199,
         x = 0.662,
         y = 0.471
     },
     FORT_TRIUMPH_FLIGHT = {
         name = "Fort Triumph",
-        faction = "ALLIANCE",
         mapID = 199,
         x = 0.488,
         y = 0.680
     },
     NIJELS_POINT_FLIGHT = {
         name = "Nijel's Point",
-        faction = "ALLIANCE",
         mapID = 66,
         x = 0.651,
         y = 0.101
@@ -571,14 +520,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     THARGADS_CAMP_FLIGHT = {
         name = "Thargad's Camp",
-        faction = "ALLIANCE",
         mapID = 66,
         x = 0.371,
         y = 0.718
     },
     THERAMORE_FLIGHT = {
         name = "Theramore",
-        faction = "ALLIANCE",
         mapID = 70,
         x = 0.674,
         y = 0.504
@@ -591,49 +538,42 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     DREAMERS_REST_FLIGHT = {
         name = "Dreamer's Rest",
-        faction = "ALLIANCE",
         mapID = 69,
         x = 0.509,
         y = 0.175
     },
     FEATHERMOON_FLIGHT = {
         name = "Feathermoon",
-        faction = "ALLIANCE",
         mapID = 69,
         x = 0.464,
         y = 0.463
     },
     TOWER_OF_ESTULAN_FLIGHT = {
         name = "Tower of Estulan",
-        faction = "ALLIANCE",
         mapID = 69,
         x = 0.566,
         y = 0.539
     },
     SHADEBOUGH_FLIGHT = {
         name = "Shadebough",
-        faction = "ALLIANCE",
         mapID = 69,
         x = 0.768,
         y = 0.566
     },
     GADGETZAN_FLIGHT_ALLIANCE = {
         name = "Gadgetzan",
-        faction = "ALLIANCE",
         mapID = 71,
         x = 0.511,
         y = 0.294
     },
     GADGETZAN_FLIGHT_HORDE = {
         name = "Gadgetzan",
-        faction = "HORDE",
         mapID = 71,
         x = 0.5180,
         y = 0.2729
     },
     DAWNRISE_EXPEDITION_FLIGHT = {
         name = "Dawnrise Expedition",
-        faction = "HORDE",
         mapID = 71,
         x = 0.3285,
         y = 0.7727
@@ -646,7 +586,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     },
     GUNSTANS_DIG_FLIGHT = {
         name = "Gunstan's Dig",
-        faction = "ALLIANCE",
         mapID = 71,
         x = 0.400,
         y = 0.774
@@ -714,7 +653,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
 
     IRONTREE_CLEARING_FLIGHT = {
         name = "Irontree Clearing",
-        faction = "HORDE",
         mapID = 77,
         x = 0.5616,
         y = 0.0910
@@ -722,21 +660,18 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Southern Barrens (KALIMDOR_OVERWORLD)
     VENDETTA_POINT_FLIGHT = {
         name = "Vendetta Point",
-        faction = "HORDE",
         mapID = 199,
         x = 0.4333,
         y = 0.4760
     },
     HUNTERS_HILL_FLIGHT = {
         name = "Hunter's Hill",
-        faction = "HORDE",
         mapID = 199,
         x = 0.4062,
         y = 0.2023
     },
     DESOLATION_HOLD_FLIGHT = {
         name = "Desolation Hold",
-        faction = "HORDE",
         mapID = 199,
         x = 0.4286,
         y = 0.7038
@@ -744,7 +679,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Thunder Bluff (KALIMDOR_OVERWORLD)
     THUNDER_BLUFF_FLIGHT = {
         name = "Flightmaster",
-        faction = "HORDE",
         mapID = 88,
         x = 0.4627,
         y = 0.4961
@@ -753,7 +687,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     ORGRIMMAR_FLIGHT = {
         name = "Flightmaster",
         category = "city",
-        faction = "HORDE",
         mapID = 85,
         x = 0.5204,
         y = 0.6144
@@ -761,14 +694,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Northern Barrens (KALIMDOR_OVERWORLD)
     THE_CROSSROADS_FLIGHT = {
         name = "The Crossroads",
-        faction = "HORDE",
         mapID = 10,
         x = 0.4898,
         y = 0.5950
     },
     NOZZLEPOTS_OUTPOST_FLIGHT = {
         name = "Nozzlepot's Outpost",
-        faction = "HORDE",
         mapID = 10,
         x = 0.6252,
         y = 0.1730
@@ -776,35 +707,30 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Stonetalon Mountains (KALIMDOR_OVERWORLD)
     SUN_ROCK_RETREAT_FLIGHT = {
         name = "Sun Rock Retreat",
-        faction = "HORDE",
         mapID = 65,
         x = 0.5016,
         y = 0.6120
     },
     THE_SLUDGEWERKS_FLIGHT = {
         name = "The Sludgewerks",
-        faction = "HORDE",
         mapID = 65,
         x = 0.5451,
         y = 0.4001
     },
     CLIFFWALKER_POST_FLIGHT = {
         name = "Cliffwalker Post",
-        faction = "HORDE",
         mapID = 65,
         x = 0.4604,
         y = 0.3224
     },
     KROMGAR_FORTRESS_FLIGHT = {
         name = "Krom'gar Fortress",
-        faction = "HORDE",
         mapID = 65,
         x = 0.6758,
         y = 0.6261
     },
     MALAKAJIN_FLIGHT = {
         name = "Malaka'jin",
-        faction = "HORDE",
         mapID = 65,
         x = 0.7040,
         y = 0.8945
@@ -812,7 +738,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Thousand Needles (KALIMDOR_OVERWORLD)
     WESTREACH_SUMMIT_FLIGHT = {
         name = "Westreach Summit",
-        faction = "HORDE",
         mapID = 64,
         x = 0.1096,
         y = 0.1158
@@ -826,14 +751,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Desolace (KALIMDOR_OVERWORLD)
     SHADOWPREY_VILLAGE_FLIGHT = {
         name = "Shadowprey Village",
-        faction = "HORDE",
         mapID = 66,
         x = 0.2108,
         y = 0.7426
     },
     FURIENS_POST_FLIGHT = {
         name = "Furien's Post",
-        faction = "HORDE",
         mapID = 66,
         x = 0.4333,
         y = 0.2959
@@ -841,21 +764,18 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Feralas (KALIMDOR_OVERWORLD)
     CAMP_MOJACHE_FLIGHT = {
         name = "Camp Mojache",
-        faction = "HORDE",
         mapID = 69,
         x = 0.7464,
         y = 0.4424
     },
     STONEMAUL_HOLD_FLIGHT = {
         name = "Stonemaul Hold",
-        faction = "HORDE",
         mapID = 69,
         x = 0.5074,
         y = 0.4813
     },
     CAMP_ATAYA_FLIGHT = {
         name = "Camp Ataya",
-        faction = "HORDE",
         mapID = 69,
         x = 0.4050,
         y = 0.1546
@@ -863,28 +783,24 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Azshara (KALIMDOR_OVERWORLD)
     BILGEWATER_HARBOR_FLIGHT = {
         name = "Bilgewater Harbor",
-        faction = "HORDE",
         mapID = 76,
         x = 0.5228,
         y = 0.4990
     },
     NORTHERN_ROCKETWAY_FLIGHT = {
         name = "Northern Rocketway",
-        faction = "HORDE",
         mapID = 76,
         x = 0.6711,
         y = 0.2094
     },
     SOUTHERN_ROCKETWAY_FLIGHT = {
         name = "Southern Rocketway",
-        faction = "HORDE",
         mapID = 76,
         x = 0.5133,
         y = 0.7426
     },
     VALORMOK_FLIGHT = {
         name = "Valormok",
-        faction = "HORDE",
         mapID = 76,
         x = 0.1413,
         y = 0.6579
@@ -892,7 +808,6 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Dustwallow Marsh (KALIMDOR_OVERWORLD)
     BRACKENWALL_VILLAGE_FLIGHT = {
         name = "Brackenwall Village",
-        faction = "HORDE",
         mapID = 70,
         x = 0.3485,
         y = 0.3171
@@ -900,35 +815,30 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Ashenvale (KALIMDOR_OVERWORLD)
     ZORAMGAR_OUTPOST_FLIGHT = {
         name = "Zoram'gar Outpost",
-        faction = "HORDE",
         mapID = 63,
         x = 0.1001,
         y = 0.3506
     },
     SPLINTERTREE_POST_FLIGHT = {
         name = "Splintertree Post",
-        faction = "HORDE",
         mapID = 63,
         x = 0.7311,
         y = 0.6296
     },
     SILVERWIND_REFUGE_FLIGHT = {
         name = "Silverwind Refuge",
-        faction = "HORDE",
         mapID = 63,
         x = 0.4910,
         y = 0.6614
     },
     HELLSCREAMS_WATCH_FLIGHT = {
         name = "Hellscream's Watch",
-        faction = "HORDE",
         mapID = 63,
         x = 0.3721,
         y = 0.4177
     },
     THE_MORSHAN_RAMPARTS_FLIGHT = {
         name = "The Mor'Shan Ramparts",
-        faction = "HORDE",
         mapID = 63,
         x = 0.6770,
         y = 0.8998
@@ -1136,14 +1046,12 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
 ns.Nodes.TELDRASSIL = {
     DARNASSUS = {
         name = "Entrance",
-        faction = "ALLIANCE",
         mapID = 89,
         x = 0.435,
         y = 0.787
     },
     DOLANAAR_FLIGHT = {
         name = "Dolanaar",
-        faction = "ALLIANCE",
         mapID = 57,
         x = 0.542,
         y = 0.501
@@ -1151,21 +1059,18 @@ ns.Nodes.TELDRASSIL = {
     DARNASSUS_FLIGHT = {
         name = "Flightmaster",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 89,
         x = 0.270,
         y = 0.480
     },
     RUTTHERAN_VILLAGE_FLIGHT = {
         name = "Rut'theran Village",
-        faction = "ALLIANCE",
         mapID = 57,
         x = 0.115,
         y = 0.496
     },
     RUTTHERAN_VILLAGE_DOCK = {
         name = "Rut'theran Village Dock",
-        faction = "ALLIANCE",
         mapID = 57,
         x = 0.5238,
         y = 0.8947
@@ -1176,7 +1081,6 @@ ns.Nodes.TELDRASSIL = {
 ns.Nodes.DRAENEI_HOME = {
     EXODAR = {
         name = "Entrance",
-        faction = "ALLIANCE",
         mapID = 103,
         x = 0.476,
         y = 0.598
@@ -1184,28 +1088,24 @@ ns.Nodes.DRAENEI_HOME = {
     THE_EXODAR_FLIGHT = {
         name = "Flightmaster",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 103,
         x = 0.541,
         y = 0.367
     },
     AZUREMYST_ISLE_DOCK = {
         name = "Azuremyst Isle Dock",
-        faction = "ALLIANCE",
         mapID = 97,
         x = 0.2148,
         y = 0.5407
     },
     AZURE_WATCH_FLIGHT = {
         name = "Azure Watch",
-        faction = "ALLIANCE",
         mapID = 97,
         x = 0.501,
         y = 0.501
     },
     BLOOD_WATCH_FLIGHT = {
         name = "Blood Watch",
-        faction = "ALLIANCE",
         mapID = 106,
         x = 0.573,
         y = 0.542
@@ -1216,7 +1116,6 @@ ns.Nodes.DRAENEI_HOME = {
 ns.Nodes.RAZORWIND_SHORES = {
     RAZORWIND_SHORES = {
         name = "Entrance Portal",
-        faction = "HORDE",
         mapID = 2351,
         x = 0.540,
         y = 0.496

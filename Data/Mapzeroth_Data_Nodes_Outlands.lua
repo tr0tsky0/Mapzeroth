@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Outlands.lua
+-- Mapzeroth_Data_Nodes_Outlands.lua
 -- Outlands (Burning Crusade)
 local _, ns = ...
 
@@ -40,21 +40,18 @@ ns.Nodes.OUTLANDS = {
     },
     HONOR_HOLD_MOLE = {
         name = "Hellfire Peninsula (Outland - Honor Hold)",
-        faction = "ALLIANCE",
         mapID = 100,
         x = 0.561,
         y = 0.631
     },
     BLADES_EDGE_MOUNTAINS_MOLE = {
         name = "Blade's Edge Mountains (Outland - Skald)",
-        faction = "ALLIANCE",
         mapID = 105,
         x = 0.725,
         y = 0.176
     },
     SHADOWMOON_VALLEY_OUTLANDS_MOLE = {
         name = "Shadowmoon Valley (Outland - Fel Pits)",
-        faction = "ALLIANCE",
         mapID = 104,
         x = 0.507,
         y = 0.353
@@ -73,14 +70,12 @@ ns.Nodes.OUTLANDS = {
     },
     TOSHLEYS_STATION_FLIGHT = {
         name = "Toshley's Station Flightmaster",
-        faction = "ALLIANCE",
         mapID = 105,
         x = 0.607,
         y = 0.704
     },
     SYLVANAAR_FLIGHT = {
         name = "Sylvanaar",
-        faction = "ALLIANCE",
         mapID = 105,
         x = 0.375,
         y = 0.616
@@ -93,77 +88,66 @@ ns.Nodes.OUTLANDS = {
     },
     OREBOR_HARBORAGE_FLIGHT = {
         name = "Orebor Harborage",
-        faction = "ALLIANCE",
         mapID = 102,
         x = 0.407,
         y = 0.279
     },
     TELREDOR_FLIGHT = {
         name = "Telredor",
-        faction = "ALLIANCE",
         mapID = 102,
         x = 0.677,
         y = 0.516
     },
     TEMPLE_OF_TELHAMAT_FLIGHT = {
         name = "Temple of Telhamat",
-        faction = "ALLIANCE",
         mapID = 100,
         x = 0.251,
         y = 0.392
     },
     HONOR_HOLD_FLIGHT = {
         name = "Honor Hold",
-        faction = "ALLIANCE",
         mapID = 100,
         x = 0.556,
         y = 0.616
     },
     SHATTER_POINT_FLIGHT = {
         name = "Shatter Point",
-        faction = "ALLIANCE",
         mapID = 100,
         x = 0.782,
         y = 0.349
     },
     HELLFIRE_PENINSULA_FLIGHT_ALLIANCE = {
         name = "Dark Portal Flightmaster",
-        faction = "ALLIANCE",
         mapID = 100,
         x = 0.874,
         y = 0.494
     },
     HELLFIRE_PENINSULA_FLIGHT_HORDE = {
         name = "Dark Portal Flightmaster",
-        faction = "HORDE",
         mapID = 100,
         x = 0.8747,
         y = 0.4908
     },
     SPINEBREAKER_RIDGE_FLIGHT = {
         name = "Spinebreaker Ridge",
-        faction = "HORDE",
         mapID = 100,
         x = 0.6134,
         y = 0.8140
     },
     TELAAR_FLIGHT = {
         name = "Telaar",
-        faction = "ALLIANCE",
         mapID = 107,
         x = 0.540,
         y = 0.728
     },
     ALLERIAN_STRONGHOLD_FLIGHT = {
         name = "Allerian Stronghold",
-        faction = "ALLIANCE",
         mapID = 108,
         x = 0.592,
         y = 0.552
     },
     WILDHAMMER_STRONGHOLD_FLIGHT = {
         name = "Wildhammer Stronghold",
-        faction = "ALLIANCE",
         mapID = 104,
         x = 0.372,
         y = 0.556
@@ -195,14 +179,12 @@ ns.Nodes.OUTLANDS = {
     -- Hellfire Peninsula (OUTLANDS)
     THRALLMAR_FLIGHT = {
         name = "Thrallmar",
-        faction = "HORDE",
         mapID = 100,
         x = 0.5734,
         y = 0.3708
     },
     FALCON_WATCH_FLIGHT = {
         name = "Falcon Watch",
-        faction = "HORDE",
         mapID = 100,
         x = 0.2802,
         y = 0.6109
@@ -210,14 +192,12 @@ ns.Nodes.OUTLANDS = {
     -- Zangarmarsh (OUTLANDS)
     ZABRAJIN_FLIGHT = {
         name = "Zabra'jin",
-        faction = "HORDE",
         mapID = 102,
         x = 0.3238,
         y = 0.5095
     },
     SWAMPRAT_POST_FLIGHT = {
         name = "Swamprat Post",
-        faction = "HORDE",
         mapID = 102,
         x = 0.8606,
         y = 0.5325
@@ -225,7 +205,6 @@ ns.Nodes.OUTLANDS = {
     -- Nagrand - Outland (OUTLANDS)
     GARADAR_FLIGHT = {
         name = "Garadar",
-        faction = "HORDE",
         mapID = 107,
         x = 0.5793,
         y = 0.3584
@@ -233,7 +212,6 @@ ns.Nodes.OUTLANDS = {
     -- Shadowmoon Valley - Outland (OUTLANDS)
     SHADOWMOON_VILLAGE_FLIGHT = {
         name = "Shadowmoon Village",
-        faction = "HORDE",
         mapID = 104,
         x = 0.3109,
         y = 0.2924
@@ -241,14 +219,12 @@ ns.Nodes.OUTLANDS = {
     -- Blade's Edge Mountains (OUTLANDS)
     THUNDERLORD_STRONGHOLD_FLIGHT = {
         name = "Thunderlord Stronghold",
-        faction = "HORDE",
         mapID = 105,
         x = 0.5157,
         y = 0.5360
     },
     MOKNATHAL_VILLAGE_FLIGHT = {
         name = "Mok'Nathal Village",
-        faction = "HORDE",
         mapID = 105,
         x = 0.7594,
         y = 0.6561
@@ -256,7 +232,6 @@ ns.Nodes.OUTLANDS = {
     -- Terokkar Forest (OUTLANDS)
     STONEBREAKER_HOLD_FLIGHT = {
         name = "Stonebreaker Hold",
-        faction = "HORDE",
         mapID = 108,
         x = 0.4886,
         y = 0.4319

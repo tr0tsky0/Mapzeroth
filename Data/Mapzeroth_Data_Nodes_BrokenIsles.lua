@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_BrokenIsles.lua
+-- Mapzeroth_Data_Nodes_BrokenIsles.lua
 -- Broken Isles, Temple of Five Dawns, Eye of Azshara (Legion)
 local _, ns = ...
 
@@ -26,14 +26,12 @@ ns.Nodes.BROKEN_ISLES = {
     },
     DALARAN_BROKEN_ISLES_PORTAL_ALLIANCE = {
         name = "Dalaran (Broken Isles) Portal",
-        faction = "ALLIANCE",
         mapID = 627,
         x = 0.3908,
         y = 0.6280
     },
     DALARAN_BROKEN_ISLES_PORTAL_HORDE = {
         name = "Dalaran (Broken Isles) Portal",
-        faction = "HORDE",
         mapID = 627,
         x = 0.6173,
         y = 0.1400
@@ -53,14 +51,12 @@ ns.Nodes.BROKEN_ISLES = {
     },
     DALARAN_PALADIN_PORTAL_ALLIANCE = {
         name = "Sanctum of Light Portal",
-        faction = "ALLIANCE",
         mapID = 627,
         x = 0.3285,
         y = 0.6952
     },
     DALARAN_PALADIN_PORTAL_HORDE = {
         name = "Sanctum of Light Portal",
-        faction = "HORDE",
         mapID = 627,
         x = 0.3285,
         y = 0.6952
@@ -136,7 +132,6 @@ ns.Nodes.BROKEN_ISLES = {
     },
     VALSHARAH = {
         name = "Lorlathil Portal",
-        faction = "ALLIANCE",
         mapID = 641,
         x = 0.548,
         y = 0.730
@@ -155,14 +150,12 @@ ns.Nodes.BROKEN_ISLES = {
     },
     THE_BROKEN_SHORE_MOLE = {
         name = "Allgen Point",
-        faction = "ALLIANCE",
         mapID = 646,
         x = 0.717,
         y = 0.480
     },
     HIGHMOUNTAIN_MOLE = {
         name = "Frosthoof Watch",
-        faction = "ALLIANCE",
         mapID = 650,
         x = 0.446,
         y = 0.729
@@ -241,21 +234,18 @@ ns.Nodes.BROKEN_ISLES = {
     },
     SKYFIRE_TRIAGE_CAMP_FLIGHT = {
         name = "Skyfire Triage Camp",
-        faction = "ALLIANCE",
         mapID = 634,
         x = 0.333,
         y = 0.505
     },
     LORNAS_WATCH_FLIGHT = {
         name = "Lorna's Watch",
-        faction = "ALLIANCE",
         mapID = 634,
         x = 0.371,
         y = 0.637
     },
     GREYWATCH_FLIGHT = {
         name = "Greywatch",
-        faction = "ALLIANCE",
         mapID = 634,
         x = 0.720,
         y = 0.598
@@ -360,14 +350,12 @@ ns.Nodes.BROKEN_ISLES = {
     NIGHTHOLD_ORGRIMMAR_PORTAL = {
         name = "Portal to Orgrimmar",
         mapID = 680,
-        faction = "HORDE",
         x = 0.5821,
         y = 0.8729
     },
     NIGHTHOLD_SHALARAN_PORTAL = {
         name = "Portal to Shal'Aran",
         mapID = 680,
-        faction = "HORDE",
         x = 0.5803,
         y = 0.8660
     },
@@ -416,21 +404,18 @@ ns.Nodes.BROKEN_ISLES = {
     -- Stormheim (BROKEN_ISLES)
     FORSAKEN_FOOTHOLD_FLIGHT = {
         name = "Forsaken Foothold",
-        faction = "HORDE",
         mapID = 634,
         x = 0.3615,
         y = 0.3072
     },
     DREADWAKES_LANDING_FLIGHT = {
         name = "Dreadwake's Landing",
-        faction = "HORDE",
         mapID = 634,
         x = 0.5416,
         y = 0.7275
     },
     CULLENS_POST_FLIGHT = {
         name = "Cullen's Post",
-        faction = "HORDE",
         mapID = 634,
         x = 0.4483,
         y = 0.5902

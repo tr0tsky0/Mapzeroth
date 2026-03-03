@@ -161,7 +161,6 @@ local function buildGraph(hierarchicalNodes, edgeList)
                 displayName = nodeData.displayName or nodeData.name,
                 category = nodeData.category,
                 traversalGroup = traversalGroup,
-                faction = nodeData.faction,
                 interior = nodeData.interior,
                 mapID = nodeData.mapID,
                 x = nodeData.x,

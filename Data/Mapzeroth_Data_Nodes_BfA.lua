@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_BfA.lua
+-- Mapzeroth_Data_Nodes_BfA.lua
 -- Kul Tiras, Mechagon, Tol Dagor, Quel'thalas (Battle for Azeroth)
 local _, ns = ...
 
@@ -8,14 +8,12 @@ ns.Nodes.KUL_TIRAS = {
     BORALUS = {
         name = "Portal Room",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 1161,
         x = 0.706,
         y = 0.170
     },
     BORALUS_PET = {
         name = "Pet Shop",
-        faction = "ALLIANCE",
         mapID = 1161,
         x = 0.5002,
         y = 0.4677
@@ -34,84 +32,72 @@ ns.Nodes.KUL_TIRAS = {
     },
     TIRAGARDE_SOUND_MOLE = {
         name = "Wailing Tideways",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.882,
         y = 0.715
     },
     STORMSONG_VALLEY_MOLE = {
         name = "Tidebreak Summit",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.642,
         y = 0.294
     },
     TRADEWINDS_MARKET_FLIGHT = {
         name = "Tradewinds Market",
-        faction = "ALLIANCE",
         mapID = 1161,
         x = 0.667,
         y = 0.151
     },
     PROUDMOORE_KEEP_FLIGHT = {
         name = "Proudmoore Keep",
-        faction = "ALLIANCE",
         mapID = 1161,
         x = 0.475,
         y = 0.649
     },
     MARINERS_ROW_FLIGHT = {
         name = "Mariner's Row",
-        faction = "ALLIANCE",
         mapID = 1161,
         x = 0.763,
         y = 0.728
     },
     HATHERFORD_FLIGHT = {
         name = "Hatherford",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.665,
         y = 0.231
     },
     NORWINGTON_ESTATE_FLIGHT = {
         name = "Norwington Estate",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.525,
         y = 0.286
     },
     ROUGHNECK_CAMP_FLIGHT = {
         name = "Roughneck Camp",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.418,
         y = 0.224
     },
     OUTRIGGER_POST_FLIGHT = {
         name = "Outrigger Post",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.353,
         y = 0.247
     },
     BRIDGEPORT_FLIGHT = {
         name = "Bridgeport",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.755,
         y = 0.488
     },
     KENNINGS_LODGE_FLIGHT = {
         name = "Kennings Lodge",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.763,
         y = 0.653
     },
     VIGIL_HILL_FLIGHT = {
         name = "Vigil Hill",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.580,
         y = 0.612
@@ -124,49 +110,42 @@ ns.Nodes.KUL_TIRAS = {
     },
     BARBTHORN_RIDGE_FLIGHT = {
         name = "Barbthorn Ridge",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.624,
         y = 0.237
     },
     FALLHAVEN_FLIGHT = {
         name = "Fallhaven",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.549,
         y = 0.348
     },
     HANGMANS_POINT_FLIGHT = {
         name = "Hangman's Point",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.708,
         y = 0.403
     },
     FLETCHERS_HOLLOW_FLIGHT = {
         name = "Fletcher's Hollow",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.700,
         y = 0.601
     },
     WATCHMANS_RISE_FLIGHT = {
         name = "Watchman's Rise",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.316,
         y = 0.303
     },
     FALCONHURST_FLIGHT = {
         name = "Falconhurst",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.271,
         y = 0.721
     },
     AROMS_STAND_FLIGHT = {
         name = "Arom's Stand",
-        faction = "ALLIANCE",
         mapID = 896,
         x = 0.380,
         y = 0.526
@@ -179,7 +158,6 @@ ns.Nodes.KUL_TIRAS = {
     },
     ANYPORT_DOCK = {
         name = "Anyport Dock",
-        faction = "HORDE",
         mapID = 896,
         x = 0.2056,
         y = 0.4553
@@ -192,56 +170,48 @@ ns.Nodes.KUL_TIRAS = {
     },
     MILLSTONE_HAMLET_FLIGHT = {
         name = "Millstone Hamlet",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.305,
         y = 0.664
     },
     FORT_DAELIN_FLIGHT = {
         name = "Fort Daelin",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.340,
         y = 0.468
     },
     DEADWASH_FLIGHT = {
         name = "Deadwash",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.426,
         y = 0.571
     },
     THE_AMBER_WAVES_FLIGHT = {
         name = "The Amber Waves",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.506,
         y = 0.700
     },
     BRENNADAM_FLIGHT = {
         name = "Brennadam",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.594,
         y = 0.702
     },
     MILDENHALL_MEADERY_FLIGHT = {
         name = "Mildenhall Meadery",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.685,
         y = 0.650
     },
     TIDECROSS_FLIGHT = {
         name = "Tidecross",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.654,
         y = 0.478
     },
     SHRINE_OF_THE_STORM_FLIGHT_ALLIANCE = {
         name = "Shrine of the Storm",
-        faction = "ALLIANCE",
         mapID = 942,
         x = 0.779,
         y = 0.291
@@ -249,56 +219,48 @@ ns.Nodes.KUL_TIRAS = {
     -- Stormsong Valley (KUL_TIRAS)
     SHRINE_OF_THE_STORM_FLIGHT_HORDE = {
         name = "Shrine of the Storm",
-        faction = "HORDE",
         mapID = 942,
         x = 0.7759,
         y = 0.2383
     },
     HILLCREST_PASTURE_FLIGHT = {
         name = "Hillcrest Pasture",
-        faction = "HORDE",
         mapID = 942,
         x = 0.5228,
         y = 0.7974
     },
     WINDFALL_CAVERN_FLIGHT = {
         name = "Windfall Cavern",
-        faction = "HORDE",
         mapID = 942,
         x = 0.6052,
         y = 0.2736
     },
     DIRETUSK_HOLLOW_FLIGHT = {
         name = "Diretusk Hollow",
-        faction = "HORDE",
         mapID = 942,
         x = 0.5404,
         y = 0.4891
     },
     IRONMAUL_OVERLOOK_FLIGHT = {
         name = "Ironmaul Overlook",
-        faction = "HORDE",
         mapID = 942,
         x = 0.7570,
         y = 0.6392
     },
     STONETUSK_WATCH_FLIGHT = {
         name = "Stonetusk Watch",
-        faction = "HORDE",
         mapID = 942,
         x = 0.3874,
         y = 0.6692
     },
     WARFANG_HOLD_FLIGHT = {
         name = "Warfang Hold",
-        faction = "HORDE",
         mapID = 942,
         x = 0.5098,
         y = 0.3372
     },
     WARFANG_HOLD_DOCK = {
         name = "Warfang Hold Dock",
-        faction = "HORDE",
         mapID = 942,
         x = 0.5193,
         y = 0.2434
@@ -312,42 +274,36 @@ ns.Nodes.KUL_TIRAS = {
     },
     WOLFS_DEN_FLIGHT = {
         name = "Wolf's Den",
-        faction = "HORDE",
         mapID = 895,
         x = 0.6169,
         y = 0.1341
     },
     WANING_GLACIER_FLIGHT = {
         name = "Waning Glacier",
-        faction = "HORDE",
         mapID = 895,
         x = 0.3933,
         y = 0.1836
     },
     STONEFIST_WATCH_FLIGHT = {
         name = "Stonefist Watch",
-        faction = "HORDE",
         mapID = 895,
         x = 0.5275,
         y = 0.6286
     },
     TIMBERFELL_OUTPOST_FLIGHT = {
         name = "Timberfell Outpost",
-        faction = "HORDE",
         mapID = 895,
         x = 0.7182,
         y = 0.5173
     },
     PLUNDER_HARBOR_FLIGHT = {
         name = "Plunder Harbor",
-        faction = "HORDE",
         mapID = 895,
         x = 0.8547,
         y = 0.5014
     },
     PLUNDER_HARBOR_DOCK = {
         name = "Plunder Harbor",
-        faction = "HORDE",
         mapID = 895,
         x = 0.8815,
         y = 0.5105
@@ -355,21 +311,18 @@ ns.Nodes.KUL_TIRAS = {
     -- Drustvar (KUL_TIRAS)
     MUDFISHER_COVE_FLIGHT = {
         name = "Mudfisher Cove",
-        faction = "HORDE",
         mapID = 896,
         x = 0.6181,
         y = 0.1695
     },
     SWIFTWIND_POST_FLIGHT = {
         name = "Swiftwind Post",
-        faction = "HORDE",
         mapID = 896,
         x = 0.6628,
         y = 0.5915
     },
     KRAZZLEFRAZZ_OUTPOST_FLIGHT = {
         name = "Krazzlefrazz Outpost",
-        faction = "HORDE",
         mapID = 896,
         x = 0.3709,
         y = 0.2419
@@ -391,7 +344,6 @@ ns.Nodes.KUL_TIRAS = {
     SIEGE_OF_BORALUS_DUNGEON_ALLIANCE = {
         name = "Siege of Boralus",
         category = "dungeon",
-        faction = "ALLIANCE",
         mapID = 895,
         x = 0.720,
         y = 0.230
@@ -399,7 +351,6 @@ ns.Nodes.KUL_TIRAS = {
     SIEGE_OF_BORALUS_DUNGEON_HORDE = {
         name = "Siege of Boralus",
         category = "dungeon",
-        faction = "HORDE",
         mapID = 895,
         x = 0.880,
         y = 0.510
@@ -422,7 +373,6 @@ ns.Nodes.KUL_TIRAS = {
     BATTLE_OF_DAZARALOR_RAID_ALLIANCE = {
         name = "Battle of Dazar'alor",
         category = "raid",
-        faction = "ALLIANCE",
         mapID = 1161, -- Boralus
         x = 0.700,
         y = 0.350
@@ -446,14 +396,12 @@ ns.Nodes.MECHAGON = {
     },
     OVERSPARK_EXPEDITION_CAMP_FLIGHT = {
         name = "Overspark Expedition Camp",
-        faction = "ALLIANCE",
         mapID = 1462,
         x = 0.775,
         y = 0.410
     },
     PROSPECTUS_BAY_FLIGHT = {
         name = "Prospectus Bay",
-        faction = "HORDE",
         mapID = 1462,
         x = 0.7335,
         y = 0.2542
@@ -471,14 +419,12 @@ ns.Nodes.MECHAGON = {
 ns.Nodes.TOL_DAGOR = {
     TOL_DAGOR_FLIGHT_ALLIANCE = {
         name = "Tol Dagor Flightmaster",
-        faction = "ALLIANCE",
         mapID = 974,
         x = 0.3744,
         y = 0.9210
     },
     TOL_DAGOR_FLIGHT_HORDE = {
         name = "Tol Dagor Flightmaster",
-        faction = "HORDE",
         mapID = 974,
         x = 0.2296,
         y = 0.4654
@@ -498,7 +444,6 @@ ns.Nodes.QUELTHALAS = {
     SILVERMOON = {
         name = "Orgrimmar Portal",
         category = "city",
-        faction = "HORDE",
         mapID = 110,
         x = 0.5826,
         y = 0.1924
@@ -512,21 +457,18 @@ ns.Nodes.QUELTHALAS = {
     -- Silvermoon City (QUELTHALAS)
     SILVERMOON_CITY_FLIGHT = {
         name = "Flightmaster",
-        faction = "HORDE",
         mapID = 110,
         x = 0.6275,
         y = 0.9658
     },
     FALCONWING_SQUARE_FLIGHT = {
         name = "Falconwing Square",
-        faction = "HORDE",
         mapID = 110,
         x = 0.3014,
         y = 0.7963
     },
     FAIRBREEZE_VILLAGE_FLIGHT = {
         name = "Fairbreeze Village",
-        faction = "HORDE",
         mapID = 94,
         x = 0.4309,
         y = 0.6985
@@ -534,7 +476,6 @@ ns.Nodes.QUELTHALAS = {
     -- Ghostlands (QUELTHALAS)
     TRANQUILLIEN_BC_FLIGHT = {
         name = "Tranquillien",
-        faction = "HORDE",
         mapID = 95,
         x = 0.4592,
         y = 0.3054

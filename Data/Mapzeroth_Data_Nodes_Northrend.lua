@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Northrend.lua
+-- Mapzeroth_Data_Nodes_Northrend.lua
 -- Northrend (Wrath of the Lich King)
 local _, ns = ...
 
@@ -14,14 +14,12 @@ ns.Nodes.NORTHREND = {
     DALARAN_NORTHREND_STORMWIND_PORTAL = {
         name = "Portal to Stormwind",
         mapID = 125,
-        faction = "ALLIANCE",
         x = 0.3998,
         y = 0.6265
     },
     DALARAN_NORTHREND_ORGRIMMAR_PORTAL = {
         name = "Portal to Orgrimmar",
         mapID = 125,
-        faction = "HORDE",
         x = 0.5757,
         y = 0.1942
     },
@@ -33,14 +31,12 @@ ns.Nodes.NORTHREND = {
     },
     RUBY_DRAGONSHRINE_MOLE = {
         name = "Ruby Dragonshrine (Dragonblight)",
-        faction = "ALLIANCE",
         mapID = 115,
         x = 0.453,
         y = 0.499
     },
     ARGENT_TOURNAMENT_GROUNDS_MOLE = {
         name = "Argent Tournament Grounds (Icecrown)",
-        faction = "ALLIANCE",
         mapID = 118,
         x = 0.770,
         y = 0.186
@@ -71,7 +67,6 @@ ns.Nodes.NORTHREND = {
     },
     VALIANCE_KEEP_FLIGHT = {
         name = "Valiance Keep",
-        faction = "ALLIANCE",
         mapID = 114,
         x = 0.604,
         y = 0.669
@@ -84,7 +79,6 @@ ns.Nodes.NORTHREND = {
     },
     FIZZCRANK_AIRSTRIP_FLIGHT = {
         name = "Fizzcrank Airstrip",
-        faction = "ALLIANCE",
         mapID = 114,
         x = 0.563,
         y = 0.208
@@ -109,21 +103,18 @@ ns.Nodes.NORTHREND = {
     },
     VALIANCE_LANDING_CAMP_FLIGHT = {
         name = "Valiance Landing Camp",
-        faction = "ALLIANCE",
         mapID = 123,
         x = 0.720,
         y = 0.311
     },
     WARSONG_CAMP_FLIGHT = {
         name = "Warsong Camp",
-        faction = "HORDE",
         mapID = 123,
         x = 0.2143,
         y = 0.3436
     },
     STARS_REST_FLIGHT = {
         name = "Stars' Rest",
-        faction = "ALLIANCE",
         mapID = 115,
         x = 0.298,
         y = 0.549
@@ -136,7 +127,6 @@ ns.Nodes.NORTHREND = {
     },
     SUNREAVERS_COMMAND_FLIGHT = {
         name = "Sunreaver's Command",
-        faction = "HORDE",
         mapID = 127,
         x = 0.7759,
         y = 0.4813
@@ -149,35 +139,30 @@ ns.Nodes.NORTHREND = {
     },
     FORDRAGON_HOLD_FLIGHT = {
         name = "Fordragon Hold",
-        faction = "ALLIANCE",
         mapID = 115,
         x = 0.383,
         y = 0.260
     },
     WINTERGARDE_KEEP_FLIGHT = {
         name = "Wintergarde Keep",
-        faction = "ALLIANCE",
         mapID = 115,
         x = 0.768,
         y = 0.499
     },
     AMBERPINE_LODGE_FLIGHT = {
         name = "Amberpine Lodge",
-        faction = "ALLIANCE",
         mapID = 116,
         x = 0.313,
         y = 0.609
     },
     WESTFALL_BRIGADE_FLIGHT = {
         name = "Westfall Brigade",
-        faction = "ALLIANCE",
         mapID = 116,
         x = 0.592,
         y = 0.268
     },
     WESTGUARD_KEEP_FLIGHT = {
         name = "Westguard Keep",
-        faction = "ALLIANCE",
         mapID = 117,
         x = 0.321,
         y = 0.446
@@ -190,14 +175,12 @@ ns.Nodes.NORTHREND = {
     },
     FORT_WILDERVAR_FLIGHT = {
         name = "Fort Wildervar",
-        faction = "ALLIANCE",
         mapID = 117,
         x = 0.608,
         y = 0.170
     },
     VALGARDE_PORT_FLIGHT = {
         name = "Valgarde Port",
-        faction = "ALLIANCE",
         mapID = 117,
         x = 0.593,
         y = 0.632
@@ -210,7 +193,6 @@ ns.Nodes.NORTHREND = {
     },
     FROSTHOLD_FLIGHT = {
         name = "Frosthold",
-        faction = "ALLIANCE",
         mapID = 120,
         x = 0.280,
         y = 0.744
@@ -235,14 +217,12 @@ ns.Nodes.NORTHREND = {
     },
     GROMARSH_CRASHSITE_FLIGHT = {
         name = "Grom'arsh Crash-Site",
-        faction = "HORDE",
         mapID = 120,
         x = 0.3685,
         y = 0.4990
     },
     CAMP_TUNKALO_FLIGHT = {
         name = "Camp Tunka'lo",
-        faction = "HORDE",
         mapID = 120,
         x = 0.6840,
         y = 0.4990
@@ -255,7 +235,6 @@ ns.Nodes.NORTHREND = {
     },
     WINDRUNNERS_OVERLOOK_FLIGHT = {
         name = "Windrunner's Overlook",
-        faction = "ALLIANCE",
         mapID = 127,
         x = 0.726,
         y = 0.809
@@ -341,7 +320,6 @@ ns.Nodes.NORTHREND = {
     },
     VALGARDE_BOAT = {
         name = "Valgarde Port",
-        faction = "ALLIANCE",
         mapID = 117,
         x = 0.593,
         y = 0.632
@@ -349,7 +327,6 @@ ns.Nodes.NORTHREND = {
 
     VENGEANCE_LANDING_ZEPPELIN = {
         name = "Vengeance Hold (Zeppelin)",
-        faction = "HORDE",
         mapID = 117,
         x = 0.7770,
         y = 0.3029
@@ -357,28 +334,24 @@ ns.Nodes.NORTHREND = {
     -- Howling Fjord (NORTHREND)
     VENGEANCE_LANDING_FLIGHT = {
         name = "Vengeance Landing",
-        faction = "HORDE",
         mapID = 117,
         x = 0.7864,
         y = 0.2959
     },
     NEW_AGAMAND_FLIGHT = {
         name = "New Agamand",
-        faction = "HORDE",
         mapID = 117,
         x = 0.5074,
         y = 0.6967
     },
     APOTHECARY_CAMP_FLIGHT = {
         name = "Apothecary Camp",
-        faction = "HORDE",
         mapID = 117,
         x = 0.2579,
         y = 0.2500
     },
     CAMP_WINTERHOOF_FLIGHT = {
         name = "Camp Winterhoof",
-        faction = "HORDE",
         mapID = 117,
         x = 0.4992,
         y = 0.1034
@@ -386,14 +359,12 @@ ns.Nodes.NORTHREND = {
     -- Grizzly Hills (NORTHREND)
     CAMP_ONEQWAH_FLIGHT = {
         name = "Camp Oneqwah",
-        faction = "HORDE",
         mapID = 116,
         x = 0.6628,
         y = 0.4661
     },
     CONQUEST_HOLD_FLIGHT = {
         name = "Conquest Hold",
-        faction = "HORDE",
         mapID = 116,
         x = 0.2343,
         y = 0.6498
@@ -407,21 +378,18 @@ ns.Nodes.NORTHREND = {
     -- Dragonblight (NORTHREND)
     VENOMSPITE_FLIGHT = {
         name = "Venomspite",
-        faction = "HORDE",
         mapID = 115,
         x = 0.7547,
         y = 0.6208
     },
     AGMARS_HAMMER_FLIGHT = {
         name = "Agmar's Hammer",
-        faction = "HORDE",
         mapID = 115,
         x = 0.3815,
         y = 0.4636
     },
     KORKRON_VANGUARD_FLIGHT = {
         name = "Kor'kron Vanguard",
-        faction = "HORDE",
         mapID = 115,
         x = 0.4368,
         y = 0.1723
@@ -429,28 +397,24 @@ ns.Nodes.NORTHREND = {
     -- Borean Tundra (NORTHREND)
     WARSONG_HOLD_FLIGHT = {
         name = "Warsong Hold",
-        faction = "HORDE",
         mapID = 114,
         x = 0.3921,
         y = 0.5138
     },
     TAUNKALE_VILLAGE_FLIGHT = {
         name = "Taunka'le Village",
-        faction = "HORDE",
         mapID = 114,
         x = 0.7735,
         y = 0.3902
     },
     BORGOROK_OUTPOST_FLIGHT = {
         name = "Bor'gorok Outpost",
-        faction = "HORDE",
         mapID = 114,
         x = 0.4980,
         y = 0.1271
     },
     WARSONG_HOLD_ZEPPELIN = {
         name = "Warsong Hold (Zeppelin)",
-        faction = "HORDE",
         mapID = 114,
         x = 0.4145,
         y = 0.5272

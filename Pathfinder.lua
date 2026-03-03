@@ -143,7 +143,6 @@ local function buildAugmentedGraph(baseGraph, syntheticEdges)
                 id = node.id,
                 name = node.name,
                 traversalGroup = node.traversalGroup,
-                faction = node.faction or "NEUTRAL",
                 mapID = node.mapID,
                 x = node.x,
                 y = node.y,
@@ -255,48 +254,32 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
                         local neighborNode = findNodeInHierarchy(augmented, neighborID)
 
                         if neighborNode then
-                            local playerFaction = addon:GetPlayerFaction()
-                            local nodeFaction = neighborNode.faction
-
-                            local oppositeFaction
-                            if playerFaction == "ALLIANCE" then
-                                oppositeFaction = "HORDE"
-                            else
-                                oppositeFaction = "ALLIANCE"
+                            -- Add loading tax for teleportation methods
+                            local edgeCost = edge.cost
+                            if edge.method == "portal" or edge.method == "teleport" or edge.method == "hearthstone" or
+                                edge.method == "racial" then
+                                if MapzerothDB and MapzerothDB.settings and MapzerothDB.settings.loadingScreenTax then
+                                    edgeCost = edgeCost + MapzerothDB.settings.loadingScreenTax
+                                end
                             end
 
-                            -- Flight nodes are always accessible for pathfinding purposes
-                            local isFlightNode = neighborNode.id:match("_FLIGHT$")
+                            local newDist = currentDist + edgeCost
+                            local currentNeighborDist = distances[neighborID] or math.huge
 
-                            -- Only process if faction matches
-                            if nodeFaction ~= oppositeFaction or isFlightNode then
-                                -- Add loading tax for teleportation methods
-                                local edgeCost = edge.cost
-                                if edge.method == "portal" or edge.method == "teleport" or edge.method == "hearthstone" or
-                                    edge.method == "racial" then
-                                    if MapzerothDB and MapzerothDB.settings and MapzerothDB.settings.loadingScreenTax then
-                                        edgeCost = edgeCost + MapzerothDB.settings.loadingScreenTax
-                                    end
-                                end
-
-                                local newDist = currentDist + edgeCost
-                                local currentNeighborDist = distances[neighborID] or math.huge
-
-                                if newDist < currentNeighborDist then
-                                    distances[neighborID] = newDist
-                                    previous[neighborID] = {
-                                        node = currentID,
-                                        method = edge.method,
-                                        cost = edgeCost,
-                                        abilityName = edge.abilityName,
-                                        destinationName = edge.destinationName,
-                                        isSynthetic = edge.isSynthetic,
-                                        itemID = edge.itemID,
-                                        itemType = edge.itemType,
-                                        spellID = edge.spellID
-                                    }
-                                    pq:push(neighborID, newDist)
-                                end
+                            if newDist < currentNeighborDist then
+                                distances[neighborID] = newDist
+                                previous[neighborID] = {
+                                    node = currentID,
+                                    method = edge.method,
+                                    cost = edgeCost,
+                                    abilityName = edge.abilityName,
+                                    destinationName = edge.destinationName,
+                                    isSynthetic = edge.isSynthetic,
+                                    itemID = edge.itemID,
+                                    itemType = edge.itemType,
+                                    spellID = edge.spellID
+                                }
+                                pq:push(neighborID, newDist)
                             end
                         elseif not neighborNode then
                             if addon.DEBUG then

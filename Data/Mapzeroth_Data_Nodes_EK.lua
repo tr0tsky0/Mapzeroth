@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_EK.lua
+-- Mapzeroth_Data_Nodes_EK.lua
 -- Eastern Kingdoms, Tol Barad, Deepholm, Founder's Point
 local _, ns = ...
 
@@ -8,7 +8,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Stormwind Portal Hub
     STORMWIND_PORTAL_ROOM_LOWER = {
         name = "Portal Room (Lower)",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4634,
@@ -16,7 +15,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_PORTAL_ROOM_UPPER = {
         name = "Portal Room (Upper)",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4275,
@@ -24,7 +22,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_DARK_PORTAL_BL_NPC = {
         name = "Honor Hold Mage",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4911,
@@ -32,7 +29,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_DORNOGAL_PORTAL = {
         name = "Portal to Dornogal",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4797,
@@ -40,7 +36,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_VALDRAKKEN_PORTAL = {
         name = "Portal to Valdrakken",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4874,
@@ -48,7 +43,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_SILVERMOON_PORTAL = {
         name = "Portal to Silvermoon City",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4865,
@@ -56,7 +50,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_BORALUS_PORTAL = {
         name = "Portal to Boralus",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4097,
@@ -64,7 +57,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_ORIBOS_PORTAL = {
         name = "Portal to Oribos",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4772,
@@ -72,7 +64,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_FOUNDERS_POINT_PORTAL = {
         name = "Portal to Founder's Point",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4701,
@@ -80,7 +71,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_PAWDON_VILLAGE_PORTAL = {
         name = "Portal to Paw'don Village",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4559,
@@ -88,7 +78,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_SHATTRATH_OUTLANDS_PORTAL = {
         name = "Portal to Shattrath",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4480,
@@ -96,7 +85,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_CAVERNS_OF_TIME_PORTAL = {
         name = "Portal to Caverns of Time",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4379,
@@ -104,7 +92,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_EXODAR_PORTAL = {
         name = "Portal to The Exodar",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4372,
@@ -112,7 +99,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_DALARAN_NORTHREND_PORTAL = {
         name = "Portal to Northrend Dalaran",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4442,
@@ -120,7 +106,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_BELAMETH_PORTAL = {
         name = "Portal to Bel'ameth",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4336,
@@ -128,7 +113,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_AZSUNA_PORTAL = {
         name = "Portal to Bel'ameth",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4197,
@@ -136,7 +120,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STORMWIND_STORMSHIELD_PORTAL = {
         name = "Portal to Stormshield",
-        faction = "ALLIANCE",
         mapID = 84,
         interior = true,
         x = 0.4126,
@@ -145,35 +128,30 @@ ns.Nodes.EK_OVERWORLD = {
     -- Stormwind City Locations
     STORMWIND_MAGE_TOWER_ENTRANCE = {
         name = "Mage Tower",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.4951,
         y = 0.8666
     },
     EASTERN_EARTHSHRINE_SW = {
         name = "Eastern Earthshrine",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.724,
         y = 0.164
     },
     SW_EMBASSY = {
         name = "Embassy",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.661,
         y = 0.228
     },
     SW_TRAM = {
         name = "Deeprun Tram",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.650,
         y = 0.323
     },
     STORMWIND_HARBOR = {
         name = "Harbour",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.268,
         y = 0.355
@@ -187,21 +165,18 @@ ns.Nodes.EK_OVERWORLD = {
     -- Ironforge
     IF_TRAM = {
         name = "Deeprun Tram",
-        faction = "ALLIANCE",
         mapID = 87,
         x = 0.706,
         y = 0.487
     },
     IRONFORGE = {
         name = "Hall of Mysteries",
-        faction = "ALLIANCE",
         mapID = 87,
         x = 0.2551,
         y = 0.0843
     },
     IRONFORGE_ENTRANCE = {
         name = "Entrance",
-        faction = "ALLIANCE",
         mapID = 87,
         x = 0.1734,
         y = 0.8316
@@ -209,49 +184,42 @@ ns.Nodes.EK_OVERWORLD = {
     -- Cataclysm Zones (via Eastern Earthshrine)
     HIGHBANK = {
         name = "Highbank",
-        faction = "ALLIANCE",
         mapID = 1275,
         x = 0.800,
         y = 0.743
     },
     DRAGONMAW_PORT = {
         name = "Dragonmaw Port",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.743,
         y = 0.508
     },
     CRUSHBLOW_FLIGHT = {
         name = "Crushblow",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.4533,
         y = 0.7568
     },
     THE_GULLET_FLIGHT = {
         name = "The Gullet",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.3827,
         y = 0.3806
     },
     BLOODGULCH_FLIGHT = {
         name = "Bloodgulch",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.5475,
         y = 0.4266
     },
     THE_KRAZZWORKS_FLIGHT = {
         name = "The Krazzworks",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.7488,
         y = 0.1758
     },
     DRAGONMAW_PORT_FLIGHT = {
         name = "Dragonmaw Port Flightmaster",
-        faction = "HORDE",
         mapID = 1275,
         x = 0.7347,
         y = 0.5254
@@ -265,7 +233,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     SHATTERED_LANDING_FLIGHT = {
         name = "Shattered Landing",
-        faction = "HORDE",
         mapID = 1246,
         x = 0.7288,
         y = 0.4838
@@ -290,7 +257,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     FORSAKEN_FORWARD_COMMAND_FLIGHT = {
         name = "Forsaken Forward Command",
-        faction = "HORDE",
         mapID = 217,
         x = 0.5675,
         y = 0.1801
@@ -309,7 +275,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     STONARD = {
         name = "Stonard",
-        faction = "HORDE",
         mapID = 76,
         x = 0.4984,
         y = 0.5581
@@ -317,14 +282,12 @@ ns.Nodes.EK_OVERWORLD = {
     UNDERCITY = {
         name = "Entrance",
         category = "city",
-        faction = "HORDE",
         mapID = 90,
         x = 0.663,
         y = 0.384
     },
     THE_BULWARK_FLIGHT = {
         name = "The Bulwark",
-        faction = "HORDE",
         mapID = 18,
         x = 0.8241,
         y = 0.6985
@@ -343,28 +306,24 @@ ns.Nodes.EK_OVERWORLD = {
     },
     BIZMOS_BRAWLPUB = {
         name = "Bizmo's Brawlpub",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.6943,
         y = 0.3133
     },
     STORMWIND_CITY_MOLE = {
         name = "Stormwind (Eastern Kingdoms)",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.633,
         y = 0.373
     },
     IRONFORGE_MOLE = {
         name = "Ironforge (Eastern Kingdoms)",
-        faction = "ALLIANCE",
         mapID = 27,
         x = 0.613,
         y = 0.372
     },
     BLACKROCK_MOUNTAIN_MOLE = {
         name = "Blackrock Mountain (Eastern Kingdoms - The Masonary)",
-        faction = "ALLIANCE",
         mapID = 35,
         x = 0.332,
         y = 0.251,
@@ -372,35 +331,30 @@ ns.Nodes.EK_OVERWORLD = {
     },
     AERIE_PEAK_MOLE = {
         name = "Aerie Peak (Eastern Kingdoms)",
-        faction = "ALLIANCE",
         mapID = 26,
         x = 0.134,
         y = 0.467
     },
     NETHERGARDE_KEEP_MOLE = {
         name = "Nethergarde Keep (Eastern Kingdoms)",
-        faction = "ALLIANCE",
         mapID = 17,
         x = 0.620,
         y = 0.128
     },
     AERIE_PEAK_FLIGHT = {
         name = "Aerie Peak",
-        faction = "ALLIANCE",
         mapID = 26,
         x = 0.108,
         y = 0.470
     },
     ANDORHAL_FLIGHT_ALLIANCE = {
         name = "Andorhal",
-        faction = "ALLIANCE",
         mapID = 22,
         x = 0.392,
         y = 0.695
     },
     ANDORHAL_FLIGHT_HORDE = {
         name = "Andorhal",
-        faction = "HORDE",
         mapID = 22,
         x = 0.4674,
         y = 0.6473
@@ -419,21 +373,18 @@ ns.Nodes.EK_OVERWORLD = {
     },
     BOOTY_BAY_FLIGHT_ALLIANCE = {
         name = "Booty Bay",
-        faction = "ALLIANCE",
         mapID = 210,
         x = 0.414,
         y = 0.744
     },
     BOOTY_BAY_FLIGHT_HORDE = {
         name = "Booty Bay",
-        faction = "HORDE",
         mapID = 210,
         x = 0.4015,
         y = 0.7328
     },
     HARDWRENCH_HIDEAWAY_FLIGHT = {
         name = "Hardwrench Hideaway",
-        faction = "HORDE",
         mapID = 210,
         x = 0.3556,
         y = 0.2888
@@ -446,21 +397,18 @@ ns.Nodes.EK_OVERWORLD = {
     },
     CAMP_EVERSTILL_FLIGHT = {
         name = "Camp Everstill",
-        faction = "ALLIANCE",
         mapID = 49,
         x = 0.538,
         y = 0.551
     },
     CHILLWIND_CAMP_FLIGHT = {
         name = "Chillwind Camp",
-        faction = "ALLIANCE",
         mapID = 22,
         x = 0.421,
         y = 0.836
     },
     DARKSHIRE_FLIGHT = {
         name = "Darkshire",
-        faction = "ALLIANCE",
         mapID = 47,
         x = 0.774,
         y = 0.444
@@ -473,21 +421,18 @@ ns.Nodes.EK_OVERWORLD = {
     },
     DRAGONS_MOUTH_FLIGHT = {
         name = "Dragon's Mouth",
-        faction = "ALLIANCE",
         mapID = 15,
         x = 0.222,
         y = 0.588
     },
     DUN_MODR_FLIGHT = {
         name = "Dun Modr",
-        faction = "ALLIANCE",
         mapID = 56,
         x = 0.500,
         y = 0.185
     },
     DUSTWIND_DIG_FLIGHT = {
         name = "Dustwind Dig",
-        faction = "ALLIANCE",
         mapID = 15,
         x = 0.484,
         y = 0.365
@@ -500,35 +445,30 @@ ns.Nodes.EK_OVERWORLD = {
     },
     EASTVALE_LOGGING_CAMP_FLIGHT = {
         name = "Eastvale Logging Camp",
-        faction = "ALLIANCE",
         mapID = 37,
         x = 0.821,
         y = 0.656
     },
     EXPLORERS_LEAGUE_DIGSITE_FLIGHT = {
         name = "Explorers' League Digsite",
-        faction = "ALLIANCE",
         mapID = 210,
         x = 0.560,
         y = 0.424
     },
     FARSTRIDER_LODGE_FLIGHT = {
         name = "Farstrider Lodge",
-        faction = "ALLIANCE",
         mapID = 48,
         x = 0.836,
         y = 0.637
     },
     FIREBEARDS_PATROL_FLIGHT = {
         name = "Firebeard's Patrol",
-        faction = "ALLIANCE",
         mapID = 241,
         x = 0.602,
         y = 0.585
     },
     FORT_LIVINGSTON_FLIGHT = {
         name = "Fort Livingston",
-        faction = "ALLIANCE",
         mapID = 50,
         x = 0.526,
         y = 0.659
@@ -541,35 +481,30 @@ ns.Nodes.EK_OVERWORLD = {
     },
     FURLBROWS_PUMPKIN_FARM_FLIGHT = {
         name = "Furlbrow's Pumpkin Farm",
-        faction = "ALLIANCE",
         mapID = 52,
         x = 0.506,
         y = 0.186
     },
     GOLBOLAR_QUARRY_FLIGHT = {
         name = "Gol'Bolar Quarry",
-        faction = "ALLIANCE",
         mapID = 27,
         x = 0.768,
         y = 0.537
     },
     GOLDSHIRE_FLIGHT = {
         name = "Goldshire",
-        faction = "ALLIANCE",
         mapID = 37,
         x = 0.422,
         y = 0.654
     },
     GREENWARDENS_GROVE_FLIGHT = {
         name = "Greenwarden's Grove",
-        faction = "ALLIANCE",
         mapID = 56,
         x = 0.553,
         y = 0.417
     },
     HIGHBANK_FLIGHT = {
         name = "Highbank Flightmaster",
-        faction = "ALLIANCE",
         mapID = 241,
         x = 0.813,
         y = 0.766
@@ -577,35 +512,30 @@ ns.Nodes.EK_OVERWORLD = {
     IRONFORGE_FLIGHT = {
         name = "Flightmaster",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 87,
         x = 0.557,
         y = 0.479
     },
     KHARANOS_FLIGHT = {
         name = "Kharanos",
-        faction = "ALLIANCE",
         mapID = 27,
         x = 0.544,
         y = 0.525
     },
     LAKESHIRE_FLIGHT = {
         name = "Lakeshire",
-        faction = "ALLIANCE",
         mapID = 49,
         x = 0.292,
         y = 0.532
     },
     LIGHTS_HOPE_CHAPEL_FLIGHT_ALLIANCE = {
         name = "Light's Hope Chapel",
-        faction = "ALLIANCE",
         mapID = 23,
         x = 0.754,
         y = 0.534
     },
     LIGHTS_HOPE_CHAPEL_FLIGHT_HORDE = {
         name = "Light's Hope Chapel",
-        faction = "HORDE",
         mapID = 23,
         x = 0.7488,
         y = 0.5360
@@ -648,7 +578,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     MARSHTIDE_WATCH_FLIGHT = {
         name = "Marshtide Watch",
-        faction = "ALLIANCE",
         mapID = 51,
         x = 0.702,
         y = 0.352
@@ -661,7 +590,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     MENETHIL_HARBOR_FLIGHT = {
         name = "Menethil Harbor Flightmaster",
-        faction = "ALLIANCE",
         mapID = 56,
         x = 0.090,
         y = 0.593
@@ -674,14 +602,12 @@ ns.Nodes.EK_OVERWORLD = {
     },
     MOONBROOK_FLIGHT = {
         name = "Moonbrook",
-        faction = "ALLIANCE",
         mapID = 52,
         x = 0.416,
         y = 0.631
     },
     MORGANS_VIGIL_FLIGHT = {
         name = "Morgan's Vigil",
-        faction = "ALLIANCE",
         mapID = 36,
         x = 0.719,
         y = 0.659
@@ -700,49 +626,42 @@ ns.Nodes.EK_OVERWORLD = {
     },
     RAVEN_HILL_FLIGHT = {
         name = "Raven Hill",
-        faction = "ALLIANCE",
         mapID = 47,
         x = 0.205,
         y = 0.576
     },
     REBEL_CAMP_FLIGHT = {
         name = "Rebel Camp",
-        faction = "ALLIANCE",
         mapID = 50,
         x = 0.479,
         y = 0.118
     },
     SENTINEL_HILL_FLIGHT = {
         name = "Sentinel Hill",
-        faction = "ALLIANCE",
         mapID = 52,
         x = 0.560,
         y = 0.491
     },
     SHALEWIND_CANYON_FLIGHT = {
         name = "Shalewind Canyon",
-        faction = "ALLIANCE",
         mapID = 49,
         x = 0.776,
         y = 0.649
     },
     SHATTERED_BEACHHEAD_FLIGHT = {
         name = "Shattered Beachhead",
-        faction = "ALLIANCE",
         mapID = 17,
         x = 0.673,
         y = 0.275
     },
     SLABCHISELS_SURVEY_FLIGHT = {
         name = "Slabchisel's Survey",
-        faction = "ALLIANCE",
         mapID = 56,
         x = 0.577,
         y = 0.715
     },
     STORMFEATHER_OUTPOST_FLIGHT = {
         name = "Stormfeather Outpost",
-        faction = "ALLIANCE",
         mapID = 26,
         x = 0.662,
         y = 0.447
@@ -750,28 +669,24 @@ ns.Nodes.EK_OVERWORLD = {
     STORMWIND_FLIGHT = {
         name = "Flightmaster",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 84,
         x = 0.713,
         y = 0.724
     },
     THE_HARBORAGE_FLIGHT = {
         name = "The Harborage",
-        faction = "ALLIANCE",
         mapID = 51,
         x = 0.294,
         y = 0.334
     },
     THELSAMAR_FLIGHT = {
         name = "Thelsamar",
-        faction = "ALLIANCE",
         mapID = 48,
         x = 0.340,
         y = 0.506
     },
     THORIUM_POINT_FLIGHT_ALLIANCE = {
         name = "Thorium Point",
-        faction = "ALLIANCE",
         mapID = 32,
         x = 0.377,
         y = 0.274
@@ -784,7 +699,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     THUNDERMAR_FLIGHT = {
         name = "Thundermar",
-        faction = "ALLIANCE",
         mapID = 241,
         x = 0.474,
         y = 0.296
@@ -797,7 +711,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     VICTORS_POINT_FLIGHT = {
         name = "Victor's Point",
-        faction = "ALLIANCE",
         mapID = 241,
         x = 0.434,
         y = 0.570
@@ -805,7 +718,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Arathi Highlands (EK_OVERWORLD)
     REFUGE_POINTE_FLIGHT = {
         name = "Refuge Pointe",
-        faction = "ALLIANCE",
         mapID = 14,
         x = 0.3944,
         y = 0.4725
@@ -813,7 +725,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Twilight Highlands (EK_OVERWORLD)
     KIRTHAVEN_FLIGHT = {
         name = "Kirthaven",
-        faction = "ALLIANCE",
         mapID = 1275,
         x = 0.5781,
         y = 0.1582
@@ -821,28 +732,24 @@ ns.Nodes.EK_OVERWORLD = {
     -- Silverpine Forest (EK_OVERWORLD)
     THE_SEPULCHER_FLIGHT = {
         name = "The Sepulcher",
-        faction = "HORDE",
         mapID = 21,
         x = 0.4521,
         y = 0.4230
     },
     THE_FORSAKEN_FRONT_FLIGHT = {
         name = "The Forsaken Front",
-        faction = "HORDE",
         mapID = 21,
         x = 0.4992,
         y = 0.6367
     },
     FORSAKEN_REAR_GUARD_FLIGHT = {
         name = "Forsaken Rear Guard",
-        faction = "HORDE",
         mapID = 21,
         x = 0.4580,
         y = 0.2164
     },
     FORSAKEN_HIGH_COMMAND_FLIGHT = {
         name = "Forsaken High Command",
-        faction = "HORDE",
         mapID = 21,
         x = 0.5781,
         y = 0.1034
@@ -850,35 +757,30 @@ ns.Nodes.EK_OVERWORLD = {
     -- Hillsbrad Foothills (EK_OVERWORLD)
     TARREN_MILL_FLIGHT = {
         name = "Tarren Mill",
-        faction = "HORDE",
         mapID = 25,
         x = 0.5581,
         y = 0.4583
     },
     STRAHNBRAD_FLIGHT = {
         name = "Strahnbrad",
-        faction = "HORDE",
         mapID = 25,
         x = 0.5851,
         y = 0.2429
     },
     EASTPOINT_TOWER_FLIGHT = {
         name = "Eastpoint Tower",
-        faction = "HORDE",
         mapID = 25,
         x = 0.5934,
         y = 0.6349
     },
     RUINS_OF_SOUTHSHORE_FLIGHT = {
         name = "Ruins of Southshore",
-        faction = "HORDE",
         mapID = 25,
         x = 0.4886,
         y = 0.6526
     },
     SOUTHPOINT_GATE_FLIGHT = {
         name = "Southpoint Gate",
-        faction = "HORDE",
         mapID = 25,
         x = 0.2838,
         y = 0.6402
@@ -886,7 +788,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Arathi Highlands (EK_OVERWORLD)
     HAMMERFALL_FLIGHT = {
         name = "Hammerfall",
-        faction = "HORDE",
         mapID = 14,
         x = 0.6864,
         y = 0.3400
@@ -894,14 +795,12 @@ ns.Nodes.EK_OVERWORLD = {
     -- Stranglethorn Vale (EK_OVERWORLD)
     GROMGOL_FLIGHT = {
         name = "Grom'gol",
-        faction = "HORDE",
         mapID = 50,
         x = 0.3874,
         y = 0.5103
     },
     BAMBALA_FLIGHT = {
         name = "Bambala",
-        faction = "HORDE",
         mapID = 50,
         x = 0.6146,
         y = 0.3902
@@ -909,7 +808,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Badlands (EK_OVERWORLD)
     NEW_KARGATH_FLIGHT = {
         name = "New Kargath",
-        faction = "HORDE",
         mapID = 15,
         x = 0.1719,
         y = 0.4107
@@ -917,7 +815,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Swamp of Sorrows (EK_OVERWORLD)
     STONARD_FLIGHT = {
         name = "Stonard",
-        faction = "HORDE",
         mapID = 51,
         x = 0.4674,
         y = 0.5484
@@ -925,7 +822,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Burning Steppes (EK_OVERWORLD)
     FLAME_CREST_FLIGHT = {
         name = "Flame Crest",
-        faction = "HORDE",
         mapID = 36,
         x = 0.5581,
         y = 0.2447
@@ -933,7 +829,6 @@ ns.Nodes.EK_OVERWORLD = {
     -- Searing Gorge (EK_OVERWORLD)
     THORIUM_POINT_FLIGHT_HORDE = {
         name = "Thorium Point",
-        faction = "HORDE",
         mapID = 32,
         x = 0.3721,
         y = 0.2772
@@ -941,14 +836,12 @@ ns.Nodes.EK_OVERWORLD = {
     -- The Hinterlands (EK_OVERWORLD)
     REVANTUSK_VILLAGE_FLIGHT = {
         name = "Revantusk Village",
-        faction = "HORDE",
         mapID = 26,
         x = 0.8065,
         y = 0.8115
     },
     HIRIWATHA_RESEARCH_STATION_FLIGHT = {
         name = "Hiri'watha Research Station",
-        faction = "HORDE",
         mapID = 26,
         x = 0.3215,
         y = 0.5713
@@ -962,14 +855,12 @@ ns.Nodes.EK_OVERWORLD = {
     -- Badlands (EK_OVERWORLD)
     BLOODWATCHER_POINT_FLIGHT = {
         name = "Bloodwatcher Point",
-        faction = "HORDE",
         mapID = 15,
         x = 0.5216,
         y = 0.5254
     },
     WHELGARS_RETREAT_FLIGHT = {
         name = "Whelgar's Retreat",
-        faction = "ALLIANCE",
         mapID = 56,
         x = 0.399,
         y = 0.388
@@ -982,28 +873,24 @@ ns.Nodes.EK_OVERWORLD = {
     },
     DARKBREAK_COVE_FLIGHT = {
         name = "Darkbreak Cove",
-        faction = "ALLIANCE",
         mapID = 204,
         x = 0.578,
         y = 0.786
     },
     TRANQUIL_WASH_FLIGHT = {
         name = "Tranquil Wash",
-        faction = "ALLIANCE",
         mapID = 205,
         x = 0.487,
         y = 0.576
     },
     SANDY_BEACH_FLIGHT_ALLIANCE = {
         name = "Sandy Beach",
-        faction = "ALLIANCE",
         mapID = 205,
         x = 0.569,
         y = 0.173
     },
     SANDY_BEACH_FLIGHT_HORDE = {
         name = "Sandy Beach",
-        faction = "HORDE",
         mapID = 205,
         x = 0.6075,
         y = 0.2754
@@ -1016,14 +903,12 @@ ns.Nodes.EK_OVERWORLD = {
     },
     LEGIONS_REST_FLIGHT = {
         name = "Legion's Rest",
-        faction = "HORDE",
         mapID = 205,
         x = 0.5027,
         y = 0.6639
     },
     STYGIAN_BOUNTY_FLIGHT = {
         name = "Stygian Bounty",
-        faction = "HORDE",
         mapID = 205,
         x = 0.5381,
         y = 0.6551
@@ -1036,21 +921,18 @@ ns.Nodes.EK_OVERWORLD = {
     },
     VOLDRINS_HOLD_FLIGHT = {
         name = "Voldrin's Hold",
-        faction = "ALLIANCE",
         mapID = 205,
         x = 0.566,
         y = 0.756
     },
     TENEBROUS_CAVERN_PORTAL = {
         name = "Tenebrous Cavern Portal",
-        faction = "HORDE",
         mapID = 204,
         x = 0.6004,
         y = 0.5625
     },
     TENEBROUS_CAVERN_FLIGHT = {
         name = "Tenebrous Cavern",
-        faction = "HORDE",
         mapID = 204,
         x = 0.6004,
         y = 0.5625
@@ -1070,14 +952,12 @@ ns.Nodes.EK_OVERWORLD = {
     },
     SILVERMOON_STORMWIND_PORTAL = {
         name = "Portal to Stormwind",
-        faction = "ALLIANCE",
         mapID = 2393,
         x = 0.5275,
         y = 0.6471
     },
     SILVERMOON_ORGRIMMAR_PORTAL = {
         name = "Portal to Orgrimmar",
-        faction = "HORDE",
         mapID = 2393,
         x = 0.5225,
         y = 0.6532
@@ -1126,7 +1006,6 @@ ns.Nodes.EK_OVERWORLD = {
     },
     SILVERGLADE_REFUGE_FLIGHT = {
         name = "Silverglade Refuge Flightmaster",
-        faction = "ALLIANCE",
         mapID = 2395,
         mapArtID = 1933,
         x = 0.3103,
@@ -1402,14 +1281,12 @@ ns.Nodes.EK_OVERWORLD = {
 ns.Nodes.TOL_BARAD = {
     TOL_BARAD_ALLIANCE = {
         name = "Tol Barad Camp",
-        faction = "ALLIANCE",
         mapID = 245,
         x = 0.724,
         y = 0.562
     },
     TOL_BARAD_HORDE = {
         name = "Tol Barad Camp",
-        faction = "HORDE",
         mapID = 245,
         x = 0.531,
         y = 0.760
@@ -1427,14 +1304,12 @@ ns.Nodes.TOL_BARAD = {
 ns.Nodes.DEEPHOLM = {
     DEEPHOLM_STORMWIND_PORTAL = {
         name = "Stormwind Portal",
-        faction = "ALLIANCE",
         mapID = 207,
         x = 0.4855,
         y = 0.5380
     },
     DEEPHOLM_ORGRIMMAR_PORTAL = {
         name = "Orgrimmar Portal",
-        faction = "HORDE",
         mapID = 207,
         x = 0.5089,
         y = 0.5307
@@ -1463,7 +1338,6 @@ ns.Nodes.DEEPHOLM = {
 ns.Nodes.FOUNDERS_POINT = {
     FOUNDERS_POINT = {
         name = "Entrance Portal",
-        faction = "ALLIANCE",
         mapID = 2352,
         x = 0.574,
         y = 0.268

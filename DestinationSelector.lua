@@ -226,13 +226,7 @@ function addon:RefreshDestinationResults(selector)
                 matchesSearch = string.find(lowerName, lowerSearch, 1, true) ~= nil or string.find(lowerDisplayName, lowerSearch, 1, true) ~= nil
             end
 
-            local matchesFaction = true
-            if node.faction then
-                -- Node is faction-specific, must match player faction
-                matchesFaction = (node.faction == addon.GetPlayerFaction())
-            end
-
-            if matchesCategory and matchesSearch and matchesFaction then
+            if matchesCategory and matchesSearch then
                 table.insert(nodeList, {
                     id = nodeID,
                     name = node.displayName or node.name,

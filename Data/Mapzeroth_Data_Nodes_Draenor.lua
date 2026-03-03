@@ -1,4 +1,4 @@
-﻿-- Mapzeroth_Data_Nodes_Draenor.lua
+-- Mapzeroth_Data_Nodes_Draenor.lua
 -- Draenor (Warlords of Draenor)
 local _, ns = ...
 
@@ -7,14 +7,12 @@ ns.Nodes = ns.Nodes or {}
 ns.Nodes.DRAENOR = {
     LUNARFALL = {
         name = "Lunarfall",
-        faction = "ALLIANCE",
         mapID = 582,
         x = 0.299,
         y = 0.339
     },
     LUNARFALL_SHIPYARD = {
         name = "Lunarfall Shipyard",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.279,
         y = 0.112
@@ -22,28 +20,24 @@ ns.Nodes.DRAENOR = {
     LUNARFALL_GARRISON_FLIGHT = {
         name = "Lunarfall Flightmaster",
         category = "city",
-        faction = "ALLIANCE",
         mapID = 582,
         x = 0.299,
         y = 0.339
     },
     FROSTWALL = {
         name = "Frostwall",
-        faction = "HORDE",
         mapID = 525,
         x = 0.4792,
         y = 0.6808
     },
     FROSTWALL_SHIPYARD = {
         name = "Frostwall Shipyard",
-        faction = "HORDE",
         mapID = 525,
         x = 0.4298,
         y = 0.7356
     },
     STORMSHIELD_ASHRAN = {
         name = "Stormshield",
-        faction = "ALLIANCE",
         mapID = 622,
         x = 0.615,
         y = 0.399
@@ -51,35 +45,30 @@ ns.Nodes.DRAENOR = {
     -- Ashran (DRAENOR)
     STORMSHIELD_ALLIANCE_FLIGHT = {
         name = "Stormshield Flightmaster",
-        faction = "ALLIANCE",
         mapID = 622,
         x = 0.3076,
         y = 0.4862
     },
     WARSPEAR_ASHRAN = {
         name = "Warspear",
-        faction = "HORDE",
         mapID = 624,
         x = 0.5884,
         y = 0.5135
     },
     WARSPEAR_ASHRAN_FLIGHT = {
         name = "Warspear Flightmaster",
-        faction = "HORDE",
         mapID = 624,
         x = 0.4420,
         y = 0.3419
     },
     GORGROND_MOLE = {
         name = "Gorgrond",
-        faction = "ALLIANCE",
         mapID = 543,
         x = 0.467,
         y = 0.387
     },
     NAGRAND_DRAENOR_MOLE = {
         name = "Nagrand (Draenor)",
-        faction = "ALLIANCE",
         mapID = 550,
         x = 0.657,
         y = 0.083
@@ -122,7 +111,6 @@ ns.Nodes.DRAENOR = {
     },
     IRON_SIEGEWORKS_FLIGHT = {
         name = "Iron Siegeworks",
-        faction = "ALLIANCE",
         mapID = 525,
         x = 0.871,
         y = 0.623
@@ -135,42 +123,36 @@ ns.Nodes.DRAENOR = {
     },
     HIGHPASS_FLIGHT = {
         name = "Highpass",
-        faction = "ALLIANCE",
         mapID = 543,
         x = 0.523,
         y = 0.592
     },
     BASTION_RISE_FLIGHT_ALLIANCE = {
         name = "Bastion Rise",
-        faction = "ALLIANCE",
         mapID = 543,
         x = 0.462,
         y = 0.922
     },
     BASTION_RISE_FLIGHT_HORDE = {
         name = "Bastion Rise",
-        faction = "HORDE",
         mapID = 543,
         x = 0.4710,
         y = 0.9051
     },
     DEEPROOT_FLIGHT = {
         name = "Deeproot",
-        faction = "ALLIANCE",
         mapID = 543,
         x = 0.4604,
         y = 0.7656
     },
     EVERMORN_SPRINGS_FLIGHT = {
         name = "Evermorn Springs",
-        faction = "HORDE",
         mapID = 543,
         x = 0.4097,
         y = 0.8698
     },
     BEASTWATCH_FLIGHT = {
         name = "Beastwatch",
-        faction = "HORDE",
         mapID = 543,
         x = 0.4545,
         y = 0.6932
@@ -183,7 +165,6 @@ ns.Nodes.DRAENOR = {
     },
     WILDWOOD_WASH_FLIGHT = {
         name = "Wildwood Wash",
-        faction = "ALLIANCE",
         mapID = 534,
         x = 0.634,
         y = 0.574
@@ -220,28 +201,24 @@ ns.Nodes.DRAENOR = {
     },
     THE_IRON_FRONT_FLIGHT_ALLIANCE = {
         name = "The Iron Front",
-        faction = "ALLIANCE",
         mapID = 534,
         x = 0.095,
         y = 0.528
     },
     THE_IRON_FRONT_FLIGHT_HORDE = {
         name = "The Iron Front",
-        faction = "HORDE",
         mapID = 534,
         x = 0.0919,
         y = 0.5590
     },
     VOLMAR_FLIGHT = {
         name = "Vol'mar",
-        faction = "HORDE",
         mapID = 534,
         x = 0.6016,
         y = 0.4619
     },
     LIONS_WATCH_FLIGHT = {
         name = "Lion's Watch",
-        faction = "ALLIANCE",
         mapID = 534,
         x = 0.573,
         y = 0.588
@@ -272,14 +249,12 @@ ns.Nodes.DRAENOR = {
     },
     YRELS_WATCH_FLIGHT = {
         name = "Yrel's Watch",
-        faction = "ALLIANCE",
         mapID = 550,
         x = 0.623,
         y = 0.406
     },
     TELAARI_STATION_FLIGHT = {
         name = "Telaari Station",
-        faction = "ALLIANCE",
         mapID = 550,
         x = 0.633,
         y = 0.616
@@ -316,35 +291,30 @@ ns.Nodes.DRAENOR = {
     },
     EXARCHS_REFUGE_FLIGHT_ALLIANCE = {
         name = "Exarch's Refuge",
-        faction = "ALLIANCE",
         mapID = 535,
         x = 0.542,
         y = 0.685
     },
     EXARCHS_REFUGE_FLIGHT_HORDE = {
         name = "Exarch's Refuge",
-        faction = "HORDE",
         mapID = 535,
         x = 0.5428,
         y = 0.6755
     },
     DUROTANS_GRASP_FLIGHT = {
         name = "Durotan's Grasp",
-        faction = "HORDE",
         mapID = 535,
         x = 0.5498,
         y = 0.4054
     },
     VOLJINS_PRIDE_FLIGHT = {
         name = "Vol'jin's Pride",
-        faction = "HORDE",
         mapID = 535,
         x = 0.7029,
         y = 0.2941
     },
     FROSTWOLF_OVERLOOK_FLIGHT = {
         name = "Frostwolf Overlook",
-        faction = "HORDE",
         mapID = 535,
         x = 0.6087,
         y = 0.1034
@@ -352,21 +322,18 @@ ns.Nodes.DRAENOR = {
 
     ANCHORITES_SOJOURN_FLIGHT = {
         name = "Anchorite's Sojourn",
-        faction = "ALLIANCE",
         mapID = 535,
         x = 0.795,
         y = 0.568
     },
     REDEMPTION_RISE_FLIGHT = {
         name = "Redemption Rise",
-        faction = "ALLIANCE",
         mapID = 535,
         x = 0.631,
         y = 0.258
     },
     FORT_WRYNN_ALLIANCE_FLIGHT = {
         name = "Fort Wrynn (Alliance)",
-        faction = "ALLIANCE",
         mapID = 535,
         x = 0.695,
         y = 0.215
@@ -397,7 +364,6 @@ ns.Nodes.DRAENOR = {
     },
     SOUTHPORT_FLIGHT = {
         name = "Southport",
-        faction = "ALLIANCE",
         mapID = 542,
         x = 0.389,
         y = 0.618
@@ -416,7 +382,6 @@ ns.Nodes.DRAENOR = {
     },
     AXEFALL_FLIGHT = {
         name = "Axefall",
-        faction = "HORDE",
         mapID = 542,
         x = 0.3921,
         y = 0.4283
@@ -441,42 +406,36 @@ ns.Nodes.DRAENOR = {
     },
     LUNARFALL_ALLIANCE_FLIGHT = {
         name = "Lunarfall (Alliance)",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.304,
         y = 0.177
     },
     EMBAARI_VILLAGE_FLIGHT = {
         name = "Embaari Village",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.453,
         y = 0.389
     },
     ELODOR_ALLIANCE_FLIGHT = {
         name = "Elodor (Alliance)",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.586,
         y = 0.315
     },
     PATH_OF_THE_LIGHT_FLIGHT = {
         name = "Path of the Light",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.594,
         y = 0.458
     },
     TRANQUIL_COURT_FLIGHT = {
         name = "Tranquil Court",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.703,
         y = 0.504
     },
     THE_DRAAKORIUM_FLIGHT = {
         name = "The Draakorium",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.568,
         y = 0.570
@@ -501,7 +460,6 @@ ns.Nodes.DRAENOR = {
     },
     TWILIGHT_GLADE_FLIGHT = {
         name = "Twilight Glade",
-        faction = "ALLIANCE",
         mapID = 539,
         x = 0.402,
         y = 0.554
@@ -509,14 +467,12 @@ ns.Nodes.DRAENOR = {
     -- Nagrand - Draenor (DRAENOR)
     RIVERSIDE_POST_FLIGHT = {
         name = "Riverside Post",
-        faction = "HORDE",
         mapID = 550,
         x = 0.4910,
         y = 0.4813
     },
     WORVAR_FLIGHT = {
         name = "Wor'var",
-        faction = "HORDE",
         mapID = 550,
         x = 0.8288,
         y = 0.4442
@@ -525,56 +481,48 @@ ns.Nodes.DRAENOR = {
     FROSTWALL_GARRISON_FLIGHT = {
         name = "Frostwall Garrison",
         category = "city",
-        faction = "HORDE",
         mapID = 590,
         x = 0.5, -- TBD
         y = 0.5
     },
     WORGOL_FLIGHT = {
         name = "Wor'gol",
-        faction = "HORDE",
         mapID = 525,
         x = 0.2120,
         y = 0.5590
     },
     BLADESPIRE_CITADEL_FLIGHT = {
         name = "Bladespire Citadel",
-        faction = "HORDE",
         mapID = 525,
         x = 0.2402,
         y = 0.3700
     },
     THROMVAR_FLIGHT = {
         name = "Throm'Var",
-        faction = "HORDE",
         mapID = 525,
         x = 0.3167,
         y = 0.0963
     },
     DARKSPEARS_EDGE_FLIGHT = {
         name = "Darkspear's Edge",
-        faction = "HORDE",
         mapID = 525,
         x = 0.5145,
         y = 0.4089
     },
     STONEFANG_OUTPOST_FLIGHT = {
         name = "Stonefang Outpost",
-        faction = "HORDE",
         mapID = 525,
         x = 0.4003,
         y = 0.5148
     },
     WOLFS_STAND_FLIGHT = {
         name = "Wolf's Stand",
-        faction = "HORDE",
         mapID = 525,
         x = 0.7323,
         y = 0.5961
     },
     THUNDER_PASS_FLIGHT = {
         name = "Thunder Pass",
-        faction = "HORDE",
         mapID = 525,
         x = 0.8347,
         y = 0.6084
