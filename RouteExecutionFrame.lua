@@ -2,6 +2,8 @@
 -- Popup frame with clickable SecureActionButtons for executing routes
 local addonName, addon = ...
 
+local StepUtils = addon.StepUtils
+
 local FRAME_WIDTH = 400
 local STEP_HEIGHT = 40
 local FRAME_PADDING = 10
@@ -34,115 +36,8 @@ local routeFooter = nil
 local routeTotalTime = nil
 
 -----------------------------------------------------------
--- MATH HELPERS
------------------------------------------------------------
-
-local function Atan2(y, x)
-    if math.atan2 then
-        return math.atan2(y, x)
-    end
-
-    if x > 0 then
-        return math.atan(y / x)
-    elseif x < 0 and y >= 0 then
-        return math.atan(y / x) + math.pi
-    elseif x < 0 and y < 0 then
-        return math.atan(y / x) - math.pi
-    elseif x == 0 and y > 0 then
-        return math.pi / 2
-    elseif x == 0 and y < 0 then
-        return -math.pi / 2
-    end
-
-    return 0
-end
-
-local function GetWorldPosition(mapID, x, y)
-    if not mapID or not x or not y then
-        return nil
-    end
-
-    local mapPos = CreateVector2D(x, y)
-    if not mapPos then
-        return nil
-    end
-
-    local _, worldPos = C_Map.GetWorldPosFromMapPos(mapID, mapPos)
-    return worldPos
-end
-
-local function GetDistanceAndHeading(fromMap, fromX, fromY, toMap, toX, toY)
-    if not fromMap or not fromX or not fromY or not toMap or not toX or not toY then
-        return nil, nil
-    end
-
-    local fromWorld = GetWorldPosition(fromMap, fromX, fromY)
-    local toWorld = GetWorldPosition(toMap, toX, toY)
-
-    local dx
-    local dy
-
-    if fromWorld and toWorld then
-        dx = toWorld.x - fromWorld.x
-        dy = toWorld.y - fromWorld.y
-    elseif fromMap == toMap then
-        dx = (toX - fromX) * addon.MAP_SCALE
-        dy = (toY - fromY) * addon.MAP_SCALE
-    else
-        return nil, nil
-    end
-
-    local distance = math.sqrt(dx * dx + dy * dy)
-    local heading = Atan2(dy, dx)
-
-    return distance, heading
-end
-
-local function FormatDistance(distance)
-    if not distance then
-        return "Target on another map"
-    end
-
-    if distance >= 1000 then
-        return string.format("%.1f km", distance / 1000)
-    end
-
-    return string.format("%.0f yd", distance)
-end
-
------------------------------------------------------------
 -- STEP TARGET RESOLUTION
 -----------------------------------------------------------
-
-local function GetStepActionText(stepData)
-    if stepData.abilityName then
-        if stepData.destinationName then
-            return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
-        end
-        return string.format("Use %s", stepData.abilityName)
-    end
-
-    local methodPrefix = addon.METHOD_DISPLAY_TEXT[stepData.method] or "Go to"
-    return string.format("%s %s", methodPrefix, stepData.destination or "destination")
-end
-
-local function ResolveNodeTarget(nodeID)
-    if not nodeID then
-        return nil
-    end
-
-    local node = addon.TravelGraph:GetNodeByID(nodeID)
-    if not node or not node.mapID or not node.x or not node.y then
-        return nil
-    end
-
-    return {
-        mapID = node.mapID,
-        x = node.x,
-        y = node.y,
-        name = node.displayName or node.name or "Target"
-    }
-end
 
 local function ResolveStepTarget(stepData)
     if not stepData then
@@ -163,11 +58,11 @@ local function ResolveStepTarget(stepData)
             }
         end
 
-        return ResolveNodeTarget(stepData.nodeID)
+        return StepUtils.ResolveNodeTarget(stepData.nodeID)
     end
 
     if stepData.fromNodeID then
-        return ResolveNodeTarget(stepData.fromNodeID)
+        return StepUtils.ResolveNodeTarget(stepData.fromNodeID)
     end
 
     return nil, "Complete this step manually"
@@ -225,36 +120,6 @@ end
 
 function addon:GetRouteNavigationState()
     return routeSteps, currentRouteStep, routeTotalTime
-end
-
------------------------------------------------------------
--- BUILD MACRO TEXT FOR STEP
------------------------------------------------------------
-
-local function BuildStepMacro(stepData)
-    if stepData.spellID then
-        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-
-        if spellInfo then
-            return string.format("/cast %s", spellInfo.name)
-        else
-            -- Fallback to ID
-            return string.format("/cast %d", stepData.spellID)
-        end
-
-    elseif stepData.itemID then
-        -- Get localized item name from ID
-        local itemName = C_Item.GetItemInfo(stepData.itemID)
-
-        if itemName then
-            return string.format("/use %s", itemName)
-        else
-            -- Fallback to ID
-            return string.format("/use %d", stepData.itemID)
-        end
-    end
-
-    return nil
 end
 
 -----------------------------------------------------------
@@ -335,22 +200,22 @@ local function UpdateNavigator(frame)
     if not target then
         nav.arrow:SetAlpha(0.25)
         nav.distanceText:SetText(reason or "Complete current step")
-        nav.detailText:SetText(GetStepActionText(step))
+        nav.detailText:SetText(StepUtils.GetStepActionText(step))
         return
     end
 
     if not location then
         nav.arrow:SetAlpha(0.25)
         nav.distanceText:SetText("Player location unavailable")
-        nav.detailText:SetText(GetStepActionText(step))
+        nav.detailText:SetText(StepUtils.GetStepActionText(step))
         return
     end
 
-    local distance, heading = GetDistanceAndHeading(location.mapID, location.x, location.y, target.mapID, target.x,
+    local distance, heading = StepUtils.GetDistanceAndHeading(location.mapID, location.x, location.y, target.mapID, target.x,
         target.y)
 
-    nav.distanceText:SetText(string.format("%s | %s", target.name, FormatDistance(distance)))
-    nav.detailText:SetText(GetStepActionText(step))
+    nav.distanceText:SetText(string.format("%s | %s", target.name, StepUtils.FormatDistance(distance)))
+    nav.detailText:SetText(StepUtils.GetStepActionText(step))
 
     if not distance or not heading then
         nav.arrow:SetAlpha(0.25)
@@ -362,7 +227,7 @@ local function UpdateNavigator(frame)
         step = routeSteps[currentRouteStep]
         nav.arrow:SetAlpha(0.25)
         if step then
-            nav.detailText:SetText(GetStepActionText(step))
+            nav.detailText:SetText(StepUtils.GetStepActionText(step))
         end
         return
     end
@@ -657,7 +522,7 @@ local function CreateStepButton(parent, stepData, stepNum)
         frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
 
         -- Set macro
-        local macroText = BuildStepMacro(stepData)
+        local macroText = StepUtils.BuildStepMacro(stepData)
         if macroText then
             frame:SetAttribute("macrotext", macroText)
         end
@@ -736,23 +601,9 @@ local function CreateStepButton(parent, stepData, stepNum)
     icon:SetSize(28, 28)
     icon:SetPoint("LEFT", numText, "RIGHT", 8, 0)
 
-    -- Get icon
-    local iconPath
-    if stepData.itemID then
-        iconPath = C_Item.GetItemIconByID(stepData.itemID)
-    elseif stepData.spellID then
-        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-        if spellInfo then
-            iconPath = spellInfo.iconID
-        end
-    end
+    icon:SetTexture(StepUtils.GetStepActionIcon(stepData))
 
-    if not iconPath then
-        iconPath = addon.TRAVEL_ICONS[stepData.method] or addon.TRAVEL_ICONS["walk"]
-    end
-    icon:SetTexture(iconPath)
-
-    local actionText = GetStepActionText(stepData)
+    local actionText = StepUtils.GetStepActionText(stepData)
 
     local destText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     destText:SetPoint("LEFT", icon, "RIGHT", 8, 0)

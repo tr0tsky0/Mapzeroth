@@ -2,6 +2,8 @@
 -- Standalone draggable GPS navigator for active route guidance.
 local addonName, addon = ...
 
+local StepUtils = addon.StepUtils
+
 local GPS_WIDTH = 400
 local GPS_HEADER_HEIGHT = 26 -- title strip
 local GPS_CONTENT_HEIGHT = 56 -- arrow / text row (= arrowSize)
@@ -36,102 +38,6 @@ local function GPSDebugPrint(message)
     end
 end
 
-local function Atan2(y, x)
-    if math.atan2 then
-        return math.atan2(y, x)
-    end
-
-    if x > 0 then
-        return math.atan(y / x)
-    elseif x < 0 and y >= 0 then
-        return math.atan(y / x) + math.pi
-    elseif x < 0 and y < 0 then
-        return math.atan(y / x) - math.pi
-    elseif x == 0 and y > 0 then
-        return math.pi / 2
-    elseif x == 0 and y < 0 then
-        return -math.pi / 2
-    end
-
-    return 0
-end
-
-local function BuildStepMacro(stepData)
-    if stepData.spellID then
-        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-        if spellInfo then
-            return string.format("/cast %s", spellInfo.name)
-        end
-        return string.format("/cast %d", stepData.spellID)
-    end
-
-    if stepData.itemID then
-        local itemName = C_Item.GetItemInfo(stepData.itemID)
-        if itemName then
-            return string.format("/use %s", itemName)
-        end
-        return string.format("/use %d", stepData.itemID)
-    end
-
-    return nil
-end
-
-local function GetStepActionIcon(stepData)
-    if not stepData then
-        return nil
-    end
-
-    if stepData.spellID then
-        local spellInfo = C_Spell.GetSpellInfo(stepData.spellID)
-        if spellInfo and spellInfo.iconID then
-            return spellInfo.iconID
-        end
-    end
-
-    if stepData.itemID then
-        local itemIcon = C_Item.GetItemIconByID(stepData.itemID)
-        if itemIcon then
-            return itemIcon
-        end
-    end
-
-    return addon.TRAVEL_ICONS[stepData.method] or addon.TRAVEL_ICONS.walk
-end
-
-local function GetStepActionText(stepData)
-    if not stepData then
-        return "No active step"
-    end
-
-    if stepData.abilityName then
-        if stepData.destinationName then
-            return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
-        end
-        return string.format("Use %s", stepData.abilityName)
-    end
-
-    local methodPrefix = addon.METHOD_DISPLAY_TEXT[stepData.method] or "Go to"
-    return string.format("%s %s", methodPrefix, stepData.destination or "destination")
-end
-
-local function ResolveNodeTarget(nodeID)
-    if not nodeID then
-        return nil
-    end
-
-    local node = addon.TravelGraph:GetNodeByID(nodeID)
-    if not node or not node.mapID or not node.x or not node.y then
-        return nil
-    end
-
-    return {
-        mapID = node.mapID,
-        x = node.x,
-        y = node.y,
-        name = node.displayName or node.name or "Target"
-    }
-end
-
 local function ResolveStepTarget(stepData)
     if not stepData then
         return nil, "No active step"
@@ -146,54 +52,14 @@ local function ResolveStepTarget(stepData)
                 name = "Waypoint"
             }
         end
-        return ResolveNodeTarget(stepData.nodeID)
+        return StepUtils.ResolveNodeTarget(stepData.nodeID)
     end
 
     if stepData.nodeID and stepData.nodeID ~= "_WAYPOINT_DESTINATION" then
-        return ResolveNodeTarget(stepData.nodeID)
+        return StepUtils.ResolveNodeTarget(stepData.nodeID)
     end
 
     return nil, "Complete current step"
-end
-
-local function GetWorldPosition(mapID, x, y)
-    if not mapID or not x or not y then
-        return nil
-    end
-
-    local mapPos = CreateVector2D(x, y)
-    if not mapPos then
-        return nil
-    end
-
-    local _, worldPos = C_Map.GetWorldPosFromMapPos(mapID, mapPos)
-    return worldPos
-end
-
-local function GetDistanceAndHeading(fromMap, fromX, fromY, toMap, toX, toY)
-    if not fromMap or not fromX or not fromY or not toMap or not toX or not toY then
-        return nil, nil
-    end
-
-    local fromWorld = GetWorldPosition(fromMap, fromX, fromY)
-    local toWorld = GetWorldPosition(toMap, toX, toY)
-
-    local dx
-    local dy
-
-    if fromWorld and toWorld then
-        dx = toWorld.x - fromWorld.x
-        dy = toWorld.y - fromWorld.y
-    elseif fromMap == toMap then
-        dx = (toX - fromX) * addon.MAP_SCALE
-        dy = (toY - fromY) * addon.MAP_SCALE
-    else
-        return nil, nil
-    end
-
-    local distance = math.sqrt(dx * dx + dy * dy)
-    local heading = Atan2(dy, dx)
-    return distance, heading
 end
 
 local function IsModifierDown(modifier)
@@ -205,18 +71,6 @@ local function IsModifierDown(modifier)
         return IsShiftKeyDown()
     end
     return false
-end
-
-local function FormatDistance(distance)
-    if not distance then
-        return "Target on another map"
-    end
-
-    if distance >= 1000 then
-        return string.format("%.1f km", distance / 1000)
-    end
-
-    return string.format("%.0f yd", distance)
 end
 
 function addon:GetMapClickModifier()
@@ -291,7 +145,7 @@ local function AutoAdvanceStep(step, location, target, distance)
         return
     end
 
-    local fromNode = ResolveNodeTarget(step.fromNodeID)
+    local fromNode = StepUtils.ResolveNodeTarget(step.fromNodeID)
 
     if step.itemID or step.spellID then
         if fromNode and location.mapID ~= fromNode.mapID then
@@ -322,10 +176,10 @@ local function UpdateActionButton(step)
 
     local button = gpsFrame.actionButton
     local arrowDragButton = gpsFrame.arrowDragButton
-    local macroText = step and BuildStepMacro(step)
+    local macroText = step and StepUtils.BuildStepMacro(step)
 
     if step and macroText then
-        button.icon:SetTexture(GetStepActionIcon(step))
+        button.icon:SetTexture(StepUtils.GetStepActionIcon(step))
 
         if InCombatLockdown() then
             GPSDebugPrint("Action button hidden (combat lockdown)")
@@ -398,7 +252,7 @@ local function UpdateGPS()
     local target, reason = ResolveStepTarget(step)
 
     gpsFrame.statusText:SetText(string.format("Step %d/%d", currentStep, #steps))
-    gpsFrame.detailText:SetText(GetStepActionText(step))
+    gpsFrame.detailText:SetText(StepUtils.GetStepActionText(step))
 
     UpdateActionButton(step)
 
@@ -415,10 +269,10 @@ local function UpdateGPS()
         return
     end
 
-    local distance, heading = GetDistanceAndHeading(location.mapID, location.x, location.y, target.mapID, target.x,
+    local distance, heading = StepUtils.GetDistanceAndHeading(location.mapID, location.x, location.y, target.mapID, target.x,
         target.y)
 
-    gpsFrame.distanceText:SetText(string.format("%s | %s", target.name, FormatDistance(distance)))
+    gpsFrame.distanceText:SetText(string.format("%s | %s", target.name, StepUtils.FormatDistance(distance)))
     AutoAdvanceStep(step, location, target, distance)
 
     local refreshedSteps, refreshedCurrent = addon:GetRouteNavigationState()

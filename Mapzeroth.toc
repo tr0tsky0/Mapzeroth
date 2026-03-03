@@ -17,7 +17,22 @@ Libs\LibDBIcon-1.0.lua
 
 # Core data and systems
 Constants.lua
-Mapzeroth_Data.lua
+Data\Mapzeroth_Data_Nodes_EK.lua
+Data\Mapzeroth_Data_Nodes_Kalimdor.lua
+Data\Mapzeroth_Data_Nodes_Outlands.lua
+Data\Mapzeroth_Data_Nodes_Northrend.lua
+Data\Mapzeroth_Data_Nodes_Pandaria.lua
+Data\Mapzeroth_Data_Nodes_BrokenIsles.lua
+Data\Mapzeroth_Data_Nodes_DragonIsles.lua
+Data\Mapzeroth_Data_Nodes_KhazAlgar.lua
+Data\Mapzeroth_Data_Nodes_Shadowlands.lua
+Data\Mapzeroth_Data_Nodes_IsolatedMaps.lua
+Data\Mapzeroth_Data_Nodes_BfA.lua
+Data\Mapzeroth_Data_Nodes_Draenor.lua
+Data\Mapzeroth_Data_Nodes_Zandalar.lua
+Data\Mapzeroth_Data_Nodes_Argus.lua
+Data\Mapzeroth_Data_Nodes_Special.lua
+Data\Mapzeroth_Data_Edges.lua
 PetTrainers.lua
 MapNames.lua
 PlayerAbilities.lua
@@ -29,6 +44,7 @@ LocationService.lua
 WaypointService.lua
 
 # UI components
+StepUtils.lua
 GPSNavigator.lua
 SettingsPanel.lua
 DestinationSelector.lua
