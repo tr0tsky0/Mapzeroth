@@ -2,32 +2,8 @@
 -- Travel edges, traversal group map, and group lookup helper
 local _, ns = ...
 
-ns.Edges = { -- Stormwind Internal Navigation
-{
-    from = "STORMWIND_MAGE_TOWER_ENTRANCE",
-    to = "EASTERN_EARTHSHRINE_SW",
-    method = "fly"
-}, {
-    from = "STORMWIND_MAGE_TOWER_ENTRANCE",
-    to = "STORMWIND_HARBOR",
-    method = "fly"
-}, {
-    from = "STORMWIND_MAGE_TOWER_ENTRANCE",
-    to = "SW_EMBASSY",
-    method = "fly"
-}, {
-    from = "STORMWIND_MAGE_TOWER_ENTRANCE",
-    to = "SW_TRAM",
-    method = "fly"
-}, {
-    from = "SW_TRAM",
-    to = "IF_TRAM",
-    method = "tram"
-}, {
-    from = "IF_TRAM",
-    to = "IRONFORGE",
-    method = "fly"
-}, -- Stormwind Mage Tower Interior
+ns.Edges = { 
+-- Stormwind Mage Tower Interior
 {
     from = "STORMWIND_BORALUS_PORTAL",
     to = "BORALUS",
@@ -402,12 +378,19 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "VALIANCE_KEEP_DOCK",
     method = "ship",
     cost = 135
-}, {
+},
+{
+    from = "SW_TRAM",
+    to = "IF_TRAM",
+    method = "tram"
+},
+ -- Orgrimmar
+{
     from = "ORGRIMMAR_GROMGOL_ZEP",
     to = "GROMGOL_ZEPPELIN",
     method = "zeppelin",
     cost = 120
-}, -- Orgrimmar
+},
 {
     from = "ORGRIMMAR_PORTAL_ROOM_ENTRANCE",
     to = "ORGRIMMAR_PORTAL_ROOM_STAIRS",
@@ -935,10 +918,6 @@ ns.Edges = { -- Stormwind Internal Navigation
     requirements = {
         faction = "Alliance"
     }
-}, {
-    from = "BELAMETH",
-    to = "BELANAAR",
-    method = "fly"
 }, {
     from = "BELANAAR",
     to = "GILNEAS_DOCK",
