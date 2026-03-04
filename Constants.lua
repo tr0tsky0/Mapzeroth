@@ -64,16 +64,17 @@ addon.NO_FLY_MAPS = {
 -- Portal/teleport costs should be instant (cast time only)
 
 addon.TRAVEL_COSTS = {
-    portal = 0,      -- Instant (cast time tracked separately)
-    teleport = 0,    -- Instant (cast time tracked separately)
-    hearthstone = 0, -- Cast time tracked separately
-    racial = 0,      -- Cast time tracked separately
-    ship = 60,       -- ~1 minute boat ride
-    zeppelin = 60,   -- ~1 minute zeppelin ride
-    tram = 90,       -- ~1.5 minute tram ride
-    flight = 120,    -- ~2 minute flight path (average)
-    walk = 30,       -- Fallback if distance calc fails
-    fly = 10,        -- Fallback if distance calc fails
+    portal = 0,        -- Instant (cast time tracked separately)
+    teleport = 0,      -- Instant (cast time tracked separately)
+    hearthstone = 0,   -- Cast time tracked separately
+    racial = 0,        -- Cast time tracked separately
+    ship = 60,         -- ~1 minute boat ride
+    zeppelin = 60,     -- ~1 minute zeppelin ride
+    tram = 90,         -- ~1.5 minute tram ride
+    flight = 120,      -- ~2 minute flight path (average)
+    walk = 30,         -- Fallback if distance calc fails
+    fly = 10,          -- Fallback if distance calc fails
+    phaseswitch = 60,  -- Talk to Zidormi / timewalker NPC to change time phase
 }
 
 -- Travel method icons and text
@@ -86,7 +87,8 @@ addon.TRAVEL_ICONS = {
     walk = "Interface\\Icons\\Ability_Rogue_Sprint",
     teleport = "Interface\\Icons\\Spell_Arcane_Teleportorgrimmar",
     hearthstone = "Interface\\Icons\\INV_Misc_Rune_01",
-    racial = "Interface\\Icons\\INV_Misc_Gear_01"
+    racial = "Interface\\Icons\\INV_Misc_Gear_01",
+    phaseswitch = "Interface\\Icons\\Ability_Mage_TimeWarp",
 }
 
 addon.METHOD_DISPLAY_TEXT = {
@@ -98,7 +100,8 @@ addon.METHOD_DISPLAY_TEXT = {
     walk = "Walk to",
     teleport = "Teleport to",
     hearthstone = "Hearth to",
-    racial = "Use"
+    racial = "Use",
+    phaseswitch = "Change time phase to",
 }
 
 addon.HOLIDAYS = {

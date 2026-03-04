@@ -1258,6 +1258,22 @@ ns.Nodes.EK_OVERWORLD = {
         mapID = 2424,
         x = 0.5230,
         y = 0.8537
+    },
+
+    -- Blasted Lands time phases (Zidormi)
+    BLASTED_LANDS_ZIDORMI_PAST = {
+        name = "Zidormi (Past Blasted Lands)",
+        mapID = 17,
+        mapArtID = 18,
+        x = 0.4812,
+        y = 0.0732
+    },
+    BLASTED_LANDS_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Blasted Lands)",
+        mapID = 17,
+        mapArtID = 628,
+        x = 0.4812,
+        y = 0.0732
     }
 }
 

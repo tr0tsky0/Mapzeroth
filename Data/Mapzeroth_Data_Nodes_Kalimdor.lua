@@ -1039,6 +1039,54 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
         mapID = 198,
         x = 0.470,
         y = 0.770
+    },
+
+    -- Darkshore time phases (Zidormi)
+    DARKSHORE_ZIDORMI_PAST = {
+        name = "Zidormi (Past Darkshore)",
+        mapID = 62,
+        mapArtID = 67,
+        x = 0.4888,
+        y = 0.2447
+    },
+    DARKSHORE_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Darkshore)",
+        mapID = 62,
+        mapArtID = 1176,
+        x = 0.4888,
+        y = 0.2447
+    },
+
+    -- Silithus time phases (Zidormi)
+    SILITHUS_ZIDORMI_PAST = {
+        name = "Zidormi (Past Silithus)",
+        mapID = 81,
+        mapArtID = 86,
+        x = 0.7892,
+        y = 0.2203
+    },
+    SILITHUS_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Silithus)",
+        mapID = 81,
+        mapArtID = 962,
+        x = 0.7892,
+        y = 0.2203
+    },
+
+    -- Dustwallow Marsh time phases (Zidormi)
+    DUSTWALLOW_ZIDORMI_PAST = {
+        name = "Zidormi (Past Dustwallow)",
+        mapID = 70,
+        mapArtID = 75,
+        x = 0.5590,
+        y = 0.4956
+    },
+    DUSTWALLOW_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Dustwallow)",
+        mapID = 70,
+        mapArtID = 498,
+        x = 0.5590,
+        y = 0.4956
     }
 }
 

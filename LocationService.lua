@@ -123,6 +123,19 @@ function addon:FindNearestNode()
     end
 
     if #exactMapNodes > 0 then
+        -- Prefer nodes matching the player's current time phase
+        local currentArtID = C_Map.GetMapArtID(mapID)
+        if currentArtID then
+            local samePhaseNodes = {}
+            for _, node in ipairs(exactMapNodes) do
+                if not node.mapArtID or node.mapArtID == currentArtID then
+                    table.insert(samePhaseNodes, node)
+                end
+            end
+            if #samePhaseNodes > 0 then
+                return self:FindClosestNodeInList(samePhaseNodes, x, y)
+            end
+        end
         return self:FindClosestNodeInList(exactMapNodes, x, y)
     end
 

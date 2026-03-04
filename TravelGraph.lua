@@ -163,6 +163,7 @@ local function buildGraph(hierarchicalNodes, edgeList)
                 traversalGroup = traversalGroup,
                 interior = nodeData.interior,
                 mapID = nodeData.mapID,
+                mapArtID = nodeData.mapArtID,
                 x = nodeData.x,
                 y = nodeData.y,
                 edges = {}
@@ -233,26 +234,31 @@ local function injectAutoTraversalEdges(graph)
             for j = i + 1, #nodesInGroup do
                 local n1, n2 = nodesInGroup[i], nodesInGroup[j]
                 if not edgeExists(n1, n2.id) and not edgeExists(n2, n1.id) then
-                    local distance = calculateDistance(n1, n2)
-                    if distance and distance <= MAX_AUTO_EDGE_DISTANCE then
-                        local method = "fly"
-                        if NO_FLY_MAPS[n1.mapID] or NO_FLY_MAPS[n2.mapID] then
-                            method = "walk"
-                        end
+                    -- Skip cross-phase connections: same map, different time phase
+                    local crossPhase = n1.mapArtID and n2.mapArtID and
+                        n1.mapID == n2.mapID and n1.mapArtID ~= n2.mapArtID
+                    if not crossPhase then
+                        local distance = calculateDistance(n1, n2)
+                        if distance and distance <= MAX_AUTO_EDGE_DISTANCE then
+                            local method = "fly"
+                            if NO_FLY_MAPS[n1.mapID] or NO_FLY_MAPS[n2.mapID] then
+                                method = "walk"
+                            end
 
-                        local cost = calculateTravelTime(n1, n2, method)
-                        if cost then
-                            table.insert(n1.edges, {
-                                to = n2.id,
-                                method = method,
-                                cost = cost
-                            })
-                            table.insert(n2.edges, {
-                                to = n1.id,
-                                method = method,
-                                cost = cost
-                            })
-                            edgesAdded = edgesAdded + 2
+                            local cost = calculateTravelTime(n1, n2, method)
+                            if cost then
+                                table.insert(n1.edges, {
+                                    to = n2.id,
+                                    method = method,
+                                    cost = cost
+                                })
+                                table.insert(n2.edges, {
+                                    to = n1.id,
+                                    method = method,
+                                    cost = cost
+                                })
+                                edgesAdded = edgesAdded + 2
+                            end
                         end
                     end
                 end

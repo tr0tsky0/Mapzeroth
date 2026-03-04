@@ -111,6 +111,12 @@ local requirementCheckers = {
         return C_Covenants.GetActiveCovenantID() == covenantID
     end,
 
+    -- Time phase requirement: player must be in the specified map art phase
+    mapArtID = function(requiredArtID)
+        local mapID = C_Map.GetBestMapForUnit("player")
+        return mapID ~= nil and C_Map.GetMapArtID(mapID) == requiredArtID
+    end,
+
     -- Multiple requirements (ANY)
     anyOf = function(subRequirements)
         for requirementType, value in pairs(subRequirements) do
@@ -183,6 +189,9 @@ function addon:ExplainEdgeRequirements(edge)
             passed = factionData and factionData.reaction >= value.standing
         elseif requirementType == "covenant" then
             passed = C_Covenants.GetActiveCovenantID() == value
+        elseif requirementType == "mapArtID" then
+            local mapID = C_Map.GetBestMapForUnit("player")
+            passed = mapID ~= nil and C_Map.GetMapArtID(mapID) == value
         end
 
         table.insert(reasons, string.format("%s: %s", requirementType, passed and "✓" or "✗"))

@@ -1677,6 +1677,57 @@ ns.Edges = {
     requirements = {
         class = "DRUID"
     }
+},
+
+-- Time phase switches (Zidormi)
+{
+    from = "DARKSHORE_ZIDORMI_PAST",
+    to = "DARKSHORE_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "DARKSHORE_ZIDORMI_PRESENT",
+    to = "DARKSHORE_ZIDORMI_PAST",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "BLASTED_LANDS_ZIDORMI_PAST",
+    to = "BLASTED_LANDS_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "BLASTED_LANDS_ZIDORMI_PRESENT",
+    to = "BLASTED_LANDS_ZIDORMI_PAST",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "SILITHUS_ZIDORMI_PAST",
+    to = "SILITHUS_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "SILITHUS_ZIDORMI_PRESENT",
+    to = "SILITHUS_ZIDORMI_PAST",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "DUSTWALLOW_ZIDORMI_PAST",
+    to = "DUSTWALLOW_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
+}, {
+    from = "DUSTWALLOW_ZIDORMI_PRESENT",
+    to = "DUSTWALLOW_ZIDORMI_PAST",
+    method = "phaseswitch",
+    cost = 60,
+    oneway = true
 }}
 
 -----------------------------------------------------------
