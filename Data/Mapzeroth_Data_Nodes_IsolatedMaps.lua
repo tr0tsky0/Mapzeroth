@@ -337,6 +337,12 @@ ns.Nodes.HARANDAR = {
         x = 0.3175,
         y = 0.6737
     },
+    LOAKNIT_DEN_ZUL_AMAN = {
+        name = "Loaknit Den",
+        mapID = 2413,
+        x = 0.316,
+        y = 0.212
+    },
     -- Dungeons
     THE_BLINDING_VALE_DUNGEON = {
         name = "The Blinding Vale",

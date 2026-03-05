@@ -444,6 +444,16 @@ addon.TravelItems = {
         cooldown = 300,
         destination = "REVENDRETH_POCKET_PORTAL"
     },
+
+    ABUNDANT_BEACON = {
+        id = "ABUNDANT_BEACON",
+        name = "Abundant Beacon",
+        itemID = 252607,
+        type = "inventory_item",
+        castTime = 8,
+        cooldown = 0,
+        destination = "LOAKNIT_DEN_ZUL_AMAN"
+    }
 }
 
 -----------------------------------------------------------
