@@ -4303,6 +4303,12 @@ ns.Nodes = {
             x = 0.3981,
             y = 0.6892
         },
+        VALSHARAH_DRUID_DALARAN_PORTAL = {
+            name = "Portal to Dalaran (Broken Isles)",
+            mapID = 747,
+            x = 0.5710,
+            y = 0.4350
+        },
         VALSHARAH = {
             name = "Lorlathil Portal",
             faction = "ALLIANCE",
@@ -9762,6 +9768,10 @@ ns.Edges = { -- Stormwind Internal Navigation
     to = "EMERALD_DREAMWAY_HINTERLANDS_PORTAL",
     method = "walk"
 }, {
+    from = "VALSHARAH_DRUID",
+    to = "VALSHARAH_DRUID_DALARAN_PORTAL",
+    method = "walk"
+}, {
     from = "EMERALD_DREAMWAY",
     to = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL",
     method = "walk"
@@ -9817,6 +9827,13 @@ ns.Edges = { -- Stormwind Internal Navigation
 }, {
     from = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL",
     to = "DUSKWOOD_DRUID",
+    method = "portal",
+    requirements = {
+        class = "DRUID"
+    }
+}, {
+    from = "VALSHARAH_DRUID_DALARAN_PORTAL",
+    to = "DALARAN_BROKEN_ISLES",
     method = "portal",
     requirements = {
         class = "DRUID"
