@@ -6,6 +6,7 @@ local addonName, addon = ...
 _G["Mapzeroth"] = addon
 
 addon.DEBUG = false
+addon.MULTIROUTE_ENABLED = false
 addon.bagsFullyLoaded = false
 
 -- Simple load confirmation

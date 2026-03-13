@@ -93,7 +93,7 @@ addon.TravelItems = {
         itemID = 253629,
         type = "toy",
         castTime = 5,
-        cooldown = 90,
+        cooldown = 900,
         destination = "ARCANTINA_ENTRANCE"
     },
 

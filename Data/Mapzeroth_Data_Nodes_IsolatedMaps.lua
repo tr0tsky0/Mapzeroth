@@ -307,6 +307,12 @@ ns.Nodes.HARANDAR = {
         x = 0.6413,
         y = 0.7066
     },
+    HARANDAR_VOIDSTORM_PORTAL = {
+        name = "Portal to Voidstorm",
+        mapID = 2405,
+        x = 0.6186,
+        y = 0.7318
+    },
     HARATHIR_FLIGHT = {
         name = "Har'athir Flightmaster",
         mapID = 2413,
@@ -374,6 +380,12 @@ ns.Nodes.VOIDSTORM = {
         mapID = 2405,
         x = 0.5164,
         y = 0.7020
+    },
+    VOIDSTORM_HARANDAR_PORTAL = {
+        name = "Portal to Harandar",
+        mapID = 2405,
+        x = 0.5171,
+        y = 0.7037
     },
     THE_INGRESS_FLIGHT = {
         name = "The Ingress Flightmaster",

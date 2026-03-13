@@ -980,6 +980,18 @@ ns.Nodes.EK_OVERWORLD = {
         x = 0.5274,
         y = 0.6535
     },
+    SILVERMOON_INN = {
+        name = "Wayfarer's Rest",
+        mapID = 2393,
+        x = 0.5628,
+        y = 0.7037
+    },
+    SILVERMOON_ARCANTINA_PORTAL = {
+        name = "Portal to the Arcantina",
+        mapID = 2393,
+        x = 0.5641,
+        y = 0.7077
+    },
     FAIRBREEZE_VILLAGE_FLIGHT = {
         name = "Fairbreeze Village Flightmaster",
         mapID = 2395,

@@ -1557,7 +1557,7 @@ ns.Edges = {
     method = "portal"
 }, {
     from = "ARCANTINA_EXIT",
-    to = "SILVERMOON_PORTAL_ROOM",
+    to = "SILVERMOON_ARCANTINA_PORTAL",
     method = "portal"
 }, {
     from = "HARANDAR_EVERSONG_PORTAL",
@@ -1573,6 +1573,13 @@ ns.Edges = {
     method = "portal",
     requirements = {
         quest = 86898
+    }
+}, {
+    from = "HARANDAR_VOIDSTORM_PORTAL",
+    to = "VOIDSTORM_HARANDAR_PORTAL",
+    method = "portal",
+    requirements = {
+        quest = 86510
     }
 }, {
     from = "SILVERMOON_VOIDSTORM_PORTAL",
@@ -1677,8 +1684,14 @@ ns.Edges = {
     requirements = {
         class = "DRUID"
     }
-},
-
+}, {
+    from = "VALSHARAH_DRUID_DALARAN_PORTAL",
+    to = "DALARAN_BROKEN_ISLES",
+    method = "portal",
+    requirements = {
+        class = "DRUID"
+    }
+}, 
 -- Time phase switches (Zidormi)
 {
     from = "DARKSHORE_ZIDORMI_PAST",

@@ -314,63 +314,65 @@ function addon:CreateGUI()
     clearRouteBtn.label:SetTextColor(unpack(COLOURS.textSecondary))
     frame.clearRouteBtn = clearRouteBtn
 
-    --[[-----------------------------------------------------------
+    -----------------------------------------------------------
     -- PET TRAINER QUICK-ROUTE BUTTONS
     -----------------------------------------------------------
 
-    local petTrainersLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    petTrainersLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
-    petTrainersLabel:SetText("Multiroute:")
-    petTrainersLabel:SetTextColor(unpack(COLOURS.textSecondary))
+    if addon.MULTIROUTE_ENABLED then
 
-    -- Three equal-width buttons across the frame (accounting for 10px left padding + 10px right)
-    local PTB_WIDTH = 60
-    local PTB_HEIGHT = 26
-    local PTB_GAP = 6
+        local petTrainersLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        petTrainersLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
+        petTrainersLabel:SetText("Multiroute:")
+        petTrainersLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
-    local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "KL Pet")
-    ptKalimdor:SetPoint("TOPLEFT", petTrainersLabel, "BOTTOMLEFT", 0, -6)
-    ptKalimdor:SetScript("OnClick", function()
-        addon:RouteMultiDestinationV2(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
-    end)
+        -- Three equal-width buttons across the frame (accounting for 10px left padding + 10px right)
+        local PTB_WIDTH = 60
+        local PTB_HEIGHT = 26
+        local PTB_GAP = 6
 
-    local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "EK Pet")
-    ptEK:SetPoint("LEFT", ptKalimdor, "RIGHT", PTB_GAP, 0)
-    ptEK:SetScript("OnClick", function()
-        addon:RouteMultiDestinationV2(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
-    end)
+        local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "KL Pet")
+        ptKalimdor:SetPoint("TOPLEFT", petTrainersLabel, "BOTTOMLEFT", 0, -6)
+        ptKalimdor:SetScript("OnClick", function()
+            addon:RouteMultiDestinationV2(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
+        end)
 
-    local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "NR Pet")
-    ptNorthrend:SetPoint("LEFT", ptEK, "RIGHT", PTB_GAP, 0)
-    ptNorthrend:SetScript("OnClick", function()
-        addon:RouteMultiDestinationV2(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
-    end)
+        local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "EK Pet")
+        ptEK:SetPoint("LEFT", ptKalimdor, "RIGHT", PTB_GAP, 0)
+        ptEK:SetScript("OnClick", function()
+            addon:RouteMultiDestinationV2(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
+        end)
 
-    local srOutland = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "OL Sky")
-    srOutland:SetPoint("LEFT", ptNorthrend, "RIGHT", PTB_GAP, 0)
-    srOutland:SetScript("OnClick", function()
-        addon:RouteMultiDestinationV2(addon.Skyriding.OUTLAND, "Outland Skyriding Races")
-    end)
+        local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "NR Pet")
+        ptNorthrend:SetPoint("LEFT", ptEK, "RIGHT", PTB_GAP, 0)
+        ptNorthrend:SetScript("OnClick", function()
+            addon:RouteMultiDestinationV2(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
+        end)
 
-    local tomtomBtn = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "TomTom")
-    tomtomBtn:SetPoint("LEFT", srOutland, "RIGHT", PTB_GAP, 0)
-    tomtomBtn:SetScript("OnClick", function()
-        local points, err = addon:GetTomTomWaypoints()
-        if not points then
-            print("[Mapzeroth] " .. (err or "Unknown error reading TomTom waypoints."))
-            return
-        end
-        print(string.format("[Mapzeroth] Routing to %d TomTom waypoint(s)...", #points))
-        addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
-    end)
+        local srOutland = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "OL Sky")
+        srOutland:SetPoint("LEFT", ptNorthrend, "RIGHT", PTB_GAP, 0)
+        srOutland:SetScript("OnClick", function()
+            addon:RouteMultiDestinationV2(addon.Skyriding.OUTLAND, "Outland Skyriding Races")
+        end)
 
-    -- Store references in case we want to show/hide them later
-    frame.ptKalimdor = ptKalimdor
-    frame.ptEK = ptEK
-    frame.ptNorthrend = ptNorthrend
-    frame.srOutland = srOutland
-    frame.tomtomBtn = tomtomBtn
---]]
+        local tomtomBtn = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "TomTom")
+        tomtomBtn:SetPoint("LEFT", srOutland, "RIGHT", PTB_GAP, 0)
+        tomtomBtn:SetScript("OnClick", function()
+            local points, err = addon:GetTomTomWaypoints()
+            if not points then
+                print("[Mapzeroth] " .. (err or "Unknown error reading TomTom waypoints."))
+                return
+            end
+            print(string.format("[Mapzeroth] Routing to %d TomTom waypoint(s)...", #points))
+            addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
+        end)
+
+        -- Store references in case we want to show/hide them later
+        frame.ptKalimdor = ptKalimdor
+        frame.ptEK = ptEK
+        frame.ptNorthrend = ptNorthrend
+        frame.srOutland = srOutland
+        frame.tomtomBtn = tomtomBtn
+    end
     -----------------------------------------------------------
     -- ROUTE DISPLAY CONTAINER (initially hidden)
     -----------------------------------------------------------

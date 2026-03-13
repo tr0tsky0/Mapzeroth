@@ -97,6 +97,12 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         return
     end
 
+    if command == "multi" then
+        addon.MULTIROUTE_ENABLED = not addon.MULTIROUTE_ENABLED
+        print(string.format("[Mapzeroth] Multi-route mode: %s", addon.MULTIROUTE_ENABLED and "Enabled" or "Disabled"))
+        return
+    end
+
     if command == "debug-groups" then
         print("[Mapzeroth] Traversal groups in graph:")
         local groups = {}

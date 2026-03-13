@@ -142,6 +142,12 @@ ns.Nodes.BROKEN_ISLES = {
         x = 0.5430,
         y = 0.2497
     },
+    VALSHARAH_DRUID_DALARAN_PORTAL = {
+        name = "Portal to Dalaran (Broken Isles)",
+        mapID = 747,
+        x = 0.5710,
+        y = 0.4350
+    },
     THE_BROKEN_SHORE = {
         name = "Aalgen Point",
         mapID = 646,
@@ -536,7 +542,6 @@ ns.Nodes.BROKEN_ISLES = {
     }
 }
 
-
 ns.Nodes.TEMPLE_OF_FIVE_DAWNS = {
     PEAK_OF_SERENITY = {
         name = "Peak of Serenity",
@@ -551,7 +556,6 @@ ns.Nodes.TEMPLE_OF_FIVE_DAWNS = {
         y = 0.5722
     }
 }
-
 
 ns.Nodes.EYE_OF_AZSHARA = {
     EYE_OF_AZSHARA_FLIGHT = {
