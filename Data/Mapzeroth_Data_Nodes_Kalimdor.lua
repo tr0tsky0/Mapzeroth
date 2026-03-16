@@ -1087,6 +1087,22 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
         mapArtID = 498,
         x = 0.5590,
         y = 0.4956
+    },
+
+    -- Uldum time phases (Zidormi)
+    ULDUM_ZIDORMI_PAST = {
+        name = "Zidormi (Past Uldum)",
+        mapID = 249,
+        mapArtID = 260,
+        x = 0.5600,
+        y = 0.3514
+    },
+    ULDUM_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Uldum)",
+        mapID = 1527,
+        mapArtID = 1343,
+        x = 0.5600,
+        y = 0.3514
     }
 }
 

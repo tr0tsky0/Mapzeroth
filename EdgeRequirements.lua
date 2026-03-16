@@ -117,6 +117,16 @@ local requirementCheckers = {
         return mapID ~= nil and C_Map.GetMapArtID(mapID) == requiredArtID
     end,
 
+    -- Any quest in a list completed (for faction-specific quest variants)
+    anyQuest = function(questList)
+        for _, questID in ipairs(questList) do
+            if C_QuestLog.IsQuestFlaggedCompleted(questID) then
+                return true
+            end
+        end
+        return false
+    end,
+
     -- Multiple requirements (ANY)
     anyOf = function(subRequirements)
         for requirementType, value in pairs(subRequirements) do

@@ -115,6 +115,10 @@ function addon:ApplyWindowScale(scale)
         addon.RouteExecutionFrame:SetScale(scale)
     end
 
+    if addon.WaypointImporterFrame then
+        addon.WaypointImporterFrame:SetScale(scale)
+    end
+
     if addon.ApplyGPSScale then
         addon:ApplyGPSScale(scale)
     end
@@ -132,6 +136,7 @@ function addon:CreateGUI()
     -- Create main frame (flat material panel)
     local frame = CreateFrame("Frame", "MapzerothMainFrame", UIParent, "BackdropTemplate")
     addon.MapzerothFrame = frame
+    tinsert(UISpecialFrames, "MapzerothMainFrame")
     frame:SetSize(FRAME_WIDTH, FRAME_HEIGHT_COLLAPSED)
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -315,47 +320,22 @@ function addon:CreateGUI()
     frame.clearRouteBtn = clearRouteBtn
 
     -----------------------------------------------------------
-    -- PET TRAINER QUICK-ROUTE BUTTONS
+    -- MULTIROUTE BUTTONS
     -----------------------------------------------------------
 
     if addon.MULTIROUTE_ENABLED then
 
-        local petTrainersLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-        petTrainersLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
-        petTrainersLabel:SetText("Multiroute:")
-        petTrainersLabel:SetTextColor(unpack(COLOURS.textSecondary))
+        local multiLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        multiLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
+        multiLabel:SetText("Multiroute:")
+        multiLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
-        -- Three equal-width buttons across the frame (accounting for 10px left padding + 10px right)
-        local PTB_WIDTH = 60
-        local PTB_HEIGHT = 26
-        local PTB_GAP = 6
+        local MR_WIDTH = 120
+        local MR_HEIGHT = 26
+        local MR_GAP = 6
 
-        local ptKalimdor = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "KL Pet")
-        ptKalimdor:SetPoint("TOPLEFT", petTrainersLabel, "BOTTOMLEFT", 0, -6)
-        ptKalimdor:SetScript("OnClick", function()
-            addon:RouteMultiDestinationV2(addon.PetTrainers.KALIMDOR, "Kalimdor Pet Trainers")
-        end)
-
-        local ptEK = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "EK Pet")
-        ptEK:SetPoint("LEFT", ptKalimdor, "RIGHT", PTB_GAP, 0)
-        ptEK:SetScript("OnClick", function()
-            addon:RouteMultiDestinationV2(addon.PetTrainers.EASTERN_KINGDOMS, "Eastern Kingdoms Pet Trainers")
-        end)
-
-        local ptNorthrend = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "NR Pet")
-        ptNorthrend:SetPoint("LEFT", ptEK, "RIGHT", PTB_GAP, 0)
-        ptNorthrend:SetScript("OnClick", function()
-            addon:RouteMultiDestinationV2(addon.PetTrainers.NORTHREND, "Northrend Pet Trainers")
-        end)
-
-        local srOutland = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "OL Sky")
-        srOutland:SetPoint("LEFT", ptNorthrend, "RIGHT", PTB_GAP, 0)
-        srOutland:SetScript("OnClick", function()
-            addon:RouteMultiDestinationV2(addon.Skyriding.OUTLAND, "Outland Skyriding Races")
-        end)
-
-        local tomtomBtn = CreateFlatButton(frame, PTB_WIDTH, PTB_HEIGHT, "TomTom")
-        tomtomBtn:SetPoint("LEFT", srOutland, "RIGHT", PTB_GAP, 0)
+        local tomtomBtn = CreateFlatButton(frame, MR_WIDTH, MR_HEIGHT, "TomTom")
+        tomtomBtn:SetPoint("TOPLEFT", multiLabel, "BOTTOMLEFT", 0, -6)
         tomtomBtn:SetScript("OnClick", function()
             local points, err = addon:GetTomTomWaypoints()
             if not points then
@@ -366,20 +346,20 @@ function addon:CreateGUI()
             addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
         end)
 
-        -- Store references in case we want to show/hide them later
-        frame.ptKalimdor = ptKalimdor
-        frame.ptEK = ptEK
-        frame.ptNorthrend = ptNorthrend
-        frame.srOutland = srOutland
+        local waypointsBtn = CreateFlatButton(frame, MR_WIDTH, MR_HEIGHT, "Paste Waypoints")
+        waypointsBtn:SetPoint("LEFT", tomtomBtn, "RIGHT", MR_GAP, 0)
+        waypointsBtn:SetScript("OnClick", function()
+            addon:ToggleWaypointImporter()
+        end)
+
         frame.tomtomBtn = tomtomBtn
+        frame.waypointsBtn = waypointsBtn
     end
     -----------------------------------------------------------
     -- ROUTE DISPLAY CONTAINER (initially hidden)
     -----------------------------------------------------------
 
     local routeContainer = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    -- Anchor below the pet trainer buttons, not the selector toggle
-    -- routeContainer:SetPoint("TOPLEFT", ptKalimdor, "BOTTOMLEFT", 0, -10)
     routeContainer:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -10)
     routeContainer:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
     routeContainer:Hide()
@@ -558,6 +538,167 @@ function addon:ToggleAboutFrame()
     else
         frame:Show()
     end
+end
+
+-----------------------------------------------------------
+-- WAYPOINT IMPORTER FRAME
+-----------------------------------------------------------
+
+function addon:CreateWaypointImporter()
+    if addon.WaypointImporterFrame then
+        return addon.WaypointImporterFrame
+    end
+
+    local frame = CreateFrame("Frame", "MapzerothWaypointImporterFrame", UIParent, "BackdropTemplate")
+    addon.WaypointImporterFrame = frame
+    tinsert(UISpecialFrames, "MapzerothWaypointImporterFrame")
+
+    frame:SetSize(360, 300)
+    frame:SetPoint("CENTER", UIParent, "CENTER")
+    frame:SetFrameStrata("DIALOG")
+    frame:SetMovable(true)
+    frame:EnableMouse(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", frame.StartMoving)
+    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+    frame:SetClampedToScreen(true)
+
+    local savedScale = MapzerothDB.settings.windowScale or 1.0
+    frame:SetScale(savedScale)
+
+    frame:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        edgeSize = 8,
+        insets = { left = 2, right = 2, top = 2, bottom = 2 }
+    })
+    frame:SetBackdropColor(unpack(COLOURS.background))
+    frame:SetBackdropBorderColor(unpack(COLOURS.border))
+
+    -- Header bar
+    local headerBar = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    headerBar:SetPoint("TOPLEFT", frame, "TOPLEFT", 6, -6)
+    headerBar:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -6, -6)
+    headerBar:SetHeight(30)
+    headerBar:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8", tile = false })
+    headerBar:SetBackdropColor(unpack(COLOURS.backgroundLight))
+
+    local title = headerBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    title:SetPoint("LEFT", headerBar, "LEFT", 10, 0)
+    title:SetText("Paste Waypoints")
+    title:SetTextColor(unpack(COLOURS.text))
+
+    local closeBtn = CreateCloseButton(headerBar)
+    closeBtn:SetPoint("RIGHT", headerBar, "RIGHT", -4, 0)
+    closeBtn:SetScript("OnClick", function() frame:Hide() end)
+
+    -- Instructions
+    local instructions = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    instructions:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", 6, -10)
+    instructions:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -10, 0)
+    instructions:SetText("Paste waypoints below. Supports Wowhead /way format.\nBest results with ~20 or fewer destinations.")
+    instructions:SetTextColor(unpack(COLOURS.textSecondary))
+    instructions:SetJustifyH("LEFT")
+
+    -- Edit box background
+    local editBg = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    editBg:SetPoint("TOPLEFT", instructions, "BOTTOMLEFT", -2, -8)
+    editBg:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 46)
+    editBg:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        edgeSize = 6,
+        insets = { left = 2, right = 2, top = 2, bottom = 2 }
+    })
+    editBg:SetBackdropColor(0.06, 0.06, 0.06, 1)
+    editBg:SetBackdropBorderColor(unpack(COLOURS.border))
+
+    -- Scroll frame inside the bg
+    local scrollFrame = CreateFrame("ScrollFrame", nil, editBg, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT", editBg, "TOPLEFT", 4, -4)
+    scrollFrame:SetPoint("BOTTOMRIGHT", editBg, "BOTTOMRIGHT", -22, 4)
+
+    local editBox = CreateFrame("EditBox", nil, scrollFrame)
+    editBox:SetMultiLine(true)
+    editBox:SetAutoFocus(false)
+    editBox:SetFontObject("GameFontNormal")
+    editBox:SetWidth(scrollFrame:GetWidth())
+    editBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    editBox:SetScript("OnTextChanged", function(self)
+        self:SetWidth(scrollFrame:GetWidth())
+    end)
+    scrollFrame:SetScrollChild(editBox)
+    frame.editBox = editBox
+
+    -- Route button
+    local routeBtn = CreateFlatButton(frame, 130, 28, "Route Waypoints")
+    routeBtn:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 10)
+    routeBtn:SetScript("OnClick", function()
+        addon:RouteFromPastedWaypoints(frame.editBox:GetText())
+    end)
+
+    -- Clear button
+    local clearBtn = CreateFlatButton(frame, 80, 28, "Clear")
+    clearBtn:SetPoint("LEFT", routeBtn, "RIGHT", 6, 0)
+    clearBtn:SetScript("OnClick", function()
+        frame.editBox:SetText("")
+    end)
+
+    frame:Hide()
+    return frame
+end
+
+function addon:ToggleWaypointImporter()
+    if not addon.WaypointImporterFrame then
+        self:CreateWaypointImporter()
+    end
+    local frame = addon.WaypointImporterFrame
+    if frame:IsShown() then
+        frame:Hide()
+    else
+        frame:Show()
+    end
+end
+
+-- Parses pasted waypoints and kicks off a multi-destination route.
+-- Accepts: /way MapID x y Name  OR  MapID x y Name  (x/y as 0-100 percent, Blizzard format)
+function addon:RouteFromPastedWaypoints(text)
+    if not text or text:match("^%s*$") then
+        print("[Mapzeroth] No waypoints pasted.")
+        return
+    end
+
+    local points = {}
+    for line in text:gmatch("[^\n]+") do
+        line = line:match("^%s*(.-)%s*$") -- trim whitespace
+        if line ~= "" then
+            -- Match: /way [#]MapID x y [Name]  or  [#]MapID x y [Name]
+            -- Accepts both standard (/way 84 x y) and Wowhead (/way #84 x y) formats
+            local mapID, x, y, name = line:match("^/?[Ww]ay%s+#?(%d+)%s+([%d%.]+)%s+([%d%.]+)%s*(.*)")
+            if not mapID then
+                mapID, x, y, name = line:match("^#?(%d+)%s+([%d%.]+)%s+([%d%.]+)%s*(.*)")
+            end
+            if mapID then
+                local idx = #points + 1
+                table.insert(points, {
+                    name = (name and name ~= "") and name or ("Waypoint " .. idx),
+                    mapID = tonumber(mapID),
+                    x = tonumber(x) / 100,
+                    y = tonumber(y) / 100,
+                })
+            end
+        end
+    end
+
+    if #points == 0 then
+        print("[Mapzeroth] No valid waypoints found. Format: /way MapID x y Name")
+        return
+    end
+
+    print(string.format("[Mapzeroth] Routing to %d pasted waypoint(s)...", #points))
+    addon:RouteMultiDestinationV2(points, "Pasted Waypoints")
 end
 
 -----------------------------------------------------------

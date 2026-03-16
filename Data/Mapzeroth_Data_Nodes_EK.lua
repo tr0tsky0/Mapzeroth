@@ -1286,6 +1286,23 @@ ns.Nodes.EK_OVERWORLD = {
         mapArtID = 628,
         x = 0.4812,
         y = 0.0732
+    },
+
+    -- Tirisfal Glades time phases (Zidormi)
+    -- Requires BfA intro: Horde quest 50769 / Alliance quest 47098
+    TIRISFAL_ZIDORMI_PAST = {
+        name = "Zidormi (Past Tirisfal)",
+        mapID = 18,
+        mapArtID = 19,
+        x = 0.6942,
+        y = 0.6269
+    },
+    TIRISFAL_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Tirisfal)",
+        mapID = 2070,
+        mapArtID = 1136,
+        x = 0.6941,
+        y = 0.6274
     }
 }
 

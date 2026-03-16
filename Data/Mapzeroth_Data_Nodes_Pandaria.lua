@@ -423,6 +423,23 @@ ns.Nodes.PANDARIA = {
         mapID = 390, -- Vale of Eternal Blossoms
         x = 0.570,
         y = 0.480
+    },
+
+    -- Vale of Eternal Blossoms time phases (Zidormi)
+    -- Requires N'Zoth assault unlock: quest 58506
+    VALE_ZIDORMI_PAST = {
+        name = "Zidormi (Past Vale of Eternal Blossoms)",
+        mapID = 390,
+        mapArtID = 402,
+        x = 0.8052,
+        y = 0.3192
+    },
+    VALE_ZIDORMI_PRESENT = {
+        name = "Zidormi (Present Vale of Eternal Blossoms)",
+        mapID = 1530,
+        mapArtID = 1342,
+        x = 0.8101,
+        y = 0.2945
     }
 }
 

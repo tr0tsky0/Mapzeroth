@@ -1694,53 +1694,42 @@ ns.Edges = {
 }, 
 -- Time phase switches (Zidormi)
 {
+    from = "TIRISFAL_ZIDORMI_PAST",
+    to = "TIRISFAL_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    requirements = { anyQuest = { 50769, 47098 } }
+}, {
+    from = "VALE_ZIDORMI_PAST",
+    to = "VALE_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60,
+    requirements = { quest = 58506 }
+}, {
+    from = "ULDUM_ZIDORMI_PAST",
+    to = "ULDUM_ZIDORMI_PRESENT",
+    method = "phaseswitch",
+    cost = 60
+}, {
     from = "DARKSHORE_ZIDORMI_PAST",
     to = "DARKSHORE_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
-    oneway = true
-}, {
-    from = "DARKSHORE_ZIDORMI_PRESENT",
-    to = "DARKSHORE_ZIDORMI_PAST",
-    method = "phaseswitch",
-    cost = 60,
-    oneway = true
+    cost = 60
 }, {
     from = "BLASTED_LANDS_ZIDORMI_PAST",
     to = "BLASTED_LANDS_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
-    oneway = true
-}, {
-    from = "BLASTED_LANDS_ZIDORMI_PRESENT",
-    to = "BLASTED_LANDS_ZIDORMI_PAST",
-    method = "phaseswitch",
-    cost = 60,
-    oneway = true
+    cost = 60
 }, {
     from = "SILITHUS_ZIDORMI_PAST",
     to = "SILITHUS_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
-    oneway = true
-}, {
-    from = "SILITHUS_ZIDORMI_PRESENT",
-    to = "SILITHUS_ZIDORMI_PAST",
-    method = "phaseswitch",
-    cost = 60,
-    oneway = true
+    cost = 60
 }, {
     from = "DUSTWALLOW_ZIDORMI_PAST",
     to = "DUSTWALLOW_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
-    oneway = true
-}, {
-    from = "DUSTWALLOW_ZIDORMI_PRESENT",
-    to = "DUSTWALLOW_ZIDORMI_PAST",
-    method = "phaseswitch",
-    cost = 60,
-    oneway = true
+    cost = 60
 }}
 
 -----------------------------------------------------------
