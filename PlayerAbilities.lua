@@ -1536,6 +1536,24 @@ addon.DungeonTeleports = {
         destination = "SEAT_OF_THE_TRIUMVIRATE_DUNGEON"
     },
 
+    TELEPORT_TO_MAISARA_CAVERNS = {
+        id = "TELEPORT_TO_MAISARA_CAVERNS",
+        name = "Path of Cavernous Depths",
+        spellID = 1254559,
+        castTime = 10,
+        cooldown = 28800,
+        destination = "MAISARA_CAVERNS_DUNGEON"
+    },
+
+    TELEPORT_TO_NEXUS_POINT_XENAS = {
+        id = "TELEPORT_TO_NEXUS_POINT_XENAS",
+        name = "Path of the Fracture Core",
+        spellID = 1254563,
+        castTime = 10,
+        cooldown = 28800,
+        destination = "NEXUS_POINT_XENAS_DUNGEON"
+    },
+
     TELEPORT_TO_THE_AZURE_VAULT = {
         id = "TELEPORT_TO_THE_AZURE_VAULT",
         name = "Path of Arcane Secrets",

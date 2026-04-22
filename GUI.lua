@@ -11,7 +11,7 @@ local UIParent = UIParent
 -----------------------------------------------------------
 
 local FRAME_WIDTH = 400
-local FRAME_HEIGHT_COLLAPSED = 170
+local FRAME_HEIGHT_COLLAPSED = 115
 local FRAME_HEIGHT_EXPANDED = 470 -- Will grow dynamically
 local STEP_HEIGHT = 40
 
@@ -273,7 +273,7 @@ function addon:CreateGUI()
 
     -- Clear the fixed size and let it stretch to fill the space
     destinationSelector:ClearAllPoints()
-    destinationSelector:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -68)
+    destinationSelector:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -8)
     destinationSelector:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
 
     destinationSelector:Hide()
@@ -319,42 +319,6 @@ function addon:CreateGUI()
     clearRouteBtn.label:SetTextColor(unpack(COLOURS.textSecondary))
     frame.clearRouteBtn = clearRouteBtn
 
-    -----------------------------------------------------------
-    -- MULTIROUTE BUTTONS
-    -----------------------------------------------------------
-
-    if addon.MULTIROUTE_ENABLED then
-
-        local multiLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-        multiLabel:SetPoint("TOPLEFT", selectorToggleBtn, "BOTTOMLEFT", 0, -12)
-        multiLabel:SetText("Multiroute:")
-        multiLabel:SetTextColor(unpack(COLOURS.textSecondary))
-
-        local MR_WIDTH = 120
-        local MR_HEIGHT = 26
-        local MR_GAP = 6
-
-        local tomtomBtn = CreateFlatButton(frame, MR_WIDTH, MR_HEIGHT, "TomTom")
-        tomtomBtn:SetPoint("TOPLEFT", multiLabel, "BOTTOMLEFT", 0, -6)
-        tomtomBtn:SetScript("OnClick", function()
-            local points, err = addon:GetTomTomWaypoints()
-            if not points then
-                print("[Mapzeroth] " .. (err or "Unknown error reading TomTom waypoints."))
-                return
-            end
-            print(string.format("[Mapzeroth] Routing to %d TomTom waypoint(s)...", #points))
-            addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
-        end)
-
-        local waypointsBtn = CreateFlatButton(frame, MR_WIDTH, MR_HEIGHT, "Paste Waypoints")
-        waypointsBtn:SetPoint("LEFT", tomtomBtn, "RIGHT", MR_GAP, 0)
-        waypointsBtn:SetScript("OnClick", function()
-            addon:ToggleWaypointImporter()
-        end)
-
-        frame.tomtomBtn = tomtomBtn
-        frame.waypointsBtn = waypointsBtn
-    end
     -----------------------------------------------------------
     -- ROUTE DISPLAY CONTAINER (initially hidden)
     -----------------------------------------------------------
@@ -597,7 +561,7 @@ function addon:CreateWaypointImporter()
     local instructions = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     instructions:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", 6, -10)
     instructions:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -10, 0)
-    instructions:SetText("Paste waypoints below. Supports Wowhead /way format.\nBest results with ~20 or fewer destinations.")
+    instructions:SetText("Paste waypoints below. Supports TomTom /way format.\nBest results with ~20 or fewer destinations.")
     instructions:SetTextColor(unpack(COLOURS.textSecondary))
     instructions:SetJustifyH("LEFT")
 

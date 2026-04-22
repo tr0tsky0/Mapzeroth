@@ -172,7 +172,8 @@ function addon:CreateDestinationSelector(parentFrame)
 
     local scrollFrame = CreateFrame("ScrollFrame", nil, selector, "UIPanelScrollFrameTemplate")
     scrollFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -10, -10)
-    scrollFrame:SetPoint("BOTTOMRIGHT", selector, "BOTTOMRIGHT", -30, 10)
+    local scrollBottomPad = addon.MULTIROUTE_ENABLED and 44 or 10
+    scrollFrame:SetPoint("BOTTOMRIGHT", selector, "BOTTOMRIGHT", -30, scrollBottomPad)
 
     local scrollChild = CreateFrame("Frame", nil, scrollFrame)
     scrollChild:SetSize(SELECTOR_WIDTH - 60, 1)
@@ -180,6 +181,62 @@ function addon:CreateDestinationSelector(parentFrame)
 
     selector.scrollFrame = scrollFrame
     selector.scrollChild = scrollChild
+
+    -----------------------------------------------------------
+    -- MULTIROUTE FOOTER
+    -----------------------------------------------------------
+
+    if addon.MULTIROUTE_ENABLED then
+        local divider = selector:CreateTexture(nil, "ARTWORK")
+        divider:SetHeight(1)
+        divider:SetPoint("BOTTOMLEFT", selector, "BOTTOMLEFT", 8, 36)
+        divider:SetPoint("BOTTOMRIGHT", selector, "BOTTOMRIGHT", -8, 36)
+        divider:SetColorTexture(0.3, 0.3, 0.3, 1)
+
+        local multiLabel = selector:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        multiLabel:SetPoint("BOTTOMLEFT", selector, "BOTTOMLEFT", 10, 10)
+        multiLabel:SetText("Multiroute:")
+        multiLabel:SetTextColor(0.7, 0.7, 0.7, 1)
+
+        local function CreateFooterBtn(text)
+            local btn = CreateFrame("Button", nil, selector, "BackdropTemplate")
+            btn:SetSize(110, 20)
+            btn:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8", tile = false })
+            btn:SetBackdropColor(0.1, 0.1, 0.1, 1)
+            local label = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+            label:SetPoint("CENTER")
+            label:SetText(text)
+            label:SetTextColor(0.2, 0.5, 0.9, 1)
+            btn.label = label
+            btn:SetScript("OnEnter", function(self)
+                self:SetBackdropColor(0.2, 0.4, 0.6, 0.5)
+                label:SetTextColor(0.3, 0.6, 1, 1)
+            end)
+            btn:SetScript("OnLeave", function(self)
+                self:SetBackdropColor(0.1, 0.1, 0.1, 1)
+                label:SetTextColor(0.2, 0.5, 0.9, 1)
+            end)
+            return btn
+        end
+
+        local tomtomBtn = CreateFooterBtn("TomTom")
+        tomtomBtn:SetPoint("BOTTOMLEFT", multiLabel, "BOTTOMRIGHT", 6, -4)
+        tomtomBtn:SetScript("OnClick", function()
+            local points, err = addon:GetTomTomWaypoints()
+            if not points then
+                print("[Mapzeroth] " .. (err or "Unknown error reading TomTom waypoints."))
+                return
+            end
+            print(string.format("[Mapzeroth] Routing to %d TomTom waypoint(s)...", #points))
+            addon:RouteMultiDestinationV2(points, "TomTom Waypoints")
+        end)
+
+        local waypointsBtn = CreateFooterBtn("Paste Waypoints")
+        waypointsBtn:SetPoint("LEFT", tomtomBtn, "RIGHT", 6, 0)
+        waypointsBtn:SetScript("OnClick", function()
+            addon:ToggleWaypointImporter()
+        end)
+    end
 
     -----------------------------------------------------------
     -- INITIAL POPULATION
