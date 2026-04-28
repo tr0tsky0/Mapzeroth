@@ -306,16 +306,16 @@ function addon:FindRoute(destinationID, coords)
     -- Find path
     local path, cost, previous = addon:FindPath("_PLAYER_POSITION", destinationID, playerAbilities, synthetic)
 
+    if not path then
+        print("[Mapzeroth] " .. cost)
+        return
+    end
+
     if addon.DEBUG then
         print("[Mapzeroth] Path nodes:")
         for i, nodeID in ipairs(path) do
             print(string.format("  %d: %s", i, nodeID))
         end
-    end
-
-    if not path then
-        print("[Mapzeroth] " .. cost)
-        return
     end
 
     -- Output

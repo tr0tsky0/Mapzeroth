@@ -86,13 +86,24 @@ local function ConsumeUsedAbilities(playerAbilities, legSteps)
         end
     end
 
+    -- Find which shared cooldown groups were triggered this leg
+    local usedGroups = {}
+    for _, ability in ipairs(playerAbilities) do
+        local wasUsed = (ability.itemID and usedItemIDs[ability.itemID]) or
+                            (ability.spellID and usedSpellIDs[ability.spellID])
+        if wasUsed and ability.sharedCooldownGroup and ability.cooldown and ability.cooldown > 0 then
+            usedGroups[ability.sharedCooldownGroup] = true
+        end
+    end
+
     local remaining = {}
     for _, ability in ipairs(playerAbilities) do
         local wasUsed = (ability.itemID and usedItemIDs[ability.itemID]) or
                             (ability.spellID and usedSpellIDs[ability.spellID])
-        -- Only consume if it has a meaningful cooldown
-        if wasUsed and ability.cooldown and ability.cooldown > 0 then
-            -- Drop it — it's on cooldown for the rest of this route
+        local groupConsumed = ability.sharedCooldownGroup and usedGroups[ability.sharedCooldownGroup]
+        -- Drop if it (or its shared cooldown group) was consumed this leg
+        if (wasUsed or groupConsumed) and ability.cooldown and ability.cooldown > 0 then
+            -- on cooldown for the rest of this route
         else
             table.insert(remaining, ability)
         end
@@ -397,9 +408,11 @@ function addon:RouteMultiDestination(trainerList, label)
                 return
             end
 
-            print(string.format("[Mapzeroth] %s (%d stops, est. %.0fs):", label, n, totalCost))
-            for i, idx in ipairs(bestOrder) do
-                print(string.format("  %d. %s", i, trainerList[idx].name))
+            if addon.DEBUG then
+                print(string.format("[Mapzeroth] %s (%d stops, est. %.0fs):", label, n, totalCost))
+                for i, idx in ipairs(bestOrder) do
+                    print(string.format("  %d. %s", i, trainerList[idx].name))
+                end
             end
 
             addon:ShowGPSNavigator(allSteps, totalCost)
@@ -705,7 +718,9 @@ function addon:RouteMultiDestinationV2(trainerList, label)
                 end
             end
 
-            print(string.format("[Mapzeroth] Best start: %s (est. %.0fs total)", bestAnchorName, bestCost))
+            if addon.DEBUG then
+                print(string.format("[Mapzeroth] Best start: %s (est. %.0fs total)", bestAnchorName, bestCost))
+            end
 
             -- Phase 4: stitch legs — identical to V1 from here
             StitchLegsAsync(trainerList, bestOrder, playerAbilities, function(allSteps, totalCost)
@@ -714,9 +729,11 @@ function addon:RouteMultiDestinationV2(trainerList, label)
                     return
                 end
 
-                print(string.format("[Mapzeroth] %s (%d stops, est. %.0fs):", label, n, totalCost))
-                for i, idx in ipairs(bestOrder) do
-                    print(string.format("  %d. %s", i, trainerList[idx].name))
+                if addon.DEBUG then
+                    print(string.format("[Mapzeroth] %s (%d stops, est. %.0fs):", label, n, totalCost))
+                    for i, idx in ipairs(bestOrder) do
+                        print(string.format("  %d. %s", i, trainerList[idx].name))
+                    end
                 end
 
                 addon:ShowGPSNavigator(allSteps, totalCost)

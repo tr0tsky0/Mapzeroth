@@ -34,6 +34,9 @@ addon.NO_FLY_MAPS = {
     [95] = true, -- Ghostlands
     [110] = true, -- Silvermoon City
     [122] = true, -- Isle of Quel'Danas
+    [103] = true, -- Exodar
+    [97] = true, -- Azuremyst Isle
+    [106] = true, -- Bloodmyst Isle
 
     -- Shadowlands
     [1670] = true, -- Oribos
@@ -74,7 +77,7 @@ addon.TRAVEL_COSTS = {
     flight = 120,      -- ~2 minute flight path (average)
     walk = 30,         -- Fallback if distance calc fails
     fly = 10,          -- Fallback if distance calc fails
-    phaseswitch = 60,  -- Talk to Zidormi / timewalker NPC to change time phase
+    phaseswitch = 0,  -- Talk to Zidormi / timewalker NPC to change time phase
 }
 
 -- Travel method icons and text

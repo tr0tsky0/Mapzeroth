@@ -122,7 +122,17 @@ ns.Edges = {
     method = "portal",
     oneway = true,
     requirements = {
-        faction = "Alliance"
+        faction = "Alliance",
+        mapArtID = { 17, 628 }
+    }
+}, {
+    from = "STORMWIND_DARK_PORTAL_BL_NPC",
+    to = "DARK_PORTAL_OUTLANDS",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 17, 18 }
     }
 }, {
     from = "STORMWIND_EXODAR_PORTAL",
@@ -357,11 +367,31 @@ ns.Edges = {
         faction = "Alliance"
     }
 }, {
-    from = "STORMWIND_HARBOR",
-    to = "DARKSHORE",
+    from = "STORMWIND_DARNASSUS_PORTAL",
+    to = "RUTTHERAN_EXODAR_PORTAL",
     method = "portal",
+    oneway = true,
     requirements = {
-        faction = "Alliance"
+        faction = "Alliance",
+        mapArtID = { 62, 67 } -- Darkshore must be in old-phase
+    }
+}, {
+    from = "RUTTHERAN_STORMWIND_PORTAL",
+    to = "STORMWIND_PORTAL_ROOM_LOWER",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 62, 67 } -- Darkshore must be in old-phase
+    }
+}, {
+    from = "STORMWIND_DARNASSUS_PORTAL",
+    to = "DARKSHORE_PORTAL_EXIT",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 62, 1176 } -- Darkshore must be in present-phase
     }
 }, {
     from = "STORMWIND_HARBOR",
@@ -863,14 +893,35 @@ ns.Edges = {
     method = "portal",
     oneway = true,
     requirements = {
-        faction = "Alliance"
+        faction = "Alliance",
+        mapArtID = { 62, 67 }
     }
 }, {
-    from = "RUTTHERAN_VILLAGE_DOCK",
+    -- Old Lor'danel Flight to Teldrassil (old-phase Darkshore only)
+    from = "LORDANEL_FLIGHT_PAST",
+    to = "RUTTHERAN_VILLAGE_FLIGHT",
+    method = "flight",
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 62, 67 }
+    },
+    cost = 60
+}, {
+    from = "RUTTHERAN_VILLAGE_FLIGHT",
+    to = "DARNASSUS_FLIGHT",
+    method = "flight",
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 62, 67 }
+    },
+    cost = 115
+}, {
+    from = "RUTTHERAN_EXODAR_PORTAL",
     to = "AZUREMYST_ISLE_DOCK",
     method = "portal",
     requirements = {
-        faction = "Alliance"
+        faction = "Alliance",
+        mapArtID = { 62, 67 }
     }
 }, -- Valdrakken
 {
@@ -913,10 +964,19 @@ ns.Edges = {
     }
 }, {
     from = "BELAMETH",
-    to = "DARKSHORE",
+    to = "DARKSHORE_BELAMETH_PORTAL_PRESENT",
     method = "portal",
     requirements = {
-        faction = "Alliance"
+        faction = "Alliance",
+        mapArtID = { 62, 1176 }
+    }
+}, {
+    from = "BELAMETH",
+    to = "DARKSHORE_BELAMETH_PORTAL_PAST",
+    method = "portal",
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 62, 67 }
     }
 }, {
     from = "BELANAAR",
@@ -1697,39 +1757,32 @@ ns.Edges = {
     from = "TIRISFAL_ZIDORMI_PAST",
     to = "TIRISFAL_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
     requirements = { anyQuest = { 50769, 47098 } }
 }, {
     from = "VALE_ZIDORMI_PAST",
     to = "VALE_ZIDORMI_PRESENT",
     method = "phaseswitch",
-    cost = 60,
     requirements = { quest = 58506 }
 }, {
     from = "ULDUM_ZIDORMI_PAST",
     to = "ULDUM_ZIDORMI_PRESENT",
-    method = "phaseswitch",
-    cost = 60
+    method = "phaseswitch"
 }, {
     from = "DARKSHORE_ZIDORMI_PAST",
     to = "DARKSHORE_ZIDORMI_PRESENT",
-    method = "phaseswitch",
-    cost = 60
+    method = "phaseswitch"
 }, {
     from = "BLASTED_LANDS_ZIDORMI_PAST",
     to = "BLASTED_LANDS_ZIDORMI_PRESENT",
-    method = "phaseswitch",
-    cost = 60
+    method = "phaseswitch"
 }, {
     from = "SILITHUS_ZIDORMI_PAST",
     to = "SILITHUS_ZIDORMI_PRESENT",
-    method = "phaseswitch",
-    cost = 60
+    method = "phaseswitch"
 }, {
     from = "DUSTWALLOW_ZIDORMI_PAST",
     to = "DUSTWALLOW_ZIDORMI_PRESENT",
-    method = "phaseswitch",
-    cost = 60
+    method = "phaseswitch"
 }}
 
 -----------------------------------------------------------

@@ -252,7 +252,7 @@ function addon:GetAvailableTravelAbilities()
         end
 
         -- Add to available list (handles both single and multi-destination)
-        if hasItem and not onCooldown and (item.destination or item.destinations or isHearthstone) then
+        if hasItem and not onCooldown and (item.destination or item.destinations or item.destinationsByArtID or isHearthstone) then
             local abilityData = {
                 id = id,
                 name = item.name,
@@ -260,6 +260,7 @@ function addon:GetAvailableTravelAbilities()
                 cooldown = item.cooldown,
                 destination = item.destination,
                 destinations = item.destinations,
+                destinationsByArtID = item.destinationsByArtID,
                 type = item.type,
                 itemID = item.itemID
             }
@@ -290,6 +291,7 @@ function addon:GetAvailableTravelAbilities()
                         name = spell.name,
                         destination = spell.destination,
                         destinations = spell.destinations,
+                        destinationsByArtID = spell.destinationsByArtID,
                         castTime = spell.castTime,
                         cooldown = spell.cooldown,
                         type = "spell",
@@ -324,6 +326,7 @@ function addon:GetAvailableTravelAbilities()
                         cooldown = racial.cooldown,
                         destination = racial.destination,
                         destinations = racial.destinations,
+                        destinationsByArtID = racial.destinationsByArtID,
                         type = "racial",
                         spellID = racial.spellID
                     }
@@ -354,7 +357,8 @@ function addon:GetAvailableTravelAbilities()
                     castTime = spell.castTime,
                     cooldown = spell.cooldown,
                     type = "spell",
-                    spellID = spell.spellID
+                    spellID = spell.spellID,
+                    sharedCooldownGroup = "dungeon_teleport",
                 })
             end
         end

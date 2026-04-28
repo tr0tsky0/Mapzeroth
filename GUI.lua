@@ -589,11 +589,13 @@ function addon:CreateWaypointImporter()
     editBox:SetAutoFocus(false)
     editBox:SetFontObject("GameFontNormal")
     editBox:SetWidth(scrollFrame:GetWidth())
+    editBox:SetHeight(scrollFrame:GetHeight())
     editBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
     editBox:SetScript("OnTextChanged", function(self)
         self:SetWidth(scrollFrame:GetWidth())
     end)
     scrollFrame:SetScrollChild(editBox)
+    scrollFrame:SetScript("OnMouseDown", function() editBox:SetFocus() end)
     frame.editBox = editBox
 
     -- Route button
@@ -639,7 +641,7 @@ function addon:RouteFromPastedWaypoints(text)
         line = line:match("^%s*(.-)%s*$") -- trim whitespace
         if line ~= "" then
             -- Match: /way [#]MapID x y [Name]  or  [#]MapID x y [Name]
-            -- Accepts both standard (/way 84 x y) and Wowhead (/way #84 x y) formats
+            -- Accepts both standard (/way 84 x y) and (/way #84 x y) formats
             local mapID, x, y, name = line:match("^/?[Ww]ay%s+#?(%d+)%s+([%d%.]+)%s+([%d%.]+)%s*(.*)")
             if not mapID then
                 mapID, x, y, name = line:match("^#?(%d+)%s+([%d%.]+)%s+([%d%.]+)%s*(.*)")
