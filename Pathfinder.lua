@@ -124,6 +124,36 @@ local function findNodeInHierarchy(hierarchicalGraph, nodeIdentifier)
 end
 
 -----------------------------------------------------------
+-- PHASE-STATE KEYS
+-----------------------------------------------------------
+-- Dijkstra carries a simulated per-map phase snapshot through the priority
+-- queue (see FindPath). A node reached before a phaseswitch and the same
+-- node reached after one are genuinely different search states, so
+-- `visited`/`distances` must key on (nodeID, phase-signature) — not nodeID
+-- alone — or a valid post-phaseswitch path through an already-visited node
+-- gets silently pruned.
+
+local function phaseSignature(phases)
+    if not phases then
+        return ""
+    end
+    local keys = {}
+    for k in pairs(phases) do
+        table.insert(keys, k)
+    end
+    table.sort(keys)
+    local parts = {}
+    for _, k in ipairs(keys) do
+        parts[#parts + 1] = tostring(k) .. "=" .. tostring(phases[k])
+    end
+    return table.concat(parts, ",")
+end
+
+local function stateKey(nodeID, phases)
+    return nodeID .. "|" .. phaseSignature(phases)
+end
+
+-----------------------------------------------------------
 -- BUILD AUGMENTED GRAPH WITH SYNTHETIC EDGES
 -----------------------------------------------------------
 -- This keeps the hierarchy intact and just adds synthetic edges.
@@ -246,57 +276,36 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
         end
     end
 
-    -- Run Dijkstra (phase-aware: each PQ entry carries a simulated phases snapshot)
+    -- Run Dijkstra (phase-aware: each PQ entry carries a simulated phases
+    -- snapshot, and visited/distances are keyed on (nodeID, phase-signature)
+    -- so the same node reached in two different phase states is treated as
+    -- two different search states — see stateKey() above).
     local distances = {}
     local previous = {}
     local visited = {}
     local pq = PriorityQueue:new()
 
-    distances[startNodeID] = 0
-    pq:push({ nodeID = startNodeID, phases = initialPhases }, 0)
+    local startKey = stateKey(startNodeID, initialPhases)
+    distances[startKey] = 0
+    pq:push({ nodeID = startNodeID, phases = initialPhases, key = startKey }, 0)
+
+    local endKey = nil
 
     while not pq:isEmpty() do
         local current, currentDist = pq:pop()
         local currentID = current.nodeID
         local currentPhases = current.phases
+        local currentKey = current.key
 
-        if not visited[currentID] then
-            visited[currentID] = true
-
-            if addon.DEBUG and (currentID == "DARKSHORE_ZIDORMI_PAST" or currentID == "LORDANEL_FLIGHT_PAST" or currentID == "RUTTHERAN_VILLAGE_FLIGHT") then
-                print(string.format("[Mapzeroth] PHASE-VISIT: %s dist=%.0f phases[62]=%s",
-                    currentID, currentDist, tostring(currentPhases[62])))
-            end
+        if not visited[currentKey] then
+            visited[currentKey] = true
 
             if currentID == endNodeID then
+                endKey = currentKey
                 break
             end
 
             local currentNode = findNodeInHierarchy(augmented, currentID)
-
-            if addon.DEBUG and currentID == "LORDANEL_FLIGHT_PAST" and currentNode then
-                print(string.format("[Mapzeroth] LORDANEL has %d edges, phases[62]=%s",
-                    #currentNode.edges, tostring(currentPhases[62])))
-                for _, dbgEdge in ipairs(currentNode.edges) do
-                    local reqOK = addon:CheckEdgeRequirements(dbgEdge, currentPhases)
-                    local dbgNeigh = findNodeInHierarchy(augmented, dbgEdge.to)
-                    local guardOK = "n/a"
-                    if reqOK and dbgNeigh then
-                        if dbgEdge.method ~= "phaseswitch" and dbgNeigh.mapArtID then
-                            local chk = dbgNeigh.phaseCheckMapID or dbgNeigh.mapID
-                            guardOK = tostring(currentPhases[chk] == dbgNeigh.mapArtID)
-                            if dbgEdge.to == "RUTTHERAN_VILLAGE_FLIGHT" then
-                                print(string.format("    [RUTTHERAN] phaseCheckMapID=%s mapID=%s mapArtID=%s chk=%s phases[chk]=%s",
-                                    tostring(dbgNeigh.phaseCheckMapID), tostring(dbgNeigh.mapID),
-                                    tostring(dbgNeigh.mapArtID), tostring(chk), tostring(currentPhases[chk])))
-                            end
-                        else
-                            guardOK = "pass(no guard)"
-                        end
-                    end
-                    print(string.format("  -> %s req=%s guard=%s", dbgEdge.to, tostring(reqOK), guardOK))
-                end
-            end
 
             if currentNode and currentNode.edges then
                 for _, edge in ipairs(currentNode.edges) do
@@ -309,30 +318,47 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
                             -- Node-phase guard: if the neighbor is phase-gated, verify the
                             -- current simulated phase allows entry. Phaseswitch edges are
                             -- exempt — they're the mechanism for entering a new phase.
+                            -- Fails OPEN when the phase snapshot is unknown (nil) for this
+                            -- map, matching BuildSyntheticEdges' fail-open behavior — an
+                            -- unreadable live phase shouldn't make a zone unroutable.
                             local neighborOK = true
                             if edge.method ~= "phaseswitch" and neighborNode.mapArtID then
                                 local checkMap = neighborNode.phaseCheckMapID or neighborNode.mapID
-                                neighborOK = currentPhases[checkMap] == neighborNode.mapArtID
+                                local knownPhase = currentPhases[checkMap]
+                                neighborOK = knownPhase == nil or knownPhase == neighborNode.mapArtID
                             end
 
                             if neighborOK then
 
-                            -- Add loading tax for teleportation methods
+                            -- Add loading tax for teleportation methods (phaseswitch excluded:
+                            -- it's a fade-to-black transition, not a real loading screen)
                             local edgeCost = edge.cost
                             if edge.method == "portal" or edge.method == "teleport" or edge.method == "hearthstone" or
-                                edge.method == "racial" or edge.method == "phaseswitch" then
+                                edge.method == "racial" then
                                 if MapzerothDB and MapzerothDB.settings and MapzerothDB.settings.loadingScreenTax then
                                     edgeCost = edgeCost + MapzerothDB.settings.loadingScreenTax
                                 end
                             end
 
+                            -- Phaseswitch edges update the simulated phase for
+                            -- all subsequent requirement checks on this path.
+                            local neighborPhases = currentPhases
+                            if edge.method == "phaseswitch" and neighborNode.mapArtID then
+                                neighborPhases = {}
+                                for k, v in pairs(currentPhases) do neighborPhases[k] = v end
+                                local phaseKey = neighborNode.phaseCheckMapID or neighborNode.mapID
+                                neighborPhases[phaseKey] = neighborNode.mapArtID
+                            end
+
+                            local neighborKey = stateKey(neighborID, neighborPhases)
                             local newDist = currentDist + edgeCost
-                            local currentNeighborDist = distances[neighborID] or math.huge
+                            local currentNeighborDist = distances[neighborKey] or math.huge
 
                             if newDist < currentNeighborDist then
-                                distances[neighborID] = newDist
-                                previous[neighborID] = {
+                                distances[neighborKey] = newDist
+                                previous[neighborKey] = {
                                     node = currentID,
+                                    parentKey = currentKey,
                                     method = edge.method,
                                     cost = edgeCost,
                                     abilityName = edge.abilityName,
@@ -342,20 +368,7 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
                                     itemType = edge.itemType,
                                     spellID = edge.spellID
                                 }
-                                -- Phaseswitch edges update the simulated phase for
-                                -- all subsequent requirement checks on this path.
-                                local neighborPhases = currentPhases
-                                if edge.method == "phaseswitch" and neighborNode.mapArtID then
-                                    neighborPhases = {}
-                                    for k, v in pairs(currentPhases) do neighborPhases[k] = v end
-                                    local phaseKey = neighborNode.phaseCheckMapID or neighborNode.mapID
-                                    neighborPhases[phaseKey] = neighborNode.mapArtID
-                                    if addon.DEBUG then
-                                        print(string.format("[Mapzeroth] PHASESWITCH: %s -> %s, map %d now artID %d",
-                                            currentID, neighborID, phaseKey, neighborNode.mapArtID))
-                                    end
-                                end
-                                pq:push({ nodeID = neighborID, phases = neighborPhases }, newDist)
+                                pq:push({ nodeID = neighborID, phases = neighborPhases, key = neighborKey }, newDist)
                             end
                             end -- neighborOK
                         elseif not neighborNode then
@@ -371,29 +384,42 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
         end
     end
 
-    if addon.DEBUG then
-        print(string.format("[Mapzeroth] PHASE-TRACE end: ZIDORMI_PAST=%s LORDANEL=%s RUTTHERAN=%s",
-            tostring(distances["DARKSHORE_ZIDORMI_PAST"]),
-            tostring(distances["LORDANEL_FLIGHT_PAST"]),
-            tostring(distances["RUTTHERAN_VILLAGE_FLIGHT"])))
-    end
-
     -- No path found
-    if (distances[endNodeID] or math.huge) == math.huge then
+    if not endKey then
         return nil, string.format("No path found from '%s' to '%s'", startNodeID, endNodeID)
     end
 
-    -- Reconstruct path
+    -- Reconstruct path by walking the composite-state chain backward, but
+    -- emit plain nodeID keys in the returned path/previous tables so
+    -- existing consumers (BuildStepList etc.) are unaffected by the
+    -- internal phase-state tracking.
     local path = {}
-    local current = endNodeID
+    local previousByNode = {}
+    local childNodeID = endNodeID
+    local walkKey = endKey
 
-    while current and current ~= startNodeID do
-        table.insert(path, 1, current)
-        local prev = previous[current]
-        current = prev and prev.node
+    while walkKey do
+        local step = previous[walkKey]
+        if not step then
+            break
+        end
+        table.insert(path, 1, childNodeID)
+        previousByNode[childNodeID] = {
+            node = step.node,
+            method = step.method,
+            cost = step.cost,
+            abilityName = step.abilityName,
+            destinationName = step.destinationName,
+            isSynthetic = step.isSynthetic,
+            itemID = step.itemID,
+            itemType = step.itemType,
+            spellID = step.spellID
+        }
+        childNodeID = step.node
+        walkKey = step.parentKey
     end
 
-    return path, distances[endNodeID], previous
+    return path, distances[endKey], previousByNode
 end
 
 -----------------------------------------------------------

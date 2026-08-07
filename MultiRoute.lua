@@ -470,12 +470,23 @@ local function GetInstantTeleportAnchors(playerAbilities, allowedGroups)
     local seen = {}
 
     for _, ability in ipairs(playerAbilities) do
-        if ability.destination and not seen[ability.destination] then
-            local node, group = NodeLookup(ability.destination)
+        local dest = ability.destination
+
+        -- Timephased single-destination teleports: resolve the live
+        -- destination the same way Pathfinder.BuildSyntheticEdges does,
+        -- so these show up as anchor candidates too.
+        if not dest and ability.destinationsByArtID then
+            local info = ability.destinationsByArtID
+            local currentArt = info.checkMapID and C_Map.GetMapArtID(info.checkMapID)
+            dest = currentArt and info[currentArt]
+        end
+
+        if dest and not seen[dest] then
+            local node, group = NodeLookup(dest)
             if node and node.mapID and node.x and node.y and (not allowedGroups or allowedGroups[group]) then
-                seen[ability.destination] = true
+                seen[dest] = true
                 table.insert(anchors, {
-                    name = (ability.name or "?") .. " → " .. (node.name or ability.destination),
+                    name = (ability.name or "?") .. " → " .. (node.name or dest),
                     mapID = node.mapID,
                     x = node.x,
                     y = node.y

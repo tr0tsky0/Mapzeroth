@@ -208,9 +208,8 @@ function addon:ExplainEdgeRequirements(edge)
         elseif requirementType == "covenant" then
             passed = C_Covenants.GetActiveCovenantID() == value
         elseif requirementType == "mapArtID" then
-            local checkMapID   = value[1] or value.mapID
-            local requiredArtID = value[2] or value.artID
-            passed = checkMapID ~= nil and C_Map.GetMapArtID(checkMapID) == requiredArtID
+            -- Delegate to the single source of truth instead of re-implementing the check.
+            passed = requirementCheckers.mapArtID(value)
         end
 
         table.insert(reasons, string.format("%s: %s", requirementType, passed and "✓" or "✗"))

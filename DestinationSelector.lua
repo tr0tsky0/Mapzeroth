@@ -314,7 +314,7 @@ function addon:RefreshDestinationResults(selector)
             local matchesSearch = true
             if selector.searchText and selector.searchText ~= "" then
                 local lowerName = string.lower(node.name)
-                local lowerDisplayName = string.lower(node.displayName or "")
+                local lowerDisplayName = string.lower(node.displayName)
                 local lowerSearch = string.lower(selector.searchText)
                 matchesSearch = string.find(lowerName, lowerSearch, 1, true) ~= nil or string.find(lowerDisplayName, lowerSearch, 1, true) ~= nil
             end
@@ -322,7 +322,7 @@ function addon:RefreshDestinationResults(selector)
             if matchesCategory and matchesSearch then
                 table.insert(nodeList, {
                     id = nodeID,
-                    name = node.displayName or node.name,
+                    name = node.displayName,
                     category = category
                 })
             end

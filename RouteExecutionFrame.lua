@@ -474,7 +474,16 @@ local function CreateExecutionFrame()
         local viewHeight = scrollFrame:GetHeight()
         local maxScroll = math.max(0, childHeight - viewHeight)
         scrollBar:SetMinMaxValues(0, maxScroll)
-        scrollBar:SetValue(math.min(scrollBar:GetValue(), maxScroll))
+        local clampedValue = math.min(scrollBar:GetValue(), maxScroll)
+        scrollBar:SetValue(clampedValue)
+        -- SetMinMaxValues can silently re-clamp the slider's internal value
+        -- without firing OnValueChanged, and the SetValue above is then a
+        -- no-op if it matches that already-clamped value. Either way the
+        -- scrollFrame's actual scroll position can be left stuck at a stale
+        -- offset from a previous, longer route (blank content until the user
+        -- manually scrolls). Force it in sync directly rather than relying
+        -- on the OnValueChanged callback to propagate it.
+        scrollFrame:SetVerticalScroll(clampedValue)
         -- Hide the bar when content fits without scrolling
         if maxScroll <= 0 then
             scrollBar:Hide()

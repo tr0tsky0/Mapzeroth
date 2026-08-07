@@ -693,7 +693,17 @@ ns.Edges = {
     method = "portal",
     oneway = true,
     requirements = {
-        faction = "Horde"
+        faction = "Horde",
+        mapArtID = { 17, 628 } -- Blasted Lands must be in present-phase (Thrallmar Mage mirrors Honor Hold Mage)
+    }
+}, {
+    from = "ORGRIMMAR_DARK_PORTAL_BL_NPC",
+    to = "DARK_PORTAL_OUTLANDS",
+    method = "portal",
+    oneway = true,
+    requirements = {
+        faction = "Horde",
+        mapArtID = { 17, 18 } -- Blasted Lands must be in past-phase
     }
 }, -- Boralus
 {
@@ -878,7 +888,61 @@ ns.Edges = {
 }, {
     from = "DARK_PORTAL_BL",
     to = "DARK_PORTAL_OUTLANDS",
-    method = "portal"
+    method = "portal",
+    requirements = {
+        mapArtID = { 17, 18 } -- Blasted Lands must be in past-phase; present-phase walkthrough
+                              -- leads to WoD Draenor instead — see the Horde/Alliance edges below.
+    }
+}, {
+    -- Present-phase (628) Horde walkthrough, pre-garrison: drops you in open-world
+    -- Frostfire Ridge, not an instanced scenario (confirmed in-game on Midnight —
+    -- the classic "Assault on the Dark Portal" scenario gate appears bypassed).
+    from = "DARK_PORTAL_BL",
+    to = "DARK_PORTAL_FROSTFIRE_RIDGE",
+    method = "portal",
+    oneway = true, -- return trip from Draenor side untested
+    requirements = {
+        faction = "Horde",
+        mapArtID = { 17, 628 },
+        questNotCompleted = 34378 -- "Establish Your Garrison" (Horde)
+    }
+}, {
+    -- Present-phase (628) Horde walkthrough, post-garrison: drops you at
+    -- Warspear in Ashran, NOT the actual garrison (confirmed in-game — the
+    -- destination is a shared faction hub, not a personal-garrison teleport).
+    from = "DARK_PORTAL_BL",
+    to = "WARSPEAR_ASHRAN",
+    method = "portal",
+    oneway = true, -- return trip from Draenor side untested
+    requirements = {
+        faction = "Horde",
+        mapArtID = { 17, 628 },
+        quest = 34378 -- "Establish Your Garrison" (Horde)
+    }
+}, {
+    -- Present-phase (628) Alliance walkthrough, pre-garrison: drops you in
+    -- open-world Shadowmoon Valley, mirroring the Horde/Frostfire Ridge case.
+    from = "DARK_PORTAL_BL",
+    to = "DARK_PORTAL_SHADOWMOON_VALLEY",
+    method = "portal",
+    oneway = true, -- return trip from Draenor side untested
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 17, 628 },
+        questNotCompleted = 34586 -- "Establish Your Garrison" (Alliance)
+    }
+}, {
+    -- Present-phase (628) Alliance walkthrough, post-garrison: drops you at
+    -- Stormshield in Ashran (Horde's mirror case: Warspear), not the actual garrison.
+    from = "DARK_PORTAL_BL",
+    to = "DARK_PORTAL_STORMSHIELD",
+    method = "portal",
+    oneway = true, -- return trip from Draenor side untested
+    requirements = {
+        faction = "Alliance",
+        mapArtID = { 17, 628 },
+        quest = 34586 -- "Establish Your Garrison" (Alliance)
+    }
 }, {
     from = "DARK_PORTAL_OUTLANDS",
     to = "STORMWIND_PORTAL_ROOM_LOWER",

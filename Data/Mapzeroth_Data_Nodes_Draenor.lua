@@ -20,9 +20,9 @@ ns.Nodes.DRAENOR = {
     LUNARFALL_GARRISON_FLIGHT = {
         name = "Lunarfall Flightmaster",
         category = "city",
-        mapID = 582,
-        x = 0.299,
-        y = 0.339
+        mapID = 582, -- confirmed in-game
+        x = 0.4770,
+        y = 0.4944
     },
     FROSTWALL = {
         name = "Frostwall",
@@ -481,9 +481,38 @@ ns.Nodes.DRAENOR = {
     FROSTWALL_GARRISON_FLIGHT = {
         name = "Frostwall Garrison",
         category = "city",
-        mapID = 590,
-        x = 0.5, -- TBD
-        y = 0.5
+        mapID = 590, -- confirmed in-game
+        x = 0.4572,
+        y = 0.5039
+    },
+    -- Present-phase (628) Dark Portal walkthrough landing spot for Horde players
+    -- who haven't completed "Establish Your Garrison" (34378) yet — open-world
+    -- Frostfire Ridge, not the garrison instance. See DARK_PORTAL_BL edges.
+    DARK_PORTAL_FROSTFIRE_RIDGE = {
+        name = "The Dark Portal",
+        mapID = 525,
+        x = 0.4066,
+        y = 0.6720
+    },
+    -- Present-phase (628) Dark Portal walkthrough landing spot for Alliance
+    -- players who haven't completed "Establish Your Garrison" (34586) yet —
+    -- open-world Shadowmoon Valley. See DARK_PORTAL_BL edges.
+    DARK_PORTAL_SHADOWMOON_VALLEY = {
+        name = "The Dark Portal",
+        mapID = 539,
+        x = 0.2718,
+        y = 0.0788
+    },
+    -- Present-phase (628) Dark Portal walkthrough landing spot for Alliance
+    -- players who HAVE completed "Establish Your Garrison" (34586) — Stormshield,
+    -- same mapID as STORMSHIELD_ASHRAN but a distinctly different spot within it
+    -- (that node's coords are the portal-room arrival point, ~0.3/0.13 away from
+    -- here — this is wherever the Dark Portal walk-through itself drops you).
+    DARK_PORTAL_STORMSHIELD = {
+        name = "The Dark Portal",
+        mapID = 622,
+        x = 0.3171,
+        y = 0.5248
     },
     WORGOL_FLIGHT = {
         name = "Wor'gol",

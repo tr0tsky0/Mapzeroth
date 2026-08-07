@@ -972,7 +972,7 @@ addon.DungeonTeleports = {
     },
 
     TELEPORT_TO_THE_VORTEX_PINNACLE = {
-        id = "TELEPORT_TO_VORTEX_PINNACLE",
+        id = "TELEPORT_TO_THE_VORTEX_PINNACLE",
         name = "Path of Wind's Domain",
         spellID = 410080,
         castTime = 10,

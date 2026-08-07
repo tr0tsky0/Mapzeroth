@@ -77,7 +77,7 @@ addon.TRAVEL_COSTS = {
     flight = 120,      -- ~2 minute flight path (average)
     walk = 30,         -- Fallback if distance calc fails
     fly = 10,          -- Fallback if distance calc fails
-    phaseswitch = 0,  -- Talk to Zidormi / timewalker NPC to change time phase
+    phaseswitch = 10,  -- Talk to Zidormi / timewalker NPC to change time phase (fade-to-black transition, not a real loading screen — no loadingScreenTax)
 }
 
 -- Travel method icons and text
