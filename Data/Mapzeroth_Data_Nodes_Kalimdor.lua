@@ -6,11 +6,29 @@ ns.Nodes = ns.Nodes or {}
 
 ns.Nodes.KALIMDOR_OVERWORLD = {
     -- Alliance Cities & Zones
-    DARKSHORE = {
-        name = "Darkshore",
+    DARKSHORE_BELAMETH_PORTAL_PRESENT = {
+        name = "Portal to Bel'ameth",
         mapID = 62,
+        mapArtID = 1176,
+        phaseCheckMapID = 62,
         x = 0.5362,
         y = 0.1877
+    },
+    DARKSHORE_BELAMETH_PORTAL_PAST = {
+        name = "Portal to Bel'ameth",
+        mapID = 62,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.5362,
+        y = 0.1877
+    },
+    DARKSHORE_PORTAL_EXIT = {
+        name = "Darkshore",
+        mapID = 62,
+        mapArtID = 1176,
+        phaseCheckMapID = 62,
+        x = 0.4595,
+        y = 0.1874   
     },
     FERALAS = {
         name = "Feathermoon Stronghold",
@@ -410,15 +428,35 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
         x = 0.514,
         y = 0.806
     },
-    LORDANEL_FLIGHT = {
+    LORDANEL_FLIGHT_PAST = {
+        name = "Lor'danel Flightmaster",
+        mapID = 62,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.5172,
+        y = 0.1771
+    },
+    LORDANEL_FLIGHT_PRESENT = {
         name = "Lor'danel",
         mapID = 62,
+        mapArtID = 1176,
+        phaseCheckMapID = 62,
         x = 0.515,
         y = 0.193
     },
-    GROVE_OF_THE_ANCIENTS_FLIGHT = {
+    GROVE_OF_THE_ANCIENTS_FLIGHT_PAST = {
         name = "Grove of the Ancients",
         mapID = 62,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.436,
+        y = 0.754
+    },
+    GROVE_OF_THE_ANCIENTS_FLIGHT_PRESENT = {
+        name = "Grove of the Ancients",
+        mapID = 62,
+        mapArtID = 1176,
+        phaseCheckMapID = 62,
         x = 0.436,
         y = 0.754
     },
@@ -1046,6 +1084,7 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
         name = "Zidormi (Past Darkshore)",
         mapID = 62,
         mapArtID = 67,
+        phaseCheckMapID = 62,
         x = 0.4888,
         y = 0.2447
     },
@@ -1053,6 +1092,7 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
         name = "Zidormi (Present Darkshore)",
         mapID = 62,
         mapArtID = 1176,
+        phaseCheckMapID = 62,
         x = 0.4888,
         y = 0.2447
     },
@@ -1093,14 +1133,15 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     ULDUM_ZIDORMI_PAST = {
         name = "Zidormi (Past Uldum)",
         mapID = 249,
-        mapArtID = 260,
+        mapArtID = 289,
         x = 0.5600,
         y = 0.3514
     },
     ULDUM_ZIDORMI_PRESENT = {
         name = "Zidormi (Present Uldum)",
         mapID = 1527,
-        mapArtID = 1343,
+        phaseCheckMapID = 249,
+        mapArtID = 260,
         x = 0.5600,
         y = 0.3514
     }
@@ -1109,14 +1150,18 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
 
 ns.Nodes.TELDRASSIL = {
     DARNASSUS = {
-        name = "Entrance",
+        name = "Darnassus",
         mapID = 89,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
         x = 0.435,
         y = 0.787
     },
     DOLANAAR_FLIGHT = {
         name = "Dolanaar",
         mapID = 57,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
         x = 0.542,
         y = 0.501
     },
@@ -1124,20 +1169,34 @@ ns.Nodes.TELDRASSIL = {
         name = "Flightmaster",
         category = "city",
         mapID = 89,
-        x = 0.270,
-        y = 0.480
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.3667,
+        y = 0.4796
     },
     RUTTHERAN_VILLAGE_FLIGHT = {
         name = "Rut'theran Village",
         mapID = 57,
-        x = 0.115,
-        y = 0.496
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.5539,
+        y = 0.8845
     },
-    RUTTHERAN_VILLAGE_DOCK = {
-        name = "Rut'theran Village Dock",
+    RUTTHERAN_EXODAR_PORTAL = {
+        name = "Portal to Exodar",
         mapID = 57,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
         x = 0.5238,
         y = 0.8947
+    },
+    RUTTHERAN_STORMWIND_PORTAL = {
+        name = "Portal to Stormwind",
+        mapID = 57,
+        mapArtID = 67,
+        phaseCheckMapID = 62,
+        x = 0.5503,
+        y = 0.9363
     }
 }
 

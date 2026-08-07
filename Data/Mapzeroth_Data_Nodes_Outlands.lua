@@ -9,8 +9,8 @@ ns.Nodes.OUTLANDS = {
     DARK_PORTAL_OUTLANDS = {
         name = "The Dark Portal",
         mapID = 100,
-        x = 0.892,
-        y = 0.502
+        x = 0.8923,
+        y = 0.5093
     },
     -- Hub
     SHATTRATH_OUTLANDS = {

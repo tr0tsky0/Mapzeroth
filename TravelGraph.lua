@@ -164,6 +164,7 @@ local function buildGraph(hierarchicalNodes, edgeList)
                 interior = nodeData.interior,
                 mapID = nodeData.mapID,
                 mapArtID = nodeData.mapArtID,
+                phaseCheckMapID = nodeData.phaseCheckMapID,
                 x = nodeData.x,
                 y = nodeData.y,
                 edges = {}

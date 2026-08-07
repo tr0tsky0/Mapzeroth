@@ -111,10 +111,16 @@ local requirementCheckers = {
         return C_Covenants.GetActiveCovenantID() == covenantID
     end,
 
-    -- Time phase requirement: player must be in the specified map art phase
-    mapArtID = function(requiredArtID)
-        local mapID = C_Map.GetBestMapForUnit("player")
-        return mapID ~= nil and C_Map.GetMapArtID(mapID) == requiredArtID
+    -- Time phase requirement: { mapArtID = { mapID, artID } }
+    -- Checks whether the given mapID is currently showing the expected art phase.
+    -- simulatedPhases overrides live values during phase-aware Dijkstra routing.
+    mapArtID = function(param, simulatedPhases)
+        local checkMapID    = param[1] or param.mapID
+        local requiredArtID = param[2] or param.artID
+        if checkMapID == nil then return false end
+        local currentArtID = (simulatedPhases and simulatedPhases[checkMapID])
+                          or C_Map.GetMapArtID(checkMapID)
+        return currentArtID == requiredArtID
     end,
 
     -- Any quest in a list completed (for faction-specific quest variants)
@@ -128,10 +134,10 @@ local requirementCheckers = {
     end,
 
     -- Multiple requirements (ANY)
-    anyOf = function(subRequirements)
+    anyOf = function(subRequirements, simulatedPhases)
         for requirementType, value in pairs(subRequirements) do
             local checker = requirementCheckers[requirementType]
-            if checker and checker(value) then
+            if checker and checker(value, simulatedPhases) then
                 return true
             end
         end
@@ -149,8 +155,10 @@ function addon:OnCalendarReady()
     holidayCache = {}
 end
 
--- Main checker: evaluates all requirements on an edge
-function addon:CheckEdgeRequirements(edge)
+-- Main checker: evaluates all requirements on an edge.
+-- simulatedPhases is an optional { [mapID] = artID } table used during
+-- phase-aware Dijkstra routing to override live C_Map.GetMapArtID values.
+function addon:CheckEdgeRequirements(edge, simulatedPhases)
     if not edge.requirements then
         return true
     end
@@ -164,7 +172,7 @@ function addon:CheckEdgeRequirements(edge)
             return false
         end
 
-        if not checker(value) then
+        if not checker(value, simulatedPhases) then
             return false
         end
     end
@@ -200,8 +208,8 @@ function addon:ExplainEdgeRequirements(edge)
         elseif requirementType == "covenant" then
             passed = C_Covenants.GetActiveCovenantID() == value
         elseif requirementType == "mapArtID" then
-            local mapID = C_Map.GetBestMapForUnit("player")
-            passed = mapID ~= nil and C_Map.GetMapArtID(mapID) == value
+            -- Delegate to the single source of truth instead of re-implementing the check.
+            passed = requirementCheckers.mapArtID(value)
         end
 
         table.insert(reasons, string.format("%s: %s", requirementType, passed and "✓" or "✗"))

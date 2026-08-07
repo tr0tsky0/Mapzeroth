@@ -2,20 +2,46 @@
 -- Categorised, filterable destination picker for Mapzeroth (MATERIAL EDITION)
 local addonName, addon = ...
 
-local CATEGORY_ORDER = {"all", "city", "dungeon", "raid"}
+local CATEGORY_ORDER = {"all", "city", "dungeon", "raid", "favourites"}
 local CATEGORY_LABELS = {
     all = "All",
     city = "Cities",
     dungeon = "Dungeons",
-    raid = "Raids"
+    raid = "Raids",
+    favourites = "|TInterface\\TARGETINGFRAME\\UI-RaidTargetingIcon_1:12:12|t Faves",
 }
 
 local SEARCH_PLACEHOLDERS = {
     all = "Search destinations...",
     city = "Search cities...",
     dungeon = "Search dungeons...",
-    raid = "Search raids..."
+    raid = "Search raids...",
+    favourites = "Search favourites...",
 }
+
+local STAR_TEXTURE = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_1"
+local STAR_SIZE = 14
+
+local function IsFavourite(nodeID)
+    return MapzerothDB and MapzerothDB.favourites and MapzerothDB.favourites[nodeID] == true
+end
+
+local function SetFavourite(nodeID, state)
+    if not MapzerothDB or not MapzerothDB.favourites then return end
+    MapzerothDB.favourites[nodeID] = state or nil
+end
+
+local function UpdateStarTexture(starTex, nodeID)
+    if IsFavourite(nodeID) then
+        starTex:SetDesaturated(false)
+        starTex:SetVertexColor(1, 0.82, 0, 1)
+        starTex:SetAlpha(1)
+    else
+        starTex:SetDesaturated(true)
+        starTex:SetVertexColor(0.5, 0.5, 0.5, 1)
+        starTex:SetAlpha(0.4)
+    end
+end
 
 local SELECTOR_WIDTH = 370
 local SELECTOR_HEIGHT = 300
@@ -262,18 +288,28 @@ function addon:RefreshDestinationResults(selector)
     -- Build filtered node list
     local nodeList = {}
 
-    -- Add waypoint as special first entry
-    table.insert(nodeList, {
-        id = "_WAYPOINT",
-        name = "[WAYPOINT] Active Waypoint",
-        category = nil
-    })
+    -- Add waypoint as special first entry (not shown in favourites tab)
+    if selector.activeCategory ~= "favourites" then
+        table.insert(nodeList, {
+            id = "_WAYPOINT",
+            name = "[WAYPOINT] Active Waypoint",
+            category = nil
+        })
+    end
 
     -- Gather all nodes with filtering
     for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
         for nodeID, node in pairs(groupData) do
             local category = node.category or "other"
-            local matchesCategory = (selector.activeCategory == "all") or (category == selector.activeCategory)
+
+            local matchesCategory
+            if selector.activeCategory == "all" then
+                matchesCategory = true
+            elseif selector.activeCategory == "favourites" then
+                matchesCategory = IsFavourite(nodeID)
+            else
+                matchesCategory = (category == selector.activeCategory)
+            end
 
             local matchesSearch = true
             if selector.searchText and selector.searchText ~= "" then
@@ -286,7 +322,7 @@ function addon:RefreshDestinationResults(selector)
             if matchesCategory and matchesSearch then
                 table.insert(nodeList, {
                     id = nodeID,
-                    name = node.displayName or node.name,
+                    name = node.displayName,
                     category = category
                 })
             end
@@ -319,8 +355,14 @@ function addon:RefreshDestinationResults(selector)
             })
             btn:SetBackdropColor(0, 0, 0, 0) -- Transparent by default
 
+            local starTex = btn:CreateTexture(nil, "OVERLAY")
+            starTex:SetSize(STAR_SIZE, STAR_SIZE)
+            starTex:SetPoint("LEFT", btn, "LEFT", 2, 0)
+            starTex:SetTexture(STAR_TEXTURE)
+            btn.starTex = starTex
+
             local label = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-            label:SetPoint("LEFT", btn, "LEFT", 5, 0)
+            label:SetPoint("LEFT", btn, "LEFT", STAR_SIZE + 6, 0)
             label:SetPoint("RIGHT", btn, "RIGHT", -5, 0)
             label:SetJustifyH("LEFT")
             btn.label = label
@@ -339,12 +381,23 @@ function addon:RefreshDestinationResults(selector)
         -- Update button state
         btn.nodeID = entry.id
         btn.label:SetText(entry.name)
+        if entry.id == "_WAYPOINT" then
+            btn.starTex:Hide()
+        else
+            btn.starTex:Show()
+            UpdateStarTexture(btn.starTex, entry.id)
+        end
         btn:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 0, -yOffset)
         btn:Show()
 
-        -- Click handler (select this destination)
+        -- Click handler: shift-click toggles favourite, plain click selects
         btn:SetScript("OnClick", function(self)
-            addon:SelectDestination(entry.id, entry.name)
+            if IsShiftKeyDown() and entry.id ~= "_WAYPOINT" then
+                SetFavourite(entry.id, not IsFavourite(entry.id))
+                addon:RefreshDestinationResults(selector)
+            else
+                addon:SelectDestination(entry.id, entry.name)
+            end
         end)
 
         yOffset = yOffset + RESULT_BUTTON_HEIGHT + 2

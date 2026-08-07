@@ -150,6 +150,12 @@ ns.Nodes.EK_OVERWORLD = {
         x = 0.650,
         y = 0.323
     },
+    STORMWIND_DARNASSUS_PORTAL = {
+        name = "Portal to Darnassus",
+        mapID = 84,
+        x = 0.2391,
+        y = 0.5602
+    },
     STORMWIND_HARBOR = {
         name = "Harbour",
         mapID = 84,
@@ -942,7 +948,6 @@ ns.Nodes.EK_OVERWORLD = {
         mapID = 35,
         x = 0.5513,
         y = 0.8454,
-        interior = false
     },
     SILVERMOON_CITY_FLIGHT = {
         name = "Silvermoon City Flightmaster",

@@ -306,16 +306,16 @@ function addon:FindRoute(destinationID, coords)
     -- Find path
     local path, cost, previous = addon:FindPath("_PLAYER_POSITION", destinationID, playerAbilities, synthetic)
 
+    if not path then
+        print("[Mapzeroth] " .. cost)
+        return
+    end
+
     if addon.DEBUG then
         print("[Mapzeroth] Path nodes:")
         for i, nodeID in ipairs(path) do
             print(string.format("  %d: %s", i, nodeID))
         end
-    end
-
-    if not path then
-        print("[Mapzeroth] " .. cost)
-        return
     end
 
     -- Output
@@ -472,6 +472,16 @@ function addon:VerifyNodeReferences()
         end
     end
 
+    -- Helper to check timephased destinations (destinationsByArtID tables)
+    local function checkDestinationsByArtID(entry, sourceType)
+        if not entry.destinationsByArtID then return end
+        for key, dest in pairs(entry.destinationsByArtID) do
+            if key ~= "checkMapID" then
+                checkDestination(dest, sourceType)
+            end
+        end
+    end
+
     local abilityCount = 0
 
     -- TravelItems (toys, hearthstones)
@@ -484,6 +494,7 @@ function addon:VerifyNodeReferences()
                     checkDestination(dest, "ability")
                 end
             end
+            checkDestinationsByArtID(item, "ability")
         end
     end
 
@@ -497,6 +508,7 @@ function addon:VerifyNodeReferences()
                     checkDestination(dest, "ability")
                 end
             end
+            checkDestinationsByArtID(spell, "ability")
         end
     end
 
@@ -510,6 +522,7 @@ function addon:VerifyNodeReferences()
                     checkDestination(dest, "ability")
                 end
             end
+            checkDestinationsByArtID(racial, "ability")
         end
     end
 
@@ -523,6 +536,7 @@ function addon:VerifyNodeReferences()
                     checkDestination(dest, "ability")
                 end
             end
+            checkDestinationsByArtID(teleport, "ability")
         end
     end
 

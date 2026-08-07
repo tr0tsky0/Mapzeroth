@@ -124,6 +124,36 @@ local function findNodeInHierarchy(hierarchicalGraph, nodeIdentifier)
 end
 
 -----------------------------------------------------------
+-- PHASE-STATE KEYS
+-----------------------------------------------------------
+-- Dijkstra carries a simulated per-map phase snapshot through the priority
+-- queue (see FindPath). A node reached before a phaseswitch and the same
+-- node reached after one are genuinely different search states, so
+-- `visited`/`distances` must key on (nodeID, phase-signature) — not nodeID
+-- alone — or a valid post-phaseswitch path through an already-visited node
+-- gets silently pruned.
+
+local function phaseSignature(phases)
+    if not phases then
+        return ""
+    end
+    local keys = {}
+    for k in pairs(phases) do
+        table.insert(keys, k)
+    end
+    table.sort(keys)
+    local parts = {}
+    for _, k in ipairs(keys) do
+        parts[#parts + 1] = tostring(k) .. "=" .. tostring(phases[k])
+    end
+    return table.concat(parts, ",")
+end
+
+local function stateKey(nodeID, phases)
+    return nodeID .. "|" .. phaseSignature(phases)
+end
+
+-----------------------------------------------------------
 -- BUILD AUGMENTED GRAPH WITH SYNTHETIC EDGES
 -----------------------------------------------------------
 -- This keeps the hierarchy intact and just adds synthetic edges.
@@ -144,6 +174,8 @@ local function buildAugmentedGraph(baseGraph, syntheticEdges)
                 name = node.name,
                 traversalGroup = node.traversalGroup,
                 mapID = node.mapID,
+                mapArtID = node.mapArtID,
+                phaseCheckMapID = node.phaseCheckMapID,
                 x = node.x,
                 y = node.y,
                 edges = {}
@@ -226,35 +258,80 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
         return {startNodeID}, 0, {}
     end
 
-    -- Run Dijkstra
+    -- Snapshot the current live mapArtID for every phased map in the graph.
+    -- This gives Dijkstra a correct baseline so phase-gated nodes are only
+    -- entered when the simulated phase (or the live snapshot) matches.
+    local initialPhases = {}
+    for _, groupData in pairs(self.TravelGraph.nodes) do
+        for _, node in pairs(groupData) do
+            if node.mapArtID then
+                local mapKey = node.phaseCheckMapID or node.mapID
+                if not initialPhases[mapKey] then
+                    local artID = C_Map.GetMapArtID(mapKey)
+                    if artID then
+                        initialPhases[mapKey] = artID
+                    end
+                end
+            end
+        end
+    end
+
+    -- Run Dijkstra (phase-aware: each PQ entry carries a simulated phases
+    -- snapshot, and visited/distances are keyed on (nodeID, phase-signature)
+    -- so the same node reached in two different phase states is treated as
+    -- two different search states — see stateKey() above).
     local distances = {}
     local previous = {}
     local visited = {}
     local pq = PriorityQueue:new()
 
-    distances[startNodeID] = 0
-    pq:push(startNodeID, 0)
+    local startKey = stateKey(startNodeID, initialPhases)
+    distances[startKey] = 0
+    pq:push({ nodeID = startNodeID, phases = initialPhases, key = startKey }, 0)
+
+    local endKey = nil
 
     while not pq:isEmpty() do
-        local currentID, currentDist = pq:pop()
+        local current, currentDist = pq:pop()
+        local currentID = current.nodeID
+        local currentPhases = current.phases
+        local currentKey = current.key
 
-        if not visited[currentID] then
-            visited[currentID] = true
+        if not visited[currentKey] then
+            visited[currentKey] = true
 
             if currentID == endNodeID then
+                endKey = currentKey
                 break
             end
 
             local currentNode = findNodeInHierarchy(augmented, currentID)
+
             if currentNode and currentNode.edges then
                 for _, edge in ipairs(currentNode.edges) do
-                    if addon:CheckEdgeRequirements(edge) then
+                    if addon:CheckEdgeRequirements(edge, currentPhases) then
 
                         local neighborID = edge.to
                         local neighborNode = findNodeInHierarchy(augmented, neighborID)
 
                         if neighborNode then
-                            -- Add loading tax for teleportation methods
+                            -- Node-phase guard: if the neighbor is phase-gated, verify the
+                            -- current simulated phase allows entry. Phaseswitch edges are
+                            -- exempt — they're the mechanism for entering a new phase.
+                            -- Fails OPEN when the phase snapshot is unknown (nil) for this
+                            -- map, matching BuildSyntheticEdges' fail-open behavior — an
+                            -- unreadable live phase shouldn't make a zone unroutable.
+                            local neighborOK = true
+                            if edge.method ~= "phaseswitch" and neighborNode.mapArtID then
+                                local checkMap = neighborNode.phaseCheckMapID or neighborNode.mapID
+                                local knownPhase = currentPhases[checkMap]
+                                neighborOK = knownPhase == nil or knownPhase == neighborNode.mapArtID
+                            end
+
+                            if neighborOK then
+
+                            -- Add loading tax for teleportation methods (phaseswitch excluded:
+                            -- it's a fade-to-black transition, not a real loading screen)
                             local edgeCost = edge.cost
                             if edge.method == "portal" or edge.method == "teleport" or edge.method == "hearthstone" or
                                 edge.method == "racial" then
@@ -263,13 +340,25 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
                                 end
                             end
 
+                            -- Phaseswitch edges update the simulated phase for
+                            -- all subsequent requirement checks on this path.
+                            local neighborPhases = currentPhases
+                            if edge.method == "phaseswitch" and neighborNode.mapArtID then
+                                neighborPhases = {}
+                                for k, v in pairs(currentPhases) do neighborPhases[k] = v end
+                                local phaseKey = neighborNode.phaseCheckMapID or neighborNode.mapID
+                                neighborPhases[phaseKey] = neighborNode.mapArtID
+                            end
+
+                            local neighborKey = stateKey(neighborID, neighborPhases)
                             local newDist = currentDist + edgeCost
-                            local currentNeighborDist = distances[neighborID] or math.huge
+                            local currentNeighborDist = distances[neighborKey] or math.huge
 
                             if newDist < currentNeighborDist then
-                                distances[neighborID] = newDist
-                                previous[neighborID] = {
+                                distances[neighborKey] = newDist
+                                previous[neighborKey] = {
                                     node = currentID,
+                                    parentKey = currentKey,
                                     method = edge.method,
                                     cost = edgeCost,
                                     abilityName = edge.abilityName,
@@ -279,8 +368,9 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
                                     itemType = edge.itemType,
                                     spellID = edge.spellID
                                 }
-                                pq:push(neighborID, newDist)
+                                pq:push({ nodeID = neighborID, phases = neighborPhases, key = neighborKey }, newDist)
                             end
+                            end -- neighborOK
                         elseif not neighborNode then
                             if addon.DEBUG then
                                 print(string.format(
@@ -295,21 +385,41 @@ function addon:FindPath(startNodeID, endNodeID, playerAbilities, syntheticEdges)
     end
 
     -- No path found
-    if (distances[endNodeID] or math.huge) == math.huge then
+    if not endKey then
         return nil, string.format("No path found from '%s' to '%s'", startNodeID, endNodeID)
     end
 
-    -- Reconstruct path
+    -- Reconstruct path by walking the composite-state chain backward, but
+    -- emit plain nodeID keys in the returned path/previous tables so
+    -- existing consumers (BuildStepList etc.) are unaffected by the
+    -- internal phase-state tracking.
     local path = {}
-    local current = endNodeID
+    local previousByNode = {}
+    local childNodeID = endNodeID
+    local walkKey = endKey
 
-    while current and current ~= startNodeID do
-        table.insert(path, 1, current)
-        local prev = previous[current]
-        current = prev and prev.node
+    while walkKey do
+        local step = previous[walkKey]
+        if not step then
+            break
+        end
+        table.insert(path, 1, childNodeID)
+        previousByNode[childNodeID] = {
+            node = step.node,
+            method = step.method,
+            cost = step.cost,
+            abilityName = step.abilityName,
+            destinationName = step.destinationName,
+            isSynthetic = step.isSynthetic,
+            itemID = step.itemID,
+            itemType = step.itemType,
+            spellID = step.spellID
+        }
+        childNodeID = step.node
+        walkKey = step.parentKey
     end
 
-    return path, distances[endNodeID], previous
+    return path, distances[endKey], previousByNode
 end
 
 -----------------------------------------------------------
@@ -505,6 +615,30 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
                     end
                 end
 
+                -- Timephased single-destination teleports (destination depends on current mapArtID)
+            elseif ability.destinationsByArtID then
+                local info = ability.destinationsByArtID
+                local currentArt = info.checkMapID and C_Map.GetMapArtID(info.checkMapID)
+                local dest = currentArt and info[currentArt]
+                local destNode = dest and self:GetTravelNode(dest)
+                if destNode and acceptableCooldown then
+                    local cost = ability.castTime
+                    if ability.cooldown and ability.cooldown > 0 then
+                        cost = cost - (ability.cooldown / 100000)
+                    end
+                    table.insert(synthetic.edges, {
+                        from = VIRTUAL_START,
+                        to = dest,
+                        method = "teleport",
+                        cost = cost,
+                        abilityName = ability.name,
+                        isSynthetic = true,
+                        itemID = ability.itemID,
+                        itemType = ability.type,
+                        spellID = ability.spellID
+                    })
+                end
+
                 -- Single-destination teleports
             elseif ability.destination then
                 if self:GetTravelNode(ability.destination) then
@@ -596,6 +730,8 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
         local MAX_PLAYER_RANGE = 3000
 
         -- Convert player position to world coordinates once, outside the loop
+        local currentArtID = C_Map.GetMapArtID(playerLocation.mapID)
+        local artIDCache = {}  -- cache per-mapID lookups for phaseCheckMapID nodes
         local _, playerWorld = C_Map.GetWorldPosFromMapPos(playerLocation.mapID,
             CreateVector2D(playerLocation.x, playerLocation.y))
 
@@ -603,24 +739,39 @@ function addon:BuildSyntheticEdges(playerLocation, playerAbilities, optionalWayp
             for traversalGroup, groupData in pairs(self.TravelGraph.nodes) do
                 for nodeID, node in pairs(groupData) do
                     if node.mapID == playerLocation.mapID and node.x and node.y then
-                        local _, nodeWorld = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
+                        -- Skip nodes that belong to a different time phase on this map.
+                        -- phaseCheckMapID lets a node declare its phase is controlled by
+                        -- a different map (e.g. Teldrassil nodes are gated on Darkshore).
+                        local phaseArtID
+                        if node.phaseCheckMapID then
+                            if not artIDCache[node.phaseCheckMapID] then
+                                artIDCache[node.phaseCheckMapID] = C_Map.GetMapArtID(node.phaseCheckMapID)
+                            end
+                            phaseArtID = artIDCache[node.phaseCheckMapID]
+                        else
+                            phaseArtID = currentArtID
+                        end
+                        local wrongPhase = phaseArtID and node.mapArtID and node.mapArtID ~= phaseArtID
+                        if not wrongPhase then
+                            local _, nodeWorld = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
 
-                        if nodeWorld then
-                            local dx = nodeWorld.x - playerWorld.x
-                            local dy = nodeWorld.y - playerWorld.y
-                            local dist = math.sqrt(dx * dx + dy * dy)
+                            if nodeWorld then
+                                local dx = nodeWorld.x - playerWorld.x
+                                local dy = nodeWorld.y - playerWorld.y
+                                local dist = math.sqrt(dx * dx + dy * dy)
 
-                            if dist <= MAX_PLAYER_RANGE then
-                                local travelTime, travelMethod = addon:CalculateTravelToNode(dist, playerLocation.mapID)
-                                -- Interior nodes must be walked to regardless of zone fly rules
-                                local method = node.interior and "walk" or travelMethod
-                                table.insert(synthetic.edges, {
-                                    from = VIRTUAL_START,
-                                    to = nodeID,
-                                    method = method,
-                                    cost = travelTime,
-                                    isSynthetic = true
-                                })
+                                if dist <= MAX_PLAYER_RANGE then
+                                    local travelTime, travelMethod = addon:CalculateTravelToNode(dist, playerLocation.mapID)
+                                    -- Interior nodes must be walked to regardless of zone fly rules
+                                    local method = node.interior and "walk" or travelMethod
+                                    table.insert(synthetic.edges, {
+                                        from = VIRTUAL_START,
+                                        to = nodeID,
+                                        method = method,
+                                        cost = travelTime,
+                                        isSynthetic = true
+                                    })
+                                end
                             end
                         end
                     end

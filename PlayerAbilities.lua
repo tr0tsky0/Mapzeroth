@@ -511,7 +511,12 @@ addon.ClassTeleports = {
         class = "MAGE",
         castTime = 10,
         cooldown = 0,
-        destination = "DARNASSUS",
+        -- Phase controlled by Darkshore (mapID 62): artID 67 = past (intact), 1176 = present (burned)
+        destinationsByArtID = {
+            checkMapID = 62, 
+            [67]   = "DARNASSUS",
+            [1176] = "DARKSHORE_PORTAL_EXIT"
+        },
     },
 
     MAGE_TP_SILVERMOON = {
@@ -575,7 +580,7 @@ addon.ClassTeleports = {
     },
 
     MAGE_TP_SHATTRATH_2 = {
-        id = "MAGE_TP_SHATTRATH_1",
+        id = "MAGE_TP_SHATTRATH_2",
         name = "Teleport: Shattrath",
         spellID = 35715,
         class = "MAGE",
@@ -967,7 +972,7 @@ addon.DungeonTeleports = {
     },
 
     TELEPORT_TO_THE_VORTEX_PINNACLE = {
-        id = "TELEPORT_TO_VORTEX_PINNACLE",
+        id = "TELEPORT_TO_THE_VORTEX_PINNACLE",
         name = "Path of Wind's Domain",
         spellID = 410080,
         castTime = 10,
