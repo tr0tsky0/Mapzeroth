@@ -1,6 +1,7 @@
 -- RouteExecutionFrame.lua
 -- Popup frame with clickable SecureActionButtons for executing routes
 local addonName, addon = ...
+local L = addon.L
 
 local StepUtils = addon.StepUtils
 
@@ -41,11 +42,11 @@ local routeTotalTime = nil
 
 local function ResolveStepTarget(stepData)
     if not stepData then
-        return nil, "No active step"
+        return nil, L["GPS_NO_STEP"]
     end
 
     if stepData.itemID or stepData.spellID then
-        return nil, "Use the current ability/item"
+        return nil, L["ROUTE_USE_CURRENT"]
     end
 
     if stepData.method == "walk" or stepData.method == "fly" then
@@ -54,7 +55,7 @@ local function ResolveStepTarget(stepData)
                 mapID = stepData.waypointData.mapID,
                 x = stepData.waypointData.x,
                 y = stepData.waypointData.y,
-                name = "Waypoint"
+                name = L["GPS_WAYPOINT"]
             }
         end
 
@@ -65,7 +66,7 @@ local function ResolveStepTarget(stepData)
         return StepUtils.ResolveNodeTarget(stepData.fromNodeID)
     end
 
-    return nil, "Complete this step manually"
+    return nil, L["ROUTE_MANUAL_STEP"]
 end
 
 -----------------------------------------------------------
@@ -128,7 +129,7 @@ end
 
 local function SetWaypoint(mapID, x, y, nodeName, method)
     if not mapID or not x or not y then
-        print("[Mapzeroth] Error: Invalid coordinates")
+        print("[Mapzeroth] " .. L["MSG_BAD_COORDS"])
         return false
     end
 
@@ -162,7 +163,7 @@ local function SetWaypoint(mapID, x, y, nodeName, method)
 
         return true
     else
-        print("[Mapzeroth] Failed to set waypoint")
+        print("[Mapzeroth] " .. L["MSG_WAYPOINT_FAIL"])
         return false
     end
 end
@@ -179,15 +180,15 @@ local function UpdateNavigator(frame)
 
     if not routeSteps or #routeSteps == 0 then
         nav.arrow:SetAlpha(0.25)
-        nav.statusText:SetText("No active route")
+        nav.statusText:SetText(L["GPS_NO_ROUTE"])
         nav.distanceText:SetText("")
         return
     end
 
     if currentRouteStep > #routeSteps then
         nav.arrow:SetAlpha(0.25)
-        nav.statusText:SetText("Route completed")
-        nav.distanceText:SetText("All steps done")
+        nav.statusText:SetText(L["ROUTE_COMPLETED"])
+        nav.distanceText:SetText(L["ROUTE_ALL_DONE"])
         return
     end
 
@@ -206,7 +207,7 @@ local function UpdateNavigator(frame)
 
     if not location then
         nav.arrow:SetAlpha(0.25)
-        nav.distanceText:SetText("Player location unavailable")
+        nav.distanceText:SetText(L["GPS_NO_POSITION"])
         nav.detailText:SetText(StepUtils.GetStepActionText(step))
         return
     end
@@ -291,14 +292,14 @@ local function CreateExecutionFrame()
     -- Title
     local title = headerBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("TOPLEFT", headerBar, "TOPLEFT", 10, -6)
-    title:SetText("Route")
+    title:SetText(L["ROUTE_TITLE"])
     title:SetTextColor(unpack(COLOURS.text))
     frame.title = title
 
     -- Hint text (second line)
     local hintText = headerBar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     hintText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -2)
-    hintText:SetText("Click steps with items/spells to use them instantly")
+    hintText:SetText(L["ROUTE_HINT"])
     hintText:SetTextColor(0.5, 0.7, 0.9, 1) -- Subtle blue
     frame.hintText = hintText
 
@@ -347,7 +348,7 @@ local function CreateExecutionFrame()
         self:SetBackdropColor(0.1, 0.2, 0.4, 0.8)
         gpsToggleIcon:SetVertexColor(0.7, 0.9, 1, 1)
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-        GameTooltip:SetText("Toggle GPS Navigator", 1, 1, 1)
+        GameTooltip:SetText(L["ROUTE_TOGGLE_GPS"], 1, 1, 1)
         GameTooltip:Show()
     end)
     gpsToggleBtn:SetScript("OnLeave", function(self)
@@ -550,7 +551,7 @@ local function CreateStepButton(parent, stepData, stepNum)
                         SetWaypoint(clickedStep.waypointData.mapID, clickedStep.waypointData.x,
                             clickedStep.waypointData.y, "Waypoint", clickedStep.method)
                     else
-                        print("[Mapzeroth] Error: No waypoint data")
+                        print("[Mapzeroth] " .. L["MSG_NO_WP_DATA"])
                     end
                     return
                 end

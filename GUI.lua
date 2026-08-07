@@ -1,6 +1,7 @@
 -- GUI.lua
 -- Main interface window for Mapzeroth (MATERIAL DESIGN EDITION)
 local addonName, addon = ...
+local L = addon.L
 
 -- Localise frequently-used globals
 local CreateFrame = CreateFrame
@@ -250,7 +251,7 @@ function addon:CreateGUI()
     -- "Destination:" label
     local destLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     destLabel:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", 10, -12)
-    destLabel:SetText("Destination:")
+    destLabel:SetText(L["UI_DESTINATION"])
     destLabel:SetTextColor(unpack(COLOURS.text))
 
     -- Current selection display
@@ -261,7 +262,7 @@ function addon:CreateGUI()
     frame.selectedDestLabel = selectedDestDisplay
 
     -- Flat "Choose Destination" button
-    local selectorToggleBtn = CreateFlatButton(frame, 140, 26, "Choose Destination")
+    local selectorToggleBtn = CreateFlatButton(frame, 140, 26, L["UI_CHOOSE_DEST"])
     selectorToggleBtn:SetPoint("TOPLEFT", destLabel, "BOTTOMLEFT", 0, -8)
     selectorToggleBtn:SetScript("OnClick", function()
         addon:ToggleDestinationSelector()
@@ -286,7 +287,7 @@ function addon:CreateGUI()
     -- NAVIGATE / SHOW ROUTE BUTTON
     -----------------------------------------------------------
 
-    local navButton = CreateFlatButton(frame, 90, 26, "Navigate")
+    local navButton = CreateFlatButton(frame, 90, 26, L["UI_NAVIGATE"])
     navButton:SetPoint("LEFT", selectorToggleBtn, "RIGHT", 10, 0)
     navButton:SetScript("OnClick", function()
         local steps = addon:GetRouteNavigationState()
@@ -308,7 +309,7 @@ function addon:CreateGUI()
     -- CLEAR ROUTE BUTTON
     -----------------------------------------------------------
 
-    local clearRouteBtn = CreateFlatButton(frame, 90, 26, "Clear Route")
+    local clearRouteBtn = CreateFlatButton(frame, 90, 26, L["UI_CLEAR_ROUTE"])
     clearRouteBtn:SetPoint("LEFT", navButton, "RIGHT", 10, 0)
     clearRouteBtn:SetScript("OnClick", function()
         addon:ClearRoute()
@@ -421,7 +422,7 @@ function addon:CreateAboutFrame()
     -- Links section header
     local linksHeader = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     linksHeader:SetPoint("TOP", frame, "TOP", 0, yOffset)
-    linksHeader:SetText("Community & Support")
+    linksHeader:SetText(L["UI_LINKS_HEADER"])
     linksHeader:SetTextColor(unpack(COLOURS.text))
     yOffset = yOffset - 25
 
@@ -430,7 +431,7 @@ function addon:CreateAboutFrame()
     curseLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
     curseLabel:SetWidth(60)
     curseLabel:SetJustifyH("RIGHT")
-    curseLabel:SetText("Share:")
+    curseLabel:SetText(L["UI_SHARE"])
     curseLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
     local curseBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
@@ -451,7 +452,7 @@ function addon:CreateAboutFrame()
     kofiLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
     kofiLabel:SetWidth(60)
     kofiLabel:SetJustifyH("RIGHT")
-    kofiLabel:SetText("Support:")
+    kofiLabel:SetText(L["UI_SUPPORT"])
     kofiLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
     local kofiBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
@@ -472,13 +473,13 @@ function addon:CreateAboutFrame()
     discordLabel:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, yOffset)
     discordLabel:SetWidth(60)
     discordLabel:SetJustifyH("RIGHT")
-    discordLabel:SetText("Chat:")
+    discordLabel:SetText(L["UI_CHAT"])
     discordLabel:SetTextColor(unpack(COLOURS.textSecondary))
 
     local discordBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
     discordBox:SetSize(220, 20)
     discordBox:SetPoint("LEFT", discordLabel, "RIGHT", 10, 0)
-    discordBox:SetText("Coming soon!")
+    discordBox:SetText(L["UI_COMING_SOON"])
     discordBox:SetAutoFocus(false)
     discordBox:SetTextColor(0.5, 0.5, 0.5, 1)
     discordBox:Disable()
@@ -550,7 +551,7 @@ function addon:CreateWaypointImporter()
 
     local title = headerBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("LEFT", headerBar, "LEFT", 10, 0)
-    title:SetText("Paste Waypoints")
+    title:SetText(L["UI_PASTE_TITLE"])
     title:SetTextColor(unpack(COLOURS.text))
 
     local closeBtn = CreateCloseButton(headerBar)
@@ -561,7 +562,7 @@ function addon:CreateWaypointImporter()
     local instructions = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     instructions:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", 6, -10)
     instructions:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -10, 0)
-    instructions:SetText("Paste waypoints below. Supports TomTom /way format.\nBest results with ~20 or fewer destinations.")
+    instructions:SetText(L["UI_PASTE_HINT"])
     instructions:SetTextColor(unpack(COLOURS.textSecondary))
     instructions:SetJustifyH("LEFT")
 
@@ -597,14 +598,14 @@ function addon:CreateWaypointImporter()
     frame.editBox = editBox
 
     -- Route button
-    local routeBtn = CreateFlatButton(frame, 130, 28, "Route Waypoints")
+    local routeBtn = CreateFlatButton(frame, 130, 28, L["UI_ROUTE_WAYPOINTS"])
     routeBtn:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 10)
     routeBtn:SetScript("OnClick", function()
         addon:RouteFromPastedWaypoints(frame.editBox:GetText())
     end)
 
     -- Clear button
-    local clearBtn = CreateFlatButton(frame, 80, 28, "Clear")
+    local clearBtn = CreateFlatButton(frame, 80, 28, L["UI_CLEAR"])
     clearBtn:SetPoint("LEFT", routeBtn, "RIGHT", 6, 0)
     clearBtn:SetScript("OnClick", function()
         frame.editBox:SetText("")
@@ -679,13 +680,13 @@ function addon:RefreshMainWindowButtons()
     local hasRoute = steps and #steps > 0
 
     if hasRoute then
-        frame.navButton.label:SetText("Show Route")
+        frame.navButton.label:SetText(L["UI_SHOW_ROUTE"])
         frame.navButton.label:SetTextColor(unpack(COLOURS.accent))
         frame.clearRouteBtn:EnableMouse(true)
         frame.clearRouteBtn:SetAlpha(1)
         frame.clearRouteBtn.label:SetTextColor(unpack(COLOURS.accent))
     else
-        frame.navButton.label:SetText("Navigate")
+        frame.navButton.label:SetText(L["UI_NAVIGATE"])
         frame.navButton.label:SetTextColor(unpack(COLOURS.accent))
         frame.clearRouteBtn:EnableMouse(false)
         frame.clearRouteBtn:SetAlpha(0.35)

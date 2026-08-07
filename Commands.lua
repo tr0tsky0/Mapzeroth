@@ -1,6 +1,7 @@
 -- Commands.lua
 -- Slash command handling
 local addonName, addon = ...
+local L = addon.L
 local GUI_ENABLED = true -- Toggle for testing
 
 local function tableCount(t)
@@ -23,11 +24,12 @@ SlashCmdList["MAPZEROTH"] = function(msg)
     command = command:lower()
 
     if command == "" or command == "help" then
-        print("[Mapzeroth] Commands:")
-        print("  /mz route <destination> - Find route to destination node")
-        print("  /mz waypoint (or wp) - Route to active waypoint")
-        print("  /mz toggle (or show/hide) - Toggle Mapzeroth GUI")
-        print("  /mz minimap - Toggle minimap button visibility")
+        print("[Mapzeroth] " .. L["CMD_HEADER"])
+        print(L["CMD_ROUTE"])
+        print(L["CMD_WAYPOINT"])
+        print(L["CMD_TOGGLE"])
+        print(L["CMD_MINIMAP"])
+        print(L["CMD_NAMES"])
         return
     end
 
