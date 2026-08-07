@@ -9,6 +9,7 @@
 --   3. RouteMultiDestination     — entry point called by GUI buttons;
 --                                  stitches per-leg steps into one master list
 local addonName, addon = ...
+local L = addon.L
 
 -- How many Dijkstra pairs to compute per frame tick.
 -- Lower = smoother client, longer wall-clock time.
@@ -362,7 +363,7 @@ function addon:RouteMultiDestination(trainerList, label)
     local n = #trainerList
 
     if n == 0 then
-        print("[Mapzeroth] No destinations in list.")
+        print("[Mapzeroth] " .. L["ROUTE_NO_DEST"])
         return
     end
 
@@ -386,14 +387,14 @@ function addon:RouteMultiDestination(trainerList, label)
         end
 
         if not bestOrder then
-            print("[Mapzeroth] Could not find a valid route. Are you on the right continent?")
+            print("[Mapzeroth] " .. L["ROUTE_NOT_FOUND"])
             return
         end
 
         -- Stitch legs with full abilities, consuming cooldowns as used
         StitchLegsAsync(trainerList, bestOrder, playerAbilities, function(allSteps, totalCost)
             if not allSteps or #allSteps == 0 then
-                print("[Mapzeroth] Route produced no steps.")
+                print("[Mapzeroth] " .. L["ROUTE_NO_STEPS"])
                 return
             end
 
@@ -619,7 +620,7 @@ function addon:RouteMultiDestinationV2(trainerList, label)
     local n = #trainerList
 
     if n == 0 then
-        print("[Mapzeroth] No destinations in list.")
+        print("[Mapzeroth] " .. L["ROUTE_NO_DEST"])
         return
     end
 
@@ -688,7 +689,7 @@ function addon:RouteMultiDestinationV2(trainerList, label)
             end
 
             if not bestOrder then
-                print("[Mapzeroth] Could not find a valid route. Are you on the right continent?")
+                print("[Mapzeroth] " .. L["ROUTE_NOT_FOUND"])
                 return
             end
 
@@ -710,7 +711,7 @@ function addon:RouteMultiDestinationV2(trainerList, label)
             -- Phase 4: stitch legs — identical to V1 from here
             StitchLegsAsync(trainerList, bestOrder, playerAbilities, function(allSteps, totalCost)
                 if not allSteps or #allSteps == 0 then
-                    print("[Mapzeroth] Route produced no steps.")
+                    print("[Mapzeroth] " .. L["ROUTE_NO_STEPS"])
                     return
                 end
 

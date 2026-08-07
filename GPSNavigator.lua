@@ -1,6 +1,7 @@
 -- GPSNavigator.lua
 -- Standalone draggable GPS navigator for active route guidance.
 local addonName, addon = ...
+local L = addon.L
 
 local StepUtils = addon.StepUtils
 
@@ -40,7 +41,7 @@ end
 
 local function ResolveStepTarget(stepData)
     if not stepData then
-        return nil, "No active step"
+        return nil, L["GPS_NO_STEP"]
     end
 
     if stepData.method == "walk" or stepData.method == "fly" then
@@ -49,7 +50,7 @@ local function ResolveStepTarget(stepData)
                 mapID = stepData.waypointData.mapID,
                 x = stepData.waypointData.x,
                 y = stepData.waypointData.y,
-                name = "Waypoint"
+                name = L["GPS_WAYPOINT"]
             }
         end
         return StepUtils.ResolveNodeTarget(stepData.nodeID)
@@ -59,7 +60,7 @@ local function ResolveStepTarget(stepData)
         return StepUtils.ResolveNodeTarget(stepData.nodeID)
     end
 
-    return nil, "Complete current step"
+    return nil, L["GPS_COMPLETE_STEP"]
 end
 
 local function IsModifierDown(modifier)
@@ -233,8 +234,8 @@ local function UpdateGPS()
     gpsFrame.currentStepIndex = currentStep
 
     if not steps or #steps == 0 or not currentStep or currentStep == 0 then
-        gpsFrame.statusText:SetText("No active route")
-        gpsFrame.detailText:SetText("Run navigation to start")
+        gpsFrame.statusText:SetText(L["GPS_NO_ROUTE"])
+        gpsFrame.detailText:SetText(L["GPS_NO_ROUTE_HINT"])
         gpsFrame.distanceText:SetText("")
         gpsFrame.arrow:SetAlpha(0.25)
         UpdateActionButton(nil)
@@ -257,7 +258,7 @@ local function UpdateGPS()
     UpdateActionButton(step)
 
     if not location then
-        gpsFrame.distanceText:SetText("Player location unavailable")
+        gpsFrame.distanceText:SetText(L["GPS_NO_POSITION"])
         gpsFrame.arrow:SetAlpha(0.25)
         return
     end
@@ -312,7 +313,7 @@ local function ShowGPSContextMenu(owner)
 
     if MenuUtil and MenuUtil.CreateContextMenu then
         MenuUtil.CreateContextMenu(owner or gpsFrame, function(_, rootDescription)
-            local previousButton = rootDescription:CreateButton("Previous step", function()
+            local previousButton = rootDescription:CreateButton(L["GPS_PREVIOUS_STEP"], function()
                 if hasPrevious then
                     addon:SetActiveRouteStep(currentStep - 1)
                     UpdateGPS()
@@ -322,7 +323,7 @@ local function ShowGPSContextMenu(owner)
                 previousButton:SetEnabled(hasPrevious)
             end
 
-            local nextButton = rootDescription:CreateButton("Next step", function()
+            local nextButton = rootDescription:CreateButton(L["GPS_NEXT_STEP"], function()
                 if hasNext then
                     addon:SetActiveRouteStep(currentStep + 1)
                     UpdateGPS()
@@ -333,7 +334,7 @@ local function ShowGPSContextMenu(owner)
             end
 
             rootDescription:CreateDivider()
-            rootDescription:CreateButton("Close", function()
+            rootDescription:CreateButton(L["GPS_CLOSE"], function()
                 gpsFrame:Hide()
             end)
         end)
@@ -545,7 +546,7 @@ function addon:InitializeGPSNavigator()
     local titleText = headerBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     titleText:SetPoint("LEFT", headerBar, "LEFT", 8, 0)
     titleText:SetTextColor(0.5, 0.7, 0.9, 1)
-    titleText:SetText("Navigation")
+    titleText:SetText(L["GPS_TITLE"])
     frame.titleText = titleText
 
     -- Close button in the header
@@ -591,7 +592,7 @@ function addon:InitializeGPSNavigator()
         self:SetBackdropColor(0.1, 0.2, 0.4, 0.8)
         routeToggleIcon:SetVertexColor(0.7, 0.9, 1, 1)
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-        GameTooltip:SetText("Toggle Route List", 1, 1, 1)
+        GameTooltip:SetText(L["GPS_TOGGLE_LIST"], 1, 1, 1)
         GameTooltip:Show()
     end)
     routeToggleBtn:SetScript("OnLeave", function(self)

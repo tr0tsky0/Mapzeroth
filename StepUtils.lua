@@ -1,6 +1,7 @@
 -- StepUtils.lua
 -- Shared math and step-resolution utilities used by GPSNavigator and RouteExecutionFrame.
 local addonName, addon = ...
+local L = addon.L
 
 addon.StepUtils = {}
 local S = addon.StepUtils
@@ -71,31 +72,31 @@ end
 -- Format a yard distance for display.
 function S.FormatDistance(distance)
     if not distance then
-        return "Target on another map"
+        return L["GPS_OTHER_MAP"]
     end
 
     if distance >= 1000 then
-        return string.format("%.1f km", distance / 1000)
+        return string.format(L["GPS_DIST_KM"], distance / 1000)
     end
 
-    return string.format("%.0f yd", distance)
+    return string.format(L["GPS_DIST_YD"], distance)
 end
 
 -- Build a one-line description of a route step for UI display.
 function S.GetStepActionText(stepData)
     if not stepData then
-        return "No active step"
+        return L["GPS_NO_STEP"]
     end
 
     if stepData.abilityName then
         if stepData.destinationName then
-            return string.format("Use %s to %s", stepData.abilityName, stepData.destinationName)
+            return string.format(L["GPS_USE_TO"], stepData.abilityName, stepData.destinationName)
         end
-        return string.format("Use %s", stepData.abilityName)
+        return string.format(L["GPS_USE"], stepData.abilityName)
     end
 
-    local methodPrefix = addon.METHOD_DISPLAY_TEXT[stepData.method] or "Go to"
-    return string.format("%s %s", methodPrefix, stepData.destination or "destination")
+    local methodPrefix = addon.METHOD_DISPLAY_TEXT[stepData.method] or L["GPS_GO_TO"]
+    return string.format("%s %s", methodPrefix, stepData.destination or L["GPS_DESTINATION"])
 end
 
 -- Look up a node by ID and return a position table, or nil if not found.
@@ -113,7 +114,7 @@ function S.ResolveNodeTarget(nodeID)
         mapID = node.mapID,
         x     = node.x,
         y     = node.y,
-        name  = node.displayName or node.name or "Target"
+        name  = node.displayName or node.name or L["ROUTE_TARGET"]
     }
 end
 

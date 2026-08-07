@@ -1,20 +1,21 @@
 -- DestinationSelector.lua
 -- Categorised, filterable destination picker for Mapzeroth (MATERIAL EDITION)
 local addonName, addon = ...
+local L = addon.L
 
 local CATEGORY_ORDER = {"all", "city", "dungeon", "raid"}
 local CATEGORY_LABELS = {
-    all = "All",
-    city = "Cities",
-    dungeon = "Dungeons",
-    raid = "Raids"
+    all = L["CAT_ALL"],
+    city = L["CAT_CITIES"],
+    dungeon = L["CAT_DUNGEONS"],
+    raid = L["CAT_RAIDS"]
 }
 
 local SEARCH_PLACEHOLDERS = {
-    all = "Search destinations...",
-    city = "Search cities...",
-    dungeon = "Search dungeons...",
-    raid = "Search raids..."
+    all = L["SEARCH_ALL"],
+    city = L["SEARCH_CITIES"],
+    dungeon = L["SEARCH_DUNGEONS"],
+    raid = L["SEARCH_RAIDS"]
 }
 
 local SELECTOR_WIDTH = 370

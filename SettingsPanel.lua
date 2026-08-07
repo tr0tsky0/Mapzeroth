@@ -1,6 +1,7 @@
 -- SettingsPanel.lua
 -- Mapzeroth settings integration with Interface Options
 local addonName, addon = ...
+local L = addon.L
 
 -----------------------------------------------------------
 -- CREATE SETTINGS PANEL
@@ -22,12 +23,12 @@ local function CreateSettingsPanel()
     -- Title
     local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     title:SetPoint("TOPLEFT", 16, -16)
-    title:SetText("Mapzeroth Settings")
+    title:SetText(L["OPT_TITLE"])
 
     -- Subtitle
     local subtitle = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     subtitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-    subtitle:SetText("Configure travel routing preferences")
+    subtitle:SetText(L["OPT_SUBTITLE"])
 
     -----------------------------------------------------------
     -- LOADING SCREEN TAX SLIDER
@@ -41,7 +42,7 @@ local function CreateSettingsPanel()
     taxSlider:SetWidth(300)
 
     -- Slider label
-    _G[taxSlider:GetName() .. "Text"]:SetText("Loading Screen Delay")
+    _G[taxSlider:GetName() .. "Text"]:SetText(L["OPT_TAX"])
 
     -- Low/High labels
     _G[taxSlider:GetName() .. "Low"]:SetText("0s")
@@ -67,7 +68,7 @@ local function CreateSettingsPanel()
     -- Slider change handler
     taxSlider:SetScript("OnValueChanged", function(self, value)
         value = math.floor(value)
-        self.valueText:SetText(value .. " seconds")
+        self.valueText:SetText(string.format(L["OPT_SECONDS"], value))
 
         -- Update saved variable
         MapzerothDB.settings.loadingScreenTax = value
@@ -88,7 +89,7 @@ local function CreateSettingsPanel()
     cooldownSlider:SetWidth(300)
 
     -- Slider label
-    _G[cooldownSlider:GetName() .. "Text"]:SetText("Max Usable Cooldown")
+    _G[cooldownSlider:GetName() .. "Text"]:SetText(L["OPT_COOLDOWN"])
 
     -- Low/High labels
     _G[cooldownSlider:GetName() .. "Low"]:SetText("1h")
@@ -114,7 +115,7 @@ local function CreateSettingsPanel()
     -- Slider change handler
     cooldownSlider:SetScript("OnValueChanged", function(self, value)
         value = math.floor(value)
-        self.valueText:SetText(value .. " hours")
+        self.valueText:SetText(string.format(L["OPT_HOURS"], value))
 
         -- Update saved variable
         MapzerothDB.settings.maxCooldownValue = value
@@ -135,7 +136,7 @@ local function CreateSettingsPanel()
     scaleSlider:SetWidth(300)
 
     -- Slider label
-    _G[scaleSlider:GetName() .. "Text"]:SetText("Window Scale")
+    _G[scaleSlider:GetName() .. "Text"]:SetText(L["OPT_SCALE"])
 
     -- Low/High labels
     _G[scaleSlider:GetName() .. "Low"]:SetText("75%")
@@ -156,7 +157,7 @@ local function CreateSettingsPanel()
     scaleTooltip:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
     scaleTooltip:SetJustifyH("LEFT")
     scaleTooltip:SetTextColor(0.7, 0.7, 0.7)
-    scaleTooltip:SetText("Adjust the size of all Mapzeroth windows. Changes take effect immediately.")
+    scaleTooltip:SetText(L["OPT_SCALE_TIP"])
 
     -- Slider change handler
     scaleSlider:SetScript("OnValueChanged", function(self, value)
@@ -180,7 +181,7 @@ local function CreateSettingsPanel()
     local minimapCheckbox = CreateFrame("CheckButton", "MapzerothMinimapCheckbox", panel,
         "InterfaceOptionsCheckButtonTemplate")
     minimapCheckbox:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 0, -50)
-    _G[minimapCheckbox:GetName() .. "Text"]:SetText("Show Minimap Button")
+    _G[minimapCheckbox:GetName() .. "Text"]:SetText(L["OPT_MINIMAP"])
     minimapCheckbox:SetChecked(not MapzerothDB.minimap.hide)
 
     minimapCheckbox:SetScript("OnClick", function(self)
@@ -202,7 +203,7 @@ local function CreateSettingsPanel()
 
     local mapClickTitle = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     mapClickTitle:SetPoint("TOPLEFT", minimapCheckbox, "BOTTOMLEFT", 4, -28)
-    mapClickTitle:SetText("Map Click Navigation")
+    mapClickTitle:SetText(L["OPT_MAPCLICK"])
 
     local mapClickDescription = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     mapClickDescription:SetPoint("TOPLEFT", mapClickTitle, "BOTTOMLEFT", 0, -6)
@@ -214,24 +215,24 @@ local function CreateSettingsPanel()
 
     local bindingValue = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     bindingValue:SetPoint("TOPLEFT", mapClickDescription, "BOTTOMLEFT", 0, -10)
-    bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+    bindingValue:SetText(string.format(L["OPT_CURRENT"], addon:GetMapClickBindingLabel()))
 
     local modifierButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
     modifierButton:SetSize(140, 24)
     modifierButton:SetPoint("TOPLEFT", bindingValue, "BOTTOMLEFT", 0, -10)
-    modifierButton:SetText("Change Modifier")
+    modifierButton:SetText(L["OPT_CHANGE_MOD"])
     modifierButton:SetScript("OnClick", function()
         addon:CycleMapClickModifier()
-        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+        bindingValue:SetText(string.format(L["OPT_CURRENT"], addon:GetMapClickBindingLabel()))
     end)
 
     local mouseButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
     mouseButton:SetSize(140, 24)
     mouseButton:SetPoint("LEFT", modifierButton, "RIGHT", 10, 0)
-    mouseButton:SetText("Change Mouse")
+    mouseButton:SetText(L["OPT_CHANGE_MOUSE"])
     mouseButton:SetScript("OnClick", function()
         addon:CycleMapClickMouseButton()
-        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+        bindingValue:SetText(string.format(L["OPT_CURRENT"], addon:GetMapClickBindingLabel()))
     end)
 
     -----------------------------------------------------------
@@ -242,11 +243,11 @@ local function CreateSettingsPanel()
         -- Load saved values
         local tax = MapzerothDB.settings.loadingScreenTax or 10
         taxSlider:SetValue(tax)
-        taxValue:SetText(tax .. " seconds")
+        taxValue:SetText(string.format(L["OPT_SECONDS"], tax))
 
         local cooldown = MapzerothDB.settings.maxCooldownValue or 8
         cooldownSlider:SetValue(cooldown)
-        cooldownValue:SetText(cooldown .. " hours")
+        cooldownValue:SetText(string.format(L["OPT_HOURS"], cooldown))
 
         local scale = MapzerothDB.settings.windowScale or 1.0
         scaleSlider:SetValue(scale)
@@ -255,7 +256,7 @@ local function CreateSettingsPanel()
         -- Minimap button
         local minimapShown = not (MapzerothDB.minimap and MapzerothDB.minimap.hide)
         minimapCheckbox:SetChecked(minimapShown)
-        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+        bindingValue:SetText(string.format(L["OPT_CURRENT"], addon:GetMapClickBindingLabel()))
     end
 
     -----------------------------------------------------------
@@ -277,7 +278,7 @@ local function CreateSettingsPanel()
         MapzerothDB.settings.mapClickMouseButton = "LeftButton"
         addon:ApplyWindowScale(1.0)
         addon:ShowMinimapButton()
-        bindingValue:SetText("Current: " .. addon:GetMapClickBindingLabel())
+        bindingValue:SetText(string.format(L["OPT_CURRENT"], addon:GetMapClickBindingLabel()))
 
         print("[Mapzeroth] Settings reset to defaults")
     end

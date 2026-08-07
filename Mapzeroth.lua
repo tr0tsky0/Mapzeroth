@@ -56,7 +56,7 @@ frame:SetScript("OnEvent", function(self, event)
         addon:InitializeGPSNavigator()
         -- Initialize settings panel
         addon:InitializeSettingsPanel()
-        print("[Mapzeroth] Loaded successfully! Type /mapzeroth help for commands.")
+        print("[Mapzeroth] " .. addon.L["LOADED"])
     elseif event == "BAG_UPDATE_DELAYED" then
         addon.bagsFullyLoaded = true
 

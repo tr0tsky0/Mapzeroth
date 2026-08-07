@@ -15,6 +15,9 @@ Libs\CallbackHandler-1.0.lua
 Libs\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0.lua
 
+# Localisation (must load before anything that reads addon.L)
+Locales.lua
+
 # Core data and systems
 Constants.lua
 Data\Mapzeroth_Data_Nodes_EK.lua
@@ -36,6 +39,7 @@ PetTrainers.lua
 MapNames.lua
 PlayerAbilities.lua
 TravelGraph.lua
+NodeNames.lua
 EdgeRequirements.lua
 Pathfinder.lua
 MultiRoute.lua

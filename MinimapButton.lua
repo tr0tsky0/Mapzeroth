@@ -1,6 +1,7 @@
 -- MinimapButton.lua
 -- Minimap button integration using LibDBIcon
 local addonName, addon = ...
+local L = addon.L
 
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
@@ -29,11 +30,11 @@ local MapzerothLDB = LDB:NewDataObject("Mapzeroth", {
     end,
     OnTooltipShow = function(tooltip)
         tooltip:SetText("|cff00ccffMapzeroth|r")
-        tooltip:AddLine("Google Maps for Azeroth", 1, 1, 1)
+        tooltip:AddLine(L["MM_TAGLINE"], 1, 1, 1)
         tooltip:AddLine(" ")
-        tooltip:AddLine("|cffaaaaaa< Left-Click >|r Toggle window", 0.2, 1, 0.2)
-        tooltip:AddLine("|cffaaaaaa< Right-Click >|r Settings (coming soon)", 0.2, 1, 0.2)
-        tooltip:AddLine("|cffaaaaaa< Drag >|r Move button", 0.2, 1, 0.2)
+        tooltip:AddLine(L["MM_LEFTCLICK"], 0.2, 1, 0.2)
+        tooltip:AddLine(L["MM_RIGHTCLICK"], 0.2, 1, 0.2)
+        tooltip:AddLine(L["MM_DRAG"], 0.2, 1, 0.2)
     end
 })
 

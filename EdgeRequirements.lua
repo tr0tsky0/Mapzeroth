@@ -191,7 +191,8 @@ function addon:ExplainEdgeRequirements(edge)
         elseif requirementType == "maxLevel" then
             passed = UnitLevel("player") <= value
         elseif requirementType == "class" then
-            passed = UnitClass("player") == value
+            -- the token, not the localised name UnitClass returns first
+            passed = select(2, UnitClass("player")) == value
         elseif requirementType == "faction" then
             passed = UnitFactionGroup("player") == value
         elseif requirementType == "reputation" then

@@ -3,6 +3,7 @@
 -- Used by TravelGraph, LocationService, WaypointService, and pathfinding
 
 local addonName, addon = ...
+local L = addon.L
 
 -----------------------------------------------------------
 -- TRAVEL SPEEDS (yards per second)
@@ -92,16 +93,16 @@ addon.TRAVEL_ICONS = {
 }
 
 addon.METHOD_DISPLAY_TEXT = {
-    portal = "Take portal to",
-    ship = "Take ship to",
-    tram = "Take tram to",
-    flight = "Take flight path to",
-    fly = "Fly to",
-    walk = "Walk to",
-    teleport = "Teleport to",
-    hearthstone = "Hearth to",
-    racial = "Use",
-    phaseswitch = "Change time phase to",
+    portal = L["METHOD_PORTAL"],
+    ship = L["METHOD_SHIP"],
+    tram = L["METHOD_TRAM"],
+    flight = L["METHOD_FLIGHT"],
+    fly = L["METHOD_FLY"],
+    walk = L["METHOD_WALK"],
+    teleport = L["METHOD_TELEPORT"],
+    hearthstone = L["METHOD_HEARTHSTONE"],
+    racial = L["METHOD_RACIAL"],
+    phaseswitch = L["METHOD_PHASESWITCH"],
 }
 
 addon.HOLIDAYS = {

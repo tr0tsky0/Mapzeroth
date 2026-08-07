@@ -2,6 +2,7 @@
 -- Automatically enriches node names with zone information
 -- e.g. "Goldshire" becomes "Goldshire, Elwynn Forest"
 local addonName, addon = ...
+local L = addon.L
 
 local MapNames = {}
 
@@ -53,8 +54,12 @@ local function FormatDisplayName(nodeName, zoneName)
     
     -- Avoid "Stormwind Harbour, Stormwind City" → just "Stormwind Harbour"
     -- Extract the first word from node name and check against zone name
+    -- The word has to be long enough to mean something. %w is ASCII only,
+    -- so a name starting with an accented letter ("Höhle des Wehklagens")
+    -- captures just "H", and a single letter is found in nearly every zone
+    -- name - which would swallow the zone suffix almost everywhere.
     local firstWord = nodeName:match("^([%w']+)")
-    if firstWord and lowerZoneName:find(firstWord:lower(), 1, true) then
+    if firstWord and #firstWord >= 4 and lowerZoneName:find(firstWord:lower(), 1, true) then
         return nodeName
     end
     
@@ -102,5 +107,13 @@ end
 -----------------------------------------------------------
 -- EXPORT
 -----------------------------------------------------------
+
+-- Same rule as EnrichNodes, for a single name. NodeNames.lua calls this
+-- after it has replaced a node's name with the client's own wording, so
+-- the zone suffix is rebuilt from the new name instead of keeping the
+-- one computed from the English original.
+function MapNames:BuildDisplayName(nodeName, mapID)
+    return FormatDisplayName(nodeName, GetZoneNameForMap(mapID))
+end
 
 addon.MapNames = MapNames
