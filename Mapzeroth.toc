@@ -39,6 +39,7 @@ PetTrainers.lua
 MapNames.lua
 PlayerAbilities.lua
 TravelGraph.lua
+NodeNames.lua
 EdgeRequirements.lua
 Pathfinder.lua
 MultiRoute.lua

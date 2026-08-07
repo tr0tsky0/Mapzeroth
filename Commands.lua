@@ -30,6 +30,7 @@ SlashCmdList["MAPZEROTH"] = function(msg)
         print(L["CMD_TOGGLE"])
         print(L["CMD_MINIMAP"])
         print(L["CMD_NAMES"])
+        print(L["CMD_NAMES"])
         return
     end
 
@@ -90,6 +91,16 @@ SlashCmdList["MAPZEROTH"] = function(msg)
 
     if command == "stats" then
         addon:ShowStats()
+        return
+    end
+
+    -- How many node names the client could supply itself, and which ones
+    -- are still on the English original. When adding a locale, whatever
+    -- this lists is what needs a NodeNameOverrides entry.
+    if command == "names" then
+        if addon.NodeNames then
+            addon.NodeNames:Report()
+        end
         return
     end
 
