@@ -1133,14 +1133,15 @@ ns.Nodes.KALIMDOR_OVERWORLD = {
     ULDUM_ZIDORMI_PAST = {
         name = "Zidormi (Past Uldum)",
         mapID = 249,
-        mapArtID = 260,
+        mapArtID = 289,
         x = 0.5600,
         y = 0.3514
     },
     ULDUM_ZIDORMI_PRESENT = {
         name = "Zidormi (Present Uldum)",
         mapID = 1527,
-        mapArtID = 1343,
+        phaseCheckMapID = 249,
+        mapArtID = 260,
         x = 0.5600,
         y = 0.3514
     }
