@@ -1,8 +1,8 @@
-## Interface: 120005
+## Interface: 120100
 ## Title: Mapzeroth
 ## Notes: Intelligent travel routing addon
 ## Author: tr0tsky
-## Version: 1.5.1
+## Version: 1.6.0
 ## SavedVariables: MapzerothDB
 ## AddonCompartmentFunc: Mapzeroth_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: Mapzeroth_OnAddonCompartmentEnter
