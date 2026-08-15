@@ -997,6 +997,18 @@ ns.Nodes.EK_OVERWORLD = {
         x = 0.5641,
         y = 0.7077
     },
+    SILVERMOON_MAGISTERS_PORTAL = {
+        name = "Portal to Magisters' Terrace",
+        mapID = 2393,
+        x = 0.4798,
+        y = 0.5181
+    },
+    MAGISTERS_SILVERMOON_PORTAL = {
+        name = "Portal to Silvermoon City",
+        mapID = 2649,
+        x = 0.5646,
+        y = 0.1400
+    },
     FAIRBREEZE_VILLAGE_FLIGHT = {
         name = "Fairbreeze Village Flightmaster",
         mapID = 2395,
@@ -1062,6 +1074,48 @@ ns.Nodes.EK_OVERWORLD = {
         mapID = 2424,
         x = 0.5762,
         y = 0.3382
+    },
+    TOKKAS_LANDING_FLIGHT = {
+        name = "Tokka's Landing",
+        mapID = 2512,
+        x = 0.5788,
+        y = 0.4576
+    },
+    AMANI_FOOTHOLD_FLIGHT = {
+        name = "Amani Foothold",
+        mapID = 2509,
+        x = 0.4439,
+        y = 0.6236
+    },
+    AMANI_FOOTHOLD_FLIGHT_2 = {
+        name = "Amani Foothold Windcaller",
+        mapID = 2509,
+        x = 0.4999,
+        y = 0.6189
+    },
+    NORTHERN_AMANI_BULWARK_FLIGHT = {
+        name = "Northern Amani Bulwark Windcaller",
+        mapID = 2509,
+        x = 0.4153,
+        y = 0.2341
+    },
+    EASTERN_AMANI_OUTPOST_FLIGHT = {
+        name = "Eastern Amani Outpost Windcaller",
+        mapID = 2509,
+        x = 0.5431,
+        y = 0.3947
+    },
+    THE_VENOMOUS_ABYSS_FLIGHT = {
+        name = "The Venomous Abyss Windcaller",
+        mapID = 2509,
+        x = 0.4845,
+        y = 0.2704
+    },
+    THE_UNDERBELLY_FLIGHT = {
+        name = "The Underbelly Windcaller",
+        mapID = 2509,
+        x = 0.4557,
+        y = 0.1165
     },
     -- Dungeons
     SHADOWFANG_KEEP_DUNGEON = {
@@ -1233,6 +1287,13 @@ ns.Nodes.EK_OVERWORLD = {
         x = 0.6331,
         y = 0.1527
     },
+    ALTAR_OF_FANGS_DUNGEON = {
+        name = "Altar of Fangs",
+        category = "dungeon",
+        mapID = 2509, -- Vaults of Atal'Utek
+        x = 0.4723,
+        y = 0.6843
+    },
     -- Raids
     MOLTEN_CORE_RAID = {
         name = "Molten Core",
@@ -1275,6 +1336,13 @@ ns.Nodes.EK_OVERWORLD = {
         mapID = 2424,
         x = 0.5230,
         y = 0.8537
+    },
+    THE_VENOMOUS_ABYSS_RAID = {
+        name = "The Venomous Abyss",
+        category = "raid",
+        mapID = 2509,
+        x = 0.4739,
+        y = 0.2303
     },
 
     -- Blasted Lands time phases (Zidormi)

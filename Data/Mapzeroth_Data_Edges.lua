@@ -1720,6 +1720,21 @@ ns.Edges = {
     requirements = {
         quest = 86510
     }
+}, {
+    from = "SILVERMOON_MAGISTERS_PORTAL",
+    to = "MAGISTERS_SILVERMOON_PORTAL",
+    method = "portal",
+    oneway = true
+}, {
+    from = "MAGISTERS_SILVERMOON_PORTAL",
+    to = "SILVERMOON_STORMWIND_PORTAL",
+    method = "portal",
+    oneway = true
+}, {
+    from = "TOKKAS_LANDING_FLIGHT",
+    to = "AMANI_FOOTHOLD_FLIGHT",
+    method = "flight",
+    cost = 86
 }, { -- DRUID EMERALD DREAMWAY
     from = "EMERALD_DREAMWAY",
     to = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",

@@ -453,6 +453,16 @@ addon.TravelItems = {
         castTime = 8,
         cooldown = 0,
         destination = "LOAKNIT_DEN_ZUL_AMAN"
+    },
+
+    POTION_OF_VENOMOUS_RETURN = {
+        id = "VENOMOUS_RETURN",
+        name = "Potion of Venomous Return",
+        itemID = 279550,
+        type = "inventory_item",
+        castTime = 1.5,
+        cooldown = 300,
+        destination = "AMANI_FOOTHOLD_FLIGHT"
     }
 }
 
