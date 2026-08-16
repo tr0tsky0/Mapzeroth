@@ -54,7 +54,10 @@ addon.NO_FLY_MAPS = {
     
     -- The War Within
     [2346] = true, -- Undermine (11.1)
-    
+
+    -- Midnight
+    [2509] = true, -- Coiled Isle / Vaults of Atal'Utek (12.1) - mount-only, no flying
+
     -- Misc
     [407] = true,  -- Darkmoon Island
 }
