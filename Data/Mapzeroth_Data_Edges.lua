@@ -1735,6 +1735,56 @@ ns.Edges = {
     to = "AMANI_FOOTHOLD_FLIGHT",
     method = "flight",
     cost = 86
+}, { -- COILED ISLE WINDCALLER NETWORK
+    from = "AMANI_FOOTHOLD_FLIGHT",
+    to = "NORTHERN_AMANI_BULWARK_FLIGHT",
+    method = "flight",
+    cost = 33
+}, {
+    from = "AMANI_FOOTHOLD_FLIGHT",
+    to = "EASTERN_AMANI_OUTPOST_FLIGHT",
+    method = "flight",
+    cost = 22
+}, {
+    from = "AMANI_FOOTHOLD_FLIGHT",
+    to = "THE_VENOMOUS_ABYSS_FLIGHT",
+    method = "flight",
+    cost = 27
+}, {
+    from = "AMANI_FOOTHOLD_FLIGHT",
+    to = "THE_UNDERBELLY_FLIGHT",
+    method = "flight",
+    cost = 43
+}, {
+    from = "NORTHERN_AMANI_BULWARK_FLIGHT",
+    to = "EASTERN_AMANI_OUTPOST_FLIGHT",
+    method = "flight",
+    cost = 21
+}, {
+    from = "NORTHERN_AMANI_BULWARK_FLIGHT",
+    to = "THE_VENOMOUS_ABYSS_FLIGHT",
+    method = "flight",
+    cost = 8
+}, {
+    from = "NORTHERN_AMANI_BULWARK_FLIGHT",
+    to = "THE_UNDERBELLY_FLIGHT",
+    method = "flight",
+    cost = 10
+}, {
+    from = "EASTERN_AMANI_OUTPOST_FLIGHT",
+    to = "THE_VENOMOUS_ABYSS_FLIGHT",
+    method = "flight",
+    cost = 15
+}, {
+    from = "EASTERN_AMANI_OUTPOST_FLIGHT",
+    to = "THE_UNDERBELLY_FLIGHT",
+    method = "flight",
+    cost = 32
+}, {
+    from = "THE_VENOMOUS_ABYSS_FLIGHT",
+    to = "THE_UNDERBELLY_FLIGHT",
+    method = "flight",
+    cost = 19
 }, { -- DRUID EMERALD DREAMWAY
     from = "EMERALD_DREAMWAY",
     to = "EMERALD_DREAMWAY_MOONGLADE_PORTAL",
