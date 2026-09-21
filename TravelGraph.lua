@@ -67,6 +67,13 @@ function TravelGraph:Build(ctx)
         }
     end
 
+    -- You can't fly to a flight point you haven't found, and until a flight master's
+    -- window has told us, we don't know: better to leave a flight out than to promise
+    -- one that can't be taken. (A context with no flightNodeFound applies no such rule.)
+    local function unfound(edge, toID)
+        return edge.method == "flight" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
+    end
+
     -- Authored edges. The reverse direction is generated here, carrying the
     -- same requirements and phase override.
     for _, edge in ipairs(addon.Edges or {}) do
@@ -80,8 +87,10 @@ function TravelGraph:Build(ctx)
             end
             if cost then
                 cost = cost + loadingCost(edge, ctx)
-                link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase)
-                if not edge.oneway then
+                if not unfound(edge, edge.to) then
+                    link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase)
+                end
+                if not edge.oneway and not unfound(edge, edge.from) then
                     link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase)
                 end
             end

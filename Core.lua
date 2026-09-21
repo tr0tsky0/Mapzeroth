@@ -9,7 +9,20 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("HEARTHSTONE_BOUND")
-frame:SetScript("OnEvent", function(_, event)
+frame:RegisterEvent("TAXIMAP_OPENED")
+frame:RegisterEvent("UI_INFO_MESSAGE")
+frame:SetScript("OnEvent", function(_, event, ...)
+    if event == "TAXIMAP_OPENED" then
+        addon.FlightKnowledge:OnTaxiMapOpened()
+        return
+    elseif event == "UI_INFO_MESSAGE" then
+        -- "New flight path discovered": we aren't told which, so forget the "not found"s.
+        local _, message = ...
+        if ERR_NEWTAXIPATH and message == ERR_NEWTAXIPATH then
+            addon.FlightKnowledge:ForgetNotFound()
+        end
+        return
+    end
     if event == "HEARTHSTONE_BOUND" then
         -- You bind at an inn, so this is where the inn is.
         local mapID = C_Map.GetBestMapForUnit("player")
@@ -21,6 +34,7 @@ frame:SetScript("OnEvent", function(_, event)
         return
     end
     addon.World:Build()
+    addon.FlightKnowledge:Load()
     local nodeCount, containerCount, continents = addon.World:GetStats()
     say("%s ruleset: %d nodes in %d containers (%s).",
         addon:GetRuleset(), nodeCount, containerCount, table.concat(continents, ", "))
@@ -42,18 +56,37 @@ SlashCmdList["MAPZEROTHREBUILD"] = function(msg)
         end
         say("validation: %d error(s), %d warning(s).", errors, warnings)
 
+    elseif cmd == "flights" then
+        -- Which flight points we know this character has (not) found; open a flight
+        -- master's window to add to it.
+        local yes, no = addon.FlightKnowledge:List()
+        local function names(list)
+            local out = {}
+            for i, id in ipairs(list) do out[i] = addon:GetNodeName(id) or id end
+            return #out > 0 and table.concat(out, "; ") or "none"
+        end
+        say("found (%d): %s", #yes, names(yes))
+        say("not found (%d): %s", #no, names(no))
+        if #yes == 0 then
+            say("nothing learned yet. Open a flight master's window and Mapzeroth will read it; until then routes use no flights (or add allflights to /mzr route).")
+        end
+
     elseif cmd == "world" then
         addon.World:ForEachContainer(function(c)
             say("%s%s  (%d nodes)", ("  "):rep(c.depth - 1), c.path, #c.nodes)
         end)
 
     elseif cmd == "route" then
-        -- /mzr route <fromNodeID> <toNodeID> [alliance|horde]
-        local from, to, faction = msg:match("^route%s+(%S+)%s+(%S+)%s*(%S*)")
+        -- /mzr route <fromNodeID> <toNodeID> [alliance|horde] [allflights]
+        -- Flights are only used into points a flight master's window has confirmed found;
+        -- allflights ignores that.
+        local from, to, rest = msg:match("^route%s+(%S+)%s+(%S+)%s*(.*)")
         if not from then
-            say("usage: /mzr route <fromNodeID> <toNodeID> [alliance|horde]")
+            say("usage: /mzr route <fromNodeID> <toNodeID> [alliance|horde] [allflights]")
             return
         end
+        local faction = rest:match("alliance") or rest:match("horde") or ""
+        local allFlights = rest:find("allflights") ~= nil
         if not addon.World:GetNode(from) or not addon.World:GetNode(to) then
             say("unknown node id (use ids like TAXI_2 or DOCK_STORMWIND)")
             return
@@ -61,6 +94,7 @@ SlashCmdList["MAPZEROTHREBUILD"] = function(msg)
         local ctx = addon:GetPlayerContext()
         if faction:lower() == "alliance" then ctx.faction = "Alliance"
         elseif faction:lower() == "horde" then ctx.faction = "Horde" end
+        if allFlights then ctx.flightNodeFound = nil end
 
         local graph = addon.TravelGraph:Build(ctx)
         local result = addon.Pathfinder:FindPath(graph, from, to)

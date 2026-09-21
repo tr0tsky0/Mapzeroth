@@ -33,6 +33,7 @@ Data\Forever\InstanceNames_enUS.lua
 World.lua
 NodeNames.lua
 Hearth.lua
+FlightKnowledge.lua
 Trainers.lua
 Relevance.lua
 PlayerAbilities.lua

@@ -49,6 +49,7 @@ function addon:GetPlayerContext()
         cooldownRemaining = cooldownRemaining,
         hearthNode = addon:GetBoundInnNode(),
         questCompleted = isQuestCompleted,
+        flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
         loadingScreenTax = addon.DEFAULT_LOADING_SCREEN_TAX,
     }
 end

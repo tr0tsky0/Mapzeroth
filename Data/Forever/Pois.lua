@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 97 places outside any city or town (starter areas and the like);
+-- 100 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -81,9 +81,12 @@
 --   WARRIOR trainer on map 1429 at (50.2, 42.2)
 --   ROGUE trainer on map 1429 at (50.5, 39.9)
 --   PALADIN trainer on map 1429 at (50.4, 42.0)
+--   leyline on map 1431 at (18.7, 57.2)
+--   leyline on map 1431 at (72.5, 30.6)
 --   HUNTER trainer on map 1432 at (82.3, 62.5)
 --   ENGINEERING trainer on map 1432 at (45.8, 13.5)
 --   PET trainer on map 1432 at (82.2, 62.6)
+--   leyline on map 1433 at (12.6, 72.8)
 --   SKINNING trainer on map 1433 at (88.8, 71.0)
 --   stable on map 1438 at (25.4, 49.0)
 --   WARRIOR trainer on map 1438 at (59.5, 38.5)
@@ -368,6 +371,8 @@ addon.Nodes.Pois = {
     { id = "TRAINER_PALADIN_925", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.5040, y = 0.4200, kind = "trainer", trainer = "PALADIN", npcs = { { id = 925 } } },
     { id = "TRAINER_PALADIN_927", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4100, y = 0.6600, kind = "trainer", trainer = "PALADIN", town = "goldshire", npcs = { { id = 927 } } },
     { id = "INN_6790", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.7390, y = 0.4450, kind = "inn", town = "darkshire", npcs = { { id = 6790 } } },
+    { id = "LEYLINE_C1431_187_572", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.1870, y = 0.5720, kind = "leyline" },
+    { id = "LEYLINE_C1431_725_306", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.7250, y = 0.3060, kind = "leyline" },
     { id = "STABLE_10062", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.7400, y = 0.4620, kind = "stable", town = "darkshire", npcs = { { id = 10062 } } },
     { id = "TRAINER_ENGINEERING_1676", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.7740, y = 0.4850, kind = "trainer", trainer = "ENGINEERING", town = "darkshire", npcs = { { id = 1676 } } },
     { id = "TRAINER_BLACKSMITHING_3136", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.7390, y = 0.4850, kind = "trainer", trainer = "BLACKSMITHING", town = "darkshire", npcs = { { id = 3136 } } },
@@ -382,6 +387,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_ENGINEERING_3290", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.4580, y = 0.1350, kind = "trainer", trainer = "ENGINEERING", npcs = { { id = 3290, teaches = { 4036 } } } },
     { id = "TRAINER_PET_3545", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.8220, y = 0.6260, kind = "trainer", trainer = "PET", npcs = { { id = 3545 } } },
     { id = "INN_6727", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.2680, y = 0.4450, kind = "inn", town = "lakeshire", npcs = { { id = 6727 } } },
+    { id = "LEYLINE_C1433_126_728", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.1260, y = 0.7280, kind = "leyline" },
     { id = "STABLE_9982", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.2680, y = 0.4660, kind = "stable", town = "lakeshire", npcs = { { id = 9982 } } },
     { id = "TRAINER_FISHING_1680", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.2655, y = 0.5075, kind = "trainer", trainer = "FISHING", town = "lakeshire", npcs = { { id = 1680, teaches = { 7620, 7731 } } } },
     { id = "TRAINER_COOKING_3087", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.2280, y = 0.4350, kind = "trainer", trainer = "COOKING", town = "lakeshire", npcs = { { id = 3087, teaches = { 2550, 3102 } } } },

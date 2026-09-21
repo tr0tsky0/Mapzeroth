@@ -170,6 +170,20 @@ Edge = {
 
 Your point #1 — you can walk up to the enemy flightmaster, you just can't fly with him — is exactly what this fixes. A node never claims to be faction-restricted; only the edge that would use it does. `EdgeRequirements.lua`'s data-driven `requirementCheckers` table (faction, quest, class, reputation, covenant-or-Forever-equivalent, holiday, level, `anyOf`) is a pattern that already works well and carries forward unchanged.
 
+## 4a. Discovered flight points
+
+You can only fly to a flight point you have found. The Forever client won't say which ones without help: `C_TaxiMap.GetTaxiNodesForMap` returns every point on the continent with no state and "undiscovered" always false. While a flight master's window is open, `C_TaxiMap.GetAllTaxiNodes(mapID)` returns each point as Current, Reachable or Unreachable (`Enum.FlightPathState` 0, 1, 2), and the old slot list agrees (CURRENT, REACHABLE, DISTANT). Confirmed on a character that had found four points: Reachable meant found and directly connected, and everything else, found or not, came back Unreachable.
+
+`FlightKnowledge.lua` turns that into a per-point answer, one window at a time:
+
+- Current or Reachable: **found**.
+- Unreachable, although one of our flight edges joins it to a found point: **not found**. Had it been found, that edge would have made it Reachable. Reachable covers multi-stop trips (Menethil is Reachable from Stormwind by way of Ironforge), so any found point can vouch, not just the flight master you're at.
+- Anything else: **unknown**. Routing only flies into a point known to be found, so a route never promises a flight that can't be taken. Until a character has opened a flight master's window once, that means routes use no flights, and the UI should say so and ask them to open one.
+
+The graph builder drops a flight leg into a point known not to be found (`ctx.flightNodeFound`). A new-flight-path message clears the "not found" answers, because we aren't told which point was learned. Knowledge is saved per character, but SavedVariables are wiped on reload on the beta for now, so it lasts a session. The same check works in reverse as data verification: on a character that has found everything, the Reachable list at each flight master should equal our direct flight edges from it.
+
+This is the basis for the panel's "not discovered, so the route walks there" note and for a "unlock it and save N minutes" hint (route with and without the point).
+
 ## 5. Name resolution (localization)
 
 Today, node names are literal English strings in the data files, plus an unmerged PR (#25) that resolves them at runtime from client APIs instead (`C_TaxiMap`, `C_AreaPoiInfo`, `C_Map` position-matching against the node's own coordinates), with a `Locales.lua` string table for UI text and a metatable fallback so a missing translation key never blanks the UI.
