@@ -1,0 +1,45 @@
+## Interface: 16001
+## Title: Mapzeroth (Rebuild)
+## Notes: Rebuilt Mapzeroth engine, Forever dataset (development build)
+## Author: tr0tsky
+## Version: 2.0.0-dev
+## SavedVariables: MapzerothRebuildDB
+
+# Dev-only TOC: the unsuffixed name is used for every client flavor. The
+# shipped addon will use per-ruleset TOCs (see the design doc, section 1).
+
+Constants.lua
+Locales.lua
+
+# Forever dataset
+Data\Forever\Containers.lua
+Data\Forever\Nodes_EasternKingdoms.lua
+Data\Forever\Nodes_Kalimdor.lua
+Data\Forever\Nodes_ZephrasIsle.lua
+Data\Forever\Edges.lua
+Data\Forever\Borders.lua
+Data\Forever\Pois.lua
+Data\Forever\Blackrock.lua
+Data\Forever\Abilities.lua
+Data\Forever\RidingSkills.lua
+Data\Forever\Professions.lua
+Data\Forever\WeaponSkills.lua
+Data\Forever\PathFactors.lua
+Data\Forever\NodeNames_enUS.lua
+Data\Forever\TownNames_enUS.lua
+Data\Forever\InstanceNames_enUS.lua
+
+# Engine
+World.lua
+NodeNames.lua
+Hearth.lua
+Trainers.lua
+Relevance.lua
+PlayerAbilities.lua
+MovementSpeed.lua
+EdgeRequirements.lua
+TravelGraph.lua
+Pathfinder.lua
+Validator.lua
+
+Core.lua

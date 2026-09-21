@@ -1,0 +1,105 @@
+local addonName, addon = ...
+
+-- Static consistency checks over the loaded dataset. Pure Lua, no client
+-- APIs, so it also runs headless. Returns a list of { level, message } issues;
+-- level is "error" for anything the engine would trip over and "warn" for
+-- data that is merely incomplete.
+
+local function isPlaceholder(container)
+    return container == nil or container == "" or container == "TODO"
+end
+
+function addon:ValidateData()
+    local issues = {}
+    local function add(level, message)
+        issues[#issues + 1] = { level = level, message = message }
+    end
+
+    local World = addon.World
+    for _, id in ipairs(World:GetDuplicateNodeIDs()) do
+        add("error", "duplicate node id: " .. id)
+    end
+
+    for _, list in pairs(addon.Nodes or {}) do
+        for _, node in ipairs(list) do
+            if isPlaceholder(node.container) then
+                add("warn", "node has no real container: " .. tostring(node.id))
+            end
+            if not node.mapID or not node.x or not node.y then
+                add("error", "node missing mapID/x/y: " .. tostring(node.id))
+            end
+            -- Flight masters are named by the client and border crossings by their
+            -- zones; everything else we created needs a locale string.
+            local id = tostring(node.id)
+            if node.kind == "instance" then
+                -- An instance entrance is named by the client (its area) or by a string of ours.
+                if not (node.area or addon:HasString("NODE_" .. id)) then
+                    add("warn", "instance has no name source (area id or NODE_ string): " .. id)
+                end
+            elseif node.kind then
+                -- A place in a city or town is named from its kind and its settlement.
+                -- A place outside any settlement is named after its zone instead.
+                local isCity = node.city ~= nil
+                local key = node.city or node.town
+                if key then
+                    local settlement = (isCity and addon.Cities or addon.Towns or {})[key]
+                    if not settlement then
+                        add("error", ("node %s: unknown %s '%s'"):format(id, isCity and "city" or "town", tostring(key)))
+                    elseif not (settlement.taxi or settlement.area
+                            or addon:HasString((isCity and "CITY_" or "TOWN_") .. key:upper())) then
+                        add("warn", ("%s '%s' has no name source (flight master, area or locale string)"):format(
+                            isCity and "city" or "town", key))
+                    end
+                end
+                if node.kind == "trainer" and not (addon.CLASS_TOKENS[node.trainer]
+                        or (addon.Professions and addon.Professions[node.trainer])
+                        or addon:HasString("TRAINER_" .. tostring(node.trainer))) then
+                    add("error", ("node %s: unknown trainer type '%s'"):format(id, tostring(node.trainer)))
+                end
+                if not addon:HasString("NODE_KIND_" .. node.kind:upper()) then
+                    add("error", ("node %s: no name pattern for kind '%s'"):format(id, node.kind))
+                end
+            elseif not node.area and not id:find("^TAXI_%d+$") and not id:find("^BORDER_")
+                    and not addon:HasString("NODE_" .. id) then
+                add("warn", "node has no name string (NODE_" .. id .. ")")
+            end
+        end
+    end
+
+    for i, edge in ipairs(addon.Edges or {}) do
+        if not World:GetNode(edge.from) then
+            add("error", ("edge %d: unknown from node %s"):format(i, tostring(edge.from)))
+        end
+        if not World:GetNode(edge.to) then
+            add("error", ("edge %d: unknown to node %s"):format(i, tostring(edge.to)))
+        end
+        if not edge.method then
+            add("error", ("edge %d (%s -> %s): missing method"):format(i, tostring(edge.from), tostring(edge.to)))
+        end
+        for key in pairs(edge.requirements or {}) do
+            if not addon.RequirementCheckers[key] then
+                add("error", ("edge %d (%s -> %s): unknown requirement '%s'"):format(
+                    i, tostring(edge.from), tostring(edge.to), key))
+            end
+        end
+        -- A walk edge without a cost is a tunnel: the engine derives its cost
+        -- from the distance between its ends.
+        if edge.cost == nil and edge.method ~= "walk" then
+            add("warn", ("edge %d (%s -> %s): no cost"):format(i, tostring(edge.from), tostring(edge.to)))
+        end
+    end
+
+    local abilities = addon.Abilities or {}
+    for category, list in pairs(abilities) do
+        for i, ability in ipairs(list) do
+            if not ability.spellID and not ability.itemID then
+                add("error", ("ability %s[%d]: needs a spellID or itemID"):format(category, i))
+            end
+            if ability.to and not World:GetNode(ability.to) then
+                add("error", ("ability %s[%d]: unknown destination node %s"):format(category, i, tostring(ability.to)))
+            end
+        end
+    end
+
+    return issues
+end

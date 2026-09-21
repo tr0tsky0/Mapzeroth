@@ -1,0 +1,65 @@
+# kind, mapID, x, y, settlementKey, name, areaID   (x and y are 0-100)
+# kind is inn | bank | auction | trainer:<TYPE>. settlementKey "-" means outside any settlement.
+inn	2521	62.18	72.69	valanaar	Valanaar	16638
+bank	2521	57.68	77.10	valanaar	Valanaar	16638
+auction	2521	57.89	77.07	valanaar	Valanaar	16638
+trainer:SHAMAN	2521	58.3	78.4	valanaar	Valanaar
+trainer:ENCHANTING	2521	59.2	76.4	valanaar	Valanaar
+trainer:ALCHEMY	2521	59.2	76.3	valanaar	Valanaar
+trainer:SKINNING	2521	59.6	76.0	valanaar	Valanaar
+trainer:HERBALISM	2521	57.9	75.5	valanaar	Valanaar
+trainer:HUNTER	2521	59.6	72.6	valanaar	Valanaar
+trainer:PET	2521	59.6	72.5	valanaar	Valanaar
+trainer:WARRIOR	2521	59.9	72.8	valanaar	Valanaar
+trainer:ROGUE	2521	59.9	72.5	valanaar	Valanaar
+trainer:COOKING	2521	60.7	72.7	valanaar	Valanaar
+trainer:FIRSTAID	2521	63.1	72.6	valanaar	Valanaar
+trainer:FISHING	2521	63.2	75.7	valanaar	Valanaar
+trainer:LEATHERWORKING	2521	63.7	80.6	valanaar	Valanaar
+trainer:TAILORING	2521	64.4	81.2	valanaar	Valanaar
+trainer:MINING	2521	65.4	80.5	valanaar	Valanaar
+trainer:BLACKSMITHING	2521	65.4	80.0	valanaar	Valanaar
+trainer:ALCHEMY	2521	66.3	79.5	valanaar	Valanaar
+trainer:MAGE	2521	65.9	80.5	valanaar	Valanaar
+trainer:DRUID	2521	64.0	75.1	valanaar	Valanaar
+# Approximate ("around 55.0, 36.6"), in the wilderness: refine when someone stands there.
+trainer:ENGINEERING	2521	55.0	36.6	-	Zephras Isle
+# Shen'dar Village (no area id yet: run /mzdump area at its inn to add one)
+trainer:FIRSTAID	2521	43.1	46.3	shendar_village	Shen'dar Village
+trainer:SHAMAN	2521	43.4	44.9	shendar_village	Shen'dar Village
+trainer:FISHING	2521	45.0	48.4	shendar_village	Shen'dar Village
+trainer:WARRIOR	2521	44.9	45.1	shendar_village	Shen'dar Village
+trainer:DRUID	2521	45.2	44.3	shendar_village	Shen'dar Village
+trainer:HUNTER	2521	45.3	44.3	shendar_village	Shen'dar Village
+trainer:MAGE	2521	45.1	45.9	shendar_village	Shen'dar Village
+trainer:LEATHERWORKING	2521	44.7	44.5	shendar_village	Shen'dar Village
+trainer:MINING	2521	44.8	44.5	shendar_village	Shen'dar Village
+trainer:BLACKSMITHING	2521	44.9	44.3	shendar_village	Shen'dar Village
+trainer:TAILORING	2521	44.9	44.2	shendar_village	Shen'dar Village
+trainer:COOKING	2521	43.8	43.9	shendar_village	Shen'dar Village
+trainer:ALCHEMY	2521	43.7	43.4	shendar_village	Shen'dar Village
+trainer:SKINNING	2521	43.3	43.4	shendar_village	Shen'dar Village
+trainer:ENCHANTING	2521	43.2	43.2	shendar_village	Shen'dar Village
+trainer:ROGUE	2521	43.2	43.3	shendar_village	Shen'dar Village
+trainer:HERBALISM	2521	43.0	43.5	shendar_village	Shen'dar Village
+inn	2521	43.0	43.3	shendar_village	Shen'dar Village	16624
+# Dalaran (Alterac Mountains map 1416; a city, defined in towns.tsv). Keys note the highest rank a profession trainer offers
+# (_including_<tier>) and number repeats (_2). Inns 1/2 and 3/4 are two buildings with two innkeepers each.
+# Banks there don't work, so none are listed.
+trainer:druid	1416	11.8	56.6	dalaran	Dalaran
+trainer:enchanting	1416	16.8	62.2	dalaran_including_expert	Dalaran
+trainer:first_aid	1416	17.2	61.1	dalaran_including_journeyman	Dalaran
+trainer:tailoring	1416	17.7	60.2	dalaran_including_expert	Dalaran
+trainer:alchemy	1416	18.5	62.5	dalaran_including_expert	Dalaran
+trainer:alchemy	1416	18.5	62.3	dalaran_including_expert_2	Dalaran
+trainer:blacksmithing	1416	19.7	63.3	dalaran_including_expert	Dalaran
+trainer:herbalism	1416	18.4	63.1	dalaran_including_artisan	Dalaran
+inn	1416	18.3	66.6	dalaran	Dalaran
+inn	1416	18.6	65.7	dalaran_2	Dalaran
+stable_master	1416	19.8	70.2	dalaran	Dalaran
+trainer:mage	1416	17.7	69.5	dalaran	Dalaran
+trainer:cooking	1416	12.6	65.9	dalaran_including_journeyman	Dalaran
+inn	1416	12.1	66.5	dalaran_3	Dalaran
+inn	1416	11.3	66.1	dalaran_4	Dalaran
+entrance	1416	21.9	82.8	dalaran	Dalaran
+leyline	1416	19.9	86.1	-	Alterac Mountains

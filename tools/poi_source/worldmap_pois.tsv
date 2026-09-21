@@ -1,0 +1,77 @@
+# From Wowhead's Forever world-map data file (nether.wowhead.com/forever/data/world-map).
+# category, name, x, y (the map tool's pixel canvas), side (0 neutral, 1 Alliance, 2 Horde), level
+innkeeper	Innkeeper Grosk	20887.2	16055.7	2	0
+innkeeper	Innkeeper Kauth	16757.1	18530.2	2	0
+innkeeper	Innkeeper Boorand Plainswind	18924.6	16768.8	2	0
+innkeeper	Innkeeper Wiley	19897.4	17391.5	2	0
+innkeeper	Innkeeper Byula	18302	18662.7	2	0
+innkeeper	Innkeeper Keldamyr	15439.7	6974.3	1	0
+innkeeper	Innkeeper Shaussiy	15886.6	10228.5	1	0
+innkeeper	Innkeeper Kimlya	16800.3	13713.5	1	0
+innkeeper	Innkeeper Kaylisk	18848.6	14134.1	2	0
+innkeeper	Innkeeper Abeqwa	18743	21639.4	0	0
+innkeeper	Innkeeper Jayka	15490.1	15522.1	2	0
+innkeeper	Innkeeper Faralia	14936.9	13765.3	1	0
+innkeeper	Innkeeper Lyshaerya	15177.2	16139.9	1	0
+innkeeper	Innkeeper Sikewa	13355.8	17912.8	2	0
+innkeeper	Innkeeper Shyria	13228.3	20586.4	1	0
+innkeeper	Innkeeper Greul	16150.7	20657.6	2	0
+innkeeper	Innkeeper Janene	20676.6	19854.7	1	0
+innkeeper	Innkeeper Fizzgrimble	20065	23251.6	0	0
+innkeeper	Calandrath	15680.2	22973.7	0	0
+innkeeper	Innkeeper Vizzie	20859.4	9955.1	0	0
+innkeeper	Innkeeper Gryshka	20647.2	14815.3	2	0
+innkeeper	Innkeeper Pala	16346.9	17630.2	2	0
+innkeeper	Innkeeper Saelienne	14245.9	6662.3	1	0
+innkeeper	Innkeeper Adegwa	40758.5	15215.1	1	0
+innkeeper	Innkeeper Shul'kar	39438.9	20719.1	2	0
+innkeeper	Innkeeper Renee	37136.2	12155.8	2	0
+innkeeper	Innkeeper Bates	35805.8	13843.5	2	0
+innkeeper	Jessica Chambers	42912.1	12388.2	0	0
+innkeeper	Innkeeper Anderson	37918.7	15156.2	1	0
+innkeeper	Innkeeper Shay	38275.1	14341.1	2	0
+innkeeper	Innkeeper Thulfram	39398	13953	2	0
+innkeeper	Lard	41778.3	14928.8	2	0
+innkeeper	Innkeeper Belm	37887.1	19709.6	1	0
+innkeeper	Innkeeper Farley	37361.4	23420.1	1	0
+innkeeper	Innkeeper Trelayne	38488.9	24431.2	1	0
+innkeeper	Innkeeper Hearthstove	40227.4	19498.7	1	0
+innkeeper	Innkeeper Brianna	39548.5	23190.7	1	0
+innkeeper	Innkeeper Thulbek	37167.6	26266.9	2	0
+innkeeper	Innkeeper Skindle	36898	28210.8	0	0
+innkeeper	Innkeeper Karakul	40500.9	24402.9	2	0
+innkeeper	Innkeeper Heather	36254.1	24560.6	1	0
+innkeeper	Innkeeper Helbrek	38170.8	18006.8	1	0
+innkeeper	Innkeeper Allison	36599.4	22741.5	1	0
+innkeeper	Innkeeper Firebrew	38202.2	18982.8	1	0
+innkeeper	Innkeeper Norman	37160.3	12767.9	2	0
+dungeon	Blackfathom Deeps	15665.5	12304.9	0	0
+dungeon	Dire Maul	15299.2	20135.7	0	0
+dungeon	Maraudon	13576	17759.4	0	0
+dungeon	Ragefire Chasm	20630.5	14639.9	0	0
+dungeon	Razorfen Downs	18818.5	20860.4	0	0
+dungeon	Razorfen Kraul	17977.8	20665	0	2
+dungeon	Wailing Caverns	18504.8	17105.1	0	1
+dungeon	Zul'Farrak	19159.6	22903	0	0
+raid	Ahn'Qiraj Temple	14918.3	24171.2	0	0
+raid	Onyxia's Lair	19986.3	20947.2	0	0
+raid	Ruins of Ahn'Qiraj	14918.7	24173.9	0	9
+dungeon	Blackrock Depths	38267.5	21227	0	0
+dungeon	Blackrock Spire	38559.7	21557.6	0	0
+dungeon	City of Dalaran	37072	14128	0	0
+dungeon	Deadmines	35762	25095.5	0	0
+dungeon	Excavation Site: Wetlands	39280	18000	0	1
+dungeon	Gnomeregan	36481.7	19292.2	0	1
+dungeon	Ruins of Lordaeron	37136	12752	0	2
+dungeon	Scarlet Monastery	38154.8	11559.5	0	1
+dungeon	Scholomance	39826.5	13112.2	0	0
+dungeon	Shadowfang Keep	35867.3	14557.8	0	0
+dungeon	Stormwind Stockade	36561.9	22747.9	0	1
+dungeon	Stratholme	40619.4	11079.4	0	1
+dungeon	Sunken Temple	41212.2	24099.3	0	0
+dungeon	The Hall of Thanes	38176.7	19156.2	0	2
+dungeon	Uldaman	40212.8	20153.8	0	0
+raid	Blackwing Lair	38546	21692.9	0	0
+raid	Molten Core	38371.2	21546.2	0	2
+raid	Naxxramas	40957.1	11328.2	0	0
+raid	Zul'Gurub	38551.6	25775.5	0	0

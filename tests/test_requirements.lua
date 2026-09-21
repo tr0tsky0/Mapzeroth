@@ -1,0 +1,18 @@
+local function meets(req, overrides) return addon:MeetsRequirements(req, makeCtx(overrides)) end
+
+check(meets(nil), "no requirements always pass")
+check(meets({ faction = "Alliance" }), "faction match")
+check(not meets({ faction = "Horde" }), "faction mismatch")
+check(meets({ faction = "Alliance", class = "MAGE" }), "AND of two matches")
+check(not meets({ faction = "Alliance", class = "DRUID" }), "AND fails when one fails")
+check(meets({ race = "Skyborne" }, { race = "Skyborne" }), "race match")
+check(not meets({ race = "Skyborne" }), "race mismatch")
+check(meets({ minLevel = 10, maxLevel = 30 }), "level in range")
+check(not meets({ minLevel = 40 }), "level too low")
+check(meets({ quest = 5 }, { quests = { [5] = true } }), "quest completed")
+check(not meets({ quest = 5 }), "quest not completed")
+check(meets({ notQuest = 5 }), "notQuest passes when not completed")
+check(not meets({ notQuest = 5 }, { quests = { [5] = true } }), "notQuest fails when completed")
+check(meets({ anyOf = { faction = "Horde", class = "MAGE" } }), "anyOf passes on one match")
+check(not meets({ anyOf = { faction = "Horde", class = "DRUID" } }), "anyOf fails on none")
+check(not meets({ bogus = 1 }), "unknown requirement fails closed")

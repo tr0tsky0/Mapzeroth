@@ -1,0 +1,110 @@
+# From Wowhead's Forever world-map data file. category, NPC id, name, x, y (the map tool's pixel canvas), side
+battlemaster	3890	Brakgul Deathbringer	20983.8	14474.1	2
+battlemaster	14942	Kartra Bloodsnarl	20981.1	14481.3	2
+battlemaster	14990	Defilers Emissary	20596	14792	2
+battlemaster	15006	Deze Snowbane	20986.5	14463.3	2
+battlemaster	15105	Warsong Emissary	20596	14792	2
+battlemaster	15106	Frostwolf Emissary	20596	14792	2
+battlemaster	7427	Taim Ragetotem	16475.2	17714.4	2
+battlemaster	10360	Kergul Bloodaxe	16457.1	17713	2
+battlemaster	12198	Martin Lindsey	16176.6	17340.3	2
+battlemaster	14990	Defilers Emissary	16328.9	17583.4	2
+battlemaster	15105	Warsong Emissary	16328.9	17582.1	2
+battlemaster	15106	Frostwolf Emissary	16328.9	17582.1	2
+battlemaster	907	Keras Wolfheart	14152.5	6804.5	1
+battlemaster	2302	Aethalas	14160.6	6804.5	1
+battlemaster	5118	Brogun Stoneshield	14150.4	6857.4	1
+battlemaster	14991	League of Arathor Emissary	13996	6823.5	1
+battlemaster	15102	Silverwing Emissary	13994	6822.2	1
+battlemaster	15103	Stormpike Emissary	14132.1	6861.5	1
+battlemaster	7410	Thelman Slatefist	37009.7	22194.4	1
+battlemaster	14981	Elfarran	37036.4	22227.7	1
+battlemaster	14991	League of Arathor Emissary	36629.4	22708.1	1
+battlemaster	15008	Lady Hoteshem	37026.4	22189.9	1
+battlemaster	15102	Silverwing Emissary	36629.4	22708.1	1
+battlemaster	15103	Stormpike Emissary	36629.4	22708.1	1
+battlemaster	857	Donal Osgood	38590.8	19174.3	1
+battlemaster	12197	Glordrum Steelbeard	38590.8	19180.4	1
+battlemaster	14982	Lylandris	38595.4	19174.3	1
+battlemaster	14991	League of Arathor Emissary	38589.3	19167.2	1
+battlemaster	15102	Silverwing Emissary	38590.8	19161.1	1
+battlemaster	15103	Stormpike Emissary	38583.2	19170.2	1
+battlemaster	347	Grizzle Halfmane	37055.3	13059.2	2
+battlemaster	2804	Kurden Bloodclaw	37038.8	13121.9	2
+battlemaster	14990	Defilers Emissary	37213.7	12804.8	2
+battlemaster	15007	Sir Malory Wheeler	37099.5	13104.7	2
+battlemaster	15105	Warsong Emissary	37145.6	12872.4	2
+battlemaster	15106	Frostwolf Emissary	37145.6	12873.6	2
+stable	9987	Shoja'my	20907.5	16062.5	2
+stable	10050	Seikwa	16768.9	18498.7	2
+stable	9981	Sikwa	18885.6	16755.9	2
+stable	9983	Kelsuwa	18263.1	18636.8	2
+stable	10063	Reggifuz	19916.8	17378.5	0
+stable	10051	Seriadne	15488.6	6967.8	1
+stable	10085	Jaelysia	15911.7	10236.9	1
+stable	10052	Maluressian	16767.1	13757.8	1
+stable	15131	Qeeju	18815.4	14148.9	2
+stable	11117	Awenasa	18734.6	21628.2	2
+stable	10048	Gereck	15508.9	15497.1	2
+stable	11104	Shelgrayn	15151.3	16174.5	1
+stable	11105	Aboda	13390.4	17930.1	2
+stable	9986	Shyrka Wolfrunner	16124	20577.5	2
+stable	10059	Antarius	13255	20577.5	1
+stable	10047	Michael	20646.4	19861.4	1
+stable	9985	Laziphus	20051.7	23260.5	0
+stable	228176	Banteazo	18955.4	8710.9	0
+stable	15722	Squire Leoren Mal'derath	15593.2	22920.2	0
+stable	11119	Azzleby	20804.9	9918.7	0
+stable	9988	Xon'cha	20859.9	14335.8	2
+stable	10054	Bulrug	16338.9	17595.5	2
+stable	10056	Alassin	13963.5	6623	1
+stable	9976	Tharlidun	40758.5	15228.9	2
+stable	10058	Greth	39462.7	20747.8	2
+stable	10055	Morganus	37066.8	12161.6	2
+stable	9979	Sarah Goode	35813.9	13843.5	2
+stable	9978	Wesley	37900.3	15152.1	1
+stable	10057	Theodore Mont Claire	38262.8	14357.5	2
+stable	10061	Killium Bouldertoe	39420.2	14041.7	1
+stable	14741	Huntsman Markhor	41807.8	14884.4	2
+stable	9980	Shelby Stoneflint	37868.2	19716	1
+stable	6749	Erma	37328.1	23420.1	1
+stable	10062	Steven Black	38494.1	24462.4	1
+stable	9989	Lina Hearthstove	40206.2	19491.7	1
+stable	9982	Penny	39548.5	23215.7	1
+stable	10060	Grimestack	36910.3	28210.8	0
+stable	16094	Durik	37192.1	26258.7	2
+stable	10049	Hekkru	40509.7	24379.4	2
+stable	10045	Kirk Maxwell	36260.8	24547.2	1
+stable	10046	Bethaine Flinthammer	38162.9	17975	1
+stable	9977	Sylista	36212.4	22581.3	1
+stable	11069	Jenova Stoneshield	36742.8	22203.3	1
+stable	9984	Ulbrek Firehand	38587.8	19147.9	1
+stable	10053	Anya Maulray	37158.5	12766.7	2
+class-hunter	543	Nalesette Wildbringer	18241.4	10426.6	0
+class-mage	4165	Elissa Dumas	13973.6	7110.8	1
+class-mage	5957	Birgitte Cranston	16110.4	17312.2	2
+class-mage	5958	Thuul	20437.1	14971.6	2
+class-hunter	10088	Xao'tsu	20811.5	14335.8	2
+class-paladin	246344	Alodan the Hopeful	16142.5	17297.5	2
+class-shaman	262558	Palah Thunderhoof	15989.1	17010.1	2
+class-druid	262560	Hana Lighthoof	15977.3	16994.4	2
+class-warrior	514	Smith Argus	37288.1	23415.7	1
+class-mage	1300	Lawrence Schneider	36449.2	22832.7	1
+class-mage	2485	Larimaine Purdue	36379.2	22897.2	1
+class-mage	2489	Milstaff Stormeye	38255.4	18760	1
+class-mage	2492	Lexington Mortaim	37313.2	12631.5	2
+class-hunter	2879	Karrina Mekenda	36749.5	22187.7	1
+class-hunter	3624	Zudd	37155.3	26234.2	0
+class-hunter	10090	Belia Thundergranite	38598.4	19155	1
+class-priest	11048	Victor Ward	37184.3	12715.1	2
+class-paladin	244808	Aramis Hammerhand	35808.8	12566.5	2
+class-paladin	246152	Shari Stilwell	37075.5	12173.2	2
+class-paladin	246389	Hilda the Breaker	35418.4	12017	2
+class-hunter	248415	Tordrin Sternblade	37608	22864.6	1
+class-hunter	251507	Josephine Carson	37274.8	23429	1
+class-shaman	257446	Teo Hammerstorm	37007.7	20144.6	1
+class-shaman	258098	Eldrun Stormbreaker	38420.8	18791.4	1
+class-shaman	258113	Ingrid Dunwald	37887.1	19697	1
+class-priest	258785	High Priestess Mims	38249.3	18773.1	1
+class-paladin	260093	Garen Largo	36974.3	12625.3	2
+class-druid	270459	Alfina Nightgaze	36941.2	13910.3	2

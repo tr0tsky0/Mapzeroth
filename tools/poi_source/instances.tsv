@@ -1,0 +1,33 @@
+# key, category, mapID, x, y (0-100), English name (dev only), areaID, Wowhead level tag, container override
+# Positions are Wowhead's map markers converted by tools/convert_worldmap.py: good to a few
+# hundred yards. Fill in the area id once `/mzdump areas <id>` shows the client's name for it.
+blackfathom_deeps	dungeon	1439	33.5	93.5	Blackfathom Deeps	719	0
+dire_maul	dungeon	1444	62.0	33.3	Dire Maul	2557	0
+maraudon	dungeon	1443	29.1	62.9	Maraudon	2100	0
+ragefire_chasm	dungeon	1454	52.8	48.9	Ragefire Chasm	2437	0
+razorfen_downs	dungeon	1413	50.9	92.9	Razorfen Downs	722	0
+razorfen_kraul	dungeon	1413	42.3	89.9	Razorfen Kraul	491	2
+wailing_caverns	dungeon	1413	47.7	35.0	Wailing Caverns	718	1
+zulfarrak	dungeon	1446	38.7	19.9	Zul'Farrak	1176	0
+ahnqiraj_temple	raid	1451	29.0	92.7	Ahn'Qiraj Temple	3428	0
+onyxias_lair	raid	1445	52.9	77.7	Onyxia's Lair	2159	0
+ruins_of_ahnqiraj	raid	1451	29.0	92.8	Ruins of Ahn'Qiraj	3429	9
+blackrock_depths	dungeon	1427	27.1	72.5	Blackrock Depths	1584	0	easternkingdoms.blackrock_mountain
+blackrock_spire	dungeon	1428	33.0	25.2	Blackrock Spire	1583	0	easternkingdoms.blackrock_mountain
+city_of_dalaran	dungeon	1416	16.6	68.8	City of Dalaran		0
+deadmines	dungeon	1436	38.2	77.5	Deadmines	1581	0
+excavation_site_wetlands	dungeon	1437	38.5	60.6	Excavation Site: Wetlands		1
+gnomeregan	dungeon	1426	17.7	39.2	Gnomeregan	133	1
+ruins_of_lordaeron	dungeon	1458	64.8	35.7	Ruins of Lordaeron		2
+scarlet_monastery	dungeon	1420	85.0	31.4	Scarlet Monastery	796	1
+scholomance	dungeon	1422	69.0	73.0	Scholomance	2057	0
+shadowfang_keep	dungeon	1421	44.7	67.8	Shadowfang Keep	209	0
+stormwind_stockade	dungeon	1453	50.4	66.1	Stormwind Stockade	717	1
+stratholme	dungeon	1423	26.0	10.5	Stratholme	2017	1
+sunken_temple	dungeon	1435	77.3	35.9	Sunken Temple	1417	0
+the_hall_of_thanes	dungeon	1455	15.2	85.7	The Hall of Thanes		2
+uldaman	dungeon	1432	34.8	85.5	Uldaman	1337	0
+blackwing_lair	raid	1428	32.5	32.4	Blackwing Lair	2677	0	easternkingdoms.blackrock_mountain
+molten_core	raid	1428	26.3	24.5	Molten Core	2717	2	easternkingdoms.blackrock_mountain
+naxxramas	raid	1423	34.2	19.5	Naxxramas	3456	0
+zulgurub	raid	1434	54.0	17.6	Zul'Gurub	1977	0
