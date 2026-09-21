@@ -143,14 +143,31 @@ do
         if link.method == "flight" then oneWay = oneWay + 1 end
     end
     check(oneWay >= 5, "an ordinary flight master still has its legs: " .. oneWay)
+
+    -- When there is a direct leg to the destination the game sells that ticket, whatever a chain of legs would
+    -- take. Refuge Pointe to Ironforge is a direct leg (271 s), so flying on through Menethil Harbor is not a
+    -- ticket the game sells; landing there and taking a new ticket is (126 + 89 s, with nothing saved).
+    local toMenethil, menethilToIronforge = flightCosts("TAXI_16", "TAXI_7")[1], flightCosts("TAXI_7", "TAXI_6")[1]
+    local viaStop = route(ali, "TAXI_16", "TAXI_6")
+    check(viaStop and methods(viaStop) == "flight,flight" and viaStop.cost == toMenethil + menethilToIronforge,
+        "Refuge Pointe to Ironforge: land at Menethil Harbor and take another ticket, no saving: " .. tostring(viaStop and viaStop.cost))
+    check(viaStop.steps[1].to == "TAXI_7" and not viaStop.steps[2].through, "the second flight is a new ticket, not the same one")
+    check(#addon.Pathfinder:CollapseSteps(viaStop.steps) == 2, "and it is shown as two flights")
+    -- No direct leg to Stormwind, so the same stops can be one ticket (Ironforge is passed through, not landed at).
+    local toStormwind = route(ali, "TAXI_16", "TAXI_2")
+    check(toStormwind and #toStormwind.steps == 3 and toStormwind.steps[2].through and toStormwind.steps[3].through,
+        "Refuge Pointe to Stormwind flies through Menethil Harbor and Ironforge on one ticket")
+    check(#addon.Pathfinder:CollapseSteps(toStormwind.steps) == 1, "shown as one ticket")
 end
 
--- Consecutive flights are one ticket, like consecutive walks are one walk: in game you buy a ticket to
--- the far flight point and fly through the stops without landing.
+-- Flights along one ticket are shown as one step, like consecutive walks are one walk: in game you buy a
+-- ticket to the far flight point and fly through the stops without landing. The search marks a flight
+-- that goes on along the ticket the last one began with `through`; a flight without it is a new ticket.
 do
     local function step(method, from, to, cost) return { method = method, from = from, to = to, cost = cost } end
+    local function through(from, to, cost) local s = step("flight", from, to, cost); s.through = true; return s end
     local merged = addon.Pathfinder:CollapseSteps({
-        step("walk", "A", "B", 10), step("flight", "B", "C", 100), step("flight", "C", "D", 50), step("walk", "D", "E", 5),
+        step("walk", "A", "B", 10), step("flight", "B", "C", 100), through("C", "D", 50), step("walk", "D", "E", 5),
     })
     check(#merged == 3, "walk, one ticket, walk: " .. #merged)
     check(merged[2].method == "flight" and merged[2].from == "B" and merged[2].to == "D" and merged[2].cost == 150 - addon.FLIGHT_CHAIN_SAVING,
@@ -158,4 +175,6 @@ do
     check(#merged[2].parts == 2 and merged[2].parts[1].to == "C", "and remembers the stop it passes through")
     local separate = addon.Pathfinder:CollapseSteps({ step("flight", "A", "B", 10), step("ship", "B", "C", 20), step("flight", "C", "D", 30) })
     check(#separate == 3, "a flight, a boat, a flight are three steps")
+    local twoTickets = addon.Pathfinder:CollapseSteps({ step("flight", "A", "B", 10), step("flight", "B", "C", 20) })
+    check(#twoTickets == 2, "two flights that land between are two tickets")
 end

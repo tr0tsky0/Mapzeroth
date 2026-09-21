@@ -16,8 +16,60 @@ local addonName, addon = ...
 -- side instead (a Zidormi conversation, or Teleport: Undercity landing on the
 -- present side regardless).
 
+-- Flights are single legs (Data/Forever/Flights.lua), and the game sells tickets over them. A ticket
+-- from A to B may fly through other flight points without landing (each extra leg saves
+-- FLIGHT_CHAIN_SAVING seconds), except that when there is a direct leg from A to B the game always
+-- sells that one, however much quicker a chain would be. So a state in the air remembers the
+-- ticket's origin and whether it is still its first leg: the ticket can end (land, walk on, reach the
+-- goal) at a point only if it is that first leg or has no direct leg from its origin to that point.
+-- Otherwise it must go on, or the plan lands earlier and takes a new ticket from there.
+
 local Pathfinder = {}
 addon.Pathfinder = Pathfinder
+
+-- Is there a direct flight leg from a to b in this graph? (Built on first use.)
+local function hasDirectLeg(graph, a, b)
+    if not graph.directLegs then
+        graph.directLegs = {}
+        for from, steps in pairs(graph.adjacency) do
+            for _, step in ipairs(steps) do
+                if step.method == "flight" then
+                    graph.directLegs[from] = graph.directLegs[from] or {}
+                    graph.directLegs[from][step.to] = true
+                end
+            end
+        end
+    end
+    return graph.directLegs[a] ~= nil and graph.directLegs[a][b] == true
+end
+
+-- May the search stop, land or walk on from this state? Only if it isn't part way along a ticket that
+-- the game wouldn't sell (see the top of the file).
+local function canLand(graph, node)
+    return node.origin == nil or node.single or not hasDirectLeg(graph, node.origin, node.id)
+end
+
+-- What taking `step` from `node` can mean: a list of { cost, origin, single, through } for a flight (a
+-- flight after a flight can go on along the same ticket, or land and start a new one), or nil when the
+-- step can't be taken from here (a non-flight step from part way along a ticket that can't end).
+local function expandStep(graph, node, step, d, oneTicket)
+    if step.method ~= "flight" then
+        if node.origin and not canLand(graph, node) then return nil end
+        return { { d + step.cost } }
+    end
+    if not node.origin then
+        return { { d + step.cost, node.id, true, false } }
+    end
+    local options = { { d + step.cost - (addon.FLIGHT_CHAIN_SAVING or 0), node.origin, false, true } }
+    if canLand(graph, node) and not oneTicket then
+        options[#options + 1] = { d + step.cost, node.id, true, false }
+    end
+    return options
+end
+
+local function airKey(option)
+    return option[2] and ("|air:" .. option[2] .. (option[3] and "1" or "0")) or ""
+end
 
 -- Binary min-heap of { priority, payload }.
 local function heapPush(heap, item)
@@ -84,9 +136,11 @@ end
 
 -- graph: from TravelGraph:Build. goalID is a node id, or a list of node ids to reach
 -- whichever is cheapest ("the nearest ley line"). initialPhase: optional { group = side }.
+-- oneTicket: optional, never land part way along a flight and take a new ticket (what the game
+-- would sell for a destination when clicked at a flight master, not the best plan).
 -- Returns { cost = seconds, goal = the node reached, steps = { {from, to, cost, method,
 -- source}, ... } } or nil when no goal can be reached.
-function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
+function Pathfinder:FindPath(graph, startID, goalID, initialPhase, oneTicket)
     local goals = {}
     if type(goalID) == "table" then
         for _, id in ipairs(goalID) do goals[id] = true end
@@ -126,7 +180,7 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
         local d, node = item[1], item[2]
         if not visited[node.key] then
             visited[node.key] = true
-            if goals[node.id] then
+            if goals[node.id] and canLand(graph, node) then
                 goalKey, reached = node.key, node.id
                 break
             end
@@ -134,14 +188,15 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
             for _, step in ipairs(graph.adjacency[node.id] or {}) do
                 local state = nextPhaseState(node.state, step)
                 if state then
-                    -- A flight leg taken straight after another doesn't land and take off between.
-                    local flight = step.method == "flight"
-                    local nd = d + step.cost - ((flight and node.air) and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
-                    local key = step.to .. "|" .. phaseKey(state) .. (flight and "|air" or "")
-                    if not dist[key] or nd < dist[key] then
-                        dist[key] = nd
-                        prev[key] = { key = node.key, step = step }
-                        heapPush(heap, { nd, { key = key, id = step.to, state = state, air = flight } })
+                    for _, option in ipairs(expandStep(graph, node, step, d, oneTicket) or {}) do
+                        local nd = option[1]
+                        local key = step.to .. "|" .. phaseKey(state) .. airKey(option)
+                        if not dist[key] or nd < dist[key] then
+                            dist[key] = nd
+                            prev[key] = { key = node.key, step = step, through = option[4] }
+                            heapPush(heap, { nd, { key = key, id = step.to, state = state,
+                                                   origin = option[2], single = option[3] } })
+                        end
                     end
                 end
             end
@@ -154,7 +209,14 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
     local key = goalKey
     while key ~= startKey do
         local link = prev[key]
-        table.insert(steps, 1, link.step)
+        local step = link.step
+        if link.through then                        -- goes on along the ticket the last flight began
+            local copy = {}
+            for k, v in pairs(step) do copy[k] = v end
+            copy.through = true
+            step = copy
+        end
+        table.insert(steps, 1, step)
         key = link.key
     end
     return { cost = dist[goalKey], goal = reached, steps = steps }
@@ -188,16 +250,18 @@ function Pathfinder:FindCosts(graph, startID, initialPhase)
         local d, node = item[1], item[2]
         if not visited[node.key] then
             visited[node.key] = true
-            if costs[node.id] == nil or d < costs[node.id] then costs[node.id] = d end
+            if canLand(graph, node) and (costs[node.id] == nil or d < costs[node.id]) then costs[node.id] = d end
             for _, step in ipairs(graph.adjacency[node.id] or {}) do
                 local state = nextPhaseState(node.state, step)
                 if state then
-                    local flight = step.method == "flight"
-                    local nd = d + step.cost - ((flight and node.air) and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
-                    local key = step.to .. "|" .. phaseKey(state) .. (flight and "|air" or "")
-                    if not dist[key] or nd < dist[key] then
-                        dist[key] = nd
-                        heapPush(heap, { nd, { key = key, id = step.to, state = state, air = flight } })
+                    for _, option in ipairs(expandStep(graph, node, step, d, oneTicket) or {}) do
+                        local nd = option[1]
+                        local key = step.to .. "|" .. phaseKey(state) .. airKey(option)
+                        if not dist[key] or nd < dist[key] then
+                            dist[key] = nd
+                            heapPush(heap, { nd, { key = key, id = step.to, state = state,
+                                                   origin = option[2], single = option[3] } })
+                        end
                     end
                 end
             end
@@ -210,7 +274,7 @@ end
 -- Presentation: what a person sees. The search happily walks through unrelated nodes
 -- on the way (a trainer that happens to lie along the road), which costs the same as
 -- walking straight there, so consecutive walk steps read as one "walk to X", and
--- consecutive flights as one ticket "fly to X". A walk still stops where a person would
+-- flights along one ticket (see the top of the file) as "fly to X". A walk still stops where a person would
 -- mark the route: at a zone border or a city entrance, and where it goes from one container
 -- into another (out of an interior, into a city), so those stay steps of their own.
 -- Returns a new list; the result's own steps are untouched, and each merged step keeps the
@@ -221,7 +285,8 @@ function Pathfinder:CollapseSteps(steps)
         local last = collapsed[#collapsed]
         -- Consecutive walks are one walk; consecutive flights are one ticket (in game you buy a
         -- ticket to the far flight point and fly through the stops without landing).
-        local joins = last and step.method == last.method and (step.method == "walk" or step.method == "flight")
+        local joins = last and step.method == last.method
+            and (step.method == "walk" or (step.method == "flight" and step.through))
         if joins and step.method == "walk" then
             local World = addon.World
             joins = not World:IsMilestone(last.to)

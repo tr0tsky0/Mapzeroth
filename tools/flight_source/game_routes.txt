@@ -8,8 +8,11 @@
 # Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil (and Thorium Point for the second block).
 #
 # Format: from -> to: number of legs: stops in order
+# A line `FOUND: a, b, ...` sets the flight points found for the routes after it (tests/test_gameroutes.lua,
+# generated from this file by tools/gen_flights.py, checks the planner picks each of these routes).
 
 # Captured at Morgan's Vigil (Thorium Point not yet found)
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil
 Morgan's Vigil, Burning Steppes -> Stormwind, Elwynn: 1 leg(s): Morgan's Vigil, Burning Steppes > Stormwind, Elwynn
 Morgan's Vigil, Burning Steppes -> Sentinel Hill, Westfall: 2 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Sentinel Hill, Westfall
 Morgan's Vigil, Burning Steppes -> Lakeshire, Redridge: 1 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
@@ -18,6 +21,7 @@ Morgan's Vigil, Burning Steppes -> Menethil Harbor, Wetlands: 3 leg(s): Morgan's
 Morgan's Vigil, Burning Steppes -> Darkshire, Duskwood: 2 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
 
 # Captured at Thorium Point (Thorium Point now found)
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point
 Thorium Point, Searing Gorge -> Stormwind, Elwynn: 2 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Stormwind, Elwynn
 Thorium Point, Searing Gorge -> Sentinel Hill, Westfall: 3 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Sentinel Hill, Westfall
 Thorium Point, Searing Gorge -> Lakeshire, Redridge: 2 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
@@ -29,6 +33,7 @@ Thorium Point, Searing Gorge -> Morgan's Vigil, Burning Steppes: 1 leg(s): Thori
 # Captured at Lakeshire (Morgan's Vigil and Thorium Point both found): the same destinations now route
 # through them. Lakeshire -> Ironforge is ONE ticket (the flight map draws one line and charges one fare,
 # 23s 66c) that flies through Morgan's Vigil and Thorium Point without landing.
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point
 Lakeshire, Redridge -> Stormwind, Elwynn: 1 leg(s): Lakeshire, Redridge > Stormwind, Elwynn
 Lakeshire, Redridge -> Sentinel Hill, Westfall: 1 leg(s): Lakeshire, Redridge > Sentinel Hill, Westfall
 Lakeshire, Redridge -> Ironforge, Dun Morogh: 3 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes > Thorium Point, Searing Gorge > Ironforge, Dun Morogh
@@ -39,6 +44,7 @@ Lakeshire, Redridge -> Thorium Point, Searing Gorge: 2 leg(s): Lakeshire, Redrid
 
 # Second capture (from Ironforge, then from Thelsamar): same character, same found points as above plus
 # Thelsamar for the second block.
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point
 Ironforge, Dun Morogh -> Stormwind, Elwynn: 1 leg(s): Ironforge, Dun Morogh > Stormwind, Elwynn
 Ironforge, Dun Morogh -> Sentinel Hill, Westfall: 2 leg(s): Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
 Ironforge, Dun Morogh -> Lakeshire, Redridge: 3 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
@@ -46,6 +52,7 @@ Ironforge, Dun Morogh -> Menethil Harbor, Wetlands: 1 leg(s): Ironforge, Dun Mor
 Ironforge, Dun Morogh -> Darkshire, Duskwood: 4 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
 Ironforge, Dun Morogh -> Morgan's Vigil, Burning Steppes: 2 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
 Ironforge, Dun Morogh -> Thorium Point, Searing Gorge: 1 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point, Thelsamar
 Thelsamar, Loch Modan -> Stormwind, Elwynn: 2 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Stormwind, Elwynn
 Thelsamar, Loch Modan -> Sentinel Hill, Westfall: 3 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
 Thelsamar, Loch Modan -> Lakeshire, Redridge: 4 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
@@ -54,3 +61,30 @@ Thelsamar, Loch Modan -> Menethil Harbor, Wetlands: 1 leg(s): Thelsamar, Loch Mo
 Thelsamar, Loch Modan -> Darkshire, Duskwood: 5 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
 Thelsamar, Loch Modan -> Morgan's Vigil, Burning Steppes: 3 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
 Thelsamar, Loch Modan -> Thorium Point, Searing Gorge: 2 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge
+
+# Third capture (from Refuge Pointe): same character, found points as above plus Thelsamar and Refuge
+# Pointe. The Thelsamar block was captured again with these and came out the same, so it isn't repeated.
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point, Thelsamar, Refuge Pointe
+Refuge Pointe, Arathi -> Stormwind, Elwynn: 3 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Stormwind, Elwynn
+Refuge Pointe, Arathi -> Sentinel Hill, Westfall: 4 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
+Refuge Pointe, Arathi -> Lakeshire, Redridge: 5 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Refuge Pointe, Arathi -> Ironforge, Dun Morogh: 1 leg(s): Refuge Pointe, Arathi > Ironforge, Dun Morogh
+Refuge Pointe, Arathi -> Menethil Harbor, Wetlands: 1 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands
+Refuge Pointe, Arathi -> Thelsamar, Loch Modan: 1 leg(s): Refuge Pointe, Arathi > Thelsamar, Loch Modan
+Refuge Pointe, Arathi -> Darkshire, Duskwood: 6 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+Refuge Pointe, Arathi -> Morgan's Vigil, Burning Steppes: 4 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
+Refuge Pointe, Arathi -> Thorium Point, Searing Gorge: 3 leg(s): Refuge Pointe, Arathi > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge
+
+# Fourth capture (from Southshore): found points as above plus Southshore. The Thelsamar and Refuge Pointe
+# blocks were captured again with Southshore found and came out the same, so they aren't repeated.
+FOUND: Stormwind, Ironforge, Menethil Harbor, Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil, Thorium Point, Thelsamar, Refuge Pointe, Southshore
+Southshore, Hillsbrad -> Stormwind, Elwynn: 3 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Stormwind, Elwynn
+Southshore, Hillsbrad -> Sentinel Hill, Westfall: 4 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
+Southshore, Hillsbrad -> Lakeshire, Redridge: 5 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Southshore, Hillsbrad -> Ironforge, Dun Morogh: 1 leg(s): Southshore, Hillsbrad > Ironforge, Dun Morogh
+Southshore, Hillsbrad -> Menethil Harbor, Wetlands: 1 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands
+Southshore, Hillsbrad -> Thelsamar, Loch Modan: 2 leg(s): Southshore, Hillsbrad > Refuge Pointe, Arathi > Thelsamar, Loch Modan
+Southshore, Hillsbrad -> Darkshire, Duskwood: 6 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+Southshore, Hillsbrad -> Refuge Pointe, Arathi: 1 leg(s): Southshore, Hillsbrad > Refuge Pointe, Arathi
+Southshore, Hillsbrad -> Morgan's Vigil, Burning Steppes: 4 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
+Southshore, Hillsbrad -> Thorium Point, Searing Gorge: 3 leg(s): Southshore, Hillsbrad > Menethil Harbor, Wetlands > Ironforge, Dun Morogh > Thorium Point, Searing Gorge

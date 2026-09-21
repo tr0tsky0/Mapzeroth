@@ -45,11 +45,11 @@ Each row is one guessed crossing point, seen from both sides.
 | Riverglades | 13.8, 64.8 | Burning Steppes | 94.5, 70.3 | 
 | Riverglades | 36.9, 91.9 | Swamp of Sorrows | 65.3, 10.6 |
 | Loch Modan | 19.66, 62.86 | Dun Morogh | 86.22, 51.29 | South Gate; captured at the gate on both sides [areaB=806]
-| Loch Modan | 25.3, 9.0 | Wetlands | 53.7, 72.8 |
+| Loch Modan | 25.57, 10.39 | Wetlands | 55.65, 84.80 | via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel)
 | Loch Modan | 16.8, 84.0 | Searing Gorge | 78.4, 16.7 | Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel
 *** | Dun Morogh | 58.4, 17.2 | Wetlands | 16.5, 83.3 | Does Not Exist
-| Wetlands | 51.5, 9.5 | Arathi Highlands | 45.5, 90.8 |
-| Arathi Highlands | 19.9, 30.0 | Hillsbrad Foothills | 81.7, 56.0 |
+| Wetlands | 51.12, 8.04 | Arathi Highlands | 45.47, 92.91 | Thandol Span; captured on both sides [areaB=880]
+| Arathi Highlands | 19.90, 29.23 | Hillsbrad Foothills | 82.60, 57.63 | captured on both sides [areaA=334]
 | Arathi Highlands | 86.8, 28.7 | The Hinterlands | 5.7, 60.5 |
 | Hillsbrad Foothills | 4.5, 42.0 | Silverpine Forest | 67.6, 80.7 |
 | Hillsbrad Foothills | 53.7, 8.1 | Alterac Mountains | 53.6, 93.3 |

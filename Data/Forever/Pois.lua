@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 103 places outside any city or town (starter areas and the like);
+-- 105 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -40,6 +40,8 @@
 --   SHAMAN trainer on map 1412 at (45.0, 76.0)
 --   MAGE trainer on map 1412 at (35.7, 30.1)
 --   leyline on map 1416 at (19.9, 86.1)
+--   leyline on map 1417 at (25.3, 30.0)
+--   leyline on map 1417 at (48.0, 60.5)
 --   LEATHERWORKING trainer on map 1417 at (28.2, 45.0)
 --   LEATHERWORKING trainer on map 1418 at (62.5, 57.5)
 --   WARRIOR trainer on map 1420 at (32.5, 65.6)
@@ -259,6 +261,8 @@ addon.Nodes.Pois = {
     { id = "TRAINER_ALCHEMY_C1416_185_623", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1850, y = 0.6240, kind = "trainer", trainer = "ALCHEMY", city = "dalaran", npcs = { { teaches = { 2259, 3101, 3464 } }, { teaches = { 2259, 3101, 3464 } } } },
     { id = "TRAINER_BLACKSMITHING_C1416_197_633", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1970, y = 0.6330, kind = "trainer", trainer = "BLACKSMITHING", city = "dalaran", npcs = { { teaches = { 2018, 3100, 3538 } } } },
     { id = "INN_9501", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.7380, y = 0.3250, kind = "inn", town = "hammerfall", npcs = { { id = 9501 } } },
+    { id = "LEYLINE_C1417_253_300", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.2530, y = 0.3000, kind = "leyline" },
+    { id = "LEYLINE_C1417_480_605", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.4800, y = 0.6050, kind = "leyline" },
     { id = "STABLE_9976", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.7380, y = 0.3320, kind = "stable", town = "hammerfall", npcs = { { id = 9976 } } },
     { id = "TRAINER_SKINNING_2818", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.7390, y = 0.3360, kind = "trainer", trainer = "SKINNING", town = "hammerfall", npcs = { { id = 2818 } } },
     { id = "TRAINER_LEATHERWORKING_7869", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.2820, y = 0.4500, kind = "trainer", trainer = "LEATHERWORKING", npcs = { { id = 7869, specialty = true } } },

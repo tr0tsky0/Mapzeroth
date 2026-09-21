@@ -127,14 +127,14 @@ addon.Nodes.Borders = {
     { id = "BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.6530, y = 0.1060 }, -- Swamp of Sorrows side of the Swamp of Sorrows/Riverglades crossing
     { id = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.1966, y = 0.6286 }, -- Loch Modan side of the Loch Modan/Dun Morogh crossing
     { id = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.8622, y = 0.5129, area = 806 }, -- Dun Morogh side of the Dun Morogh/Loch Modan crossing
-    { id = "BORDER_LOCH_MODAN_TO_WETLANDS", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.2530, y = 0.0900 }, -- Loch Modan side of the Loch Modan/Wetlands crossing
-    { id = "BORDER_WETLANDS_TO_LOCH_MODAN", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.5370, y = 0.7280 }, -- Wetlands side of the Wetlands/Loch Modan crossing
+    { id = "BORDER_LOCH_MODAN_TO_WETLANDS", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.2557, y = 0.1039 }, -- Loch Modan side of the Loch Modan/Wetlands crossing
+    { id = "BORDER_WETLANDS_TO_LOCH_MODAN", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.5565, y = 0.8480 }, -- Wetlands side of the Wetlands/Loch Modan crossing
     { id = "BORDER_LOCH_MODAN_TO_SEARING_GORGE", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.1680, y = 0.8400 }, -- Loch Modan side of the Loch Modan/Searing Gorge crossing
     { id = "BORDER_SEARING_GORGE_TO_LOCH_MODAN", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.7840, y = 0.1670 }, -- Searing Gorge side of the Searing Gorge/Loch Modan crossing
-    { id = "BORDER_WETLANDS_TO_ARATHI_HIGHLANDS", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.5150, y = 0.0950 }, -- Wetlands side of the Wetlands/Arathi Highlands crossing
-    { id = "BORDER_ARATHI_HIGHLANDS_TO_WETLANDS", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.4550, y = 0.9080 }, -- Arathi Highlands side of the Arathi Highlands/Wetlands crossing
-    { id = "BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.1990, y = 0.3000 }, -- Arathi Highlands side of the Arathi Highlands/Hillsbrad Foothills crossing
-    { id = "BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS", container = "easternkingdoms.hillsbrad_foothills", mapID = 1424, x = 0.8170, y = 0.5600 }, -- Hillsbrad Foothills side of the Hillsbrad Foothills/Arathi Highlands crossing
+    { id = "BORDER_WETLANDS_TO_ARATHI_HIGHLANDS", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.5112, y = 0.0804 }, -- Wetlands side of the Wetlands/Arathi Highlands crossing
+    { id = "BORDER_ARATHI_HIGHLANDS_TO_WETLANDS", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.4547, y = 0.9291, area = 880 }, -- Arathi Highlands side of the Arathi Highlands/Wetlands crossing
+    { id = "BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.1990, y = 0.2923, area = 334 }, -- Arathi Highlands side of the Arathi Highlands/Hillsbrad Foothills crossing
+    { id = "BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS", container = "easternkingdoms.hillsbrad_foothills", mapID = 1424, x = 0.8260, y = 0.5763 }, -- Hillsbrad Foothills side of the Hillsbrad Foothills/Arathi Highlands crossing
     { id = "BORDER_ARATHI_HIGHLANDS_TO_HINTERLANDS", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.8680, y = 0.2870 }, -- Arathi Highlands side of the Arathi Highlands/The Hinterlands crossing
     { id = "BORDER_HINTERLANDS_TO_ARATHI_HIGHLANDS", container = "easternkingdoms.hinterlands", mapID = 1425, x = 0.0570, y = 0.6050 }, -- The Hinterlands side of the The Hinterlands/Arathi Highlands crossing
     { id = "BORDER_HILLSBRAD_FOOTHILLS_TO_SILVERPINE_FOREST", container = "easternkingdoms.hillsbrad_foothills", mapID = 1424, x = 0.0450, y = 0.4200 }, -- Hillsbrad Foothills side of the Hillsbrad Foothills/Silverpine Forest crossing
@@ -192,10 +192,10 @@ for _, edge in ipairs({
     { from = "BORDER_RIVERGLADES_TO_BURNING_STEPPES", to = "BORDER_BURNING_STEPPES_TO_RIVERGLADES", method = "walk", cost = 0 }, -- Riverglades <-> Burning Steppes
     { from = "BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS", to = "BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES", method = "walk", cost = 0 }, -- Riverglades <-> Swamp of Sorrows
     { from = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", to = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", method = "walk", cost = 0 }, -- Loch Modan <-> Dun Morogh (South Gate; captured at the gate on both sides)
-    { from = "BORDER_LOCH_MODAN_TO_WETLANDS", to = "BORDER_WETLANDS_TO_LOCH_MODAN", method = "walk", cost = 0 }, -- Loch Modan <-> Wetlands
+    { from = "BORDER_LOCH_MODAN_TO_WETLANDS", to = "BORDER_WETLANDS_TO_LOCH_MODAN", method = "walk" }, -- Loch Modan <-> Wetlands (via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel))
     { from = "BORDER_LOCH_MODAN_TO_SEARING_GORGE", to = "BORDER_SEARING_GORGE_TO_LOCH_MODAN", method = "walk", requirements = { quest = 3201 } }, -- Loch Modan <-> Searing Gorge (Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel)
-    { from = "BORDER_WETLANDS_TO_ARATHI_HIGHLANDS", to = "BORDER_ARATHI_HIGHLANDS_TO_WETLANDS", method = "walk", cost = 0 }, -- Wetlands <-> Arathi Highlands
-    { from = "BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS", to = "BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS", method = "walk", cost = 0 }, -- Arathi Highlands <-> Hillsbrad Foothills
+    { from = "BORDER_WETLANDS_TO_ARATHI_HIGHLANDS", to = "BORDER_ARATHI_HIGHLANDS_TO_WETLANDS", method = "walk", cost = 0 }, -- Wetlands <-> Arathi Highlands (Thandol Span; captured on both sides)
+    { from = "BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS", to = "BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS", method = "walk", cost = 0 }, -- Arathi Highlands <-> Hillsbrad Foothills (captured on both sides)
     { from = "BORDER_ARATHI_HIGHLANDS_TO_HINTERLANDS", to = "BORDER_HINTERLANDS_TO_ARATHI_HIGHLANDS", method = "walk", cost = 0 }, -- Arathi Highlands <-> The Hinterlands
     { from = "BORDER_HILLSBRAD_FOOTHILLS_TO_SILVERPINE_FOREST", to = "BORDER_SILVERPINE_FOREST_TO_HILLSBRAD_FOOTHILLS", method = "walk", cost = 0 }, -- Hillsbrad Foothills <-> Silverpine Forest
     { from = "BORDER_HILLSBRAD_FOOTHILLS_TO_ALTERAC_MOUNTAINS", to = "BORDER_ALTERAC_MOUNTAINS_TO_HILLSBRAD_FOOTHILLS", method = "walk", cost = 0 }, -- Hillsbrad Foothills <-> Alterac Mountains
