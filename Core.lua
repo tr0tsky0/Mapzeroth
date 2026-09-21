@@ -8,11 +8,16 @@ end
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
+frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("HEARTHSTONE_BOUND")
 frame:RegisterEvent("TAXIMAP_OPENED")
 frame:RegisterEvent("UI_INFO_MESSAGE")
 frame:SetScript("OnEvent", function(_, event, ...)
-    if event == "TAXIMAP_OPENED" then
+    if event == "ADDON_LOADED" then
+        -- The world map may load after us; attach the panel when it does.
+        if (...) == "Blizzard_WorldMap" then addon.Panel:Init() end
+        return
+    elseif event == "TAXIMAP_OPENED" then
         addon.FlightKnowledge:OnTaxiMapOpened()
         return
     elseif event == "UI_INFO_MESSAGE" then
@@ -35,6 +40,8 @@ frame:SetScript("OnEvent", function(_, event, ...)
     end
     addon.World:Build()
     addon.FlightKnowledge:Load()
+    addon.Theme:Init("moderndark")
+    addon.Panel:Init()
     local nodeCount, containerCount, continents = addon.World:GetStats()
     say("%s ruleset: %d nodes in %d containers (%s).",
         addon:GetRuleset(), nodeCount, containerCount, table.concat(continents, ", "))
@@ -70,6 +77,59 @@ SlashCmdList["MAPZEROTHREBUILD"] = function(msg)
         if #yes == 0 then
             say("nothing learned yet. Open a flight master's window and Mapzeroth will read it; until then routes use no flights (or add allflights to /mzr route).")
         end
+
+    elseif cmd == "timings" then
+        -- Flights and boat rides timed while following trips this session, against the data.
+        local list = addon.Navigation:Timings()
+        if #list == 0 then say("nothing timed yet: follow a trip with a flight or boat and it is measured") end
+        for _, t in ipairs(list) do
+            say("%s %s -> %s: measured %ds, data %ds (%+d)", t.kind, addon:GetNodeName(t.from), addon:GetNodeName(t.to),
+                t.actual, t.planned, t.actual - t.planned)
+        end
+
+    elseif cmd == "nav" then
+        -- /mzr nav [stop]: where the trip being followed is, or drop it.
+        if msg:match("^nav%s+stop") then
+            addon.Navigator:Stop()
+            say("trip stopped")
+        else
+            local model = addon.Navigation:Model()
+            say("%s", model and (model.finished and "arrived" or ("step %d of %d"):format(model.index, model.total)) or "no trip")
+        end
+
+    elseif cmd == "ui" then
+        say("panel %s", addon.Panel:Toggle() and "shown" or "hidden")
+
+    elseif cmd == "theme" then
+        -- /mzr theme [id]: switch theme (no id cycles). Ids: classic, moderndark.
+        local id = msg:match("^theme%s+(%S+)")
+        if id then
+            if not addon.Theme:Set(id) then say("unknown theme '%s'", id) end
+        else
+            addon.Theme:Cycle()
+        end
+        addon.Panel:UpdateThemeLabel()
+        say("theme: %s", addon.Theme:Current().id)
+
+    elseif cmd == "dist" then
+        -- /mzr dist <nodeA> <nodeB>: straight-line yards between two nodes as the graph measures
+        -- them, and each node's world position. Used to check that a city's own map and its
+        -- zone's map line up (two ends of the same gate should be close).
+        local a, b = msg:match("^dist%s+(%S+)%s+(%S+)")
+        local nodeA, nodeB = a and addon.World:GetNode(a), b and addon.World:GetNode(b)
+        if not (nodeA and nodeB) then
+            say("usage: /mzr dist <nodeA> <nodeB> (node ids such as ENTRANCE_C1455_145_861)")
+            return
+        end
+        local function world(node)
+            local _, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
+            if not pos then return "?" end
+            local x, y = pos:GetXY()
+            return ("%.0f, %.0f"):format(x, y)
+        end
+        local dist = addon.TravelGraph.DistanceProvider(nodeA, nodeB)
+        say("%s (map %d) world %s | %s (map %d) world %s | %s yd", a, nodeA.mapID, world(nodeA),
+            b, nodeB.mapID, world(nodeB), dist and ("%.0f"):format(dist) or "?")
 
     elseif cmd == "world" then
         addon.World:ForEachContainer(function(c)

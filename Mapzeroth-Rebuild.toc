@@ -10,6 +10,7 @@
 
 Constants.lua
 Locales.lua
+Locales_UI.lua
 
 # Forever dataset
 Data\Forever\Containers.lua
@@ -42,5 +43,17 @@ EdgeRequirements.lua
 TravelGraph.lua
 Pathfinder.lua
 Validator.lua
+Search.lua
+Destinations.lua
+Location.lua
+Journey.lua
+Navigation.lua
+
+# UI
+UI\Theme.lua
+UI\Themes\Classic.lua
+UI\Themes\ModernDark.lua
+UI\Panel.lua
+UI\Navigator.lua
 
 Core.lua

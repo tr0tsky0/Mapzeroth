@@ -66,3 +66,15 @@ leyline	1416	19.9	86.1	-	Alterac Mountains
 leyline	1431	18.7	57.2	-	Duskwood
 leyline	1431	72.5	30.6	-	Duskwood
 leyline	1433	12.6	72.8	-	Redridge Mountains
+# City gates, captured from both sides: the point inside the city, and the point on the zone map outside.
+# Ironforge's were taken in person (subzone: Gates of Ironforge); the others are from mouse-over on the map.
+entrance	1453	72.4	89.2	stormwind	Stormwind
+entrance	1429	32.2	49.7	stormwind	Stormwind
+entrance	1455	15.18	85.69	ironforge	Ironforge	809
+entrance	1426	53.43	34.96	ironforge	Ironforge	809
+entrance	1457	73.9	40.0	darnassus	Darnassus
+entrance	1438	36.0	54.4	darnassus	Darnassus
+entrance	1411	45.5	11.9	orgrimmar	Orgrimmar
+entrance	1454	51.7	85.8	orgrimmar	Orgrimmar
+entrance	1420	61.9	64.6	undercity	Undercity
+entrance	1458	65.7	2.4	undercity	Undercity

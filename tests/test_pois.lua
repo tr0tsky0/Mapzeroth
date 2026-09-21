@@ -47,3 +47,14 @@ for _, n in ipairs(addon.Nodes.Pois) do
     if n.kind == "inn" and n.city == "dalaran" then dalaranInns = dalaranInns + 1 end
 end
 check(dalaranInns == 2, "Dalaran's four innkeepers make two inns (two buildings)")
+
+-- Ironforge's gate was captured in the subzone "Gates of Ironforge" (area 809): both sides carry it,
+-- so the client names them, and nothing else picks up an area by accident.
+for _, id in ipairs({ "ENTRANCE_C1455_152_857", "ENTRANCE_C1426_534_350" }) do
+    local node = addon.World:GetNode(id)
+    check(node and node.area == 809, "the Ironforge gate node " .. id .. " carries area 809")
+end
+check(addon.World:GetNode("ENTRANCE_C1453_724_892").area == nil, "an entrance captured without an area has none")
+for _, n in ipairs(addon.Nodes.Pois) do
+    if n.kind == "inn" then check(n.area == nil, "an inn never takes an area (it would lose its name): " .. n.id) end
+end

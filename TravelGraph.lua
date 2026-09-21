@@ -19,12 +19,12 @@ local worldPosCache = {}
 -- on different maps compare correctly. Replaceable for tests.
 function TravelGraph.DistanceProvider(a, b)
     local function worldPos(node)
-        local cached = worldPosCache[node.id]
+        local cached = not node.nocache and worldPosCache[node.id]
         if cached then return cached[1], cached[2] end
         local _, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
         if not pos then return nil end
         local x, y = pos:GetXY()
-        worldPosCache[node.id] = { x, y }
+        if not node.nocache then worldPosCache[node.id] = { x, y } end   -- the player moves: never cache
         return x, y
     end
 
@@ -74,8 +74,14 @@ function TravelGraph:Build(ctx)
         return edge.method == "flight" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
     end
 
-    -- Authored edges. The reverse direction is generated here, carrying the
-    -- same requirements and phase override.
+    -- Authored edges. The reverse direction is generated here, carrying the same requirements
+    -- and phase override, unless the reverse is authored itself: flight times differ by
+    -- direction (Lakeshire -> Ironforge is 357 s, Ironforge -> Lakeshire 201 s), and generating
+    -- a reverse next to an authored one would let the search take the cheaper of the two.
+    local authored = {}
+    for _, edge in ipairs(addon.Edges or {}) do
+        authored[edge.from .. "|" .. edge.to .. "|" .. edge.method] = true
+    end
     for _, edge in ipairs(addon.Edges or {}) do
         if addon:MeetsRequirements(edge.requirements, ctx) then
             local a, b = World:GetNode(edge.from), World:GetNode(edge.to)
@@ -90,7 +96,8 @@ function TravelGraph:Build(ctx)
                 if not unfound(edge, edge.to) then
                     link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase)
                 end
-                if not edge.oneway and not unfound(edge, edge.from) then
+                local reverseAuthored = authored[edge.to .. "|" .. edge.from .. "|" .. edge.method]
+                if not edge.oneway and not reverseAuthored and not unfound(edge, edge.from) then
                     link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase)
                 end
             end
@@ -157,4 +164,26 @@ function TravelGraph:Build(ctx)
     end
 
     return { adjacency = adjacency, anywhere = anywhere }
+end
+
+-- Adds the player's own position to a graph as a node that can only be left: it walks to
+-- every node in its container, the way any two nodes there are joined. `start` is
+-- { id, mapID, x, y }; its id must be unique to that spot (distances are cached by id).
+-- Returns false if we have no nodes on the start's map to walk to.
+function TravelGraph:AddStart(graph, ctx, start)
+    local container = addon.World:GetContainerForMap(start.mapID)
+    if not container then return false end
+    local speed = addon:GetGroundSpeed(container, ctx)
+    local list = graph.adjacency[start.id]
+    if not list then list = {}; graph.adjacency[start.id] = list end
+    for _, node in ipairs(container.nodes) do
+        local dist = TravelGraph.DistanceProvider(start, node)
+        if dist then
+            list[#list + 1] = {
+                from = start.id, to = node.id, method = "walk",
+                cost = dist * pathFactor(start, node) / speed,
+            }
+        end
+    end
+    return true
 end

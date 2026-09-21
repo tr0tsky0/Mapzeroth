@@ -305,7 +305,7 @@ def load_captured(settlements):
                 settlements[key]["area"] = area
         captured.append({"kind": kind, "trainer": trainer or None,
                          "teaches": captured_teaches(trainer, tier) if kind == "trainer" else [], "id": 0, "label": f"C{map_id}_{round(x * 10)}_{round(y * 10)}",
-                         "captured": True, "map": map_id, "pos": (x, y), "settlement": key})
+                         "captured": True, "map": map_id, "pos": (x, y), "settlement": key, "area": area})
     return captured
 
 
@@ -433,9 +433,25 @@ def main():
             specialty = "specialty = true" if m.get("specialty") else ""
             npc_entries.append("{ " + ", ".join(x for x in (ident_part, specialty, teaches) if x) + " }")
         npc_field = f", npcs = {{ {', '.join(npc_entries)} }}" if npc_entries else ""
+        area_field = ""
+        if p["kind"] == "entrance":
+            area = next((m.get("area") for m in p["members"] if m.get("area")), None)
+            if area:
+                area_field = f", area = {area}"
         out_nodes.append(
             f'    {{ id = "{ident}", container = "{containers[p["map"]]}", mapID = {p["map"]}, '
-            f'x = {p["pos"][0] / 100:.4f}, y = {p["pos"][1] / 100:.4f}, kind = "{p["kind"]}"{trainer_field}{where}{npc_field} }},')
+            f'x = {p["pos"][0] / 100:.4f}, y = {p["pos"][1] / 100:.4f}, kind = "{p["kind"]}"{trainer_field}{where}{npc_field}{area_field} }},')
+
+    # A city or town is a region, so it gets a node of its own at its centre: what "go to
+    # Goldshire" routes to. (A city is entered through its entrances when it has them, and
+    # its centre is then only the fallback.)
+    for key, t in sorted(settlements.items()):
+        if t["map"] not in containers:
+            continue
+        field = "city" if t["type"] == "city" else "town"
+        out_nodes.append(
+            f'    {{ id = "{field.upper()}_{key.upper()}", container = "{containers[t["map"]]}", mapID = {t["map"]}, '
+            f'x = {t["pos"][0] / 100:.4f}, y = {t["pos"][1] / 100:.4f}, kind = "settlement", {field} = "{key}" }},')
 
     instances = load_instances()
     for inst in instances:

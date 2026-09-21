@@ -158,6 +158,52 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
     return { cost = dist[goalKey], goal = reached, steps = steps }
 end
 
+-- The cheapest cost in seconds from startID to every node it can reach, as
+-- { [nodeID] = seconds }: one search for a whole list of results.
+function Pathfinder:FindCosts(graph, startID, initialPhase)
+    local startState = {}
+    for k, v in pairs(initialPhase or {}) do startState[k] = v end
+
+    local dist, visited, heap = {}, {}, {}
+    local costs = {}
+    local startKey = startID .. "|" .. phaseKey(startState)
+    dist[startKey] = 0
+    heapPush(heap, { 0, { key = startKey, id = startID, state = startState } })
+
+    for _, ability in ipairs(graph.anywhere or {}) do
+        local state = nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
+        if state then
+            local key = ability.to .. "|" .. phaseKey(state)
+            if not dist[key] or ability.cost < dist[key] then
+                dist[key] = ability.cost
+                heapPush(heap, { ability.cost, { key = key, id = ability.to, state = state } })
+            end
+        end
+    end
+
+    while #heap > 0 do
+        local item = heapPop(heap)
+        local d, node = item[1], item[2]
+        if not visited[node.key] then
+            visited[node.key] = true
+            if costs[node.id] == nil or d < costs[node.id] then costs[node.id] = d end
+            for _, step in ipairs(graph.adjacency[node.id] or {}) do
+                local state = nextPhaseState(node.state, step)
+                if state then
+                    local nd = d + step.cost
+                    local key = step.to .. "|" .. phaseKey(state)
+                    if not dist[key] or nd < dist[key] then
+                        dist[key] = nd
+                        heapPush(heap, { nd, { key = key, id = step.to, state = state } })
+                    end
+                end
+            end
+        end
+    end
+    costs[startID] = nil
+    return costs
+end
+
 -- Presentation: what a person sees. The search happily walks through unrelated nodes
 -- on the way (a trainer that happens to lie along the road), which costs the same as
 -- walking straight there, so consecutive walk steps read as one "walk to X". Returns

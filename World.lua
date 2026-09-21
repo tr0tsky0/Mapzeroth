@@ -15,6 +15,7 @@ local containers = {}      -- path -> container
 local nodes = {}           -- nodeID -> node
 local nodeContainer = {}   -- nodeID -> container
 local duplicates = {}      -- nodeIDs seen more than once
+local mapContainer = {}    -- uiMapID -> the container most of that map's nodes are in
 
 local function parentPath(path)
     return path:match("^(.*)%.[^.]+$") or ROOT
@@ -44,7 +45,8 @@ end
 
 -- Rebuilds the tree from addon.Nodes / addon.Containers. Safe to call again.
 function World:Build()
-    containers, nodes, nodeContainer, duplicates = {}, {}, {}, {}
+    containers, nodes, nodeContainer, duplicates, mapContainer = {}, {}, {}, {}, {}
+    local mapCounts = {}    -- uiMapID -> { [container] = node count }
 
     ensureContainer(ROOT)
     -- Containers that carry flags but no nodes of their own still exist.
@@ -61,8 +63,23 @@ function World:Build()
                 local c = ensureContainer(node.container or ROOT)
                 c.nodes[#c.nodes + 1] = node
                 nodeContainer[node.id] = c
+                if node.mapID then
+                    local counts = mapCounts[node.mapID]
+                    if not counts then counts = {}; mapCounts[node.mapID] = counts end
+                    counts[c] = (counts[c] or 0) + 1
+                end
             end
         end
+    end
+
+    -- A city map sits inside its zone's container, so a map can be looked up by the
+    -- container most of its nodes are in (ties go to the earlier path, to stay stable).
+    for mapID, counts in pairs(mapCounts) do
+        local best
+        for c, n in pairs(counts) do
+            if not best or n > counts[best] or (n == counts[best] and c.path < best.path) then best = c end
+        end
+        mapContainer[mapID] = best
     end
 end
 
@@ -72,6 +89,11 @@ end
 
 function World:GetContainer(path)
     return containers[path]
+end
+
+-- The container a map's nodes live in (nil for a map we have no nodes on).
+function World:GetContainerForMap(mapID)
+    return mapContainer[mapID]
 end
 
 -- Calls fn(node) for every node.

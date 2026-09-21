@@ -61,6 +61,7 @@ addon:RegisterLocale("enUS", {
     NODE_KIND_STABLE   = "%s Stable Master",
     NODE_KIND_ENTRANCE = "%s Entrance",
     NODE_KIND_LEYLINE  = "%s Ley Line",
+    NODE_KIND_SETTLEMENT = "%s",
     -- First %s is the settlement (or zone), second is what it trains.
     NODE_KIND_TRAINER  = "%s %s Trainer",
 

@@ -69,3 +69,29 @@ check(#shown == 3, "walk, walk, flight, walk collapses to 3 steps, got " .. #sho
 check(shown[1].from == "A" and shown[1].to == "C" and shown[1].cost == 30 and #shown[1].parts == 2, "the two walks merge")
 check(shown[2].method == "flight" and shown[3].to == "E", "other steps stay as they are")
 check(steps[1].to == "B" and steps[1].cost == 10, "the original steps are not modified")
+
+-- Flight times differ by direction, and each direction's own time is used: Lakeshire -> Ironforge
+-- is 357 s (5:57 in game) and Ironforge -> Lakeshire 201 s. Both directions are authored, so a reverse must not be generated
+-- next to an authored one, or the search would take the cheaper of the two both ways (which is
+-- how a 357 s flight once showed as 3m21s).
+do
+    useTestDistances()
+    addon.World:Build()
+    local graph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+    local function flightCosts(from, to)
+        local costs = {}
+        for _, link in ipairs(graph.adjacency[from] or {}) do
+            if link.to == to and link.method == "flight" then costs[#costs + 1] = link.cost end
+        end
+        return costs
+    end
+    local there, back = flightCosts("TAXI_5", "TAXI_6"), flightCosts("TAXI_6", "TAXI_5")
+    check(#there == 1 and there[1] == 357, "Lakeshire -> Ironforge is one flight of 357 s: " .. table.concat(there, ","))
+    check(#back == 1 and back[1] == 201, "Ironforge -> Lakeshire is one flight of 201 s: " .. table.concat(back, ","))
+    -- Where only one direction is authored, the other is still generated.
+    local oneWay = 0
+    for _, link in ipairs(graph.adjacency["TAXI_2"] or {}) do
+        if link.method == "flight" then oneWay = oneWay + 1 end
+    end
+    check(oneWay > 5, "an ordinary flight master still has its flights: " .. oneWay)
+end

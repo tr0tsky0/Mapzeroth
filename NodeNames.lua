@@ -20,6 +20,11 @@ local function zoneName(mapID)
     return info and info.name
 end
 
+-- The client's name for a map (a zone, a city).
+function addon:GetZoneName(mapID)
+    return zoneName(mapID)
+end
+
 local function continentOf(mapID)
     local id = mapID
     while id and id ~= 0 do

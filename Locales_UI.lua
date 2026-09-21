@@ -1,0 +1,71 @@
+local addonName, addon = ...
+
+-- Strings for the route and the panel. The destination's name inside them is already in the
+-- client's language; only our own words are here, and they are the only ones to translate.
+
+addon:RegisterLocale("enUS", {
+    -- One step of a route. %s is the place the step goes to.
+    STEP_WALK        = "Walk to %s",
+    STEP_FLIGHT      = "Fly to %s",
+    STEP_SHIP        = "Take the boat to %s",
+    STEP_ZEPPELIN    = "Take the zeppelin to %s",
+    STEP_TRAM        = "Take the tram to %s",
+    STEP_PORTAL      = "Use %s",
+    STEP_TELEPORT    = "Teleport to %s",
+    STEP_HEARTHSTONE = "Use your Hearthstone to go to %s",
+    STEP_OTHER       = "Go to %s",
+
+    -- Times.
+    TIME_SECONDS = "%ds",
+    TIME_MINUTES = "%dm %02ds",
+    TIME_HOURS   = "%dh %02dm",
+    TIME_ABOUT   = "~%s",
+
+    -- Why a route is longer than it could be. First %s is a flight point, second a time saved.
+    HINT_UNFOUND = "You haven't found %s yet. Unlock it and this trip would take %s less.",
+    HINT_UNKNOWN = "Open a flight master's window so Mapzeroth can see which flight points you have found. Flying could save %s here.",
+
+    -- The panel.
+    PANEL_TITLE       = "Mapzeroth",
+    SEARCH_HINT       = "Where to?",
+    SEARCH_EMPTY      = "Type a town, flight master, inn, trainer, dungeon or anything else.",
+    NO_RESULTS        = "Nothing matches.",
+    QUICK_LEYLINE     = "Nearest ley line",
+    ROUTE_BACK        = "Back",
+    ROUTE_START       = "Start",
+    ROUTE_TOTAL       = "%s in total",
+    ROUTE_ALREADY     = "You're already here.",
+    ROUTE_NONE        = "No route found from here.",
+    NOWHERE           = "Mapzeroth can't tell where you are right now (instances aren't covered).",
+    THEME_LABEL       = "Theme: %s",
+
+    -- Following a route (the navigator).
+    NAV_STEP_OF       = "Step %d of %d",
+    NAV_STOP          = "Stop",
+    NAV_CLOSE         = "Close",
+    NAV_ARRIVED       = "Destination reached",
+    NAV_LEFT          = "%s left",
+    NAV_DISTANCE      = "%d yards",
+    NAV_WAIT_FLIGHT   = "Speak to the flight master",
+    NAV_FLYING        = "In flight",
+    NAV_LONGER        = "Taking longer than planned",
+    NAV_WAIT_BOARD    = "Board and wait to depart",
+    NAV_UNDERWAY      = "Underway",
+    NAV_PORTAL        = "Walk into the portal",
+    NAV_COMBAT        = "Can't be used in combat",
+
+    -- What sort of place a search result is, shown under its name.
+    GROUP_place       = "Town or city",
+    GROUP_flight      = "Flight master",
+    GROUP_transport   = "Transport",
+    GROUP_instance    = "Dungeon or raid",
+    GROUP_inn         = "Inn",
+    GROUP_bank        = "Bank",
+    GROUP_auction     = "Auction house",
+    GROUP_battlemaster = "Battlemaster",
+    GROUP_stable      = "Stable master",
+    GROUP_trainer     = "Trainer",
+    GROUP_entrance    = "City entrance",
+    GROUP_leyline     = "Ley line",
+    GROUP_other       = "Place",
+})
