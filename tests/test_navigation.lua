@@ -4,6 +4,9 @@ useTestDistances()
 addon.World:Build()
 
 local N = addon.Navigation
+-- What was measured on the trips below: the engine hands each measurement to a tool and keeps none.
+local timed = {}
+N.onTiming = function(record) timed[#timed + 1] = record end
 
 local function at(nodeID, dx, dy, extra)
     local node = addon.World:GetNode(nodeID)
@@ -53,7 +56,6 @@ m = N:Update(at("TAXI_2", 0.5, 0, { now = 120, onTaxi = true }))
 check(m.overrun == false, "and a flight within it doesn't")
 m = N:Update(at("TAXI_6", 0.002, 0, { now = 230, onTaxi = false }))
 check(m.index == 3 and m.kind == "ability", "landing ends the flight step")
-local timed = N:Timings()
 check(#timed == 1 and timed[1].kind == "flight" and timed[1].planned == 200 and math.abs(timed[1].actual - 210) < 1e-9,
     "the flight was timed from take-off to landing (planned 200, took 210)")
 
@@ -157,7 +159,6 @@ m = N:Update(flying("TAXI_2", 160))
 check(math.abs(m.progress - 0.5) < 1e-9, "the bar runs over both: half way at 150 of 300 s")
 m = N:Update(at("TAXI_4", 0.002, 0, { now = 320 }))
 check(m.finished, "landing at the end finishes the trip")
-timed = N:Timings()
 check(timed[#timed].planned == 300 and math.abs(timed[#timed].actual - 310) < 1e-9, "and the flight is timed against the ticket, not one step")
 check(timed[#timed].from == "TAXI_2" and timed[#timed].to == "TAXI_4", "and is labelled with where the ticket began, not where the skipped-to step did")
 

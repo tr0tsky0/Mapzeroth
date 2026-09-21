@@ -105,6 +105,9 @@ def new_runtime():
         path = ROOT / name
         chunk = compile_chunk(loadstring, path.read_text(encoding="utf-8"), name)
         chunk("MapzerothRebuild", addon)
+    # Test support that isn't part of the addon: the data validator.
+    support = ROOT / "tests" / "Validator.lua"
+    compile_chunk(loadstring, support.read_text(encoding="utf-8"), support.name)("MapzerothRebuild", addon)
     lua.globals().addon = addon
     return lua
 

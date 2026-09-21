@@ -2,7 +2,9 @@
 local World = addon.World
 World:Build()
 
-local nodeCount, containerCount, continents = World:GetStats()
+local nodeCount, continents = 0, {}
+World:ForEachNode(function() nodeCount = nodeCount + 1 end)
+World:ForEachContainer(function(c) if c.depth == 1 then continents[#continents + 1] = c.path end end)
 check(nodeCount > 90, "expected 90+ nodes, got " .. nodeCount)
 check(#continents == 3, "expected 3 continents, got " .. #continents)
 

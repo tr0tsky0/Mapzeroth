@@ -169,14 +169,3 @@ function World:ForEachContainer(fn)
         fn(containers[path])
     end
 end
-
-function World:GetStats()
-    local nodeCount, containerCount, continents = 0, 0, {}
-    for _ in pairs(nodes) do nodeCount = nodeCount + 1 end
-    for path, c in pairs(containers) do
-        if path ~= ROOT then containerCount = containerCount + 1 end
-        if c.depth == 1 then continents[#continents + 1] = c.path end
-    end
-    table.sort(continents)
-    return nodeCount, containerCount, continents
-end

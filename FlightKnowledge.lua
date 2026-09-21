@@ -25,7 +25,6 @@ addon.FlightKnowledge = FlightKnowledge
 local found = {}    -- "TAXI_<id>" -> true | false
 local fareFactor        -- what the player pays as a fraction of the base fares, typically, once seen
 local originFactors = {}    -- the same for tickets bought at one flight master: "TAXI_<id>" -> factor
-local fareSamples = {}      -- the last window's prices: { to, paid, base }, for /mzr fares
 
 -- Enum.FlightPathState on the beta: Current = 0, Reachable = 1, Unreachable = 2.
 local function states()
@@ -39,7 +38,7 @@ end
 
 function FlightKnowledge:Reset()
     found = {}
-    fareFactor, originFactors, fareSamples = nil, {}, {}
+    fareFactor, originFactors = nil, {}
 end
 
 -- What the player pays for a ticket as a fraction of the game's base fares. It is probably a
@@ -50,10 +49,6 @@ function FlightKnowledge:FareFactor(nodeID)
     return (nodeID and originFactors[nodeID]) or fareFactor or 1
 end
 
--- The prices read from the last flight window, { { to = nodeID, paid = copper, base = copper }, ... }.
-function FlightKnowledge:FareSamples()
-    return fareSamples
-end
 
 local legFares       -- "TAXI_a|TAXI_b" -> base fare in copper, from the flight edges
 
@@ -74,7 +69,9 @@ local function baseFare(from, stops)
 end
 
 -- The client's price for each reachable destination, next to what our fares add up to for that route,
--- gives the player's discount. entries: { { nodeID, state, slotIndex }, ... } as for Record.
+-- gives the player's discount. entries: { { nodeID, state, slotIndex }, ... } as for Record. The prices
+-- read, { { to = nodeID, paid = copper, base = copper }, ... }, go to FlightKnowledge.onFares(from, samples)
+-- if a tool has set one (MapzerothDataTools does); nothing is kept or shown here.
 function FlightKnowledge:LearnFares(entries)
     local current, reachable = states()
     local from
@@ -83,7 +80,7 @@ function FlightKnowledge:LearnFares(entries)
     end
     if not (from and TaxiNodeCost) then return end
     local ratios = {}
-    fareSamples = {}
+    local samples = {}
     for _, entry in ipairs(entries) do
         if entry.state == reachable and entry.slotIndex then
             local ok, cost = pcall(TaxiNodeCost, entry.slotIndex)
@@ -91,10 +88,11 @@ function FlightKnowledge:LearnFares(entries)
             local base = stops and baseFare(from, stops)
             if base and base > 0 then
                 ratios[#ratios + 1] = cost / base
-                fareSamples[#fareSamples + 1] = { to = stops[#stops], paid = cost, base = base }
+                samples[#samples + 1] = { to = stops[#stops], paid = cost, base = base }
             end
         end
     end
+    if self.onFares then self.onFares(from, samples) end
     if #ratios == 0 then return end
     table.sort(ratios)
     originFactors[from] = ratios[math.ceil(#ratios / 2)]
@@ -235,15 +233,4 @@ function FlightKnowledge:Load()
     local factors = MapzerothRebuildDB and MapzerothRebuildDB.fareFactors and MapzerothRebuildDB.fareFactors[characterKey()]
     fareFactor, originFactors = factors and factors.typical or nil, {}
     for id, factor in pairs(factors and factors.origins or {}) do originFactors[id] = factor end
-end
-
--- For /mzr flights: found and not-found ids, sorted.
-function FlightKnowledge:List()
-    local yes, no = {}, {}
-    for id, value in pairs(found) do
-        table.insert(value and yes or no, id)
-    end
-    table.sort(yes)
-    table.sort(no)
-    return yes, no
 end

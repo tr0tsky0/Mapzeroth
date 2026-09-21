@@ -170,8 +170,14 @@ FK:OnTaxiMapOpened(ali)
 check(math.abs(FK:FareFactor() - 0.96) < 0.01, "a flight window's prices give the factor: " .. tostring(FK:FareFactor()))
 check(math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01, "for the flight master they were read at")
 check(FK:FareFactor("TAXI_6") == FK:FareFactor(), "and a flight master not seen yet gets the general one")
-local samples = FK:FareSamples()
-check(#samples == 2 and samples[1].paid and samples[1].base, "the prices read are kept for /mzr fares")
+-- The prices read go to a tool if one is listening; the engine keeps none.
+check(FK.FareSamples == nil, "the engine keeps no samples of its own")
+local heard
+FK.onFares = function(from, samples) heard = { from = from, samples = samples } end
+FK:OnTaxiMapOpened(ali)
+check(heard and heard.from == "TAXI_2" and #heard.samples == 2 and heard.samples[1].paid and heard.samples[1].base,
+    "the prices read are handed to the tool that listens")
+FK.onFares = nil
 -- Another flight master with a different discount (a different faction's reputation): its own factor.
 C_TaxiMap.GetAllTaxiNodes = function()
     return { { nodeID = 6, slotIndex = 2, state = 0 }, { nodeID = 2, slotIndex = 1, state = 1 } }

@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 -- The settings page, in the game's own Settings window (Game Menu > Options > AddOns >
--- Mapzeroth, or /mzr settings): how long a loading screen counts for in a route, the size of
+-- Mapzeroth, or /mapzeroth settings): how long a loading screen counts for in a route, the size of
 -- our windows, and the theme. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.

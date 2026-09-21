@@ -88,6 +88,8 @@ addon:RegisterLocale("enUS", {
     PICK_PROFESSION   = "Nearest %s Trainer",
     PICK_WEAPON       = "Nearest Weapon Trainer",
     PICK_NO_ROUTE     = "No way there",
+    CMD_HELP          = "Mapzeroth: /mapzeroth ui shows or hides the travel panel on the map, /mapzeroth settings opens the settings.",
+    CMD_NO_SETTINGS   = "Mapzeroth: the game's settings window isn't available here.",
     GROUP_place       = "Town or city",
     KIND_city         = "City",
     KIND_town         = "Town",

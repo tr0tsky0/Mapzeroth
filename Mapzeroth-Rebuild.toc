@@ -44,7 +44,6 @@ MovementSpeed.lua
 EdgeRequirements.lua
 TravelGraph.lua
 Pathfinder.lua
-Validator.lua
 Search.lua
 Destinations.lua
 Sections.lua

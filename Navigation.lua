@@ -43,10 +43,13 @@ end
 
 local active       -- the trip: { entry, plan, steps, index, state, finished, model }
 
--- What was measured on trips this session: { kind, from, to, planned, actual } in seconds. A flight
--- is timed from take-off to landing; a boat from leaving the dock to arriving (the plan's number
--- also includes waiting for it, so that comparison is only rough). Read with Navigation:Timings().
-local timings = {}
+-- A flight is timed from take-off to landing, a boat from leaving the dock to arriving (the plan's number
+-- also includes waiting for it, so that comparison is only rough). Each measurement, { kind, from, to,
+-- planned, actual } in seconds, goes to Navigation.onTiming if a tool has set one (MapzerothDataTools
+-- does); nothing is kept or shown here.
+local function report(record)
+    if Navigation.onTiming then Navigation.onTiming(record) end
+end
 
 local function nodeOf(id)
     return id and addon.World:GetNode(id)
@@ -143,8 +146,8 @@ local function completed(step, sample)
             return false
         end
         if state.flying then
-            timings[#timings + 1] = { kind = "flight", from = state.fromID or step.fromID, to = step.nodeID,
-                                      planned = state.seconds or step.seconds, actual = sample.now - state.flightStart }
+            report({ kind = "flight", from = state.fromID or step.fromID, to = step.nodeID,
+                     planned = state.seconds or step.seconds, actual = sample.now - state.flightStart })
             return true
         end
         return farStart and arrived(step, sample)
@@ -158,8 +161,8 @@ local function completed(step, sample)
         end
         if (state.underway or farStart) and arrived(step, sample) then
             if state.underway then
-                timings[#timings + 1] = { kind = step.method, from = step.fromID, to = step.nodeID,
-                                          planned = step.seconds, actual = sample.now - state.departedAt }
+                report({ kind = step.method, from = step.fromID, to = step.nodeID,
+                         planned = step.seconds, actual = sample.now - state.departedAt })
             end
             return true
         end
@@ -281,10 +284,6 @@ end
 
 function Navigation:Stop()
     active = nil
-end
-
-function Navigation:Timings()
-    return timings
 end
 
 function Navigation:IsActive()

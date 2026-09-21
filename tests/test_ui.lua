@@ -148,12 +148,13 @@ check(state.offset == 0, "and at the start")
 
 -- Switching theme re-skins everything, and every widget has a skin.
 local before = Theme:Current().id
-Theme:Cycle()
-check(Theme:Current().id ~= before, "cycling changes theme: " .. Theme:Current().id)
+local other = before == "classic" and "moderndark" or "classic"
+Theme:Set(other)
+check(Theme:Current().id == other, "switching changes theme: " .. Theme:Current().id)
 addon.Panel:Query("iron")
 addon.Panel:Choose(1)
-Theme:Cycle()
-check(Theme:Current().id == before, "and cycles back")
+Theme:Set(before)
+check(Theme:Current().id == before, "and switches back")
 local count, missing = Theme:Audit()
 check(count > 30 and missing == 0, "every widget is themed: " .. count .. " widgets, " .. missing .. " without a skin")
 check(Theme:Set("classic") and Theme:Set("moderndark") and not Theme:Set("nope"), "themes are set by id")

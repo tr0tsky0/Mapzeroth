@@ -209,15 +209,6 @@ function Theme:Set(id)
     return true
 end
 
-function Theme:Cycle()
-    local index = 1
-    for i, id in ipairs(order) do
-        if current and id == current.id then index = i end
-    end
-    self:Set(order[index % #order + 1])
-    return current.id
-end
-
 -- Choose the saved theme, or the default.
 function Theme:Init(default)
     local saved = addon.Options:Get("theme")
