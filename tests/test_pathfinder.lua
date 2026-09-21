@@ -70,6 +70,45 @@ check(shown[1].from == "A" and shown[1].to == "C" and shown[1].cost == 30 and #s
 check(shown[2].method == "flight" and shown[3].to == "E", "other steps stay as they are")
 check(steps[1].to == "B" and steps[1].cost == 10, "the original steps are not modified")
 
+-- A walk still stops where a person would mark the route: a zone border, a city entrance, and going
+-- from one container into another (out of an interior, into a city).
+local function walkTo(from, to, cost) return { from = from, to = to, cost = cost, method = "walk" } end
+local BORDER_OUT, BORDER_IN = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", "BORDER_LOCH_MODAN_TO_DUN_MOROGH"
+local pre                                        -- a node in the border's own zone, to walk past on the way there
+local outContainer = addon.World:GetNodeContainer(BORDER_OUT)
+addon.World:ForEachNode(function(node)
+    if node.id ~= BORDER_OUT and addon.World:GetNodeContainer(node.id) == outContainer then pre = pre or node.id end
+end)
+check(pre, "the border's zone has another node")
+local viaBorder = addon.Pathfinder:CollapseSteps({
+    walkTo("A", pre, 10), walkTo(pre, BORDER_OUT, 50), walkTo(BORDER_OUT, BORDER_IN, 0), walkTo(BORDER_IN, "TAXI_8", 30),
+})
+check(#viaBorder == 3 and viaBorder[1].to == BORDER_OUT and viaBorder[1].cost == 60, "a walk ends at the zone border (the pass-through node before it merges)")
+check(viaBorder[3].from == BORDER_IN and viaBorder[3].to == "TAXI_8", "and the walk on from the border is its own step")
+check(addon.World:IsMilestone(BORDER_OUT) and not addon.World:IsMilestone("TAXI_8"), "a border is a milestone, a flight master is not")
+local gate
+addon.World:ForEachNode(function(node) if node.kind == "entrance" then gate = gate or node end end)
+check(gate and addon.World:IsMilestone(gate.id), "a city entrance is a milestone")
+local viaGate = addon.Pathfinder:CollapseSteps({ walkTo("A", gate.id, 20), walkTo(gate.id, "C", 40) })
+check(#viaGate == 2 and viaGate[1].to == gate.id and viaGate[2].to == "C", "a walk ends at a city entrance and the next starts there")
+local same, other
+addon.World:ForEachNode(function(node)
+    local c = addon.World:GetNodeContainer(node.id)
+    if node.id:find("^TAXI_") and c then
+        same = same or {}
+        same[c] = same[c] or {}
+        table.insert(same[c], node.id)
+    end
+end)
+local pair
+for _, ids in pairs(same or {}) do if #ids >= 2 then pair = ids break end end
+check(pair, "two flight nodes share a container")
+local within = addon.Pathfinder:CollapseSteps({ walkTo("A", pair[1], 10), walkTo(pair[1], pair[2], 20) })
+check(#within == 1, "walking between nodes of one container stays one step")
+local across = addon.Pathfinder:CollapseSteps({ walkTo("A", "TAXI_2", 10), walkTo("TAXI_2", "TAXI_4", 20) })
+check(addon.World:GetNodeContainer("TAXI_2") ~= addon.World:GetNodeContainer("TAXI_4") and #across == 2,
+    "walking on into another container starts a new step")
+
 -- Flights are single legs, chained by the planner. A leg's time differs by direction (Morgan's Vigil ->
 -- Thorium Point 104 s, back 96 s), each direction's own time is used, and taking a leg straight after
 -- another saves FLIGHT_CHAIN_SAVING seconds (a through-ticket doesn't land and take off again).

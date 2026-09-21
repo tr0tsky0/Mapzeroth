@@ -125,8 +125,8 @@ addon.Nodes.Borders = {
     { id = "BORDER_BURNING_STEPPES_TO_RIVERGLADES", container = "easternkingdoms.burning_steppes", mapID = 1428, x = 0.9450, y = 0.7030 }, -- Burning Steppes side of the Burning Steppes/Riverglades crossing
     { id = "BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS", container = "easternkingdoms.riverglades", mapID = 2548, x = 0.3690, y = 0.9190 }, -- Riverglades side of the Riverglades/Swamp of Sorrows crossing
     { id = "BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.6530, y = 0.1060 }, -- Swamp of Sorrows side of the Swamp of Sorrows/Riverglades crossing
-    { id = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.2040, y = 0.6330 }, -- Loch Modan side of the Loch Modan/Dun Morogh crossing
-    { id = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.8470, y = 0.3050 }, -- Dun Morogh side of the Dun Morogh/Loch Modan crossing
+    { id = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.1966, y = 0.6286 }, -- Loch Modan side of the Loch Modan/Dun Morogh crossing
+    { id = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.8622, y = 0.5129, area = 806 }, -- Dun Morogh side of the Dun Morogh/Loch Modan crossing
     { id = "BORDER_LOCH_MODAN_TO_WETLANDS", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.2530, y = 0.0900 }, -- Loch Modan side of the Loch Modan/Wetlands crossing
     { id = "BORDER_WETLANDS_TO_LOCH_MODAN", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.5370, y = 0.7280 }, -- Wetlands side of the Wetlands/Loch Modan crossing
     { id = "BORDER_LOCH_MODAN_TO_SEARING_GORGE", container = "easternkingdoms.loch_modan", mapID = 1432, x = 0.1680, y = 0.8400 }, -- Loch Modan side of the Loch Modan/Searing Gorge crossing
@@ -191,7 +191,7 @@ for _, edge in ipairs({
     { from = "BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS", to = "BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES", method = "walk", cost = 0 }, -- Riverglades <-> Redridge Mountains
     { from = "BORDER_RIVERGLADES_TO_BURNING_STEPPES", to = "BORDER_BURNING_STEPPES_TO_RIVERGLADES", method = "walk", cost = 0 }, -- Riverglades <-> Burning Steppes
     { from = "BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS", to = "BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES", method = "walk", cost = 0 }, -- Riverglades <-> Swamp of Sorrows
-    { from = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", to = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", method = "walk", cost = 0 }, -- Loch Modan <-> Dun Morogh
+    { from = "BORDER_LOCH_MODAN_TO_DUN_MOROGH", to = "BORDER_DUN_MOROGH_TO_LOCH_MODAN", method = "walk", cost = 0 }, -- Loch Modan <-> Dun Morogh (South Gate; captured at the gate on both sides)
     { from = "BORDER_LOCH_MODAN_TO_WETLANDS", to = "BORDER_WETLANDS_TO_LOCH_MODAN", method = "walk", cost = 0 }, -- Loch Modan <-> Wetlands
     { from = "BORDER_LOCH_MODAN_TO_SEARING_GORGE", to = "BORDER_SEARING_GORGE_TO_LOCH_MODAN", method = "walk", requirements = { quest = 3201 } }, -- Loch Modan <-> Searing Gorge (Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel)
     { from = "BORDER_WETLANDS_TO_ARATHI_HIGHLANDS", to = "BORDER_ARATHI_HIGHLANDS_TO_WETLANDS", method = "walk", cost = 0 }, -- Wetlands <-> Arathi Highlands

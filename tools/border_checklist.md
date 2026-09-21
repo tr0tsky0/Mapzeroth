@@ -44,7 +44,7 @@ Each row is one guessed crossing point, seen from both sides.
 | Riverglades | 13.8, 78.4 | Redridge Mountains | 52.3, 7.6 |
 | Riverglades | 13.8, 64.8 | Burning Steppes | 94.5, 70.3 | 
 | Riverglades | 36.9, 91.9 | Swamp of Sorrows | 65.3, 10.6 |
-| Loch Modan | 20.4, 63.3 | Dun Morogh | 84.7, 30.5 |
+| Loch Modan | 19.66, 62.86 | Dun Morogh | 86.22, 51.29 | South Gate; captured at the gate on both sides [areaB=806]
 | Loch Modan | 25.3, 9.0 | Wetlands | 53.7, 72.8 |
 | Loch Modan | 16.8, 84.0 | Searing Gorge | 78.4, 16.7 | Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel
 *** | Dun Morogh | 58.4, 17.2 | Wetlands | 16.5, 83.3 | Does Not Exist

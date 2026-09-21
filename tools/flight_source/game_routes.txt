@@ -36,3 +36,21 @@ Lakeshire, Redridge -> Menethil Harbor, Wetlands: 4 leg(s): Lakeshire, Redridge 
 Lakeshire, Redridge -> Darkshire, Duskwood: 1 leg(s): Lakeshire, Redridge > Darkshire, Duskwood
 Lakeshire, Redridge -> Morgan's Vigil, Burning Steppes: 1 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes
 Lakeshire, Redridge -> Thorium Point, Searing Gorge: 2 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes > Thorium Point, Searing Gorge
+
+# Second capture (from Ironforge, then from Thelsamar): same character, same found points as above plus
+# Thelsamar for the second block.
+Ironforge, Dun Morogh -> Stormwind, Elwynn: 1 leg(s): Ironforge, Dun Morogh > Stormwind, Elwynn
+Ironforge, Dun Morogh -> Sentinel Hill, Westfall: 2 leg(s): Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
+Ironforge, Dun Morogh -> Lakeshire, Redridge: 3 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Ironforge, Dun Morogh -> Menethil Harbor, Wetlands: 1 leg(s): Ironforge, Dun Morogh > Menethil Harbor, Wetlands
+Ironforge, Dun Morogh -> Darkshire, Duskwood: 4 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+Ironforge, Dun Morogh -> Morgan's Vigil, Burning Steppes: 2 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
+Ironforge, Dun Morogh -> Thorium Point, Searing Gorge: 1 leg(s): Ironforge, Dun Morogh > Thorium Point, Searing Gorge
+Thelsamar, Loch Modan -> Stormwind, Elwynn: 2 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Stormwind, Elwynn
+Thelsamar, Loch Modan -> Sentinel Hill, Westfall: 3 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Stormwind, Elwynn > Sentinel Hill, Westfall
+Thelsamar, Loch Modan -> Lakeshire, Redridge: 4 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Thelsamar, Loch Modan -> Ironforge, Dun Morogh: 1 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh
+Thelsamar, Loch Modan -> Menethil Harbor, Wetlands: 1 leg(s): Thelsamar, Loch Modan > Menethil Harbor, Wetlands
+Thelsamar, Loch Modan -> Darkshire, Duskwood: 5 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+Thelsamar, Loch Modan -> Morgan's Vigil, Burning Steppes: 3 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
+Thelsamar, Loch Modan -> Thorium Point, Searing Gorge: 2 leg(s): Thelsamar, Loch Modan > Ironforge, Dun Morogh > Thorium Point, Searing Gorge

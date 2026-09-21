@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 101 places outside any city or town (starter areas and the like);
+-- 103 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -51,6 +51,8 @@
 --   PALADIN trainer on map 1420 at (22.0, 47.2)
 --   DEMON trainer on map 1420 at (30.8, 66.4)
 --   battlemaster on map 1426 at (62.3, 35.3)
+--   leyline on map 1426 at (56.6, 45.6)
+--   leyline on map 1426 at (63.8, 50.7)
 --   stable on map 1426 at (62.2, 34.6)
 --   COOKING trainer on map 1426 at (68.4, 54.5)
 --   FISHING trainer on map 1426 at (35.5, 40.3)
@@ -311,6 +313,8 @@ addon.Nodes.Pois = {
     { id = "BATTLEMASTER_857", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.6227, y = 0.3532, kind = "battlemaster", npcs = { { id = 857 }, { id = 12197 }, { id = 14982 }, { id = 14991 }, { id = 15102 }, { id = 15103 } } },
     { id = "ENTRANCE_C1426_534_350", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.5343, y = 0.3496, kind = "entrance", city = "ironforge", area = 809 },
     { id = "INN_1247", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.4740, y = 0.5250, kind = "inn", town = "kharanos", npcs = { { id = 1247 } } },
+    { id = "LEYLINE_C1426_566_456", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.5660, y = 0.4560, kind = "leyline" },
+    { id = "LEYLINE_C1426_638_507", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.6380, y = 0.5070, kind = "leyline" },
     { id = "STABLE_9980", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.4700, y = 0.5260, kind = "stable", town = "kharanos", npcs = { { id = 9980 } } },
     { id = "STABLE_9984", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.6220, y = 0.3460, kind = "stable", npcs = { { id = 9984 } } },
     { id = "TRAINER_PRIEST_1226", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.4720, y = 0.5220, kind = "trainer", trainer = "PRIEST", town = "kharanos", npcs = { { id = 1226 } } },

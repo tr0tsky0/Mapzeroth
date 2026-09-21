@@ -18,6 +18,7 @@ local Navigation = addon.Navigation
 local WIDTH, HEIGHT, PAD = 330, 124, 14
 local INNER = WIDTH - 2 * PAD
 local INTERVAL = 0.5            -- seconds between updates
+local ARROW = 44                -- the direction arrow, in pixels
 
 local ui
 
@@ -69,8 +70,8 @@ local function build()
     ui.step:SetMaxLines(2)
 
     -- On foot: an arrow that turns to point at the destination, relative to where you face.
-    ui.arrow = Theme:Arrow(frame, 22)
-    ui.arrow:SetPoint("TOPLEFT", PAD, -70)
+    ui.arrow = Theme:Arrow(frame, ARROW)
+    ui.arrow:SetPoint("TOPLEFT", PAD, -68)
     ui.arrow:Hide()
 
     ui.status = Theme:Text(frame, "accent")
@@ -175,10 +176,12 @@ function Navigator:Render(model)
     local heading = model.kind == "walk" and model.heading
     ui.arrow:SetShown(heading ~= nil and heading ~= false)
     if heading then ui.arrow:SetRotation(heading) end
-    local indent = heading and 30 or 0
+    local indent = heading and (ARROW + 8) or 0
     ui.status:ClearAllPoints()
-    ui.status:SetPoint("TOPLEFT", PAD + indent, -74)
+    ui.status:SetPoint("TOPLEFT", PAD + indent, heading and -78 or -74)
     ui.status:SetWidth(INNER - 90 - indent)
+    ui.left:ClearAllPoints()
+    ui.left:SetPoint("TOPRIGHT", -PAD, heading and -78 or -74)
 
     ui.bar:SetShown(showBar)
     if showBar then ui.bar:SetValue(model.progress or 0) end

@@ -107,6 +107,13 @@ function World:GetNodeContainer(nodeID)
     return nodeContainer[nodeID]
 end
 
+-- Is this node one a person marks a route by: a crossing from one zone to the next, or a
+-- city's entrance?
+function World:IsMilestone(nodeID)
+    local node = nodes[nodeID]
+    return (type(nodeID) == "string" and nodeID:find("^BORDER_") ~= nil) or (node ~= nil and node.kind == "entrance")
+end
+
 function World:GetDuplicateNodeIDs()
     return duplicates
 end
