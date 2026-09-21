@@ -50,7 +50,7 @@ function addon:GetPlayerContext()
         hearthNode = addon:GetBoundInnNode(),
         questCompleted = isQuestCompleted,
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
-        loadingScreenTax = addon.DEFAULT_LOADING_SCREEN_TAX,
+        loadingScreenTax = addon.Options:Get("loadingScreenTax"),
     }
 end
 

@@ -114,5 +114,30 @@ N:Update(at("TAXI_2", 0.2, 0, { now = 0 }))
 m = N:Update(at("TAXI_6", 0.3, 0, { now = 20 }))
 check(m.index == 2, "one jump ends one step, not two: " .. tostring(m.index))
 
+-- Heading: which way to turn to face a node. 0 is straight ahead, positive is left (the game
+-- measures facing counter-clockwise from north), negative is right. TAXI_2 is the target.
+local target = addon.World:GetNode("TAXI_2")
+local function player(dx, dy, facing)
+    return { mapID = target.mapID, x = target.x + dx, y = target.y + dy, facing = facing, now = 0 }
+end
+local NORTH, WEST, SOUTH, EAST = 0, math.pi / 2, math.pi, 3 * math.pi / 2
+local function near(a, b) return math.abs(a - b) < 1e-6 end
+-- The player is due south of the target, so the target is due north.
+check(near(N:Heading(player(0, 0.1, NORTH), target), 0), "facing north with the target due north: straight ahead")
+check(near(N:Heading(player(0, 0.1, WEST), target), -math.pi / 2), "facing west, the target north is 90 degrees to the right")
+check(near(N:Heading(player(0, 0.1, EAST), target), math.pi / 2), "facing east, it is 90 degrees to the left")
+check(near(math.abs(N:Heading(player(0, 0.1, SOUTH), target)), math.pi), "facing south, it is directly behind")
+-- The player is due west of the target, so the target is due east.
+check(near(N:Heading(player(-0.1, 0, NORTH), target), -math.pi / 2), "target due east while facing north: turn right")
+check(near(N:Heading(player(-0.1, 0, EAST), target), 0), "facing east, it is straight ahead")
+-- The map isn't square: 0.1 east and 0.1 south are different distances, and the angle follows yards.
+local skew = N:Heading(player(-0.1, 0.1, NORTH), target)      -- 250 yd east, 170 yd north
+check(near(skew, -math.atan2(250, 170)), "the angle is worked out in yards, not map units: " .. skew)
+check(N:Heading({ mapID = target.mapID, x = 0.5, y = 0.5, now = 0 }, target) == nil, "no facing, no heading")
+-- It rides along in the walk step's model.
+N:Start(entry, { steps = { step("walk", "YOU", "TAXI_2", 60) } })
+m = N:Update(player(0, 0.1, WEST))
+check(m.kind == "walk" and near(m.heading, -math.pi / 2), "a walk step carries its heading")
+
 N:Stop()
 check(not N:IsActive() and N:Model() == nil, "stopping clears the trip")

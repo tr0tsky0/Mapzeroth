@@ -134,12 +134,14 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase)
             for _, step in ipairs(graph.adjacency[node.id] or {}) do
                 local state = nextPhaseState(node.state, step)
                 if state then
-                    local nd = d + step.cost
-                    local key = step.to .. "|" .. phaseKey(state)
+                    -- A flight leg taken straight after another doesn't land and take off between.
+                    local flight = step.method == "flight"
+                    local nd = d + step.cost - ((flight and node.air) and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
+                    local key = step.to .. "|" .. phaseKey(state) .. (flight and "|air" or "")
                     if not dist[key] or nd < dist[key] then
                         dist[key] = nd
                         prev[key] = { key = node.key, step = step }
-                        heapPush(heap, { nd, { key = key, id = step.to, state = state } })
+                        heapPush(heap, { nd, { key = key, id = step.to, state = state, air = flight } })
                     end
                 end
             end
@@ -190,11 +192,12 @@ function Pathfinder:FindCosts(graph, startID, initialPhase)
             for _, step in ipairs(graph.adjacency[node.id] or {}) do
                 local state = nextPhaseState(node.state, step)
                 if state then
-                    local nd = d + step.cost
-                    local key = step.to .. "|" .. phaseKey(state)
+                    local flight = step.method == "flight"
+                    local nd = d + step.cost - ((flight and node.air) and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
+                    local key = step.to .. "|" .. phaseKey(state) .. (flight and "|air" or "")
                     if not dist[key] or nd < dist[key] then
                         dist[key] = nd
-                        heapPush(heap, { nd, { key = key, id = step.to, state = state } })
+                        heapPush(heap, { nd, { key = key, id = step.to, state = state, air = flight } })
                     end
                 end
             end
@@ -206,16 +209,20 @@ end
 
 -- Presentation: what a person sees. The search happily walks through unrelated nodes
 -- on the way (a trainer that happens to lie along the road), which costs the same as
--- walking straight there, so consecutive walk steps read as one "walk to X". Returns
+-- walking straight there, so consecutive walk steps read as one "walk to X", and
+-- consecutive flights as one ticket "fly to X". Returns
 -- a new list; the result's own steps are untouched, and each merged step keeps the
 -- pieces it was made from in `parts`.
 function Pathfinder:CollapseSteps(steps)
     local collapsed = {}
     for _, step in ipairs(steps) do
         local last = collapsed[#collapsed]
-        if last and last.method == "walk" and step.method == "walk" then
+        -- Consecutive walks are one walk; consecutive flights are one ticket (in game you buy a
+        -- ticket to the far flight point and fly through the stops without landing).
+        local joins = last and step.method == last.method and (step.method == "walk" or step.method == "flight")
+        if joins then
             last.to = step.to
-            last.cost = last.cost + step.cost
+            last.cost = last.cost + step.cost - (step.method == "flight" and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
             last.parts[#last.parts + 1] = step
         else
             collapsed[#collapsed + 1] = {

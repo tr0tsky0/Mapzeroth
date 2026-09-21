@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 100 places outside any city or town (starter areas and the like);
+-- 101 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -66,6 +66,7 @@
 --   PALADIN trainer on map 1426 at (28.8, 68.2)
 --   MAGE trainer on map 1426 at (28.6, 66.4)
 --   LEATHERWORKING trainer on map 1427 at (63.5, 75.7)
+--   leyline on map 1428 at (78.6, 61.8)
 --   battlemaster on map 1429 at (33.7, 11.0)
 --   stable on map 1429 at (25.2, 11.0)
 --   TAILORING trainer on map 1429 at (79.2, 69.0)
@@ -342,6 +343,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_PALADIN_926", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.2880, y = 0.6820, kind = "trainer", trainer = "PALADIN", npcs = { { id = 926 } } },
     { id = "TRAINER_MAGE_944", container = "easternkingdoms.dun_morogh", mapID = 1426, x = 0.2860, y = 0.6640, kind = "trainer", trainer = "MAGE", npcs = { { id = 944 } } },
     { id = "TRAINER_LEATHERWORKING_7868", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.6345, y = 0.7565, kind = "trainer", trainer = "LEATHERWORKING", npcs = { { id = 7868, specialty = true } } },
+    { id = "LEYLINE_C1428_786_618", container = "easternkingdoms.burning_steppes", mapID = 1428, x = 0.7860, y = 0.6180, kind = "leyline" },
     { id = "BATTLEMASTER_7410", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3373, y = 0.1103, kind = "battlemaster", npcs = { { id = 7410 }, { id = 14981 }, { id = 15008 } } },
     { id = "ENTRANCE_C1429_322_497", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3220, y = 0.4970, kind = "entrance", city = "stormwind" },
     { id = "INN_295", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4380, y = 0.6580, kind = "inn", town = "goldshire", npcs = { { id = 295 } } },

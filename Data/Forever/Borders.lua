@@ -111,8 +111,8 @@ addon.Nodes.Borders = {
     { id = "BORDER_SWAMP_OF_SORROWS_TO_DEADWIND_PASS", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.0290, y = 0.6070 }, -- Swamp of Sorrows side of the Swamp of Sorrows/Deadwind Pass crossing
     { id = "BORDER_SWAMP_OF_SORROWS_TO_BLASTED_LANDS", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.3330, y = 0.7410 }, -- Swamp of Sorrows side of the Swamp of Sorrows/Blasted Lands crossing
     { id = "BORDER_BLASTED_LANDS_TO_SWAMP_OF_SORROWS", container = "easternkingdoms.blasted_lands", mapID = 1419, x = 0.5270, y = 0.0850 }, -- Blasted Lands side of the Blasted Lands/Swamp of Sorrows crossing
-    { id = "BORDER_BURNING_STEPPES_TO_SEARING_GORGE", container = "easternkingdoms.burning_steppes", mapID = 1428, x = 0.2960, y = 0.3700 }, -- Burning Steppes side of the Burning Steppes/Searing Gorge crossing
-    { id = "BORDER_SEARING_GORGE_TO_BURNING_STEPPES", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.3690, y = 0.8380 }, -- Searing Gorge side of the Searing Gorge/Burning Steppes crossing
+    { id = "BORDER_BURNING_STEPPES_TO_SEARING_GORGE", container = "easternkingdoms.burning_steppes", mapID = 1428, x = 0.2940, y = 0.3850, area = 254 }, -- Burning Steppes side of the Burning Steppes/Searing Gorge crossing
+    { id = "BORDER_SEARING_GORGE_TO_BURNING_STEPPES", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.3490, y = 0.8700 }, -- Searing Gorge side of the Searing Gorge/Burning Steppes crossing
     { id = "BORDER_SEARING_GORGE_TO_BADLANDS", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.7760, y = 0.6010 }, -- Searing Gorge side of the Searing Gorge/Badlands crossing
     { id = "BORDER_BADLANDS_TO_SEARING_GORGE", container = "easternkingdoms.badlands", mapID = 1418, x = 0.0870, y = 0.6800 }, -- Badlands side of the Badlands/Searing Gorge crossing
     { id = "BORDER_BADLANDS_TO_LOCH_MODAN", container = "easternkingdoms.badlands", mapID = 1418, x = 0.4670, y = 0.0360 }, -- Badlands side of the Badlands/Loch Modan crossing

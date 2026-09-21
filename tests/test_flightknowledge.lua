@@ -35,13 +35,20 @@ FK:Record(capture, ali)
 for _, id in ipairs({ "TAXI_2", "TAXI_4", "TAXI_6", "TAXI_7" }) do
     check(FK:IsFound(id) == true, id .. " is found")
 end
--- Points a found point flies to, that came back Unreachable, are not found. That includes
--- Darkshire: no flight from Stormwind itself, but Sentinel Hill, Ironforge and Menethil fly
--- there, so had it been found it would have been Reachable through one of them.
-for _, id in ipairs({ "TAXI_5", "TAXI_8", "TAXI_12", "TAXI_14", "TAXI_16", "TAXI_19", "TAXI_43",
-                      "TAXI_45", "TAXI_66", "TAXI_67", "TAXI_71", "TAXI_74" }) do
+-- Points a found point has a flight leg to, that came back Unreachable, are not found: had one been
+-- found, that leg would have made it Reachable. Every one of these has a leg from Stormwind, Ironforge
+-- or Menethil Harbor.
+for _, id in ipairs({ "TAXI_5", "TAXI_8", "TAXI_12", "TAXI_14", "TAXI_16", "TAXI_19", "TAXI_43", "TAXI_45",
+                      "TAXI_66", "TAXI_67", "TAXI_71", "TAXI_74" }) do
     check(FK:IsFound(id) == false, id .. " is not found")
 end
+-- Aerie Peak and Chillwind Camp have no leg from Sentinel Hill (they are reached through Ironforge or
+-- Southshore), so from there nothing says either way.
+FK:Reset()
+FK:Record({ { nodeID = 4, state = CURRENT }, { nodeID = 43, state = UNREACHABLE }, { nodeID = 66, state = UNREACHABLE } }, ali)
+check(FK:IsFound("TAXI_43") == nil and FK:IsFound("TAXI_66") == nil, "points with no leg from a found point stay unknown")
+FK:Reset()
+FK:Record(capture, ali)
 -- A point nothing found flies to is left unknown (here, an Orgrimmar entry on the wrong continent).
 local mixed = { { nodeID = 2, state = CURRENT }, { nodeID = 23, state = UNREACHABLE } }
 FK:Record(mixed, ali)

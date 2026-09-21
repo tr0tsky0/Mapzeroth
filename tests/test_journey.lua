@@ -17,7 +17,8 @@ Enum = { UIMapType = { Continent = 2 } }
 C_TaxiMap = { GetTaxiNodesForMap = function(id)
     if id == 1415 then
         return { { nodeID = 2, name = "Stormwind, Elwynn" }, { nodeID = 6, name = "Ironforge, Dun Morogh" },
-                 { nodeID = 8, name = "Thelsamar, Loch Modan" } }
+                 { nodeID = 8, name = "Thelsamar, Loch Modan" }, { nodeID = 5, name = "Lakeshire, Redridge" },
+                 { nodeID = 74, name = "Thorium Point, Searing Gorge" } }
     end
     return {}
 end }
@@ -116,3 +117,15 @@ local atFlightMaster = J:Build(ali, { id = "YOU_fm", mapID = 1453, x = 0.7098, y
 local justFly = J:Plan(atFlightMaster, "TAXI_6")
 check(justFly and #justFly.steps == 1 and justFly.steps[1].method == "flight", "no trivial walk step: " .. tostring(justFly and #justFly.steps))
 check(J:Plan(atFlightMaster, "TAXI_2").steps[1] ~= nil, "but a route that is only a tiny walk keeps it")
+
+-- Lakeshire to Ironforge goes through Thorium Point: two tickets in the data, one flight in game. The
+-- game's flight map shows a single ticket, so the plan is one step that names the stop.
+maps[1433] = { name = "Redridge Mountains", mapType = 3, parentMapID = 1415 }
+addon:ClearNodeNameCache()
+local lakeshire = addon.World:GetNode("TAXI_5")
+local fromLakeshire = J:Build(ali, { id = "YOU_ls", mapID = lakeshire.mapID, x = lakeshire.x, y = lakeshire.y })
+local ticket = J:Plan(fromLakeshire, "TAXI_6")
+check(ticket and #ticket.steps == 1 and ticket.steps[1].method == "flight", "Lakeshire to Ironforge is one flight step: " .. tostring(ticket and #ticket.steps))
+check(ticket.steps[1].via and #ticket.steps[1].via >= 1, "that goes through another flight point")
+check(ticket.steps[1].text:find("(via ", 1, true) and ticket.steps[1].text:find("Fly to Ironforge, Dun Morogh", 1, true), "and says so: " .. ticket.steps[1].text)
+check(math.abs(ticket.steps[1].seconds - ticket.cost) < 1, "with the whole flight's time on it")

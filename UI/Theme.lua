@@ -28,6 +28,7 @@ local skin = {}                                       -- role -> function(widget
 
 local BLIZZARD_BUTTON = "Interface\\Buttons\\UI-Panel-Button-"
 local FLAT = "Interface\\Buttons\\WHITE8x8"
+local ARROW = "Interface\\Minimap\\ROTATING-MINIMAPARROW"      -- an arrow pointing up, in every client
 
 function Theme:Register(id, def)
     def.id = id
@@ -103,6 +104,16 @@ skin.panel = function(frame)
     else
         frame.mzFill:Hide()
     end
+end
+
+skin.arrow = function(arrow)
+    arrow:SetTexture(current.arrow or ARROW)
+    arrow:SetVertexColor(Theme:Color("accent"))
+end
+
+skin.slider = function(slider)
+    slider.track:SetColorTexture(Theme:Color("editBg"))
+    slider.thumb:SetColorTexture(Theme:Color("accent"))
 end
 
 skin.bar = function(bar)
@@ -193,7 +204,7 @@ end
 function Theme:Set(id)
     if not themes[id] then return false end
     current = themes[id]
-    if MapzerothRebuildDB then MapzerothRebuildDB.theme = id end
+    addon.Options:Store("theme", id)
     self:Apply()
     return true
 end
@@ -209,8 +220,15 @@ end
 
 -- Choose the saved theme, or the default.
 function Theme:Init(default)
-    local saved = MapzerothRebuildDB and MapzerothRebuildDB.theme
+    local saved = addon.Options:Get("theme")
     self:Set(themes[saved] and saved or default or order[1])
+    if not self.listening then
+        self.listening = true
+        -- Picking a theme on the settings page changes it live.
+        addon.Options:OnChange(function(key, value)
+            if key == "theme" and themes[value] then Theme:Set(value) end
+        end)
+    end
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -248,6 +266,70 @@ function Theme:Button(parent, text, width, height, primary, template)
     button:SetScript("OnMouseDown", function() state("pressed") end)
     button:SetScript("OnMouseUp", function() state("hover") end)
     return register(button, "button", { primary = primary })
+end
+
+-- A horizontal slider. Set its range with SetMinMaxValues/SetValueStep; read changes through the
+-- OnValueChanged script (self, value, userInput).
+function Theme:Slider(parent, width)
+    local slider = CreateFrame("Slider", nil, parent)
+    slider:SetSize(width, 18)
+    slider:SetOrientation("HORIZONTAL")
+    slider:SetObeyStepOnDrag(true)
+    slider.track = slider:CreateTexture(nil, "BACKGROUND")
+    slider.track:SetPoint("LEFT", 0, 0)
+    slider.track:SetPoint("RIGHT", 0, 0)
+    slider.track:SetHeight(6)
+    slider:SetThumbTexture(FLAT)
+    slider.thumb = slider:GetThumbTexture()
+    slider.thumb:SetSize(10, 18)
+    return register(slider, "slider")
+end
+
+-- A dropdown: a button showing the chosen option that opens a list under it. `options` is
+-- { { id = ..., label = ... }, ... }; onSelect(id) runs when the player picks one. Returns a
+-- table with :SetValue(id) (shows an option without calling onSelect) and :Select(id) (as if
+-- the player clicked it).
+function Theme:Dropdown(parent, width, options, onSelect)
+    local dropdown = { options = options, rows = {} }
+    dropdown.button = Theme:Button(parent, "", width, 24)
+    dropdown.menu = Theme:Panel(dropdown.button, nil)     -- a child of the button, so it hides with it
+    dropdown.menu:SetFrameStrata("FULLSCREEN_DIALOG")
+    dropdown.menu:SetSize(width, #options * 24 + 8)
+    dropdown.menu:SetPoint("TOPLEFT", dropdown.button, "BOTTOMLEFT", 0, -2)
+    dropdown.menu:Hide()
+
+    function dropdown:SetValue(id)
+        self.value = id
+        for i, option in ipairs(self.options) do
+            self.rows[i]:SetSelected(option.id == id)
+            if option.id == id then self.button.label:SetText(option.label .. "  v") end
+        end
+    end
+    function dropdown:Select(id)
+        self:SetValue(id)
+        self.menu:Hide()
+        if onSelect then onSelect(id) end
+    end
+
+    for i, option in ipairs(options) do
+        local row = Theme:Row(dropdown.menu, width - 8, 24)
+        row:SetPoint("TOPLEFT", 4, -(4 + (i - 1) * 24))
+        row.text = Theme:Text(row, "body")
+        row.text:SetPoint("LEFT", 12, 0)
+        row.text:SetText(option.label)
+        row:SetScript("OnClick", function() dropdown:Select(option.id) end)
+        dropdown.rows[i] = row
+    end
+    dropdown.button:SetScript("OnClick", function() dropdown.menu:SetShown(not dropdown.menu:IsShown()) end)
+    return dropdown
+end
+
+-- An arrow pointing up until rotated: arrow:SetRotation(radians), counter-clockwise. Its picture
+-- and colour come from the theme (`arrow` in the theme definition, else the minimap arrow).
+function Theme:Arrow(parent, size)
+    local arrow = parent:CreateTexture(nil, "ARTWORK")
+    arrow:SetSize(size, size)
+    return register(arrow, "arrow")
 end
 
 -- A progress bar (0 to 1): bar:SetValue(fraction).

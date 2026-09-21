@@ -64,13 +64,6 @@ local function build(parent)
     ui.title:SetPoint("TOPLEFT", PAD, -PAD)
     ui.title:SetText(L["PANEL_TITLE"])
 
-    ui.themeButton = Theme:Button(frame, "", 104, 22)
-    ui.themeButton:SetPoint("TOPRIGHT", -PAD, -PAD + 3)
-    ui.themeButton:SetScript("OnClick", function()
-        Theme:Cycle()
-        Panel:UpdateThemeLabel()
-    end)
-
     ui.search = Theme:EditBox(frame, INNER, 30)
     ui.search:SetPoint("TOPLEFT", PAD, -46)
     ui.hint = Theme:Text(ui.search, "dim")
@@ -140,7 +133,7 @@ local function build(parent)
     ui.start:SetPoint("BOTTOMRIGHT", -PAD, PAD)
     ui.start:SetScript("OnClick", function() Panel:StartRoute() end)
 
-    Panel:UpdateThemeLabel()
+    Panel:ApplyScale()
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -357,10 +350,9 @@ function Panel:Escape()
     end
 end
 
-function Panel:UpdateThemeLabel()
-    if ui and Theme:Current() then
-        ui.themeButton.label:SetText(Theme:Label(Theme:Current().id))
-    end
+-- The size setting (Options): our windows scale with it.
+function Panel:ApplyScale()
+    if ui then ui.frame:SetScale(addon.Options:Get("scale")) end
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -391,7 +383,6 @@ function Panel:OnMapShown()
     ui.frame:SetShown(not state.hidden)
     if state.hidden then return end
     self:Refresh()
-    self:UpdateThemeLabel()
     if state.pinned and state.plan and addon.Navigation:IsActive() then
         self:DisplayPlan(state.entry, state.plan)       -- the trip in progress, not the search page
     else
@@ -411,6 +402,7 @@ function Panel:Init()
     if self.inited then return true end
     if not WorldMapFrame then return false end
     self.inited = true
+    addon.Options:OnChange(function(key) if key == "scale" then Panel:ApplyScale() end end)
     WorldMapFrame:HookScript("OnShow", function() Panel:OnMapShown() end)
     WorldMapFrame:HookScript("OnSizeChanged", function()
         if ui and ui.frame:IsShown() then Panel:Reanchor() end

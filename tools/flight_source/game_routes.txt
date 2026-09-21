@@ -1,0 +1,38 @@
+# Flight routes as the game itself reported them (/mzroutes with a flight master's window open):
+# the stops the game will fly through to each destination, for the flight points found on the
+# capturing character at the time. This is ground truth for which tickets are single legs and
+# which pass through other flight points, and it depends on the character's found points:
+# routes are chosen by time over the points found, so they change as more are found.
+#
+# Character: Alliance Skyborne druid. Found at capture time: Stormwind, Ironforge, Menethil Harbor,
+# Sentinel Hill, Darkshire, Lakeshire, Morgan's Vigil (and Thorium Point for the second block).
+#
+# Format: from -> to: number of legs: stops in order
+
+# Captured at Morgan's Vigil (Thorium Point not yet found)
+Morgan's Vigil, Burning Steppes -> Stormwind, Elwynn: 1 leg(s): Morgan's Vigil, Burning Steppes > Stormwind, Elwynn
+Morgan's Vigil, Burning Steppes -> Sentinel Hill, Westfall: 2 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Sentinel Hill, Westfall
+Morgan's Vigil, Burning Steppes -> Lakeshire, Redridge: 1 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Morgan's Vigil, Burning Steppes -> Ironforge, Dun Morogh: 2 leg(s): Morgan's Vigil, Burning Steppes > Stormwind, Elwynn > Ironforge, Dun Morogh
+Morgan's Vigil, Burning Steppes -> Menethil Harbor, Wetlands: 3 leg(s): Morgan's Vigil, Burning Steppes > Stormwind, Elwynn > Ironforge, Dun Morogh > Menethil Harbor, Wetlands
+Morgan's Vigil, Burning Steppes -> Darkshire, Duskwood: 2 leg(s): Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+
+# Captured at Thorium Point (Thorium Point now found)
+Thorium Point, Searing Gorge -> Stormwind, Elwynn: 2 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Stormwind, Elwynn
+Thorium Point, Searing Gorge -> Sentinel Hill, Westfall: 3 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Sentinel Hill, Westfall
+Thorium Point, Searing Gorge -> Lakeshire, Redridge: 2 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge
+Thorium Point, Searing Gorge -> Ironforge, Dun Morogh: 1 leg(s): Thorium Point, Searing Gorge > Ironforge, Dun Morogh
+Thorium Point, Searing Gorge -> Menethil Harbor, Wetlands: 2 leg(s): Thorium Point, Searing Gorge > Ironforge, Dun Morogh > Menethil Harbor, Wetlands
+Thorium Point, Searing Gorge -> Darkshire, Duskwood: 3 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes > Lakeshire, Redridge > Darkshire, Duskwood
+Thorium Point, Searing Gorge -> Morgan's Vigil, Burning Steppes: 1 leg(s): Thorium Point, Searing Gorge > Morgan's Vigil, Burning Steppes
+
+# Captured at Lakeshire (Morgan's Vigil and Thorium Point both found): the same destinations now route
+# through them. Lakeshire -> Ironforge is ONE ticket (the flight map draws one line and charges one fare,
+# 23s 66c) that flies through Morgan's Vigil and Thorium Point without landing.
+Lakeshire, Redridge -> Stormwind, Elwynn: 1 leg(s): Lakeshire, Redridge > Stormwind, Elwynn
+Lakeshire, Redridge -> Sentinel Hill, Westfall: 1 leg(s): Lakeshire, Redridge > Sentinel Hill, Westfall
+Lakeshire, Redridge -> Ironforge, Dun Morogh: 3 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes > Thorium Point, Searing Gorge > Ironforge, Dun Morogh
+Lakeshire, Redridge -> Menethil Harbor, Wetlands: 4 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes > Thorium Point, Searing Gorge > Ironforge, Dun Morogh > Menethil Harbor, Wetlands
+Lakeshire, Redridge -> Darkshire, Duskwood: 1 leg(s): Lakeshire, Redridge > Darkshire, Duskwood
+Lakeshire, Redridge -> Morgan's Vigil, Burning Steppes: 1 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes
+Lakeshire, Redridge -> Thorium Point, Searing Gorge: 2 leg(s): Lakeshire, Redridge > Morgan's Vigil, Burning Steppes > Thorium Point, Searing Gorge

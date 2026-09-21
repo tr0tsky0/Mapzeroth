@@ -1,0 +1,74 @@
+# The game's own flight table, Classic Era build 1.15.9.69722, from wago.tools (DB2 TaxiPath and TaxiNodes).
+# Each PATH is one directed leg: a flight from one flight master straight to the next. It does not depend on
+# which flight points a character has found. Fare is copper; 0 marks ship, zeppelin and dialog paths.
+# NODE: id|continent (0 Eastern Kingdoms, 1 Kalimdor)|name|flags (1 Alliance, 2 Horde, 3 both, 0 none)
+# Node ids are our TAXI_<id> numbers. Forever adds flight points this build doesn't have.
+PATHS 2 4 110;4 2 110;5 2 210;2 5 210;6 2 50;2 6 50;8 6 110;6 8 110;7 6 330;6 7 330;11 10 110;10 11 110;12 2 330;2 12 330;13 11 330;11 13 330;14 6 330;6 14 330;16 6 530;6 16 530;17 11 530;11 17 530;20 18 630;18 20 630;18 21 630;21 18 630;21 11 630;11 21 630;2 19 630;19 2 630;23 22 50;25 22 110;25 23 110;22 25 110;23 25 110;28 26 330;26 28 330;29 22 210;22 29 210;30 22 430;22 30 430;32 31 430;31 32 730;33 26 330;26 33 330;18 56 630;26 27 0;27 26 0;56 18 630;37 32 530;38 22 530;22 38 530;32 37 530;26 32 630;32 26 630;39 32 630;32 39 730;40 23 730;23 40 730;41 26 730;26 41 730;42 22 730;22 42 730;43 14 330;14 43 730;34 35 0;44 23 830;23 44 830;45 2 830;2 45 830;4 5 210;4 12 330;12 4 110;46 7 0;5 4 110;4 19 630;19 4 530;5 12 330;12 5 210;12 19 630;19 12 330;12 45 830;45 12 330;6 43 730;43 6 730;8 7 330;7 8 110;8 16 530;16 8 110;7 16 530;16 7 330;7 14 330;14 7 330;16 14 330;14 16 530;16 43 730;43 16 530;25 29 210;29 25 210;25 30 430;30 25 430;25 44 830;44 25 830;47 35 0;48 25 930;25 48 930;26 49 830;22 44 830;44 22 830;50 36 0;51 50 0;50 51 0;52 49 830;35 20 0;35 24 0;54 24 0;55 25 630;58 25 110;53 48 930;48 53 1020;30 40 730;22 40 730;40 30 430;40 22 730;59 6 0;60 11 0;6 59 1020;62 27 0;63 22 0;21 56 710;56 21 630;21 17 630;17 21 630;17 13 330;13 17 530;39 31 430;31 39 730;31 41 630;41 31 430;61 23 530;23 61 530;64 26 730;26 64 730;64 65 730;61 25 530;25 61 530;23 55 630;55 23 630;23 48 830;52 65 730;48 23 930;56 20 630;20 56 630;22 55 630;66 14 330;14 66 830;55 22 630;43 67 1020;58 61 530;61 58 330;67 43 730;42 25 730;25 58 330;25 42 730;38 29 210;11 68 1020;29 38 530;68 11 1020;25 55 630;20 21 630;21 20 530;53 69 830;69 48 930;48 69 830;69 53 1020;49 52 1020;49 26 830;65 26 730;65 52 1020;65 64 730;37 41 730;41 37 730;42 38 730;38 42 730;70 21 830;21 70 830;70 56 830;56 70 830;71 45 830;45 71 830;11 60 1020;37 26 530;26 37 530;26 65 730;22 23 50;40 55 630;40 42 630;55 40 730;42 40 630;40 25 730;25 40 730;39 73 1020;40 72 1020;53 23 1020;23 53 1020;44 48 930;48 44 830;74 6 830;6 74 830;21 75 830;75 21 630;70 75 830;75 70 830;71 74 830;74 71 830;76 13 330;13 76 730;11 76 730;76 11 730;77 25 110;25 77 110;22 77 110;77 22 110;77 30 430;30 77 430;72 40 730;73 39 730;71 2 830;2 71 830;6 66 1020;66 6 1020;66 67 1020;67 66 1020;78 24 0;67 6 1020;6 67 1020;36 24 0;10 13 330;13 10 110;28 33 330;33 28 330;32 64 730;64 32 630;64 52 1030;52 64 730;72 42 730;42 72 1030;73 41 730;79 39 730;79 40 730;79 72 1030;79 73 1030;72 79 830;73 79 830;39 79 830;40 79 830;80 32 630;80 25 110;25 80 110;32 80 110;64 80 110;80 64 730;28 64 730;64 28 330;5 71 830;71 5 210;41 73 1030;0 24 0;76 68 1030;68 76 730;43 66 1020;66 43 730;37 33 330;33 37 530;49 65 730;65 49 1020;61 44 830;44 61 530;17 76 730;76 17 530;42 30 430;30 42 730;84 85 0;84 86 0;84 87 0;53 44 830;44 53 1020
+NODE 1|0|Northshore
+NODE 2|0|Stormwind, Elwynn|1
+NODE 4|0|Sentinel Hill, Westfall|1
+NODE 5|0|Lakeshire, Redridge|1
+NODE 6|0|Ironforge, Dun Morogh|1
+NODE 7|0|Menethil Harbor, Wetlands|1
+NODE 8|0|Thelsamar, Loch Modan|1
+NODE 10|0|The Sepulcher, Silverpine Forest|2
+NODE 11|0|Undercity, Tirisfal|2
+NODE 12|0|Darkshire, Duskwood|1
+NODE 13|0|Tarren Mill, Hillsbrad|2
+NODE 14|0|Southshore, Hillsbrad|1
+NODE 16|0|Refuge Pointe, Arathi|1
+NODE 17|0|Hammerfall, Arathi|2
+NODE 18|0|Booty Bay, Stranglethorn|2
+NODE 19|0|Booty Bay, Stranglethorn|1
+NODE 20|0|Grom'gol, Stranglethorn|2
+NODE 21|0|Kargath, Badlands|2
+NODE 22|1|Thunder Bluff, Mulgore|2
+NODE 23|1|Orgrimmar, Durotar|2
+NODE 25|1|Crossroads, The Barrens|2
+NODE 26|1|Auberdine, Darkshore|1
+NODE 27|1|Rut'theran Village, Teldrassil|1
+NODE 28|1|Astranaar, Ashenvale|1
+NODE 29|1|Sun Rock Retreat, Stonetalon Mountains|2
+NODE 30|1|Freewind Post, Thousand Needles|2
+NODE 31|1|Thalanaar, Feralas|1
+NODE 32|1|Theramore, Dustwallow Marsh|1
+NODE 33|1|Stonetalon Peak, Stonetalon Mountains|1
+NODE 37|1|Nijel's Point, Desolace|1
+NODE 38|1|Shadowprey Village, Desolace|2
+NODE 39|1|Gadgetzan, Tanaris|1
+NODE 40|1|Gadgetzan, Tanaris|2
+NODE 41|1|Feathermoon, Feralas|1
+NODE 42|1|Camp Mojache, Feralas|2
+NODE 43|0|Aerie Peak, The Hinterlands|1
+NODE 44|1|Valormok, Azshara|2
+NODE 45|0|Nethergarde Keep, Blasted Lands|1
+NODE 48|1|Bloodvenom Post, Felwood|2
+NODE 52|1|Everlook, Winterspring|1
+NODE 53|1|Everlook, Winterspring|2
+NODE 55|1|Brackenwall Village, Dustwallow Marsh|2
+NODE 56|0|Stonard, Swamp of Sorrows|2
+NODE 58|1|Zoram'gar Outpost, Ashenvale|2
+NODE 61|1|Splintertree Post, Ashenvale|2
+NODE 62|1|Nighthaven, Moonglade|1
+NODE 63|1|Nighthaven, Moonglade|2
+NODE 64|1|Talrendis Point, Azshara|1
+NODE 65|1|Talonbranch Glade, Felwood|1
+NODE 66|0|Chillwind Camp, Western Plaguelands|1
+NODE 67|0|Light's Hope Chapel, Eastern Plaguelands|1
+NODE 68|0|Light's Hope Chapel, Eastern Plaguelands|2
+NODE 70|0|Flame Crest, Burning Steppes|2
+NODE 71|0|Morgan's Vigil, Burning Steppes|1
+NODE 72|1|Cenarion Hold, Silithus|2
+NODE 73|1|Cenarion Hold, Silithus|1
+NODE 74|0|Thorium Point, Searing Gorge|1
+NODE 75|0|Thorium Point, Searing Gorge|2
+NODE 76|0|Revantusk Village, The Hinterlands|2
+NODE 77|1|Camp Taurajo, The Barrens|2
+NODE 79|1|Marshal's Refuge, Un'Goro Crater|3
+NODE 80|1|Ratchet, The Barrens|3
+NODE 84|0|Plaguewood Tower, Eastern Plaguelands|3
+NODE 85|0|Northpass Tower, Eastern Plaguelands|3
+NODE 86|0|Eastwall Tower, Eastern Plaguelands|3
+NODE 87|0|Crown Guard Tower, Eastern Plaguelands|3
+NODE 49|1|Moonglade|1
+NODE 69|1|Moonglade|2

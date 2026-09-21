@@ -41,6 +41,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
     addon.World:Build()
     addon.FlightKnowledge:Load()
     addon.Theme:Init("moderndark")
+    addon.OptionsPanel:Register()
     addon.Panel:Init()
     local nodeCount, containerCount, continents = addon.World:GetStats()
     say("%s ruleset: %d nodes in %d containers (%s).",
@@ -108,8 +109,10 @@ SlashCmdList["MAPZEROTHREBUILD"] = function(msg)
         else
             addon.Theme:Cycle()
         end
-        addon.Panel:UpdateThemeLabel()
         say("theme: %s", addon.Theme:Current().id)
+
+    elseif cmd == "settings" then
+        if not addon.OptionsPanel:Open() then say("the game's settings window isn't available here") end
 
     elseif cmd == "dist" then
         -- /mzr dist <nodeA> <nodeB>: straight-line yards between two nodes as the graph measures

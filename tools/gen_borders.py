@@ -72,6 +72,12 @@ def parse_checklist():
             "b": ALIASES.get(cells[2], cells[2]), "bc": parse_coord(cells[3]),
             "note": cells[4] if len(cells) > 4 else "",
         }
+        # [areaA=254] / [areaB=...]: the client's area id for that side's doorway, so the client names
+        # it ("Blackrock Mountain") instead of "<zone> / <zone> border".
+        areas = dict(re.findall(r"\[area([AB])=(\d+)\]", row["note"]))
+        row["area_a"] = int(areas["A"]) if "A" in areas else None
+        row["area_b"] = int(areas["B"]) if "B" in areas else None
+        row["note"] = re.sub(r"\s*\[area[AB]=\d+\]", "", row["note"]).strip()
         # "requires quest N" in a note gates the crossing behind that quest.
         quest = re.search(r"requires quest (\d+)", row["note"], re.I)
         row["quest"] = int(quest.group(1)) if quest else None
@@ -130,14 +136,15 @@ def main():
 
         prefix = CONTINENT_PREFIX[cont_a]
         ids = []
-        for side, other, zid, (x, y) in ((row["a"], row["b"], id_a, row["ac"]), (row["b"], row["a"], id_b, row["bc"])):
+        for side, other, zid, (x, y), area in ((row["a"], row["b"], id_a, row["ac"], row["area_a"]),
+                                               (row["b"], row["a"], id_b, row["bc"], row["area_b"])):
             nid = f"BORDER_{zone_slug(side).upper()}_TO_{zone_slug(other).upper()}"
             if any(nid in line for line in out_nodes):
                 nid += "_2"  # a second crossing between the same two zones
             ids.append(nid)
             out_nodes.append(
                 f'    {{ id = "{nid}", container = "{prefix}.{zone_slug(side)}", mapID = {zid}, '
-                f'x = {x:.4f}, y = {y:.4f} }}, -- {side} side of the {side}/{other} crossing')
+                f'x = {x:.4f}, y = {y:.4f}{f", area = {area}" if area else ""} }}, -- {side} side of the {side}/{other} crossing')
         tunnel = "not zero travel" in row["note"].lower()
         cost = "" if tunnel else ", cost = 0"
         if row["quest"]:

@@ -21,9 +21,14 @@ local INTERVAL = 0.5            -- seconds between updates
 
 local ui
 
+function Navigator:ApplyScale()
+    if ui then ui.frame:SetScale(addon.Options:Get("scale")) end
+end
+
 local function build()
     ui = {}
     Navigator.widgets = ui              -- for tests
+    addon.Options:OnChange(function(key) if key == "scale" then Navigator:ApplyScale() end end)
     local frame = Theme:Panel(UIParent, "MapzerothRebuildNavigator")
     frame:SetSize(WIDTH, HEIGHT)
     frame:SetPoint("TOP", UIParent, "TOP", 0, -160)
@@ -63,6 +68,11 @@ local function build()
     ui.step:SetWordWrap(true)
     ui.step:SetMaxLines(2)
 
+    -- On foot: an arrow that turns to point at the destination, relative to where you face.
+    ui.arrow = Theme:Arrow(frame, 22)
+    ui.arrow:SetPoint("TOPLEFT", PAD, -70)
+    ui.arrow:Hide()
+
     ui.status = Theme:Text(frame, "accent")
     ui.status:SetPoint("TOPLEFT", PAD, -74)
     ui.status:SetWidth(INNER - 90)
@@ -81,6 +91,8 @@ local function build()
     ui.use = Theme:Button(frame, "", INNER, 26, true, "SecureActionButtonTemplate")
     ui.use:SetPoint("BOTTOMLEFT", PAD, 10)
     ui.use:RegisterForClicks("AnyUp", "AnyDown")
+
+    Navigator:ApplyScale()
 end
 
 -- Sets what the use-button does for this step, if we can (not in combat).
@@ -129,6 +141,7 @@ function Navigator:Render(model)
         ui.status:SetText("")
         ui.left:SetText("")
         ui.bar:Hide()
+        ui.arrow:Hide()
         if not combat then ui.use:Hide() end
         ui.stop.label:SetText(L["NAV_CLOSE"])
         addon.Panel:OnTripUpdate(model)
@@ -157,6 +170,15 @@ function Navigator:Render(model)
         status = L["NAV_PORTAL"]
     end
     ui.status:SetText(status)
+
+    -- The arrow, when we know which way the player is facing; the text moves aside for it.
+    local heading = model.kind == "walk" and model.heading
+    ui.arrow:SetShown(heading ~= nil and heading ~= false)
+    if heading then ui.arrow:SetRotation(heading) end
+    local indent = heading and 30 or 0
+    ui.status:ClearAllPoints()
+    ui.status:SetPoint("TOPLEFT", PAD + indent, -74)
+    ui.status:SetWidth(INNER - 90 - indent)
 
     ui.bar:SetShown(showBar)
     if showBar then ui.bar:SetValue(model.progress or 0) end

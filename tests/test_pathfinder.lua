@@ -70,14 +70,14 @@ check(shown[1].from == "A" and shown[1].to == "C" and shown[1].cost == 30 and #s
 check(shown[2].method == "flight" and shown[3].to == "E", "other steps stay as they are")
 check(steps[1].to == "B" and steps[1].cost == 10, "the original steps are not modified")
 
--- Flight times differ by direction, and each direction's own time is used: Lakeshire -> Ironforge
--- is 357 s (5:57 in game) and Ironforge -> Lakeshire 201 s. Both directions are authored, so a reverse must not be generated
--- next to an authored one, or the search would take the cheaper of the two both ways (which is
--- how a 357 s flight once showed as 3m21s).
+-- Flights are single legs, chained by the planner. A leg's time differs by direction (Morgan's Vigil ->
+-- Thorium Point 104 s, back 96 s), each direction's own time is used, and taking a leg straight after
+-- another saves FLIGHT_CHAIN_SAVING seconds (a through-ticket doesn't land and take off again).
 do
     useTestDistances()
     addon.World:Build()
-    local graph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+    local ali = makeCtx({ faction = "Alliance" })
+    local graph = addon.TravelGraph:Build(ali)
     local function flightCosts(from, to)
         local costs = {}
         for _, link in ipairs(graph.adjacency[from] or {}) do
@@ -85,13 +85,38 @@ do
         end
         return costs
     end
-    local there, back = flightCosts("TAXI_5", "TAXI_6"), flightCosts("TAXI_6", "TAXI_5")
-    check(#there == 1 and there[1] == 357, "Lakeshire -> Ironforge is one flight of 357 s: " .. table.concat(there, ","))
-    check(#back == 1 and back[1] == 201, "Ironforge -> Lakeshire is one flight of 201 s: " .. table.concat(back, ","))
-    -- Where only one direction is authored, the other is still generated.
+    local there, back = flightCosts("TAXI_71", "TAXI_74"), flightCosts("TAXI_74", "TAXI_71")
+    check(#there == 1 and there[1] == 104 and #back == 1 and back[1] == 96, "each direction of a leg has its own time: " .. table.concat(there, ",") .. " / " .. table.concat(back, ","))
+    check(#flightCosts("TAXI_5", "TAXI_6") == 0, "Lakeshire to Ironforge is not a leg of its own")
+
+    -- ...it is three legs chained: Lakeshire > Morgan's Vigil > Thorium Point > Ironforge.
+    local saving = addon.FLIGHT_CHAIN_SAVING
+    local trip = route(ali, "TAXI_5", "TAXI_6")
+    check(trip and #trip.steps == 3 and methods(trip) == "flight,flight,flight", "three flights: " .. tostring(trip and methods(trip)))
+    check(math.abs(trip.cost - (61 + 104 + 94 - 2 * saving)) < 1e-6, "priced as the legs less the saving for each extra one: " .. tostring(trip.cost))
+    local collapsed = addon.Pathfinder:CollapseSteps(trip.steps)
+    check(#collapsed == 1 and math.abs(collapsed[1].cost - trip.cost) < 1e-6, "shown as one ticket that costs the whole trip")
+
+    -- A walk between two flights is two tickets and takes no saving.
+    check(saving > 0, "the chain saving is set")
     local oneWay = 0
     for _, link in ipairs(graph.adjacency["TAXI_2"] or {}) do
         if link.method == "flight" then oneWay = oneWay + 1 end
     end
-    check(oneWay > 5, "an ordinary flight master still has its flights: " .. oneWay)
+    check(oneWay >= 5, "an ordinary flight master still has its legs: " .. oneWay)
+end
+
+-- Consecutive flights are one ticket, like consecutive walks are one walk: in game you buy a ticket to
+-- the far flight point and fly through the stops without landing.
+do
+    local function step(method, from, to, cost) return { method = method, from = from, to = to, cost = cost } end
+    local merged = addon.Pathfinder:CollapseSteps({
+        step("walk", "A", "B", 10), step("flight", "B", "C", 100), step("flight", "C", "D", 50), step("walk", "D", "E", 5),
+    })
+    check(#merged == 3, "walk, one ticket, walk: " .. #merged)
+    check(merged[2].method == "flight" and merged[2].from == "B" and merged[2].to == "D" and merged[2].cost == 150 - addon.FLIGHT_CHAIN_SAVING,
+    "the ticket runs B to D and costs both legs less the saving for the extra one")
+    check(#merged[2].parts == 2 and merged[2].parts[1].to == "C", "and remembers the stop it passes through")
+    local separate = addon.Pathfinder:CollapseSteps({ step("flight", "A", "B", 10), step("ship", "B", "C", 20), step("flight", "C", "D", 30) })
+    check(#separate == 3, "a flight, a boat, a flight are three steps")
 end

@@ -2,12 +2,13 @@ local addonName, addon = ...
 
 -- Following a route. Once the player starts a trip, this tracks which step they are on and
 -- how far along it is, from samples of where they are:
---   sample = { mapID, x, y, onTaxi, now }     (mapID nil when we can't tell, as in an instance)
+--   sample = { mapID, x, y, onTaxi, now, facing }   (mapID nil when we can't tell, as in an instance)
 -- It knows nothing about frames; the navigator shows what Model() says, and tests feed it
 -- samples directly.
 --
 -- What "progress" means depends on the step:
---   walk       distance left to the step's destination (yards), and time left scaled from it;
+--   walk       distance left to the step's destination (yards), which way to turn to face it
+--              (an arrow), and time left scaled from the distance;
 --   flight     waiting until the player is actually on the taxi, then a bar over the flight's
 --              planned time, done when they land;
 --   transport  (boat, zeppelin, tram) waiting until the player has moved off the boarding
@@ -54,6 +55,46 @@ local function distance(sample, node)
     if not (sample and sample.mapID and node) then return nil end
     return addon.TravelGraph.DistanceProvider(
         { id = "YOU_NOW", nocache = true, mapID = sample.mapID, x = sample.x, y = sample.y }, node)
+end
+
+-- Where a node is on the map the player is on, as x, y (0 to 1), or nil. Same map: as it is;
+-- another (a city and its zone): carried across through world coordinates. Replaceable for tests.
+function Navigation.MapPoint(node, mapID)
+    if node.mapID == mapID then return node.x, node.y end
+    local ok, continent, world = pcall(C_Map.GetWorldPosFromMapPos, node.mapID, CreateVector2D(node.x, node.y))
+    if not (ok and world) then return nil end
+    local ok2, _, pos = pcall(C_Map.GetMapPosFromWorldPos, continent, world, mapID)
+    if not (ok2 and pos) then return nil end
+    return pos:GetXY()
+end
+
+-- Yards for a step of 1 in x and in y on a map, measured with the same distance the rest of the
+-- addon uses (a map isn't square, so a unit in x and a unit in y differ).
+local function yardsPerUnit(mapID)
+    local here = { id = "SCALE_A", nocache = true, mapID = mapID, x = 0.5, y = 0.5 }
+    local east = { id = "SCALE_B", nocache = true, mapID = mapID, x = 0.51, y = 0.5 }
+    local south = { id = "SCALE_C", nocache = true, mapID = mapID, x = 0.5, y = 0.51 }
+    local dx = addon.TravelGraph.DistanceProvider(here, east)
+    local dy = addon.TravelGraph.DistanceProvider(here, south)
+    if not (dx and dy) then return nil end
+    return dx / 0.01, dy / 0.01
+end
+
+-- The turn needed to face a node, in radians: 0 is straight ahead, positive is to the left
+-- (counter-clockwise, as the game measures facing), negative to the right. Needs sample.facing.
+-- North is up the map, so a target's north-ness is minus its y difference.
+function Navigation:Heading(sample, node)
+    if not (sample and sample.facing and sample.mapID and node) then return nil end
+    local tx, ty = Navigation.MapPoint(node, sample.mapID)
+    local xScale, yScale = yardsPerUnit(sample.mapID)
+    if not (tx and xScale) then return nil end
+    local east = (tx - sample.x) * xScale
+    local north = -(ty - sample.y) * yScale
+    local bearing = math.atan2(-east, north)           -- counter-clockwise from north
+    local turn = bearing - sample.facing
+    while turn > math.pi do turn = turn - 2 * math.pi end
+    while turn <= -math.pi do turn = turn + 2 * math.pi end
+    return turn
 end
 
 local function radiusOf(step)
@@ -149,6 +190,7 @@ local function buildModel(sample)
 
     if kind == "walk" then
         model.distance = distance(sample, nodeOf(step.nodeID))
+        model.heading = Navigation:Heading(sample, nodeOf(step.nodeID))
         if model.distance and state.startDistance and state.startDistance > 0 then
             left = step.seconds * clamp(model.distance / state.startDistance, 0, 1)
         end
@@ -240,7 +282,8 @@ end
 
 -- Where the player is right now, as a sample (needs the client).
 function Navigation:Sample()
-    local sample = { now = GetTime(), onTaxi = UnitOnTaxi and UnitOnTaxi("player") or false }
+    local sample = { now = GetTime(), onTaxi = UnitOnTaxi and UnitOnTaxi("player") or false,
+                     facing = GetPlayerFacing and GetPlayerFacing() or nil }
     local mapID = C_Map.GetBestMapForUnit("player")
     local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
     if pos then

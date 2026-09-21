@@ -11,6 +11,7 @@
 Constants.lua
 Locales.lua
 Locales_UI.lua
+Options.lua
 
 # Forever dataset
 Data\Forever\Containers.lua
@@ -18,6 +19,7 @@ Data\Forever\Nodes_EasternKingdoms.lua
 Data\Forever\Nodes_Kalimdor.lua
 Data\Forever\Nodes_ZephrasIsle.lua
 Data\Forever\Edges.lua
+Data\Forever\Flights.lua
 Data\Forever\Borders.lua
 Data\Forever\Pois.lua
 Data\Forever\Blackrock.lua
@@ -55,5 +57,6 @@ UI\Themes\Classic.lua
 UI\Themes\ModernDark.lua
 UI\Panel.lua
 UI\Navigator.lua
+UI\OptionsPanel.lua
 
 Core.lua

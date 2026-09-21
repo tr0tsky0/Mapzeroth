@@ -1,0 +1,14 @@
+# Flight tickets timed in game (take-off to landing), against what our data says. From `/mzr timings`,
+# which the navigator records while following a trip; SavedVariables don't persist on the beta yet, so
+# paste new lines here. `route` is the stops the game flew: from /mzroutes when we have it, otherwise
+# inferred from which flight points were found (marked "inferred").
+#
+# What this shows so far: a ticket through other flight points is shorter than the sum of its legs
+# (no landing and take-off at the stop, roughly 15-45 s saved per ticket), and shorter or longer than
+# an InFlight time recorded by someone with a different set of found points.
+#
+# Format: from -> to | measured s | data s | legs (sum of the single-leg times, where known) | route
+
+Lakeshire -> Ironforge | 357 | 357 | 372 | Lakeshire > Stormwind > Ironforge (inferred; Thorium Point and Morgan's Vigil not yet found)
+Ironforge -> Lakeshire | 308 | 201 | 372 | Ironforge > Stormwind > Lakeshire (inferred; Thorium Point and Morgan's Vigil not yet found)
+Thorium Point -> Lakeshire | 123 | 153 | 160 | Thorium Point > Morgan's Vigil > Lakeshire (from /mzroutes)

@@ -59,7 +59,10 @@ function Journey:EntryCost(session, entry)
     return cost
 end
 
-local function stepText(method, name)
+local function stepText(method, name, via)
+    if via and #via > 0 then
+        return L["STEP_FLIGHT_VIA"]:format(name, table.concat(via, ", "))
+    end
     local key = "STEP_" .. tostring(method):upper()
     return (addon:HasString(key) and L[key] or L["STEP_OTHER"]):format(name)
 end
@@ -75,10 +78,16 @@ local function readableSteps(result)
             -- A portal node is named for where it leads, so the step names the one you take
             -- (where you stand), not the one you come out of.
             local name = addon:GetNodeName(step.method == "portal" and step.from or step.to)
+            -- A flight ticket that passes through other flight points names them.
+            local via
+            if step.method == "flight" and #step.parts > 1 then
+                via = {}
+                for i = 1, #step.parts - 1 do via[#via + 1] = addon:GetNodeName(step.parts[i].to) end
+            end
             steps[#steps + 1] = {
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
-                seconds = step.cost, name = name,
-                text = stepText(step.method, name),
+                seconds = step.cost, name = name, via = via,
+                text = stepText(step.method, name, via),
                 approx = step.method == "walk",     -- a walk is an estimate
             }
         end

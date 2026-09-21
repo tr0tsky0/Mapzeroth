@@ -7,6 +7,7 @@ addon:RegisterLocale("enUS", {
     -- One step of a route. %s is the place the step goes to.
     STEP_WALK        = "Walk to %s",
     STEP_FLIGHT      = "Fly to %s",
+    STEP_FLIGHT_VIA  = "Fly to %s (via %s)",
     STEP_SHIP        = "Take the boat to %s",
     STEP_ZEPPELIN    = "Take the zeppelin to %s",
     STEP_TRAM        = "Take the tram to %s",
@@ -37,14 +38,23 @@ addon:RegisterLocale("enUS", {
     ROUTE_ALREADY     = "You're already here.",
     ROUTE_NONE        = "No route found from here.",
     NOWHERE           = "Mapzeroth can't tell where you are right now (instances aren't covered).",
-    THEME_LABEL       = "Theme: %s",
+    -- The settings page.
+    OPT_TITLE         = "Mapzeroth",
+    OPT_TAX           = "Loading screen time",
+    OPT_TAX_DESC      = "How long a loading screen (a portal, teleport, hearthstone or tram) counts for when Mapzeroth times a route.",
+    OPT_SCALE         = "Scale",
+    OPT_SCALE_DESC    = "The size of the panel beside the map and of the trip window.",
+    OPT_THEME         = "Theme",
+    OPT_THEME_DESC    = "How the panel and the trip window look.",
+    OPT_SECONDS       = "%d s",
+    OPT_PERCENT       = "%d%%",
 
     -- Following a route (the navigator).
     NAV_STEP_OF       = "Step %d of %d",
     NAV_STOP          = "Stop",
     NAV_CLOSE         = "Close",
     NAV_ARRIVED       = "Destination reached",
-    NAV_LEFT          = "%s left",
+    NAV_LEFT          = "%s left in total",
     NAV_DISTANCE      = "%d yards",
     NAV_WAIT_FLIGHT   = "Speak to the flight master",
     NAV_FLYING        = "In flight",

@@ -12,7 +12,12 @@ addon.WALK_SPEED = 7
 addon.DEFAULT_PATH_FACTOR = 1.15
 
 -- Seconds added per loading screen when totalling a route.
-addon.DEFAULT_LOADING_SCREEN_TAX = 15
+addon.DEFAULT_LOADING_SCREEN_TAX = 10     -- the player can change it (Options.lua)
+
+-- Seconds taken off for each extra flight leg flown straight through: a through-ticket doesn't land
+-- and take off again. Measured 15-45 s per ticket in game; 10 s is a cautious per-leg start.
+-- Keep equal to CHAIN_SAVING in tools/gen_flights.py.
+addon.FLIGHT_CHAIN_SAVING = 10
 
 -- The classes a trainer can be for; their names come from the client.
 addon.CLASS_TOKENS = {

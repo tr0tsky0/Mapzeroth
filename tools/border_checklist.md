@@ -37,7 +37,7 @@ Each row is one guessed crossing point, seen from both sides.
 | Deadwind Pass | 59.1, 41.6 | Swamp of Sorrows | 2.9, 60.7 |
 | Swamp of Sorrows | 33.3, 74.1 | Blasted Lands | 52.7, 8.5 |
 *** | Redridge Mountains | 47.5, 10.4 | Burning Steppes | 78.1, 80.6 | Doesn't Exist...it's part of Riverglades now
-| Burning Steppes | 29.6, 37.0 | Searing Gorge | 36.9, 83.8 | via Blackrock Mountain (not zero travel)
+| Burning Steppes | 29.4, 38.5 | Searing Gorge | 34.9, 87.0 | via Blackrock Mountain (not zero travel) [areaA=254]
 | Searing Gorge | 77.6, 60.1 | Badlands | 8.7, 68.0 |
 | Badlands | 46.7, 3.6 | Loch Modan | 47.2, 85.4 |
 | Badlands | 62.5, 84.1 | Riverglades | 31.7, 25.0 |

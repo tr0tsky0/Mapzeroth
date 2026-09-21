@@ -29,6 +29,11 @@ local function mock(isFontString)
             SetAttribute = function(self, k, v) self._attrs = self._attrs or {}; self._attrs[k] = v end,
             SetAtlas = function(self, a) self._atlas = a end,
             SetValue = function(self, v) self._value = v end,
+            SetScale = function(self, v) self._scale = v end,
+            SetRotation = function(self, v) self._rotation = v end,
+            SetTexture = function(self, v) self._texture = v end,
+            SetThumbTexture = function(self, a) self._thumb = mock() end,
+            GetThumbTexture = function(self) return self._thumb end,
             GetRight = function() return 1000 end,
             GetFrameLevel = function() return 5 end,
             CreateFontString = function() return mock(true) end,
@@ -276,3 +281,54 @@ local picks = addon.Panel:GetState().results
 check(#picks == 1 and picks[1].group == "leyline" and picks[1].name == "Nearest ley line", "a Skyborne is offered the nearest ley line")
 check(#picks[1].nodeIDs >= 4, "over every ley line we know: " .. #picks[1].nodeIDs)
 IsPlayerSpell = function() return false end
+
+-- The main window has no theme button any more: the theme is a setting.
+check(addon.Panel.UpdateThemeLabel == nil, "the panel has no theme button to update")
+
+-- The settings page: registered with the game's Settings window, showing and changing the settings.
+local registeredFrame, openedID
+Settings = {
+    RegisterCanvasLayoutCategory = function(frame, name) registeredFrame = frame; return { GetID = function() return 42 end } end,
+    RegisterAddOnCategory = function() end,
+    OpenToCategory = function(id) openedID = id end,
+}
+local Options = addon.Options
+Options:Reset()
+check(addon.OptionsPanel:Register() and registeredFrame.name == "Mapzeroth", "the page registers with the Settings window as Mapzeroth")
+local pw = addon.OptionsPanel.widgets
+addon.OptionsPanel:Sync()
+check(pw.tax.slider._value == 10 and pw.tax.value._text == "10 s", "it shows the loading screen time: " .. tostring(pw.tax.value._text))
+check(pw.scale.slider._value == 1 and pw.scale.value._text == "100%", "and the scale: " .. tostring(pw.scale.value._text))
+check(pw.theme.button.label._text:find("Modern Dark", 1, true), "and the theme: " .. tostring(pw.theme.button.label._text))
+
+pw.tax.slider._scripts.OnValueChanged(pw.tax.slider, 15, true)
+check(Options:Get("loadingScreenTax") == 15 and pw.tax.value._text == "15 s", "moving the loading screen slider changes the setting")
+pw.scale.slider._scripts.OnValueChanged(pw.scale.slider, 1.2, true)
+check(math.abs(Options:Get("scale") - 1.2) < 1e-9 and pw.scale.value._text == "120%", "moving the scale slider changes it")
+check(math.abs(addon.Panel:GetFrame()._scale - 1.2) < 1e-9, "the panel resizes with it")
+check(math.abs(addon.Navigator.widgets.frame._scale - 1.2) < 1e-9, "and so does the trip window")
+
+pw.theme:Select("classic")
+check(Theme:Current().id == "classic" and Options:Get("theme") == "classic", "choosing a theme in the dropdown applies it")
+check(pw.theme.menu._shown == false, "and closes the list")
+
+registeredFrame.OnDefault()
+check(Options:Get("loadingScreenTax") == 10 and Options:Get("scale") == 1 and Theme:Current().id == "moderndark", "the Defaults button restores everything")
+check(pw.tax.value._text == "10 s", "and the page shows it")
+check(addon.OptionsPanel:Open() and openedID == 42, "/mzr settings opens the page")
+Options:Reset()
+
+-- On foot the navigator shows an arrow that turns to the destination.
+addon.Navigation:Start({ name = "Stormwind" }, { steps = { { method = "walk", fromID = "YOU", nodeID = "TAXI_2", seconds = 60, text = "Walk to the flight master" } } })
+local target = addon.World:GetNode("TAXI_2")
+C_Map.GetBestMapForUnit = function() return target.mapID end
+C_Map.GetPlayerMapPosition = function() return { GetXY = function() return target.x, target.y + 0.1 end } end
+GetPlayerFacing = function() return math.pi / 2 end          -- facing west, the flight master is north of the player
+addon.Navigator:Show()
+local nw = addon.Navigator.widgets
+check(nw.arrow._shown and math.abs(nw.arrow._rotation + math.pi / 2) < 1e-6, "the arrow points 90 degrees to the right: " .. tostring(nw.arrow._rotation))
+check(nw.arrow._texture and nw.arrow._texture:find("ROTATING-MINIMAPARROW", 1, true), "and uses the theme's arrow: " .. tostring(nw.arrow._texture))
+GetPlayerFacing = nil
+addon.Navigator:Tick()
+check(not nw.arrow._shown, "without a facing there is no arrow")
+addon.Navigator:Stop()
