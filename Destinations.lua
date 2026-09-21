@@ -91,6 +91,11 @@ function Destinations:Build(ctx)
     World:ForEachNode(function(node)
         local group = groupOf(node)
         if not group then return end
+        -- The other faction's flight masters can't be spoken to: not a place to go.
+        if group == "flight" then
+            local owner = addon:GetFlightOwner(node.id)
+            if owner and ctx.faction and owner ~= ctx.faction then return end
+        end
         local name = addon:GetNodeName(node.id)
         if not name or name == node.id then return end   -- no name yet: leave it out
         entries[#entries + 1] = {
@@ -98,8 +103,15 @@ function Destinations:Build(ctx)
             zone = addon:GetZoneName(node.mapID),
             relevant = addon.Relevance:IsRelevant(node, ctx),
             details = node.kind == "trainer" and node.trainer == "WEAPON" and weaponDetails(node, skills) or nil,
+            trainer = node.trainer,
         }
     end)
+
+    -- Whose a place is: its faction's, or both's (or nobody's on record). The other faction's are still
+    -- found by searching, but aren't listed by default.
+    local function ours(settlement)
+        return settlement.faction == nil or settlement.faction == "Both" or ctx.faction == nil or settlement.faction == ctx.faction
+    end
 
     local function addSettlements(list, getName, field, label)
         for key, settlement in pairs(list or {}) do
@@ -108,7 +120,7 @@ function Destinations:Build(ctx)
             if nodeIDs then
                 entries[#entries + 1] = {
                     nodeID = nodeIDs[1], nodeIDs = nodeIDs, name = name, group = "place", kind = label,
-                    zone = addon:GetZoneName(settlement.mapID), relevant = true,
+                    zone = addon:GetZoneName(settlement.mapID), relevant = ours(settlement), faction = settlement.faction,
                 }
             end
         end

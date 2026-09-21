@@ -210,6 +210,28 @@ do
     check(costs["TAXI_6"] == 271 and cheaper["TAXI_6"] == 530, "and within a budget: " .. tostring(costs["TAXI_6"]) .. "s " .. tostring(cheaper["TAXI_6"]) .. "c")
 end
 
+-- Hostile flight masters: no flight into or out of the other faction's flight points, even along an edge that
+-- names no faction (the Hyjal placeholders join Horde flight masters to a point of unknown faction).
+do
+    local ali = makeCtx({ faction = "Alliance" })
+    local graph = addon.TravelGraph:Build(ali)
+    local touching = 0
+    for from, steps in pairs(graph.adjacency) do
+        for _, step in ipairs(steps) do
+            if step.method == "flight" and (addon:GetFlightOwner(from) == "Horde" or addon:GetFlightOwner(step.to) == "Horde") then
+                touching = touching + 1
+            end
+        end
+    end
+    check(touching == 0, "no Alliance flight touches a Horde flight master: " .. touching)
+    local horde = addon.TravelGraph:Build(makeCtx({ faction = "Horde" }))
+    local hordeFlights = 0
+    for from, steps in pairs(horde.adjacency) do
+        for _, step in ipairs(steps) do if step.method == "flight" and addon:GetFlightOwner(from) == "Horde" then hordeFlights = hordeFlights + 1 end end
+    end
+    check(hordeFlights > 50, "and the Horde still has theirs: " .. hordeFlights)
+end
+
 -- Flights along one ticket are shown as one step, like consecutive walks are one walk: in game you buy a
 -- ticket to the far flight point and fly through the stops without landing. The search marks a flight
 -- that goes on along the ticket the last one began with `through`; a flight without it is a new ticket.

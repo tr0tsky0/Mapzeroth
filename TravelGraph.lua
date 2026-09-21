@@ -51,6 +51,32 @@ local function loadingCost(edge, ctx)
     return screens * ctx.loadingScreenTax
 end
 
+-- Which faction a flight point belongs to, when only one faction's flights touch it ("Alliance" or
+-- "Horde"; nil for a point both use, or one no faction-bound flight reaches). A flight master of the other
+-- faction is hostile and can't be spoken to, so no flight into or out of it is ever used.
+local flightOwners
+function addon:GetFlightOwner(nodeID)
+    if not flightOwners then
+        local seen = {}
+        for _, edge in ipairs(addon.Edges or {}) do
+            local faction = edge.method == "flight" and edge.requirements and edge.requirements.faction
+            if faction then
+                for _, id in ipairs({ edge.from, edge.to }) do
+                    seen[id] = seen[id] or {}
+                    seen[id][faction] = true
+                end
+            end
+        end
+        flightOwners = {}
+        for id, factions in pairs(seen) do
+            local only, count = nil, 0
+            for faction in pairs(factions) do only, count = faction, count + 1 end
+            if count == 1 then flightOwners[id] = only end
+        end
+    end
+    return flightOwners[nodeID]
+end
+
 function TravelGraph:Build(ctx)
     local World = addon.World
     local adjacency = {}
@@ -71,6 +97,14 @@ function TravelGraph:Build(ctx)
     -- You can't fly to a flight point you haven't found, and until a flight master's
     -- window has told us, we don't know: better to leave a flight out than to promise
     -- one that can't be taken. (A context with no flightNodeFound applies no such rule.)
+    -- A flight into or out of a hostile faction's flight master can't be taken, whatever else the edge says
+    -- (placeholders and hand-written edges may have no faction of their own).
+    local function hostile(edge)
+        if edge.method ~= "flight" or not ctx.faction then return false end
+        local a, b = addon:GetFlightOwner(edge.from), addon:GetFlightOwner(edge.to)
+        return (a ~= nil and a ~= ctx.faction) or (b ~= nil and b ~= ctx.faction)
+    end
+
     local function unfound(edge, toID)
         return edge.method == "flight" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
     end
@@ -84,7 +118,7 @@ function TravelGraph:Build(ctx)
         authored[edge.from .. "|" .. edge.to .. "|" .. edge.method] = true
     end
     for _, edge in ipairs(addon.Edges or {}) do
-        if addon:MeetsRequirements(edge.requirements, ctx) then
+        if addon:MeetsRequirements(edge.requirements, ctx) and not hostile(edge) then
             local a, b = World:GetNode(edge.from), World:GetNode(edge.to)
             local cost = edge.cost
             if cost == nil and a and b then

@@ -20,12 +20,14 @@ local WIDTH, HEIGHT, PAD = 330, 440, 16
 local INNER = WIDTH - 2 * PAD
 local LIST_TOP = 86
 local ROW_H, ROWS = 38, 8
+local INDENT = 14                         -- how far an item of an accordion section sits in from its heading
 local STEP_H, STEPS = 30, 7
 
 local ui                                  -- the widgets, once built
 local state = {
     hidden = false, entries = {}, results = {}, offset = 0, selected = 0,
     view = "list", entry = nil, plan = nil, ctx = nil,
+    sections = {}, open = {}, priced = false, session = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
 }
 
@@ -87,7 +89,7 @@ local function build(parent)
     -- The results list.
     ui.rows = {}
     for i = 1, ROWS do
-        local row = makeRow(frame, LIST_TOP, i, ROW_H, false)
+        local row = makeRow(frame, LIST_TOP, i, ROW_H, true)
         row.sub = Theme:Text(row, "small")
         row.sub:SetPoint("BOTTOMLEFT", 14, 5)
         row.sub:SetWidth(INNER - 14 - 8)
@@ -154,9 +156,18 @@ local function showRouteWidgets(show)
     end
 end
 
--- "Trainer - Stormwind - One-Handed Swords, Staves": the weapons a search matched, else all it teaches.
+-- The second line of a result: "Trainer - Stormwind - One-Handed Swords, Staves" (the weapons a search matched,
+-- else all it teaches), or "City - Stormwind City". Under a heading of the accordion the kind is already said,
+-- so a city or town shows just its zone, and a pick the nearest place of its kind.
 local function subtitle(entry)
+    if entry.pick then
+        return entry.where or (entry.eta == nil and state.priced and L["PICK_NO_ROUTE"]) or ""
+    end
+    if entry.inSection then return entry.zone or "" end
     local text = L["GROUP_" .. entry.group]
+    if entry.group == "place" and entry.kind and addon:HasString("KIND_" .. entry.kind) then
+        text = L["KIND_" .. entry.kind]                     -- "City" or "Town", not "Town or city"
+    end
     if entry.zone then text = text .. " - " .. entry.zone end
     local detail = entry.detailHit
     if not detail and entry.details then
@@ -168,15 +179,42 @@ local function subtitle(entry)
     return text
 end
 
--- Fills the list rows from state.results, starting at state.offset.
+-- The travel time on the right of a row: only for the items of an opened section (priced then). A search
+-- result shows none, even for a place that was priced when its section was opened; its route is worked out
+-- when it is chosen.
+function Panel.EtaText(entry)
+    if (entry.pick or entry.inSection) and entry.eta then return Journey:FormatTime(entry.eta) end
+    return ""
+end
+
+-- Fills the list rows from state.results, starting at state.offset. A row is a search result, a section
+-- heading of the accordion, or one of a section's items (shown with its travel time once priced).
 function Panel:Render()
     for i = 1, ROWS do
         local row, entry = ui.rows[i], state.results[state.offset + i]
         if entry then
             row.index = state.offset + i
-            row.name:SetText(entry.name)
-            row.sub:SetText(subtitle(entry))
-            row.markerGroup = entry.group
+            -- An item of a section sits in from its heading: the marker, the name and the line under it together.
+            local indent = (entry.pick or entry.inSection) and INDENT or 0
+            row.marker:ClearAllPoints()
+            row.marker:SetPoint("LEFT", 4 + indent, 0)
+            row.name:ClearAllPoints()
+            row.name:SetPoint("TOPLEFT", 14 + indent, -5)
+            row.name:SetWidth(INNER - 14 - 76 - indent)
+            row.sub:ClearAllPoints()
+            row.sub:SetPoint("BOTTOMLEFT", 14 + indent, 5)
+            row.sub:SetWidth(INNER - 14 - 8 - indent)
+            if entry.header then
+                row.name:SetText((entry.open and "- " or "+ ") .. entry.name)
+                row.sub:SetText(L["SECTION_COUNT"]:format(entry.count))
+                row.eta:SetText("")
+                row.markerGroup = "place"
+            else
+                row.name:SetText(entry.name)
+                row.sub:SetText(subtitle(entry))
+                row.eta:SetText(Panel.EtaText(entry))
+                row.markerGroup = entry.group
+            end
             row.markerMethod = nil
             Theme:Restyle(row)
             row:SetSelected(row.index == state.selected)
@@ -192,21 +230,49 @@ local function setStatus(text)
     ui.status:SetShown(text ~= nil and text ~= "")
 end
 
--- What to offer before anything is typed: the nearest ley line, for those who can use one (a
--- single entry over every ley line; the nearest is worked out when it is chosen). There is no
--- "Home": the hearthstone is one step of a route, and anyone can click it themselves.
-local function quickPicks()
-    local picks = {}
-    local lines = {}
-    for _, entry in ipairs(state.entries) do
-        if entry.group == "leyline" and entry.relevant then lines[#lines + 1] = entry.nodeID end
+-- What to offer before anything is typed: the accordion (Sections.lua). There is no "Home": the
+-- hearthstone is one step of a route, and anyone can click it themselves. Nothing is priced until
+-- a section is opened.
+function Panel:ShowMenu(selectID)
+    local rows = {}
+    for _, section in ipairs(state.sections or {}) do
+        local open = state.open[section.id] == true
+        rows[#rows + 1] = { header = true, id = section.id, name = section.title, open = open, count = #section.items }
+        if open then
+            for _, item in ipairs(section.items) do
+                item.inSection = true
+                rows[#rows + 1] = item
+            end
+        end
     end
-    if #lines > 0 then
-        picks[#picks + 1] = {
-            nodeID = lines[1], nodeIDs = lines, group = "leyline", relevant = true, name = L["QUICK_LEYLINE"],
-        }
+    state.results = rows
+    state.selected = #rows > 0 and 1 or 0
+    for i, row in ipairs(rows) do
+        if row.header and row.id == selectID then state.selected = i end
     end
-    return picks
+    local keep = state.selected
+    if keep <= state.offset then state.offset = math.max(0, keep - 1) end
+    if keep > state.offset + ROWS then state.offset = keep - ROWS end
+    self:Render()
+end
+
+-- The times need where the player is and a search over the whole map, so it happens when a section is
+-- first opened, not when the window is.
+function Panel:PriceSections()
+    if state.priced then return end
+    local start = addon:GetPlayerStart()
+    local session = start and Journey:Build(state.ctx, start)
+    if session then
+        addon.Sections:Price(state.sections, session)
+        state.session = session
+    end
+    state.priced = true
+end
+
+function Panel:ToggleSection(id)
+    state.open[id] = not state.open[id]
+    if state.open[id] then self:PriceSections() end
+    self:ShowMenu(id)
 end
 
 -- What was typed changed (or "go back to the list"): show matching places.
@@ -217,17 +283,16 @@ function Panel:Query(text)
     showRouteWidgets(false)
     text = text or ""
     if text == "" then
-        state.results = quickPicks()
-    else
-        state.results = addon.Search:Query(state.entries, text, 60)
+        state.offset = 0
+        self:ShowMenu()
+        if #state.results == 0 then setStatus(L["SEARCH_EMPTY"]) else setStatus(nil) end
+        return
     end
+    for _, entry in ipairs(state.entries) do entry.inSection = nil end
+    state.results = addon.Search:Query(state.entries, text, 60)
     state.offset, state.selected = 0, (#state.results > 0) and 1 or 0
     self:Render()
-    if #state.results > 0 then
-        setStatus(nil)
-    else
-        setStatus(text == "" and L["SEARCH_EMPTY"] or L["NO_RESULTS"])
-    end
+    if #state.results > 0 then setStatus(nil) else setStatus(L["NO_RESULTS"]) end
 end
 
 function Panel:Move(delta)
@@ -346,7 +411,12 @@ end
 
 function Panel:Choose(index)
     local entry = state.results[index]
-    if entry then self:ShowRoute(entry) end
+    if not entry then return end
+    if entry.header then
+        self:ToggleSection(entry.id)
+    else
+        self:ShowRoute(entry)
+    end
 end
 
 -- Begin following the route on screen: the navigator takes over.
@@ -393,6 +463,9 @@ end
 function Panel:Refresh()
     state.ctx = addon:GetPlayerContext()
     state.entries = addon.Destinations:Build(state.ctx)
+    -- A new window: the sections start closed, and are priced from where the player is when one is opened.
+    state.sections = addon.Sections:Build(state.entries, state.ctx)
+    state.open, state.priced, state.session = {}, false, nil
 end
 
 function Panel:OnMapShown()
@@ -431,4 +504,6 @@ function Panel:Init()
 end
 
 function Panel:GetState() return state end
+Panel.Subtitle = subtitle                 -- for tests
+function Panel:StatusText() return ui and ui.status:IsShown() and ui.status:GetText() or nil end
 function Panel:GetFrame() return ui and ui.frame end

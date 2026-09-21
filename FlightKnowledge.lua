@@ -44,8 +44,8 @@ end
 
 -- What the player pays for a ticket as a fraction of the game's base fares. It is probably a
 -- reputation discount, which depends on the flight master's faction, so it is learned per departure
--- point (nodeID) from that flight master's window; a place not seen yet gets the typical one, and 1
--- (no discount) until any window has shown us a real price.
+-- point (nodeID) from that flight master's window; a place not seen yet gets the highest seen (the
+-- least discount, to stay on the safe side), and 1 (no discount) until any window has shown us a price.
 function FlightKnowledge:FareFactor(nodeID)
     return (nodeID and originFactors[nodeID]) or fareFactor or 1
 end
@@ -98,11 +98,13 @@ function FlightKnowledge:LearnFares(entries)
     if #ratios == 0 then return end
     table.sort(ratios)
     originFactors[from] = ratios[math.ceil(#ratios / 2)]
-    -- The typical factor, for places whose flight master we haven't seen: the middle of those seen.
-    local seen = {}
-    for _, factor in pairs(originFactors) do seen[#seen + 1] = factor end
-    table.sort(seen)
-    fareFactor = seen[math.ceil(#seen / 2)]
+    -- For places whose flight master we haven't seen: the highest seen, that is the smallest discount,
+    -- so an unseen flight master is never assumed cheaper than it may be (a route the player can't pay
+    -- for must not be offered).
+    fareFactor = nil
+    for _, factor in pairs(originFactors) do
+        if fareFactor == nil or factor > fareFactor then fareFactor = factor end
+    end
 end
 
 -- The points in `wanted` (a set) that some flight edge this player could take joins to a

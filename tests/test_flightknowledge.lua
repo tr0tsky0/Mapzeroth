@@ -169,7 +169,7 @@ GetRealmName = function() return "Realm" end
 FK:OnTaxiMapOpened(ali)
 check(math.abs(FK:FareFactor() - 0.96) < 0.01, "a flight window's prices give the factor: " .. tostring(FK:FareFactor()))
 check(math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01, "for the flight master they were read at")
-check(FK:FareFactor("TAXI_6") == FK:FareFactor(), "and a flight master not seen yet gets the typical one")
+check(FK:FareFactor("TAXI_6") == FK:FareFactor(), "and a flight master not seen yet gets the general one")
 local samples = FK:FareSamples()
 check(#samples == 2 and samples[1].paid and samples[1].base, "the prices read are kept for /mzr fares")
 -- Another flight master with a different discount (a different faction's reputation): its own factor.
@@ -179,6 +179,7 @@ end
 TaxiNodeCost = function(slot) return ({ 50, 0 })[slot] end       -- Ironforge to Stormwind at full price
 FK:OnTaxiMapOpened(ali)
 check(FK:FareFactor("TAXI_6") == 1 and math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01, "each flight master keeps its own")
+check(FK:FareFactor("TAXI_14") == 1, "and one not seen yet is assumed to give the least discount seen, never more")
 C_TaxiMap.GetAllTaxiNodes = function()
     return { { nodeID = 2, slotIndex = 1, state = 0 }, { nodeID = 6, slotIndex = 2, state = 1 }, { nodeID = 7, slotIndex = 3, state = 1 } }
 end
@@ -188,6 +189,7 @@ FK:Save()
 FK:Reset()
 check(FK:FareFactor() == 1, "reset forgets it")
 FK:Load()
-check(math.abs(FK:FareFactor() - 0.96) < 0.01 and FK:FareFactor("TAXI_6") == 1, "and it is saved with the character, per flight master")
+check(math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01 and FK:FareFactor("TAXI_6") == 1 and FK:FareFactor("TAXI_14") == 1,
+    "and it is saved with the character, per flight master")
 TaxiNodeCost = nil
 GetTaxiMapID = nil

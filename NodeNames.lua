@@ -130,6 +130,9 @@ local function trainerTypeName(token)
     if addon:HasString(key) then return L[key] end
 end
 
+-- What a trainer of this type is called in the client's language ("Alchemy", "Mage").
+function addon:GetTrainerTypeName(token) return trainerTypeName(token) end
+
 -- The node on the other side of a border crossing.
 local function borderPartner(nodeID)
     if not borderPartners then

@@ -351,12 +351,28 @@ def cluster(npcs):
     return places
 
 
+def load_settlement_factions():
+    """{key: "Alliance" | "Horde" | "Both"} from tools/poi_source/settlement_factions.tsv."""
+    out = {}
+    path = ROOT / "tools" / "poi_source" / "settlement_factions.tsv"
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip() and not line.startswith("#"):
+            key, faction = line.split("\t")[:2]
+            out[key] = faction
+    return out
+
+
 def lua_table(name, entries, taxi):
+    factions = load_settlement_factions()
     lines = [f"addon.{name} = {{"]
     for key, t in sorted(entries.items()):
         extra = f', taxi = "{taxi[key]}"' if key in taxi else ""
         if t.get("area"):
             extra += f", area = {t['area']}"
+        if key in factions:
+            extra += f', faction = "{factions[key]}"'
+        else:
+            print(f"  no faction for {name[:-1].lower()} {key}: shown to everyone until it is added to settlement_factions.tsv")
         lines.append(f'    {key} = {{ mapID = {t["map"]}, x = {t["pos"][0] / 100:.4f}, y = {t["pos"][1] / 100:.4f}{extra} }},')
     lines.append("}")
     return lines

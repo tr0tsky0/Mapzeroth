@@ -17,7 +17,8 @@ C_Map = {
 Enum = { UIMapType = { Continent = 2 } }
 C_TaxiMap = { GetTaxiNodesForMap = function(id)
     if id == 1415 then
-        return { { nodeID = 2, name = "Stormwind, Elwynn" }, { nodeID = 6, name = "Ironforge, Dun Morogh" } }
+        return { { nodeID = 2, name = "Stormwind, Elwynn" }, { nodeID = 6, name = "Ironforge, Dun Morogh" },
+                 { nodeID = 11, name = "Undercity, Tirisfal" } }
     end
     return {}
 end }
@@ -136,3 +137,11 @@ check(names(addon.Search:Query(entries, "dagger", 200))["TRAINER_WEAPON_11867"],
 local plain = names(addon.Search:Query(entries, "weapon trainer", 200))
 check(plain["TRAINER_WEAPON_11867"] and plain["TRAINER_WEAPON_11867"].detailHit == nil, "a name match doesn't claim a weapon")
 check(names(addon.Search:Query(entries, "sword stormwind", 200))["TRAINER_WEAPON_11867"], "a weapon and a place can be searched together")
+
+-- A flight master of the other faction can't be spoken to: it isn't a destination.
+check(find("TAXI_11", "flight") == nil, "an Alliance player is not offered Undercity's flight master")
+local horde = addon.Destinations:Build(makeCtx({ class = "MAGE", faction = "Horde" }))
+check(addon.Destinations:Find(horde, "TAXI_11", "flight") ~= nil, "but a Horde player is")
+check(addon.Destinations:Find(horde, "TAXI_2", "flight") == nil, "and not Stormwind's")
+check(addon:GetFlightOwner("TAXI_2") == "Alliance" and addon:GetFlightOwner("TAXI_11") == "Horde" and addon:GetFlightOwner("TAXI_80") == nil,
+    "flight points know their faction (Ratchet, used by both, has none)")

@@ -116,10 +116,14 @@ check(state.selected == 1, "and stop at the top")
 addon.Panel:Query("sword")
 check(#state.results > 0 and state.results[1].detailHit and state.results[1].detailHit:find("Swords"),
     "typing a weapon finds the trainers that teach it, and says which: " .. tostring(state.results[1] and state.results[1].detailHit))
+check(addon.Panel:StatusText() == nil, "no \"nothing matches\" message while there are results")
 addon.Panel:Query("zzzzqq")
 check(#state.results == 0 and state.selected == 0, "nothing matches nonsense")
+check(addon.Panel:StatusText() == "Nothing matches.", "and then it says so: " .. tostring(addon.Panel:StatusText()))
+addon.Panel:Query("iron")
+check(addon.Panel:StatusText() == nil, "and the message goes away when there are results again")
 addon.Panel:Query("")
-check(state.view == "list", "an empty box shows the quick picks (none for a fresh character)")
+check(state.view == "list", "an empty box shows the accordion")
 
 -- Choosing a result shows its route.
 addon.Panel:Query("ironforge, dun")
@@ -284,21 +288,65 @@ check(addon.Navigation:IsActive() and nav.count._text == "Route updated", "on la
 check(state.pinned and state.plan ~= oldPlan and state.plan and #state.plan.steps > 0, "the panel shows the new route")
 addon.Navigator:Stop()
 
--- Before anything is typed: the nearest ley line for a Skyborne, and no "Home".
+-- Before anything is typed: an accordion of sections, closed, and nothing priced until one is opened.
 maps[1416] = { name = "Alterac Mountains", mapType = 3, parentMapID = 1415 }
 maps[1431] = { name = "Duskwood", mapType = 3, parentMapID = 1415 }
 maps[1433] = { name = "Redridge Mountains", mapType = 3, parentMapID = 1415 }
 addon:ClearNodeNameCache()
-addon.Panel:Query("")
-check(#state.results == 0, "a character who can't read ley lines has no quick picks")
-IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
-state.ctx = addon:GetPlayerContext()
-state.ctx.hearthNode = "TAXI_2"                            -- and a hearthstone bound somewhere
 WorldMapFrame._hooks.OnShow()
-local picks = addon.Panel:GetState().results
-check(#picks == 1 and picks[1].group == "leyline" and picks[1].name == "Nearest ley line", "a Skyborne is offered the nearest ley line")
-check(#picks[1].nodeIDs >= 4, "over every ley line we know: " .. #picks[1].nodeIDs)
+addon.Panel:Query("")
+local function headerIndex(id)
+    for i, row in ipairs(state.results) do if row.header and row.id == id then return i end end
+end
+local function pickNamed(name)
+    for _, row in ipairs(state.results) do if row.pick and row.name == name then return row end end
+end
+check(#state.results >= 2, "the empty window shows the accordion's sections")
+for _, row in ipairs(state.results) do check(row.header and not row.open, "and they start closed: " .. tostring(row.name)) end
+check(not state.priced, "nothing is priced just for opening the window")
+
+-- Opening a section prices it, from where the player stands, and lists its items with their times.
+local cities = headerIndex("cities")
+check(cities, "there is a Cities section")
+addon.Panel:Choose(cities)
+check(state.priced and state.open.cities and state.results[cities].open, "opening Cities opens it and prices it")
+local shown, timed = 0, 0
+for _, row in ipairs(state.results) do
+    if row.inSection then shown = shown + 1; if row.eta then timed = timed + 1 end end
+end
+check(shown >= 2 and timed >= 1, "its cities are listed with travel times: " .. shown .. " listed, " .. timed .. " timed")
+local firstCity
+for _, row in ipairs(state.results) do if row.inSection then firstCity = firstCity or row end end
+check(addon.Panel.Subtitle(firstCity) == (firstCity.zone or ""), "under Cities a city says just its zone: " .. tostring(addon.Panel.Subtitle(firstCity)))
+local asResult = {}
+for k, v in pairs(firstCity) do asResult[k] = v end
+asResult.inSection = nil
+check(addon.Panel.EtaText(firstCity) ~= "" or firstCity.eta == nil, "an item of an open section shows its time")
+check(addon.Panel.EtaText(asResult) == "", "but the same place as a search result shows none, though it was priced")
+check(addon.Panel.Subtitle(asResult):find("^City %- ") or addon.Panel.Subtitle(asResult):find("^Town %- "),
+    "in a search result it says what it is: " .. addon.Panel.Subtitle(asResult))
+addon.Panel:Choose(cities)
+check(not state.open.cities, "choosing the heading again closes it")
+
+-- A character who can't read ley lines has no such pick; a Skyborne does.
+local relevant = headerIndex("relevant")
+check(relevant, "there is a Personally relevant section")
+addon.Panel:Choose(relevant)
+check(not pickNamed("Nearest Ley Line"), "no ley line pick for a character who can't read them")
+check(pickNamed("Nearest Class Trainer"), "but their class trainer is there")
+addon.Panel:Choose(relevant)
+IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
+WorldMapFrame._hooks.OnShow()
+addon.Panel:Query("")
+addon.Panel:Choose(headerIndex("relevant"))
+local leyline = pickNamed("Nearest Ley Line")
+check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4, "a Skyborne is offered the nearest ley line, over every one we know")
 IsPlayerSpell = function() return false end
+
+-- Searching still works, and lists everything.
+addon.Panel:Query("storm")
+check(#state.results > 0 and not state.results[1].header, "typing searches as before")
+WorldMapFrame._hooks.OnShow()
 
 -- The main window has no theme button any more: the theme is a setting.
 check(addon.Panel.UpdateThemeLabel == nil, "the panel has no theme button to update")

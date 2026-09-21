@@ -47,6 +47,7 @@ Pathfinder.lua
 Validator.lua
 Search.lua
 Destinations.lua
+Sections.lua
 Location.lua
 Journey.lua
 Navigation.lua

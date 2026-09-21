@@ -1,0 +1,55 @@
+# key, faction (Alliance | Horde | Both). Whose a city or town is: the accordion on the main window lists your
+# own faction's (and Both) by default; search still finds everyone's. A settlement not listed here is
+# treated as belonging to everyone, and the generator says so.
+#
+# Towns with a flight master were worked out from it (a town with a flight master of each faction is Both);
+# the rest are from knowing the game or from the player (Dalaran is Alliance; Shendar Village and Valanaar are
+# open to both).
+dalaran	Alliance
+darnassus	Alliance
+ironforge	Alliance
+stormwind	Alliance
+orgrimmar	Horde
+thunder_bluff	Horde
+undercity	Horde
+aerie_peak	Alliance
+astranaar	Alliance
+auberdine	Alliance
+darkshire	Alliance
+feathermoon_stronghold	Alliance
+menethil_harbor	Alliance
+nijels_point	Alliance
+sentinel_hill	Alliance
+southshore	Alliance
+stonetalon_peak	Alliance
+thelsamar	Alliance
+theramore_isle	Alliance
+camp_mojache	Horde
+camp_taurajo	Horde
+crossroads	Horde
+freewind_post	Horde
+gromgol_base_camp	Horde
+hammerfall	Horde
+kargath	Horde
+revantusk_village	Horde
+shadowprey_village	Horde
+splintertree_post	Horde
+stonard	Horde
+sun_rock_retreat	Horde
+tarren_mill	Horde
+the_sepulcher	Horde
+booty_bay	Both
+cenarion_hold	Both
+everlook	Both
+gadgetzan	Both
+ratchet	Both
+bloodhoof_village	Horde
+brill	Horde
+dolanaar	Alliance
+goldshire	Alliance
+kharanos	Alliance
+lakeshire	Alliance
+lights_hope_chapel	Both
+razor_hill	Horde
+shendar_village	Both
+valanaar	Both
