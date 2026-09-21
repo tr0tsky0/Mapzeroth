@@ -54,7 +54,17 @@ for _, id in ipairs({ "ENTRANCE_C1455_152_857", "ENTRANCE_C1426_534_350" }) do
     local node = addon.World:GetNode(id)
     check(node and node.area == 809, "the Ironforge gate node " .. id .. " carries area 809")
 end
-check(addon.World:GetNode("ENTRANCE_C1453_724_892").area == nil, "an entrance captured without an area has none")
+check(addon.World:GetNode("ENTRANCE_C1453_741_922").area == nil, "an entrance captured without an area has none")
+
+-- Stormwind's bank is where the player stood at it; Wowhead's bankers, which the game showed to be wrong, are left out.
+local bank = addon.World:GetNode("BANK_C1453_638_808")
+check(bank and bank.kind == "bank" and bank.city == "stormwind" and math.abs(bank.x - 0.638) < 1e-9, "Stormwind's bank is the captured one")
+check(addon.World:GetNode("BANK_2455") == nil, "and Wowhead's listing of it (ignored_npcs.tsv) is gone")
+local stormwindBanks = 0
+for _, n in ipairs(addon.Nodes.Pois) do
+    if n.kind == "bank" and n.city == "stormwind" then stormwindBanks = stormwindBanks + 1 end
+end
+check(stormwindBanks == 1, "so Stormwind has one bank: " .. stormwindBanks)
 for _, n in ipairs(addon.Nodes.Pois) do
     if n.kind == "inn" then check(n.area == nil, "an inn never takes an area (it would lose its name): " .. n.id) end
 end

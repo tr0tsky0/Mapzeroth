@@ -4,8 +4,10 @@ local addonName, addon = ...
 -- relevant ones by default and puts every other trainer in a drill-down:
 --   * class trainer: yours only;
 --   * weapon master: teaches a weapon your class can learn and you don't have;
---   * profession trainer: for a profession you have, teaches a rank you don't know
---     yet (so it drops out once you have outgrown it);
+--   * profession trainer: for a profession you have, teaches the NEXT rank (the one above your
+--     highest) and talks to you, that is its top rank isn't too far above yours
+--     (addon.PROFESSION_TRAINER_REACH): an Artisan trainer won't talk to an Apprentice. So it drops
+--     out once you have outgrown it, and doesn't show until you are close enough;
 --   * riding instructor: teaches a riding rank you don't know;
 --   * pet trainer: hunters; demon trainer: warlocks.
 -- It works from the spell ids each NPC teaches and from what the player knows.
@@ -40,8 +42,9 @@ local function teachesUnknown(npc, ctx, wanted)
     return false
 end
 
--- Returns `eligible`, `wanted`: whether this kind of trainer is of any use to the player
--- at all, and which taught spells count (a set, or nil for any).
+-- Returns `eligible`, `wanted`, `gate`: whether this kind of trainer is of any use to the player
+-- at all, which taught spells count (a set, or nil for any), and for a profession its ranks and the
+-- player's own (`gate`, see talksTo).
 local function needFor(node, ctx)
     local token = node.trainer
     if addon.CLASS_TOKENS[token] then
@@ -60,10 +63,31 @@ local function needFor(node, ctx)
     end
     local firstRank = addon.Professions and addon.Professions[token]
     if firstRank then
-        -- Only a profession you have, and only its own ranks.
-        return ctx.knowsSpell(firstRank), asSet(addon.ProfessionRanks and addon.ProfessionRanks[token])
+        -- Only a profession you have, and only the next rank up from your highest.
+        local ranks = addon.ProfessionRanks and addon.ProfessionRanks[token] or {}
+        local known = 0
+        for i, spellID in ipairs(ranks) do
+            if ctx.knowsSpell(spellID) then known = i end
+        end
+        local wanted = {}
+        if ranks[known + 1] then wanted[ranks[known + 1]] = true end
+        return ctx.knowsSpell(firstRank), wanted, { ranks = ranks, known = known }
     end
     return true, nil
+end
+
+-- Will this profession trainer talk to the player? Its top rank (the highest rank it teaches) mustn't be
+-- more than PROFESSION_TRAINER_REACH above the player's own. A trainer whose ranks we don't know, or that
+-- teaches none of this profession's rank spells, is given the benefit of the doubt.
+local function talksTo(npc, gate)
+    if not gate then return true end
+    local teaches = asSet(npc.teaches)
+    for i = #gate.ranks, 1, -1 do
+        if teaches[gate.ranks[i]] then
+            return i - gate.known <= (addon.PROFESSION_TRAINER_REACH or 2)
+        end
+    end
+    return true
 end
 
 -- The NPCs at a trainer place worth visiting, in data order. A place with no NPC
@@ -71,7 +95,7 @@ end
 function Trainers:RelevantNPCs(node, ctx)
     local result = {}
     if node.kind ~= "trainer" then return result end
-    local eligible, wanted = needFor(node, ctx)
+    local eligible, wanted, gate = needFor(node, ctx)
     if not eligible then return result end
     if addon.CLASS_TOKENS[node.trainer] or PET_TRAINER_CLASS[node.trainer] then
         -- These teach their whole class/pet skill set; being the right class is enough.
@@ -84,7 +108,7 @@ function Trainers:RelevantNPCs(node, ctx)
     for _, npc in ipairs(npcs) do
         if not npc.specialty then
             if npc.teaches and #npc.teaches > 0 then
-                if teachesUnknown(npc, ctx, wanted) then result[#result + 1] = npc end
+                if teachesUnknown(npc, ctx, wanted) and talksTo(npc, gate) then result[#result + 1] = npc end
             else
                 result[#result + 1] = npc      -- nothing known about what it teaches
             end

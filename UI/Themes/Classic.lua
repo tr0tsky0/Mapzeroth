@@ -54,6 +54,6 @@ addon.Theme:Register("classic", {
     },
     markers = {
         place = c(1, 0.82, 0), flight = c(0.4, 0.75, 1), transport = c(0.4, 0.75, 1), instance = c(0.9, 0.3, 0.3),
-        leyline = c(0.7, 0.5, 1), default = c(0.62, 0.62, 0.62),
+        leyline = c(0.7, 0.5, 1), waypoint = c(1, 0.82, 0), default = c(0.62, 0.62, 0.62),
     },
 })

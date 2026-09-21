@@ -23,10 +23,11 @@ end
 -- Builds the graph for this player from `start` (see TravelGraph:AddStart). Nothing is
 -- priced yet: a plan searches for one destination, and Cost prices everywhere on first use.
 -- Returns nil, "nowhere" if we have no nodes on the start's map.
-function Journey:Build(ctx, start)
+function Journey:Build(ctx, start, extras)
     local graph = addon.TravelGraph:Build(ctx)
     if not addon.TravelGraph:AddStart(graph, ctx, start) then return nil, "nowhere" end
-    return { ctx = ctx, start = start, graph = graph }
+    for _, dest in ipairs(extras or {}) do addon.TravelGraph:AddDestination(graph, ctx, dest, start) end
+    return { ctx = ctx, start = start, graph = graph, extras = extras }
 end
 
 -- A flight costs its fare, and a route the player can't pay for isn't a route: with the player's money
@@ -90,7 +91,19 @@ end
 -- The route as a person reads it: one entry per leg, walking legs merged.
 local TRIVIAL_WALK = 4     -- seconds: a walk this short is standing where you already are
 
-local function readableSteps(result)
+-- Where a node id is, as { mapID, x, y }: one of our nodes, or the trip's own start or extra destination.
+local function pointOf(session, id)
+    local node = addon.World:GetNode(id)
+    if not node and session then
+        if session.start and session.start.id == id then node = session.start end
+        for _, extra in ipairs(session.extras or {}) do
+            if extra.id == id then node = extra end
+        end
+    end
+    return node and { mapID = node.mapID, x = node.x, y = node.y } or nil
+end
+
+local function readableSteps(result, session)
     local steps = {}
     local legs = addon.Pathfinder:CollapseSteps(result.steps)
     for _, step in ipairs(legs) do
@@ -104,9 +117,18 @@ local function readableSteps(result)
                 via = {}
                 for i = 1, #step.parts - 1 do via[#via + 1] = addon:GetNodeName(step.parts[i].to) end
             end
+            -- The points it goes through, for drawing it on the map: where it starts, each stop it passes
+            -- (the nodes a merged walk or a through-ticket is made of), and where it ends.
+            local path = {}
+            local function add(id)
+                local point = pointOf(session, id)
+                if point then path[#path + 1] = point end
+            end
+            add(step.from)
+            for _, part in ipairs(step.parts or {}) do add(part.to) end
             steps[#steps + 1] = {
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
-                seconds = step.cost, name = name, via = via,
+                seconds = step.cost, name = name, via = via, path = path,
                 text = stepText(step.method, name, via),
                 approx = step.method == "walk",     -- a walk is an estimate
             }
@@ -123,7 +145,7 @@ local function flightHint(session, goalID, plan)
     local free = {}
     for k, v in pairs(ctx) do free[k] = v end
     free.flightNodeFound = nil
-    session.free = session.free or Journey:Build(free, session.start)
+    session.free = session.free or Journey:Build(free, session.start, session.extras)
     if not session.free then return nil end
     local result = addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
     if not result or result.cost + 1 >= plan.cost then return nil end
@@ -152,7 +174,7 @@ function Journey:Plan(session, goalID)
     if money and fastest.fare > money then
         chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, money))
     end
-    local plan = { cost = (chosen or fastest).cost, steps = readableSteps(chosen or fastest), goal = (chosen or fastest).goal,
+    local plan = { cost = (chosen or fastest).cost, steps = readableSteps(chosen or fastest, session), goal = (chosen or fastest).goal,
                    fare = (chosen or fastest).fare, money = money }
     if not chosen then
         plan.unaffordable = true                           -- no way there within their means: show the quickest anyway
@@ -193,7 +215,7 @@ end
 -- The route to a destination entry from where the player is now (nil if there is none).
 function Journey:PlanFromHere(entry)
     local start = addon:GetPlayerStart()
-    local session = start and self:Build(addon:GetPlayerContext(), start)
+    local session = start and self:Build(addon:GetPlayerContext(), start, entry.dest and { entry.dest } or nil)
     return session and self:PlanEntry(session, entry) or nil
 end
 

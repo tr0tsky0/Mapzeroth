@@ -51,6 +51,36 @@ local function loadingCost(edge, ctx)
     return screens * ctx.loadingScreenTax
 end
 
+-- A city with a map of its own is walled: getting in or out on foot goes through its gate. Each such city
+-- has entrance nodes on its own map (inside) and on the zone's (outside), captured at the same gate. Walking
+-- edges never join an inside node to an outside one; the two sides of a gate are joined by a zero-cost walk,
+-- so a route says "walk to the gates" and not a straight line through the wall. (A city with no entrance
+-- pair on record isn't walled, so it can't be cut off. Dalaran's map is its zone's, so it isn't either.)
+local walls
+local function cityWalls()
+    if walls then return walls end
+    walls = {}
+    local gates = {}
+    for _, node in ipairs(addon.Nodes and addon.Nodes.Pois or {}) do
+        if node.kind == "entrance" and node.city then
+            gates[node.city] = gates[node.city] or {}
+            table.insert(gates[node.city], node)
+        end
+    end
+    for key, city in pairs(addon.Cities or {}) do
+        local inner, outer = {}, {}
+        for _, node in ipairs(gates[key] or {}) do table.insert(node.mapID == city.mapID and inner or outer, node) end
+        if #inner > 0 and #outer > 0 then walls[city.mapID] = { city = key, inner = inner, outer = outer } end
+    end
+    return walls
+end
+
+-- Which walled city a node or position is inside (its map is the city's own), or nil.
+local function insideCity(place)
+    local wall = place and cityWalls()[place.mapID]
+    return wall and wall.city or nil
+end
+
 -- Which faction a flight point belongs to, when only one faction's flights touch it ("Alliance" or
 -- "Horde"; nil for a point both use, or one no faction-bound flight reaches). A flight master of the other
 -- faction is hostile and can't be spoken to, so no flight into or out of it is ever used.
@@ -146,7 +176,7 @@ function TravelGraph:Build(ctx)
         local speed = addon:GetGroundSpeed(container, ctx)
         for i = 1, #list - 1 do
             for j = i + 1, #list do
-                local dist = TravelGraph.DistanceProvider(list[i], list[j])
+                local dist = insideCity(list[i]) == insideCity(list[j]) and TravelGraph.DistanceProvider(list[i], list[j])
                 if dist then
                     local cost = dist * pathFactor(list[i], list[j]) / speed
                     link(list[i].id, list[j].id, cost, "walk")
@@ -155,6 +185,21 @@ function TravelGraph:Build(ctx)
             end
         end
     end)
+
+    -- The two sides of each city gate: a step through it takes no time of its own.
+    for _, wall in pairs(cityWalls()) do
+        for _, inner in ipairs(wall.inner) do
+            local nearest, best
+            for _, outer in ipairs(wall.outer) do
+                local dist = TravelGraph.DistanceProvider(inner, outer) or 0
+                if not best or dist < best then nearest, best = outer, dist end
+            end
+            if nearest and World:GetNode(inner.id) and World:GetNode(nearest.id) then
+                link(inner.id, nearest.id, 0, "walk")
+                link(nearest.id, inner.id, 0, "walk")
+            end
+        end
+    end
 
     -- Flying: continent-wide, only between flyable, outdoor nodes.
     local flyable = {}
@@ -205,6 +250,26 @@ end
 -- every node in its container, the way any two nodes there are joined. `start` is
 -- { id, mapID, x, y }; its id must be unique to that spot (distances are cached by id).
 -- Returns false if we have no nodes on the start's map to walk to.
+-- A place that isn't one of our nodes but somewhere to go (the player's map waypoint): { id, mapID, x, y }.
+-- Walking edges lead to it from every node in its container, and from the start if that is in the same one.
+function TravelGraph:AddDestination(graph, ctx, dest, start)
+    local container = addon.World:GetContainerForMap(dest.mapID)
+    if not container then return false end
+    local speed = addon:GetGroundSpeed(container, ctx)
+    local function link(from)
+        local dist = TravelGraph.DistanceProvider(from, dest)
+        if not dist then return end
+        local list = graph.adjacency[from.id]
+        if not list then list = {}; graph.adjacency[from.id] = list end
+        list[#list + 1] = { from = from.id, to = dest.id, method = "walk", cost = dist * pathFactor(from, dest) / speed }
+    end
+    for _, node in ipairs(container.nodes) do
+        if insideCity(node) == insideCity(dest) then link(node) end
+    end
+    if start and addon.World:GetContainerForMap(start.mapID) == container and insideCity(start) == insideCity(dest) then link(start) end
+    return true
+end
+
 function TravelGraph:AddStart(graph, ctx, start)
     local container = addon.World:GetContainerForMap(start.mapID)
     if not container then return false end
@@ -212,7 +277,7 @@ function TravelGraph:AddStart(graph, ctx, start)
     local list = graph.adjacency[start.id]
     if not list then list = {}; graph.adjacency[start.id] = list end
     for _, node in ipairs(container.nodes) do
-        local dist = TravelGraph.DistanceProvider(start, node)
+        local dist = insideCity(node) == insideCity(start) and TravelGraph.DistanceProvider(start, node)
         if dist then
             list[#list + 1] = {
                 from = start.id, to = node.id, method = "walk",

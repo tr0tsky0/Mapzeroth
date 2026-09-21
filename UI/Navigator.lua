@@ -141,6 +141,11 @@ end
 -- Show the current model of the trip.
 function Navigator:Render(model)
     if not ui then return end
+    -- The map and the minimap show the route of the trip that has been started (not what the panel is showing).
+    local plan = model and not model.finished and not model.replan and Navigation:CurrentPlan() or nil
+    local index = model and model.index or nil
+    if addon.RouteLines then addon.RouteLines:Follow(plan, index) end
+    if addon.MinimapLines then addon.MinimapLines:Follow(plan, index) end
     if model and model.replan then
         self:Replan(model.entry)
         return
@@ -239,6 +244,8 @@ end
 -- Stop following the trip and close the window.
 function Navigator:Stop()
     Navigation:Stop()
+    if addon.RouteLines then addon.RouteLines:Follow(nil) end
+    if addon.MinimapLines then addon.MinimapLines:Follow(nil) end
     self:Hide()
     addon.Panel:OnTripUpdate(nil)
 end

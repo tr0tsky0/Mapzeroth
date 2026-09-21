@@ -320,6 +320,17 @@ def load_flight_masters():
     return fms
 
 
+def load_ignored():
+    """NPC ids from tools/poi_source/ignored_npcs.tsv: Wowhead listings the game has shown to be wrong."""
+    path = SRC / "ignored_npcs.tsv"
+    ids = set()
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip() and not line.startswith("#"):
+                ids.add(line.split("\t")[0].strip())
+    return ids
+
+
 def cluster(npcs):
     """Single-linkage clusters of same-kind, same-map NPCs."""
     groups = collections.defaultdict(list)
@@ -386,6 +397,11 @@ def main():
     settlements = load_settlements()
     fms = load_flight_masters()
     npcs += load_captured(settlements)
+    ignored = load_ignored()
+    before = len(npcs)
+    npcs = [n for n in npcs if n.get("captured") or str(n["id"]) not in ignored]
+    if before != len(npcs):
+        print(f"  left out {before - len(npcs)} Wowhead NPC(s) listed in ignored_npcs.tsv")
 
     # A held-back NPC counts as confirmed once someone captured a place of the same
     # kind standing right next to it in game.

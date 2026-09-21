@@ -35,6 +35,6 @@ addon.Theme:Register("moderndark", {
     },
     markers = {
         place = rgb("d4a64f"), flight = rgb("63b7a4"), transport = rgb("63b7a4"), instance = rgb("c0554d"),
-        leyline = rgb("8f7bd4"), default = rgb("a8a191"),
+        leyline = rgb("8f7bd4"), waypoint = rgb("d4a64f"), default = rgb("a8a191"),
     },
 })

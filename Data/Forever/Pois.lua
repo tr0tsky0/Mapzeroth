@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 105 places outside any city or town (starter areas and the like);
+-- 106 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -93,6 +93,7 @@
 --   PET trainer on map 1432 at (82.2, 62.6)
 --   leyline on map 1433 at (12.6, 72.8)
 --   SKINNING trainer on map 1433 at (88.8, 71.0)
+--   leyline on map 1436 at (59.8, 31.5)
 --   stable on map 1438 at (25.4, 49.0)
 --   WARRIOR trainer on map 1438 at (59.5, 38.5)
 --   ROGUE trainer on map 1438 at (59.5, 38.7)
@@ -353,7 +354,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_LEATHERWORKING_7868", container = "easternkingdoms.searing_gorge", mapID = 1427, x = 0.6345, y = 0.7565, kind = "trainer", trainer = "LEATHERWORKING", npcs = { { id = 7868, specialty = true } } },
     { id = "LEYLINE_C1428_786_618", container = "easternkingdoms.burning_steppes", mapID = 1428, x = 0.7860, y = 0.6180, kind = "leyline" },
     { id = "BATTLEMASTER_7410", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3373, y = 0.1103, kind = "battlemaster", npcs = { { id = 7410 }, { id = 14981 }, { id = 15008 } } },
-    { id = "ENTRANCE_C1429_322_497", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3220, y = 0.4970, kind = "entrance", city = "stormwind" },
+    { id = "ENTRANCE_C1429_318_488", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3180, y = 0.4877, kind = "entrance", city = "stormwind" },
     { id = "INN_295", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4380, y = 0.6580, kind = "inn", town = "goldshire", npcs = { { id = 295 } } },
     { id = "STABLE_11069", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.2520, y = 0.1100, kind = "stable", npcs = { { id = 11069 } } },
     { id = "STABLE_6749", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4280, y = 0.6580, kind = "stable", town = "goldshire", npcs = { { id = 6749 } } },
@@ -435,6 +436,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_HUNTER_987", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.4740, y = 0.5320, kind = "trainer", trainer = "HUNTER", town = "stonard", npcs = { { id = 987 } } },
     { id = "TRAINER_WARLOCK_988", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.4850, y = 0.5550, kind = "trainer", trainer = "WARLOCK", town = "stonard", npcs = { { id = 988 } } },
     { id = "INN_8931", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5280, y = 0.5350, kind = "inn", town = "sentinel_hill", npcs = { { id = 8931 } } },
+    { id = "LEYLINE_C1436_598_315", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5980, y = 0.3150, kind = "leyline" },
     { id = "STABLE_10045", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5300, y = 0.5300, kind = "stable", town = "sentinel_hill", npcs = { { id = 10045 } } },
     { id = "INN_1464", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.1060, y = 0.6080, kind = "inn", town = "menethil_harbor", npcs = { { id = 1464 } } },
     { id = "STABLE_10046", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.1040, y = 0.5960, kind = "stable", town = "menethil_harbor", npcs = { { id = 10046 } } },
@@ -535,9 +537,9 @@ addon.Nodes.Pois = {
     { id = "INN_11118", container = "kalimdor.winterspring", mapID = 1452, x = 0.6120, y = 0.3880, kind = "inn", town = "everlook", npcs = { { id = 11118 } } },
     { id = "STABLE_11119", container = "kalimdor.winterspring", mapID = 1452, x = 0.6040, y = 0.3800, kind = "stable", town = "everlook", npcs = { { id = 11119 } } },
     { id = "AUCTION_8670", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5340, y = 0.5997, kind = "auction", city = "stormwind", npcs = { { id = 8670 }, { id = 8719 }, { id = 15659 } } },
-    { id = "BANK_2455", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5693, y = 0.7270, kind = "bank", city = "stormwind", npcs = { { id = 2455 }, { id = 2456 }, { id = 2457 } } },
+    { id = "BANK_C1453_638_808", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.6380, y = 0.8080, kind = "bank", city = "stormwind" },
     { id = "BATTLEMASTER_14991", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5440, y = 0.6260, kind = "battlemaster", city = "stormwind", npcs = { { id = 14991 }, { id = 15102 }, { id = 15103 } } },
-    { id = "ENTRANCE_C1453_724_892", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.7240, y = 0.8920, kind = "entrance", city = "stormwind" },
+    { id = "ENTRANCE_C1453_741_922", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.7413, y = 0.9225, kind = "entrance", city = "stormwind" },
     { id = "INN_6740", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5260, y = 0.6553, kind = "inn", city = "stormwind", npcs = { { id = 6740 } } },
     { id = "STABLE_9977", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.2940, y = 0.5120, kind = "stable", city = "stormwind", npcs = { { id = 9977 } } },
     { id = "TRAINER_PRIEST_11397", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.2065, y = 0.5050, kind = "trainer", trainer = "PRIEST", city = "stormwind", npcs = { { id = 11397 } } },

@@ -18,6 +18,7 @@ function GetBuildInfo() return "1.60.1", "16001", "Sep 1 2026", 16001 end
 function CreateFrame() return { RegisterEvent = function() end, SetScript = function() end } end
 function CreateVector2D(x, y) return { x = x, y = y, GetXY = function(self) return self.x, self.y end } end
 SlashCmdList = {}
+function hooksecurefunc() end
 -- Tests override these to play different characters.
 function UnitFactionGroup() return "Alliance" end
 function UnitClass() return "Druid", "DRUID" end

@@ -49,6 +49,21 @@ local master = findNPC(11052)   -- Timothy Worthington, Master Tailor: 3908, 390
 check(master and relevant(master, { class = "MAGE", spells = { 3908, 3909, 3910 } }), "an Expert tailor still has Artisan to learn")
 check(master and not relevant(master, { class = "MAGE", spells = { 3908, 3909, 3910, 12180 } }), "an Artisan is done")
 
+-- A trainer won't talk to a player whose rank is well below its top rank: Timothy's is Artisan (4). An Apprentice (1)
+-- is told they need more training; from Journeyman (2) on he talks to them, and teaches the next rank.
+check(master and not relevant(master, { class = "MAGE", spells = { 3908 } }), "the Artisan trainer isn't offered to an Apprentice: he won't talk to them")
+check(master and relevant(master, { class = "MAGE", spells = { 3908, 3909 } }), "a Journeyman can talk to him: he teaches Expert")
+-- The trainers an Apprentice can use are the ones that teach Journeyman and talk to them.
+check(relevant(tailor, { class = "MAGE", spells = { 3908 } }), "an Apprentice still has Stormwind's Journeyman and Expert trainers")
+
+-- Only the rank after yours: a trainer that teaches nothing you can learn next isn't useful, however high it goes.
+local function synthetic(teaches) return { kind = "trainer", trainer = "TAILORING", npcs = { { id = 1, teaches = teaches } } } end
+check(not relevant(synthetic({ 12180 }), { class = "MAGE", spells = { 3908, 3909 } }), "a trainer of only Artisan has nothing for a Journeyman, who needs Expert first")
+check(relevant(synthetic({ 12180 }), { class = "MAGE", spells = { 3908, 3909, 3910 } }), "but an Expert is ready for it")
+check(not relevant(synthetic({ 3909 }), { class = "MAGE", spells = { 3908, 3909 } }), "and one that teaches only what you know has nothing")
+check(relevant(synthetic({ 3909, 3910 }), { class = "MAGE", spells = { 3908 } }), "an Expert-tier trainer talks to an Apprentice and teaches Journeyman")
+check(not relevant(synthetic({ 3909, 3910, 12180 }), { class = "MAGE", spells = { 3908 } }), "an Artisan-tier one doesn't, even though it lists Journeyman")
+
 -- A page that lists another profession's ranks doesn't make a trainer relevant to it.
 local telathir, telathirNPC = findNPC(5500)   -- Journeyman Alchemist
 check(telathir and #telathirNPC.teaches == 1 and telathirNPC.teaches[1] == 2259, "Tel'Athir teaches only alchemy ranks")

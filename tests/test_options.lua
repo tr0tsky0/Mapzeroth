@@ -48,3 +48,11 @@ O:Set("theme", "moderndark")
 check(Theme:Current().id == "moderndark", "picking a theme in the settings changes it live")
 Theme:Set("classic")
 check(O:Get("theme") == "classic", "changing theme another way is remembered too")
+
+-- Two on/off settings: the route on the map and on the minimap. On by default; anything truthy is on.
+check(O:Get("showRouteOnMap") == true and O:Get("showRouteOnMinimap") == true, "the route is drawn on the map and the minimap by default")
+check(O:Set("showRouteOnMap", false) == false and O:Get("showRouteOnMap") == false, "and can be switched off")
+check(O:Set("showRouteOnMinimap", nil) == false and O:Get("showRouteOnMinimap") == false, "nothing means off")
+check(O:Set("showRouteOnMap", "yes") == true and O:Get("showRouteOnMap") == true, "and anything else on")
+O:Reset()
+check(O:Get("showRouteOnMap") == true and O:Get("showRouteOnMinimap") == true, "Reset turns both back on")

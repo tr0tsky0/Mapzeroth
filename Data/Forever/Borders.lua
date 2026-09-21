@@ -95,8 +95,8 @@ addon.Nodes.Borders = {
     { id = "BORDER_UNGORO_CRATER_TO_TANARIS", container = "kalimdor.ungoro_crater", mapID = 1449, x = 0.6750, y = 0.8150 }, -- Un'Goro Crater side of the Un'Goro Crater/Tanaris crossing
     { id = "BORDER_UNGORO_CRATER_TO_SILITHUS", container = "kalimdor.ungoro_crater", mapID = 1449, x = 0.3470, y = 0.1690 }, -- Un'Goro Crater side of the Un'Goro Crater/Silithus crossing
     { id = "BORDER_SILITHUS_TO_UNGORO_CRATER", container = "kalimdor.silithus", mapID = 1451, x = 0.8130, y = 0.1650 }, -- Silithus side of the Silithus/Un'Goro Crater crossing
-    { id = "BORDER_ELWYNN_FOREST_TO_WESTFALL", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.2060, y = 0.7980 }, -- Elwynn Forest side of the Elwynn Forest/Westfall crossing
-    { id = "BORDER_WESTFALL_TO_ELWYNN_FOREST", container = "easternkingdoms.westfall", mapID = 1436, x = 0.6160, y = 0.1800 }, -- Westfall side of the Westfall/Elwynn Forest crossing
+    { id = "BORDER_ELWYNN_FOREST_TO_WESTFALL", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.2029, y = 0.8044, area = 60 }, -- Elwynn Forest side of the Elwynn Forest/Westfall crossing
+    { id = "BORDER_WESTFALL_TO_ELWYNN_FOREST", container = "easternkingdoms.westfall", mapID = 1436, x = 0.6234, y = 0.1734 }, -- Westfall side of the Westfall/Elwynn Forest crossing
     { id = "BORDER_ELWYNN_FOREST_TO_REDRIDGE_MOUNTAINS", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.9380, y = 0.7210 }, -- Elwynn Forest side of the Elwynn Forest/Redridge Mountains crossing
     { id = "BORDER_REDRIDGE_MOUNTAINS_TO_ELWYNN_FOREST", container = "easternkingdoms.redridge_mountains", mapID = 1433, x = 0.0280, y = 0.7280 }, -- Redridge Mountains side of the Redridge Mountains/Elwynn Forest crossing
     { id = "BORDER_DUSKWOOD_TO_WESTFALL", container = "easternkingdoms.duskwood", mapID = 1431, x = 0.0870, y = 0.6350 }, -- Duskwood side of the Duskwood/Westfall crossing
@@ -176,7 +176,7 @@ for _, edge in ipairs({
     { from = "BORDER_THOUSAND_NEEDLES_TO_FERALAS", to = "BORDER_FERALAS_TO_THOUSAND_NEEDLES", method = "walk", cost = 0 }, -- Thousand Needles <-> Feralas
     { from = "BORDER_TANARIS_TO_UNGORO_CRATER", to = "BORDER_UNGORO_CRATER_TO_TANARIS", method = "walk", cost = 0 }, -- Tanaris <-> Un'Goro Crater
     { from = "BORDER_UNGORO_CRATER_TO_SILITHUS", to = "BORDER_SILITHUS_TO_UNGORO_CRATER", method = "walk", cost = 0 }, -- Un'Goro Crater <-> Silithus
-    { from = "BORDER_ELWYNN_FOREST_TO_WESTFALL", to = "BORDER_WESTFALL_TO_ELWYNN_FOREST", method = "walk", cost = 0 }, -- Elwynn Forest <-> Westfall
+    { from = "BORDER_ELWYNN_FOREST_TO_WESTFALL", to = "BORDER_WESTFALL_TO_ELWYNN_FOREST", method = "walk", cost = 0 }, -- Elwynn Forest <-> Westfall (captured on both sides)
     { from = "BORDER_ELWYNN_FOREST_TO_REDRIDGE_MOUNTAINS", to = "BORDER_REDRIDGE_MOUNTAINS_TO_ELWYNN_FOREST", method = "walk", cost = 0 }, -- Elwynn Forest <-> Redridge Mountains
     { from = "BORDER_DUSKWOOD_TO_WESTFALL", to = "BORDER_WESTFALL_TO_DUSKWOOD", method = "walk", cost = 0 }, -- Duskwood <-> Westfall
     { from = "BORDER_DUSKWOOD_TO_REDRIDGE_MOUNTAINS", to = "BORDER_REDRIDGE_MOUNTAINS_TO_DUSKWOOD", method = "walk", cost = 0 }, -- Duskwood <-> Redridge Mountains

@@ -2,7 +2,8 @@ local addonName, addon = ...
 
 -- What the main window offers before anything is typed: sections that open like an accordion.
 --
---   Personally relevant  "Nearest ..." picks for what matters to this character: the nearest ley
+--   Personally relevant  the waypoint they have set on the map, if any; "Nearest ..." picks for what
+--                        matters to this character: the nearest ley
 --                        line (Skyborne), class trainer (and pet or demon trainer), a trainer for each
 --                        profession they have that still teaches them something, a weapon master that
 --                        teaches a weapon they can learn and don't have
@@ -28,7 +29,7 @@ end
 
 -- Returns { { id, title, items }, ... } for this player's entries (from Destinations:Build) and context.
 -- `index` (by node id) is set on the result for Price.
-function Sections:Build(entries, ctx)
+function Sections:Build(entries, ctx, waypoint)
     local leylines, cities, towns = {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
@@ -50,6 +51,14 @@ function Sections:Build(entries, ctx)
     end
 
     local picks = {}
+    -- The waypoint they set on the map, when they have one: where they are heading, so first.
+    if waypoint then
+        index[waypoint.id] = { name = addon:GetZoneName(waypoint.mapID) or "" }
+        picks[#picks + 1] = {
+            name = L["PICK_WAYPOINT"], nodeID = waypoint.id, nodeIDs = { waypoint.id }, group = "waypoint",
+            relevant = true, pick = true, dest = waypoint,
+        }
+    end
     if #leylines > 0 then picks[#picks + 1] = pick(L["PICK_LEYLINE"], "leyline", leylines) end
     if trainers[ctx.class] then picks[#picks + 1] = pick(L["PICK_CLASS"], "trainer", trainers[ctx.class]) end
     for token, key in pairs({ PET = "PICK_PET", DEMON = "PICK_DEMON" }) do

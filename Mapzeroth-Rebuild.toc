@@ -50,11 +50,14 @@ Sections.lua
 Location.lua
 Journey.lua
 Navigation.lua
+MapRoute.lua
 
 # UI
 UI\Theme.lua
 UI\Themes\Classic.lua
 UI\Themes\ModernDark.lua
+UI\RouteLines.lua
+UI\MinimapLines.lua
 UI\Panel.lua
 UI\Navigator.lua
 UI\OptionsPanel.lua

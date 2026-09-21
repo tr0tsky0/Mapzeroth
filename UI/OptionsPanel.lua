@@ -2,7 +2,7 @@ local addonName, addon = ...
 
 -- The settings page, in the game's own Settings window (Game Menu > Options > AddOns >
 -- Mapzeroth, or /mapzeroth settings): how long a loading screen counts for in a route, the size of
--- our windows, and the theme. The page is built from our own themed widgets and handed to the
+-- our windows, the theme, and whether the route is drawn on the map and on the minimap. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.
 
@@ -15,6 +15,24 @@ local Options = addon.Options
 
 local PAD = 20
 local widgets = {}
+
+-- A label, a description and an On / Off choice for one on/off setting, in a column at x.
+local function toggleColumn(parent, x, top, key, label, description)
+    local title = Theme:Text(parent, "body")
+    title:SetPoint("TOPLEFT", x, -top)
+    title:SetText(label)
+    local hint = Theme:Text(parent, "dim")
+    hint:SetPoint("TOPLEFT", x, -(top + 20))
+    hint:SetWidth(250)
+    hint:SetWordWrap(true)
+    hint:SetText(description)
+    local choices = { { id = true, label = L["OPT_ON"] }, { id = false, label = L["OPT_OFF"] } }
+    local dropdown = Theme:Dropdown(parent, 120, choices, function(id) Options:Set(key, id) end)
+    dropdown.button:SetPoint("TOPLEFT", x, -(top + 84))
+    dropdown.hint = hint
+    dropdown.key = key
+    return dropdown
+end
 
 -- A label, a description, and a slider bound to one numeric setting, with its value beside it.
 local function sliderRow(parent, top, key, label, description, formatValue)
@@ -75,6 +93,13 @@ function OptionsPanel:Build()
     widgets.theme = Theme:Dropdown(box, 220, choices, function(id) Options:Set("theme", id) end)
     widgets.theme.button:SetPoint("TOPLEFT", PAD, -326)
 
+    widgets.routeMap = toggleColumn(box, PAD, 390, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
+    widgets.routeMinimap = toggleColumn(box, PAD + 290, 390, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
+    if not (addon.MinimapLines and addon.MinimapLines:IsAvailable()) then
+        widgets.routeMinimap.hint:SetText(L["OPT_MINIMAP_UNAVAILABLE"])       -- it can't be done here: say so
+        widgets.routeMinimap.button:Disable()
+    end
+
     -- Hooks the game's Settings window calls on a canvas page.
     frame.OnCommit = function() end
     frame.OnDefault = function()
@@ -96,6 +121,8 @@ function OptionsPanel:Sync()
     widgets.scale.slider:SetValue(Options:Get("scale"))
     widgets.scale.value:SetText(widgets.scale.format(Options:Get("scale")))
     widgets.theme:SetValue(Options:Get("theme"))
+    widgets.routeMap:SetValue(Options:Get("showRouteOnMap"))
+    widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
 end
 
 -- Add the page to the game's Settings window (once).

@@ -9,11 +9,13 @@ local addonName, addon = ...
 local Options = {}
 addon.Options = Options
 
--- key -> { default, min, max, step } for numbers; text settings have only a default.
+-- key -> { default, min, max, step } for numbers; text settings have only a default; on/off ones say boolean.
 local definitions = {
     loadingScreenTax = { default = addon.DEFAULT_LOADING_SCREEN_TAX or 10, min = 0, max = 20, step = 1 },   -- seconds a loading screen costs a route
     scale = { default = 1, min = 0.7, max = 1.5, step = 0.05 },           -- size of our windows
     theme = { default = "moderndark" },
+    showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
+    showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
 }
 
 local listeners = {}
@@ -51,6 +53,7 @@ end
 local function clean(key, value)
     local d = definitions[key]
     if not d then return nil end
+    if d.boolean then return value and true or false end
     if d.min then
         value = tonumber(value)
         if not value then return d.default end

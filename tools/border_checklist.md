@@ -27,7 +27,7 @@ Each row is one guessed crossing point, seen from both sides.
 | Thousand Needles | 6.6, 13.5 | Feralas | 96.7, 48.3 |
 | Tanaris | 26.8, 53.1 | Un'Goro Crater | 67.5, 81.5 |
 | Un'Goro Crater | 34.7, 16.9 | Silithus | 81.3, 16.5 |
-| Elwynn Forest | 20.6, 79.8 | Westfall | 61.6, 18.0 |
+| Elwynn Forest | 20.29, 80.44 | Westfall | 62.34, 17.34 | captured on both sides [areaA=60]
 *** | Elwynn Forest | 67.5, 94.8 | Duskwood | 60.8, 23.2 | Technically you can just swim across the southern river into Duskwood, but there's no "road" crossing
 | Elwynn Forest | 93.8, 72.1 | Redridge Mountains | 2.8, 72.8 |
 | Duskwood | 8.7, 63.5 | Westfall | 67.2, 62.4 |

@@ -19,6 +19,12 @@ addon.DEFAULT_LOADING_SCREEN_TAX = 10     -- the player can change it (Options.l
 -- Keep equal to CHAIN_SAVING in tools/gen_flights.py.
 addon.FLIGHT_CHAIN_SAVING = 10
 
+-- A profession trainer won't talk to a player whose rank is too far below the trainer's top rank: an
+-- Artisan (rank 4) trainer told an Apprentice (rank 1) "you need more training". Observed for that one
+-- case; a trainer whose top rank is at most this many above the player's own is taken to talk to them
+-- (so an Apprentice can learn Journeyman from an Expert-tier trainer, and then talk to the Artisan).
+addon.PROFESSION_TRAINER_REACH = 2
+
 -- The classes a trainer can be for; their names come from the client.
 addon.CLASS_TOKENS = {
     WARRIOR = true, PALADIN = true, HUNTER = true, ROGUE = true, PRIEST = true,

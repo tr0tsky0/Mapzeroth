@@ -13,6 +13,7 @@ frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("HEARTHSTONE_BOUND")
 frame:RegisterEvent("TAXIMAP_OPENED")
 frame:RegisterEvent("UI_INFO_MESSAGE")
+pcall(frame.RegisterEvent, frame, "USER_WAYPOINT_UPDATED")
 frame:SetScript("OnEvent", function(_, event, ...)
     if event == "ADDON_LOADED" then
         -- The world map may load after us; attach the panel when it does.
@@ -20,6 +21,9 @@ frame:SetScript("OnEvent", function(_, event, ...)
         return
     elseif event == "TAXIMAP_OPENED" then
         addon.FlightKnowledge:OnTaxiMapOpened()
+        return
+    elseif event == "USER_WAYPOINT_UPDATED" then
+        addon.Panel:OnWaypointChanged()
         return
     elseif event == "UI_INFO_MESSAGE" then
         -- "New flight path discovered": we aren't told which, so forget the "not found"s.

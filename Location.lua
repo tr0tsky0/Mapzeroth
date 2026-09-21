@@ -41,3 +41,22 @@ function addon:GetPlayerStart()
     local id = ("YOU_%d_%d_%d"):format(knownID, math.floor(kx * 2000 + 0.5), math.floor(ky * 2000 + 0.5))
     return { id = id, mapID = knownID, x = kx, y = ky }
 end
+
+-- The waypoint the player has set on the map (the game's own, not an addon's) as a destination node
+-- { id, mapID, x, y }, or nil when there is none, the client has no such API, or it sits on a map we
+-- can't place (a position on a map with no nodes is carried up to a parent map that has some, as for the
+-- player). The id names the spot, rounded, so distances to it are cached like any other node's.
+function addon:GetWaypoint()
+    local map = C_Map
+    if not (map and map.HasUserWaypoint and map.GetUserWaypoint and map.HasUserWaypoint()) then return nil end
+    local point = map.GetUserWaypoint()
+    local position = point and point.position
+    if not (point and point.uiMapID and position) then return nil end
+    local x, y
+    if position.GetXY then x, y = position:GetXY() else x, y = position.x, position.y end
+    if not (x and y) then return nil end
+    local knownID, kx, ky = knownMap(point.uiMapID, x, y)
+    if not knownID then return nil end
+    local id = ("WAYPOINT_%d_%d_%d"):format(knownID, math.floor(kx * 2000 + 0.5), math.floor(ky * 2000 + 0.5))
+    return { id = id, mapID = knownID, x = kx, y = ky }
+end

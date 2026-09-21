@@ -125,6 +125,16 @@ check(addon.Panel:StatusText() == nil, "and the message goes away when there are
 addon.Panel:Query("")
 check(state.view == "list", "an empty box shows the accordion")
 
+-- An X at the right end of the search box clears it, and only shows when there is something to clear.
+local box = addon.Panel.widgets
+check(box.clear and not box.clear._shown, "the clear button is hidden while the box is empty")
+box.search:SetText("iron")
+box.search._scripts.OnTextChanged(box.search)
+check(box.clear._shown and not box.hint._shown, "typing shows it")
+box.clear._scripts.OnClick()
+check(box.search:GetText() == "" and not box.clear._shown and box.hint._shown, "clicking it empties the box and hides it again")
+check(state.view == "list" and #state.results >= 1 and state.results[1].header, "and the search goes back to the sections")
+
 -- Choosing a result shows its route.
 addon.Panel:Query("ironforge, dun")
 local flightMaster
@@ -344,10 +354,106 @@ local leyline = pickNamed("Nearest Ley Line")
 check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4, "a Skyborne is offered the nearest ley line, over every one we know")
 IsPlayerSpell = function() return false end
 
+-- A waypoint set on the map is the first personally relevant pick, and the accordion follows it being set or cleared.
+C_Map.HasUserWaypoint = function() return true end
+C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.4, 0.3 end } } end
+addon.Panel:OnWaypointChanged()
+addon.Panel:Choose(headerIndex("relevant"))
+local way = pickNamed("Your Waypoint")
+check(way and way.dest and way.dest.mapID == 1453 and state.results[headerIndex("relevant") + 1] == way, "a waypoint is the first pick under Personally relevant")
+check(way.eta ~= nil, "and priced when the section is opened")
+C_Map.HasUserWaypoint = function() return false end
+addon.Panel:OnWaypointChanged()
+addon.Panel:Choose(headerIndex("relevant"))
+check(not pickNamed("Your Waypoint"), "clearing it removes the pick")
+C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+
 -- Searching still works, and lists everything.
 addon.Panel:Query("storm")
 check(#state.results > 0 and not state.results[1].header, "typing searches as before")
 WorldMapFrame._hooks.OnShow()
+
+-- The route is drawn on the world map's canvas, follows the step the trip is on, and is taken down when the
+-- route is left. (Frames here record what they are asked to draw.)
+local drawn = {}
+local realCreateFrame = CreateFrame
+CreateFrame = function()
+    local f = mock()
+    f.GetWidth = function() return 1000 end
+    f.GetHeight = function() return 500 end
+    f.GetEffectiveScale = function() return 1 end
+    f.SetFrameLevel = function(self, level) self._level = level end
+    f.CreateLine = function()
+        local line = mock()
+        line.SetStartPoint = function(self, _, _, x, y) self._from = { x, y } end
+        line.SetEndPoint = function(self, _, _, x, y) self._to = { x, y } end
+        line.SetThickness = function(self, t) self._thickness = t end
+        line.SetColorTexture = function(self, r, g, b, a) self._alpha = a end
+        drawn[#drawn + 1] = line
+        return line
+    end
+    return f
+end
+WorldMapFrame.GetCanvas = function() return mock() end
+WorldMapFrame.GetMapID = function() return 1453 end
+WorldMapFrame._shown = true
+local RouteLines = addon.RouteLines
+local function shown()
+    local n = 0
+    for _, line in ipairs(drawn) do if line._shown then n = n + 1 end end
+    return n
+end
+C_Map.GetBestMapForUnit = function() return 1453 end
+C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.60, 0.60 end } end
+WorldMapFrame._hooks.OnShow()
+-- Looking at a route (chosen and priced) draws nothing: only a trip that has been started does.
+addon.Panel:Query("ironforge, dun")
+local previewIndex
+for i, r in ipairs(state.results) do if r.group == "flight" then previewIndex = i end end
+addon.Panel:Choose(previewIndex)
+check(state.view == "route" and state.plan and shown() == 0 and RouteLines.state.badgesUsed == 0, "a route that is only being looked at is not drawn on the map")
+startTrip()
+check(shown() > 10 and RouteLines.state.linesUsed == shown(), "started, a route on foot is drawn as many short dots: " .. shown())
+check(RouteLines.state.badgesUsed >= 2, "with a badge for a step and one for the end: " .. RouteLines.state.badgesUsed)
+local inside = true
+for _, line in ipairs(drawn) do
+    if line._shown and not (line._from[1] >= 0 and line._from[1] <= 1000 and line._from[2] <= 0 and line._from[2] >= -500) then inside = false end
+end
+check(inside, "all of it on the canvas")
+local faded = 0
+for _, line in ipairs(drawn) do if line._shown and line._alpha and line._alpha < 1 and line._alpha > 0.2 then faded = faded + 1 end end
+RouteLines:SetCurrent(2)
+check(shown() > 0, "moving on to the next step redraws it")
+addon.Options:Set("showRouteOnMap", false)
+check(shown() == 0, "switched off in the settings, the route leaves the map")
+addon.Options:Set("showRouteOnMap", true)
+check(shown() > 0, "and comes back when it is switched on")
+-- The map's own art (its detail layers and explored-area overlays) hides anything under it, so the route goes just above.
+local art = {}
+art[{ GetFrameLevel = function() return 7 end }] = true
+art[{ GetFrameLevel = function() return 12 end }] = true
+WorldMapFrame.detailLayerPool = { EnumerateActive = function() return pairs(art) end }
+WorldMapFrame.pinPools = {
+    MapExplorationPinTemplate = { EnumerateActive = function() return pairs({ [{ GetFrameLevel = function() return 20 end }] = true }) end },
+    QuestPinTemplate = { EnumerateActive = function() return pairs({ [{ GetFrameLevel = function() return 500 end }] = true }) end },
+}
+RouteLines:Redraw()
+check(RouteLines.state.frame._level == 21, "above the highest art layer (the exploration overlays) but not above the points of interest: " .. tostring(RouteLines.state.frame._level))
+WorldMapFrame.detailLayerPool, WorldMapFrame.pinPools = nil, nil
+addon.Panel:Query("storm")
+check(shown() > 0, "going back to the search page doesn't take it down: the trip goes on")
+addon.Navigator:Stop()
+check(shown() == 0 and RouteLines.state.badgesUsed == 0, "stopping the trip takes the lines down")
+
+-- A failure while drawing never reaches the map.
+startTrip()
+check(shown() > 0, "drawn again for a new route")
+WorldMapFrame.GetMapID = function() error("the map isn't ready") end
+local ok = pcall(function() RouteLines:Redraw() end)
+check(ok and shown() == 0 and RouteLines.state.error, "an error while drawing is caught and leaves it undrawn: " .. tostring(RouteLines.state.error))
+WorldMapFrame.GetMapID = function() return 1453 end
+addon.Navigator:Stop()
+CreateFrame = realCreateFrame
 
 -- The main window has no theme button any more: the theme is a setting.
 check(addon.Panel.UpdateThemeLabel == nil, "the panel has no theme button to update")
@@ -382,7 +488,19 @@ check(pw.theme.menu._shown == false, "and closes the list")
 registeredFrame.OnDefault()
 check(Options:Get("loadingScreenTax") == 10 and Options:Get("scale") == 1 and Theme:Current().id == "moderndark", "the Defaults button restores everything")
 check(pw.tax.value._text == "10 s", "and the page shows it")
-check(addon.OptionsPanel:Open() and openedID == 42, "/mzr settings opens the page")
+check(addon.OptionsPanel:Open() and openedID == 42, "/mapzeroth settings opens the page")
+
+-- Two on/off settings: the route on the map and on the minimap.
+check(pw.routeMap.button.label._text:find("On", 1, true) and pw.routeMinimap.button.label._text:find("On", 1, true), "both route settings show On by default")
+pw.routeMap:Select(false)
+check(Options:Get("showRouteOnMap") == false and pw.routeMap.button.label._text:find("Off", 1, true), "choosing Off for the map turns it off")
+pw.routeMinimap:Select(false)
+check(Options:Get("showRouteOnMinimap") == false, "and the same for the minimap")
+registeredFrame.OnDefault()
+check(Options:Get("showRouteOnMap") == true and Options:Get("showRouteOnMinimap") == true and pw.routeMap.button.label._text:find("On", 1, true),
+    "the Defaults button turns both back on")
+check(pw.routeMinimap.hint._text ~= "This client's minimap can't show the route." or not addon.MinimapLines:IsAvailable(),
+    "the minimap row only says it can't when the client can't")
 Options:Reset()
 
 -- On foot the navigator shows an arrow that turns to the destination.

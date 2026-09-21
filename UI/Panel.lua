@@ -27,7 +27,7 @@ local ui                                  -- the widgets, once built
 local state = {
     hidden = false, entries = {}, results = {}, offset = 0, selected = 0,
     view = "list", entry = nil, plan = nil, ctx = nil,
-    sections = {}, open = {}, priced = false, session = nil,     -- the accordion, and whether it has been priced
+    sections = {}, open = {}, priced = false, session = nil, waypoint = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
 }
 
@@ -52,6 +52,7 @@ end
 
 local function build(parent)
     ui = {}
+    Panel.widgets = ui                          -- for tests
     local frame = Theme:Panel(parent, "MapzerothRebuildPanel")
     frame:SetSize(WIDTH, HEIGHT)
     -- Stay in the map's strata (a child inherits it) and just sit above the map's own frames.
@@ -71,10 +72,22 @@ local function build(parent)
     ui.hint = Theme:Text(ui.search, "dim")
     ui.hint:SetPoint("LEFT", 10, 0)
     ui.hint:SetText(L["SEARCH_HINT"])
-    ui.search:SetScript("OnTextChanged", function(self)
+    local function textChanged(self)
         ui.hint:SetShown(self:GetText() == "")
+        ui.clear:SetShown(self:GetText() ~= "")
         Panel:Query(self:GetText())
+    end
+    -- An X at the right end to empty the box (shown only when there is something to clear).
+    ui.clear = Theme:Button(ui.search, "x", 22, 22)
+    ui.clear:SetPoint("RIGHT", -4, 0)
+    ui.clear:Hide()
+    ui.clear:SetScript("OnClick", function()
+        ui.search:SetText("")
+        textChanged(ui.search)
+        ui.search:SetFocus()
     end)
+    ui.search:SetTextInsets(8, 32, 0, 0)               -- typing stops short of the X
+    ui.search:SetScript("OnTextChanged", textChanged)
     ui.search:SetScript("OnEnterPressed", function() Panel:Choose(state.selected) end)
     ui.search:SetScript("OnEscapePressed", function() Panel:Escape() end)
     ui.search:SetScript("OnArrowPressed", function(_, key)
@@ -261,7 +274,7 @@ end
 function Panel:PriceSections()
     if state.priced then return end
     local start = addon:GetPlayerStart()
-    local session = start and Journey:Build(state.ctx, start)
+    local session = start and Journey:Build(state.ctx, start, state.waypoint and { state.waypoint } or nil)
     if session then
         addon.Sections:Price(state.sections, session)
         state.session = session
@@ -327,7 +340,7 @@ function Panel:ShowRoute(entry)
     local ctx = addon:GetPlayerContext()
     state.ctx = ctx
     local start = addon:GetPlayerStart()
-    local session = start and Journey:Build(ctx, start)
+    local session = start and Journey:Build(ctx, start, entry.dest and { entry.dest } or nil)
     if not session then
         ui.status:ClearAllPoints()
         ui.status:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 74))
@@ -464,8 +477,16 @@ function Panel:Refresh()
     state.ctx = addon:GetPlayerContext()
     state.entries = addon.Destinations:Build(state.ctx)
     -- A new window: the sections start closed, and are priced from where the player is when one is opened.
-    state.sections = addon.Sections:Build(state.entries, state.ctx)
+    state.waypoint = addon:GetWaypoint()
+    state.sections = addon.Sections:Build(state.entries, state.ctx, state.waypoint)
     state.open, state.priced, state.session = {}, false, nil
+end
+
+-- The player set or cleared their map waypoint: the accordion's first pick changes with it.
+function Panel:OnWaypointChanged()
+    if not (ui and ui.frame:IsShown()) or state.view ~= "list" or ui.search:GetText() ~= "" then return end
+    self:Refresh()
+    self:Query("")
 end
 
 function Panel:OnMapShown()
@@ -496,6 +517,7 @@ function Panel:Init()
     self.inited = true
     addon.Options:OnChange(function(key) if key == "scale" then Panel:ApplyScale() end end)
     WorldMapFrame:HookScript("OnShow", function() Panel:OnMapShown() end)
+    addon.RouteLines:Init()
     WorldMapFrame:HookScript("OnSizeChanged", function()
         if ui and ui.frame:IsShown() then Panel:Reanchor() end
     end)

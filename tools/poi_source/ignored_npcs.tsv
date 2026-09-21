@@ -1,0 +1,5 @@
+# NPC id, name, why. Wowhead listings we don't use because the game shows something else: the generator
+# leaves these out (a place captured in person with /mzdump poi stands instead).
+2455	Olivia Burnside	banker: Stormwind's bank is at 63.8, 80.8 (captured), not the 57, 72 Wowhead lists
+2456	Newton Burnside	banker: same
+2457	John Burnside	banker: same

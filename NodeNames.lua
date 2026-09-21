@@ -148,6 +148,7 @@ local function borderPartner(nodeID)
 end
 
 local function resolve(nodeID)
+    if nodeID:find("^WAYPOINT_") then return L["WAYPOINT_NAME"] end       -- the player's map waypoint
     local key = "NODE_" .. nodeID
     if addon:HasString(key) then
         return L[key]

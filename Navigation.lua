@@ -51,8 +51,9 @@ local function report(record)
     if Navigation.onTiming then Navigation.onTiming(record) end
 end
 
+-- A node of ours, or the trip's own destination when it isn't one (the waypoint).
 local function nodeOf(id)
-    return id and addon.World:GetNode(id)
+    return id and (addon.World:GetNode(id) or (active and active.extra and active.extra[id]))
 end
 
 -- Yards from the sample to a node, or nil if we can't say.
@@ -83,6 +84,14 @@ local function yardsPerUnit(mapID)
     local dy = addon.TravelGraph.DistanceProvider(here, south)
     if not (dx and dy) then return nil end
     return dx / 0.01, dy / 0.01
+end
+
+-- Yards for a step of 1 in x and in y on a map (the minimap route needs it too).
+Navigation.YardsPerUnit = yardsPerUnit
+
+-- The plan of the trip being followed, or nil.
+function Navigation:CurrentPlan()
+    return active and active.plan or nil
 end
 
 -- The turn needed to face a node, in radians: 0 is straight ahead, positive is to the left
@@ -245,7 +254,7 @@ end
 -- `notice` (optional) is a string key shown for a few seconds ("NAV_REROUTED").
 function Navigation:Start(entry, plan, notice)
     active = { entry = entry, plan = plan, steps = plan.steps, index = 1, finished = false, jumped = false,
-               notice = notice }
+               notice = notice, extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil }
 end
 
 -- A flight was chosen at a flight master: stops = the node ids the ticket lands at, the last being where
