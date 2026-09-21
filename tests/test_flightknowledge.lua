@@ -133,3 +133,61 @@ FK:Reset()
 check(FK:IsFound("TAXI_7") == nil, "reset forgets")
 FK:Load()
 check(FK:IsFound("TAXI_7") == true and FK:IsFound("TAXI_8") == false, "load restores it")
+
+-- Where a chosen flight goes: the game's route for the slot the player clicked, as node ids.
+GetTaxiMapID = function() return 1415 end
+C_TaxiMap.GetAllTaxiNodes = function()
+    return { { nodeID = 2, slotIndex = 1 }, { nodeID = 6, slotIndex = 2 }, { nodeID = 7, slotIndex = 3 }, { nodeID = 14, slotIndex = 4 } }
+end
+GetNumRoutes = function(slot) return slot == 4 and 3 or 1 end
+TaxiGetNodeSlot = function(slot, hop, source)
+    if slot == 4 then return ({ 2, 3, 4 })[hop] end       -- Southshore: Ironforge, Menethil, itself
+    return slot
+end
+local stops = FK:StopsForSlot(2)
+check(stops and #stops == 1 and stops[1] == "TAXI_6", "a direct flight lands at its destination")
+stops = FK:StopsForSlot(4)
+check(stops and #stops == 3 and stops[1] == "TAXI_6" and stops[2] == "TAXI_7" and stops[3] == "TAXI_14",
+    "a ticket through other points lists each stop in order, ending at the destination")
+check(FK:StopsForSlot(99) == nil and FK:StopsForSlot(nil) == nil, "an unknown slot gives nothing")
+GetTaxiMapID = nil
+
+-- The player's discount is learned from the client's prices. Stormwind to Ironforge is a leg of 50 copper;
+-- Menethil Harbor is that plus Ironforge to Menethil Harbor's 330, by way of Ironforge: 380 in all. A player
+-- who pays 96% of that pays 48 and 365.
+FK:Reset()
+check(FK:FareFactor() == 1, "no discount is assumed before a price has been seen")
+GetTaxiMapID = function() return 1415 end
+C_TaxiMap.GetAllTaxiNodes = function()
+    return { { nodeID = 2, slotIndex = 1, state = 0 }, { nodeID = 6, slotIndex = 2, state = 1 }, { nodeID = 7, slotIndex = 3, state = 1 } }
+end
+GetNumRoutes = function(slot) return slot == 3 and 2 or 1 end
+TaxiGetNodeSlot = function(slot, hop) if slot == 3 then return ({ 2, 3 })[hop] end return slot end
+TaxiNodeCost = function(slot) return ({ 0, 48, 365 })[slot] end
+UnitName = function() return "Tester" end
+GetRealmName = function() return "Realm" end
+FK:OnTaxiMapOpened(ali)
+check(math.abs(FK:FareFactor() - 0.96) < 0.01, "a flight window's prices give the factor: " .. tostring(FK:FareFactor()))
+check(math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01, "for the flight master they were read at")
+check(FK:FareFactor("TAXI_6") == FK:FareFactor(), "and a flight master not seen yet gets the typical one")
+local samples = FK:FareSamples()
+check(#samples == 2 and samples[1].paid and samples[1].base, "the prices read are kept for /mzr fares")
+-- Another flight master with a different discount (a different faction's reputation): its own factor.
+C_TaxiMap.GetAllTaxiNodes = function()
+    return { { nodeID = 6, slotIndex = 2, state = 0 }, { nodeID = 2, slotIndex = 1, state = 1 } }
+end
+TaxiNodeCost = function(slot) return ({ 50, 0 })[slot] end       -- Ironforge to Stormwind at full price
+FK:OnTaxiMapOpened(ali)
+check(FK:FareFactor("TAXI_6") == 1 and math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01, "each flight master keeps its own")
+C_TaxiMap.GetAllTaxiNodes = function()
+    return { { nodeID = 2, slotIndex = 1, state = 0 }, { nodeID = 6, slotIndex = 2, state = 1 }, { nodeID = 7, slotIndex = 3, state = 1 } }
+end
+TaxiNodeCost = function(slot) return ({ 0, 48, 365 })[slot] end
+FK:OnTaxiMapOpened(ali)
+FK:Save()
+FK:Reset()
+check(FK:FareFactor() == 1, "reset forgets it")
+FK:Load()
+check(math.abs(FK:FareFactor() - 0.96) < 0.01 and FK:FareFactor("TAXI_6") == 1, "and it is saved with the character, per flight master")
+TaxiNodeCost = nil
+GetTaxiMapID = nil

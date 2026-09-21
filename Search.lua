@@ -9,8 +9,9 @@ local addonName, addon = ...
 -- are lowered too (ruRU); Chinese and Korean have no case and are compared as typed.
 --
 -- Every word the player types must match, and each is scored by where it hits: the start
--- of the name best, the start of a word in it next, anywhere in it after that, and the
--- start of a word in the zone last. Results sort by score, then relevant places first,
+-- of the name best, the start of a word in it next, anywhere in it after that, then one of
+-- the place's details (the weapons a weapon master teaches), and the zone last. An entry
+-- that was matched through details says which in .detailHit. Results sort by score, then relevant places first,
 -- then shorter names.
 
 local Search = {}
@@ -76,6 +77,9 @@ function Search:Prepare(entries)
     for _, entry in ipairs(entries) do
         entry.key = self:Fold(entry.name or "")
         entry.zoneKey = self:Fold(entry.zone or "")
+        for _, detail in ipairs(entry.details or {}) do
+            detail.key = self:Fold(detail.text .. " " .. (detail.alias or ""))
+        end
     end
     return entries
 end
@@ -90,8 +94,19 @@ function Search:Query(entries, text, limit)
     local results = {}
     for _, entry in ipairs(entries) do
         local score = 0
+        local matched                                    -- the details a word hit, by position
         for _, token in ipairs(tokens) do
             local best = hit(entry.key, token)
+            if best == 0 then
+                -- What the place offers counts for less than a hit in the name, more than the zone.
+                for i, detail in ipairs(entry.details or {}) do
+                    if hit(detail.key, token) > 0 then
+                        best = 1.5
+                        matched = matched or {}
+                        matched[i] = true
+                    end
+                end
+            end
             if best == 0 then
                 -- A zone match counts for less than any hit in the name.
                 best = hit(entry.zoneKey or "", token) > 0 and 0.5 or 0
@@ -99,8 +114,16 @@ function Search:Query(entries, text, limit)
             if best == 0 then score = 0; break end
             score = score + best
         end
+        entry.detailHit = nil
         if score > 0 then
             entry.score = score
+            if matched then
+                local texts = {}
+                for i, detail in ipairs(entry.details) do
+                    if matched[i] then texts[#texts + 1] = detail.text end
+                end
+                entry.detailHit = table.concat(texts, ", ")
+            end
             results[#results + 1] = entry
         end
     end

@@ -154,10 +154,18 @@ local function showRouteWidgets(show)
     end
 end
 
+-- "Trainer - Stormwind - One-Handed Swords, Staves": the weapons a search matched, else all it teaches.
 local function subtitle(entry)
-    local group = L["GROUP_" .. entry.group]
-    if entry.zone then return group .. " - " .. entry.zone end
-    return group
+    local text = L["GROUP_" .. entry.group]
+    if entry.zone then text = text .. " - " .. entry.zone end
+    local detail = entry.detailHit
+    if not detail and entry.details then
+        local names = {}
+        for _, d in ipairs(entry.details) do names[#names + 1] = d.text end
+        detail = table.concat(names, ", ")
+    end
+    if detail and detail ~= "" then text = text .. " - " .. detail end
+    return text
 end
 
 -- Fills the list rows from state.results, starting at state.offset.
@@ -280,9 +288,15 @@ function Panel:DisplayPlan(entry, plan)
     showRouteWidgets(true)
     setStatus(nil)
     ui.routeTitle:SetText(entry.name)
-    ui.routeTotal:SetText(plan.cost < 20 and L["ROUTE_ALREADY"] or L["ROUTE_TOTAL"]:format(Journey:FormatTime(plan.cost)))
-    ui.routeHint:SetText(Journey:HintText(plan.hint) or "")
-    ui.start:SetShown(#plan.steps > 0 and not state.pinned)
+    local total = plan.cost < 20 and L["ROUTE_ALREADY"] or L["ROUTE_TOTAL"]:format(Journey:FormatTime(plan.cost))
+    if plan.fare and plan.fare > 0 then total = total .. " - " .. L["ROUTE_FARES"]:format(Journey:FormatMoney(plan.fare)) end
+    ui.routeTotal:SetText(total)
+    local hints = {}
+    for _, text in ipairs({ Journey:FareText(plan), Journey:HintText(plan.hint) }) do
+        if text then hints[#hints + 1] = text end
+    end
+    ui.routeHint:SetText(table.concat(hints, "\n"))
+    ui.start:SetShown(#plan.steps > 0 and not state.pinned and not plan.unaffordable)
     for i = 1, STEPS do
         local row, step = ui.steps[i], plan.steps[i]
         if step then
@@ -323,6 +337,11 @@ function Panel:OnTripUpdate(model)
         return
     end
     if state.pinned and state.view == "route" then self:MarkCurrentStep() end
+end
+
+-- The trip was planned again (a flight went somewhere the route didn't): show the new route.
+function Panel:OnRerouted(entry, plan)
+    if state.pinned then self:DisplayPlan(entry, plan) end
 end
 
 function Panel:Choose(index)

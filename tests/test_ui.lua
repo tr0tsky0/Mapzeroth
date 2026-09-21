@@ -82,7 +82,8 @@ C_TaxiMap = { GetTaxiNodesForMap = function(id)
 end }
 LOCALIZED_CLASS_NAMES_MALE = { DRUID = "Druid", MAGE = "Mage", WARRIOR = "Warrior", HUNTER = "Hunter",
     PALADIN = "Paladin", PRIEST = "Priest", ROGUE = "Rogue", SHAMAN = "Shaman", WARLOCK = "Warlock" }
-C_Spell = { GetSpellInfo = function(id) return { name = "Profession " .. id } end }
+local skillNames = { [201] = "One-Handed Swords", [202] = "Two-Handed Swords", [227] = "Staves" }
+C_Spell = { GetSpellInfo = function(id) return { name = skillNames[id] or ("Profession " .. id) } end }
 addon:ClearNodeNameCache()
 
 -- The player has read Stormwind's flight window: Ironforge is found.
@@ -112,6 +113,9 @@ addon.Panel:Move(1)
 check(state.selected == 2, "the arrow keys move the selection")
 addon.Panel:Move(-5)
 check(state.selected == 1, "and stop at the top")
+addon.Panel:Query("sword")
+check(#state.results > 0 and state.results[1].detailHit and state.results[1].detailHit:find("Swords"),
+    "typing a weapon finds the trainers that teach it, and says which: " .. tostring(state.results[1] and state.results[1].detailHit))
 addon.Panel:Query("zzzzqq")
 check(#state.results == 0 and state.selected == 0, "nothing matches nonsense")
 addon.Panel:Query("")
@@ -264,6 +268,20 @@ addon.Panel:OnTripUpdate({ finished = true })
 check(state.view == "list" and not state.pinned, "arriving at the destination shows the search page")
 WorldMapFrame._hooks.OnShow()
 check(state.view == "list", "and reopening the map keeps it there")
+addon.Navigator:Stop()
+
+-- A flight to the wrong place: the navigator says where it goes, then plans again on landing.
+startTrip()
+local oldPlan = state.plan
+addon.Navigation:OnTakeTaxi({ "TAXI_8" }, 100)
+UnitOnTaxi = function() return true end
+addon.Navigator:Tick()
+local nav = addon.Navigator.widgets
+check(nav.step._text:find("Flying to") and not nav.bar._shown, "flying off the route: the window says where, with no bar: " .. tostring(nav.step._text))
+UnitOnTaxi = function() return false end
+addon.Navigator:Tick()
+check(addon.Navigation:IsActive() and nav.count._text == "Route updated", "on landing the route is planned again and says so: " .. tostring(nav.count._text))
+check(state.pinned and state.plan ~= oldPlan and state.plan and #state.plan.steps > 0, "the panel shows the new route")
 addon.Navigator:Stop()
 
 -- Before anything is typed: the nearest ley line for a Skyborne, and no "Home".

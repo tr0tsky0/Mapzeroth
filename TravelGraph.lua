@@ -64,6 +64,7 @@ function TravelGraph:Build(ctx)
         list[#list + 1] = {
             from = from, to = to, cost = cost, method = method,
             source = source, overridesPhase = overridesPhase,
+            fare = source and source.fare,           -- copper, for a flight
         }
     end
 

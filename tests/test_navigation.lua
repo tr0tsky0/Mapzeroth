@@ -139,5 +139,67 @@ N:Start(entry, { steps = { step("walk", "YOU", "TAXI_2", 60) } })
 m = N:Update(player(0, 0.1, WEST))
 check(m.kind == "walk" and near(m.heading, -math.pi / 2), "a walk step carries its heading")
 
+-- Which flight was chosen. Two flights on the route, Stormwind > Ironforge > Sentinel Hill.
+local twoFlights = { steps = { step("flight", "TAXI_2", "TAXI_6", 200), step("flight", "TAXI_6", "TAXI_4", 100) } }
+local far = { x = 0.5, y = 0.5 }
+local function flying(id, now) return at(id, far.x, far.y, { now = now, onTaxi = true }) end
+
+-- The player buys one ticket straight to the last stop: that is the flight being flown, over both steps.
+N:Start(entry, twoFlights)
+N:Update(at("TAXI_2"))
+N:OnTakeTaxi({ "TAXI_6", "TAXI_4" }, 5)
+m = N:Update(at("TAXI_2", 0, 0, { now = 6 }))
+check(m.index == 1 and m.phase == "waiting", "a chosen flight takes effect once the taxi moves, not before")
+m = N:Update(flying("TAXI_2", 10))
+check(m.index == 2 and m.phase == "flying" and not m.offRoute, "a ticket to a later stop skips to that step")
+check(math.abs(m.remaining - 300) < 1e-9, "and is timed as both flights: " .. tostring(m.remaining))
+m = N:Update(flying("TAXI_2", 160))
+check(math.abs(m.progress - 0.5) < 1e-9, "the bar runs over both: half way at 150 of 300 s")
+m = N:Update(at("TAXI_4", 0.002, 0, { now = 320 }))
+check(m.finished, "landing at the end finishes the trip")
+timed = N:Timings()
+check(timed[#timed].planned == 300 and math.abs(timed[#timed].actual - 310) < 1e-9, "and the flight is timed against the ticket, not one step")
+check(timed[#timed].from == "TAXI_2" and timed[#timed].to == "TAXI_4", "and is labelled with where the ticket began, not where the skipped-to step did")
+
+-- The player takes the flight the route said: nothing changes.
+N:Start(entry, twoFlights)
+N:Update(at("TAXI_2"))
+N:OnTakeTaxi({ "TAXI_6" }, 5)
+m = N:Update(flying("TAXI_2", 10))
+check(m.index == 1 and m.phase == "flying" and not m.offRoute, "the flight the route asked for is just followed")
+
+-- The wrong destination: say so while flying, and plan again on landing.
+N:Start(entry, twoFlights)
+N:Update(at("TAXI_2"))
+N:OnTakeTaxi({ "TAXI_8" }, 5)
+m = N:Update(flying("TAXI_2", 10))
+check(m.offRoute and m.flyingTo == "TAXI_8" and m.index == 1, "a flight to somewhere off the route is flagged, with where it goes")
+m = N:Update(flying("TAXI_2", 100))
+check(m.offRoute and not m.finished, "and stays flagged in the air, even passing over a stop of the route")
+m = N:Update(at("TAXI_8", 0.002, 0, { now = 200 }))
+check(m.replan and m.entry == entry, "landing asks for a new route to the same destination")
+check(not N:IsActive(), "and the old trip is done with")
+
+-- A flight that never leaves (no money, cancelled) changes nothing.
+N:Start(entry, twoFlights)
+N:Update(at("TAXI_2"))
+N:OnTakeTaxi({ "TAXI_8" }, 5)
+m = N:Update(at("TAXI_2", 0, 0, { now = 40 }))
+check(m.index == 1 and not m.offRoute, "a flight that hasn't started in 15 seconds is forgotten")
+m = N:Update(flying("TAXI_2", 50))
+check(not m.offRoute and m.index == 1, "and doesn't count when a flight starts later")
+
+-- Flying over a later stop is not arriving there.
+N:Start(entry, twoFlights)
+N:Update(at("TAXI_2"))
+m = N:Update(at("TAXI_4", 0.001, 0, { now = 10, onTaxi = true }))
+check(m.index == 1 and not m.finished, "passing over a later stop in the air doesn't skip the trip ahead")
+
+-- A note ("Route updated") is shown for a few seconds.
+N:Start(entry, twoFlights, "NAV_REROUTED")
+check(N:Update(at("TAXI_2", 0, 0, { now = 100 })).notice == "NAV_REROUTED", "a note is on the model at first")
+check(N:Update(at("TAXI_2", 0, 0, { now = 105 })).notice == "NAV_REROUTED", "still there a few seconds on")
+check(N:Update(at("TAXI_2", 0, 0, { now = 120 })).notice == nil, "and gone after that")
+
 N:Stop()
 check(not N:IsActive() and N:Model() == nil, "stopping clears the trip")

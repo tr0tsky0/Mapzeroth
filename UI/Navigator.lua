@@ -124,9 +124,27 @@ local function configureUse(step)
     ui.use.label:SetText(label)
 end
 
+-- The player flew somewhere the route didn't go (a mis-click; to change their mind they can stop and pick
+-- again): plan the way on from where they landed.
+function Navigator:Replan(entry)
+    local plan = Journey:PlanFromHere(entry)
+    if plan and #plan.steps > 0 then
+        Navigation:Start(entry, plan, "NAV_REROUTED")
+        addon.Panel:OnRerouted(entry, plan)
+        ui.useStep = nil
+        self:Tick()
+    else
+        self:Stop()
+    end
+end
+
 -- Show the current model of the trip.
 function Navigator:Render(model)
     if not ui then return end
+    if model and model.replan then
+        self:Replan(model.entry)
+        return
+    end
     if not model then
         ui.frame:Hide()
         addon.Panel:OnTripUpdate(nil)
@@ -150,7 +168,18 @@ function Navigator:Render(model)
     end
 
     ui.stop.label:SetText(L["NAV_STOP"])
-    ui.count:SetText(L["NAV_STEP_OF"]:format(model.index, model.total))
+    ui.count:SetText(model.notice and L[model.notice] or L["NAV_STEP_OF"]:format(model.index, model.total))
+    if model.offRoute then
+        -- Somewhere the route doesn't go: say where, and that it will sort itself out on landing.
+        ui.step:SetText(L["NAV_OFFROUTE"]:format(addon:GetNodeName(model.flyingTo)))
+        ui.status:SetText("")
+        ui.left:SetText("")
+        ui.bar:Hide()
+        ui.arrow:Hide()
+        if not combat then ui.use:Hide() end
+        addon.Panel:OnTripUpdate(model)
+        return
+    end
     ui.step:SetText(model.step.text)
     ui.left:SetText(L["NAV_LEFT"]:format(Journey:FormatTime(model.remaining)))
 

@@ -23,6 +23,9 @@ local FlightKnowledge = {}
 addon.FlightKnowledge = FlightKnowledge
 
 local found = {}    -- "TAXI_<id>" -> true | false
+local fareFactor        -- what the player pays as a fraction of the base fares, typically, once seen
+local originFactors = {}    -- the same for tickets bought at one flight master: "TAXI_<id>" -> factor
+local fareSamples = {}      -- the last window's prices: { to, paid, base }, for /mzr fares
 
 -- Enum.FlightPathState on the beta: Current = 0, Reachable = 1, Unreachable = 2.
 local function states()
@@ -36,6 +39,70 @@ end
 
 function FlightKnowledge:Reset()
     found = {}
+    fareFactor, originFactors, fareSamples = nil, {}, {}
+end
+
+-- What the player pays for a ticket as a fraction of the game's base fares. It is probably a
+-- reputation discount, which depends on the flight master's faction, so it is learned per departure
+-- point (nodeID) from that flight master's window; a place not seen yet gets the typical one, and 1
+-- (no discount) until any window has shown us a real price.
+function FlightKnowledge:FareFactor(nodeID)
+    return (nodeID and originFactors[nodeID]) or fareFactor or 1
+end
+
+-- The prices read from the last flight window, { { to = nodeID, paid = copper, base = copper }, ... }.
+function FlightKnowledge:FareSamples()
+    return fareSamples
+end
+
+local legFares       -- "TAXI_a|TAXI_b" -> base fare in copper, from the flight edges
+
+local function baseFare(from, stops)
+    if not legFares then
+        legFares = {}
+        for _, edge in ipairs(addon.Edges or {}) do
+            if edge.method == "flight" and edge.fare then legFares[edge.from .. "|" .. edge.to] = edge.fare end
+        end
+    end
+    local total, at = 0, from
+    for _, id in ipairs(stops) do
+        local fare = legFares[at .. "|" .. id]
+        if not fare then return nil end
+        total, at = total + fare, id
+    end
+    return total
+end
+
+-- The client's price for each reachable destination, next to what our fares add up to for that route,
+-- gives the player's discount. entries: { { nodeID, state, slotIndex }, ... } as for Record.
+function FlightKnowledge:LearnFares(entries)
+    local current, reachable = states()
+    local from
+    for _, entry in ipairs(entries) do
+        if entry.nodeID and entry.state == current then from = "TAXI_" .. entry.nodeID end
+    end
+    if not (from and TaxiNodeCost) then return end
+    local ratios = {}
+    fareSamples = {}
+    for _, entry in ipairs(entries) do
+        if entry.state == reachable and entry.slotIndex then
+            local ok, cost = pcall(TaxiNodeCost, entry.slotIndex)
+            local stops = ok and cost and cost > 0 and self:StopsForSlot(entry.slotIndex)
+            local base = stops and baseFare(from, stops)
+            if base and base > 0 then
+                ratios[#ratios + 1] = cost / base
+                fareSamples[#fareSamples + 1] = { to = stops[#stops], paid = cost, base = base }
+            end
+        end
+    end
+    if #ratios == 0 then return end
+    table.sort(ratios)
+    originFactors[from] = ratios[math.ceil(#ratios / 2)]
+    -- The typical factor, for places whose flight master we haven't seen: the middle of those seen.
+    local seen = {}
+    for _, factor in pairs(originFactors) do seen[#seen + 1] = factor end
+    table.sort(seen)
+    fareFactor = seen[math.ceil(#seen / 2)]
 end
 
 -- The points in `wanted` (a set) that some flight edge this player could take joins to a
@@ -101,6 +168,31 @@ local function taxiMapID()
     end
 end
 
+-- The flight points a chosen flight lands at, in order, the last being where it ends, as node ids: the
+-- game's own route for the slot the player clicked (the same GetNumRoutes / TaxiGetNodeSlot reading as
+-- /mzroutes). Nil when it can't be read.
+function FlightKnowledge:StopsForSlot(slot)
+    local mapID = taxiMapID()
+    local nodes = mapID and C_TaxiMap and C_TaxiMap.GetAllTaxiNodes and C_TaxiMap.GetAllTaxiNodes(mapID)
+    if not (nodes and slot) then return nil end
+    local bySlot = {}
+    for _, node in ipairs(nodes) do
+        if node.slotIndex and node.nodeID then bySlot[node.slotIndex] = "TAXI_" .. node.nodeID end
+    end
+    local stops = {}
+    local okHops, hops = pcall(GetNumRoutes, slot)
+    if okHops and type(hops) == "number" then
+        for hop = 1, hops do
+            local okSlot, landing = pcall(TaxiGetNodeSlot, slot, hop, false)
+            local id = okSlot and bySlot[landing]
+            if not id then return nil end
+            stops[#stops + 1] = id
+        end
+    end
+    if #stops == 0 and bySlot[slot] then stops[1] = bySlot[slot] end
+    return #stops > 0 and stops or nil
+end
+
 -- Call when the flight map opens.
 function FlightKnowledge:OnTaxiMapOpened(ctx)
     local mapID = taxiMapID()
@@ -108,9 +200,10 @@ function FlightKnowledge:OnTaxiMapOpened(ctx)
     if not nodes then return end
     local entries = {}
     for _, node in ipairs(nodes) do
-        entries[#entries + 1] = { nodeID = node.nodeID, state = node.state }
+        entries[#entries + 1] = { nodeID = node.nodeID, state = node.state, slotIndex = node.slotIndex }
     end
     local yes, no = self:Record(entries, ctx or addon:GetPlayerContext())
+    self:LearnFares(entries)
     self:Save()
     return yes, no
 end
@@ -127,12 +220,19 @@ function FlightKnowledge:Save()
     local copy = {}
     for id, value in pairs(found) do copy[id] = value end
     MapzerothRebuildDB.flights[characterKey()] = copy
+    MapzerothRebuildDB.fareFactors = MapzerothRebuildDB.fareFactors or {}
+    local origins = {}
+    for id, factor in pairs(originFactors) do origins[id] = factor end
+    MapzerothRebuildDB.fareFactors[characterKey()] = { typical = fareFactor, origins = origins }
 end
 
 function FlightKnowledge:Load()
     local saved = MapzerothRebuildDB and MapzerothRebuildDB.flights and MapzerothRebuildDB.flights[characterKey()]
     found = {}
     for id, value in pairs(saved or {}) do found[id] = value end
+    local factors = MapzerothRebuildDB and MapzerothRebuildDB.fareFactors and MapzerothRebuildDB.fareFactors[characterKey()]
+    fareFactor, originFactors = factors and factors.typical or nil, {}
+    for id, factor in pairs(factors and factors.origins or {}) do originFactors[id] = factor end
 end
 
 -- For /mzr flights: found and not-found ids, sorted.

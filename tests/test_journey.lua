@@ -129,3 +129,60 @@ check(ticket and #ticket.steps == 1 and ticket.steps[1].method == "flight", "Lak
 check(ticket.steps[1].via and #ticket.steps[1].via >= 1, "that goes through another flight point")
 check(ticket.steps[1].text:find("(via ", 1, true) and ticket.steps[1].text:find("Fly to Ironforge, Dun Morogh", 1, true), "and says so: " .. ticket.steps[1].text)
 check(math.abs(ticket.steps[1].seconds - ticket.cost) < 1, "with the whole flight's time on it")
+
+-- Money: a route the player can't pay for isn't offered. Starting at Refuge Pointe's flight master, Ironforge is
+-- 271 s direct (530c) or 215 s on two tickets through Menethil Harbor (660c).
+do
+    local refuge = addon.World:GetNode("TAXI_16")
+    local at = { id = "YOU_refuge", mapID = refuge.mapID, x = refuge.x, y = refuge.y }
+    local function planWith(money)
+        local ctx = makeCtx({ faction = "Alliance" })
+        ctx.money = money
+        local session = J:Build(ctx, at)
+        return session and J:Plan(session, "TAXI_6"), session
+    end
+    local rich = planWith(nil)
+    check(rich and rich.fare == 660 and rich.cost < 230, "with no money known, fares are just reported: " .. tostring(rich and rich.fare))
+    local plenty = planWith(100000)
+    check(plenty.fare == 660 and not plenty.quickest and not plenty.unaffordable, "with plenty, the quickest route and nothing to say")
+    check(J:FareText(plenty) == nil, "so no fare warning")
+    local short = planWith(600)
+    check(short.fare == 530 and short.cost == 271 and not short.unaffordable, "600 copper can't pay 660: the direct ticket at 530: " .. tostring(short.fare) .. "c " .. tostring(short.cost) .. "s")
+    check(short.quickest and short.quickest.fare == 660 and short.quickest.saves > 50, "and it says the quicker one costs more")
+    check(J:FareText(short):find("quickest") and J:FareText(short):find("6s 60c"), "in words: " .. tostring(J:FareText(short)))
+    local broke = planWith(0)
+    local flights = 0
+    for _, step in ipairs(broke and broke.steps or {}) do if step.method == "flight" then flights = flights + 1 end end
+    check(broke == nil or broke.unaffordable or flights == 0, "with no money there is no flight in the route (or it says it can't be paid for)")
+    if broke and broke.unaffordable then
+        check(J:FareText(broke):find("can't afford"), "an unaffordable route says so: " .. tostring(J:FareText(broke)))
+    end
+
+    -- Pricing every place is bounded by the money too.
+    local _, richSession = planWith(nil)
+    local _, poorSession = planWith(0)
+    check(J:Cost(richSession, "TAXI_6") ~= nil, "priced with money unknown")
+    local flown = J:Cost(poorSession, "TAXI_7")
+    check(flown == nil or flown > J:Cost(richSession, "TAXI_7"), "with nothing to spend, Menethil Harbor isn't reached by a flight")
+
+    check(J:FormatMoney(0) == "0c" and J:FormatMoney(830) == "8s 30c" and J:FormatMoney(12345) == "1g 23s 45c" and J:FormatMoney(20000) == "2g",
+        "money reads as gold, silver and copper")
+end
+
+-- Back to Stormwind from Thorium Point with 1638 copper, 22 short of the game's own ticket (1660c).
+do
+    local thorium = addon.World:GetNode("TAXI_74")
+    local at = { id = "YOU_thorium", mapID = thorium.mapID, x = thorium.x, y = thorium.y }
+    local ctx = makeCtx({ faction = "Alliance" })
+    ctx.money = 1638
+    local session = J:Build(ctx, at)
+    local plan = J:Plan(session, "TAXI_2")
+    local flights = {}
+    for _, step in ipairs(plan.steps) do if step.method == "flight" then flights[#flights + 1] = step end end
+    check(plan.fare == 1250 and #flights == 2 and flights[1].nodeID == "TAXI_5" and flights[2].nodeID == "TAXI_2",
+        "22 copper short of the direct ticket: a ticket to Lakeshire, then on to Stormwind: " .. tostring(plan.fare) .. "c")
+    check(flights[1].via and #flights[1].via == 1, "the first ticket says it flies through Morgan's Vigil")
+    check(plan.quickest and plan.quickest.fare == 1660 and plan.quickest.saves > 20 and plan.quickest.saves < 30,
+        "and it says the quicker one costs 1660c: saves " .. tostring(plan.quickest and plan.quickest.saves) .. "s")
+    check(not plan.unaffordable, "which isn't out of reach")
+end

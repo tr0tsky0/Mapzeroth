@@ -106,6 +106,14 @@ function addon:GetSpellLabel(spellID)
     return info and info.name, rank
 end
 
+-- A skill spell's name (a weapon skill: "One-Handed Swords", "Staves"), in the client's language, or
+-- nil until the client has loaded it.
+function addon:GetSkillName(spellID)
+    local info = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(spellID)
+    if info and info.name and info.name ~= "" then return info.name end
+    if C_Spell and C_Spell.RequestLoadSpellData then C_Spell.RequestLoadSpellData(spellID) end
+end
+
 -- What a trainer trains, in the client's language: a class name from the client,
 -- or one of our own strings (weapons, riding).
 local function trainerTypeName(token)

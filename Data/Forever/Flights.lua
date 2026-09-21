@@ -9,281 +9,282 @@
 -- which points the flyer had found, so the same ticket takes a different route and time for a player
 -- with a different set. Leg times don't have that problem.
 --
--- Sources: which pairs are legs is the game's own flight table (Classic Era TaxiPath,
--- tools/flight_source/taxipath_classic_1.15.9.txt); the times are InFlight's per-direction ticket times
--- for those pairs (tools/flight_source/inflight_tickets.lua). Directions are separate: they differ.
+-- Sources: which pairs are legs, and each leg's `fare` (copper, before any discount), is the game's own
+-- flight table (Classic Era TaxiPath, tools/flight_source/taxipath_classic_1.15.9.txt); the times are
+-- InFlight's per-direction ticket times for those pairs (tools/flight_source/inflight_tickets.lua).
+-- Directions are separate: they differ. A ticket costs the sum of its legs' fares.
 
 local addonName, addon = ...
 
 addon.Edges = addon.Edges or {}
 
 for _, edge in ipairs({
-    { from = "TAXI_2", to = "TAXI_4", method = "flight", cost = 78, requirements = { faction = "Alliance" } }, -- Stormwind -> Sentinel Hill
-    { from = "TAXI_2", to = "TAXI_5", method = "flight", cost = 113, requirements = { faction = "Alliance" } }, -- Stormwind -> Lakeshire
-    { from = "TAXI_2", to = "TAXI_6", method = "flight", cost = 259, requirements = { faction = "Alliance" } }, -- Stormwind -> Ironforge
-    { from = "TAXI_2", to = "TAXI_12", method = "flight", cost = 116, requirements = { faction = "Alliance" } }, -- Stormwind -> Darkshire
-    { from = "TAXI_2", to = "TAXI_19", method = "flight", cost = 245, requirements = { faction = "Alliance" } }, -- Stormwind -> Booty Bay
-    { from = "TAXI_2", to = "TAXI_45", method = "flight", cost = 176, requirements = { faction = "Alliance" } }, -- Stormwind -> Nethergarde Keep
-    { from = "TAXI_2", to = "TAXI_71", method = "flight", cost = 157, requirements = { faction = "Alliance" } }, -- Stormwind -> Morgan's Vigil
-    { from = "TAXI_4", to = "TAXI_2", method = "flight", cost = 86, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Stormwind
-    { from = "TAXI_4", to = "TAXI_5", method = "flight", cost = 130, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Lakeshire
-    { from = "TAXI_4", to = "TAXI_12", method = "flight", cost = 97, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Darkshire
-    { from = "TAXI_4", to = "TAXI_19", method = "flight", cost = 185, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Booty Bay
-    { from = "TAXI_5", to = "TAXI_2", method = "flight", cost = 113, requirements = { faction = "Alliance" } }, -- Lakeshire -> Stormwind
-    { from = "TAXI_5", to = "TAXI_4", method = "flight", cost = 133, requirements = { faction = "Alliance" } }, -- Lakeshire -> Sentinel Hill
-    { from = "TAXI_5", to = "TAXI_12", method = "flight", cost = 60, requirements = { faction = "Alliance" } }, -- Lakeshire -> Darkshire
-    { from = "TAXI_5", to = "TAXI_71", method = "flight", cost = 61, requirements = { faction = "Alliance" } }, -- Lakeshire -> Morgan's Vigil
-    { from = "TAXI_6", to = "TAXI_2", method = "flight", cost = 210, requirements = { faction = "Alliance" } }, -- Ironforge -> Stormwind
-    { from = "TAXI_6", to = "TAXI_7", method = "flight", cost = 128, requirements = { faction = "Alliance" } }, -- Ironforge -> Menethil Harbor
-    { from = "TAXI_6", to = "TAXI_8", method = "flight", cost = 101, requirements = { faction = "Alliance" } }, -- Ironforge -> Thelsamar
-    { from = "TAXI_6", to = "TAXI_14", method = "flight", cost = 265, requirements = { faction = "Alliance" } }, -- Ironforge -> Southshore
-    { from = "TAXI_6", to = "TAXI_16", method = "flight", cost = 253, requirements = { faction = "Alliance" } }, -- Ironforge -> Refuge Pointe
-    { from = "TAXI_6", to = "TAXI_43", method = "flight", cost = 298, requirements = { faction = "Alliance" } }, -- Ironforge -> Aerie Peak
-    { from = "TAXI_6", to = "TAXI_66", method = "flight", cost = 294, requirements = { faction = "Alliance" } }, -- Ironforge -> Chillwind Camp
-    { from = "TAXI_6", to = "TAXI_67", method = "flight", cost = 349, requirements = { faction = "Alliance" } }, -- Ironforge -> Light's Hope Chapel
-    { from = "TAXI_6", to = "TAXI_74", method = "flight", cost = 87, requirements = { faction = "Alliance" } }, -- Ironforge -> Thorium Point
-    { from = "TAXI_7", to = "TAXI_6", method = "flight", cost = 89, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Ironforge
-    { from = "TAXI_7", to = "TAXI_8", method = "flight", cost = 163, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Thelsamar
-    { from = "TAXI_7", to = "TAXI_14", method = "flight", cost = 107, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Southshore
-    { from = "TAXI_7", to = "TAXI_16", method = "flight", cost = 113, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Refuge Pointe
-    { from = "TAXI_8", to = "TAXI_6", method = "flight", cost = 109, requirements = { faction = "Alliance" } }, -- Thelsamar -> Ironforge
-    { from = "TAXI_8", to = "TAXI_7", method = "flight", cost = 153, requirements = { faction = "Alliance" } }, -- Thelsamar -> Menethil Harbor
-    { from = "TAXI_8", to = "TAXI_16", method = "flight", cost = 164, requirements = { faction = "Alliance" } }, -- Thelsamar -> Refuge Pointe
-    { from = "TAXI_12", to = "TAXI_2", method = "flight", cost = 88, requirements = { faction = "Alliance" } }, -- Darkshire -> Stormwind
-    { from = "TAXI_12", to = "TAXI_4", method = "flight", cost = 93, requirements = { faction = "Alliance" } }, -- Darkshire -> Sentinel Hill
-    { from = "TAXI_12", to = "TAXI_5", method = "flight", cost = 60, requirements = { faction = "Alliance" } }, -- Darkshire -> Lakeshire
-    { from = "TAXI_12", to = "TAXI_19", method = "flight", cost = 171, requirements = { faction = "Alliance" } }, -- Darkshire -> Booty Bay
-    { from = "TAXI_12", to = "TAXI_45", method = "flight", cost = 97, requirements = { faction = "Alliance" } }, -- Darkshire -> Nethergarde Keep
-    { from = "TAXI_14", to = "TAXI_6", method = "flight", cost = 206, requirements = { faction = "Alliance" } }, -- Southshore -> Ironforge
-    { from = "TAXI_14", to = "TAXI_7", method = "flight", cost = 110, requirements = { faction = "Alliance" } }, -- Southshore -> Menethil Harbor
-    { from = "TAXI_14", to = "TAXI_16", method = "flight", cost = 74, requirements = { faction = "Alliance" } }, -- Southshore -> Refuge Pointe
-    { from = "TAXI_14", to = "TAXI_43", method = "flight", cost = 71, requirements = { faction = "Alliance" } }, -- Southshore -> Aerie Peak
-    { from = "TAXI_14", to = "TAXI_66", method = "flight", cost = 81, requirements = { faction = "Alliance" } }, -- Southshore -> Chillwind Camp
-    { from = "TAXI_16", to = "TAXI_6", method = "flight", cost = 271, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Ironforge
-    { from = "TAXI_16", to = "TAXI_7", method = "flight", cost = 126, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Menethil Harbor
-    { from = "TAXI_16", to = "TAXI_8", method = "flight", cost = 171, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Thelsamar
-    { from = "TAXI_16", to = "TAXI_14", method = "flight", cost = 86, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Southshore
-    { from = "TAXI_16", to = "TAXI_43", method = "flight", cost = 72, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Aerie Peak
-    { from = "TAXI_19", to = "TAXI_2", method = "flight", cost = 220, requirements = { faction = "Alliance" } }, -- Booty Bay -> Stormwind
-    { from = "TAXI_19", to = "TAXI_4", method = "flight", cost = 181, requirements = { faction = "Alliance" } }, -- Booty Bay -> Sentinel Hill
-    { from = "TAXI_19", to = "TAXI_12", method = "flight", cost = 175, requirements = { faction = "Alliance" } }, -- Booty Bay -> Darkshire
-    { from = "TAXI_26", to = "TAXI_27", method = "flight", cost = 84, requirements = { faction = "Alliance" } }, -- Auberdine -> Rut'theran Village
-    { from = "TAXI_26", to = "TAXI_28", method = "flight", cost = 176, requirements = { faction = "Alliance" } }, -- Auberdine -> Astranaar
-    { from = "TAXI_26", to = "TAXI_32", method = "flight", cost = 675, requirements = { faction = "Alliance" } }, -- Auberdine -> Theramore
-    { from = "TAXI_26", to = "TAXI_33", method = "flight", cost = 181, requirements = { faction = "Alliance" } }, -- Auberdine -> Stonetalon Peak
-    { from = "TAXI_26", to = "TAXI_37", method = "flight", cost = 291, requirements = { faction = "Alliance" } }, -- Auberdine -> Nijel's Point
-    { from = "TAXI_26", to = "TAXI_41", method = "flight", cost = 473, requirements = { faction = "Alliance" } }, -- Auberdine -> Feathermoon
-    { from = "TAXI_26", to = "TAXI_49", method = "flight", cost = 151, requirements = { faction = "Alliance" } }, -- Auberdine -> Moonglade, Alliance flight master
-    { from = "TAXI_26", to = "TAXI_64", method = "flight", cost = 301, requirements = { faction = "Alliance" } }, -- Auberdine -> Talrendis Point
-    { from = "TAXI_26", to = "TAXI_65", method = "flight", cost = 190, requirements = { faction = "Alliance" } }, -- Auberdine -> Talonbranch Glade
-    { from = "TAXI_27", to = "TAXI_26", method = "flight", cost = 86, requirements = { faction = "Alliance" } }, -- Rut'theran Village -> Auberdine
-    { from = "TAXI_28", to = "TAXI_26", method = "flight", cost = 148, requirements = { faction = "Alliance" } }, -- Astranaar -> Auberdine
-    { from = "TAXI_28", to = "TAXI_33", method = "flight", cost = 153, requirements = { faction = "Alliance" } }, -- Astranaar -> Stonetalon Peak
-    { from = "TAXI_28", to = "TAXI_64", method = "flight", cost = 150, requirements = { faction = "Alliance" } }, -- Astranaar -> Talrendis Point
-    { from = "TAXI_31", to = "TAXI_32", method = "flight", cost = 159, requirements = { faction = "Alliance" } }, -- Thalanaar -> Theramore
-    { from = "TAXI_31", to = "TAXI_39", method = "flight", cost = 171, requirements = { faction = "Alliance" } }, -- Thalanaar -> Gadgetzan
-    { from = "TAXI_31", to = "TAXI_41", method = "flight", cost = 179, requirements = { faction = "Alliance" } }, -- Thalanaar -> Feathermoon
-    { from = "TAXI_32", to = "TAXI_26", method = "flight", cost = 620, requirements = { faction = "Alliance" } }, -- Theramore -> Auberdine
-    { from = "TAXI_32", to = "TAXI_31", method = "flight", cost = 162, requirements = { faction = "Alliance" } }, -- Theramore -> Thalanaar
-    { from = "TAXI_32", to = "TAXI_37", method = "flight", cost = 334, requirements = { faction = "Alliance" } }, -- Theramore -> Nijel's Point
-    { from = "TAXI_32", to = "TAXI_39", method = "flight", cost = 157, requirements = { faction = "Alliance" } }, -- Theramore -> Gadgetzan
-    { from = "TAXI_32", to = "TAXI_64", method = "flight", cost = 235, requirements = { faction = "Alliance" } }, -- Theramore -> Talrendis Point
-    { from = "TAXI_32", to = "TAXI_80", method = "flight", cost = 115, requirements = { faction = "Alliance" } }, -- Theramore -> Ratchet
-    { from = "TAXI_33", to = "TAXI_26", method = "flight", cost = 177, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Auberdine
-    { from = "TAXI_33", to = "TAXI_28", method = "flight", cost = 154, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Astranaar
-    { from = "TAXI_33", to = "TAXI_37", method = "flight", cost = 126, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Nijel's Point
-    { from = "TAXI_37", to = "TAXI_26", method = "flight", cost = 282, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Auberdine
-    { from = "TAXI_37", to = "TAXI_32", method = "flight", cost = 308, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Theramore
-    { from = "TAXI_37", to = "TAXI_33", method = "flight", cost = 120, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Stonetalon Peak
-    { from = "TAXI_37", to = "TAXI_41", method = "flight", cost = 232, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Feathermoon
-    { from = "TAXI_39", to = "TAXI_31", method = "flight", cost = 177, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Thalanaar
-    { from = "TAXI_39", to = "TAXI_32", method = "flight", cost = 154, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Theramore
-    { from = "TAXI_39", to = "TAXI_73", method = "flight", cost = 197, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Cenarion Hold
-    { from = "TAXI_39", to = "TAXI_79", method = "flight", cost = 104, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Marshal's Refuge
-    { from = "TAXI_41", to = "TAXI_26", method = "flight", cost = 468, requirements = { faction = "Alliance" } }, -- Feathermoon -> Auberdine
-    { from = "TAXI_41", to = "TAXI_31", method = "flight", cost = 155, requirements = { faction = "Alliance" } }, -- Feathermoon -> Thalanaar
-    { from = "TAXI_41", to = "TAXI_37", method = "flight", cost = 227, requirements = { faction = "Alliance" } }, -- Feathermoon -> Nijel's Point
-    { from = "TAXI_41", to = "TAXI_73", method = "flight", cost = 159, requirements = { faction = "Alliance" } }, -- Feathermoon -> Cenarion Hold
-    { from = "TAXI_43", to = "TAXI_6", method = "flight", cost = 256, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Ironforge
-    { from = "TAXI_43", to = "TAXI_14", method = "flight", cost = 68, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Southshore
-    { from = "TAXI_43", to = "TAXI_16", method = "flight", cost = 75, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Refuge Pointe
-    { from = "TAXI_43", to = "TAXI_66", method = "flight", cost = 54, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Chillwind Camp
-    { from = "TAXI_43", to = "TAXI_67", method = "flight", cost = 164, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Light's Hope Chapel
-    { from = "TAXI_45", to = "TAXI_2", method = "flight", cost = 189, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Stormwind
-    { from = "TAXI_45", to = "TAXI_12", method = "flight", cost = 91, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Darkshire
-    { from = "TAXI_45", to = "TAXI_71", method = "flight", cost = 207, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Morgan's Vigil
-    { from = "TAXI_49", to = "TAXI_26", method = "flight", cost = 142, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Auberdine
-    { from = "TAXI_49", to = "TAXI_52", method = "flight", cost = 131, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Everlook
-    { from = "TAXI_49", to = "TAXI_65", method = "flight", cost = 61, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Talonbranch Glade
-    { from = "TAXI_52", to = "TAXI_49", method = "flight", cost = 122, requirements = { faction = "Alliance" } }, -- Everlook -> Moonglade, Alliance flight master
-    { from = "TAXI_52", to = "TAXI_64", method = "flight", cost = 176, requirements = { faction = "Alliance" } }, -- Everlook -> Talrendis Point
-    { from = "TAXI_52", to = "TAXI_65", method = "flight", cost = 122, requirements = { faction = "Alliance" } }, -- Everlook -> Talonbranch Glade
-    { from = "TAXI_64", to = "TAXI_26", method = "flight", cost = 301, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Auberdine
-    { from = "TAXI_64", to = "TAXI_28", method = "flight", cost = 153, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Astranaar
-    { from = "TAXI_64", to = "TAXI_32", method = "flight", cost = 241, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Theramore
-    { from = "TAXI_64", to = "TAXI_52", method = "flight", cost = 178, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Everlook
-    { from = "TAXI_64", to = "TAXI_65", method = "flight", cost = 283, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Talonbranch Glade
-    { from = "TAXI_64", to = "TAXI_80", method = "flight", cost = 135, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Ratchet
-    { from = "TAXI_65", to = "TAXI_26", method = "flight", cost = 188, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Auberdine
-    { from = "TAXI_65", to = "TAXI_49", method = "flight", cost = 67, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Moonglade, Alliance flight master
-    { from = "TAXI_65", to = "TAXI_52", method = "flight", cost = 121, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Everlook
-    { from = "TAXI_65", to = "TAXI_64", method = "flight", cost = 282, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Talrendis Point
-    { from = "TAXI_66", to = "TAXI_6", method = "flight", cost = 261, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Ironforge
-    { from = "TAXI_66", to = "TAXI_14", method = "flight", cost = 85, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Southshore
-    { from = "TAXI_66", to = "TAXI_43", method = "flight", cost = 66, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Aerie Peak
-    { from = "TAXI_66", to = "TAXI_67", method = "flight", cost = 147, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Light's Hope Chapel
-    { from = "TAXI_67", to = "TAXI_6", method = "flight", cost = 369, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Ironforge
-    { from = "TAXI_67", to = "TAXI_43", method = "flight", cost = 163, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Aerie Peak
-    { from = "TAXI_67", to = "TAXI_66", method = "flight", cost = 150, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Chillwind Camp
-    { from = "TAXI_71", to = "TAXI_2", method = "flight", cost = 151, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Stormwind
-    { from = "TAXI_71", to = "TAXI_5", method = "flight", cost = 64, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Lakeshire
-    { from = "TAXI_71", to = "TAXI_45", method = "flight", cost = 210, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Nethergarde Keep
-    { from = "TAXI_71", to = "TAXI_74", method = "flight", cost = 104, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Thorium Point
-    { from = "TAXI_73", to = "TAXI_39", method = "flight", cost = 189, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Gadgetzan
-    { from = "TAXI_73", to = "TAXI_41", method = "flight", cost = 175, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Feathermoon
-    { from = "TAXI_73", to = "TAXI_79", method = "flight", cost = 92, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Marshal's Refuge
-    { from = "TAXI_74", to = "TAXI_6", method = "flight", cost = 94, requirements = { faction = "Alliance" } }, -- Thorium Point -> Ironforge
-    { from = "TAXI_74", to = "TAXI_71", method = "flight", cost = 96, requirements = { faction = "Alliance" } }, -- Thorium Point -> Morgan's Vigil
-    { from = "TAXI_79", to = "TAXI_39", method = "flight", cost = 104, requirements = { faction = "Alliance" } }, -- Marshal's Refuge -> Gadgetzan
-    { from = "TAXI_79", to = "TAXI_73", method = "flight", cost = 94, requirements = { faction = "Alliance" } }, -- Marshal's Refuge -> Cenarion Hold
-    { from = "TAXI_80", to = "TAXI_32", method = "flight", cost = 106, requirements = { faction = "Alliance" } }, -- Ratchet -> Theramore
-    { from = "TAXI_80", to = "TAXI_64", method = "flight", cost = 132, requirements = { faction = "Alliance" } }, -- Ratchet -> Talrendis Point
-    { from = "TAXI_10", to = "TAXI_11", method = "flight", cost = 112, requirements = { faction = "Horde" } }, -- The Sepulcher -> Undercity
-    { from = "TAXI_10", to = "TAXI_13", method = "flight", cost = 95, requirements = { faction = "Horde" } }, -- The Sepulcher -> Tarren Mill
-    { from = "TAXI_11", to = "TAXI_10", method = "flight", cost = 106, requirements = { faction = "Horde" } }, -- Undercity -> The Sepulcher
-    { from = "TAXI_11", to = "TAXI_13", method = "flight", cost = 141, requirements = { faction = "Horde" } }, -- Undercity -> Tarren Mill
-    { from = "TAXI_11", to = "TAXI_17", method = "flight", cost = 301, requirements = { faction = "Horde" } }, -- Undercity -> Hammerfall
-    { from = "TAXI_11", to = "TAXI_21", method = "flight", cost = 488, requirements = { faction = "Horde" } }, -- Undercity -> Kargath
-    { from = "TAXI_11", to = "TAXI_68", method = "flight", cost = 261, requirements = { faction = "Horde" } }, -- Undercity -> Light's Hope Chapel
-    { from = "TAXI_11", to = "TAXI_76", method = "flight", cost = 284, requirements = { faction = "Horde" } }, -- Undercity -> Revantusk Village
-    { from = "TAXI_13", to = "TAXI_10", method = "flight", cost = 99, requirements = { faction = "Horde" } }, -- Tarren Mill -> The Sepulcher
-    { from = "TAXI_13", to = "TAXI_11", method = "flight", cost = 139, requirements = { faction = "Horde" } }, -- Tarren Mill -> Undercity
-    { from = "TAXI_13", to = "TAXI_17", method = "flight", cost = 118, requirements = { faction = "Horde" } }, -- Tarren Mill -> Hammerfall
-    { from = "TAXI_13", to = "TAXI_76", method = "flight", cost = 195, requirements = { faction = "Horde" } }, -- Tarren Mill -> Revantusk Village
-    { from = "TAXI_17", to = "TAXI_11", method = "flight", cost = 259, requirements = { faction = "Horde" } }, -- Hammerfall -> Undercity
-    { from = "TAXI_17", to = "TAXI_13", method = "flight", cost = 117, requirements = { faction = "Horde" } }, -- Hammerfall -> Tarren Mill
-    { from = "TAXI_17", to = "TAXI_21", method = "flight", cost = 259, requirements = { faction = "Horde" } }, -- Hammerfall -> Kargath
-    { from = "TAXI_17", to = "TAXI_76", method = "flight", cost = 91, requirements = { faction = "Horde" } }, -- Hammerfall -> Revantusk Village
-    { from = "TAXI_18", to = "TAXI_20", method = "flight", cost = 102, requirements = { faction = "Horde" } }, -- Booty Bay -> Grom'gol
-    { from = "TAXI_18", to = "TAXI_21", method = "flight", cost = 406, requirements = { faction = "Horde" } }, -- Booty Bay -> Kargath
-    { from = "TAXI_18", to = "TAXI_56", method = "flight", cost = 267, requirements = { faction = "Horde" } }, -- Booty Bay -> Stonard
-    { from = "TAXI_20", to = "TAXI_18", method = "flight", cost = 81, requirements = { faction = "Horde" } }, -- Grom'gol -> Booty Bay
-    { from = "TAXI_20", to = "TAXI_21", method = "flight", cost = 327, requirements = { faction = "Horde" } }, -- Grom'gol -> Kargath
-    { from = "TAXI_20", to = "TAXI_56", method = "flight", cost = 205, requirements = { faction = "Horde" } }, -- Grom'gol -> Stonard
-    { from = "TAXI_21", to = "TAXI_11", method = "flight", cost = 497, requirements = { faction = "Horde" } }, -- Kargath -> Undercity
-    { from = "TAXI_21", to = "TAXI_17", method = "flight", cost = 263, requirements = { faction = "Horde" } }, -- Kargath -> Hammerfall
-    { from = "TAXI_21", to = "TAXI_18", method = "flight", cost = 417, requirements = { faction = "Horde" } }, -- Kargath -> Booty Bay
-    { from = "TAXI_21", to = "TAXI_20", method = "flight", cost = 313, requirements = { faction = "Horde" } }, -- Kargath -> Grom'gol
-    { from = "TAXI_21", to = "TAXI_56", method = "flight", cost = 280, requirements = { faction = "Horde" } }, -- Kargath -> Stonard
-    { from = "TAXI_21", to = "TAXI_70", method = "flight", cost = 87, requirements = { faction = "Horde" } }, -- Kargath -> Flame Crest
-    { from = "TAXI_21", to = "TAXI_75", method = "flight", cost = 56, requirements = { faction = "Horde" } }, -- Kargath -> Thorium Point
-    { from = "TAXI_22", to = "TAXI_23", method = "flight", cost = 207, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Orgrimmar
-    { from = "TAXI_22", to = "TAXI_25", method = "flight", cost = 159, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Crossroads
-    { from = "TAXI_22", to = "TAXI_29", method = "flight", cost = 182, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Sun Rock Retreat
-    { from = "TAXI_22", to = "TAXI_30", method = "flight", cost = 204, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Freewind Post
-    { from = "TAXI_22", to = "TAXI_38", method = "flight", cost = 159, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Shadowprey Village
-    { from = "TAXI_22", to = "TAXI_40", method = "flight", cost = 290, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Gadgetzan
-    { from = "TAXI_22", to = "TAXI_42", method = "flight", cost = 252, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Camp Mojache
-    { from = "TAXI_22", to = "TAXI_44", method = "flight", cost = 269, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Valormok
-    { from = "TAXI_22", to = "TAXI_55", method = "flight", cost = 239, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Brackenwall Village
-    { from = "TAXI_22", to = "TAXI_77", method = "flight", cost = 87, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Camp Taurajo
-    { from = "TAXI_23", to = "TAXI_22", method = "flight", cost = 224, requirements = { faction = "Horde" } }, -- Orgrimmar -> Thunder Bluff
-    { from = "TAXI_23", to = "TAXI_25", method = "flight", cost = 110, requirements = { faction = "Horde" } }, -- Orgrimmar -> Crossroads
-    { from = "TAXI_23", to = "TAXI_40", method = "flight", cost = 417, requirements = { faction = "Horde" } }, -- Orgrimmar -> Gadgetzan
-    { from = "TAXI_23", to = "TAXI_44", method = "flight", cost = 99, requirements = { faction = "Horde" } }, -- Orgrimmar -> Valormok
-    { from = "TAXI_23", to = "TAXI_48", method = "flight", cost = 252, requirements = { faction = "Horde" } }, -- Orgrimmar -> Bloodvenom Post
-    { from = "TAXI_23", to = "TAXI_53", method = "flight", cost = 319, requirements = { faction = "Horde" } }, -- Orgrimmar -> Everlook
-    { from = "TAXI_23", to = "TAXI_55", method = "flight", cost = 229, requirements = { faction = "Horde" } }, -- Orgrimmar -> Brackenwall Village
-    { from = "TAXI_23", to = "TAXI_61", method = "flight", cost = 89, requirements = { faction = "Horde" } }, -- Orgrimmar -> Splintertree Post
-    { from = "TAXI_25", to = "TAXI_22", method = "flight", cost = 182, requirements = { faction = "Horde" } }, -- Crossroads -> Thunder Bluff
-    { from = "TAXI_25", to = "TAXI_23", method = "flight", cost = 142, requirements = { faction = "Horde" } }, -- Crossroads -> Orgrimmar
-    { from = "TAXI_25", to = "TAXI_29", method = "flight", cost = 150, requirements = { faction = "Horde" } }, -- Crossroads -> Sun Rock Retreat
-    { from = "TAXI_25", to = "TAXI_30", method = "flight", cost = 184, requirements = { faction = "Horde" } }, -- Crossroads -> Freewind Post
-    { from = "TAXI_25", to = "TAXI_40", method = "flight", cost = 303, requirements = { faction = "Horde" } }, -- Crossroads -> Gadgetzan
-    { from = "TAXI_25", to = "TAXI_42", method = "flight", cost = 252, requirements = { faction = "Horde" } }, -- Crossroads -> Camp Mojache
-    { from = "TAXI_25", to = "TAXI_44", method = "flight", cost = 168, requirements = { faction = "Horde" } }, -- Crossroads -> Valormok
-    { from = "TAXI_25", to = "TAXI_48", method = "flight", cost = 253, requirements = { faction = "Horde" } }, -- Crossroads -> Bloodvenom Post
-    { from = "TAXI_25", to = "TAXI_55", method = "flight", cost = 162, requirements = { faction = "Horde" } }, -- Crossroads -> Brackenwall Village
-    { from = "TAXI_25", to = "TAXI_58", method = "flight", cost = 231, requirements = { faction = "Horde" } }, -- Crossroads -> Zoram'gar Outpost
-    { from = "TAXI_25", to = "TAXI_61", method = "flight", cost = 162, requirements = { faction = "Horde" } }, -- Crossroads -> Splintertree Post
-    { from = "TAXI_25", to = "TAXI_77", method = "flight", cost = 90, requirements = { faction = "Horde" } }, -- Crossroads -> Camp Taurajo
-    { from = "TAXI_25", to = "TAXI_80", method = "flight", cost = 52, requirements = { faction = "Horde" } }, -- Crossroads -> Ratchet
-    { from = "TAXI_29", to = "TAXI_22", method = "flight", cost = 175, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Thunder Bluff
-    { from = "TAXI_29", to = "TAXI_25", method = "flight", cost = 150, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Crossroads
-    { from = "TAXI_29", to = "TAXI_38", method = "flight", cost = 143, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Shadowprey Village
-    { from = "TAXI_30", to = "TAXI_22", method = "flight", cost = 225, requirements = { faction = "Horde" } }, -- Freewind Post -> Thunder Bluff
-    { from = "TAXI_30", to = "TAXI_25", method = "flight", cost = 194, requirements = { faction = "Horde" } }, -- Freewind Post -> Crossroads
-    { from = "TAXI_30", to = "TAXI_40", method = "flight", cost = 93, requirements = { faction = "Horde" } }, -- Freewind Post -> Gadgetzan
-    { from = "TAXI_30", to = "TAXI_42", method = "flight", cost = 124, requirements = { faction = "Horde" } }, -- Freewind Post -> Camp Mojache
-    { from = "TAXI_30", to = "TAXI_77", method = "flight", cost = 137, requirements = { faction = "Horde" } }, -- Freewind Post -> Camp Taurajo
-    { from = "TAXI_38", to = "TAXI_22", method = "flight", cost = 178, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Thunder Bluff
-    { from = "TAXI_38", to = "TAXI_29", method = "flight", cost = 199, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Sun Rock Retreat
-    { from = "TAXI_38", to = "TAXI_42", method = "flight", cost = 196, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Camp Mojache
-    { from = "TAXI_40", to = "TAXI_22", method = "flight", cost = 304, requirements = { faction = "Horde" } }, -- Gadgetzan -> Thunder Bluff
-    { from = "TAXI_40", to = "TAXI_23", method = "flight", cost = 350, requirements = { faction = "Horde" } }, -- Gadgetzan -> Orgrimmar
-    { from = "TAXI_40", to = "TAXI_25", method = "flight", cost = 301, requirements = { faction = "Horde" } }, -- Gadgetzan -> Crossroads
-    { from = "TAXI_40", to = "TAXI_30", method = "flight", cost = 87, requirements = { faction = "Horde" } }, -- Gadgetzan -> Freewind Post
-    { from = "TAXI_40", to = "TAXI_42", method = "flight", cost = 200, requirements = { faction = "Horde" } }, -- Gadgetzan -> Camp Mojache
-    { from = "TAXI_40", to = "TAXI_55", method = "flight", cost = 222, requirements = { faction = "Horde" } }, -- Gadgetzan -> Brackenwall Village
-    { from = "TAXI_40", to = "TAXI_72", method = "flight", cost = 233, requirements = { faction = "Horde" } }, -- Gadgetzan -> Cenarion Hold
-    { from = "TAXI_40", to = "TAXI_79", method = "flight", cost = 108, requirements = { faction = "Horde" } }, -- Gadgetzan -> Marshal's Refuge
-    { from = "TAXI_42", to = "TAXI_22", method = "flight", cost = 259, requirements = { faction = "Horde" } }, -- Camp Mojache -> Thunder Bluff
-    { from = "TAXI_42", to = "TAXI_25", method = "flight", cost = 263, requirements = { faction = "Horde" } }, -- Camp Mojache -> Crossroads
-    { from = "TAXI_42", to = "TAXI_30", method = "flight", cost = 107, requirements = { faction = "Horde" } }, -- Camp Mojache -> Freewind Post
-    { from = "TAXI_42", to = "TAXI_38", method = "flight", cost = 201, requirements = { faction = "Horde" } }, -- Camp Mojache -> Shadowprey Village
-    { from = "TAXI_42", to = "TAXI_40", method = "flight", cost = 201, requirements = { faction = "Horde" } }, -- Camp Mojache -> Gadgetzan
-    { from = "TAXI_42", to = "TAXI_72", method = "flight", cost = 132, requirements = { faction = "Horde" } }, -- Camp Mojache -> Cenarion Hold
-    { from = "TAXI_44", to = "TAXI_22", method = "flight", cost = 257, requirements = { faction = "Horde" } }, -- Valormok -> Thunder Bluff
-    { from = "TAXI_44", to = "TAXI_23", method = "flight", cost = 121, requirements = { faction = "Horde" } }, -- Valormok -> Orgrimmar
-    { from = "TAXI_44", to = "TAXI_25", method = "flight", cost = 172, requirements = { faction = "Horde" } }, -- Valormok -> Crossroads
-    { from = "TAXI_44", to = "TAXI_48", method = "flight", cost = 232, requirements = { faction = "Horde" } }, -- Valormok -> Bloodvenom Post
-    { from = "TAXI_44", to = "TAXI_53", method = "flight", cost = 131, requirements = { faction = "Horde" } }, -- Valormok -> Everlook
-    { from = "TAXI_44", to = "TAXI_61", method = "flight", cost = 94, requirements = { faction = "Horde" } }, -- Valormok -> Splintertree Post
-    { from = "TAXI_48", to = "TAXI_23", method = "flight", cost = 259, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Orgrimmar
-    { from = "TAXI_48", to = "TAXI_25", method = "flight", cost = 241, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Crossroads
-    { from = "TAXI_48", to = "TAXI_44", method = "flight", cost = 241, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Valormok
-    { from = "TAXI_48", to = "TAXI_53", method = "flight", cost = 190, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Everlook
-    { from = "TAXI_48", to = "TAXI_69", method = "flight", cost = 166, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Moonglade, Horde flight master
-    { from = "TAXI_53", to = "TAXI_23", method = "flight", cost = 304, requirements = { faction = "Horde" } }, -- Everlook -> Orgrimmar
-    { from = "TAXI_53", to = "TAXI_44", method = "flight", cost = 135, requirements = { faction = "Horde" } }, -- Everlook -> Valormok
-    { from = "TAXI_53", to = "TAXI_48", method = "flight", cost = 195, requirements = { faction = "Horde" } }, -- Everlook -> Bloodvenom Post
-    { from = "TAXI_53", to = "TAXI_69", method = "flight", cost = 134, requirements = { faction = "Horde" } }, -- Everlook -> Moonglade, Horde flight master
-    { from = "TAXI_55", to = "TAXI_22", method = "flight", cost = 224, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Thunder Bluff
-    { from = "TAXI_55", to = "TAXI_23", method = "flight", cost = 217, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Orgrimmar
-    { from = "TAXI_55", to = "TAXI_25", method = "flight", cost = 162, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Crossroads
-    { from = "TAXI_55", to = "TAXI_40", method = "flight", cost = 222, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Gadgetzan
-    { from = "TAXI_56", to = "TAXI_18", method = "flight", cost = 260, requirements = { faction = "Horde" } }, -- Stonard -> Booty Bay
-    { from = "TAXI_56", to = "TAXI_20", method = "flight", cost = 189, requirements = { faction = "Horde" } }, -- Stonard -> Grom'gol
-    { from = "TAXI_56", to = "TAXI_21", method = "flight", cost = 285, requirements = { faction = "Horde" } }, -- Stonard -> Kargath
-    { from = "TAXI_56", to = "TAXI_70", method = "flight", cost = 197, requirements = { faction = "Horde" } }, -- Stonard -> Flame Crest
-    { from = "TAXI_58", to = "TAXI_25", method = "flight", cost = 228, requirements = { faction = "Horde" } }, -- Zoram'gar Outpost -> Crossroads
-    { from = "TAXI_58", to = "TAXI_61", method = "flight", cost = 167, requirements = { faction = "Horde" } }, -- Zoram'gar Outpost -> Splintertree Post
-    { from = "TAXI_61", to = "TAXI_23", method = "flight", cost = 96, requirements = { faction = "Horde" } }, -- Splintertree Post -> Orgrimmar
-    { from = "TAXI_61", to = "TAXI_25", method = "flight", cost = 160, requirements = { faction = "Horde" } }, -- Splintertree Post -> Crossroads
-    { from = "TAXI_61", to = "TAXI_44", method = "flight", cost = 96, requirements = { faction = "Horde" } }, -- Splintertree Post -> Valormok
-    { from = "TAXI_61", to = "TAXI_58", method = "flight", cost = 166, requirements = { faction = "Horde" } }, -- Splintertree Post -> Zoram'gar Outpost
-    { from = "TAXI_68", to = "TAXI_11", method = "flight", cost = 262, requirements = { faction = "Horde" } }, -- Light's Hope Chapel -> Undercity
-    { from = "TAXI_68", to = "TAXI_76", method = "flight", cost = 141, requirements = { faction = "Horde" } }, -- Light's Hope Chapel -> Revantusk Village
-    { from = "TAXI_69", to = "TAXI_48", method = "flight", cost = 157, requirements = { faction = "Horde" } }, -- Moonglade, Horde flight master -> Bloodvenom Post
-    { from = "TAXI_69", to = "TAXI_53", method = "flight", cost = 142, requirements = { faction = "Horde" } }, -- Moonglade, Horde flight master -> Everlook
-    { from = "TAXI_70", to = "TAXI_21", method = "flight", cost = 99, requirements = { faction = "Horde" } }, -- Flame Crest -> Kargath
-    { from = "TAXI_70", to = "TAXI_56", method = "flight", cost = 213, requirements = { faction = "Horde" } }, -- Flame Crest -> Stonard
-    { from = "TAXI_70", to = "TAXI_75", method = "flight", cost = 72, requirements = { faction = "Horde" } }, -- Flame Crest -> Thorium Point
-    { from = "TAXI_72", to = "TAXI_40", method = "flight", cost = 241, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Gadgetzan
-    { from = "TAXI_72", to = "TAXI_42", method = "flight", cost = 129, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Camp Mojache
-    { from = "TAXI_72", to = "TAXI_79", method = "flight", cost = 97, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Marshal's Refuge
-    { from = "TAXI_75", to = "TAXI_21", method = "flight", cost = 70, requirements = { faction = "Horde" } }, -- Thorium Point -> Kargath
-    { from = "TAXI_75", to = "TAXI_70", method = "flight", cost = 77, requirements = { faction = "Horde" } }, -- Thorium Point -> Flame Crest
-    { from = "TAXI_76", to = "TAXI_11", method = "flight", cost = 284, requirements = { faction = "Horde" } }, -- Revantusk Village -> Undercity
-    { from = "TAXI_76", to = "TAXI_13", method = "flight", cost = 159, requirements = { faction = "Horde" } }, -- Revantusk Village -> Tarren Mill
-    { from = "TAXI_76", to = "TAXI_17", method = "flight", cost = 93, requirements = { faction = "Horde" } }, -- Revantusk Village -> Hammerfall
-    { from = "TAXI_76", to = "TAXI_68", method = "flight", cost = 139, requirements = { faction = "Horde" } }, -- Revantusk Village -> Light's Hope Chapel
-    { from = "TAXI_77", to = "TAXI_22", method = "flight", cost = 114, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Thunder Bluff
-    { from = "TAXI_77", to = "TAXI_25", method = "flight", cost = 79, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Crossroads
-    { from = "TAXI_77", to = "TAXI_30", method = "flight", cost = 125, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Freewind Post
-    { from = "TAXI_79", to = "TAXI_40", method = "flight", cost = 113, requirements = { faction = "Horde" } }, -- Marshal's Refuge -> Gadgetzan
-    { from = "TAXI_79", to = "TAXI_72", method = "flight", cost = 100, requirements = { faction = "Horde" } }, -- Marshal's Refuge -> Cenarion Hold
-    { from = "TAXI_80", to = "TAXI_25", method = "flight", cost = 69, requirements = { faction = "Horde" } }, -- Ratchet -> Crossroads
+    { from = "TAXI_2", to = "TAXI_4", method = "flight", cost = 78, fare = 110, requirements = { faction = "Alliance" } }, -- Stormwind -> Sentinel Hill
+    { from = "TAXI_2", to = "TAXI_5", method = "flight", cost = 113, fare = 210, requirements = { faction = "Alliance" } }, -- Stormwind -> Lakeshire
+    { from = "TAXI_2", to = "TAXI_6", method = "flight", cost = 259, fare = 50, requirements = { faction = "Alliance" } }, -- Stormwind -> Ironforge
+    { from = "TAXI_2", to = "TAXI_12", method = "flight", cost = 116, fare = 330, requirements = { faction = "Alliance" } }, -- Stormwind -> Darkshire
+    { from = "TAXI_2", to = "TAXI_19", method = "flight", cost = 245, fare = 630, requirements = { faction = "Alliance" } }, -- Stormwind -> Booty Bay
+    { from = "TAXI_2", to = "TAXI_45", method = "flight", cost = 176, fare = 830, requirements = { faction = "Alliance" } }, -- Stormwind -> Nethergarde Keep
+    { from = "TAXI_2", to = "TAXI_71", method = "flight", cost = 157, fare = 830, requirements = { faction = "Alliance" } }, -- Stormwind -> Morgan's Vigil
+    { from = "TAXI_4", to = "TAXI_2", method = "flight", cost = 86, fare = 110, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Stormwind
+    { from = "TAXI_4", to = "TAXI_5", method = "flight", cost = 130, fare = 210, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Lakeshire
+    { from = "TAXI_4", to = "TAXI_12", method = "flight", cost = 97, fare = 330, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Darkshire
+    { from = "TAXI_4", to = "TAXI_19", method = "flight", cost = 185, fare = 630, requirements = { faction = "Alliance" } }, -- Sentinel Hill -> Booty Bay
+    { from = "TAXI_5", to = "TAXI_2", method = "flight", cost = 113, fare = 210, requirements = { faction = "Alliance" } }, -- Lakeshire -> Stormwind
+    { from = "TAXI_5", to = "TAXI_4", method = "flight", cost = 133, fare = 110, requirements = { faction = "Alliance" } }, -- Lakeshire -> Sentinel Hill
+    { from = "TAXI_5", to = "TAXI_12", method = "flight", cost = 60, fare = 330, requirements = { faction = "Alliance" } }, -- Lakeshire -> Darkshire
+    { from = "TAXI_5", to = "TAXI_71", method = "flight", cost = 61, fare = 830, requirements = { faction = "Alliance" } }, -- Lakeshire -> Morgan's Vigil
+    { from = "TAXI_6", to = "TAXI_2", method = "flight", cost = 210, fare = 50, requirements = { faction = "Alliance" } }, -- Ironforge -> Stormwind
+    { from = "TAXI_6", to = "TAXI_7", method = "flight", cost = 128, fare = 330, requirements = { faction = "Alliance" } }, -- Ironforge -> Menethil Harbor
+    { from = "TAXI_6", to = "TAXI_8", method = "flight", cost = 101, fare = 110, requirements = { faction = "Alliance" } }, -- Ironforge -> Thelsamar
+    { from = "TAXI_6", to = "TAXI_14", method = "flight", cost = 265, fare = 330, requirements = { faction = "Alliance" } }, -- Ironforge -> Southshore
+    { from = "TAXI_6", to = "TAXI_16", method = "flight", cost = 253, fare = 530, requirements = { faction = "Alliance" } }, -- Ironforge -> Refuge Pointe
+    { from = "TAXI_6", to = "TAXI_43", method = "flight", cost = 298, fare = 730, requirements = { faction = "Alliance" } }, -- Ironforge -> Aerie Peak
+    { from = "TAXI_6", to = "TAXI_66", method = "flight", cost = 294, fare = 1020, requirements = { faction = "Alliance" } }, -- Ironforge -> Chillwind Camp
+    { from = "TAXI_6", to = "TAXI_67", method = "flight", cost = 349, fare = 1020, requirements = { faction = "Alliance" } }, -- Ironforge -> Light's Hope Chapel
+    { from = "TAXI_6", to = "TAXI_74", method = "flight", cost = 87, fare = 830, requirements = { faction = "Alliance" } }, -- Ironforge -> Thorium Point
+    { from = "TAXI_7", to = "TAXI_6", method = "flight", cost = 89, fare = 330, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Ironforge
+    { from = "TAXI_7", to = "TAXI_8", method = "flight", cost = 163, fare = 110, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Thelsamar
+    { from = "TAXI_7", to = "TAXI_14", method = "flight", cost = 107, fare = 330, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Southshore
+    { from = "TAXI_7", to = "TAXI_16", method = "flight", cost = 113, fare = 530, requirements = { faction = "Alliance" } }, -- Menethil Harbor -> Refuge Pointe
+    { from = "TAXI_8", to = "TAXI_6", method = "flight", cost = 109, fare = 110, requirements = { faction = "Alliance" } }, -- Thelsamar -> Ironforge
+    { from = "TAXI_8", to = "TAXI_7", method = "flight", cost = 153, fare = 330, requirements = { faction = "Alliance" } }, -- Thelsamar -> Menethil Harbor
+    { from = "TAXI_8", to = "TAXI_16", method = "flight", cost = 164, fare = 530, requirements = { faction = "Alliance" } }, -- Thelsamar -> Refuge Pointe
+    { from = "TAXI_12", to = "TAXI_2", method = "flight", cost = 88, fare = 330, requirements = { faction = "Alliance" } }, -- Darkshire -> Stormwind
+    { from = "TAXI_12", to = "TAXI_4", method = "flight", cost = 93, fare = 110, requirements = { faction = "Alliance" } }, -- Darkshire -> Sentinel Hill
+    { from = "TAXI_12", to = "TAXI_5", method = "flight", cost = 60, fare = 210, requirements = { faction = "Alliance" } }, -- Darkshire -> Lakeshire
+    { from = "TAXI_12", to = "TAXI_19", method = "flight", cost = 171, fare = 630, requirements = { faction = "Alliance" } }, -- Darkshire -> Booty Bay
+    { from = "TAXI_12", to = "TAXI_45", method = "flight", cost = 97, fare = 830, requirements = { faction = "Alliance" } }, -- Darkshire -> Nethergarde Keep
+    { from = "TAXI_14", to = "TAXI_6", method = "flight", cost = 206, fare = 330, requirements = { faction = "Alliance" } }, -- Southshore -> Ironforge
+    { from = "TAXI_14", to = "TAXI_7", method = "flight", cost = 110, fare = 330, requirements = { faction = "Alliance" } }, -- Southshore -> Menethil Harbor
+    { from = "TAXI_14", to = "TAXI_16", method = "flight", cost = 74, fare = 530, requirements = { faction = "Alliance" } }, -- Southshore -> Refuge Pointe
+    { from = "TAXI_14", to = "TAXI_43", method = "flight", cost = 71, fare = 730, requirements = { faction = "Alliance" } }, -- Southshore -> Aerie Peak
+    { from = "TAXI_14", to = "TAXI_66", method = "flight", cost = 81, fare = 830, requirements = { faction = "Alliance" } }, -- Southshore -> Chillwind Camp
+    { from = "TAXI_16", to = "TAXI_6", method = "flight", cost = 271, fare = 530, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Ironforge
+    { from = "TAXI_16", to = "TAXI_7", method = "flight", cost = 126, fare = 330, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Menethil Harbor
+    { from = "TAXI_16", to = "TAXI_8", method = "flight", cost = 171, fare = 110, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Thelsamar
+    { from = "TAXI_16", to = "TAXI_14", method = "flight", cost = 86, fare = 330, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Southshore
+    { from = "TAXI_16", to = "TAXI_43", method = "flight", cost = 72, fare = 730, requirements = { faction = "Alliance" } }, -- Refuge Pointe -> Aerie Peak
+    { from = "TAXI_19", to = "TAXI_2", method = "flight", cost = 220, fare = 630, requirements = { faction = "Alliance" } }, -- Booty Bay -> Stormwind
+    { from = "TAXI_19", to = "TAXI_4", method = "flight", cost = 181, fare = 530, requirements = { faction = "Alliance" } }, -- Booty Bay -> Sentinel Hill
+    { from = "TAXI_19", to = "TAXI_12", method = "flight", cost = 175, fare = 330, requirements = { faction = "Alliance" } }, -- Booty Bay -> Darkshire
+    { from = "TAXI_26", to = "TAXI_27", method = "flight", cost = 84, fare = 0, requirements = { faction = "Alliance" } }, -- Auberdine -> Rut'theran Village
+    { from = "TAXI_26", to = "TAXI_28", method = "flight", cost = 176, fare = 330, requirements = { faction = "Alliance" } }, -- Auberdine -> Astranaar
+    { from = "TAXI_26", to = "TAXI_32", method = "flight", cost = 675, fare = 630, requirements = { faction = "Alliance" } }, -- Auberdine -> Theramore
+    { from = "TAXI_26", to = "TAXI_33", method = "flight", cost = 181, fare = 330, requirements = { faction = "Alliance" } }, -- Auberdine -> Stonetalon Peak
+    { from = "TAXI_26", to = "TAXI_37", method = "flight", cost = 291, fare = 530, requirements = { faction = "Alliance" } }, -- Auberdine -> Nijel's Point
+    { from = "TAXI_26", to = "TAXI_41", method = "flight", cost = 473, fare = 730, requirements = { faction = "Alliance" } }, -- Auberdine -> Feathermoon
+    { from = "TAXI_26", to = "TAXI_49", method = "flight", cost = 151, fare = 830, requirements = { faction = "Alliance" } }, -- Auberdine -> Moonglade, Alliance flight master
+    { from = "TAXI_26", to = "TAXI_64", method = "flight", cost = 301, fare = 730, requirements = { faction = "Alliance" } }, -- Auberdine -> Talrendis Point
+    { from = "TAXI_26", to = "TAXI_65", method = "flight", cost = 190, fare = 730, requirements = { faction = "Alliance" } }, -- Auberdine -> Talonbranch Glade
+    { from = "TAXI_27", to = "TAXI_26", method = "flight", cost = 86, fare = 0, requirements = { faction = "Alliance" } }, -- Rut'theran Village -> Auberdine
+    { from = "TAXI_28", to = "TAXI_26", method = "flight", cost = 148, fare = 330, requirements = { faction = "Alliance" } }, -- Astranaar -> Auberdine
+    { from = "TAXI_28", to = "TAXI_33", method = "flight", cost = 153, fare = 330, requirements = { faction = "Alliance" } }, -- Astranaar -> Stonetalon Peak
+    { from = "TAXI_28", to = "TAXI_64", method = "flight", cost = 150, fare = 730, requirements = { faction = "Alliance" } }, -- Astranaar -> Talrendis Point
+    { from = "TAXI_31", to = "TAXI_32", method = "flight", cost = 159, fare = 730, requirements = { faction = "Alliance" } }, -- Thalanaar -> Theramore
+    { from = "TAXI_31", to = "TAXI_39", method = "flight", cost = 171, fare = 730, requirements = { faction = "Alliance" } }, -- Thalanaar -> Gadgetzan
+    { from = "TAXI_31", to = "TAXI_41", method = "flight", cost = 179, fare = 630, requirements = { faction = "Alliance" } }, -- Thalanaar -> Feathermoon
+    { from = "TAXI_32", to = "TAXI_26", method = "flight", cost = 620, fare = 630, requirements = { faction = "Alliance" } }, -- Theramore -> Auberdine
+    { from = "TAXI_32", to = "TAXI_31", method = "flight", cost = 162, fare = 430, requirements = { faction = "Alliance" } }, -- Theramore -> Thalanaar
+    { from = "TAXI_32", to = "TAXI_37", method = "flight", cost = 334, fare = 530, requirements = { faction = "Alliance" } }, -- Theramore -> Nijel's Point
+    { from = "TAXI_32", to = "TAXI_39", method = "flight", cost = 157, fare = 730, requirements = { faction = "Alliance" } }, -- Theramore -> Gadgetzan
+    { from = "TAXI_32", to = "TAXI_64", method = "flight", cost = 235, fare = 730, requirements = { faction = "Alliance" } }, -- Theramore -> Talrendis Point
+    { from = "TAXI_32", to = "TAXI_80", method = "flight", cost = 115, fare = 110, requirements = { faction = "Alliance" } }, -- Theramore -> Ratchet
+    { from = "TAXI_33", to = "TAXI_26", method = "flight", cost = 177, fare = 330, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Auberdine
+    { from = "TAXI_33", to = "TAXI_28", method = "flight", cost = 154, fare = 330, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Astranaar
+    { from = "TAXI_33", to = "TAXI_37", method = "flight", cost = 126, fare = 530, requirements = { faction = "Alliance" } }, -- Stonetalon Peak -> Nijel's Point
+    { from = "TAXI_37", to = "TAXI_26", method = "flight", cost = 282, fare = 530, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Auberdine
+    { from = "TAXI_37", to = "TAXI_32", method = "flight", cost = 308, fare = 530, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Theramore
+    { from = "TAXI_37", to = "TAXI_33", method = "flight", cost = 120, fare = 330, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Stonetalon Peak
+    { from = "TAXI_37", to = "TAXI_41", method = "flight", cost = 232, fare = 730, requirements = { faction = "Alliance" } }, -- Nijel's Point -> Feathermoon
+    { from = "TAXI_39", to = "TAXI_31", method = "flight", cost = 177, fare = 430, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Thalanaar
+    { from = "TAXI_39", to = "TAXI_32", method = "flight", cost = 154, fare = 630, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Theramore
+    { from = "TAXI_39", to = "TAXI_73", method = "flight", cost = 197, fare = 1020, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Cenarion Hold
+    { from = "TAXI_39", to = "TAXI_79", method = "flight", cost = 104, fare = 830, requirements = { faction = "Alliance" } }, -- Gadgetzan -> Marshal's Refuge
+    { from = "TAXI_41", to = "TAXI_26", method = "flight", cost = 468, fare = 730, requirements = { faction = "Alliance" } }, -- Feathermoon -> Auberdine
+    { from = "TAXI_41", to = "TAXI_31", method = "flight", cost = 155, fare = 430, requirements = { faction = "Alliance" } }, -- Feathermoon -> Thalanaar
+    { from = "TAXI_41", to = "TAXI_37", method = "flight", cost = 227, fare = 730, requirements = { faction = "Alliance" } }, -- Feathermoon -> Nijel's Point
+    { from = "TAXI_41", to = "TAXI_73", method = "flight", cost = 159, fare = 1030, requirements = { faction = "Alliance" } }, -- Feathermoon -> Cenarion Hold
+    { from = "TAXI_43", to = "TAXI_6", method = "flight", cost = 256, fare = 730, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Ironforge
+    { from = "TAXI_43", to = "TAXI_14", method = "flight", cost = 68, fare = 330, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Southshore
+    { from = "TAXI_43", to = "TAXI_16", method = "flight", cost = 75, fare = 530, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Refuge Pointe
+    { from = "TAXI_43", to = "TAXI_66", method = "flight", cost = 54, fare = 1020, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Chillwind Camp
+    { from = "TAXI_43", to = "TAXI_67", method = "flight", cost = 164, fare = 1020, requirements = { faction = "Alliance" } }, -- Aerie Peak -> Light's Hope Chapel
+    { from = "TAXI_45", to = "TAXI_2", method = "flight", cost = 189, fare = 830, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Stormwind
+    { from = "TAXI_45", to = "TAXI_12", method = "flight", cost = 91, fare = 330, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Darkshire
+    { from = "TAXI_45", to = "TAXI_71", method = "flight", cost = 207, fare = 830, requirements = { faction = "Alliance" } }, -- Nethergarde Keep -> Morgan's Vigil
+    { from = "TAXI_49", to = "TAXI_26", method = "flight", cost = 142, fare = 830, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Auberdine
+    { from = "TAXI_49", to = "TAXI_52", method = "flight", cost = 131, fare = 1020, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Everlook
+    { from = "TAXI_49", to = "TAXI_65", method = "flight", cost = 61, fare = 730, requirements = { faction = "Alliance" } }, -- Moonglade, Alliance flight master -> Talonbranch Glade
+    { from = "TAXI_52", to = "TAXI_49", method = "flight", cost = 122, fare = 830, requirements = { faction = "Alliance" } }, -- Everlook -> Moonglade, Alliance flight master
+    { from = "TAXI_52", to = "TAXI_64", method = "flight", cost = 176, fare = 730, requirements = { faction = "Alliance" } }, -- Everlook -> Talrendis Point
+    { from = "TAXI_52", to = "TAXI_65", method = "flight", cost = 122, fare = 730, requirements = { faction = "Alliance" } }, -- Everlook -> Talonbranch Glade
+    { from = "TAXI_64", to = "TAXI_26", method = "flight", cost = 301, fare = 730, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Auberdine
+    { from = "TAXI_64", to = "TAXI_28", method = "flight", cost = 153, fare = 330, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Astranaar
+    { from = "TAXI_64", to = "TAXI_32", method = "flight", cost = 241, fare = 630, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Theramore
+    { from = "TAXI_64", to = "TAXI_52", method = "flight", cost = 178, fare = 1030, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Everlook
+    { from = "TAXI_64", to = "TAXI_65", method = "flight", cost = 283, fare = 730, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Talonbranch Glade
+    { from = "TAXI_64", to = "TAXI_80", method = "flight", cost = 135, fare = 110, requirements = { faction = "Alliance" } }, -- Talrendis Point -> Ratchet
+    { from = "TAXI_65", to = "TAXI_26", method = "flight", cost = 188, fare = 730, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Auberdine
+    { from = "TAXI_65", to = "TAXI_49", method = "flight", cost = 67, fare = 1020, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Moonglade, Alliance flight master
+    { from = "TAXI_65", to = "TAXI_52", method = "flight", cost = 121, fare = 1020, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Everlook
+    { from = "TAXI_65", to = "TAXI_64", method = "flight", cost = 282, fare = 730, requirements = { faction = "Alliance" } }, -- Talonbranch Glade -> Talrendis Point
+    { from = "TAXI_66", to = "TAXI_6", method = "flight", cost = 261, fare = 1020, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Ironforge
+    { from = "TAXI_66", to = "TAXI_14", method = "flight", cost = 85, fare = 330, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Southshore
+    { from = "TAXI_66", to = "TAXI_43", method = "flight", cost = 66, fare = 730, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Aerie Peak
+    { from = "TAXI_66", to = "TAXI_67", method = "flight", cost = 147, fare = 1020, requirements = { faction = "Alliance" } }, -- Chillwind Camp -> Light's Hope Chapel
+    { from = "TAXI_67", to = "TAXI_6", method = "flight", cost = 369, fare = 1020, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Ironforge
+    { from = "TAXI_67", to = "TAXI_43", method = "flight", cost = 163, fare = 730, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Aerie Peak
+    { from = "TAXI_67", to = "TAXI_66", method = "flight", cost = 150, fare = 1020, requirements = { faction = "Alliance" } }, -- Light's Hope Chapel -> Chillwind Camp
+    { from = "TAXI_71", to = "TAXI_2", method = "flight", cost = 151, fare = 830, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Stormwind
+    { from = "TAXI_71", to = "TAXI_5", method = "flight", cost = 64, fare = 210, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Lakeshire
+    { from = "TAXI_71", to = "TAXI_45", method = "flight", cost = 210, fare = 830, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Nethergarde Keep
+    { from = "TAXI_71", to = "TAXI_74", method = "flight", cost = 104, fare = 830, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Thorium Point
+    { from = "TAXI_73", to = "TAXI_39", method = "flight", cost = 189, fare = 730, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Gadgetzan
+    { from = "TAXI_73", to = "TAXI_41", method = "flight", cost = 175, fare = 730, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Feathermoon
+    { from = "TAXI_73", to = "TAXI_79", method = "flight", cost = 92, fare = 830, requirements = { faction = "Alliance" } }, -- Cenarion Hold -> Marshal's Refuge
+    { from = "TAXI_74", to = "TAXI_6", method = "flight", cost = 94, fare = 830, requirements = { faction = "Alliance" } }, -- Thorium Point -> Ironforge
+    { from = "TAXI_74", to = "TAXI_71", method = "flight", cost = 96, fare = 830, requirements = { faction = "Alliance" } }, -- Thorium Point -> Morgan's Vigil
+    { from = "TAXI_79", to = "TAXI_39", method = "flight", cost = 104, fare = 730, requirements = { faction = "Alliance" } }, -- Marshal's Refuge -> Gadgetzan
+    { from = "TAXI_79", to = "TAXI_73", method = "flight", cost = 94, fare = 1030, requirements = { faction = "Alliance" } }, -- Marshal's Refuge -> Cenarion Hold
+    { from = "TAXI_80", to = "TAXI_32", method = "flight", cost = 106, fare = 630, requirements = { faction = "Alliance" } }, -- Ratchet -> Theramore
+    { from = "TAXI_80", to = "TAXI_64", method = "flight", cost = 132, fare = 730, requirements = { faction = "Alliance" } }, -- Ratchet -> Talrendis Point
+    { from = "TAXI_10", to = "TAXI_11", method = "flight", cost = 112, fare = 110, requirements = { faction = "Horde" } }, -- The Sepulcher -> Undercity
+    { from = "TAXI_10", to = "TAXI_13", method = "flight", cost = 95, fare = 330, requirements = { faction = "Horde" } }, -- The Sepulcher -> Tarren Mill
+    { from = "TAXI_11", to = "TAXI_10", method = "flight", cost = 106, fare = 110, requirements = { faction = "Horde" } }, -- Undercity -> The Sepulcher
+    { from = "TAXI_11", to = "TAXI_13", method = "flight", cost = 141, fare = 330, requirements = { faction = "Horde" } }, -- Undercity -> Tarren Mill
+    { from = "TAXI_11", to = "TAXI_17", method = "flight", cost = 301, fare = 530, requirements = { faction = "Horde" } }, -- Undercity -> Hammerfall
+    { from = "TAXI_11", to = "TAXI_21", method = "flight", cost = 488, fare = 630, requirements = { faction = "Horde" } }, -- Undercity -> Kargath
+    { from = "TAXI_11", to = "TAXI_68", method = "flight", cost = 261, fare = 1020, requirements = { faction = "Horde" } }, -- Undercity -> Light's Hope Chapel
+    { from = "TAXI_11", to = "TAXI_76", method = "flight", cost = 284, fare = 730, requirements = { faction = "Horde" } }, -- Undercity -> Revantusk Village
+    { from = "TAXI_13", to = "TAXI_10", method = "flight", cost = 99, fare = 110, requirements = { faction = "Horde" } }, -- Tarren Mill -> The Sepulcher
+    { from = "TAXI_13", to = "TAXI_11", method = "flight", cost = 139, fare = 330, requirements = { faction = "Horde" } }, -- Tarren Mill -> Undercity
+    { from = "TAXI_13", to = "TAXI_17", method = "flight", cost = 118, fare = 530, requirements = { faction = "Horde" } }, -- Tarren Mill -> Hammerfall
+    { from = "TAXI_13", to = "TAXI_76", method = "flight", cost = 195, fare = 730, requirements = { faction = "Horde" } }, -- Tarren Mill -> Revantusk Village
+    { from = "TAXI_17", to = "TAXI_11", method = "flight", cost = 259, fare = 530, requirements = { faction = "Horde" } }, -- Hammerfall -> Undercity
+    { from = "TAXI_17", to = "TAXI_13", method = "flight", cost = 117, fare = 330, requirements = { faction = "Horde" } }, -- Hammerfall -> Tarren Mill
+    { from = "TAXI_17", to = "TAXI_21", method = "flight", cost = 259, fare = 630, requirements = { faction = "Horde" } }, -- Hammerfall -> Kargath
+    { from = "TAXI_17", to = "TAXI_76", method = "flight", cost = 91, fare = 730, requirements = { faction = "Horde" } }, -- Hammerfall -> Revantusk Village
+    { from = "TAXI_18", to = "TAXI_20", method = "flight", cost = 102, fare = 630, requirements = { faction = "Horde" } }, -- Booty Bay -> Grom'gol
+    { from = "TAXI_18", to = "TAXI_21", method = "flight", cost = 406, fare = 630, requirements = { faction = "Horde" } }, -- Booty Bay -> Kargath
+    { from = "TAXI_18", to = "TAXI_56", method = "flight", cost = 267, fare = 630, requirements = { faction = "Horde" } }, -- Booty Bay -> Stonard
+    { from = "TAXI_20", to = "TAXI_18", method = "flight", cost = 81, fare = 630, requirements = { faction = "Horde" } }, -- Grom'gol -> Booty Bay
+    { from = "TAXI_20", to = "TAXI_21", method = "flight", cost = 327, fare = 630, requirements = { faction = "Horde" } }, -- Grom'gol -> Kargath
+    { from = "TAXI_20", to = "TAXI_56", method = "flight", cost = 205, fare = 630, requirements = { faction = "Horde" } }, -- Grom'gol -> Stonard
+    { from = "TAXI_21", to = "TAXI_11", method = "flight", cost = 497, fare = 630, requirements = { faction = "Horde" } }, -- Kargath -> Undercity
+    { from = "TAXI_21", to = "TAXI_17", method = "flight", cost = 263, fare = 630, requirements = { faction = "Horde" } }, -- Kargath -> Hammerfall
+    { from = "TAXI_21", to = "TAXI_18", method = "flight", cost = 417, fare = 630, requirements = { faction = "Horde" } }, -- Kargath -> Booty Bay
+    { from = "TAXI_21", to = "TAXI_20", method = "flight", cost = 313, fare = 530, requirements = { faction = "Horde" } }, -- Kargath -> Grom'gol
+    { from = "TAXI_21", to = "TAXI_56", method = "flight", cost = 280, fare = 710, requirements = { faction = "Horde" } }, -- Kargath -> Stonard
+    { from = "TAXI_21", to = "TAXI_70", method = "flight", cost = 87, fare = 830, requirements = { faction = "Horde" } }, -- Kargath -> Flame Crest
+    { from = "TAXI_21", to = "TAXI_75", method = "flight", cost = 56, fare = 830, requirements = { faction = "Horde" } }, -- Kargath -> Thorium Point
+    { from = "TAXI_22", to = "TAXI_23", method = "flight", cost = 207, fare = 50, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Orgrimmar
+    { from = "TAXI_22", to = "TAXI_25", method = "flight", cost = 159, fare = 110, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Crossroads
+    { from = "TAXI_22", to = "TAXI_29", method = "flight", cost = 182, fare = 210, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Sun Rock Retreat
+    { from = "TAXI_22", to = "TAXI_30", method = "flight", cost = 204, fare = 430, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Freewind Post
+    { from = "TAXI_22", to = "TAXI_38", method = "flight", cost = 159, fare = 530, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Shadowprey Village
+    { from = "TAXI_22", to = "TAXI_40", method = "flight", cost = 290, fare = 730, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Gadgetzan
+    { from = "TAXI_22", to = "TAXI_42", method = "flight", cost = 252, fare = 730, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Camp Mojache
+    { from = "TAXI_22", to = "TAXI_44", method = "flight", cost = 269, fare = 830, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Valormok
+    { from = "TAXI_22", to = "TAXI_55", method = "flight", cost = 239, fare = 630, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Brackenwall Village
+    { from = "TAXI_22", to = "TAXI_77", method = "flight", cost = 87, fare = 110, requirements = { faction = "Horde" } }, -- Thunder Bluff -> Camp Taurajo
+    { from = "TAXI_23", to = "TAXI_22", method = "flight", cost = 224, fare = 50, requirements = { faction = "Horde" } }, -- Orgrimmar -> Thunder Bluff
+    { from = "TAXI_23", to = "TAXI_25", method = "flight", cost = 110, fare = 110, requirements = { faction = "Horde" } }, -- Orgrimmar -> Crossroads
+    { from = "TAXI_23", to = "TAXI_40", method = "flight", cost = 417, fare = 730, requirements = { faction = "Horde" } }, -- Orgrimmar -> Gadgetzan
+    { from = "TAXI_23", to = "TAXI_44", method = "flight", cost = 99, fare = 830, requirements = { faction = "Horde" } }, -- Orgrimmar -> Valormok
+    { from = "TAXI_23", to = "TAXI_48", method = "flight", cost = 252, fare = 830, requirements = { faction = "Horde" } }, -- Orgrimmar -> Bloodvenom Post
+    { from = "TAXI_23", to = "TAXI_53", method = "flight", cost = 319, fare = 1020, requirements = { faction = "Horde" } }, -- Orgrimmar -> Everlook
+    { from = "TAXI_23", to = "TAXI_55", method = "flight", cost = 229, fare = 630, requirements = { faction = "Horde" } }, -- Orgrimmar -> Brackenwall Village
+    { from = "TAXI_23", to = "TAXI_61", method = "flight", cost = 89, fare = 530, requirements = { faction = "Horde" } }, -- Orgrimmar -> Splintertree Post
+    { from = "TAXI_25", to = "TAXI_22", method = "flight", cost = 182, fare = 110, requirements = { faction = "Horde" } }, -- Crossroads -> Thunder Bluff
+    { from = "TAXI_25", to = "TAXI_23", method = "flight", cost = 142, fare = 110, requirements = { faction = "Horde" } }, -- Crossroads -> Orgrimmar
+    { from = "TAXI_25", to = "TAXI_29", method = "flight", cost = 150, fare = 210, requirements = { faction = "Horde" } }, -- Crossroads -> Sun Rock Retreat
+    { from = "TAXI_25", to = "TAXI_30", method = "flight", cost = 184, fare = 430, requirements = { faction = "Horde" } }, -- Crossroads -> Freewind Post
+    { from = "TAXI_25", to = "TAXI_40", method = "flight", cost = 303, fare = 730, requirements = { faction = "Horde" } }, -- Crossroads -> Gadgetzan
+    { from = "TAXI_25", to = "TAXI_42", method = "flight", cost = 252, fare = 730, requirements = { faction = "Horde" } }, -- Crossroads -> Camp Mojache
+    { from = "TAXI_25", to = "TAXI_44", method = "flight", cost = 168, fare = 830, requirements = { faction = "Horde" } }, -- Crossroads -> Valormok
+    { from = "TAXI_25", to = "TAXI_48", method = "flight", cost = 253, fare = 930, requirements = { faction = "Horde" } }, -- Crossroads -> Bloodvenom Post
+    { from = "TAXI_25", to = "TAXI_55", method = "flight", cost = 162, fare = 630, requirements = { faction = "Horde" } }, -- Crossroads -> Brackenwall Village
+    { from = "TAXI_25", to = "TAXI_58", method = "flight", cost = 231, fare = 330, requirements = { faction = "Horde" } }, -- Crossroads -> Zoram'gar Outpost
+    { from = "TAXI_25", to = "TAXI_61", method = "flight", cost = 162, fare = 530, requirements = { faction = "Horde" } }, -- Crossroads -> Splintertree Post
+    { from = "TAXI_25", to = "TAXI_77", method = "flight", cost = 90, fare = 110, requirements = { faction = "Horde" } }, -- Crossroads -> Camp Taurajo
+    { from = "TAXI_25", to = "TAXI_80", method = "flight", cost = 52, fare = 110, requirements = { faction = "Horde" } }, -- Crossroads -> Ratchet
+    { from = "TAXI_29", to = "TAXI_22", method = "flight", cost = 175, fare = 210, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Thunder Bluff
+    { from = "TAXI_29", to = "TAXI_25", method = "flight", cost = 150, fare = 210, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Crossroads
+    { from = "TAXI_29", to = "TAXI_38", method = "flight", cost = 143, fare = 530, requirements = { faction = "Horde" } }, -- Sun Rock Retreat -> Shadowprey Village
+    { from = "TAXI_30", to = "TAXI_22", method = "flight", cost = 225, fare = 430, requirements = { faction = "Horde" } }, -- Freewind Post -> Thunder Bluff
+    { from = "TAXI_30", to = "TAXI_25", method = "flight", cost = 194, fare = 430, requirements = { faction = "Horde" } }, -- Freewind Post -> Crossroads
+    { from = "TAXI_30", to = "TAXI_40", method = "flight", cost = 93, fare = 730, requirements = { faction = "Horde" } }, -- Freewind Post -> Gadgetzan
+    { from = "TAXI_30", to = "TAXI_42", method = "flight", cost = 124, fare = 730, requirements = { faction = "Horde" } }, -- Freewind Post -> Camp Mojache
+    { from = "TAXI_30", to = "TAXI_77", method = "flight", cost = 137, fare = 430, requirements = { faction = "Horde" } }, -- Freewind Post -> Camp Taurajo
+    { from = "TAXI_38", to = "TAXI_22", method = "flight", cost = 178, fare = 530, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Thunder Bluff
+    { from = "TAXI_38", to = "TAXI_29", method = "flight", cost = 199, fare = 210, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Sun Rock Retreat
+    { from = "TAXI_38", to = "TAXI_42", method = "flight", cost = 196, fare = 730, requirements = { faction = "Horde" } }, -- Shadowprey Village -> Camp Mojache
+    { from = "TAXI_40", to = "TAXI_22", method = "flight", cost = 304, fare = 730, requirements = { faction = "Horde" } }, -- Gadgetzan -> Thunder Bluff
+    { from = "TAXI_40", to = "TAXI_23", method = "flight", cost = 350, fare = 730, requirements = { faction = "Horde" } }, -- Gadgetzan -> Orgrimmar
+    { from = "TAXI_40", to = "TAXI_25", method = "flight", cost = 301, fare = 730, requirements = { faction = "Horde" } }, -- Gadgetzan -> Crossroads
+    { from = "TAXI_40", to = "TAXI_30", method = "flight", cost = 87, fare = 430, requirements = { faction = "Horde" } }, -- Gadgetzan -> Freewind Post
+    { from = "TAXI_40", to = "TAXI_42", method = "flight", cost = 200, fare = 630, requirements = { faction = "Horde" } }, -- Gadgetzan -> Camp Mojache
+    { from = "TAXI_40", to = "TAXI_55", method = "flight", cost = 222, fare = 630, requirements = { faction = "Horde" } }, -- Gadgetzan -> Brackenwall Village
+    { from = "TAXI_40", to = "TAXI_72", method = "flight", cost = 233, fare = 1020, requirements = { faction = "Horde" } }, -- Gadgetzan -> Cenarion Hold
+    { from = "TAXI_40", to = "TAXI_79", method = "flight", cost = 108, fare = 830, requirements = { faction = "Horde" } }, -- Gadgetzan -> Marshal's Refuge
+    { from = "TAXI_42", to = "TAXI_22", method = "flight", cost = 259, fare = 730, requirements = { faction = "Horde" } }, -- Camp Mojache -> Thunder Bluff
+    { from = "TAXI_42", to = "TAXI_25", method = "flight", cost = 263, fare = 730, requirements = { faction = "Horde" } }, -- Camp Mojache -> Crossroads
+    { from = "TAXI_42", to = "TAXI_30", method = "flight", cost = 107, fare = 430, requirements = { faction = "Horde" } }, -- Camp Mojache -> Freewind Post
+    { from = "TAXI_42", to = "TAXI_38", method = "flight", cost = 201, fare = 730, requirements = { faction = "Horde" } }, -- Camp Mojache -> Shadowprey Village
+    { from = "TAXI_42", to = "TAXI_40", method = "flight", cost = 201, fare = 630, requirements = { faction = "Horde" } }, -- Camp Mojache -> Gadgetzan
+    { from = "TAXI_42", to = "TAXI_72", method = "flight", cost = 132, fare = 1030, requirements = { faction = "Horde" } }, -- Camp Mojache -> Cenarion Hold
+    { from = "TAXI_44", to = "TAXI_22", method = "flight", cost = 257, fare = 830, requirements = { faction = "Horde" } }, -- Valormok -> Thunder Bluff
+    { from = "TAXI_44", to = "TAXI_23", method = "flight", cost = 121, fare = 830, requirements = { faction = "Horde" } }, -- Valormok -> Orgrimmar
+    { from = "TAXI_44", to = "TAXI_25", method = "flight", cost = 172, fare = 830, requirements = { faction = "Horde" } }, -- Valormok -> Crossroads
+    { from = "TAXI_44", to = "TAXI_48", method = "flight", cost = 232, fare = 930, requirements = { faction = "Horde" } }, -- Valormok -> Bloodvenom Post
+    { from = "TAXI_44", to = "TAXI_53", method = "flight", cost = 131, fare = 1020, requirements = { faction = "Horde" } }, -- Valormok -> Everlook
+    { from = "TAXI_44", to = "TAXI_61", method = "flight", cost = 94, fare = 530, requirements = { faction = "Horde" } }, -- Valormok -> Splintertree Post
+    { from = "TAXI_48", to = "TAXI_23", method = "flight", cost = 259, fare = 930, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Orgrimmar
+    { from = "TAXI_48", to = "TAXI_25", method = "flight", cost = 241, fare = 930, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Crossroads
+    { from = "TAXI_48", to = "TAXI_44", method = "flight", cost = 241, fare = 830, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Valormok
+    { from = "TAXI_48", to = "TAXI_53", method = "flight", cost = 190, fare = 1020, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Everlook
+    { from = "TAXI_48", to = "TAXI_69", method = "flight", cost = 166, fare = 830, requirements = { faction = "Horde" } }, -- Bloodvenom Post -> Moonglade, Horde flight master
+    { from = "TAXI_53", to = "TAXI_23", method = "flight", cost = 304, fare = 1020, requirements = { faction = "Horde" } }, -- Everlook -> Orgrimmar
+    { from = "TAXI_53", to = "TAXI_44", method = "flight", cost = 135, fare = 830, requirements = { faction = "Horde" } }, -- Everlook -> Valormok
+    { from = "TAXI_53", to = "TAXI_48", method = "flight", cost = 195, fare = 930, requirements = { faction = "Horde" } }, -- Everlook -> Bloodvenom Post
+    { from = "TAXI_53", to = "TAXI_69", method = "flight", cost = 134, fare = 830, requirements = { faction = "Horde" } }, -- Everlook -> Moonglade, Horde flight master
+    { from = "TAXI_55", to = "TAXI_22", method = "flight", cost = 224, fare = 630, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Thunder Bluff
+    { from = "TAXI_55", to = "TAXI_23", method = "flight", cost = 217, fare = 630, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Orgrimmar
+    { from = "TAXI_55", to = "TAXI_25", method = "flight", cost = 162, fare = 630, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Crossroads
+    { from = "TAXI_55", to = "TAXI_40", method = "flight", cost = 222, fare = 730, requirements = { faction = "Horde" } }, -- Brackenwall Village -> Gadgetzan
+    { from = "TAXI_56", to = "TAXI_18", method = "flight", cost = 260, fare = 630, requirements = { faction = "Horde" } }, -- Stonard -> Booty Bay
+    { from = "TAXI_56", to = "TAXI_20", method = "flight", cost = 189, fare = 630, requirements = { faction = "Horde" } }, -- Stonard -> Grom'gol
+    { from = "TAXI_56", to = "TAXI_21", method = "flight", cost = 285, fare = 630, requirements = { faction = "Horde" } }, -- Stonard -> Kargath
+    { from = "TAXI_56", to = "TAXI_70", method = "flight", cost = 197, fare = 830, requirements = { faction = "Horde" } }, -- Stonard -> Flame Crest
+    { from = "TAXI_58", to = "TAXI_25", method = "flight", cost = 228, fare = 110, requirements = { faction = "Horde" } }, -- Zoram'gar Outpost -> Crossroads
+    { from = "TAXI_58", to = "TAXI_61", method = "flight", cost = 167, fare = 530, requirements = { faction = "Horde" } }, -- Zoram'gar Outpost -> Splintertree Post
+    { from = "TAXI_61", to = "TAXI_23", method = "flight", cost = 96, fare = 530, requirements = { faction = "Horde" } }, -- Splintertree Post -> Orgrimmar
+    { from = "TAXI_61", to = "TAXI_25", method = "flight", cost = 160, fare = 530, requirements = { faction = "Horde" } }, -- Splintertree Post -> Crossroads
+    { from = "TAXI_61", to = "TAXI_44", method = "flight", cost = 96, fare = 830, requirements = { faction = "Horde" } }, -- Splintertree Post -> Valormok
+    { from = "TAXI_61", to = "TAXI_58", method = "flight", cost = 166, fare = 330, requirements = { faction = "Horde" } }, -- Splintertree Post -> Zoram'gar Outpost
+    { from = "TAXI_68", to = "TAXI_11", method = "flight", cost = 262, fare = 1020, requirements = { faction = "Horde" } }, -- Light's Hope Chapel -> Undercity
+    { from = "TAXI_68", to = "TAXI_76", method = "flight", cost = 141, fare = 730, requirements = { faction = "Horde" } }, -- Light's Hope Chapel -> Revantusk Village
+    { from = "TAXI_69", to = "TAXI_48", method = "flight", cost = 157, fare = 930, requirements = { faction = "Horde" } }, -- Moonglade, Horde flight master -> Bloodvenom Post
+    { from = "TAXI_69", to = "TAXI_53", method = "flight", cost = 142, fare = 1020, requirements = { faction = "Horde" } }, -- Moonglade, Horde flight master -> Everlook
+    { from = "TAXI_70", to = "TAXI_21", method = "flight", cost = 99, fare = 830, requirements = { faction = "Horde" } }, -- Flame Crest -> Kargath
+    { from = "TAXI_70", to = "TAXI_56", method = "flight", cost = 213, fare = 830, requirements = { faction = "Horde" } }, -- Flame Crest -> Stonard
+    { from = "TAXI_70", to = "TAXI_75", method = "flight", cost = 72, fare = 830, requirements = { faction = "Horde" } }, -- Flame Crest -> Thorium Point
+    { from = "TAXI_72", to = "TAXI_40", method = "flight", cost = 241, fare = 730, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Gadgetzan
+    { from = "TAXI_72", to = "TAXI_42", method = "flight", cost = 129, fare = 730, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Camp Mojache
+    { from = "TAXI_72", to = "TAXI_79", method = "flight", cost = 97, fare = 830, requirements = { faction = "Horde" } }, -- Cenarion Hold -> Marshal's Refuge
+    { from = "TAXI_75", to = "TAXI_21", method = "flight", cost = 70, fare = 630, requirements = { faction = "Horde" } }, -- Thorium Point -> Kargath
+    { from = "TAXI_75", to = "TAXI_70", method = "flight", cost = 77, fare = 830, requirements = { faction = "Horde" } }, -- Thorium Point -> Flame Crest
+    { from = "TAXI_76", to = "TAXI_11", method = "flight", cost = 284, fare = 730, requirements = { faction = "Horde" } }, -- Revantusk Village -> Undercity
+    { from = "TAXI_76", to = "TAXI_13", method = "flight", cost = 159, fare = 330, requirements = { faction = "Horde" } }, -- Revantusk Village -> Tarren Mill
+    { from = "TAXI_76", to = "TAXI_17", method = "flight", cost = 93, fare = 530, requirements = { faction = "Horde" } }, -- Revantusk Village -> Hammerfall
+    { from = "TAXI_76", to = "TAXI_68", method = "flight", cost = 139, fare = 1030, requirements = { faction = "Horde" } }, -- Revantusk Village -> Light's Hope Chapel
+    { from = "TAXI_77", to = "TAXI_22", method = "flight", cost = 114, fare = 110, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Thunder Bluff
+    { from = "TAXI_77", to = "TAXI_25", method = "flight", cost = 79, fare = 110, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Crossroads
+    { from = "TAXI_77", to = "TAXI_30", method = "flight", cost = 125, fare = 430, requirements = { faction = "Horde" } }, -- Camp Taurajo -> Freewind Post
+    { from = "TAXI_79", to = "TAXI_40", method = "flight", cost = 113, fare = 730, requirements = { faction = "Horde" } }, -- Marshal's Refuge -> Gadgetzan
+    { from = "TAXI_79", to = "TAXI_72", method = "flight", cost = 100, fare = 1030, requirements = { faction = "Horde" } }, -- Marshal's Refuge -> Cenarion Hold
+    { from = "TAXI_80", to = "TAXI_25", method = "flight", cost = 69, fare = 110, requirements = { faction = "Horde" } }, -- Ratchet -> Crossroads
 }) do
     table.insert(addon.Edges, edge)
 end

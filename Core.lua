@@ -43,6 +43,15 @@ frame:SetScript("OnEvent", function(_, event, ...)
     addon.Theme:Init("moderndark")
     addon.OptionsPanel:Register()
     addon.Panel:Init()
+    -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
+    if type(TakeTaxiNode) == "function" and not addon.takeTaxiHooked then
+        addon.takeTaxiHooked = true
+        hooksecurefunc("TakeTaxiNode", function(slot)
+            local stops = addon.FlightKnowledge:StopsForSlot(slot)
+            addon.lastTicket = { slot = slot, stops = stops, at = GetTime() }      -- for /mzr ticket
+            addon.Navigation:OnTakeTaxi(stops, GetTime())
+        end)
+    end
     local nodeCount, containerCount, continents = addon.World:GetStats()
     say("%s ruleset: %d nodes in %d containers (%s).",
         addon:GetRuleset(), nodeCount, containerCount, table.concat(continents, ", "))
@@ -87,6 +96,34 @@ SlashCmdList["MAPZEROTHREBUILD"] = function(msg)
             say("%s %s -> %s: measured %ds, data %ds (%+d)", t.kind, addon:GetNodeName(t.from), addon:GetNodeName(t.to),
                 t.actual, t.planned, t.actual - t.planned)
         end
+
+    elseif cmd == "fares" then
+        -- What routes assume about money: how much the player has, and the discount learned from the
+        -- flight window's prices (1 until a flight master's window has been opened).
+        say("money %s, typical fare factor %.3f (%s)", addon.Journey:FormatMoney(GetMoney and GetMoney() or 0),
+            addon.FlightKnowledge:FareFactor(), TaxiNodeCost and "prices readable" or "TaxiNodeCost missing")
+        local samples = addon.FlightKnowledge:FareSamples()
+        if #samples == 0 then
+            say("no prices read yet: open a flight master's window")
+        end
+        for _, sample in ipairs(samples) do
+            say("  to %s: paid %d, base %d (%.3f)", addon:GetNodeName(sample.to), sample.paid, sample.base, sample.paid / sample.base)
+        end
+
+    elseif cmd == "ticket" then
+        -- The last flight chosen, as the hook saw it, and what the trip made of it.
+        local t = addon.lastTicket
+        if not t then
+            say("no flight chosen yet this session (or the TakeTaxiNode hook isn't firing)")
+        else
+            local names = {}
+            for _, id in ipairs(t.stops or {}) do names[#names + 1] = addon:GetNodeName(id) end
+            say("slot %s, %.0fs ago: %s", tostring(t.slot), GetTime() - t.at,
+                #names > 0 and table.concat(names, " > ") or "stops unreadable")
+        end
+        local model = addon.Navigation:Model()
+        say("trip: %s", model and (model.offRoute and ("off route, flying to " .. addon:GetNodeName(model.flyingTo))
+            or model.finished and "arrived" or ("step %d of %d"):format(model.index, model.total)) or "none")
 
     elseif cmd == "nav" then
         -- /mzr nav [stop]: where the trip being followed is, or drop it.

@@ -10,12 +10,48 @@ local addonName, addon = ...
 --              "instance", or a place kind ("inn", "bank", "trainer", "leyline", ...)
 --   relevant   false for things this player has little use for by default (other classes'
 --              trainers and the like); they are still found by searching
+--   details    optional, what a place offers that a search can hit and the list shows: for a
+--              weapon master, { { text = "One-Handed Swords", alias = "..." }, ... } (the weapon skills
+--              its trainers teach, in the client's names)
 -- A city or town is an entry of its own (group "place"). A town routes to its centre node.
 -- A city is enclosed, so it routes to whichever of its entrances is nearest, or to its
 -- centre node until entrances have been captured for it.
 
 local Destinations = {}
 addon.Destinations = Destinations
+
+local L = addon.L
+
+-- Every weapon skill any class can learn: what a weapon master might teach.
+local function weaponSkills()
+    local set = {}
+    for _, list in pairs(addon.ClassWeapons or {}) do
+        for _, spellID in ipairs(list) do set[spellID] = true end
+    end
+    return set
+end
+
+-- The weapon skills the trainers at a weapon master teach, as search details, in skill order.
+local function weaponDetails(node, skills)
+    local taught = {}
+    for _, npc in ipairs(node.npcs or {}) do
+        for _, spellID in ipairs(npc.teaches or {}) do
+            if skills[spellID] then taught[spellID] = true end
+        end
+    end
+    local ids = {}
+    for spellID in pairs(taught) do ids[#ids + 1] = spellID end
+    table.sort(ids)
+    local details = {}
+    for _, spellID in ipairs(ids) do
+        local name = addon:GetSkillName(spellID)
+        if name then
+            local alias = "SKILL_ALIAS_" .. spellID
+            details[#details + 1] = { text = name, alias = addon:HasString(alias) and L[alias] or nil }
+        end
+    end
+    return #details > 0 and details or nil
+end
 
 local TRANSPORT = { DOCK = true, ZEPPELIN = true, TRAM = true, PORTAL = true, TELEPORT = true }
 
@@ -50,6 +86,7 @@ end
 function Destinations:Build(ctx)
     local World = addon.World
     local entries = {}
+    local skills = weaponSkills()
 
     World:ForEachNode(function(node)
         local group = groupOf(node)
@@ -60,6 +97,7 @@ function Destinations:Build(ctx)
             nodeID = node.id, nodeIDs = { node.id }, name = name, group = group, kind = node.kind,
             zone = addon:GetZoneName(node.mapID),
             relevant = addon.Relevance:IsRelevant(node, ctx),
+            details = node.kind == "trainer" and node.trainer == "WEAPON" and weaponDetails(node, skills) or nil,
         }
     end)
 

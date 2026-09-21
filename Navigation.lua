@@ -28,6 +28,8 @@ local WALK_RADIUS = 30       -- yards
 local ARRIVE_RADIUS = 60     -- yards, for everything that isn't walking: a landing spot is looser
 local DEPART_RADIUS = 40     -- yards moved from the boarding point before a ship counts as underway
 local JUMP = 300             -- yards between two updates that can only be a teleport or a portal
+local TICKET_WAIT = 15       -- seconds a chosen flight has to start before we forget it was chosen
+local NOTICE_TIME = 8        -- seconds a note ("Route updated") stays up
 
 local KINDS = {
     walk = "walk", transition = "walk", flight = "flight",
@@ -141,8 +143,8 @@ local function completed(step, sample)
             return false
         end
         if state.flying then
-            timings[#timings + 1] = { kind = "flight", from = step.fromID, to = step.nodeID,
-                                      planned = step.seconds, actual = sample.now - state.flightStart }
+            timings[#timings + 1] = { kind = "flight", from = state.fromID or step.fromID, to = step.nodeID,
+                                      planned = state.seconds or step.seconds, actual = sample.now - state.flightStart }
             return true
         end
         return farStart and arrived(step, sample)
@@ -187,6 +189,7 @@ local function buildModel(sample)
         destination = active.entry and active.entry.name,
     }
     local left = step.seconds
+    if state.seconds then left = state.seconds end        -- a flight that covers several steps
 
     if kind == "walk" then
         model.distance = distance(sample, nodeOf(step.nodeID))
@@ -197,9 +200,10 @@ local function buildModel(sample)
     elseif kind == "flight" then
         if state.flying then
             model.phase = "flying"
-            model.overrun = (sample.now - state.flightStart) > step.seconds      -- longer than the data says
-            model.progress = clamp((sample.now - state.flightStart) / step.seconds, 0, 0.99)
-            left = step.seconds * (1 - model.progress)
+            local planned = state.seconds or step.seconds
+            model.overrun = (sample.now - state.flightStart) > planned      -- longer than the data says
+            model.progress = clamp((sample.now - state.flightStart) / planned, 0, 0.99)
+            left = planned * (1 - model.progress)
         else
             model.phase = "waiting"
             model.progress = 0
@@ -225,14 +229,54 @@ local function buildModel(sample)
 
     for i = active.index + 1, #steps do left = left + steps[i].seconds end
     model.remaining = left
+    if active.notice then
+        active.noticeUntil = active.noticeUntil or (sample.now + NOTICE_TIME)
+        if sample.now <= active.noticeUntil then model.notice = active.notice end
+    end
     return model
 end
 
 -- ---------------------------------------------------------------------------------------
 
 -- Begin following a plan (from Journey:PlanEntry) to a destination entry.
-function Navigation:Start(entry, plan)
-    active = { entry = entry, plan = plan, steps = plan.steps, index = 1, finished = false, jumped = false }
+-- `notice` (optional) is a string key shown for a few seconds ("NAV_REROUTED").
+function Navigation:Start(entry, plan, notice)
+    active = { entry = entry, plan = plan, steps = plan.steps, index = 1, finished = false, jumped = false,
+               notice = notice }
+end
+
+-- A flight was chosen at a flight master: stops = the node ids the ticket lands at, the last being where
+-- it ends (FlightKnowledge:StopsForSlot); now = GetTime(). It takes effect once the taxi is moving.
+function Navigation:OnTakeTaxi(stops, now)
+    if not active or active.finished or not stops or #stops == 0 then return end
+    active.ticket = { stops = stops, at = now or 0 }
+end
+
+-- The flight has begun. If it ends where a step of the route ends, that is the step being flown (the
+-- ones before it, if any, were flown through, or are skipped); otherwise it is the wrong place, and the
+-- route is worked out again on landing.
+local function applyTicket(sample)
+    local destination = active.ticket.stops[#active.ticket.stops]
+    local match
+    for i = active.index, #active.steps do
+        if kindOf(active.steps[i].method) == "flight" and active.steps[i].nodeID == destination then
+            match = i
+            break
+        end
+    end
+    if not match then
+        active.offRoute = { destination = destination }
+    elseif match > active.index then
+        local seconds = 0
+        for i = active.index, match do
+            if kindOf(active.steps[i].method) == "flight" then seconds = seconds + active.steps[i].seconds end
+        end
+        local from = active.steps[active.index].fromID
+        active.index = match
+        beginStep(sample)
+        active.state.seconds = seconds       -- one ticket over what were several steps
+        active.state.fromID = from           -- and it began where the first of them did
+    end
 end
 
 function Navigation:Stop()
@@ -258,13 +302,37 @@ function Navigation:Update(sample)
     if not active.finished then
         if not active.state then beginStep(sample) end
 
-        -- Already at a later step's destination: skip everything before it.
-        for j = #active.steps, active.index + 1, -1 do
-            if arrived(active.steps[j], sample) then
-                active.index = j
-                beginStep(sample)
-                advance(sample)
-                break
+        if active.ticket then
+            if sample.onTaxi then
+                applyTicket(sample)
+                active.ticket = nil
+            elseif sample.now - active.ticket.at > TICKET_WAIT then
+                active.ticket = nil              -- it never took off (no money, cancelled)
+            end
+        end
+
+        if active.offRoute then
+            if not sample.onTaxi then            -- landed somewhere the route didn't go: plan again from here
+                local entry = active.entry
+                active = nil
+                return { replan = true, entry = entry }
+            end
+            active.last = sample.mapID and { mapID = sample.mapID, x = sample.x, y = sample.y } or active.last
+            active.model = buildModel(sample)
+            active.model.offRoute, active.model.flyingTo = true, active.offRoute.destination
+            return active.model
+        end
+
+        -- Already at a later step's destination: skip everything before it. (Not in the air: a flight
+        -- passing over a later stop hasn't got there.)
+        if not sample.onTaxi then
+            for j = #active.steps, active.index + 1, -1 do
+                if arrived(active.steps[j], sample) then
+                    active.index = j
+                    beginStep(sample)
+                    advance(sample)
+                    break
+                end
             end
         end
         -- Did the player just appear somewhere far from where they were a moment ago?

@@ -51,6 +51,8 @@ function addon:GetPlayerContext()
         questCompleted = isQuestCompleted,
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
+        money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
+        fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master
     }
 end
 

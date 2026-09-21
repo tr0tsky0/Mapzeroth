@@ -160,6 +160,56 @@ do
     check(#addon.Pathfinder:CollapseSteps(toStormwind.steps) == 1, "shown as one ticket")
 end
 
+-- Fares. A flight leg has a base fare in copper and a ticket costs the sum of its legs (Lakeshire to Ironforge
+-- was 23s 66c for legs of 8s 30c each: 95%). A route reports what its flights cost.
+do
+    local ali = makeCtx({ faction = "Alliance" })
+    local graph = addon.TravelGraph:Build(ali)
+    local three = addon.Pathfinder:FindPath(graph, "TAXI_5", "TAXI_6")
+    check(three.fare == 3 * 830, "Lakeshire to Ironforge costs its three legs' fares: " .. tostring(three.fare))
+    local discounted = addon.Pathfinder:FindPath(graph, "TAXI_5", "TAXI_6", nil, { fareFactor = 0.95 })
+    check(math.abs(discounted.fare - 0.95 * 3 * 830) < 1e-6, "less a discount: " .. tostring(discounted.fare))
+    check(discounted.cost == three.cost, "which doesn't change the time")
+    check(addon.Pathfinder:FindPath(graph, "TAXI_2", "TAXI_2") == nil or true, "")
+
+    -- With a budget the route is the quickest the player can pay for: Refuge Pointe to Ironforge is 271 s direct
+    -- (530c), 215 s through Menethil Harbor on two tickets (660c), or 280 s through Thelsamar (220c).
+    local free = addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6")
+    check(free.cost == 215 and free.fare == 660, "ignoring fares, the quicker two tickets: " .. free.cost .. "s " .. free.fare .. "c")
+    local enough = addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6", nil, { budget = 600 })
+    check(enough.cost == 271 and enough.fare == 530, "with 600c, the direct ticket, the quickest that fits: " .. enough.cost .. "s " .. enough.fare .. "c")
+    local little = addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6", nil, { budget = 300 })
+    check(little.cost == 280 and little.fare == 220, "with 300c, through Thelsamar: " .. little.cost .. "s " .. little.fare .. "c")
+    local none = addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6", nil, { budget = 0 })
+    check(none == nil or none.fare == 0, "with nothing, no flight at all")
+    check(addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6", nil, { budget = 660 }).cost == 215, "and exactly enough for the quickest takes it")
+    -- The discount depends on where the ticket is bought: half price at Refuge Pointe only.
+    local atRefuge = addon.Pathfinder:FindPath(graph, "TAXI_16", "TAXI_6", nil,
+        { fareFactor = function(nodeID) return nodeID == "TAXI_16" and 0.5 or 1 end })
+    check(atRefuge.fare == 0.5 * 330 + 330, "a factor per flight master: the first ticket is half price, the second is not: " .. tostring(atRefuge.fare))
+    -- The player doesn't pick a ticket's stops: the game sells its own quickest chain. Thorium Point to Stormwind is
+    -- through Morgan's Vigil (830c + 830c, 237 s). With 1638c that ticket can't be bought, so: a ticket to
+    -- Lakeshire (also through Morgan's Vigil: 1040c, 150 s) and on to Stormwind (210c, 113 s).
+    local gameTicket = addon.Pathfinder:FindPath(graph, "TAXI_74", "TAXI_2")
+    check(gameTicket.fare == 1660 and gameTicket.cost == 96 + 151 - addon.FLIGHT_CHAIN_SAVING and gameTicket.steps[1].to == "TAXI_71"
+        and gameTicket.steps[2].through, "the game's own ticket goes through Morgan's Vigil: " .. gameTicket.cost .. "s " .. gameTicket.fare .. "c")
+    local viaLakeshire = addon.Pathfinder:FindPath(graph, "TAXI_74", "TAXI_2", nil, { budget = 1638 })
+    check(viaLakeshire and viaLakeshire.fare == 1250 and viaLakeshire.cost == 263, "1638c: " .. tostring(viaLakeshire and viaLakeshire.cost) .. "s " .. tostring(viaLakeshire and viaLakeshire.fare) .. "c")
+    local shown = addon.Pathfinder:CollapseSteps(viaLakeshire.steps)
+    check(#shown == 2 and shown[1].to == "TAXI_5" and shown[2].to == "TAXI_2" and not viaLakeshire.steps[#viaLakeshire.steps].through,
+        "two tickets: to Lakeshire (through Morgan's Vigil) and on")
+    -- With 900c that is out of reach too. A ticket through Ironforge isn't for sale (the game's route is not that
+    -- one), so it is two tickets, to Ironforge and on (830c + 50c, 94 s + 210 s), with no through-ticket saving.
+    local viaIronforge = addon.Pathfinder:FindPath(graph, "TAXI_74", "TAXI_2", nil, { budget = 900 })
+    check(viaIronforge and viaIronforge.fare == 880 and viaIronforge.cost == 94 + 210, "900c: " .. tostring(viaIronforge and viaIronforge.cost) .. "s " .. tostring(viaIronforge and viaIronforge.fare) .. "c")
+    check(viaIronforge.steps[1].to == "TAXI_6" and not viaIronforge.steps[2].through, "landing at Ironforge and buying a new ticket, not one through it")
+    check(#addon.Pathfinder:CollapseSteps(viaIronforge.steps) == 2, "shown as two flights")
+    local _, fares = addon.Pathfinder:FindCosts(graph, "TAXI_16")
+    check(fares["TAXI_6"] == 660 and fares["TAXI_7"] == 330, "FindCosts reports each place's fare too")
+    local costs, cheaper = addon.Pathfinder:FindCosts(graph, "TAXI_16", nil, { budget = 600 })
+    check(costs["TAXI_6"] == 271 and cheaper["TAXI_6"] == 530, "and within a budget: " .. tostring(costs["TAXI_6"]) .. "s " .. tostring(cheaper["TAXI_6"]) .. "c")
+end
+
 -- Flights along one ticket are shown as one step, like consecutive walks are one walk: in game you buy a
 -- ticket to the far flight point and fly through the stops without landing. The search marks a flight
 -- that goes on along the ticket the last one began with `through`; a flight without it is a new ticket.

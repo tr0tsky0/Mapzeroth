@@ -113,7 +113,7 @@ for _, block in ipairs(blocks) do
         end
     end
     for _, stops in ipairs(block.routes) do
-        local result = addon.Pathfinder:FindPath(flightsOnly, stops[1], stops[#stops], nil, true)
+        local result = addon.Pathfinder:FindPath(flightsOnly, stops[1], stops[#stops], nil, { oneTicket = true })
         local ours = { stops[1] }
         for _, step in ipairs(result and result.steps or {}) do ours[#ours + 1] = step.to end
         checked = checked + 1

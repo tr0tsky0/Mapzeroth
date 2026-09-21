@@ -56,6 +56,14 @@ addon:RegisterLocale("enUS", {
     NAV_ARRIVED       = "Destination reached",
     NAV_LEFT          = "%s left in total",
     NAV_DISTANCE      = "%d yards",
+    MONEY_GOLD        = "%dg",
+    MONEY_SILVER      = "%ds",
+    MONEY_COPPER      = "%dc",
+    ROUTE_FARES       = "%s in fares",
+    HINT_BROKE        = "You can't afford this route: the flights cost %s and you have %s.",
+    HINT_QUICKER      = "The quickest route would save %s but its flights cost %s. This is the fastest you can afford.",
+    NAV_OFFROUTE      = "Flying to %s. The route updates when you land.",
+    NAV_REROUTED      = "Route updated",
     NAV_WAIT_FLIGHT   = "Speak to the flight master",
     NAV_FLYING        = "In flight",
     NAV_LONGER        = "Taking longer than planned",
@@ -65,6 +73,10 @@ addon:RegisterLocale("enUS", {
     NAV_COMBAT        = "Can't be used in combat",
 
     -- What sort of place a search result is, shown under its name.
+    -- Other words a player types for a weapon skill whose name (from the client) doesn't contain them,
+    -- searched along with it: "Staves" is a staff, "Thrown" is throwing weapons.
+    SKILL_ALIAS_227   = "staff staffs",
+    SKILL_ALIAS_2567  = "throwing throwing weapons",
     GROUP_place       = "Town or city",
     GROUP_flight      = "Flight master",
     GROUP_transport   = "Transport",

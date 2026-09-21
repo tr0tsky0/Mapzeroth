@@ -23,7 +23,11 @@ C_TaxiMap = { GetTaxiNodesForMap = function(id)
 end }
 LOCALIZED_CLASS_NAMES_MALE = { MAGE = "Mage", DRUID = "Druid", WARRIOR = "Warrior", HUNTER = "Hunter",
     PALADIN = "Paladin", PRIEST = "Priest", ROGUE = "Rogue", SHAMAN = "Shaman", WARLOCK = "Warlock" }
-C_Spell = { GetSpellInfo = function(id) return { name = "Profession " .. id } end }
+local weaponNames = { [196] = "One-Handed Axes", [197] = "Two-Handed Axes", [198] = "One-Handed Maces",
+    [199] = "Two-Handed Maces", [200] = "Polearms", [201] = "One-Handed Swords", [202] = "Two-Handed Swords",
+    [227] = "Staves", [264] = "Bows", [266] = "Guns", [1180] = "Daggers", [2567] = "Thrown", [5011] = "Crossbows",
+    [15590] = "Fist Weapons" }
+C_Spell = { GetSpellInfo = function(id) return { name = weaponNames[id] or ("Profession " .. id) } end }
 addon:ClearNodeNameCache()
 
 local ctx = makeCtx({ class = "MAGE" })
@@ -97,3 +101,38 @@ check(druidTrainer and not druidTrainer.relevant, "a druid trainer isn't, for a 
 -- Searching the list works end to end.
 local hits = addon.Search:Query(entries, "stormwind", 5)
 check(#hits > 0 and hits[1].score == 3, "searching finds Stormwind places first")
+
+-- A weapon master says which weapons it teaches, and a search for a weapon finds it.
+local stormwindWeapons = find("TRAINER_WEAPON_11867", "trainer")
+check(stormwindWeapons and stormwindWeapons.details and #stormwindWeapons.details == 6, "Stormwind's weapon master lists what it teaches")
+local taught = {}
+for _, d in ipairs(stormwindWeapons.details) do taught[d.text] = d end
+check(taught["One-Handed Swords"] and taught["Two-Handed Swords"] and taught["Staves"] and taught["Daggers"] and not taught["Bows"],
+    "in the client's names: swords, staves and daggers but no bows")
+check(taught["Staves"].alias and taught["Staves"].alias:find("staff"), "with the word a player types for a staff")
+check(find("TAXI_2", "flight").details == nil, "other places have no details")
+
+local function names(results)
+    local out = {}
+    for _, r in ipairs(results) do out[r.nodeID] = r end
+    return out
+end
+local sword = names(addon.Search:Query(entries, "sword", 200))
+check(sword["TRAINER_WEAPON_11867"], "\"sword\" finds Stormwind's weapon master")
+check(sword["TRAINER_WEAPON_11867"].detailHit == "One-Handed Swords, Two-Handed Swords", "and says which swords: " .. tostring(sword["TRAINER_WEAPON_11867"].detailHit))
+local staff = names(addon.Search:Query(entries, "staff", 200))
+local withDetails, agree = 0, 0
+for _, entry in ipairs(entries) do
+    if entry.details then
+        withDetails = withDetails + 1
+        local teachesStaves = false
+        for _, d in ipairs(entry.details) do if d.text == "Staves" then teachesStaves = true end end
+        if (staff[entry.nodeID] ~= nil) == teachesStaves then agree = agree + 1 end
+    end
+end
+check(withDetails >= 2 and agree == withDetails, "\"staff\" finds exactly the weapon masters that teach Staves: " .. agree .. " of " .. withDetails)
+check(staff["TRAINER_WEAPON_11867"] and staff["TRAINER_WEAPON_11867"].detailHit == "Staves", "Stormwind's is one, and it names the client's word for it")
+check(names(addon.Search:Query(entries, "dagger", 200))["TRAINER_WEAPON_11867"], "\"dagger\" finds a dagger trainer")
+local plain = names(addon.Search:Query(entries, "weapon trainer", 200))
+check(plain["TRAINER_WEAPON_11867"] and plain["TRAINER_WEAPON_11867"].detailHit == nil, "a name match doesn't claim a weapon")
+check(names(addon.Search:Query(entries, "sword stormwind", 200))["TRAINER_WEAPON_11867"], "a weapon and a place can be searched together")
