@@ -36,6 +36,8 @@ addon:RegisterLocale("enUS", {
     NODE_DOCK_POWDERFUSE           = "Powderfuse Port",
     NODE_DOCK_SOUTHSHORE           = "Southshore Harbor",
     NODE_DOCK_STORMWIND            = "Stormwind Harbor",
+    NODE_ENTRANCE_SW_WIZARDS_SANCTUM_OUTER = "Wizard's Sanctum Entrance",
+    NODE_ENTRANCE_SW_WIZARDS_SANCTUM_INNER = "Wizard's Sanctum",
     NODE_PORTAL_DALARAN_STORMWIND  = "Skyborne Portal to Stormwind",
     NODE_PORTAL_STORMWIND_DALARAN  = "Skyborne Portal to Dalaran",
     NODE_TAXI_POWDERFUSE           = "Powderfuse Port, Riverglades",

@@ -22,8 +22,7 @@ trainer:BLACKSMITHING	2521	65.4	80.0	valanaar	Valanaar
 trainer:ALCHEMY	2521	66.3	79.5	valanaar	Valanaar
 trainer:MAGE	2521	65.9	80.5	valanaar	Valanaar
 trainer:DRUID	2521	64.0	75.1	valanaar	Valanaar
-# Approximate ("around 55.0, 36.6"), in the wilderness: refine when someone stands there.
-trainer:ENGINEERING	2521	55.0	36.6	-	Zephras Isle
+trainer:ENGINEERING	2521	53.99	38.92	-	Zephras Isle
 # Shen'dar Village (no area id yet: run /mzdump area at its inn to add one)
 trainer:FIRSTAID	2521	43.1	46.3	shendar_village	Shen'dar Village
 trainer:SHAMAN	2521	43.4	44.9	shendar_village	Shen'dar Village
@@ -84,5 +83,7 @@ leyline	1426	63.8	50.7	-	Dun Morogh
 leyline	1417	48.0	60.5	-	Arathi Highlands
 leyline	1417	25.3	30.0	-	Arathi Highlands
 leyline	1436	59.8	31.5	-	Westfall
+leyline	2521	63.9	74.1	-	Zephras Isle
+leyline	2521	58.8	33.5	-	Zephras Isle
 bank	1453	63.8	80.8	stormwind	Stormwind
 trainer:DRUID	1453	36.19	64.28	stormwind	Stormwind

@@ -353,11 +353,19 @@ def cluster(npcs):
             # A captured position (standing there) beats Wowhead's.
             basis = [g for g in group if g["captured"]] or group
             lead = min(group, key=lambda g: (g["id"], g["label"]))
+            captured_members = [g for g in group if g["captured"]]
+            # A capture's settlement column is authoritative when given: "-" (settlement None) means
+            # someone stood there and confirmed it belongs to no settlement, which must stick even if
+            # it happens to fall within SETTLEMENT_RADIUS of one (the radius is a straight-line guess,
+            # blind to water and mountains in between). Only fall through to that guess when nothing
+            # captured said anything either way.
+            standalone = bool(captured_members) and captured_members[0]["settlement"] is None
             places.append({
                 "kind": kind, "trainer": trainer, "map": map_id, "label": lead["label"], "npcs": len(group),
                 "members": sorted(group, key=lambda g: (g["captured"], g["id"])),
                 "pos": (sum(g["pos"][0] for g in basis) / len(basis), sum(g["pos"][1] for g in basis) / len(basis)),
                 "settlement": next((g["settlement"] for g in group if g["captured"]), None),
+                "standalone": standalone,
             })
     return places
 
@@ -434,7 +442,7 @@ def main():
     unassigned, out_nodes, counts = [], [], collections.Counter()
     used_ids = set()
     for p in sorted(places, key=lambda p: (p["map"], p["kind"], p["label"])):
-        if p["kind"] in WORLD_KINDS:
+        if p["kind"] in WORLD_KINDS or p["standalone"]:
             key = None
         elif p["settlement"]:
             key = p["settlement"]

@@ -61,6 +61,22 @@ local direct = addon.Journey:Build(ali, { id = "YOU_in2", mapID = inner.mapID, x
 local inCity = addon.Journey:Plan(direct, waypoint.id)
 check(#inCity.steps == 1 and inCity.steps[1].nodeID == waypoint.id, "and one inside the same city is a plain walk")
 
+-- A building within a city can be walled the same way, but by container instead of map (both sides
+-- share Stormwind's own mapID): the Wizard's Sanctum, where the Dalaran portal exits.
+local sanctumOuter = addon.World:GetNode("ENTRANCE_SW_WIZARDS_SANCTUM_OUTER")
+local sanctumInner = addon.World:GetNode("ENTRANCE_SW_WIZARDS_SANCTUM_INNER")
+local portalExit = addon.World:GetNode("PORTAL_STORMWIND_DALARAN")
+check(sanctumOuter and sanctumInner and portalExit, "the Sanctum's gate and the portal it holds exist")
+check(sanctumOuter.mapID == sanctumInner.mapID and sanctumOuter.mapID == bank.mapID, "all on Stormwind's own map, unlike a whole city's gate")
+check(not edge(bank.id, portalExit.id) and not edge(portalExit.id, bank.id), "no straight line from the bank into the Sanctum")
+local sanctumHop = edge(sanctumOuter.id, sanctumInner.id)
+check(sanctumHop and sanctumHop.cost == 0 and edge(sanctumInner.id, sanctumOuter.id).cost == 0, "its door takes no time either")
+local outOfSanctum = addon.Pathfinder:FindPath(graph, portalExit.id, bank.id)
+local sanctumVia = {}
+for _, step in ipairs(outOfSanctum.steps) do sanctumVia[#sanctumVia + 1] = step.to end
+check(table.concat(sanctumVia, ">"):find(sanctumInner.id .. ">" .. sanctumOuter.id, 1, true) and sanctumVia[#sanctumVia] == bank.id,
+    "from the portal to the bank: out through the Sanctum's own door first: " .. table.concat(sanctumVia, ">"))
+
 -- Cities that aren't enclosed are left alone: Dalaran's map is its zone's, and it has no gate pair.
 local dalaranDock, alterac = addon.World:GetNode("DOCK_DALARAN"), nil
 addon.World:ForEachNode(function(node) if node.id:find("^BORDER_ALTERAC") then alterac = alterac or node end end)

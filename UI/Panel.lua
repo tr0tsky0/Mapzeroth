@@ -29,6 +29,7 @@ local state = {
     view = "list", entry = nil, plan = nil, ctx = nil,
     sections = {}, open = {}, priced = false, session = nil, waypoint = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
+    stepOffset = 0,       -- how many of the route's steps are scrolled past, when it has more than fit
 }
 
 -- ---------------------------------------------------------------------------------------
@@ -318,6 +319,12 @@ function Panel:Move(delta)
 end
 
 function Panel:Scroll(delta)
+    if state.view == "route" and state.plan then
+        local max = math.max(0, #state.plan.steps - STEPS)
+        state.stepOffset = math.max(0, math.min(max, state.stepOffset + delta))
+        self:RenderSteps()
+        return
+    end
     if state.view ~= "list" then return end
     local max = math.max(0, #state.results - ROWS)
     state.offset = math.max(0, math.min(max, state.offset + delta))
@@ -361,7 +368,7 @@ end
 
 -- Draw a plan's route: the total, the hint, and its steps (the one being followed is marked).
 function Panel:DisplayPlan(entry, plan)
-    state.view, state.entry, state.plan = "route", entry, plan
+    state.view, state.entry, state.plan, state.stepOffset = "route", entry, plan, 0
     showList(false)
     showRouteWidgets(true)
     setStatus(nil)
@@ -375,8 +382,15 @@ function Panel:DisplayPlan(entry, plan)
     end
     ui.routeHint:SetText(table.concat(hints, "\n"))
     ui.start:SetShown(#plan.steps > 0 and not state.pinned and not plan.unaffordable)
+    self:RenderSteps()
+end
+
+-- Draw the STEPS-tall window of the route's steps starting at state.stepOffset (mouse wheel
+-- moves it; more than fit is never lost, just scrolled to, like the search results list).
+function Panel:RenderSteps()
+    local plan = state.plan
     for i = 1, STEPS do
-        local row, step = ui.steps[i], plan.steps[i]
+        local row, step = ui.steps[i], plan.steps[state.stepOffset + i]
         if step then
             local time = Journey:FormatTime(step.seconds)
             row.name:SetText(step.text)
@@ -389,17 +403,24 @@ function Panel:DisplayPlan(entry, plan)
             row:Hide()
         end
     end
-    local extra = #plan.steps - STEPS
+    local extra = #plan.steps - state.stepOffset - STEPS
     ui.more:SetText(extra > 0 and ("+" .. extra) or "")
     self:MarkCurrentStep()
 end
 
--- Highlight the step the trip is on (only while this route is the one being followed).
+-- Highlight the step the trip is on (only while this route is the one being followed), scrolling
+-- it into view if the player has moved on to a step currently scrolled out of sight.
 function Panel:MarkCurrentStep()
     if not ui then return end
     local model = state.pinned and addon.Navigation:Model()
+    local current = model and not model.finished and model.index
+    if current and (current <= state.stepOffset or current > state.stepOffset + STEPS) then
+        state.stepOffset = math.max(0, math.min(#state.plan.steps - STEPS, current - 1))
+        self:RenderSteps()
+        return
+    end
     for i, row in ipairs(ui.steps) do
-        row:SetSelected(model and not model.finished and model.index == i or false)
+        row:SetSelected(current == state.stepOffset + i)
     end
 end
 

@@ -14,7 +14,7 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 106 places outside any city or town (starter areas and the like);
+-- 108 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
@@ -121,7 +121,9 @@
 --   stable on map 1450 at (56.2, 32.4)
 --   HERBALISM trainer on map 1450 at (45.5, 46.9)
 --   DRUID trainer on map 1450 at (52.5, 40.5)
---   ENGINEERING trainer on map 2521 at (55.0, 36.6)
+--   leyline on map 2521 at (58.8, 33.5)
+--   leyline on map 2521 at (63.9, 74.1)
+--   ENGINEERING trainer on map 2521 at (54.0, 38.9)
 
 local addonName, addon = ...
 
@@ -715,6 +717,8 @@ addon.Nodes.Pois = {
     { id = "BANK_C2521_577_771", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5768, y = 0.7710, kind = "bank", town = "valanaar", npcs = { { id = 257036 } } },
     { id = "INN_C2521_430_433", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4300, y = 0.4330, kind = "inn", town = "shendar_village" },
     { id = "INN_C2521_622_727", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6218, y = 0.7269, kind = "inn", town = "valanaar" },
+    { id = "LEYLINE_C2521_588_335", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5880, y = 0.3350, kind = "leyline" },
+    { id = "LEYLINE_C2521_639_741", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6390, y = 0.7410, kind = "leyline" },
     { id = "TRAINER_HERBALISM_C2521_430_435", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4300, y = 0.4350, kind = "trainer", trainer = "HERBALISM", town = "shendar_village", npcs = { { teaches = { 2366, 2368, 3570, 11993 } } } },
     { id = "TRAINER_FIRSTAID_C2521_431_463", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4310, y = 0.4630, kind = "trainer", trainer = "FIRSTAID", town = "shendar_village", npcs = { { teaches = { 3273, 3274 } } } },
     { id = "TRAINER_ENCHANTING_C2521_432_432", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4320, y = 0.4320, kind = "trainer", trainer = "ENCHANTING", town = "shendar_village", npcs = { { teaches = { 7411, 7412 } } } },
@@ -732,7 +736,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_MAGE_C2521_451_459", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4510, y = 0.4590, kind = "trainer", trainer = "MAGE", town = "shendar_village" },
     { id = "TRAINER_DRUID_C2521_452_443", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4520, y = 0.4430, kind = "trainer", trainer = "DRUID", town = "shendar_village" },
     { id = "TRAINER_HUNTER_C2521_453_443", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4530, y = 0.4430, kind = "trainer", trainer = "HUNTER", town = "shendar_village" },
-    { id = "TRAINER_ENGINEERING_C2521_550_366", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5500, y = 0.3660, kind = "trainer", trainer = "ENGINEERING", npcs = { { teaches = { 4036, 4037 } } } },
+    { id = "TRAINER_ENGINEERING_C2521_540_389", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5399, y = 0.3892, kind = "trainer", trainer = "ENGINEERING", npcs = { { teaches = { 4036, 4037 } } } },
     { id = "TRAINER_HERBALISM_C2521_579_755", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5790, y = 0.7550, kind = "trainer", trainer = "HERBALISM", town = "valanaar", npcs = { { teaches = { 2366, 2368, 3570, 11993 } } } },
     { id = "TRAINER_SHAMAN_C2521_583_784", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5830, y = 0.7840, kind = "trainer", trainer = "SHAMAN", town = "valanaar" },
     { id = "TRAINER_ALCHEMY_C2521_592_763", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5920, y = 0.7630, kind = "trainer", trainer = "ALCHEMY", town = "valanaar", npcs = { { teaches = { 2259, 3101 } } } },

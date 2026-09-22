@@ -133,6 +133,11 @@ for _, edge in ipairs({
     -- Cost is just the base portal cost; loading tax is added separately.
     { from = "PORTAL_DALARAN_STORMWIND", to = "PORTAL_STORMWIND_DALARAN", method = "portal", cost = 2, loadingScreens = 1, requirements = { faction = "Alliance", race = "Skyborne" } },
 
+    -- The Wizard's Sanctum's door: its own nested container has no walking edges to the rest of
+    -- Stormwind's (see Nodes_EasternKingdoms.lua), so this authored zero-cost step is the only way
+    -- across, the way a walled city's own gate is. Reverse is generated automatically.
+    { from = "ENTRANCE_SW_WIZARDS_SANCTUM_OUTER", to = "ENTRANCE_SW_WIZARDS_SANCTUM_INNER", method = "walk", cost = 0 },
+
     -- Rut'theran <-> Darnassus: bidirectional, both ends captured live. Not a
     -- real portal (nothing to interact with) -- just walking into a zone
     -- trigger, so it's method "transition", no faction requirement, and one

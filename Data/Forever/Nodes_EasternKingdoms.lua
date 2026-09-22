@@ -73,7 +73,14 @@ addon.Nodes.EasternKingdoms = {
     -- Captured live with `/mzdump here` (exact, not estimated).
     { id = "DOCK_DALARAN",      container = "easternkingdoms.alterac_mountains",  mapID = 1416, x = 0.1262, y = 0.5203 }, -- Dalaran (ship to/from Zephras Isle). Forever's alternate-timeline Dalaran city, on the Alterac Mountains map -- not the Northrend one, no separate city mapID seen
     { id = "PORTAL_DALARAN_STORMWIND", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1205, y = 0.5636 }, -- Dalaran: "Skyborne Portal to Stormwind" (Skyborne-only? UNTESTED; exit location unknown; no edge yet)
-    { id = "PORTAL_STORMWIND_DALARAN", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.4987, y = 0.8667 }, -- Stormwind: return portal to Dalaran (same open questions as the Dalaran-side portal)
+    -- Stormwind: the Dalaran portal exits inside the Wizard's Sanctum (captured live), so it's walled off from
+    -- the rest of the city like a walled city's own gate, just within one map: the entrance pair below sits in
+    -- its own nested container, joined to the main Stormwind container only by the zero-cost gate edge in
+    -- Edges.lua, so a route out of the Sanctum reads "walk to the entrance" rather than a straight line through
+    -- its walls.
+    { id = "PORTAL_STORMWIND_DALARAN", container = "easternkingdoms.elwynn_forest.stormwind_wizards_sanctum", mapID = 1453, x = 0.4987, y = 0.8667 }, -- Stormwind: return portal to Dalaran, inside the Wizard's Sanctum (same faction/timing questions as the Dalaran-side portal)
+    { id = "ENTRANCE_SW_WIZARDS_SANCTUM_OUTER", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.4944, y = 0.8677, kind = "entrance" }, -- Stormwind: Wizard's Sanctum entrance, outside (captured live)
+    { id = "ENTRANCE_SW_WIZARDS_SANCTUM_INNER", container = "easternkingdoms.elwynn_forest.stormwind_wizards_sanctum", mapID = 1453, x = 0.4936, y = 0.8693, kind = "entrance" }, -- Stormwind: Wizard's Sanctum entrance, inside (captured live)
     { id = "TRAM_STORMWIND",    container = "easternkingdoms.elwynn_forest",      mapID = 1453, x = 0.6903, y = 0.3110 }, -- Deeprun Tram exterior entrance, Stormwind (captured live)
     { id = "TRAM_IRONFORGE",    container = "easternkingdoms.dun_morogh",         mapID = 1455, x = 0.7641, y = 0.5123 }, -- Deeprun Tram exterior entrance, Ironforge (captured live)
     { id = "DOCK_POWDERFUSE",   container = "easternkingdoms.riverglades",        mapID = 2548, x = 0.7222, y = 0.7603 }, -- Powderfuse Port (ESTIMATED)

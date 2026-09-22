@@ -145,6 +145,31 @@ check(state.view == "route" and state.plan, "choosing it plans the trip")
 check(#state.plan.steps >= 2 and state.plan.steps[#state.plan.steps].method == "flight", "walk to the flight master, then fly")
 check(state.plan.cost > 0, "with a time")
 
+-- A route with more steps than fit scrolls into view instead of losing the rest (previously
+-- there was no way to see past the "+N" hint: reported after a real 8-step route).
+local function fakeStep(i) return { method = "walk", seconds = 10, text = "Step " .. i, approx = false } end
+local longSteps = {}
+for i = 1, 9 do longSteps[i] = fakeStep(i) end
+addon.Panel:DisplayPlan({ name = "Somewhere far" }, { steps = longSteps, cost = 90 })
+check(box.steps[1].name._text == "Step 1" and box.steps[7].name._text == "Step 7", "the first 7 show")
+check(box.more._text == "+2", "and how many are hidden below: " .. tostring(box.more._text))
+addon.Panel:Scroll(1)
+check(box.steps[1].name._text == "Step 2" and box.steps[7].name._text == "Step 8", "the wheel moves the window: " .. box.steps[1].name._text)
+check(box.more._text == "+1", "the hidden count follows")
+addon.Panel:Scroll(1000)
+check(box.steps[7].name._text == "Step 9" and box.more._text == "", "scrolling clamps at the end, with nothing left to hint")
+addon.Panel:Scroll(-1000)
+check(box.steps[1].name._text == "Step 1", "and clamps back at the start")
+
+-- A step the player has reached that's scrolled out of sight is scrolled back into view.
+state.pinned = true
+local realModel = addon.Navigation.Model
+addon.Navigation.Model = function() return { index = 9, finished = false } end
+addon.Panel:MarkCurrentStep()
+check(box.steps[7].name._text == "Step 9" and box.steps[7].sel._shown, "the current step scrolls into view and is marked: " .. box.steps[7].name._text)
+addon.Navigation.Model = realModel
+state.pinned = false
+
 -- Escape goes back, then clears, then leaves the box.
 addon.Panel:Escape()
 check(state.view == "list", "Escape returns to the list")
