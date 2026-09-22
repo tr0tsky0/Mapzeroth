@@ -43,8 +43,8 @@ check(plan and plan.cost == J:Cost(session, "TAXI_6"), "the plan costs what the 
 check(#plan.steps == 2, "walk to the flight master, then fly: " .. #plan.steps)
 check(plan.steps[1].method == "walk" and plan.steps[1].approx, "walking is marked approximate")
 check(plan.steps[2].method == "flight" and not plan.steps[2].approx, "a flight is not")
-check(plan.steps[2].text == "Fly to Ironforge, Dun Morogh", "the step reads well: " .. plan.steps[2].text)
-check(plan.steps[1].text == "Walk to Stormwind, Elwynn", "walking to the flight master: " .. plan.steps[1].text)
+check(plan.steps[2].text == "Fly to Ironforge Flight Master", "the step reads well: " .. plan.steps[2].text)
+check(plan.steps[1].text == "Walk to Stormwind Flight Master", "walking to the flight master: " .. plan.steps[1].text)
 check(plan.hint == nil, "no hint when there's no flight rule in play")
 
 -- Nearest of several.
@@ -66,7 +66,7 @@ local toThelsamar = J:Plan(limitedSession, "TAXI_8")
 check(toThelsamar and toThelsamar.hint, "flying to Thelsamar isn't allowed, and a hint says so")
 check(toThelsamar.hint.nodeID == "TAXI_8" and toThelsamar.hint.known, "it names Thelsamar as known-not-found")
 check(toThelsamar.hint.saves > 0, "and what unlocking it would save")
-check(J:HintText(toThelsamar.hint):find("Thelsamar, Loch Modan", 1, true), "the sentence names it: " .. J:HintText(toThelsamar.hint))
+check(J:HintText(toThelsamar.hint):find("Thelsamar Flight Master", 1, true), "the sentence names it: " .. J:HintText(toThelsamar.hint))
 
 -- Before anything has been read, the hint asks the player to open a flight window.
 FK:Reset()
@@ -127,7 +127,7 @@ local fromLakeshire = J:Build(ali, { id = "YOU_ls", mapID = lakeshire.mapID, x =
 local ticket = J:Plan(fromLakeshire, "TAXI_6")
 check(ticket and #ticket.steps == 1 and ticket.steps[1].method == "flight", "Lakeshire to Ironforge is one flight step: " .. tostring(ticket and #ticket.steps))
 check(ticket.steps[1].via and #ticket.steps[1].via >= 1, "that goes through another flight point")
-check(ticket.steps[1].text:find("(via ", 1, true) and ticket.steps[1].text:find("Fly to Ironforge, Dun Morogh", 1, true), "and says so: " .. ticket.steps[1].text)
+check(ticket.steps[1].text:find("(via ", 1, true) and ticket.steps[1].text:find("Fly to Ironforge Flight Master", 1, true), "and says so: " .. ticket.steps[1].text)
 check(math.abs(ticket.steps[1].seconds - ticket.cost) < 1, "with the whole flight's time on it")
 
 -- Money: a route the player can't pay for isn't offered. Starting at Refuge Pointe's flight master, Ironforge is

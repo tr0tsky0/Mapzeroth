@@ -136,7 +136,7 @@ check(box.search:GetText() == "" and not box.clear._shown and box.hint._shown, "
 check(state.view == "list" and #state.results >= 1 and state.results[1].header, "and the search goes back to the sections")
 
 -- Choosing a result shows its route.
-addon.Panel:Query("ironforge, dun")
+addon.Panel:Query("ironforge flight")
 local flightMaster
 for i, r in ipairs(state.results) do if r.group == "flight" then flightMaster = i end end
 check(flightMaster, "the Ironforge flight master is a result")
@@ -181,7 +181,7 @@ Theme:Set("moderndark")
 check(addon.Panel:Toggle() == false and addon.Panel:Toggle() == true, "the panel can be toggled off and on")
 
 -- Route view: no waypoint, a Start button, and choosing does the pricing.
-addon.Panel:Query("ironforge, dun")
+addon.Panel:Query("ironforge flight")
 local fm
 for i, r in ipairs(state.results) do if r.group == "flight" then fm = i end end
 addon.Panel:Choose(fm)
@@ -247,7 +247,7 @@ Theme:Set("moderndark")
 C_Map.GetBestMapForUnit = function() return 1453 end
 C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.60, 0.60 end } end
 local function startTrip()
-    addon.Panel:Query("ironforge, dun")
+    addon.Panel:Query("ironforge flight")
     local index
     for i, r in ipairs(state.results) do if r.group == "flight" then index = i end end
     addon.Panel:Choose(index)
@@ -407,7 +407,7 @@ C_Map.GetBestMapForUnit = function() return 1453 end
 C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.60, 0.60 end } end
 WorldMapFrame._hooks.OnShow()
 -- Looking at a route (chosen and priced) draws nothing: only a trip that has been started does.
-addon.Panel:Query("ironforge, dun")
+addon.Panel:Query("ironforge flight")
 local previewIndex
 for i, r in ipairs(state.results) do if r.group == "flight" then previewIndex = i end end
 addon.Panel:Choose(previewIndex)

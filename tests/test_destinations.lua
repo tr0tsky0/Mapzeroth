@@ -37,9 +37,9 @@ check(#entries > 100, "a real list: " .. #entries)
 
 local function find(nodeID, group) return addon.Destinations:Find(entries, nodeID, group) end
 
--- Flight masters are named by the client and grouped as flights.
+-- Flight masters at a known settlement are named for it, and grouped as flights.
 local sw = find("TAXI_2", "flight")
-check(sw and sw.name == "Stormwind, Elwynn" and sw.group == "flight", "Stormwind's flight master")
+check(sw and sw.name == "Stormwind Flight Master" and sw.group == "flight", "Stormwind's flight master")
 check(sw.zone == "Stormwind City", "with its map's name as the zone: " .. tostring(sw.zone))
 
 -- Border crossings are plumbing, not destinations; nodes with no name yet are left out.

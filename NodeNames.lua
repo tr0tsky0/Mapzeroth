@@ -14,6 +14,7 @@ local L = addon.L
 local nameCache = {}
 local taxiNames    -- nodeID -> client-supplied name, loaded on first use
 local borderPartners
+local taxiSettlements -- TAXI_ nodeID -> "city" or "town" key it belongs to
 
 local function zoneName(mapID)
     local info = mapID and C_Map.GetMapInfo(mapID)
@@ -65,6 +66,25 @@ local function taxiNameOf(nodeID)
     if not id then return nil end
     if not taxiNames then loadTaxiNames() end
     return taxiNames[tonumber(id)]
+end
+
+-- The city or town this flight master stands in, if any ("Walk to the Stormwind Flight Master"
+-- is clearer than the client's own raw name for the point, "Stormwind, Elwynn").
+local function taxiSettlementName(nodeID)
+    if not taxiSettlements then
+        taxiSettlements = {}
+        for _, kind in ipairs({ "city", "town" }) do
+            for key, settlement in pairs(addon[kind == "city" and "Cities" or "Towns"] or {}) do
+                if settlement.taxi then
+                    taxiSettlements[settlement.taxi] = { kind = kind, key = key }
+                end
+            end
+        end
+    end
+    local settlement = taxiSettlements[nodeID]
+    if not settlement then return nil end
+    if settlement.kind == "city" then return addon:GetCityName(settlement.key) end
+    return addon:GetTownName(settlement.key)
 end
 
 -- The name of a city or town, in the client's language. A settlement has no
@@ -184,6 +204,10 @@ local function resolve(nodeID)
     end
 
     if nodeID:match("^TAXI_%d+$") then
+        local place = taxiSettlementName(nodeID)
+        if place and addon:HasString("NODE_KIND_FLIGHTMASTER") then
+            return L["NODE_KIND_FLIGHTMASTER"]:format(place)
+        end
         return taxiNameOf(nodeID)
     end
 
@@ -218,5 +242,5 @@ end
 
 -- Forget resolved names, e.g. after a locale change or in tests.
 function addon:ClearNodeNameCache()
-    nameCache, taxiNames, borderPartners = {}, nil, nil
+    nameCache, taxiNames, borderPartners, taxiSettlements = {}, nil, nil, nil
 end

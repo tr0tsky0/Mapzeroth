@@ -20,8 +20,9 @@ addon:ClearNodeNameCache()
 -- 1. Names we gave: explicit locale strings.
 check(addon:GetNodeName("DOCK_STORMWIND") == "Stormwind Harbor", "explicit name: " .. addon:GetNodeName("DOCK_STORMWIND"))
 
--- 2. Flight masters come from the client's taxi names, by nodeID.
-check(addon:GetNodeName("TAXI_23") == "Orgrimmar, Durotar", "taxi name: " .. addon:GetNodeName("TAXI_23"))
+-- 2. Flight masters at a city or town we know take its name ("Orgrimmar Flight Master"), not the
+-- client's raw taxi-point name, which reads as a zone label rather than a destination.
+check(addon:GetNodeName("TAXI_23") == "Orgrimmar Flight Master", "taxi name: " .. addon:GetNodeName("TAXI_23"))
 -- ...unless we override what the client says (a node with no real taxi id).
 check(addon:GetNodeName("TAXI_POWDERFUSE") == "Powderfuse Port, Riverglades", "override for a taxi-style node")
 
