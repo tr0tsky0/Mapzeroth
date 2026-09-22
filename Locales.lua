@@ -35,6 +35,11 @@ function addon:HasString(key)
     return lookup(key) ~= nil
 end
 
+-- One locale's own strings, with no fallback (nil if it registered none). For the tests.
+function addon:GetLocaleStrings(locale)
+    return strings[locale]
+end
+
 addon.L = setmetatable({}, {
     __index = function(_, key)
         local value = lookup(key)

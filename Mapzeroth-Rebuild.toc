@@ -11,6 +11,15 @@
 Constants.lua
 Locales.lua
 Locales_UI.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
 Options.lua
 
 # Forever dataset
