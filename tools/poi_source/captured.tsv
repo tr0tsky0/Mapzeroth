@@ -68,8 +68,8 @@ leyline	1431	72.5	30.6	-	Duskwood
 leyline	1433	12.6	72.8	-	Redridge Mountains
 # City gates, captured from both sides: the point inside the city, and the point on the zone map outside.
 # Ironforge's were taken in person (subzone: Gates of Ironforge); the others are from mouse-over on the map.
-entrance	1453	74.13	92.25	stormwind	Stormwind
-entrance	1429	31.80	48.77	stormwind	Stormwind
+entrance	1453	74.13	92.25	stormwind	Stormwind
+entrance	1429	31.80	48.77	stormwind	Stormwind
 entrance	1455	15.18	85.69	ironforge	Ironforge	809
 entrance	1426	53.43	34.96	ironforge	Ironforge	809
 entrance	1457	73.9	40.0	darnassus	Darnassus
@@ -83,5 +83,6 @@ leyline	1426	56.6	45.6	-	Dun Morogh
 leyline	1426	63.8	50.7	-	Dun Morogh
 leyline	1417	48.0	60.5	-	Arathi Highlands
 leyline	1417	25.3	30.0	-	Arathi Highlands
-leyline	1436	59.8	31.5	-	Westfall
-bank	1453	63.8	80.8	stormwind	Stormwind
+leyline	1436	59.8	31.5	-	Westfall
+bank	1453	63.8	80.8	stormwind	Stormwind
+trainer:DRUID	1453	36.19	64.28	stormwind	Stormwind
