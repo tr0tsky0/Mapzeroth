@@ -57,6 +57,36 @@ check(route(sky, "PORTAL_DALARAN_STORMWIND", "PORTAL_STORMWIND_DALARAN"), "Skybo
 local plain = route(ali, "PORTAL_DALARAN_STORMWIND", "PORTAL_STORMWIND_DALARAN")
 check(not plain or methods(plain):find("portal") == nil, "non-Skyborne must not use the Skyborne portal")
 
+-- 8. Item-based teleports (Modern's addon.Abilities.Items: a toy/trinket to a fixed spot,
+-- as opposed to a spell or the hearthstone-to-wherever-bound). Carrying the item and it
+-- being off cooldown is the check, same shape as a spell teleport but itemID-keyed; a
+-- faction split (two items sharing one itemID, each going somewhere different) and a
+-- multi-destination ability (toList, picked between rather than fixed) are both real
+-- shapes in the converted data, so both get covered here with a synthetic entry each.
+addon.Abilities = addon.Abilities or {}
+addon.Abilities.Items = addon.Abilities.Items or {}
+table.insert(addon.Abilities.Items, { itemID = 900001, to = "TAXI_49", cost = 5, faction = "Alliance" })
+table.insert(addon.Abilities.Items, { itemID = 900001, to = "TAXI_23", cost = 5, faction = "Horde" })
+local withItem = route(makeCtx({ faction = "Alliance", items = { 900001 } }), "TAXI_2", "TAXI_49")
+check(withItem and withItem.steps[1].method == "teleport", "carrying the item, its faction entry fires: "
+    .. (withItem and methods(withItem) or "nil"))
+check(not route(makeCtx({ faction = "Alliance" }), "TAXI_2", "TAXI_49") or
+    route(makeCtx({ faction = "Alliance" }), "TAXI_2", "TAXI_49").steps[1].method ~= "teleport", "without the item, no teleport")
+local horde900001 = route(makeCtx({ faction = "Horde", items = { 900001 } }), "TAXI_6", "TAXI_23")
+check(horde900001 and horde900001.steps[1].method == "teleport" and horde900001.steps[1].to == "TAXI_23"
+    and #horde900001.steps == 1, "Horde's copy of the same item goes to their own faction's entry, not Alliance's: "
+    .. (horde900001 and methods(horde900001) or "nil"))
+local horde900001OnCD = route(
+    makeCtx({ faction = "Horde", items = { 900001 }, itemCooldowns = { [900001] = 60 } }), "TAXI_6", "TAXI_23")
+check(not horde900001OnCD or horde900001OnCD.steps[1].method ~= "teleport", "on item cooldown, it isn't offered")
+
+table.insert(addon.Abilities.Teleports, { spellID = 900002, toList = { "TAXI_49", "TAXI_2" }, cost = 5 })
+local toListCtx = makeCtx({ faction = "Alliance", spells = { 900002 } })
+local viaList = route(toListCtx, "TAXI_23", "TAXI_2")
+check(viaList and viaList.steps[1].method == "teleport" and viaList.steps[1].to == "TAXI_2",
+    "a multi-destination ability (toList) is picked as whichever landing spot is actually cheapest: "
+    .. (viaList and viaList.steps[1].to or "nil"))
+
 -- 8. Consecutive walk steps collapse into one for display, keeping the total and the parts.
 local steps = {
     { from = "A", to = "B", cost = 10, method = "walk" },

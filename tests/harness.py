@@ -52,6 +52,7 @@ function makeCtx(overrides)
         knowsSpell = function(id) return known[id] or false end,
         hasItem = function(id) return items[id] or false end,
         cooldownRemaining = function(id) return (overrides.cooldowns or {})[id] or 0 end,
+        itemCooldownRemaining = function(id) return (overrides.itemCooldowns or {})[id] or 0 end,
         hearthNode = overrides.hearthNode,
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,

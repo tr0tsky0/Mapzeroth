@@ -108,6 +108,25 @@ local horde = makeCtx({ faction = "Horde", quests = { [34378] = false } })
 check(not addon:MeetsRequirements({ faction = "Horde", notQuest = 34378, mapArtID = { 17, 18 } }, horde),
     "a phase-gated edge stays closed even when its other requirements are met")
 
+-- Abilities (tools/gen_modern_abilities.py): a real converted Mage teleport seeds the
+-- search from anywhere, exactly like Forever's own Moonglade teleport does.
+local mage = makeCtx({ faction = "Alliance", class = "MAGE", spells = { 3561 } })
+local mageGraph = addon.TravelGraph:Build(mage)
+local viaTeleport = addon.Pathfinder:FindPath(mageGraph, "IRONFORGE", "STORMWIND_PORTAL_ROOM_LOWER")
+check(viaTeleport and viaTeleport.steps[1].method == "teleport",
+    "a Mage teleports to Stormwind from anywhere: " .. tostring(viaTeleport and viaTeleport.steps[1].method))
+local noSpellGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance", class = "MAGE" }))
+local noTeleport = addon.Pathfinder:FindPath(noSpellGraph, "IRONFORGE", "STORMWIND_PORTAL_ROOM_LOWER")
+check(not noTeleport or noTeleport.steps[1].method ~= "teleport", "without the spell, no teleport")
+
+-- A dungeon-teleport toy (an Item, itemID-gated, fixed destination) that only made it into
+-- the data because its old destination got renamed to a real INSTANCE_<id> first.
+check(addon.World:GetNode("INSTANCE_67"), "The Stonecore (from the earlier instance-rename pass) still exists")
+local karazhanSeal = makeCtx({ faction = "Alliance", items = { 142469 } })
+local viaItem = addon.Pathfinder:FindPath(addon.TravelGraph:Build(karazhanSeal), "IRONFORGE", "KARAZHAN")
+check(viaItem and viaItem.steps[1].method == "teleport",
+    "an Item ability (Violet Seal of the Grand Magus) routes to a fixed destination too")
+
 print(string.format("modern_smoke: %d nodes, %d distinct containers", total, (function()
     local n = 0
     for _ in pairs(containers) do n = n + 1 end

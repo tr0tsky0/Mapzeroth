@@ -106,3 +106,37 @@
   not repeated here.
 - No dangling `from`/`to`: every edge resolved to a node from the conversion pass.
 - No unrecognized requirement keys.
+
+## Ability conversion (tools/gen_modern_abilities.py)
+
+110 Teleports, 4 Hearthstones, 36 Items written.
+
+- 2 item(s) skipped: the old data itself flags them `isRandom` (the client sends you to one of several unlisted spots at random -- not a promise a deterministic search can make, unlike a real `destinations` list the player picks from):
+  - `WORMHOLE_PANDARIA` (Wormhole Generator: Pandaria)
+  - `WORMHOLE_ARGUS` (Wormhole Generator: Argus)
+- 1 ability(ies) skipped: phase-gated (`destinationsByArtID`), same open item as the phase-tagged nodes/edges from the earlier passes -- needs the real phaseGroup/phaseSide wiring, not a coin-flip default:
+  - `MAGE_TP_DARNASSUS` (Teleport: Darnassus)
+- 1 ability(ies) dropped: their destination didn't resolve to a converted node even after the rename (worth checking by hand):
+  - `SHAMAN_TP_HEARTH` -> `None`
+
+## Ability conversion (tools/gen_modern_abilities.py)
+
+110 Teleports, 1 Hearthstones, 39 Items written.
+
+- 2 item(s) skipped: the old data itself flags them `isRandom` (the client sends you to one of several unlisted spots at random -- not a promise a deterministic search can make, unlike a real `destinations` list the player picks from):
+  - `WORMHOLE_PANDARIA` (Wormhole Generator: Pandaria)
+  - `WORMHOLE_ARGUS` (Wormhole Generator: Argus)
+- 1 ability(ies) skipped: phase-gated (`destinationsByArtID`), same open item as the phase-tagged nodes/edges from the earlier passes -- needs the real phaseGroup/phaseSide wiring, not a coin-flip default:
+  - `MAGE_TP_DARNASSUS` (Teleport: Darnassus)
+- 1 ability(ies) dropped: their destination didn't resolve to a converted node even after the rename (worth checking by hand):
+  - `SHAMAN_TP_HEARTH` -> `None`
+
+## Ability conversion (tools/gen_modern_abilities.py)
+
+110 Teleports, 2 Hearthstones, 39 Items written.
+
+- 2 item(s) skipped: the old data itself flags them `isRandom` (the client sends you to one of several unlisted spots at random -- not a promise a deterministic search can make, unlike a real `destinations` list the player picks from):
+  - `WORMHOLE_PANDARIA` (Wormhole Generator: Pandaria)
+  - `WORMHOLE_ARGUS` (Wormhole Generator: Argus)
+- 1 ability(ies) skipped: phase-gated (`destinationsByArtID`), same open item as the phase-tagged nodes/edges from the earlier passes -- needs the real phaseGroup/phaseSide wiring, not a coin-flip default:
+  - `MAGE_TP_DARNASSUS` (Teleport: Darnassus)

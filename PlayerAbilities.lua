@@ -32,6 +32,20 @@ local function cooldownRemaining(spellID)
     return math.max(0, info.startTime + info.duration - GetTime())
 end
 
+-- Seconds until an ITEM can be used again (0 when ready). Items don't share the spell
+-- cooldown API even when their effect is functionally a spell, so a teleport toy/trinket
+-- (Modern's fixed-destination items, addon.Abilities.Items) needs its own check.
+local function itemCooldownRemaining(itemID)
+    local start, duration
+    if C_Item and C_Item.GetItemCooldown then
+        start, duration = C_Item.GetItemCooldown(itemID)
+    elseif GetItemCooldown then
+        start, duration = GetItemCooldown(itemID)
+    end
+    if not start or start == 0 or not duration or duration <= 1.5 then return 0 end
+    return math.max(0, start + duration - GetTime())
+end
+
 local function isQuestCompleted(questID)
     return C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted(questID) and true or false
 end
@@ -70,6 +84,7 @@ function addon:GetPlayerContext()
         knowsSpell = isSpellKnown,
         hasItem = hasItem,
         cooldownRemaining = cooldownRemaining,
+        itemCooldownRemaining = itemCooldownRemaining,
         hearthNode = addon:GetBoundInnNode(),
         questCompleted = isQuestCompleted,
         holidayActive = isHolidayActive,
@@ -81,14 +96,25 @@ function addon:GetPlayerContext()
 end
 
 -- The "Anywhere -> Node" abilities the player can use right now: class teleports they
--- know, and the hearthstone if they carry it and have a bind. Each entry says where it
--- goes and what it costs; abilities on cooldown are left out.
+-- know, an item-based teleport (a toy/trinket to a fixed spot, addon.Abilities.Items) they
+-- carry, and the hearthstone if they carry it and have a bind. Each entry says where it
+-- goes and what it costs; abilities on cooldown, or restricted to the other faction, are
+-- left out. An ability with several possible landing spots the player picks between
+-- (`toList` instead of a single `to` -- Modern's Mole Machine is the first of these) is
+-- expanded into one candidate per spot; the search picks whichever is actually cheapest.
 function addon:GetKnownTeleports(ctx)
     local known = {}
     local abilities = addon.Abilities or {}
 
-    local function ready(ability)
+    local function factionOk(ability)
+        return not ability.faction or ability.faction == ctx.faction
+    end
+    local function spellReady(ability)
         return not ability.spellID or (ctx.cooldownRemaining(ability.spellID) or 0) <= 0
+    end
+    local function itemReady(ability)
+        return not ability.itemID or not ctx.itemCooldownRemaining
+            or (ctx.itemCooldownRemaining(ability.itemID) or 0) <= 0
     end
     local function add(ability, to)
         known[#known + 1] = {
@@ -96,15 +122,32 @@ function addon:GetKnownTeleports(ctx)
             loadingScreens = ability.loadingScreens, ability = ability,
         }
     end
+    local function addAll(ability, to)
+        if ability.toList then
+            for _, dest in ipairs(ability.toList) do add(ability, dest) end
+        else
+            add(ability, to)
+        end
+    end
 
     for _, ability in ipairs(abilities.Teleports or {}) do
-        if ability.spellID and ctx.knowsSpell(ability.spellID) and ready(ability) then
-            add(ability, ability.to)
+        if ability.spellID and factionOk(ability) and ctx.knowsSpell(ability.spellID) and spellReady(ability) then
+            addAll(ability, ability.to)
         end
     end
     for _, ability in ipairs(abilities.Hearthstones or {}) do
-        if ability.itemID and ctx.hasItem(ability.itemID) and ctx.hearthNode and ready(ability) then
+        -- Almost always the item (the Hearthstone itself); a class spell that goes to the
+        -- same wherever-you're-bound place instead (Astral Recall, Modern-only so far) has
+        -- no itemID, so it's known the normal spell way.
+        local owns = ability.itemID and ctx.hasItem(ability.itemID)
+            or (not ability.itemID and ability.spellID and ctx.knowsSpell(ability.spellID))
+        if owns and ctx.hearthNode and spellReady(ability) and itemReady(ability) then
             add(ability, ctx.hearthNode)
+        end
+    end
+    for _, ability in ipairs(abilities.Items or {}) do
+        if ability.itemID and factionOk(ability) and ctx.hasItem(ability.itemID) and itemReady(ability) then
+            addAll(ability, ability.to)
         end
     end
     return known
