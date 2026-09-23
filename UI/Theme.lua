@@ -14,7 +14,7 @@ local addonName, addon = ...
 --   panel        { backdrop = <SetBackdrop table> }
 --   button       "flat" (a coloured backdrop) or "blizzard" (the classic red button textures)
 --   edit         { backdrop = <SetBackdrop table> }
---   methods      colours by travel method (walk, flight, ship, zeppelin, tram, portal, ...)
+--   methods      colours by travel method (walk, taxi, ship, zeppelin, tram, portal, ...)
 --   markers      colours by kind of place (place, flight, transport, instance, ...)
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 

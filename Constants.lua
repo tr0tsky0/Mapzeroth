@@ -14,10 +14,12 @@ addon.DEFAULT_PATH_FACTOR = 1.15
 -- Seconds added per loading screen when totalling a route.
 addon.DEFAULT_LOADING_SCREEN_TAX = 10     -- the player can change it (Options.lua)
 
--- Seconds taken off for each extra flight leg flown straight through: a through-ticket doesn't land
--- and take off again. Measured 15-45 s per ticket in game; 10 s is a cautious per-leg start.
+-- The fraction of an extra flight leg's own time saved by flying straight through: a through-ticket
+-- doesn't land and take off again. Measured 15-45 s per ticket in game; 0.10 is a cautious start (10 s off
+-- a 100 s leg, 30 s off a 300 s one). A fraction, not a flat number of seconds, so a short leg can never
+-- be saved down to nothing (or below: a flat 10 s made a loop of 8 s legs cheaper every lap).
 -- Keep equal to CHAIN_SAVING in tools/gen_flights.py.
-addon.FLIGHT_CHAIN_SAVING = 10
+addon.FLIGHT_CHAIN_SAVING = 0.10
 
 -- A profession trainer won't talk to a player whose rank is too far below the trainer's top rank: an
 -- Artisan (rank 4) trainer told an Apprentice (rank 1) "you need more training". Observed for that one
@@ -34,6 +36,17 @@ addon.CLASS_TOKENS = {
 -- Auto-generated `fly` edges (only where a ruleset has flying) connect nodes
 -- within this many yards of each other, continent-wide.
 addon.MAX_AUTO_EDGE_DISTANCE = 3000
+
+-- A safety valve on that generation: it's an O(n^2) pairwise check per continent, fine for a
+-- handful of nodes (Forever has none flagged fly=true at all) but not for Modern's real scale --
+-- Eastern Kingdoms alone has ~200 outdoor nodes, and a real character hit "script ran too long"
+-- from it (2026-09-23). A continent whose flyable node count exceeds this is skipped rather than
+-- generated slowly; authored edges still work there, just no auto fly mesh. Not a real answer to
+-- "which zones actually allow free flying" (old-world Eastern Kingdoms/Kalimdor generally don't
+-- without Pathfinder, for instance) -- that's a proper per-zone data pass, or a spatial index to
+-- make the generation itself cheap regardless of size, either of which is real work for later
+-- (see docs/DESIGN.md open questions and the mapzeroth-modern-port memory).
+addon.MAX_FLY_BUCKET = 90
 
 -- Loading screens an edge incurs when it doesn't say (edge.loadingScreens
 -- overrides). Anything not listed defaults to 0.

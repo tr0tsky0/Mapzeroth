@@ -16,6 +16,7 @@ local definitions = {
     theme = { default = "moderndark" },
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
+    docked = { default = true, boolean = true },                          -- the panel: docked beside the map, or free-floating (UI/Panel.lua)
 }
 
 local listeners = {}

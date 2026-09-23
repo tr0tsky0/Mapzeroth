@@ -33,7 +33,7 @@ for _, edge in ipairs({
     { from = "TAXI_3203", to = "TAXI_70", cost = 263, requirements = { faction = "Horde" } }, -- Rog'mar -> Flame Crest
     { from = "TAXI_3276", to = "TAXI_71", cost = 222, requirements = { faction = "Alliance" } }, -- Farholde Keep -> Morgan's Vigil
 }) do
-    edge.method = "flight"
+    edge.method = "taxi"
     table.insert(addon.Edges, edge)
 end
 
@@ -53,12 +53,12 @@ end
 -----------------------------------------------------------
 
 table.insert(addon.Edges, {
-    from = "TAXI_63", to = "TAXI_22", method = "flight", cost = 362, loadingScreens = 0, oneway = true,
+    from = "TAXI_63", to = "TAXI_22", method = "taxi", cost = 362, loadingScreens = 0, oneway = true,
     requirements = { faction = "Horde", class = "DRUID" },
 }) -- Nighthaven (Moonglade) -> Thunder Bluff, ESTIMATED, not ridden
 
 table.insert(addon.Edges, {
-    from = "TAXI_62", to = "TAXI_27", method = "flight", cost = 154, loadingScreens = 0, oneway = true,
+    from = "TAXI_62", to = "TAXI_27", method = "taxi", cost = 154, loadingScreens = 0, oneway = true,
     requirements = { faction = "Alliance", class = "DRUID" },
 }) -- Nighthaven (Moonglade) -> Rut'theran Village, MEASURED live
 

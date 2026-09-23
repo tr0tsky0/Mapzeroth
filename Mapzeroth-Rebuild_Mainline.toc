@@ -1,0 +1,93 @@
+## Interface: 120100
+## Title: Mapzeroth (Rebuild) - Modern
+## Notes: Rebuilt Mapzeroth engine, Modern dataset (development build, retail)
+## Author: tr0tsky
+## Version: 2.0.0-dev
+## SavedVariables: MapzerothRebuildDB
+
+# The `_Mainline` suffix is Blizzard's own convention for "load this one on retail" when a
+# folder carries several .toc files -- so this now loads for real in the _retail_ client via
+# the Mapzeroth-Rebuild junction, not just tests/harness.py (`--toc
+# Mapzeroth-Rebuild_Mainline.toc`). Interface 120100 vs Mapzeroth-Rebuild.toc's 16001 (Forever)
+# is what should keep the two apart even though Forever's own WOW_PROJECT_ID reads as Mainline
+# too (see Constants.lua) -- unconfirmed against the live client, check both actually load the
+# right one before trusting this. Not the final shipped per-ruleset TOC pair either (that will
+# be Mapzeroth_Mainline.toc / Mapzeroth_Forever.toc under the eventual merged addon name -- see
+# docs/DESIGN.md section 1); this is just this dev repo's own folder name doing the same trick
+# early, for in-game testing before that merge happens.
+#
+# Same engine/UI file list as Mapzeroth-Rebuild.toc, Modern data instead of Forever's: every
+# engine file already reads its data tables defensively (`addon.Edges or {}` and the like), so
+# the ones Modern has no data for yet -- Trainers.lua (addon.Professions), Hearth.lua/
+# FindHearthNode (no inn/POI data, so ctx.hearthNode never resolves), Relevance.lua -- should
+# just come back empty rather than error (see Data/Modern/CONVERSION_NOTES.md and the
+# mapzeroth-modern-port memory for what's actually missing vs. just untested this way).
+# Forever-only data files (RidingSkills, Professions, WeaponSkills, PathFactors, Pois,
+# Blackrock, Borders, NodeNames_enUS/TownNames_enUS/InstanceNames_enUS) are left out below on
+# purpose -- Modern has no equivalents converted yet.
+
+Constants.lua
+Locales.lua
+Locales_UI.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+Options.lua
+
+# Modern dataset (see Data/Modern/CONVERSION_NOTES.md)
+Data\Modern\Containers.lua
+Data\Modern\Nodes_EK.lua
+Data\Modern\Nodes_Kalimdor.lua
+Data\Modern\Nodes_Outlands.lua
+Data\Modern\Nodes_Northrend.lua
+Data\Modern\Nodes_Pandaria.lua
+Data\Modern\Nodes_BrokenIsles.lua
+Data\Modern\Nodes_Draenor.lua
+Data\Modern\Nodes_DragonIsles.lua
+Data\Modern\Nodes_KhazAlgar.lua
+Data\Modern\Nodes_Shadowlands.lua
+Data\Modern\Nodes_Zandalar.lua
+Data\Modern\Nodes_Argus.lua
+Data\Modern\Nodes_BfA.lua
+Data\Modern\Nodes_IsolatedMaps.lua
+Data\Modern\Edges.lua
+Data\Modern\Abilities.lua
+Data\Modern\Geometry.lua
+
+# Engine
+World.lua
+NodeNames.lua
+Hearth.lua
+FlightKnowledge.lua
+Trainers.lua
+Relevance.lua
+PlayerAbilities.lua
+MovementSpeed.lua
+EdgeRequirements.lua
+TravelGraph.lua
+Pathfinder.lua
+Search.lua
+Destinations.lua
+Sections.lua
+Location.lua
+Journey.lua
+Navigation.lua
+MapRoute.lua
+
+# UI
+UI\Theme.lua
+UI\Themes\Classic.lua
+UI\Themes\ModernDark.lua
+UI\RouteLines.lua
+UI\MinimapLines.lua
+UI\Panel.lua
+UI\Navigator.lua
+UI\OptionsPanel.lua
+
+Core.lua

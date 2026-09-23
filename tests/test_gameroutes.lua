@@ -106,7 +106,7 @@ for _, block in ipairs(blocks) do
     local flightsOnly = { adjacency = {}, anywhere = {} }              -- the game's routes are flights
     for id, steps in pairs(graph.adjacency) do
         for _, step in ipairs(steps) do
-            if step.method == "flight" then
+            if step.method == "taxi" then
                 flightsOnly.adjacency[id] = flightsOnly.adjacency[id] or {}
                 table.insert(flightsOnly.adjacency[id], step)
             end

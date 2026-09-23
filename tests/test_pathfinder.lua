@@ -91,13 +91,13 @@ check(viaList and viaList.steps[1].method == "teleport" and viaList.steps[1].to 
 local steps = {
     { from = "A", to = "B", cost = 10, method = "walk" },
     { from = "B", to = "C", cost = 20, method = "walk" },
-    { from = "C", to = "D", cost = 5, method = "flight" },
+    { from = "C", to = "D", cost = 5, method = "taxi" },
     { from = "D", to = "E", cost = 7, method = "walk" },
 }
 local shown = addon.Pathfinder:CollapseSteps(steps)
 check(#shown == 3, "walk, walk, flight, walk collapses to 3 steps, got " .. #shown)
 check(shown[1].from == "A" and shown[1].to == "C" and shown[1].cost == 30 and #shown[1].parts == 2, "the two walks merge")
-check(shown[2].method == "flight" and shown[3].to == "E", "other steps stay as they are")
+check(shown[2].method == "taxi" and shown[3].to == "E", "other steps stay as they are")
 check(steps[1].to == "B" and steps[1].cost == 10, "the original steps are not modified")
 
 -- A walk still stops where a person would mark the route: a zone border, a city entrance, and going
@@ -141,7 +141,7 @@ check(addon.World:GetNodeContainer("TAXI_2") ~= addon.World:GetNodeContainer("TA
 
 -- Flights are single legs, chained by the planner. A leg's time differs by direction (Morgan's Vigil ->
 -- Thorium Point 104 s, back 96 s), each direction's own time is used, and taking a leg straight after
--- another saves FLIGHT_CHAIN_SAVING seconds (a through-ticket doesn't land and take off again).
+-- another saves FLIGHT_CHAIN_SAVING of that leg's time (a through-ticket doesn't land and take off again).
 do
     useTestDistances()
     addon.World:Build()
@@ -150,7 +150,7 @@ do
     local function flightCosts(from, to)
         local costs = {}
         for _, link in ipairs(graph.adjacency[from] or {}) do
-            if link.to == to and link.method == "flight" then costs[#costs + 1] = link.cost end
+            if link.to == to and link.method == "taxi" then costs[#costs + 1] = link.cost end
         end
         return costs
     end
@@ -161,8 +161,8 @@ do
     -- ...it is three legs chained: Lakeshire > Morgan's Vigil > Thorium Point > Ironforge.
     local saving = addon.FLIGHT_CHAIN_SAVING
     local trip = route(ali, "TAXI_5", "TAXI_6")
-    check(trip and #trip.steps == 3 and methods(trip) == "flight,flight,flight", "three flights: " .. tostring(trip and methods(trip)))
-    check(math.abs(trip.cost - (61 + 104 + 94 - 2 * saving)) < 1e-6, "priced as the legs less the saving for each extra one: " .. tostring(trip.cost))
+    check(trip and #trip.steps == 3 and methods(trip) == "taxi,taxi,taxi", "three flights: " .. tostring(trip and methods(trip)))
+    check(math.abs(trip.cost - (61 + (104 + 94) * (1 - saving))) < 1e-6, "priced as the legs less the saving for each extra one: " .. tostring(trip.cost))
     local collapsed = addon.Pathfinder:CollapseSteps(trip.steps)
     check(#collapsed == 1 and math.abs(collapsed[1].cost - trip.cost) < 1e-6, "shown as one ticket that costs the whole trip")
 
@@ -170,7 +170,7 @@ do
     check(saving > 0, "the chain saving is set")
     local oneWay = 0
     for _, link in ipairs(graph.adjacency["TAXI_2"] or {}) do
-        if link.method == "flight" then oneWay = oneWay + 1 end
+        if link.method == "taxi" then oneWay = oneWay + 1 end
     end
     check(oneWay >= 5, "an ordinary flight master still has its legs: " .. oneWay)
 
@@ -179,7 +179,7 @@ do
     -- ticket the game sells; landing there and taking a new ticket is (126 + 89 s, with nothing saved).
     local toMenethil, menethilToIronforge = flightCosts("TAXI_16", "TAXI_7")[1], flightCosts("TAXI_7", "TAXI_6")[1]
     local viaStop = route(ali, "TAXI_16", "TAXI_6")
-    check(viaStop and methods(viaStop) == "flight,flight" and viaStop.cost == toMenethil + menethilToIronforge,
+    check(viaStop and methods(viaStop) == "taxi,taxi" and viaStop.cost == toMenethil + menethilToIronforge,
         "Refuge Pointe to Ironforge: land at Menethil Harbor and take another ticket, no saving: " .. tostring(viaStop and viaStop.cost))
     check(viaStop.steps[1].to == "TAXI_7" and not viaStop.steps[2].through, "the second flight is a new ticket, not the same one")
     check(#addon.Pathfinder:CollapseSteps(viaStop.steps) == 2, "and it is shown as two flights")
@@ -221,10 +221,10 @@ do
     -- through Morgan's Vigil (830c + 830c, 237 s). With 1638c that ticket can't be bought, so: a ticket to
     -- Lakeshire (also through Morgan's Vigil: 1040c, 150 s) and on to Stormwind (210c, 113 s).
     local gameTicket = addon.Pathfinder:FindPath(graph, "TAXI_74", "TAXI_2")
-    check(gameTicket.fare == 1660 and gameTicket.cost == 96 + 151 - addon.FLIGHT_CHAIN_SAVING and gameTicket.steps[1].to == "TAXI_71"
+    check(gameTicket.fare == 1660 and math.abs(gameTicket.cost - (96 + 151 * (1 - addon.FLIGHT_CHAIN_SAVING))) < 1e-6 and gameTicket.steps[1].to == "TAXI_71"
         and gameTicket.steps[2].through, "the game's own ticket goes through Morgan's Vigil: " .. gameTicket.cost .. "s " .. gameTicket.fare .. "c")
     local viaLakeshire = addon.Pathfinder:FindPath(graph, "TAXI_74", "TAXI_2", nil, { budget = 1638 })
-    check(viaLakeshire and viaLakeshire.fare == 1250 and viaLakeshire.cost == 263, "1638c: " .. tostring(viaLakeshire and viaLakeshire.cost) .. "s " .. tostring(viaLakeshire and viaLakeshire.fare) .. "c")
+    check(viaLakeshire and viaLakeshire.fare == 1250 and math.abs(viaLakeshire.cost - (96 + 64 * (1 - addon.FLIGHT_CHAIN_SAVING) + 113)) < 1e-6, "1638c: " .. tostring(viaLakeshire and viaLakeshire.cost) .. "s " .. tostring(viaLakeshire and viaLakeshire.fare) .. "c")
     local shown = addon.Pathfinder:CollapseSteps(viaLakeshire.steps)
     check(#shown == 2 and shown[1].to == "TAXI_5" and shown[2].to == "TAXI_2" and not viaLakeshire.steps[#viaLakeshire.steps].through,
         "two tickets: to Lakeshire (through Morgan's Vigil) and on")
@@ -248,7 +248,7 @@ do
     local touching = 0
     for from, steps in pairs(graph.adjacency) do
         for _, step in ipairs(steps) do
-            if step.method == "flight" and (addon:GetFlightOwner(from) == "Horde" or addon:GetFlightOwner(step.to) == "Horde") then
+            if step.method == "taxi" and (addon:GetFlightOwner(from) == "Horde" or addon:GetFlightOwner(step.to) == "Horde") then
                 touching = touching + 1
             end
         end
@@ -257,7 +257,7 @@ do
     local horde = addon.TravelGraph:Build(makeCtx({ faction = "Horde" }))
     local hordeFlights = 0
     for from, steps in pairs(horde.adjacency) do
-        for _, step in ipairs(steps) do if step.method == "flight" and addon:GetFlightOwner(from) == "Horde" then hordeFlights = hordeFlights + 1 end end
+        for _, step in ipairs(steps) do if step.method == "taxi" and addon:GetFlightOwner(from) == "Horde" then hordeFlights = hordeFlights + 1 end end
     end
     check(hordeFlights > 50, "and the Horde still has theirs: " .. hordeFlights)
 end
@@ -267,16 +267,49 @@ end
 -- that goes on along the ticket the last one began with `through`; a flight without it is a new ticket.
 do
     local function step(method, from, to, cost) return { method = method, from = from, to = to, cost = cost } end
-    local function through(from, to, cost) local s = step("flight", from, to, cost); s.through = true; return s end
+    local function through(from, to, cost) local s = step("taxi", from, to, cost); s.through = true; return s end
     local merged = addon.Pathfinder:CollapseSteps({
-        step("walk", "A", "B", 10), step("flight", "B", "C", 100), through("C", "D", 50), step("walk", "D", "E", 5),
+        step("walk", "A", "B", 10), step("taxi", "B", "C", 100), through("C", "D", 50), step("walk", "D", "E", 5),
     })
     check(#merged == 3, "walk, one ticket, walk: " .. #merged)
-    check(merged[2].method == "flight" and merged[2].from == "B" and merged[2].to == "D" and merged[2].cost == 150 - addon.FLIGHT_CHAIN_SAVING,
+    check(merged[2].method == "taxi" and merged[2].from == "B" and merged[2].to == "D" and math.abs(merged[2].cost - (100 + 50 * (1 - addon.FLIGHT_CHAIN_SAVING))) < 1e-6,
     "the ticket runs B to D and costs both legs less the saving for the extra one")
     check(#merged[2].parts == 2 and merged[2].parts[1].to == "C", "and remembers the stop it passes through")
-    local separate = addon.Pathfinder:CollapseSteps({ step("flight", "A", "B", 10), step("ship", "B", "C", 20), step("flight", "C", "D", 30) })
+    local separate = addon.Pathfinder:CollapseSteps({ step("taxi", "A", "B", 10), step("ship", "B", "C", 20), step("taxi", "C", "D", 30) })
     check(#separate == 3, "a flight, a boat, a flight are three steps")
-    local twoTickets = addon.Pathfinder:CollapseSteps({ step("flight", "A", "B", 10), step("flight", "B", "C", 20) })
+    local twoTickets = addon.Pathfinder:CollapseSteps({ step("taxi", "A", "B", 10), step("taxi", "B", "C", 20) })
     check(#twoTickets == 2, "two flights that land between are two tickets")
+end
+
+-- With the chain saving a flat 10 s, a flight leg shorter than that (Modern's Vaults of Atal'Utek
+-- Windcallers have 8 s ones) made a through-ticket loop between two points cheaper every lap, so a search that reached
+-- them never finished ("script ran too long" in the client). Search a made-up network like that for
+-- somewhere unreachable, so it has to exhaust the graph; a hook stops a runaway instead of hanging.
+do
+    local function leg(from, to, cost)
+        return { from = from, to = to, cost = cost, method = "taxi", fare = 0 }
+    end
+    local graph = { anywhere = {}, adjacency = {
+        A = { leg("A", "B", 8), leg("A", "C", 20) },
+        B = { leg("B", "A", 8), leg("B", "C", 10) },
+        C = { leg("C", "A", 20), leg("C", "B", 10) },
+    } }
+    local budget = 0
+    debug.sethook(function() budget = budget + 1; if budget > 2000 then error("search ran away") end end, "", 10000)
+    local ok, result = pcall(function() return addon.Pathfinder:FindPath(graph, "A", "NOWHERE") end)
+    debug.sethook()
+    check(ok, "a search through short legs finishes: " .. tostring(result))
+    check(result == nil, "and finds nothing to an unreachable place")
+    local costs = addon.Pathfinder:FindCosts(graph, "A")
+    check(costs.B and costs.B >= 0 and costs.C and costs.C >= 0, "no place costs less than nothing")
+
+    -- The clamp itself, as a guard: even a saving over 100% of a leg (a bad constant) can't run the clock backwards.
+    local saved = addon.FLIGHT_CHAIN_SAVING
+    addon.FLIGHT_CHAIN_SAVING = 1.5
+    budget = 0
+    debug.sethook(function() budget = budget + 1; if budget > 2000 then error("search ran away") end end, "", 10000)
+    local ok2, result2 = pcall(function() return addon.Pathfinder:FindPath(graph, "A", "NOWHERE") end)
+    debug.sethook()
+    addon.FLIGHT_CHAIN_SAVING = saved
+    check(ok2 and result2 == nil, "a saving larger than the leg still can't make a loop cheaper every lap: " .. tostring(result2))
 end

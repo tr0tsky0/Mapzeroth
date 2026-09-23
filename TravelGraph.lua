@@ -19,18 +19,22 @@ local worldPosCache = {}
 -- on different maps compare correctly. Replaceable for tests.
 function TravelGraph.DistanceProvider(a, b)
     local function worldPos(node)
+        if not node.mapID then return nil end     -- a synthetic point built from an unplaceable sample
         local cached = not node.nocache and worldPosCache[node.id]
-        if cached then return cached[1], cached[2] end
-        local _, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
+        if cached then return cached[1], cached[2], cached[3] end
+        local continent, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
         if not pos then return nil end
         local x, y = pos:GetXY()
-        if not node.nocache then worldPosCache[node.id] = { x, y } end   -- the player moves: never cache
-        return x, y
+        if not node.nocache then worldPosCache[node.id] = { x, y, continent } end   -- the player moves: never cache
+        return x, y, continent
     end
 
-    local ax, ay = worldPos(a)
-    local bx, by = worldPos(b)
+    local ax, ay, ac = worldPos(a)
+    local bx, by, bc = worldPos(b)
     if not (ax and bx) then return nil end
+    -- World coordinates are per continent: Eversong and Hyjal can have the same x/y, yards apart on
+    -- paper and two continents apart in fact. No distance at all is the honest answer between them.
+    if ac ~= nil and bc ~= nil and ac ~= bc then return nil end
     return math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
 end
 
@@ -89,7 +93,7 @@ function addon:GetFlightOwner(nodeID)
     if not flightOwners then
         local seen = {}
         for _, edge in ipairs(addon.Edges or {}) do
-            local faction = edge.method == "flight" and edge.requirements and edge.requirements.faction
+            local faction = edge.method == "taxi" and edge.requirements and edge.requirements.faction
             if faction then
                 for _, id in ipairs({ edge.from, edge.to }) do
                     seen[id] = seen[id] or {}
@@ -105,6 +109,144 @@ function addon:GetFlightOwner(nodeID)
         end
     end
     return flightOwners[nodeID]
+end
+
+-- The geometry-only part of the graph: walk edges (container-scoped), city-gate joins and fly
+-- edges (continent-wide). None of it depends on the player (ctx) -- only on node positions --
+-- so it doesn't need computing at all client-side, ideally: node/edge data only ever changes
+-- through a new version, so this can be generated once (via /mzr dumpgeometry, MapzerothDataTools'
+-- Dev.lua) and shipped as Data/<ruleset>/Geometry.lua, the same way Flights.lua/Pois.lua are
+-- generated from live client data rather than re-derived at runtime. addon.Geometry (if present
+-- and its addon.GeometryMeta.nodeCount still matches the loaded node count -- a forgotten
+-- regeneration after a data change is caught this way, not served silently) is used as-is, no
+-- computation at all; otherwise this falls back to computing it live, once, cached (keyed on
+-- World.generation, so a World:Build() invalidates it) rather than redone on every single route
+-- request. Fly edges alone are an O(n^2) pairwise check per continent (Eastern Kingdoms has ~200
+-- outdoor nodes); redoing that on every graph build -- which used to happen twice over for one
+-- click, once to price the picker's sections and again to plan the chosen route -- is what
+-- "script ran too long" was actually coming from, not the search itself.
+--
+-- Each entry is { to, dtf, kind } (a plain array, not named fields -- shipped-file size adds up
+-- across thousands of edges): `dtf` is distance * path factor for a "walk" edge (ground speed is
+-- the only ctx-dependent piece left, a single per-container divide applied cheaply in Build
+-- below, not a reason to redo the O(n^2) distance pass), 0 for a "gate" edge (no time at any
+-- speed), or the already-finished cost for a "fly" edge (FLY_SPEED is a flat constant, no
+-- ctx-dependent piece at all).
+local staticGeometry, staticGeneration
+
+TravelGraph.staticBuildCount = 0    -- for tests: how many times the expensive geometry pass actually ran
+
+-- ignoreCap: skip addon.MAX_FLY_BUCKET (see its own comment below). Only /mzr dumpgeometry
+-- passes true: it's a one-time, deliberate, isolated call (no Dijkstra search sharing the same
+-- synchronous execution, no gameplay impact if it's slow) -- unlike the live fallback, which
+-- can land unpredictably mid-session, so that path keeps the cap as a safety net.
+local function buildStaticGeometry(ignoreCap)
+    TravelGraph.staticBuildCount = TravelGraph.staticBuildCount + 1
+    local World = addon.World
+    local geometry = {}
+
+    local function link(from, to, dtf, kind)
+        local list = geometry[from]
+        if not list then list = {}; geometry[from] = list end
+        list[#list + 1] = { to, dtf, kind }
+    end
+
+    -- Walking: every pair of nodes in one container.
+    World:ForEachContainer(function(container)
+        local list = container.nodes
+        if #list < 2 then return end
+        for i = 1, #list - 1 do
+            for j = i + 1, #list do
+                local dist = insideCity(list[i]) == insideCity(list[j]) and TravelGraph.DistanceProvider(list[i], list[j])
+                if dist then
+                    local dtf = dist * pathFactor(list[i], list[j])
+                    link(list[i].id, list[j].id, dtf, "walk")
+                    link(list[j].id, list[i].id, dtf, "walk")
+                end
+            end
+        end
+    end)
+
+    -- The two sides of each city gate: a step through it takes no time of its own, at any speed.
+    for _, wall in pairs(cityWalls()) do
+        for _, inner in ipairs(wall.inner) do
+            local nearest, best
+            for _, outer in ipairs(wall.outer) do
+                local dist = TravelGraph.DistanceProvider(inner, outer) or 0
+                if not best or dist < best then nearest, best = outer, dist end
+            end
+            if nearest and World:GetNode(inner.id) and World:GetNode(nearest.id) then
+                link(inner.id, nearest.id, 0, "gate")
+                link(nearest.id, inner.id, 0, "gate")
+            end
+        end
+    end
+
+    -- Flying: continent-wide, only between flyable, outdoor nodes.
+    local flyable = {}
+    for _, list in pairs(addon.Nodes or {}) do
+        for _, node in ipairs(list) do
+            local c = World:GetNodeContainer(node.id)
+            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then
+                local continent = World:GetContinent(c)
+                local key = continent and continent.path
+                if key then
+                    flyable[key] = flyable[key] or {}
+                    table.insert(flyable[key], node)
+                end
+            end
+        end
+    end
+    for _, nodes in pairs(flyable) do
+        -- See addon.MAX_FLY_BUCKET's own comment: this check is O(n^2) per continent, so on the
+        -- live fallback path a continent with too many flyable nodes is skipped rather than run
+        -- (unconfirmed to actually be necessary there once it's only the first route of the
+        -- session paying for it, rather than every one -- kept as a safety net regardless, since
+        -- a live route landing mid-session, alongside whatever else the client is doing, is a
+        -- worse place to find out than a deliberate /mzr dumpgeometry run is).
+        if ignoreCap or #nodes <= (addon.MAX_FLY_BUCKET or math.huge) then
+            for i = 1, #nodes - 1 do
+                for j = i + 1, #nodes do
+                    local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
+                    if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
+                        local cost = dist / (addon.FLY_SPEED or 50)
+                        link(nodes[i].id, nodes[j].id, cost, "fly")
+                        link(nodes[j].id, nodes[i].id, cost, "fly")
+                    end
+                end
+            end
+        end
+    end
+
+    return geometry
+end
+
+local function countNodes()
+    local n = 0
+    addon.World:ForEachNode(function() n = n + 1 end)
+    return n
+end
+
+local function staticGeometryFor()
+    if staticGeometry and staticGeneration == addon.World.generation then
+        return staticGeometry
+    end
+    local shipped = addon.Geometry
+    if shipped and addon.GeometryMeta and addon.GeometryMeta.nodeCount == countNodes() then
+        staticGeometry = shipped
+    else
+        staticGeometry = buildStaticGeometry()
+    end
+    staticGeneration = addon.World.generation
+    return staticGeometry
+end
+
+-- For /mzr dumpgeometry: always computes fresh (never the shipped file, even if one is loaded),
+-- since the whole point of that command is to regenerate it -- and without MAX_FLY_BUCKET's
+-- cap, since a one-time, isolated dump can afford to actually find out whether the full pass
+-- fits the script-execution budget, rather than guess defensively the way the live fallback does.
+function TravelGraph:BuildFreshGeometry()
+    return buildStaticGeometry(true)
 end
 
 function TravelGraph:Build(ctx)
@@ -130,13 +272,13 @@ function TravelGraph:Build(ctx)
     -- A flight into or out of a hostile faction's flight master can't be taken, whatever else the edge says
     -- (placeholders and hand-written edges may have no faction of their own).
     local function hostile(edge)
-        if edge.method ~= "flight" or not ctx.faction then return false end
+        if edge.method ~= "taxi" or not ctx.faction then return false end
         local a, b = addon:GetFlightOwner(edge.from), addon:GetFlightOwner(edge.to)
         return (a ~= nil and a ~= ctx.faction) or (b ~= nil and b ~= ctx.faction)
     end
 
     local function unfound(edge, toID)
-        return edge.method == "flight" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
+        return edge.method == "taxi" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
     end
 
     -- Authored edges. The reverse direction is generated here, carrying the same requirements
@@ -155,7 +297,7 @@ function TravelGraph:Build(ctx)
                 local dist = TravelGraph.DistanceProvider(a, b)
                 local speed = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
                 cost = dist and (dist * pathFactor(a, b) / speed)
-            elseif cost and edge.method == "flight" then
+            elseif cost and edge.method == "taxi" then
                 cost = cost / addon:GetFlightSpeedMultiplier(ctx)
             end
             if cost then
@@ -171,62 +313,25 @@ function TravelGraph:Build(ctx)
         end
     end
 
-    -- Walking: every pair of nodes in one container.
-    World:ForEachContainer(function(container)
-        local list = container.nodes
-        if #list < 2 then return end
-        local speed = addon:GetGroundSpeed(container, ctx)
-        for i = 1, #list - 1 do
-            for j = i + 1, #list do
-                local dist = insideCity(list[i]) == insideCity(list[j]) and TravelGraph.DistanceProvider(list[i], list[j])
-                if dist then
-                    local cost = dist * pathFactor(list[i], list[j]) / speed
-                    link(list[i].id, list[j].id, cost, "walk")
-                    link(list[j].id, list[i].id, cost, "walk")
+    -- Walking, city gates and flying: the cached geometry pass, with ground speed (the only
+    -- ctx-dependent piece a walk edge has) divided in per container -- cheap, since it's one
+    -- GetGroundSpeed call reused for every edge in that container, not redone per edge.
+    local speedByContainer = {}
+    for from, list in pairs(staticGeometryFor()) do
+        for _, e in ipairs(list) do
+            local to, dtf, kind = e[1], e[2], e[3]
+            if kind == "fly" then
+                link(from, to, dtf, "fly")
+            elseif kind == "gate" then
+                link(from, to, 0, "walk")
+            else
+                local container = World:GetNodeContainer(from)
+                local speed = speedByContainer[container]
+                if not speed then
+                    speed = addon:GetGroundSpeed(container, ctx)
+                    speedByContainer[container] = speed
                 end
-            end
-        end
-    end)
-
-    -- The two sides of each city gate: a step through it takes no time of its own.
-    for _, wall in pairs(cityWalls()) do
-        for _, inner in ipairs(wall.inner) do
-            local nearest, best
-            for _, outer in ipairs(wall.outer) do
-                local dist = TravelGraph.DistanceProvider(inner, outer) or 0
-                if not best or dist < best then nearest, best = outer, dist end
-            end
-            if nearest and World:GetNode(inner.id) and World:GetNode(nearest.id) then
-                link(inner.id, nearest.id, 0, "walk")
-                link(nearest.id, inner.id, 0, "walk")
-            end
-        end
-    end
-
-    -- Flying: continent-wide, only between flyable, outdoor nodes.
-    local flyable = {}
-    for _, list in pairs(addon.Nodes or {}) do
-        for _, node in ipairs(list) do
-            local c = World:GetNodeContainer(node.id)
-            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then
-                local continent = World:GetContinent(c)
-                local key = continent and continent.path
-                if key then
-                    flyable[key] = flyable[key] or {}
-                    table.insert(flyable[key], node)
-                end
-            end
-        end
-    end
-    for _, nodes in pairs(flyable) do
-        for i = 1, #nodes - 1 do
-            for j = i + 1, #nodes do
-                local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
-                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
-                    local cost = dist / (addon.FLY_SPEED or 50)
-                    link(nodes[i].id, nodes[j].id, cost, "fly")
-                    link(nodes[j].id, nodes[i].id, cost, "fly")
-                end
+                link(from, to, dtf / speed, "walk")
             end
         end
     end
@@ -255,20 +360,42 @@ end
 -- A place that isn't one of our nodes but somewhere to go (the player's map waypoint): { id, mapID, x, y }.
 -- Walking edges lead to it from every node in its container, and from the start if that is in the same one.
 function TravelGraph:AddDestination(graph, ctx, dest, start)
-    local container = addon.World:GetContainerForMap(dest.mapID)
-    if not container then return false end
-    local speed = addon:GetGroundSpeed(container, ctx)
-    local function link(from)
-        local dist = TravelGraph.DistanceProvider(from, dest)
-        if not dist then return end
+    local World = addon.World
+    local container = World:GetContainerForMap(dest.mapID)
+    local function add(from, cost, method)
         local list = graph.adjacency[from.id]
         if not list then list = {}; graph.adjacency[from.id] = list end
-        list[#list + 1] = { from = from.id, to = dest.id, method = "walk", cost = dist * pathFactor(from, dest) / speed }
+        list[#list + 1] = { from = from.id, to = dest.id, method = method, cost = cost }
+    end
+
+    -- Flying to it: from any flyable, outdoor node within range, the same rule the fly mesh between
+    -- nodes uses -- so "portal to Nordrassil, fly to the waypoint" is a route, and so is a waypoint on
+    -- a map none of our nodes are on (walking has no node to start from there).
+    local flyable = not container or (World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor"))
+    local flew = false
+    if flyable then
+        World:ForEachNode(function(node)
+            local c = World:GetNodeContainer(node.id)
+            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(dest) then
+                local dist = TravelGraph.DistanceProvider(node, dest)
+                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
+                    add(node, dist / (addon.FLY_SPEED or 50), "fly")
+                    flew = true
+                end
+            end
+        end)
+    end
+
+    if not container then return flew end
+    local speed = addon:GetGroundSpeed(container, ctx)
+    local function walk(from)
+        local dist = TravelGraph.DistanceProvider(from, dest)
+        if dist then add(from, dist * pathFactor(from, dest) / speed, "walk") end
     end
     for _, node in ipairs(container.nodes) do
-        if insideCity(node) == insideCity(dest) then link(node) end
+        if insideCity(node) == insideCity(dest) then walk(node) end
     end
-    if start and addon.World:GetContainerForMap(start.mapID) == container and insideCity(start) == insideCity(dest) then link(start) end
+    if start and World:GetContainerForMap(start.mapID) == container and insideCity(start) == insideCity(dest) then walk(start) end
     return true
 end
 

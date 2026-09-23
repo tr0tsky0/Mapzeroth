@@ -69,7 +69,7 @@ withKnowledge.flightNodeFound = function(id) return FK:IsFound(id) end
 
 local function flights(result)
     local n = 0
-    for _, step in ipairs(result.steps) do if step.method == "flight" then n = n + 1 end end
+    for _, step in ipairs(result.steps) do if step.method == "taxi" then n = n + 1 end end
     return n
 end
 local nothingYet = route(withKnowledge, "TAXI_2", "TAXI_6")
@@ -79,7 +79,7 @@ FK:Record(capture, ali)
 
 local function flownInto(result, nodeID)
     for _, step in ipairs(result.steps) do
-        if step.method == "flight" and step.to == nodeID then return true end
+        if step.method == "taxi" and step.to == nodeID then return true end
     end
     return false
 end
@@ -90,7 +90,7 @@ check(knowing and not flownInto(knowing, "TAXI_8"), "knowing Thelsamar isn't fou
 check(knowing.cost > without.cost, "and it takes longer")
 
 local toIronforge = route(withKnowledge, "TAXI_2", "TAXI_6")
-check(toIronforge and methods(toIronforge) == "flight", "Ironforge is found, so it is still a single flight")
+check(toIronforge and methods(toIronforge) == "taxi", "Ironforge is found, so it is still a single flight")
 local toDarkshire = route(withKnowledge, "TAXI_2", "TAXI_12")
 check(toDarkshire and not flownInto(toDarkshire, "TAXI_12"), "Darkshire isn't found: reached on foot, or by flying to Sentinel Hill first")
 check(flights(toDarkshire) == 0 or flownInto(toDarkshire, "TAXI_4"), "the only flight it may use is one into a found point")

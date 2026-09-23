@@ -30,6 +30,7 @@ local state = {
     sections = {}, open = {}, priced = false, session = nil, waypoint = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
     stepOffset = 0,       -- how many of the route's steps are scrolled past, when it has more than fit
+    docked = true,         -- beside the map (Reanchor), or free-floating where the player dragged it
 }
 
 -- ---------------------------------------------------------------------------------------
@@ -61,12 +62,28 @@ local function build(parent)
     frame:EnableMouse(true)                -- a click here must not reach the map underneath
     frame:EnableMouseWheel(true)
     frame:SetClampedToScreen(true)
+    frame:SetMovable(true)
+    frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnMouseWheel", function(_, delta) Panel:Scroll(-delta) end)
+    -- Only free-floating (state.docked == false) actually moves: docked, a drag on the title
+    -- bar is a no-op rather than fighting Reanchor's next map-open/resize repositioning.
+    frame:SetScript("OnDragStart", function(self) if not state.docked then self:StartMoving() end end)
+    frame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        if not state.docked then Panel:SavePosition() end
+    end)
     ui.frame = frame
 
     ui.title = Theme:Text(frame, "title")
     ui.title:SetPoint("TOPLEFT", PAD, -PAD)
     ui.title:SetText(L["PANEL_TITLE"])
+
+    -- Beside the map there's often another addon docked to its other side (WorldQuestList and
+    -- the like) or the map's own tab row above it, with nowhere to move out of the way to --
+    -- this lets the player drag the panel free of them instead.
+    ui.pop = Theme:Button(frame, "", 64, 18)
+    ui.pop:SetPoint("TOPRIGHT", -PAD, -PAD + 3)
+    ui.pop:SetScript("OnClick", function() Panel:SetDocked(not state.docked) end)
 
     ui.search = Theme:EditBox(frame, INNER, 30)
     ui.search:SetPoint("TOPLEFT", PAD, -46)
@@ -150,6 +167,7 @@ local function build(parent)
     ui.start:SetScript("OnClick", function() Panel:StartRoute() end)
 
     Panel:ApplyScale()
+    Panel:SetDocked(addon.Options:Get("docked"))
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -481,16 +499,75 @@ end
 -- ---------------------------------------------------------------------------------------
 -- Attaching to the map
 
--- Beside the map when there is room on screen, otherwise inside its right edge.
+-- Beside the map when there is room on screen, otherwise inside its right edge. A no-op while
+-- free-floating (state.docked == false): RestorePosition/dragging own the frame's point then.
+-- How far past the map frame's right edge its own chrome reaches: on retail the Quests / Events /
+-- Map Legend tabs hang off the side of the quest panel, outside WorldMapFrame's rectangle, so a
+-- panel anchored to the frame's edge sits under them. 0 when none are there (Forever, or the
+-- quest panel closed).
+local function mapChromeOverhang(map)
+    local mapRight = map:GetRight()
+    local overhang = 0
+    local questMap = QuestMapFrame
+    if mapRight and questMap then
+        for _, name in ipairs({ "QuestsTab", "EventsTab", "MapLegendTab" }) do
+            local tab = questMap[name]
+            local right = tab and tab.IsShown and tab:IsShown() and tab:GetRight()
+            if right and right - mapRight > overhang then overhang = right - mapRight end
+        end
+    end
+    return overhang
+end
+
 function Panel:Reanchor()
+    if not state.docked then return end
     local frame, map = ui.frame, WorldMapFrame
     frame:ClearAllPoints()
-    local room = (UIParent:GetRight() or 0) - (map:GetRight() or 0)
+    local overhang = mapChromeOverhang(map)
+    local room = (UIParent:GetRight() or 0) - (map:GetRight() or 0) - overhang
     if room >= WIDTH + 4 then
-        frame:SetPoint("TOPLEFT", map, "TOPRIGHT", 2, 0)
+        frame:SetPoint("TOPLEFT", map, "TOPRIGHT", 2 + overhang, 0)
     else
         frame:SetPoint("TOPRIGHT", map, "TOPRIGHT", -8, -68)
     end
+end
+
+-- Where a free-floating panel was left, read back by RestorePosition. Account-wide, same as
+-- every other Options-backed setting.
+function Panel:SavePosition()
+    local left, top = ui.frame:GetLeft(), ui.frame:GetTop()
+    if not (left and top) then return end
+    MapzerothRebuildDB = MapzerothRebuildDB or {}
+    MapzerothRebuildDB.panelPos = { x = left, y = top }
+end
+
+-- TOPLEFT anchored to UIParent's BOTTOMLEFT so saved x/y (from GetLeft/GetTop, screen-space
+-- already) land back exactly where they were, whatever the panel happened to be docked beside
+-- when it was popped out.
+function Panel:RestorePosition()
+    local frame = ui.frame
+    frame:ClearAllPoints()
+    local saved = MapzerothRebuildDB and MapzerothRebuildDB.panelPos
+    if saved then
+        frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", saved.x, saved.y)
+        return
+    end
+    -- First time popping out, nothing saved yet: stay exactly where it currently is (docked),
+    -- not a jump to some default spot.
+    local left, top = frame:GetLeft(), frame:GetTop()
+    frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left or 100, top or -100)
+end
+
+-- Toggle between docked (beside the map, Reanchor decides where) and free-floating (the player
+-- drags it; RestorePosition puts it back where they left it). The button in the corner calls
+-- this; so does build(), to apply whatever was last saved.
+function Panel:SetDocked(docked)
+    docked = docked and true or false
+    state.docked = docked
+    addon.Options:Set("docked", docked)
+    if not ui then return end
+    ui.pop.label:SetText(docked and L["PANEL_POPOUT"] or L["PANEL_DOCK"])
+    if docked then self:Reanchor() else self:RestorePosition() end
 end
 
 -- Re-read the player and the world when the map opens: who they are, and the places to offer.

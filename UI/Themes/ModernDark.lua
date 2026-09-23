@@ -29,7 +29,7 @@ addon.Theme:Register("moderndark", {
     edit = { backdrop = { bgFile = FLAT, edgeFile = FLAT, edgeSize = 1,
                           insets = { left = 1, right = 1, top = 1, bottom = 1 } } },
     methods = {
-        walk = rgb("ece6d6"), flight = rgb("63b7a4"), ship = rgb("63b7a4"), zeppelin = rgb("63b7a4"),
+        walk = rgb("ece6d6"), taxi = rgb("63b7a4"), ship = rgb("63b7a4"), zeppelin = rgb("63b7a4"),
         tram = rgb("63b7a4"), portal = rgb("d4a64f"), teleport = rgb("d4a64f"),
         hearthstone = rgb("d4a64f"), default = rgb("a8a191"),
     },

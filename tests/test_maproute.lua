@@ -7,7 +7,7 @@ local MapRoute = addon.MapRoute
 
 -- Looks.
 check(MapRoute:StyleOf("walk") == "foot" and MapRoute:StyleOf("transition") == "foot", "walking is on foot")
-check(MapRoute:StyleOf("flight") == "flight", "a flight is a flight")
+check(MapRoute:StyleOf("taxi") == "flight", "a flight is a flight")
 check(MapRoute:StyleOf("ship") == "boat" and MapRoute:StyleOf("zeppelin") == "boat" and MapRoute:StyleOf("tram") == "boat", "boats, zeppelins and trams look alike")
 check(MapRoute:StyleOf("teleport") == "ability" and MapRoute:StyleOf("hearthstone") == "ability" and MapRoute:StyleOf("portal") == "ability", "teleports, the hearthstone and portals too")
 check(MapRoute:StyleOf("nonsense") == "foot", "anything else is on foot")
@@ -51,7 +51,7 @@ addon.Navigation.MapPoint = function(node, mapID)
 end
 local plan = { steps = {
     { method = "walk", path = { { mapID = 1, x = 0.1, y = 0.1 }, { mapID = 1, x = 0.2, y = 0.2 }, { mapID = 1, x = 0.3, y = 0.3 } } },
-    { method = "flight", path = { { mapID = 1, x = 0.3, y = 0.3 }, { mapID = 2, x = 0.5, y = 0.5 } } },
+    { method = "taxi", path = { { mapID = 1, x = 0.3, y = 0.3 }, { mapID = 2, x = 0.5, y = 0.5 } } },
     { method = "ship", path = { { mapID = 2, x = 0.5, y = 0.5 }, { mapID = 1, x = 0.7, y = 0.7 } } },
     { method = "walk", path = { { mapID = 1, x = 0.7, y = 0.7 }, { mapID = 1, x = 0.9, y = 0.9 } } },
 } }

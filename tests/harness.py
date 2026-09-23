@@ -7,7 +7,7 @@ runtime (lupa) with just enough WoW API stubbed, then runs Lua test files.
                                                        # (e.g. the Modern data-conversion smoke
                                                        # test, which isn't named test_*.lua so
                                                        # the default run above never picks it up:
-                                                       # python tests/harness.py --toc Mapzeroth-Rebuild-Modern-dev.toc modern_smoke)
+                                                       # python tests/harness.py --toc Mapzeroth-Rebuild_Mainline.toc modern_smoke)
 """
 import pathlib
 import sys

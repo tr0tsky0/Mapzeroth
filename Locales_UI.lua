@@ -6,8 +6,8 @@ local addonName, addon = ...
 addon:RegisterLocale("enUS", {
     -- One step of a route. %s is the place the step goes to.
     STEP_WALK        = "Walk to %s",
-    STEP_FLIGHT      = "Fly to %s",
-    STEP_FLIGHT_VIA  = "Fly to %s (via %s)",
+    STEP_TAXI        = "Fly to %s",
+    STEP_TAXI_VIA   = "Fly to %s (via %s)",
     STEP_SHIP        = "Take the boat to %s",
     STEP_ZEPPELIN    = "Take the zeppelin to %s",
     STEP_TRAM        = "Take the tram to %s",
@@ -34,6 +34,8 @@ addon:RegisterLocale("enUS", {
     QUICK_LEYLINE     = "Nearest ley line",
     ROUTE_BACK        = "Back",
     ROUTE_START       = "Start",
+    PANEL_POPOUT      = "Pop out",
+    PANEL_DOCK        = "Dock",
     ROUTE_TOTAL       = "%s in total",
     ROUTE_ALREADY     = "You're already here.",
     ROUTE_NONE        = "No route found from here.",

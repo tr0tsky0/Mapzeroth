@@ -43,9 +43,12 @@ local function ensureContainer(path)
     return c
 end
 
--- Rebuilds the tree from addon.Nodes / addon.Containers. Safe to call again.
+-- Rebuilds the tree from addon.Nodes / addon.Containers. Safe to call again. Bumps
+-- World.generation, so anything caching work derived from the tree (TravelGraph's geometry
+-- pass) knows to redo it rather than serve a stale cache.
 function World:Build()
     containers, nodes, nodeContainer, duplicates, mapContainer = {}, {}, {}, {}, {}
+    World.generation = (World.generation or 0) + 1
     local mapCounts = {}    -- uiMapID -> { [container] = node count }
 
     ensureContainer(ROOT)

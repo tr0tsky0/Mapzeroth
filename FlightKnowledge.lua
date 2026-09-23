@@ -56,7 +56,7 @@ local function baseFare(from, stops)
     if not legFares then
         legFares = {}
         for _, edge in ipairs(addon.Edges or {}) do
-            if edge.method == "flight" and edge.fare then legFares[edge.from .. "|" .. edge.to] = edge.fare end
+            if edge.method == "taxi" and edge.fare then legFares[edge.from .. "|" .. edge.to] = edge.fare end
         end
     end
     local total, at = 0, from
@@ -110,7 +110,7 @@ end
 local function flightsFrom(via, wanted, ctx)
     local hit = {}
     for _, edge in ipairs(addon.Edges or {}) do
-        if edge.method == "flight" and addon:MeetsRequirements(edge.requirements, ctx) then
+        if edge.method == "taxi" and addon:MeetsRequirements(edge.requirements, ctx) then
             if via[edge.from] and wanted[edge.to] then hit[edge.to] = true end
             if not edge.oneway and via[edge.to] and wanted[edge.from] then hit[edge.from] = true end
         end

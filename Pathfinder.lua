@@ -18,7 +18,7 @@ local addonName, addon = ...
 
 -- Flights are single legs (Data/Forever/Flights.lua), and the game sells tickets over them. A ticket
 -- from A to B may fly through other flight points without landing (each extra leg saves
--- FLIGHT_CHAIN_SAVING seconds), except that when there is a direct leg from A to B the game always
+-- FLIGHT_CHAIN_SAVING of that leg's time), except that when there is a direct leg from A to B the game always
 -- sells that one, however much quicker a chain would be. So a state in the air remembers the
 -- ticket's origin and whether it is still its first leg: the ticket can end (land, walk on, reach the
 -- goal) at a point only if it is that first leg or has no direct leg from its origin to that point.
@@ -66,7 +66,7 @@ local function hasDirectLeg(graph, a, b)
         graph.directLegs = {}
         for from, steps in pairs(graph.adjacency) do
             for _, step in ipairs(steps) do
-                if step.method == "flight" then
+                if step.method == "taxi" then
                     graph.directLegs[from] = graph.directLegs[from] or {}
                     graph.directLegs[from][step.to] = true
                 end
@@ -79,7 +79,7 @@ end
 -- May the search stop, land or walk on from this state? Only if it isn't part way along a ticket that
 -- the game wouldn't sell (see the top of the file).
 -- The quickest chain of legs from `origin` to each flight point in the graph (each leg after the first
--- less the chain saving): the route the game sells a ticket along. Built per origin on first use.
+-- less the chain saving, a fraction of the leg): the route the game sells a ticket along. Built per origin on first use.
 local function gameTicketTimes(graph, origin)
     graph.ticketTimes = graph.ticketTimes or {}
     local times = graph.ticketTimes[origin]
@@ -95,8 +95,11 @@ local function gameTicketTimes(graph, origin)
         if best[key] == d then
             if node.started and (times[node.id] == nil or d < times[node.id]) then times[node.id] = d end
             for _, step in ipairs(graph.adjacency[node.id] or {}) do
-                if step.method == "flight" then
-                    local nd = d + step.cost - (node.started and saving or 0)
+                if step.method == "taxi" then
+                    -- The saving is a fraction of the leg, so it can't take more than the leg costs; the max
+                    -- is only a guard: a leg that ran the clock backwards would make a loop cheaper every
+                    -- lap, and this search would never finish (it did, with a flat 10 s and 8 s legs).
+                    local nd = math.max(d, d + step.cost * (1 - (node.started and saving or 0)))
                     local nkey = step.to .. "|1"
                     if best[nkey] == nil or nd < best[nkey] then
                         best[nkey] = nd
@@ -124,7 +127,7 @@ end
 -- opts: oneTicket (never land part way and start a new ticket), fareFactor (what the player pays as a
 -- fraction of base fares: a number, or a function of the flight point the ticket is bought at).
 local function expandStep(graph, node, step, d, opts)
-    if step.method ~= "flight" then
+    if step.method ~= "taxi" then
         if node.origin and not canLand(graph, node) then return nil end
         return { { d + step.cost, nil, nil, nil, 0 } }
     end
@@ -139,7 +142,8 @@ local function expandStep(graph, node, step, d, opts)
     if not node.origin then
         return { { base, node.id, true, false, fareBoughtAt(node.id), d } }
     end
-    local options = { { base - (addon.FLIGHT_CHAIN_SAVING or 0), node.origin, false, true, fareBoughtAt(node.origin), node.startD } }
+    -- (Never below d: see gameTicketTimes -- the clock must not run backwards.)
+    local options = { { math.max(d, d + step.cost * (1 - (addon.FLIGHT_CHAIN_SAVING or 0))), node.origin, false, true, fareBoughtAt(node.origin), node.startD } }
     if canLand(graph, node) and not opts.oneTicket then
         options[#options + 1] = { base, node.id, true, false, fareBoughtAt(node.id), d }
     end
@@ -151,6 +155,7 @@ local function airKey(option)
 end
 
 local function phaseKey(state)
+    if next(state) == nil then return "" end
     local groups = {}
     for group in pairs(state) do groups[#groups + 1] = group end
     if #groups == 0 then return "" end
@@ -163,10 +168,28 @@ end
 
 -- Returns the state after taking `step` into its destination, or nil if the
 -- edge isn't allowed given the current simulated phases.
-local function nextPhaseState(state, step)
+local phaseMemo, phaseMemoGeneration = {}, nil
+
+-- A node's phase group and side (or false), looked up once per World build: walking a container's
+-- ancestors for every edge the search relaxes was a large share of its time.
+local function phaseOf(nodeID)
     local World = addon.World
-    local group, side = World:GetPhase(World:GetNodeContainer(step.to))
-    if not group then return state end
+    if phaseMemoGeneration ~= World.generation then
+        phaseMemo, phaseMemoGeneration = {}, World.generation
+    end
+    local memo = phaseMemo[nodeID]
+    if memo == nil then
+        local group, side = World:GetPhase(World:GetNodeContainer(nodeID))
+        memo = group and { group, side } or false
+        phaseMemo[nodeID] = memo
+    end
+    return memo
+end
+
+local function nextPhaseState(state, step)
+    local memo = phaseOf(step.to)
+    if not memo then return state end
+    local group, side = memo[1], memo[2]
 
     if step.overridesPhase then
         for _, g in ipairs(step.overridesPhase) do
@@ -216,8 +239,9 @@ local function run(graph, startID, initialPhase, opts, visit)
     for k, v in pairs(initialPhase or {}) do startState[k] = v end
 
     local store, heap = {}, {}
-    local startKey = startID .. "|" .. phaseKey(startState)
-    local start = { key = startKey, id = startID, state = startState, d = 0, paid = 0 }
+    local startPK = phaseKey(startState)
+    local startKey = startID .. "|" .. startPK
+    local start = { key = startKey, pk = startPK, id = startID, state = startState, d = 0, paid = 0 }
     addLabel(store, start, useFare)
     heapPush(heap, { 0, start })
 
@@ -225,8 +249,9 @@ local function run(graph, startID, initialPhase, opts, visit)
     for _, ability in ipairs(graph.anywhere or {}) do
         local state = nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
         if state then
+            local pk = phaseKey(state)
             local label = {
-                key = ability.to .. "|" .. phaseKey(state), id = ability.to, state = state, d = ability.cost, paid = 0,
+                key = ability.to .. "|" .. pk, pk = pk, id = ability.to, state = state, d = ability.cost, paid = 0,
                 prev = start, step = { from = startID, to = ability.to, cost = ability.cost,
                                        method = ability.method, source = ability.source },
             }
@@ -234,23 +259,45 @@ local function run(graph, startID, initialPhase, opts, visit)
         end
     end
 
+    -- One way of reaching step.to: skipped without allocating anything when (no budget: only time
+    -- matters) a label at least as quick already holds that state.
+    local function relax(label, step, state, pk, d, paid, origin, single, through, startD)
+        local key = step.to .. "|" .. pk .. (origin and ("|air:" .. origin .. (single and "1" or "0")) or "")
+        if not useFare then
+            local list = store[key]
+            if list then
+                for i = 1, #list do
+                    if list[i].d <= d then return end
+                end
+            end
+        end
+        local next = {
+            key = key, pk = pk, id = step.to, state = state,
+            d = d, paid = paid, origin = origin, single = single, startD = startD,
+            prev = label, step = step, through = through,
+        }
+        if addLabel(store, next, useFare) then heapPush(heap, { d, next }) end
+    end
+
     while #heap > 0 do
         local label = heapPop(heap)[2]
         if not label.dead and not label.done then
             label.done = true
             if visit(label) then return label end
+            local labelPK = label.pk
             for _, step in ipairs(graph.adjacency[label.id] or {}) do
                 local state = nextPhaseState(label.state, step)
                 if state then
-                    for _, option in ipairs(expandStep(graph, label, step, label.d, opts) or {}) do
-                        local paid = label.paid + (option[5] or 0)
-                        if not budget or paid <= budget then
-                            local next = {
-                                key = step.to .. "|" .. phaseKey(state) .. airKey(option), id = step.to, state = state,
-                                d = option[1], paid = paid, origin = option[2], single = option[3], startD = option[6],
-                                prev = label, step = step, through = option[4],
-                            }
-                            if addLabel(store, next, useFare) then heapPush(heap, { next.d, next }) end
+                    local pk = state == label.state and labelPK or phaseKey(state)
+                    if step.method ~= "taxi" and not label.origin then
+                        -- The common case (walking, portals, a flight not in the air): no ticket to track.
+                        relax(label, step, state, pk, label.d + step.cost, label.paid, nil, nil, nil, nil)
+                    else
+                        for _, option in ipairs(expandStep(graph, label, step, label.d, opts) or {}) do
+                            local paid = label.paid + (option[5] or 0)
+                            if not budget or paid <= budget then
+                                relax(label, step, state, pk, option[1], paid, option[2], option[3], option[4], option[6])
+                            end
                         end
                     end
                 end
@@ -327,7 +374,7 @@ function Pathfinder:CollapseSteps(steps)
         -- Consecutive walks are one walk; consecutive flights are one ticket (in game you buy a
         -- ticket to the far flight point and fly through the stops without landing).
         local joins = last and step.method == last.method
-            and (step.method == "walk" or (step.method == "flight" and step.through))
+            and (step.method == "walk" or (step.method == "taxi" and step.through))
         if joins and step.method == "walk" then
             local World = addon.World
             joins = not World:IsMilestone(last.to)
@@ -335,7 +382,7 @@ function Pathfinder:CollapseSteps(steps)
         end
         if joins then
             last.to = step.to
-            last.cost = last.cost + step.cost - (step.method == "flight" and (addon.FLIGHT_CHAIN_SAVING or 0) or 0)
+            last.cost = last.cost + step.cost * (1 - (step.method == "taxi" and (addon.FLIGHT_CHAIN_SAVING or 0) or 0))
             last.parts[#last.parts + 1] = step
         else
             collapsed[#collapsed + 1] = {

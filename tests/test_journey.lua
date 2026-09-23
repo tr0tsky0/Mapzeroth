@@ -42,7 +42,7 @@ local plan = J:Plan(session, "TAXI_6")
 check(plan and plan.cost == J:Cost(session, "TAXI_6"), "the plan costs what the session priced")
 check(#plan.steps == 2, "walk to the flight master, then fly: " .. #plan.steps)
 check(plan.steps[1].method == "walk" and plan.steps[1].approx, "walking is marked approximate")
-check(plan.steps[2].method == "flight" and not plan.steps[2].approx, "a flight is not")
+check(plan.steps[2].method == "taxi" and not plan.steps[2].approx, "a flight is not")
 check(plan.steps[2].text == "Fly to Ironforge Flight Master", "the step reads well: " .. plan.steps[2].text)
 check(plan.steps[1].text == "Walk to Stormwind Flight Master", "walking to the flight master: " .. plan.steps[1].text)
 check(plan.hint == nil, "no hint when there's no flight rule in play")
@@ -115,7 +115,7 @@ check(portalStep.text == "Use Skyborne Portal to Stormwind", "and the step says 
 -- Standing at a flight master, the walk to it isn't a step.
 local atFlightMaster = J:Build(ali, { id = "YOU_fm", mapID = 1453, x = 0.7098, y = 0.7293 })
 local justFly = J:Plan(atFlightMaster, "TAXI_6")
-check(justFly and #justFly.steps == 1 and justFly.steps[1].method == "flight", "no trivial walk step: " .. tostring(justFly and #justFly.steps))
+check(justFly and #justFly.steps == 1 and justFly.steps[1].method == "taxi", "no trivial walk step: " .. tostring(justFly and #justFly.steps))
 check(J:Plan(atFlightMaster, "TAXI_2").steps[1] ~= nil, "but a route that is only a tiny walk keeps it")
 
 -- Lakeshire to Ironforge goes through Thorium Point: two tickets in the data, one flight in game. The
@@ -125,7 +125,7 @@ addon:ClearNodeNameCache()
 local lakeshire = addon.World:GetNode("TAXI_5")
 local fromLakeshire = J:Build(ali, { id = "YOU_ls", mapID = lakeshire.mapID, x = lakeshire.x, y = lakeshire.y })
 local ticket = J:Plan(fromLakeshire, "TAXI_6")
-check(ticket and #ticket.steps == 1 and ticket.steps[1].method == "flight", "Lakeshire to Ironforge is one flight step: " .. tostring(ticket and #ticket.steps))
+check(ticket and #ticket.steps == 1 and ticket.steps[1].method == "taxi", "Lakeshire to Ironforge is one flight step: " .. tostring(ticket and #ticket.steps))
 check(ticket.steps[1].via and #ticket.steps[1].via >= 1, "that goes through another flight point")
 check(ticket.steps[1].text:find("(via ", 1, true) and ticket.steps[1].text:find("Fly to Ironforge Flight Master", 1, true), "and says so: " .. ticket.steps[1].text)
 check(math.abs(ticket.steps[1].seconds - ticket.cost) < 1, "with the whole flight's time on it")
@@ -152,7 +152,7 @@ do
     check(J:FareText(short):find("quickest") and J:FareText(short):find("6s 60c"), "in words: " .. tostring(J:FareText(short)))
     local broke = planWith(0)
     local flights = 0
-    for _, step in ipairs(broke and broke.steps or {}) do if step.method == "flight" then flights = flights + 1 end end
+    for _, step in ipairs(broke and broke.steps or {}) do if step.method == "taxi" then flights = flights + 1 end end
     check(broke == nil or broke.unaffordable or flights == 0, "with no money there is no flight in the route (or it says it can't be paid for)")
     if broke and broke.unaffordable then
         check(J:FareText(broke):find("can't afford"), "an unaffordable route says so: " .. tostring(J:FareText(broke)))
@@ -178,11 +178,11 @@ do
     local session = J:Build(ctx, at)
     local plan = J:Plan(session, "TAXI_2")
     local flights = {}
-    for _, step in ipairs(plan.steps) do if step.method == "flight" then flights[#flights + 1] = step end end
+    for _, step in ipairs(plan.steps) do if step.method == "taxi" then flights[#flights + 1] = step end end
     check(plan.fare == 1250 and #flights == 2 and flights[1].nodeID == "TAXI_5" and flights[2].nodeID == "TAXI_2",
         "22 copper short of the direct ticket: a ticket to Lakeshire, then on to Stormwind: " .. tostring(plan.fare) .. "c")
     check(flights[1].via and #flights[1].via == 1, "the first ticket says it flies through Morgan's Vigil")
-    check(plan.quickest and plan.quickest.fare == 1660 and plan.quickest.saves > 20 and plan.quickest.saves < 30,
+    check(plan.quickest and plan.quickest.fare == 1660 and plan.quickest.saves > 30 and plan.quickest.saves < 40,
         "and it says the quicker one costs 1660c: saves " .. tostring(plan.quickest and plan.quickest.saves) .. "s")
     check(not plan.unaffordable, "which isn't out of reach")
 end

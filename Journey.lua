@@ -82,7 +82,7 @@ end
 
 local function stepText(method, name, via)
     if via and #via > 0 then
-        return L["STEP_FLIGHT_VIA"]:format(name, table.concat(via, ", "))
+        return L["STEP_TAXI_VIA"]:format(name, table.concat(via, ", "))
     end
     local key = "STEP_" .. tostring(method):upper()
     return (addon:HasString(key) and L[key] or L["STEP_OTHER"]):format(name)
@@ -113,7 +113,7 @@ local function readableSteps(result, session)
             local name = addon:GetNodeName(step.method == "portal" and step.from or step.to)
             -- A flight ticket that passes through other flight points names them.
             local via
-            if step.method == "flight" and #step.parts > 1 then
+            if step.method == "taxi" and #step.parts > 1 then
                 via = {}
                 for i = 1, #step.parts - 1 do via[#via + 1] = addon:GetNodeName(step.parts[i].to) end
             end
@@ -150,7 +150,7 @@ local function flightHint(session, goalID, plan)
     local result = addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
     if not result or result.cost + 1 >= plan.cost then return nil end
     for _, step in ipairs(result.steps) do
-        if step.method == "flight" and ctx.flightNodeFound(step.to) ~= true then
+        if step.method == "taxi" and ctx.flightNodeFound(step.to) ~= true then
             return {
                 nodeID = step.to, name = addon:GetNodeName(step.to), saves = plan.cost - result.cost,
                 -- known: a flight master's window said it isn't found; otherwise we just haven't looked

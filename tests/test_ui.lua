@@ -135,6 +135,19 @@ box.clear._scripts.OnClick()
 check(box.search:GetText() == "" and not box.clear._shown and box.hint._shown, "clicking it empties the box and hides it again")
 check(state.view == "list" and #state.results >= 1 and state.results[1].header, "and the search goes back to the sections")
 
+-- The pop-out button: docked by default, and toggling it flips state, the Options setting and
+-- the button's own label. (This mock frame has no real geometry -- GetLeft/GetTop return
+-- nothing -- so SavePosition's "nothing to save yet" guard is what's under test here, not the
+-- actual screen position, which only the game can tell us.)
+check(state.docked == true, "docked by default")
+check(box.pop.label:GetText() == "Pop out", "the button offers to pop out while docked")
+box.pop._scripts.OnClick()
+check(state.docked == false and addon.Options:Get("docked") == false, "clicking it undocks")
+check(box.pop.label:GetText() == "Dock", "and now offers to dock again")
+box.pop._scripts.OnClick()
+check(state.docked == true and addon.Options:Get("docked") == true, "clicking it again re-docks")
+check(box.pop.label:GetText() == "Pop out", "and the label flips back")
+
 -- Choosing a result shows its route.
 addon.Panel:Query("ironforge flight")
 local flightMaster
@@ -142,7 +155,7 @@ for i, r in ipairs(state.results) do if r.group == "flight" then flightMaster = 
 check(flightMaster, "the Ironforge flight master is a result")
 addon.Panel:Choose(flightMaster)
 check(state.view == "route" and state.plan, "choosing it plans the trip")
-check(#state.plan.steps >= 2 and state.plan.steps[#state.plan.steps].method == "flight", "walk to the flight master, then fly")
+check(#state.plan.steps >= 2 and state.plan.steps[#state.plan.steps].method == "taxi", "walk to the flight master, then fly")
 check(state.plan.cost > 0, "with a time")
 
 -- A route with more steps than fit scrolls into view instead of losing the rest (previously
@@ -244,7 +257,7 @@ check(w.use._attrs.spell == 18960 and w.status._text == "Can't be used in combat
 InCombatLockdown = function() return false end
 
 -- A flight shows a bar once flying; arriving shows the end message.
-addon.Navigation:Start({ name = "Ironforge" }, { steps = { { method = "flight", fromID = "TAXI_2", nodeID = "TAXI_6", seconds = 200, text = "Fly" } } })
+addon.Navigation:Start({ name = "Ironforge" }, { steps = { { method = "taxi", fromID = "TAXI_2", nodeID = "TAXI_6", seconds = 200, text = "Fly" } } })
 addon.Navigator:Show()
 check(not w.bar._shown, "no bar while waiting to take off")
 UnitOnTaxi = function() return true end

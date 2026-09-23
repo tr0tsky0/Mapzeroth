@@ -100,19 +100,9 @@
 
 267 edges written.
 
-- Cost filled in from the old flat per-method default (see the script's docstring) for: flight (4), phaseswitch (7), portal (175), ship (1), tram (1), zeppelin (2).
+- Cost filled in from the old flat per-method default (see the script's docstring) for: phaseswitch (7), portal (175), ship (1), taxi (4), tram (1), zeppelin (2).
 - 18 edges carry an inert `mapArtID` requirement -- unusable until the
   phase model is wired up for real (see the node-conversion note above); listed there,
   not repeated here.
 - No dangling `from`/`to`: every edge resolved to a node from the conversion pass.
 - No unrecognized requirement keys.
-
-## Ability conversion (tools/gen_modern_abilities.py)
-
-110 Teleports, 2 Hearthstones, 39 Items written.
-
-- 2 item(s) skipped: the old data itself flags them `isRandom` (the client sends you to one of several unlisted spots at random -- not a promise a deterministic search can make, unlike a real `destinations` list the player picks from):
-  - `WORMHOLE_PANDARIA` (Wormhole Generator: Pandaria)
-  - `WORMHOLE_ARGUS` (Wormhole Generator: Argus)
-- 1 ability(ies) skipped: phase-gated (`destinationsByArtID`), same open item as the phase-tagged nodes/edges from the earlier passes -- needs the real phaseGroup/phaseSide wiring, not a coin-flip default:
-  - `MAGE_TP_DARNASSUS` (Teleport: Darnassus)

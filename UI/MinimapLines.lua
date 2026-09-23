@@ -28,7 +28,7 @@ local SIZES = {
 -- Screen pixels.
 local LOOK = {
     foot = { color = "walk", width = 2, on = 1.5, off = 4.5 },
-    flight = { color = "flight", width = 2, on = 6, off = 4 },
+    flight = { color = "taxi", width = 2, on = 6, off = 4 },
     boat = { color = "ship", width = 2.5 },
     ability = { color = "teleport", width = 2, on = 1.5, off = 4.5 },
 }

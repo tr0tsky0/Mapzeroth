@@ -16,7 +16,7 @@ local MapRoute = {}
 addon.MapRoute = MapRoute
 
 local STYLES = {
-    walk = "foot", transition = "foot", flight = "flight",
+    walk = "foot", transition = "foot", taxi = "flight",
     ship = "boat", zeppelin = "boat", tram = "boat",
     teleport = "ability", hearthstone = "ability", portal = "ability",
 }

@@ -19,7 +19,7 @@ local MapRoute = addon.MapRoute
 -- faint band under the line.
 local LOOK = {
     foot = { color = "walk", width = 3.2, on = 2, off = 6.5, halo = 12 },
-    flight = { color = "flight", width = 3, on = 9, off = 7 },
+    flight = { color = "taxi", width = 3, on = 9, off = 7 },
     boat = { color = "ship", width = 3.5 },
     ability = { color = "teleport", width = 3.2, on = 2, off = 6.5 },
 }

@@ -19,7 +19,7 @@ local toStormwindFM = addon.Pathfinder:FindPath(graph, "YOU_1", "TAXI_2")
 check(toStormwindFM and #toStormwindFM.steps == 1 and toStormwindFM.steps[1].method == "walk", "you walk to the flight master")
 
 local toIronforge = addon.Pathfinder:FindPath(graph, "YOU_1", "TAXI_6")
-check(toIronforge and methods(toIronforge) == "walk,flight", "then fly: " .. tostring(toIronforge and methods(toIronforge)))
+check(toIronforge and methods(toIronforge) == "walk,taxi", "then fly: " .. tostring(toIronforge and methods(toIronforge)))
 check(toIronforge.cost > toStormwindFM.cost, "the trip costs more than the walk")
 
 -- One search gives the cost of every reachable node, and agrees with a single route.

@@ -24,7 +24,7 @@ check(not N:IsActive() and N:Update(at("TAXI_2")) == nil, "nothing happens with 
 -- Walk to Stormwind's flight master, fly to Ironforge, then a hearthstone-style jump to Sentinel Hill.
 local plan = { steps = {
     step("walk", "YOU", "TAXI_2", 60),
-    step("flight", "TAXI_2", "TAXI_6", 200),
+    step("taxi", "TAXI_2", "TAXI_6", 200),
     step("hearthstone", "TAXI_6", "TAXI_4", 25, { itemID = 6948 }),
 } }
 
@@ -76,6 +76,16 @@ check(m.index == 4, "standing at Sentinel Hill jumps past the walk, flight and h
 N:Start(entry, plan)
 m = N:Update({ now = 0, onTaxi = false })
 check(m.index == 1 and m.distance == nil and m.remaining > 0, "no position: no distance")
+
+-- Losing position mid-trip (a loading screen, an instance) must not error even though the last
+-- known position is still on hand -- the jump check used to build a "where are they now" node
+-- straight from the sample's (possibly missing) mapID/x/y and hand it to the real distance
+-- provider unguarded.
+N:Start(entry, plan)
+N:Update(at("TAXI_2", 0.08, 0))            -- a real position, so active.last gets set
+local ok, midTrip = pcall(N.Update, N, { now = 5, onTaxi = false })
+check(ok, "losing position mid-trip doesn't error: " .. tostring(midTrip))
+check(midTrip.index == 1, "and just keeps the step it was on")
 
 -- Transport: two places on the Stormwind map, 577 yards apart.
 local ship = { steps = { step("ship", "TAXI_2", "PORTAL_STORMWIND_DALARAN", 100) } }
@@ -142,7 +152,7 @@ m = N:Update(player(0, 0.1, WEST))
 check(m.kind == "walk" and near(m.heading, -math.pi / 2), "a walk step carries its heading")
 
 -- Which flight was chosen. Two flights on the route, Stormwind > Ironforge > Sentinel Hill.
-local twoFlights = { steps = { step("flight", "TAXI_2", "TAXI_6", 200), step("flight", "TAXI_6", "TAXI_4", 100) } }
+local twoFlights = { steps = { step("taxi", "TAXI_2", "TAXI_6", 200), step("taxi", "TAXI_6", "TAXI_4", 100) } }
 local far = { x = 0.5, y = 0.5 }
 local function flying(id, now) return at(id, far.x, far.y, { now = now, onTaxi = true }) end
 

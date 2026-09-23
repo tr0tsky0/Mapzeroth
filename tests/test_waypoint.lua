@@ -84,3 +84,19 @@ check(m.kind == "walk" and m.distance and m.distance > 100, "on the way: a dista
 m = N:Update({ mapID = 1453, x = dest.x + 0.001, y = dest.y, now = 5 })
 check(m.finished, "arriving at the waypoint ends the trip")
 N:Stop()
+
+-- Where flying is allowed a waypoint can be flown to from nodes in range, not only walked to: so a
+-- route can end "fly to your waypoint" (Forever has no flying, so its waypoints stay walk-only, above).
+local flyPath = addon.World:GetNodeContainer("TAXI_2").path
+addon.Containers[flyPath] = { fly = true }
+addon.World:Build()
+local flySession = addon.Journey:Build(ctx, start, { dest })
+local flyEdge
+for _, e in ipairs(flySession.graph.adjacency["TAXI_2"] or {}) do
+    if e.to == dest.id and e.method == "fly" then flyEdge = e end
+end
+check(flyEdge and flyEdge.cost > 0, "a flyable zone gets a fly edge to the waypoint from a node in range")
+local flyPlan = addon.Journey:PlanEntry(flySession, pick)
+check(flyPlan and flyPlan.steps[#flyPlan.steps].nodeID == dest.id, "and the waypoint is still reachable")
+addon.Containers[flyPath] = nil
+addon.World:Build()

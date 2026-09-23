@@ -48,7 +48,7 @@ addon.Theme:Register("classic", {
         insets = { left = 3, right = 3, top = 3, bottom = 3 },
     } },
     methods = {
-        walk = c(0.9, 0.9, 0.9), flight = c(0.4, 0.75, 1), ship = c(0.4, 0.75, 1), zeppelin = c(0.4, 0.75, 1),
+        walk = c(0.9, 0.9, 0.9), taxi = c(0.4, 0.75, 1), ship = c(0.4, 0.75, 1), zeppelin = c(0.4, 0.75, 1),
         tram = c(0.4, 0.75, 1), portal = c(1, 0.82, 0), teleport = c(1, 0.82, 0),
         hearthstone = c(1, 0.82, 0), default = c(0.62, 0.62, 0.62),
     },

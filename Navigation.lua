@@ -32,7 +32,7 @@ local TICKET_WAIT = 15       -- seconds a chosen flight has to start before we f
 local NOTICE_TIME = 8        -- seconds a note ("Route updated") stays up
 
 local KINDS = {
-    walk = "walk", transition = "walk", flight = "flight",
+    walk = "walk", transition = "walk", taxi = "flight",
     ship = "transport", zeppelin = "transport", tram = "transport",
     teleport = "ability", hearthstone = "ability", portal = "portal",
 }
@@ -58,7 +58,7 @@ end
 
 -- Yards from the sample to a node, or nil if we can't say.
 local function distance(sample, node)
-    if not (sample and sample.mapID and node) then return nil end
+    if not (sample and sample.mapID and node and node.mapID) then return nil end
     return addon.TravelGraph.DistanceProvider(
         { id = "YOU_NOW", nocache = true, mapID = sample.mapID, x = sample.x, y = sample.y }, node)
 end

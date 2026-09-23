@@ -2,8 +2,8 @@
 -- gen_modern_edges.py, match_modern_taxi_nodes.py): not a real coverage suite (no
 -- Abilities/POI data yet -- see Data/Modern/CONVERSION_NOTES.md), just "does the data load
 -- into the real engine without falling over, and does grouping/routing/naming look sane."
--- Run against the Modern-dev TOC, not the default one:
---   python tests/harness.py --toc Mapzeroth-Rebuild-Modern-dev.toc modern_smoke
+-- Run against the Modern TOC, not the default one:
+--   python tests/harness.py --toc Mapzeroth-Rebuild_Mainline.toc modern_smoke
 
 useTestDistances()
 addon.World:Build()

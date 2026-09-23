@@ -40,6 +40,7 @@ Data\Forever\PathFactors.lua
 Data\Forever\NodeNames_enUS.lua
 Data\Forever\TownNames_enUS.lua
 Data\Forever\InstanceNames_enUS.lua
+Data\Forever\Geometry.lua
 
 # Engine
 World.lua
