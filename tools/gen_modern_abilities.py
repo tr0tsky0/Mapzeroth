@@ -14,6 +14,8 @@ Category mapping:
   Hearthstones: goes to wherever the player is bound (ctx.hearthNode), not a fixed spot.
 - TravelItems with a fixed destination becomes Items (NEW category this pass adds to
   GetKnownTeleports): item-based, like Hearthstones, but a fixed `to` like Teleports.
+  `toy = true` carries through (a toy lives in the toy box, not the bags: see PlayerAbilities.lua's
+  hasToy) -- the old data's `type = "toy"`.
   `faction` carries through (two entries can share one itemID with a different `to` each
   per faction -- Admiral's Compass does; GetKnownTeleports picks the one that matches).
 - ClassTeleports and DungeonTeleports become Teleports (spell-based, fixed `to`).
@@ -110,7 +112,7 @@ def main():
                 dangling.append((ability_id, ", ".join(missing)))
                 continue
             items.append({"itemID": item_id, "toList": dest_list, "cost": cost,
-                          "cooldown": cooldown, "faction": faction})
+                          "cooldown": cooldown, "faction": faction, "toy": a["type"] == "toy"})
             continue
         if a["destination"] is None:
             hearthstones.append({"itemID": item_id, "cost": cost, "cooldown": cooldown})
@@ -119,7 +121,8 @@ def main():
         if to not in node_ids:
             dangling.append((ability_id, a["destination"]))
             continue
-        items.append({"itemID": item_id, "to": to, "cost": cost, "cooldown": cooldown, "faction": faction})
+        items.append({"itemID": item_id, "to": to, "cost": cost, "cooldown": cooldown, "faction": faction,
+                      "toy": a["type"] == "toy"})
 
     # ClassTeleports: spell-based, fixed destination (or skipped for a phase-gated one); a
     # spell with no destination at all (Astral Recall) goes to wherever the player is bound,
@@ -172,6 +175,8 @@ def main():
             parts.append(f'cooldown = {int(entry["cooldown"])}')
         if entry.get("faction"):
             parts.append(f'faction = "{entry["faction"]}"')
+        if entry.get("toy"):
+            parts.append("toy = true")
         return "    { " + ", ".join(parts) + " },"
 
     lines = [

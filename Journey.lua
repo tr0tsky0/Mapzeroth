@@ -80,9 +80,36 @@ function Journey:EntryCost(session, entry)
     return cost
 end
 
-local function stepText(method, name, via)
+-- The client's name for the spell or item an ability step uses, and which it is ("spell" / "item"), or
+-- nil when it has none or the client hasn't loaded it yet (an item's name can take a moment: the request
+-- is made, and the text says where the step goes instead until it arrives).
+local function abilityName(source)
+    if type(source) ~= "table" then return nil end
+    if source.itemID then
+        local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(source.itemID)
+        if not name and type(GetItemInfo) == "function" then name = GetItemInfo(source.itemID) end
+        if not name and C_Item and C_Item.RequestLoadItemDataByID then C_Item.RequestLoadItemDataByID(source.itemID) end
+        return name, "item"
+    end
+    if source.spellID then
+        local info = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(source.spellID)
+        return info and info.name, "spell"
+    end
+end
+
+-- Steps that are the player using something of their own: "Cast Path of the Devoted Magistry",
+-- "Use Personal Key to the Arcantina", named for the spell or item rather than for where it lands.
+local ABILITY_METHODS = { teleport = true, racial = true }
+
+local function stepText(method, name, via, source)
     if via and #via > 0 then
         return L["STEP_TAXI_VIA"]:format(name, table.concat(via, ", "))
+    end
+    if ABILITY_METHODS[method] then
+        local label, kind = abilityName(source)
+        if label and label ~= "" then
+            return L[kind == "item" and "STEP_USE_ITEM" or "STEP_CAST"]:format(label)
+        end
     end
     local key = "STEP_" .. tostring(method):upper()
     return (addon:HasString(key) and L[key] or L["STEP_OTHER"]):format(name)
@@ -110,7 +137,10 @@ local function readableSteps(result, session)
         if not (step.method == "walk" and step.cost < TRIVIAL_WALK and #legs > 1) then
             -- A portal node is named for where it leads, so the step names the one you take
             -- (where you stand), not the one you come out of.
-            local name = addon:GetNodeName(step.method == "portal" and step.from or step.to)
+            -- A portal we have a name for is named for where it leads (Forever's "Stormwind Portal");
+            -- one we only know by its map (Modern's) is described by where you come out.
+            local ownName = step.method == "portal" and addon:HasNodeName(step.from)
+            local name = addon:GetNodeName(ownName and step.from or step.to)
             -- A flight ticket that passes through other flight points names them.
             local via
             if step.method == "taxi" and #step.parts > 1 then
@@ -129,7 +159,8 @@ local function readableSteps(result, session)
             steps[#steps + 1] = {
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
                 seconds = step.cost, name = name, via = via, path = path,
-                text = stepText(step.method, name, via),
+                text = (step.method == "portal" and not ownName)
+                    and L["STEP_PORTAL_TO"]:format(name) or stepText(step.method, name, via, step.source),
                 approx = step.method == "walk",     -- a walk is an estimate
             }
         end
@@ -175,6 +206,7 @@ function Journey:Plan(session, goalID)
         chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, money))
     end
     local plan = { cost = (chosen or fastest).cost, steps = readableSteps(chosen or fastest, session), goal = (chosen or fastest).goal,
+                   raw = (chosen or fastest).steps,           -- the search's own steps, before merging: for diagnostics
                    fare = (chosen or fastest).fare, money = money }
     if not chosen then
         plan.unaffordable = true                           -- no way there within their means: show the quickest anyway

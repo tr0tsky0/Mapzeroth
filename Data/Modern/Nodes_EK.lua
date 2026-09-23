@@ -234,4 +234,5 @@ addon.Nodes.EK = {
     { id = "TOL_BARAD_HORDE", container = "tol_barad.map245", mapID = 245, x = 0.5310, y = 0.7600 }, -- Tol Barad Camp
     { id = "BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700 }, -- Baradin Hold
     { id = "FOUNDERS_POINT", container = "founders_point.map2352", mapID = 2352, x = 0.5740, y = 0.2680 }, -- Entrance Portal
+    { id = "LYCANEUM_ENTRANCE", container = "ek_overworld.map2424", mapID = 2424, x = 0.6409, y = 0.2895, area = 16754 }, -- Entrance to the Lycaneum (Court of the Phoenix) (hand-added: tools/modern_manual.py)
 }

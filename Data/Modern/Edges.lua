@@ -274,4 +274,6 @@ addon.Edges = {
     { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
+    { from = "LYCANEUM_ENTRANCE", to = "MAGISTERS_SILVERMOON_PORTAL", method = "walk" }, -- hand-added: tools/modern_manual.py
+    { from = "MAGISTERS_SILVERMOON_PORTAL", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
 }

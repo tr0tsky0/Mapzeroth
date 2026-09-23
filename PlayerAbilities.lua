@@ -23,6 +23,14 @@ local function hasItem(itemID)
     return (GetItemCount and (GetItemCount(itemID) or 0) > 0) or false
 end
 
+-- Is this toy usable by the player? A toy sits in the toy box, not the bags, so an item count can't
+-- see it (Personal Key to the Arcantina and most of Modern's teleport toys).
+local function hasToy(itemID)
+    if not PlayerHasToy or not PlayerHasToy(itemID) then return false end
+    if C_ToyBox and C_ToyBox.IsToyUsable then return C_ToyBox.IsToyUsable(itemID) and true or false end
+    return true
+end
+
 -- Seconds until a spell can be used again (0 when ready).
 local function cooldownRemaining(spellID)
     local info = C_Spell and C_Spell.GetSpellCooldown and C_Spell.GetSpellCooldown(spellID)
@@ -83,6 +91,7 @@ function addon:GetPlayerContext()
         level = UnitLevel("player"),
         knowsSpell = isSpellKnown,
         hasItem = hasItem,
+        hasToy = hasToy,
         cooldownRemaining = cooldownRemaining,
         itemCooldownRemaining = itemCooldownRemaining,
         hearthNode = addon:GetBoundInnNode(),
@@ -146,7 +155,8 @@ function addon:GetKnownTeleports(ctx)
         end
     end
     for _, ability in ipairs(abilities.Items or {}) do
-        if ability.itemID and factionOk(ability) and ctx.hasItem(ability.itemID) and itemReady(ability) then
+        local owns = ability.toy and ctx.hasToy and ctx.hasToy(ability.itemID) or ctx.hasItem(ability.itemID)
+        if ability.itemID and factionOk(ability) and owns and itemReady(ability) then
             addAll(ability, ability.to)
         end
     end

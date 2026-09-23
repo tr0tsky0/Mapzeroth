@@ -16,12 +16,12 @@ local L = addon.L
 local Theme = addon.Theme
 local Journey = addon.Journey
 
-local WIDTH, HEIGHT, PAD = 330, 440, 16
+local WIDTH, HEIGHT, PAD = 330, 500, 16
 local INNER = WIDTH - 2 * PAD
 local LIST_TOP = 86
 local ROW_H, ROWS = 38, 8
 local INDENT = 14                         -- how far an item of an accordion section sits in from its heading
-local STEP_H, STEPS = 30, 7
+local STEP_H, STEPS = 30, 8
 
 local ui                                  -- the widgets, once built
 local state = {
@@ -160,7 +160,7 @@ local function build(parent)
         ui.steps[i] = row
     end
     ui.more = Theme:Text(frame, "dim")
-    ui.more:SetPoint("TOPLEFT", PAD + 14, -(stepsTop + STEPS * STEP_H + 2))
+    ui.more:SetPoint("BOTTOMLEFT", PAD + 14, PAD + 4)      -- beside Start, never under it
 
     ui.start = Theme:Button(frame, L["ROUTE_START"], 90, 22, true)
     ui.start:SetPoint("BOTTOMRIGHT", -PAD, PAD)
@@ -421,8 +421,13 @@ function Panel:RenderSteps()
             row:Hide()
         end
     end
-    local extra = #plan.steps - state.stepOffset - STEPS
-    ui.more:SetText(extra > 0 and ("+" .. extra) or "")
+    -- Say when steps are out of sight, above or below: a route can be longer than the list, and the
+    -- first step scrolled away was easy to miss.
+    local above, below = state.stepOffset, #plan.steps - state.stepOffset - STEPS
+    local notes = {}
+    if above > 0 then notes[#notes + 1] = L["ROUTE_MORE_ABOVE"]:format(above) end
+    if below > 0 then notes[#notes + 1] = L["ROUTE_MORE_BELOW"]:format(below) end
+    ui.more:SetText(table.concat(notes, "   "))
     self:MarkCurrentStep()
 end
 

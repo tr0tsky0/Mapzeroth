@@ -186,3 +186,40 @@ do
         "and it says the quicker one costs 1660c: saves " .. tostring(plan.quickest and plan.quickest.saves) .. "s")
     check(not plan.unaffordable, "which isn't out of reach")
 end
+
+-- What a step says when the player is using something of their own, or a portal we can't name.
+-- "Cast <spell>" and "Use <item>" name the spell or item (the client's name for it) instead of where it
+-- lands; a portal with no name of ours (Modern's) says where you come out, by its map, not a raw id.
+do
+    local list = addon.Nodes.EasternKingdoms or select(2, next(addon.Nodes))
+    local swContainer = addon.World:GetNodeContainer("TAXI_2").path
+    local ifContainer = addon.World:GetNodeContainer("TAXI_6").path
+    table.insert(list, { id = "ZZTEST_A", container = ifContainer, mapID = 1455, x = 0.5, y = 0.5 })
+    table.insert(list, { id = "ZZTEST_B", container = swContainer, mapID = 1453, x = 0.5, y = 0.5 })
+    table.insert(list, { id = "ZZTEST_SPELL", container = swContainer, mapID = 1453, x = 0.4, y = 0.4 })
+    table.insert(list, { id = "ZZTEST_ITEM", container = swContainer, mapID = 1453, x = 0.6, y = 0.6 })
+    table.insert(addon.Edges, { from = "ZZTEST_A", to = "ZZTEST_B", method = "portal", cost = 0 })
+    table.insert(addon.Abilities.Teleports, { spellID = 900002, to = "ZZTEST_SPELL", cost = 5 })
+    addon.Abilities.Items = addon.Abilities.Items or {}
+    table.insert(addon.Abilities.Items, { itemID = 900001, to = "ZZTEST_ITEM", cost = 5 })
+    addon.World:Build()
+    addon:ClearNodeNameCache()
+    C_Spell = { GetSpellInfo = function(id) if id == 900002 then return { name = "Path of Testing" } end end }
+    C_Item = { GetItemNameByID = function(id) if id == 900001 then return "Test Key" end end }
+
+    local ctx = makeCtx({ faction = "Alliance", spells = { 900002 }, items = { 900001 } })
+    local from = { id = "YOU_zz", mapID = 1455, x = 0.5, y = 0.5 }
+    local s = J:Build(ctx, from)
+    local spellPlan = J:Plan(s, "ZZTEST_SPELL")
+    check(spellPlan and spellPlan.steps[1].text == "Cast Path of Testing", "a spell teleport is named for the spell: " .. tostring(spellPlan and spellPlan.steps[1].text))
+    local itemPlan = J:Plan(s, "ZZTEST_ITEM")
+    check(itemPlan and itemPlan.steps[1].text == "Use Test Key", "an item teleport is named for the item: " .. tostring(itemPlan and itemPlan.steps[1].text))
+    local portalPlan = J:Plan(s, "ZZTEST_B")
+    local portal
+    for _, step in ipairs(portalPlan and portalPlan.steps or {}) do if step.method == "portal" then portal = step end end
+    check(portal and portal.text == "Take the portal to Stormwind City", "an unnamed portal says where it comes out: " .. tostring(portal and portal.text))
+
+    C_Spell.GetSpellInfo = function() return nil end     -- the client has no name yet: say where it goes instead
+    local unnamed = J:Plan(J:Build(ctx, from), "ZZTEST_SPELL")
+    check(unnamed and unnamed.steps[1].text == "Teleport to Stormwind City", "with no name to give, it says where it goes: " .. tostring(unnamed and unnamed.steps[1].text))
+end

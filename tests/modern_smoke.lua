@@ -25,8 +25,8 @@ C_TaxiMap = { GetTaxiNodesForMap = function(id)
     if id == 13 then return { { nodeID = 6, name = "Ironforge, Dun Morogh" } } end
     return {}
 end }
-check(addon:GetNodeName("TAXI_6") == "Ironforge, Dun Morogh",
-    "a renamed flight master resolves to the client's own name, not its raw id: " .. addon:GetNodeName("TAXI_6"))
+check(addon:GetNodeName("TAXI_6") == "Ironforge Flight Master",
+    "a renamed flight master resolves to the client's own name (place without its zone), not its raw id: " .. addon:GetNodeName("TAXI_6"))
 
 -- Same idea for a dungeon entrance (tools/match_modern_instance_nodes.py, matched by name
 -- against the real JournalInstance table): The Stonecore matched to journalInstanceID 67.
@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1215, "every converted node made it into the tree: " .. total)
+check(total == 1216, "every converted node made it into the tree (1215 converted + 1 hand-added): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -132,3 +132,26 @@ print(string.format("modern_smoke: %d nodes, %d distinct containers", total, (fu
     for _ in pairs(containers) do n = n + 1 end
     return n
 end)()))
+
+-- Hand additions (tools/modern_manual.py): the Lycaneum's portal room is an interior, reached on foot from
+-- its outside entrance, not by a 2 s hop from the dungeon entrance next door.
+check(addon.World:GetNode("LYCANEUM_ENTRANCE"), "the hand-added Lycaneum entrance is in the tree")
+check(addon.World:GetFlag(addon.World:GetContainer("ek_overworld.map2649"), "indoor") == true, "the Lycaneum is marked indoor")
+local lycGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+local flyIntoLycaneum, walkOut = false, false
+for from, list in pairs(lycGraph.adjacency) do
+    for _, e in ipairs(list) do
+        if e.method == "fly" and (from == "MAGISTERS_SILVERMOON_PORTAL" or e.to == "MAGISTERS_SILVERMOON_PORTAL") then flyIntoLycaneum = true end
+        if from == "LYCANEUM_ENTRANCE" and e.to == "MAGISTERS_SILVERMOON_PORTAL" and e.method == "walk" and e.cost > 0 then walkOut = true end
+    end
+end
+check(not flyIntoLycaneum, "nothing flies to or from the Lycaneum's portal room (an interior: no 2 s hop into it)")
+check(walkOut, "the way in is a walk from its outside door, costed from distance")
+
+-- A toy is owned through the toy box, not the bags (the old data's type = "toy", carried through as
+-- toy = true): Personal Key to the Arcantina is one, and the bag-count check never saw it.
+local withKey = addon.TravelGraph:Build(makeCtx({ faction = "Alliance", toys = { 253629 } }))
+local keyRoute = addon.Pathfinder:FindPath(withKey, "IRONFORGE", "ARCANTINA_ENTRANCE")
+check(keyRoute and keyRoute.steps[1].method == "teleport" and keyRoute.steps[1].source.itemID == 253629,
+    "a character who owns the toy can use it from anywhere: " .. tostring(keyRoute and keyRoute.steps[1].method))
+-- (An unlearned toy still in the bags is an ordinary usable item, so the bag count still counts too.)

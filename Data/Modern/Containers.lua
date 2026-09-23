@@ -33,3 +33,4 @@ addon.Containers["broken_isles.map734.interior"] = { indoor = true } -- 1 interi
 addon.Containers["ek_overworld.map35.interior"] = { indoor = true } -- 2 interior node(s)
 addon.Containers["ek_overworld.map84.interior"] = { indoor = true } -- 17 interior node(s)
 addon.Containers["kalimdor_overworld.map85.interior"] = { indoor = true } -- 17 interior node(s)
+addon.Containers["ek_overworld.map2649"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)

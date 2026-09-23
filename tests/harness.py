@@ -41,9 +41,10 @@ end
 -- A player context. overrides: faction, class, race, level, spells = {id, ...}
 function makeCtx(overrides)
     overrides = overrides or {}
-    local known, items = {}, {}
+    local known, items, toys = {}, {}, {}
     for _, id in ipairs(overrides.spells or {}) do known[id] = true end
     for _, id in ipairs(overrides.items or {}) do items[id] = true end
+    for _, id in ipairs(overrides.toys or {}) do toys[id] = true end
     return {
         faction = overrides.faction or "Alliance",
         class = overrides.class or "MAGE",
@@ -51,6 +52,7 @@ function makeCtx(overrides)
         level = overrides.level or 20,
         knowsSpell = function(id) return known[id] or false end,
         hasItem = function(id) return items[id] or false end,
+        hasToy = function(id) return toys[id] or false end,
         cooldownRemaining = function(id) return (overrides.cooldowns or {})[id] or 0 end,
         itemCooldownRemaining = function(id) return (overrides.itemCooldowns or {})[id] or 0 end,
         hearthNode = overrides.hearthNode,

@@ -41,22 +41,29 @@ end
 local function loadTaxiNames()
     taxiNames = {}
     local queried = {}
-    for _, list in pairs(addon.Nodes or {}) do
-        for _, node in ipairs(list) do
-            if node.id:find("^TAXI_%d+$") then
-                local continent = continentOf(node.mapID)
-                if continent and not queried[continent] then
-                    queried[continent] = true
-                    local ok, entries = pcall(C_TaxiMap.GetTaxiNodesForMap, continent)
-                    if ok and type(entries) == "table" then
-                        for _, entry in ipairs(entries) do
-                            if entry.nodeID and entry.name then
-                                taxiNames[entry.nodeID] = entry.name
-                            end
-                        end
-                    end
+    local function query(mapID)
+        if not mapID or queried[mapID] then return end
+        queried[mapID] = true
+        local ok, entries = pcall(C_TaxiMap.GetTaxiNodesForMap, mapID)
+        if ok and type(entries) == "table" then
+            for _, entry in ipairs(entries) do
+                if entry.nodeID and entry.name then
+                    taxiNames[entry.nodeID] = entry.name
                 end
             end
+        end
+    end
+    for _, list in pairs(addon.Nodes or {}) do
+        for _, node in ipairs(list) do
+            if node.id:find("^TAXI_%d+$") then query(continentOf(node.mapID)) end
+        end
+    end
+    -- What the continents didn't return: ask for the node's own map (some maps, like the Vaults of
+    -- Atal'Utek, hang off no continent, or list their flight masters on their own).
+    for _, list in pairs(addon.Nodes or {}) do
+        for _, node in ipairs(list) do
+            local id = node.id:match("^TAXI_(%d+)$")
+            if id and not taxiNames[tonumber(id)] then query(node.mapID) end
         end
     end
 end
@@ -205,10 +212,12 @@ local function resolve(nodeID)
 
     if nodeID:match("^TAXI_%d+$") then
         local place = taxiSettlementName(nodeID)
-        if place and addon:HasString("NODE_KIND_FLIGHTMASTER") then
+        local raw = taxiNameOf(nodeID)
+        if not place and raw then place = (raw:gsub(",.*$", "")) end
+        if place and place ~= "" and addon:HasString("NODE_KIND_FLIGHTMASTER") then
             return L["NODE_KIND_FLIGHTMASTER"]:format(place)
         end
-        return taxiNameOf(nodeID)
+        return raw
     end
 
     -- A dungeon or raid entrance, named from the client's own Dungeon Journal (Modern only
@@ -241,11 +250,23 @@ function addon:GetNodeName(nodeID)
     if cached then return cached end
 
     local name = resolve(nodeID)
+    if not name then
+        -- Nothing names this node: the client's name for its map says where it is (an arrival, or
+        -- a teleport's destination, reads "The Arcantina"), which beats showing a raw id.
+        local node = addon.World:GetNode(nodeID)
+        name = node and zoneName(node.mapID)
+    end
     if name then
         nameCache[nodeID] = name
         return name
     end
     return nodeID
+end
+
+-- Does something name this node (as opposed to only its map standing in for a name)? A portal we
+-- can name is described by that name; one we can't is described by where it comes out.
+function addon:HasNodeName(nodeID)
+    return resolve(nodeID) ~= nil
 end
 
 -- Forget resolved names, e.g. after a locale change or in tests.

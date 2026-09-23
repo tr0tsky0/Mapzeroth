@@ -23,6 +23,23 @@ check(addon:GetNodeName("DOCK_STORMWIND") == "Stormwind Harbor", "explicit name:
 -- 2. Flight masters at a city or town we know take its name ("Orgrimmar Flight Master"), not the
 -- client's raw taxi-point name, which reads as a zone label rather than a destination.
 check(addon:GetNodeName("TAXI_23") == "Orgrimmar Flight Master", "taxi name: " .. addon:GetNodeName("TAXI_23"))
+-- A flight master at no settlement of ours (Modern has none) is still "<place> Flight Master", the
+-- place being the client's name for the point without its ", Zone" suffix. One the continent's
+-- list doesn't return is asked for by its own map (the Vaults of Atal'Utek hang off no continent).
+table.insert(addon.Nodes.Kalimdor, { id = "TAXI_900001", container = "kalimdor.durotar", mapID = 1411, x = 0.4, y = 0.4 })
+table.insert(addon.Nodes.Kalimdor, { id = "TAXI_900002", container = "kalimdor.durotar", mapID = 1454, x = 0.4, y = 0.4 })
+addon.World:Build()
+local realTaxi = C_TaxiMap.GetTaxiNodesForMap
+C_TaxiMap.GetTaxiNodesForMap = function(id)
+    if id == 1414 then return { { nodeID = 900001, name = "Tokka's Landing, The Coiled Isle" } } end
+    if id == 1454 then return { { nodeID = 900002, name = "Amani Foothold, Vaults of Atal'Utek" } } end
+    return {}
+end
+addon:ClearNodeNameCache()
+check(addon:GetNodeName("TAXI_900001") == "Tokka's Landing Flight Master", "place from the client's taxi name: " .. addon:GetNodeName("TAXI_900001"))
+check(addon:GetNodeName("TAXI_900002") == "Amani Foothold Flight Master", "found through its own map: " .. addon:GetNodeName("TAXI_900002"))
+C_TaxiMap.GetTaxiNodesForMap = realTaxi
+addon:ClearNodeNameCache()
 -- ...unless we override what the client says (a node with no real taxi id).
 check(addon:GetNodeName("TAXI_POWDERFUSE") == "Powderfuse Port, Riverglades", "override for a taxi-style node")
 
@@ -46,7 +63,9 @@ EJ_GetInstanceInfo = function(id) if id == 67 then return "The Stonecore" end en
 check(addon:GetNodeName("INSTANCE_67") == "The Stonecore", "instance name: " .. addon:GetNodeName("INSTANCE_67"))
 EJ_GetInstanceInfo = nil
 addon:ClearNodeNameCache()
-check(addon:GetNodeName("INSTANCE_67") == "INSTANCE_67", "and falls back to the raw id without that API")
+check(addon:GetNodeName("INSTANCE_67") == "Durotar", "and without that API takes its map's name, not a raw id")
+check(not addon:HasNodeName("INSTANCE_67"), "though nothing actually names it (a portal like that is described by where it comes out)")
+check(addon:HasNodeName("DOCK_TESTONLY"), "while a node with a kind pattern is named")
 
 -- 5. Locales: a translation wins, and anything untranslated falls back to English.
 addon:RegisterLocale("deDE", { NODE_DOCK_STORMWIND = "Hafen von Sturmwind" })

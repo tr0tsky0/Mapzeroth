@@ -30,7 +30,11 @@ these were already worked out on the original addon's wip/timephased-routing bra
 worth reusing rather than re-deriving.
 """
 import pathlib
+import sys
 from lupa.lua51 import LuaRuntime
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import modern_manual as manual
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\Data\Mapzeroth_Data_Edges.lua")
@@ -180,6 +184,18 @@ def main():
             req_parts = ", ".join(f"{k} = {format_value(v)}" for k, v in reqs.items())
             parts.append(f"requirements = {{ {req_parts} }}")
         lines.append(f"    {{ {', '.join(parts)} }},")
+        total += 1
+
+    # Hand-added edges (tools/modern_manual.py).
+    for me in manual.EDGES:
+        if me["from"] not in node_ids or me["to"] not in node_ids:
+            raise SystemExit(f"manual edge {me['from']} -> {me['to']} names a node that doesn't exist")
+        parts = [f'from = "{me["from"]}"', f'to = "{me["to"]}"', f'method = "{me["method"]}"']
+        if me.get("cost") is not None:
+            parts.append(f'cost = {me["cost"]}')
+        if me.get("oneway"):
+            parts.append("oneway = true")
+        lines.append(f"    {{ {', '.join(parts)} }}, -- hand-added: tools/modern_manual.py")
         total += 1
 
     lines.append("}")
