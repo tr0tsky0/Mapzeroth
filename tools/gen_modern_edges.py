@@ -1,0 +1,235 @@
+"""tools/gen_modern_edges.py -- converts the original retail addon's edge list
+(../Mapzeroth/Data/Mapzeroth_Data_Edges.lua) into the rebuild's edge schema
+(Data/Modern/Edges.lua). Run after tools/gen_modern_nodes.py (this script checks every
+edge's `from`/`to` against that pass's node ids and drops -- reporting -- any that don't
+resolve). See docs/DESIGN.md section 4, and Data/Modern/CONVERSION_NOTES.md for the
+node-conversion notes this appends to.
+
+    python tools/gen_modern_edges.py
+
+Cost: the old engine defaults an edge's omitted `cost` to a flat per-method constant
+(Constants.lua's `TRAVEL_COSTS`); the new engine's omitted-cost fallback is distance-based
+instead (right for `walk`, wrong for everything else -- see the node-conversion notes).
+So every omitted-cost edge gets its method's old flat value written in literally, except
+`walk`, which is left omitted on purpose: a Zone<->Zone walk should use real distance, the
+same way Forever's own hand-authored walk edges do.
+
+Requirements: `faction`/`class`/`minLevel`/`maxLevel`/`quest`/`holiday` carry over under
+the same key (the new engine's EdgeRequirements.lua already has checkers for all of
+these -- `holiday` needed adding, done alongside this pass, see Constants.lua/
+PlayerAbilities.lua). `questNotCompleted` is renamed `notQuest` to match the new checker's
+name; nothing else about it changes. `mapArtID` (the old phase-gate marker, an edge-level
+`{mapID, mapArtID}` pair) is carried through UNTRANSLATED under its own key on purpose --
+the new engine's EdgeRequirements has no checker for it, so `addon:MeetsRequirements`
+fails closed on any edge that has one (an unrecognized requirement key never passes),
+which is the same "unreachable until it's done properly" default the node conversion's
+phase-tagged containers already use. Translating it into the new engine's actual
+phaseGroup/phaseSide/phaseswitch-edge model is real per-zone judgment work (which
+container is the present side, which the past), not a mechanical rename, and several of
+these were already worked out on the original addon's wip/timephased-routing branch --
+worth reusing rather than re-deriving.
+"""
+import pathlib
+from lupa.lua51 import LuaRuntime
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\Data\Mapzeroth_Data_Edges.lua")
+OUT = ROOT / "Data" / "Modern"
+
+# The old Constants.lua's TRAVEL_COSTS: what an omitted `cost` meant, by method. `walk` is
+# excluded on purpose -- see the module docstring.
+FALLBACK_COST = {
+    "portal": 0, "teleport": 0, "hearthstone": 0, "racial": 0,
+    "ship": 60, "zeppelin": 60, "tram": 90, "flight": 120, "phaseswitch": 10,
+}
+
+RENAME_REQUIREMENT = {"questNotCompleted": "notQuest"}
+# Requirement keys carried through unrecognized on purpose (see the docstring); anything
+# else unrecognized is a real gap this run should stop and report, not silently drop.
+KNOWN_INERT_REQUIREMENTS = {"mapArtID"}
+KNOWN_REQUIREMENTS = {"faction", "class", "race", "minLevel", "maxLevel", "quest", "notQuest",
+                       "holiday", "anyOf", "anyQuest"}
+
+
+# Same match files tools/gen_modern_nodes.py renames flight-master and instance-entrance
+# node ids from -- an edge's from/to needs the identical rename or it'd point at an id that
+# no longer exists.
+MATCH_FILES = {
+    "flight_node_matches.tsv": "TAXI_",
+    "instance_node_matches.tsv": "INSTANCE_",
+}
+
+
+def load_renames():
+    """Same "one" or "many" (first candidate) policy as tools/gen_modern_nodes.py's own
+    load_renames -- see its docstring."""
+    renames = {}
+    for filename, prefix in MATCH_FILES.items():
+        path = ROOT / "tools" / "modern_source" / filename
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip() or line.startswith("#"):
+                continue
+            node_id, verdict, real_ids, _name = line.split("\t", 3)
+            if verdict in ("one", "many"):
+                renames[node_id] = f"{prefix}{real_ids.split(',')[0]}"
+    return renames
+
+
+def known_node_ids():
+    ids = set()
+    for path in sorted((OUT).glob("Nodes_*.lua")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith('{ id = "'):
+                ids.add(line.split('"')[1])
+    return ids
+
+
+def lua_requirements(reqs):
+    if reqs is None:
+        return None, []
+    out = {}
+    unknown = []
+    for key, value in reqs.items():
+        key = RENAME_REQUIREMENT.get(key, key)
+        if key in KNOWN_REQUIREMENTS or key in KNOWN_INERT_REQUIREMENTS:
+            out[key] = value
+        else:
+            unknown.append(key)
+    return out, unknown
+
+
+def format_value(v):
+    if isinstance(v, str):
+        return f'"{v}"'
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if hasattr(v, "items"):     # a Lua table -- the mapArtID {mapID, artID} pair, or anyOf
+        parts = []
+        for k, item in v.items():
+            if isinstance(k, int):
+                parts.append(format_value(item))
+            else:
+                parts.append(f"{k} = {format_value(item)}")
+        return "{ " + ", ".join(parts) + " }"
+    return str(v)
+
+
+def main():
+    lua = LuaRuntime(unpack_returned_tuples=True)
+    loadstring = lua.eval("loadstring")
+    ns = lua.eval("{}")
+    src = SRC.read_text(encoding="utf-8-sig")
+    chunk = loadstring(src, "@" + SRC.name)
+    if isinstance(chunk, tuple):
+        raise SystemExit(f"syntax error in {SRC.name}: {chunk[1]}")
+    chunk("Mapzeroth", ns)
+
+    node_ids = known_node_ids()
+    if not node_ids:
+        raise SystemExit("no Data/Modern/Nodes_*.lua found -- run tools/gen_modern_nodes.py first")
+    renames = load_renames()
+
+    def resolve_id(old_id):
+        # The node conversion applies this same rename unless two old ids happened to match
+        # the same real id (a rename collision) -- then only the first keeps its new
+        # TAXI_<id>/INSTANCE_<id>, and the id actually in Nodes_*.lua is the one to trust either way.
+        renamed = renames.get(old_id)
+        if renamed and renamed in node_ids:
+            return renamed
+        return old_id
+
+    lines = ["addon.Edges = {"]
+    dangling = []           # (from, to) referencing an unconverted node
+    unknown_reqs = {}       # key -> count, for anything not in KNOWN_REQUIREMENTS/INERT
+    stray_fields = {}       # field name -> count, for anything not in the schema at all
+    phase_gated = 0
+    cost_filled = {}        # method -> count of edges that got a fallback cost written in
+    total = 0
+
+    for e in ns.Edges.values():
+        keys = set(e.keys())
+        for stray in keys - {"from", "to", "method", "cost", "oneway", "requirements", "mapArtID"}:
+            stray_fields[stray] = stray_fields.get(stray, 0) + 1
+        from_id, to_id, method = resolve_id(e["from"]), resolve_id(e["to"]), e["method"]
+        if from_id not in node_ids or to_id not in node_ids:
+            dangling.append((from_id, to_id))
+            continue
+        cost = e["cost"]
+        if cost is None and method != "walk" and method in FALLBACK_COST:
+            cost = FALLBACK_COST[method]
+            cost_filled[method] = cost_filled.get(method, 0) + 1
+        reqs, unknown = lua_requirements(e["requirements"])
+        for key in unknown:
+            unknown_reqs[key] = unknown_reqs.get(key, 0) + 1
+        if reqs and "mapArtID" in reqs:
+            phase_gated += 1
+
+        parts = [f'from = "{from_id}"', f'to = "{to_id}"', f'method = "{method}"']
+        if cost is not None:
+            parts.append(f"cost = {cost}")
+        if e["oneway"]:
+            parts.append("oneway = true")
+        if reqs:
+            req_parts = ", ".join(f"{k} = {format_value(v)}" for k, v in reqs.items())
+            parts.append(f"requirements = {{ {req_parts} }}")
+        lines.append(f"    {{ {', '.join(parts)} }},")
+        total += 1
+
+    lines.append("}")
+    (OUT / "Edges.lua").write_text(
+        "-- Edges.lua (Modern) -- GENERATED by tools/gen_modern_edges.py from the original\n"
+        "-- addon's Mapzeroth_Data_Edges.lua, do not hand-edit. See the script's own docstring\n"
+        "-- for the conversion rules (cost fallbacks, requirement renames, the mapArtID\n"
+        "-- phase-gate marker carried through inert) and Data/Modern/CONVERSION_NOTES.md for\n"
+        "-- what's still open.\n\n"
+        "local addonName, addon = ...\n\n"
+        + "\n".join(lines) + "\n",
+        encoding="utf-8",
+    )
+
+    notes = [
+        "",
+        "## Edge conversion (tools/gen_modern_edges.py)",
+        "",
+        f"{total} edges written.",
+        "",
+        f"- Cost filled in from the old flat per-method default (see the script's docstring) "
+        f"for: " + (", ".join(f"{m} ({n})" for m, n in sorted(cost_filled.items())) if cost_filled else "none") + ".",
+        f"- {phase_gated} edges carry an inert `mapArtID` requirement -- unusable until the",
+        "  phase model is wired up for real (see the node-conversion note above); listed there,",
+        "  not repeated here.",
+    ]
+    if dangling:
+        notes.append(f"- {len(dangling)} edge(s) dropped: `from`/`to` didn't resolve to a converted node")
+        notes.append("  (a node this pass hasn't reached, or the old data referencing something that")
+        notes.append("  no longer exists -- worth checking by hand, not assumed stale):")
+        notes.append("")
+        for f, t in dangling:
+            notes.append(f"  - `{f}` -> `{t}`")
+    else:
+        notes.append("- No dangling `from`/`to`: every edge resolved to a node from the conversion pass.")
+    if unknown_reqs:
+        notes.append(f"- Unrecognized requirement key(s), dropped from their edge (not carried through,")
+        notes.append("  unlike `mapArtID` -- these aren't a known concept in either engine, worth a look):")
+        for key, count in sorted(unknown_reqs.items()):
+            notes.append(f"  - `{key}` ({count})")
+    else:
+        notes.append("- No unrecognized requirement keys.")
+    if stray_fields:
+        notes.append("- Stray field(s) on some edge, not part of the schema, dropped:")
+        for key, count in sorted(stray_fields.items()):
+            notes.append(f"  - `{key}` ({count})")
+
+    with open(OUT / "CONVERSION_NOTES.md", "a", encoding="utf-8") as f:
+        f.write("\n".join(notes) + "\n")
+
+    print(f"wrote {total} edges to {OUT / 'Edges.lua'}")
+    print(f"{len(dangling)} dangling, {phase_gated} phase-gated (inert), "
+          f"{sum(unknown_reqs.values())} unrecognized requirement(s), {sum(stray_fields.values())} stray field(s)")
+
+
+if __name__ == "__main__":
+    main()

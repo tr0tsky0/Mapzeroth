@@ -33,10 +33,20 @@ check(addon:GetNodeName("BORDER_DUROTAR_TO_THE_BARRENS") == "Durotar / The Barre
 -- 4. A node with no string falls back to a kind pattern over the zone name.
 addon:RegisterLocale("enUS", {}) -- no-op; keeps the API exercised
 table.insert(addon.Nodes.Kalimdor, { id = "DOCK_TESTONLY", container = "kalimdor.durotar", mapID = 1411, x = 0.5, y = 0.5 })
+table.insert(addon.Nodes.Kalimdor, { id = "INSTANCE_67", container = "kalimdor.durotar", mapID = 1411, x = 0.5, y = 0.5 })
 addon.World:Build()
 addon:ClearNodeNameCache()
 check(addon:GetNodeName("DOCK_TESTONLY") == "Durotar Harbor", "kind fallback: " .. addon:GetNodeName("DOCK_TESTONLY"))
 check(addon:GetNodeName("NOT_A_NODE") == "NOT_A_NODE", "unknown id falls back to itself")
+
+-- A dungeon/raid entrance (Modern only so far) is named from the client's own Dungeon
+-- Journal by its journalInstanceID, not a kind pattern -- there's no settlement or zone
+-- name that would say "The Stonecore" on its own.
+EJ_GetInstanceInfo = function(id) if id == 67 then return "The Stonecore" end end
+check(addon:GetNodeName("INSTANCE_67") == "The Stonecore", "instance name: " .. addon:GetNodeName("INSTANCE_67"))
+EJ_GetInstanceInfo = nil
+addon:ClearNodeNameCache()
+check(addon:GetNodeName("INSTANCE_67") == "INSTANCE_67", "and falls back to the raw id without that API")
 
 -- 5. Locales: a translation wins, and anything untranslated falls back to English.
 addon:RegisterLocale("deDE", { NODE_DOCK_STORMWIND = "Hafen von Sturmwind" })
@@ -51,7 +61,8 @@ local missing = {}
 for _, list in pairs(addon.Nodes) do
     for _, node in ipairs(list) do
         local id = node.id
-        if id ~= "DOCK_TESTONLY" and not node.kind and not node.area and not id:find("^TAXI_%d+$") and not id:find("^BORDER_")
+        if id ~= "DOCK_TESTONLY" and not node.kind and not node.area
+                and not id:find("^TAXI_%d+$") and not id:find("^INSTANCE_%d+$") and not id:find("^BORDER_")
                 and not addon:HasString("NODE_" .. id) then
             missing[#missing + 1] = id
         end

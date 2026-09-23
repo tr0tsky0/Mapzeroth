@@ -211,6 +211,14 @@ local function resolve(nodeID)
         return taxiNameOf(nodeID)
     end
 
+    -- A dungeon or raid entrance, named from the client's own Dungeon Journal (Modern only
+    -- so far: tools/match_modern_instance_nodes.py renamed it INSTANCE_<journalInstanceID>).
+    local instanceID = nodeID:match("^INSTANCE_(%d+)$")
+    if instanceID and EJ_GetInstanceInfo then
+        local name = EJ_GetInstanceInfo(tonumber(instanceID))
+        if name and name ~= "" then return name end
+    end
+
     local kind = nodeID:match("^(%u+)_")
     if kind == "BORDER" then
         local partner = addon.World:GetNode(borderPartner(nodeID) or "")

@@ -39,6 +39,15 @@ addon.MAX_AUTO_EDGE_DISTANCE = 3000
 -- overrides). Anything not listed defaults to 0.
 addon.DEFAULT_LOADING_SCREENS = { portal = 1, teleport = 1, hearthstone = 1, tram = 2 }
 
+-- Seasonal-event portals (a `requirements = { holiday = "..." }` edge, Modern only so
+-- far): each key is the set of calendar iconTexture ids the event's day entry can show,
+-- matched by PlayerAbilities.lua's ctx.holidayActive against C_Calendar's day events.
+addon.HOLIDAYS = {
+    love_is_in_the_air = { 235466, 235467, 235468 },
+    darkmoon_faire = { 235446, 235447, 235448 },
+    feast_of_winters_veil = { 235482, 235484, 235485 },
+}
+
 -- Forever reports WOW_PROJECT_ID == WOW_PROJECT_MAINLINE, so the interface
 -- version is the only reliable discriminator: 16001 for Forever vs a six-digit
 -- number for Modern.

@@ -1,8 +1,13 @@
 """Headless test harness: loads the addon's TOC files in order into a Lua 5.1
 runtime (lupa) with just enough WoW API stubbed, then runs Lua test files.
 
-    python tests/harness.py            # run every tests/test_*.lua
-    python tests/harness.py test_world # run one
+    python tests/harness.py                     # run every tests/test_*.lua (Forever)
+    python tests/harness.py test_world           # run one
+    python tests/harness.py --toc <name>.toc t1 t2   # run named files against a different TOC
+                                                       # (e.g. the Modern data-conversion smoke
+                                                       # test, which isn't named test_*.lua so
+                                                       # the default run above never picks it up:
+                                                       # python tests/harness.py --toc Mapzeroth-Rebuild-Modern-dev.toc modern_smoke)
 """
 import pathlib
 import sys
@@ -49,6 +54,7 @@ function makeCtx(overrides)
         cooldownRemaining = function(id) return (overrides.cooldowns or {})[id] or 0 end,
         hearthNode = overrides.hearthNode,
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
+        holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,
     }
 end
@@ -79,9 +85,9 @@ end
 """
 
 
-def toc_files():
+def toc_files(toc=None):
     files = []
-    for line in TOC.read_text(encoding="utf-8").splitlines():
+    for line in (toc or TOC).read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue
@@ -97,12 +103,12 @@ def compile_chunk(loadstring, source, name):
     return result
 
 
-def new_runtime():
+def new_runtime(toc=None):
     lua = LuaRuntime(unpack_returned_tuples=True)
     lua.execute(STUBS)
     addon = lua.eval("{}")
     loadstring = lua.eval("loadstring")
-    for name in toc_files():
+    for name in toc_files(toc):
         path = ROOT / name
         chunk = compile_chunk(loadstring, path.read_text(encoding="utf-8"), name)
         chunk("MapzerothRebuild", addon)
@@ -113,8 +119,8 @@ def new_runtime():
     return lua
 
 
-def run_test(name):
-    lua = new_runtime()
+def run_test(name, toc=None):
+    lua = new_runtime(toc)
     path = ROOT / "tests" / f"{name}.lua"
     lua.execute(PRELUDE)
     chunk = compile_chunk(lua.eval("loadstring"), path.read_text(encoding="utf-8"), path.name)
@@ -126,8 +132,13 @@ def run_test(name):
 
 
 def main():
-    names = sys.argv[1:] or sorted(p.stem for p in (ROOT / "tests").glob("test_*.lua"))
-    results = [run_test(n) for n in names]
+    args = sys.argv[1:]
+    toc = None
+    if args[:1] == ["--toc"]:
+        toc = ROOT / args[1]
+        args = args[2:]
+    names = args or sorted(p.stem for p in (ROOT / "tests").glob("test_*.lua"))
+    results = [run_test(n, toc) for n in names]
     raise SystemExit(0 if all(results) else 1)
 
 

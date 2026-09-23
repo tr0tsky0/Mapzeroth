@@ -36,6 +36,29 @@ local function isQuestCompleted(questID)
     return C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted(questID) and true or false
 end
 
+-- Is a seasonal event (addon.HOLIDAYS key) live right now, cached per key for the session
+-- (a snapshot is a snapshot; a holiday doesn't start or end mid-search). No holidays are
+-- gated on in Forever's own data yet, so this only does real work for Modern.
+local holidayCache = {}
+local function isHolidayActive(key)
+    if holidayCache[key] ~= nil then return holidayCache[key] end
+    local icons = addon.HOLIDAYS and addon.HOLIDAYS[key]
+    local active = false
+    if icons and C_DateAndTime and C_Calendar and C_Calendar.GetNumDayEvents then
+        local today = C_DateAndTime.GetCurrentCalendarTime()
+        for i = 1, C_Calendar.GetNumDayEvents(0, today.monthDay) do
+            local event = C_Calendar.GetDayEvent(0, today.monthDay, i)
+            if event and event.calendarType == "HOLIDAY" and event.iconTexture then
+                for _, icon in ipairs(icons) do
+                    if event.iconTexture == icon then active = true end
+                end
+            end
+        end
+    end
+    holidayCache[key] = active
+    return active
+end
+
 function addon:GetPlayerContext()
     local _, classToken = UnitClass("player")
     local _, raceToken = UnitRace("player")
@@ -49,6 +72,7 @@ function addon:GetPlayerContext()
         cooldownRemaining = cooldownRemaining,
         hearthNode = addon:GetBoundInnNode(),
         questCompleted = isQuestCompleted,
+        holidayActive = isHolidayActive,
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost

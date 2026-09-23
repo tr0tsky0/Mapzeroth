@@ -14,6 +14,17 @@ checkers = {
     maxLevel = function(value, ctx) return (ctx.level or 0) <= value end,
     quest    = function(value, ctx) return ctx.questCompleted(value) end,
     notQuest = function(value, ctx) return not ctx.questCompleted(value) end,
+    holiday  = function(value, ctx) return ctx.holidayActive(value) end,
+
+    -- anyQuest = { 50769, 47098 }: true if any one of these quests is done (unlike `quest`,
+    -- which needs a specific one; a Zidormi phase-switch that several different quest
+    -- chains can unlock is the first real use of this).
+    anyQuest = function(value, ctx)
+        for _, questID in ipairs(value) do
+            if ctx.questCompleted(questID) then return true end
+        end
+        return false
+    end,
 
     -- anyOf = { quest = 123, faction = "Horde" }: true if any one entry passes.
     anyOf = function(value, ctx)
