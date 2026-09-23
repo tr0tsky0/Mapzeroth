@@ -220,8 +220,13 @@ def main():
     if not (skipped_random or skipped_phase or dangling):
         notes.append("- Nothing skipped or dangling.")
 
-    with open(NOTES, "a", encoding="utf-8") as f:
-        f.write("\n".join(notes) + "\n")
+    # Idempotent: drop this script's own section from a prior run before appending the
+    # fresh one, so re-running it alone doesn't pile up duplicate sections.
+    heading = "## Ability conversion (tools/gen_modern_abilities.py)"
+    existing = NOTES.read_text(encoding="utf-8") if NOTES.exists() else ""
+    if heading in existing:
+        existing = existing[:existing.index(heading)].rstrip("\n") + "\n"
+    NOTES.write_text(existing + "\n".join(notes) + "\n", encoding="utf-8")
 
     print(f"wrote {len(teleports)} Teleports, {len(hearthstones)} Hearthstones, {len(items)} Items to {OUT}")
     print(f"{len(skipped_random)} skipped (isRandom), {len(skipped_phase)} skipped (phase-gated), "

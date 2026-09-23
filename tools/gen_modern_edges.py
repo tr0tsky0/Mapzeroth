@@ -223,8 +223,14 @@ def main():
         for key, count in sorted(stray_fields.items()):
             notes.append(f"  - `{key}` ({count})")
 
-    with open(OUT / "CONVERSION_NOTES.md", "a", encoding="utf-8") as f:
-        f.write("\n".join(notes) + "\n")
+    # Idempotent: drop this script's own section from a prior run before appending the
+    # fresh one, so re-running it alone doesn't pile up duplicate sections.
+    notes_path = OUT / "CONVERSION_NOTES.md"
+    heading = "## Edge conversion (tools/gen_modern_edges.py)"
+    existing = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
+    if heading in existing:
+        existing = existing[:existing.index(heading)].rstrip("\n") + "\n"
+    notes_path.write_text(existing + "\n".join(notes) + "\n", encoding="utf-8")
 
     print(f"wrote {total} edges to {OUT / 'Edges.lua'}")
     print(f"{len(dangling)} dangling, {phase_gated} phase-gated (inert), "
