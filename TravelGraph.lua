@@ -155,6 +155,8 @@ function TravelGraph:Build(ctx)
                 local dist = TravelGraph.DistanceProvider(a, b)
                 local speed = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
                 cost = dist and (dist * pathFactor(a, b) / speed)
+            elseif cost and edge.method == "flight" then
+                cost = cost / addon:GetFlightSpeedMultiplier(ctx)
             end
             if cost then
                 cost = cost + loadingCost(edge, ctx)

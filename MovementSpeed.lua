@@ -32,3 +32,15 @@ function addon:GetGroundSpeed(container, ctx)
 
     return addon.WALK_SPEED * best
 end
+
+-- Multiplier on a flight-path mount's speed from perks that make it faster (currently just
+-- Forever's Frequent Flier legacy perk; always 1.0 on Modern, where the perk doesn't exist).
+-- A flight edge's baked-in `cost` seconds divides by this in TravelGraph:Build, the same way
+-- a walk edge's divides by GetGroundSpeed above.
+function addon:GetFlightSpeedMultiplier(ctx)
+    local perk = addon.FREQUENT_FLIER
+    if perk and ctx.knowsSpell(perk.spellID) then
+        return 1 + perk.speedBonus
+    end
+    return 1
+end

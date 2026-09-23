@@ -197,5 +197,28 @@ check(FK:FareFactor() == 1, "reset forgets it")
 FK:Load()
 check(math.abs(FK:FareFactor("TAXI_2") - 0.96) < 0.01 and FK:FareFactor("TAXI_6") == 1 and FK:FareFactor("TAXI_14") == 1,
     "and it is saved with the character, per flight master")
+
+-- ForgetFares drops the learned factors but not the found flight points.
+check(FK:IsFound("TAXI_2") == true, "sanity: TAXI_2 is found going into ForgetFares")
+FK:ForgetFares()
+check(FK:FareFactor() == 1 and FK:FareFactor("TAXI_2") == 1, "ForgetFares forgets every learned factor")
+check(FK:IsFound("TAXI_2") == true, "ForgetFares leaves found flight points alone")
+
+-- FACTION_STANDING_CHANGED (a real standing tier crossing, unlike UPDATE_FACTION which fires on
+-- every reputation tick) forgets the learned factors so the next window relearns.
+FK:Reset()
+GetTaxiMapID = function() return 1415 end
+C_TaxiMap.GetAllTaxiNodes = function()
+    return { { nodeID = 2, slotIndex = 1, state = 0 }, { nodeID = 6, slotIndex = 2, state = 1 } }
+end
+GetNumRoutes = function() return 1 end
+TaxiGetNodeSlot = function(slot) return slot end
+TaxiNodeCost = function(slot) return ({ 0, 48 })[slot] end
+FK:OnTaxiMapOpened(ali)
+check(math.abs(FK:FareFactor() - 0.96) < 0.01, "sanity: a factor is learned before the faction test")
+
+FK:OnFactionChanged()
+check(FK:FareFactor() == 1, "a standing change forgets the learned factor")
+check(MapzerothRebuildDB.fareFactors["Tester-Realm"].typical == nil, "and persists the forgetting immediately")
 TaxiNodeCost = nil
 GetTaxiMapID = nil

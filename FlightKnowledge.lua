@@ -152,6 +152,24 @@ function FlightKnowledge:ForgetNotFound()
     end
 end
 
+-- Forgets every learned fare factor (not the found flight points), so the next flight-master
+-- window relearns it from the client's real prices instead of an average that may now be stale.
+function FlightKnowledge:ForgetFares()
+    fareFactor, originFactors = nil, {}
+end
+
+-- FACTION_STANDING_CHANGED fires only on a real standing tier crossing (Friendly -> Honored, or
+-- a drop), unlike UPDATE_FACTION which fires on every reputation tick even within a tier -- so
+-- there's nothing to snapshot or diff here, just react. We have no data on which faction governs
+-- which flight master's price, so any standing change just forgets every learned factor rather
+-- than guessing which one it was; the next window opened relearns it, and until then FareFactor
+-- already falls back to the least discount seen, so a route is never offered at a price the
+-- player can no longer actually pay.
+function FlightKnowledge:OnFactionChanged()
+    self:ForgetFares()
+    self:Save()
+end
+
 -- The map the open flight window is showing: its own id if the client has one, else the
 -- continent above the player.
 local function taxiMapID()

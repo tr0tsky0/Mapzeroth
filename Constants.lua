@@ -48,6 +48,14 @@ addon.HOLIDAYS = {
     feast_of_winters_veil = { 235482, 235484, 235485 },
 }
 
+-- Forever's "Frequent Flier" legacy perk: 50% off flight-path fares (already covered for
+-- free by FlightKnowledge's empirically-learned FareFactor -- it measures the client's
+-- actual shown price against the base fare, so whatever the real stacking rule with
+-- reputation is, the observed ratio already reflects it) and a 20% faster flight-path
+-- mount, which none of our baked-in flight `cost` seconds account for on their own -- see
+-- addon:GetFlightSpeedMultiplier (MovementSpeed.lua).
+addon.FREQUENT_FLIER = { spellID = 1225490, speedBonus = 0.20 }
+
 -- Forever reports WOW_PROJECT_ID == WOW_PROJECT_MAINLINE, so the interface
 -- version is the only reliable discriminator: 16001 for Forever vs a six-digit
 -- number for Modern.
