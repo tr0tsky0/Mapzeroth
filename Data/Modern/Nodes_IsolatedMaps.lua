@@ -8,14 +8,14 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.IsolatedMaps = {
-    { id = "VINDICAAR_AZEROTH", container = "vindicaar_azeroth.map940", mapID = 940, x = 0.7500, y = 0.7500 }, -- The Vindicaar (Azeroth)
+    { id = "VINDICAAR_AZEROTH", container = "vindicaar_azeroth.map940", mapID = 940, x = 0.7500, y = 0.7500, area = 9359 }, -- The Vindicaar (Azeroth)
     { id = "INSTANCE_SUNWELL_PLATEAU", container = "queldanas.map122", mapID = 122, x = 0.4800, y = 0.4200, kind = "instance", journal = 752 }, -- Sunwell Plateau
     { id = "QUELDANAS", container = "queldanas.map122", mapID = 122, x = 0.5000, y = 0.3660 }, -- Entrance Portal
     { id = "INSTANCE_MAGISTERS_TERRACE_BC", container = "queldanas.map122", mapID = 122, x = 0.6100, y = 0.3100, kind = "instance", journal = 249 }, -- Magisters' Terrace
     { id = "TAXI_213", container = "queldanas.map122", mapID = 122, x = 0.4740, y = 0.2510 }, -- Shattered Sun Staging Area
     { id = "TAXI_1294", container = "timeless_isle.map554", mapID = 554, x = 0.2250, y = 0.3810 }, -- Huojin Landing
     { id = "GRIM_CAMPFIRE_PANDARIA", container = "timeless_isle.map554", mapID = 554, x = 0.6790, y = 0.7690 }, -- Grim Campfire
-    { id = "TIMELESS_ISLE", container = "timeless_isle.map554", mapID = 554, x = 0.3420, y = 0.5530 }, -- The Celestial Court
+    { id = "TIMELESS_ISLE", container = "timeless_isle.map554", mapID = 554, x = 0.3420, y = 0.5530, area = 6830 }, -- The Celestial Court
     { id = "TAXI_1293", container = "timeless_isle.map554", mapID = 554, x = 0.2300, y = 0.7100 }, -- Tushui Landing
     { id = "ARCANTINA_EXIT", container = "arcantina.map2541", mapID = 2541, x = 0.5067, y = 0.8530 }, -- Exit
     { id = "ARCANTINA_ENTRANCE", container = "arcantina.map2541", mapID = 2541, x = 0.5093, y = 0.7880 }, -- The Arcantina
@@ -64,13 +64,13 @@ addon.Nodes.IsolatedMaps = {
     { id = "TAXI_2437", container = "nazjatar.map1355", mapID = 1355, x = 0.6358, y = 0.5166 }, -- Ekka's Hideaway
     { id = "TAXI_2403", container = "nazjatar.map1355", mapID = 1355, x = 0.7397, y = 0.2466 }, -- Kelya's Grave
     { id = "TAXI_2409", container = "nazjatar.map1355", mapID = 1355, x = 0.4410, y = 0.8570 }, -- Wreck of the Old Blanchy
-    { id = "NAZJATAR_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.3996, y = 0.5884 }, -- Mezzamere
+    { id = "NAZJATAR_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.3996, y = 0.5884, area = 10334 }, -- Mezzamere
     { id = "TAXI_2408", container = "nazjatar.map1355", mapID = 1355, x = 0.3990, y = 0.5420 }, -- Mezzamere
     { id = "INSTANCE_THE_ETERNAL_PALACE", container = "nazjatar.map1355", mapID = 1355, x = 0.5000, y = 0.1200, kind = "instance", journal = 1179 }, -- The Eternal Palace
     { id = "FLIGHT_THE_TIDAL_CONFLUX_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.4960, y = 0.2360 }, -- The Tidal Conflux
     { id = "FLIGHT_THE_TIDAL_CONFLUX_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.5086, y = 0.2376 }, -- The Tidal Conflux
     { id = "TAXI_2407", container = "nazjatar.map1355", mapID = 1355, x = 0.6140, y = 0.3660 }, -- Utama's Stand
-    { id = "NAZJATAR_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.4719, y = 0.6263 }, -- Newhome
+    { id = "NAZJATAR_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.4719, y = 0.6263, area = 10333 }, -- Newhome
     { id = "SHADOWFORGE_CITY_MOLE", container = "dark_iron_city.map1186", mapID = 1186, x = 0.6140, y = 0.2440 }, -- Shadowforge City
     { id = "INSTANCE_SPOREFALL", container = "harandar.map2413", mapID = 2413, x = 0.7360, y = 0.6650, kind = "instance", journal = 1305 }, -- Sporefall (Harandar): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
 }

@@ -21,7 +21,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_254", container = "northrend.map115", mapID = 115, x = 0.7547, y = 0.6208 }, -- Venomspite
     { id = "TAXI_183", container = "northrend.map117", mapID = 117, x = 0.5930, y = 0.6320 }, -- Valgarde Port
     { id = "TAXI_306", container = "northrend.map121", mapID = 121, x = 0.3360, y = 0.7420 }, -- Light's Breach
-    { id = "ARGENT_TOURNAMENT_GROUNDS", container = "northrend.map118", mapID = 118, x = 0.6940, y = 0.2260 }, -- Argent Tournament Grounds
+    { id = "ARGENT_TOURNAMENT_GROUNDS", container = "northrend.map118", mapID = 118, x = 0.6940, y = 0.2260, area = 4658 }, -- Argent Tournament Grounds
     { id = "TAXI_310", container = "northrend.map127", mapID = 127, x = 0.3660, y = 0.3770 }, -- Dalaran (Northrend) Flightmaster
     { id = "TAXI_331", container = "northrend.map121", mapID = 121, x = 0.7030, y = 0.2290 }, -- Gundrak
     { id = "DOCK_VALGARDE_PORT", container = "northrend.map117", mapID = 117, x = 0.6110, y = 0.6243 }, -- Valgarde Port Dock
@@ -30,8 +30,8 @@ addon.Nodes.Northrend = {
     { id = "TAXI_334", container = "northrend.map118", mapID = 118, x = 0.8790, y = 0.7570 }, -- The Argent Vanguard
     { id = "INSTANCE_UTGARDE_KEEP", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.5000, kind = "instance", journal = 285 }, -- Utgarde Keep
     { id = "TAXI_322", container = "northrend.map120", mapID = 120, x = 0.6250, y = 0.6130 }, -- Dun Niffelem
-    { id = "ARGENT_TOURNAMENT_GROUNDS_MOLE", container = "northrend.map118", mapID = 118, x = 0.7700, y = 0.1860 }, -- Argent Tournament Grounds (Icecrown)
-    { id = "DALARAN_NORTHREND", container = "northrend.map125", mapID = 125, x = 0.5592, y = 0.4678 }, -- Dalaran (Northrend)
+    { id = "ARGENT_TOURNAMENT_GROUNDS_MOLE", container = "northrend.map118", mapID = 118, x = 0.7700, y = 0.1860, area = 4658 }, -- Argent Tournament Grounds (Icecrown)
+    { id = "DALARAN_NORTHREND", container = "northrend.map125", mapID = 125, x = 0.5592, y = 0.4678, area = 4395 }, -- Dalaran (Northrend)
     { id = "PORTAL_DALARAN_NORTHREND_ORGRIMMAR", container = "northrend.map125", mapID = 125, x = 0.5757, y = 0.1942 }, -- Portal to Orgrimmar
     { id = "INSTANCE_HALLS_OF_STONE", container = "northrend.map120", mapID = 120, x = 0.4000, y = 0.2700, kind = "instance", journal = 277 }, -- Halls of Stone
     { id = "TAXI_336", container = "northrend.map127", mapID = 127, x = 0.7260, y = 0.8090 }, -- Windrunner's Overlook
@@ -40,9 +40,9 @@ addon.Nodes.Northrend = {
     { id = "INSTANCE_UTGARDE_PINNACLE", container = "northrend.map117", mapID = 117, x = 0.5700, y = 0.4800, kind = "instance", journal = 286 }, -- Utgarde Pinnacle
     { id = "TAXI_335", container = "northrend.map118", mapID = 118, x = 0.7920, y = 0.7210 }, -- Crusaders' Pinnacle
     { id = "TAXI_246", container = "northrend.map114", mapID = 114, x = 0.5630, y = 0.2080 }, -- Fizzcrank Airstrip
-    { id = "STORM_PEAKS_WORMHOLE", container = "northrend.map120", mapID = 120, x = 0.4300, y = 0.2500 }, -- The Storm Peaks (Wormhole)
+    { id = "STORM_PEAKS_WORMHOLE", container = "northrend.map120", mapID = 120, x = 0.4300, y = 0.2500, area = 67 }, -- The Storm Peaks (Wormhole)
     { id = "TAXI_253", container = "northrend.map116", mapID = 116, x = 0.3130, y = 0.6090 }, -- Amberpine Lodge
-    { id = "HOWLING_FJORD_WORMHOLE", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.4700 }, -- Howling Fjord (Wormhole)
+    { id = "HOWLING_FJORD_WORMHOLE", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.4700, area = 495 }, -- Howling Fjord (Wormhole)
     { id = "TAXI_304", container = "northrend.map121", mapID = 121, x = 0.4230, y = 0.6820 }, -- The Argent Stand
     { id = "INSTANCE_THE_RUBY_SANCTUM", container = "northrend.map115", mapID = 115, x = 0.6100, y = 0.5300, kind = "instance", journal = 761 }, -- The Ruby Sanctum
     { id = "TAXI_257", container = "northrend.map114", mapID = 114, x = 0.3921, y = 0.5138 }, -- Warsong Hold
@@ -52,7 +52,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_333", container = "northrend.map118", mapID = 118, x = 0.4370, y = 0.2700 }, -- The Shadow Vault
     { id = "INSTANCE_VAULT_OF_ARCHAVON", container = "northrend.map123", mapID = 123, x = 0.5000, y = 0.1600, kind = "instance", journal = 753 }, -- Vault of Archavon
     { id = "INSTANCE_NAXXRAMAS", container = "northrend.map115", mapID = 115, x = 0.8700, y = 0.5100, kind = "instance", journal = 754 }, -- Naxxramas
-    { id = "SHOLAZAR_BASIN_WORMHOLE", container = "northrend.map119", mapID = 119, x = 0.4920, y = 0.3960 }, -- Sholazar Basin (Wormhole)
+    { id = "SHOLAZAR_BASIN_WORMHOLE", container = "northrend.map119", mapID = 119, x = 0.4920, y = 0.3960, area = 3711 }, -- Sholazar Basin (Wormhole)
     { id = "INSTANCE_HALLS_OF_REFLECTION", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900, kind = "instance", journal = 276 }, -- Halls of Reflection
     { id = "INSTANCE_GUNDRAK", container = "northrend.map121", mapID = 121, x = 0.8100, y = 0.2900, kind = "instance", journal = 274 }, -- Gundrak
     { id = "INSTANCE_AHNKAHET_THE_OLD_KINGDOM", container = "northrend.map115", mapID = 115, x = 0.2800, y = 0.5200, kind = "instance", journal = 271 }, -- Ahn'kahet: The Old Kingdom
@@ -70,7 +70,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_295", container = "northrend.map117", mapID = 117, x = 0.2500, y = 0.5970 }, -- Kamagua
     { id = "INSTANCE_ICECROWN_CITADEL", container = "northrend.map118", mapID = 118, x = 0.5300, y = 0.8600, kind = "instance", journal = 758 }, -- Icecrown Citadel
     { id = "INSTANCE_DRAKTHARON_KEEP", container = "northrend.map121", mapID = 121, x = 0.2800, y = 0.8700, kind = "instance", journal = 273 }, -- Drak'Tharon Keep
-    { id = "BOREAN_TUNDRA_WORMHOLE", container = "northrend.map114", mapID = 114, x = 0.5300, y = 0.1500 }, -- Borean Tundra (Wormhole)
+    { id = "BOREAN_TUNDRA_WORMHOLE", container = "northrend.map114", mapID = 114, x = 0.5300, y = 0.1500, area = 3537 }, -- Borean Tundra (Wormhole)
     { id = "TAXI_221", container = "northrend.map114", mapID = 114, x = 0.4490, y = 0.3370 }, -- Amber Ledge
     { id = "TAXI_296", container = "northrend.map114", mapID = 114, x = 0.7750, y = 0.4940 }, -- Unu'pe
     { id = "TAXI_250", container = "northrend.map116", mapID = 116, x = 0.2343, y = 0.6498 }, -- Conquest Hold
@@ -78,7 +78,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_256", container = "northrend.map115", mapID = 115, x = 0.3815, y = 0.4636 }, -- Agmar's Hammer
     { id = "ZEPPELIN_WARSONG_HOLD", container = "northrend.map114", mapID = 114, x = 0.4145, y = 0.5272 }, -- Warsong Hold (Zeppelin)
     { id = "TAXI_247", container = "northrend.map115", mapID = 115, x = 0.2980, y = 0.5490 }, -- Stars' Rest
-    { id = "RUBY_DRAGONSHRINE_MOLE", container = "northrend.map115", mapID = 115, x = 0.4530, y = 0.4990 }, -- Ruby Dragonshrine (Dragonblight)
+    { id = "RUBY_DRAGONSHRINE_MOLE", container = "northrend.map115", mapID = 115, x = 0.4530, y = 0.4990, area = 4168 }, -- Ruby Dragonshrine (Dragonblight)
     { id = "TAXI_260", container = "northrend.map115", mapID = 115, x = 0.4368, y = 0.1723 }, -- Kor'kron Vanguard
     { id = "TAXI_192", container = "northrend.map117", mapID = 117, x = 0.4992, y = 0.1034 }, -- Camp Winterhoof
     { id = "TAXI_332", container = "northrend.map123", mapID = 123, x = 0.2143, y = 0.3436 }, -- Warsong Camp
@@ -86,7 +86,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_321", container = "northrend.map120", mapID = 120, x = 0.2800, y = 0.7440 }, -- Frosthold
     { id = "TAXI_258", container = "northrend.map114", mapID = 114, x = 0.7735, y = 0.3902 }, -- Taunka'le Village
     { id = "INSTANCE_THE_NEXUS", container = "northrend.map114", mapID = 114, x = 0.2700, y = 0.2600, kind = "instance", journal = 281 }, -- The Nexus
-    { id = "GRIZZLY_HILLS_DRUID", container = "northrend.map116", mapID = 116, x = 0.5043, y = 0.2975 }, -- Ursoc's Den, Grizzly Hills
+    { id = "GRIZZLY_HILLS_DRUID", container = "northrend.map116", mapID = 116, x = 0.5043, y = 0.2975, area = 4366 }, -- Ursoc's Den, Grizzly Hills
     { id = "VALGARDE_BOAT", container = "northrend.map117", mapID = 117, x = 0.5930, y = 0.6320 }, -- Valgarde Port
     { id = "TAXI_252", container = "northrend.map115", mapID = 115, x = 0.6010, y = 0.5040 }, -- Wyrmrest Temple
     { id = "TAXI_226", container = "northrend.map114", mapID = 114, x = 0.3250, y = 0.3440 }, -- Transitus Shield

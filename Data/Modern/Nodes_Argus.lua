@@ -19,7 +19,7 @@ addon.Nodes.Argus = {
     { id = "INSTANCE_SEAT_OF_THE_TRIUMVIRATE", container = "argus_eredath.map882", mapID = 882, x = 0.2100, y = 0.5700, kind = "instance", journal = 945 }, -- Seat of the Triumvirate
     { id = "TAXI_1977", container = "argus_eredath.map882", mapID = 882, x = 0.5157, y = 0.8609 }, -- The Vindicaar (Eredath)
     { id = "TAXI_2003", container = "argus_eredath.map882", mapID = 882, x = 0.4698, y = 0.5572 }, -- City Center
-    { id = "VINDICAAR_ARGUS", container = "argus_vindicaar.map883", mapID = 883, x = 0.5826, y = 0.8101 }, -- The Vindicaar (Argus)
+    { id = "VINDICAAR_ARGUS", container = "argus_vindicaar.map883", mapID = 883, x = 0.5826, y = 0.8101, area = 8915 }, -- The Vindicaar (Argus)
     { id = "INSTANCE_ANTORUS_THE_BURNING_THRONE", container = "argus_antoran_wastes.map885", mapID = 885, x = 0.5500, y = 0.6200, kind = "instance", journal = 946 }, -- Antorus, the Burning Throne
     { id = "TAXI_1994", container = "argus_antoran_wastes.map885", mapID = 885, x = 0.7547, y = 0.3690 }, -- The Vindicaar (Antoran Wastes)
     { id = "TAXI_1988", container = "argus_antoran_wastes.map885", mapID = 885, x = 0.7276, y = 0.5067 }, -- Hope's Landing

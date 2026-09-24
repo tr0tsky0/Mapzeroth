@@ -12,15 +12,15 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2803", container = "dragon_isles.map2022", mapID = 2022, x = 0.4574, y = 0.2717 }, -- Uktulut Pier
     { id = "ZEPPELIN_WAKING_SHORES_ORGRIMMAR", container = "dragon_isles.map2022", mapID = 2022, x = 0.8162, y = 0.2796 }, -- Zeppelin to Orgrimmar
     { id = "TAXI_2793", container = "dragon_isles.map2023", mapID = 2023, x = 0.7133, y = 0.7890 }, -- Forkriver Crossing
-    { id = "AMIRDRASSIL_DRUID", container = "dragon_isles.map2239", mapID = 2239, x = 0.5834, y = 0.8477 }, -- Amirdrassil, Dragon Isles
+    { id = "AMIRDRASSIL_DRUID", container = "dragon_isles.map2239", mapID = 2239, x = 0.5834, y = 0.8477, area = 15105 }, -- Amirdrassil, Dragon Isles
     { id = "INSTANCE_THE_NOKHUD_OFFENSIVE", container = "dragon_isles.map2023", mapID = 2023, x = 0.6100, y = 0.3900, kind = "instance", journal = 1198 }, -- The Nokhud Offensive
     { id = "TYRHOLD_RESERVOIR_WAYGATE", container = "dragon_isles.map2133", mapID = 2133, x = 0.5234, y = 0.7854 }, -- Tyrhold Reservoir
     { id = "TAXI_2825", container = "dragon_isles.map2023", mapID = 2023, x = 0.5664, y = 0.7648 }, -- Ohn'iri Springs
     { id = "TAXI_2795", container = "dragon_isles.map2023", mapID = 2023, x = 0.4643, y = 0.4154 }, -- Broadhoof Outpost
     { id = "TAXI_2806", container = "dragon_isles.map2022", mapID = 2022, x = 0.6514, y = 0.5713 }, -- Life Vault Ruins
     { id = "FORBIDDEN_REACH", container = "dragon_isles.map2151", mapID = 2151, x = 0.3495, y = 0.6095 }, -- Morqut Village Entrance
-    { id = "ZARALEK_CAVERN_MOLE", container = "dragon_isles.map2133", mapID = 2133, x = 0.5270, y = 0.2770 }, -- Zaralek Cavern (Obsidian Rest)
-    { id = "BELAMETH", container = "dragon_isles.map2239", mapID = 2239, x = 0.5493, y = 0.6388 }, -- Bel'ameth
+    { id = "ZARALEK_CAVERN_MOLE", container = "dragon_isles.map2133", mapID = 2133, x = 0.5270, y = 0.2770, area = 14655 }, -- Zaralek Cavern (Obsidian Rest)
+    { id = "BELAMETH", container = "dragon_isles.map2239", mapID = 2239, x = 0.5493, y = 0.6388, area = 15115 }, -- Bel'ameth
     { id = "TAXI_2810", container = "dragon_isles.map2112", mapID = 2112, x = 0.4436, y = 0.6798 }, -- Flightmaster
     { id = "INSTANCE_RUBY_LIFE_POOLS", container = "dragon_isles.map2022", mapID = 2022, x = 0.6000, y = 0.7500, kind = "instance", journal = 1202 }, -- Ruby Life Pools
     { id = "TAXI_2773", container = "dragon_isles.map2024", mapID = 2024, x = 0.3702, y = 0.6082 }, -- Azure Archives
@@ -34,7 +34,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2855", container = "dragon_isles.map2151", mapID = 2151, x = 0.3552, y = 0.5920 }, -- Morqut Village
     { id = "TAXI_2811", container = "dragon_isles.map2025", mapID = 2025, x = 0.5113, y = 0.6702 }, -- Gelikyr Post
     { id = "INSTANCE_THE_AZURE_VAULT", container = "dragon_isles.map2024", mapID = 2024, x = 0.3800, y = 0.6400, kind = "instance", journal = 1203 }, -- The Azure Vault
-    { id = "FORBIDDEN_REACH_WAYGATE", container = "dragon_isles.map2151", mapID = 2151, x = 0.2909, y = 0.6245 }, -- Morqut Islet
+    { id = "FORBIDDEN_REACH_WAYGATE", container = "dragon_isles.map2151", mapID = 2151, x = 0.2909, y = 0.6245, area = 14594 }, -- Morqut Islet
     { id = "TAXI_2817", container = "dragon_isles.map2022", mapID = 2022, x = 0.7283, y = 0.5197 }, -- Skytop Observatory
     { id = "DOCK_WAKING_SHORES", container = "dragon_isles.map2022", mapID = 2022, x = 0.8194, y = 0.3065 }, -- Alliance Dock
     { id = "TAXI_2801", container = "dragon_isles.map2022", mapID = 2022, x = 0.2370, y = 0.8313 }, -- Apex Observatory
@@ -42,9 +42,9 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2816", container = "dragon_isles.map2025", mapID = 2025, x = 0.5733, y = 0.7907 }, -- Shifting Sands
     { id = "TAXI_2786", container = "dragon_isles.map2024", mapID = 2024, x = 0.6594, y = 0.2545 }, -- Rhonin's Shield
     { id = "PORTAL_VALDRAKKEN_BADLANDS", container = "dragon_isles.map2112", mapID = 2112, x = 0.2597, y = 0.4078 }, -- Badlands Portal
-    { id = "BELANAAR", container = "dragon_isles.map2239", mapID = 2239, x = 0.5140, y = 0.1580 }, -- Belanaar
+    { id = "BELANAAR", container = "dragon_isles.map2239", mapID = 2239, x = 0.5140, y = 0.1580, area = 15121 }, -- Belanaar
     { id = "TAXI_2789", container = "dragon_isles.map2024", mapID = 2024, x = 0.1923, y = 0.2373 }, -- Three-Falls Lookout
-    { id = "AZURE_SPAN_MOLE", container = "dragon_isles.map2024", mapID = 2024, x = 0.8010, y = 0.3900 }, -- The Azure Span (Vakthros Summit)
+    { id = "AZURE_SPAN_MOLE", container = "dragon_isles.map2024", mapID = 2024, x = 0.8010, y = 0.3900, area = 14017 }, -- The Azure Span (Vakthros Summit)
     { id = "TAXI_2805", container = "dragon_isles.map2022", mapID = 2022, x = 0.7604, y = 0.3509 }, -- Wingrest Embassy
     { id = "INSTANCE_VAULT_OF_THE_INCARNATES", container = "dragon_isles.map2025", mapID = 2025, x = 0.7300, y = 0.5500, kind = "instance", journal = 1200 }, -- Vault of the Incarnates
     { id = "TAXI_2809", container = "dragon_isles.map2022", mapID = 2022, x = 0.4772, y = 0.8337 }, -- Dragonscale Basecamp
@@ -65,7 +65,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2775", container = "dragon_isles.map2024", mapID = 2024, x = 0.1310, y = 0.4888 }, -- Iskaara
     { id = "TAXI_2818", container = "dragon_isles.map2025", mapID = 2025, x = 0.7191, y = 0.5634 }, -- Vault of the Incarnates
     { id = "TAXI_2796", container = "dragon_isles.map2023", mapID = 2023, x = 0.3001, y = 0.5806 }, -- Shady Sanctuary
-    { id = "THE_WAKING_SHORES_MOLE", container = "dragon_isles.map2022", mapID = 2022, x = 0.3230, y = 0.5490 }, -- The Waking Shores (The Slagmire)
+    { id = "THE_WAKING_SHORES_MOLE", container = "dragon_isles.map2022", mapID = 2022, x = 0.3230, y = 0.5490, area = 14012 }, -- The Waking Shores (The Slagmire)
     { id = "TAXI_2784", container = "dragon_isles.map2024", mapID = 2024, x = 0.6341, y = 0.5851 }, -- Camp Nowhere
     { id = "TAXI_2807", container = "dragon_isles.map2022", mapID = 2022, x = 0.5766, y = 0.6797 }, -- Ruby Life Pools
     { id = "TAXI_2788", container = "dragon_isles.map2024", mapID = 2024, x = 0.6514, y = 0.1633 }, -- Theron's Watch
@@ -74,7 +74,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2792", container = "dragon_isles.map2023", mapID = 2023, x = 0.6319, y = 0.4171 }, -- Maruukai
     { id = "TAXI_2800", container = "dragon_isles.map2022", mapID = 2022, x = 0.1739, y = 0.8881 }, -- Uktulut Outpost
     { id = "TAXI_2903", container = "emerald_dream.map2200", mapID = 2200, x = 0.6873, y = 0.5458 }, -- Verdant Landing
-    { id = "AMIRDRASSIL", container = "emerald_dream.map2200", mapID = 2200, x = 0.5060, y = 0.6250 }, -- Amirdrassil
+    { id = "AMIRDRASSIL", container = "emerald_dream.map2200", mapID = 2200, x = 0.5060, y = 0.6250, area = 14860 }, -- Amirdrassil
     { id = "INSTANCE_AMIRDRASSIL_THE_DREAMS_HOPE", container = "emerald_dream.map2200", mapID = 2200, x = 0.2800, y = 0.3100, kind = "instance", journal = 1207 }, -- Amirdrassil, the Dream's Hope
     { id = "TAXI_2905", container = "emerald_dream.map2200", mapID = 2200, x = 0.3564, y = 0.3362 }, -- Wellspring Overlook
     { id = "TAXI_2902", container = "emerald_dream.map2200", mapID = 2200, x = 0.5111, y = 0.6219 }, -- Central Encampment

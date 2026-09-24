@@ -22,6 +22,8 @@ DROP_EDGES  old-data edges to leave out (usually because a hand-added route repl
 INSTANCE_JOURNALS  { source node id: journalInstanceID, or (journalInstanceID, "Alliance"/"Horde") }: the dungeon
          and raid entrances tools/match_modern_instance_nodes.py can't match, or matches wrongly; the faction for an
          entrance only one faction has. Two entrances to one instance become one destination.
+AREA_OVERRIDES  { source node id: areaID }: the area that names a node, where tools/match_modern_area_nodes.py found
+         none or the wrong one (area_node_matches.tsv). Capture one in game with /mzdump at the spot.
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -201,4 +203,8 @@ INSTANCE_JOURNALS = {
     "THE_MOTHERLODE_DUNGEON_HORDE": (1012, "Horde"),
     "NYALOTHA_THE_WAKING_CITY_RAID_ULDUM": 1180,    # two entrances that swap each week: one destination,
     "NYALOTHA_THE_WAKING_CITY_RAID_PANDARIA": 1180, # whichever is nearer
+}
+
+# Area ids by hand (see the docstring): none yet.
+AREA_OVERRIDES = {
 }

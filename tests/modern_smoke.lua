@@ -481,3 +481,15 @@ do
         check(costs["CITY_" .. key:upper()], "an Alliance player in Stormwind can reach " .. key)
     end
 end
+
+-- Nameless nodes matched to an area (tools/match_modern_area_nodes.py) are named by the client, like Forever's.
+do
+    local node = addon.World:GetNode("ZARALEK_CAVERN_MOLE")
+    check(node and node.area == 14655, "the Zaralek Cavern mole machine spot is Obsidian Rest's area")
+    local realAreaInfo = C_Map.GetAreaInfo
+    C_Map.GetAreaInfo = function(id) if id == 14655 then return "Obsidian Rest" end end
+    addon:ClearNodeNameCache()
+    check(addon:GetNodeName("ZARALEK_CAVERN_MOLE") == "Obsidian Rest", "and named by it: " .. addon:GetNodeName("ZARALEK_CAVERN_MOLE"))
+    C_Map.GetAreaInfo = realAreaInfo
+    addon:ClearNodeNameCache()
+end

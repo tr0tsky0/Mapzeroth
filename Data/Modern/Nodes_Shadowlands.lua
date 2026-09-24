@@ -13,7 +13,7 @@ addon.Nodes.Shadowlands = {
     { id = "PORTAL_BASTION_POCKET", container = "sl_bastion.map1533", mapID = 1533, x = 0.4200, y = 0.4800 }, -- Temple of Courage
     { id = "BASTION_WORMHOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5186, y = 0.8776 }, -- Home of the Kyrian
     { id = "INSTANCE_THE_NECROTIC_WAKE", container = "sl_bastion.map1533", mapID = 1533, x = 0.4000, y = 0.5500, kind = "instance", journal = 1182 }, -- The Necrotic Wake
-    { id = "BASTION_MOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5180, y = 0.1320 }, -- The Eternal Forge
+    { id = "BASTION_MOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5180, y = 0.1320, area = 11412 }, -- The Eternal Forge
     { id = "TAXI_2528", container = "sl_bastion.map1533", mapID = 1533, x = 0.6534, y = 0.1705 }, -- Elysian Hold
     { id = "INSTANCE_SPIRES_OF_ASCENSION", container = "sl_bastion.map1533", mapID = 1533, x = 0.5800, y = 0.2900, kind = "instance", journal = 1186 }, -- Spires of Ascension
     { id = "TAXI_2519", container = "sl_bastion.map1533", mapID = 1533, x = 0.4810, y = 0.7420 }, -- Aspirant's Rest
@@ -22,7 +22,7 @@ addon.Nodes.Shadowlands = {
     { id = "ARDENWEALD_WORMHOLE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5443, y = 0.6033 }, -- Forest of the Night Fae
     { id = "TAXI_2585", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6340, y = 0.3750 }, -- Tirna Vaal
     { id = "PORTAL_ARDENWEALD_POCKET", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4800, y = 0.4800 }, -- Heart of the Forest
-    { id = "ARDENWEALD_MOLE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6650, y = 0.5050 }, -- Soryn's Meadow
+    { id = "ARDENWEALD_MOLE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6650, y = 0.5050, area = 13455 }, -- Soryn's Meadow
     { id = "TAXI_2586", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6032, y = 0.5334 }, -- Hibernal Hollow
     { id = "TAXI_2588", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.3518, y = 0.5145 }, -- Root-Home
     { id = "TAXI_2589", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5136, y = 0.7090 }, -- Claw's Edge
@@ -35,10 +35,10 @@ addon.Nodes.Shadowlands = {
     { id = "INSTANCE_SANCTUM_OF_DOMINATION", container = "sl_the_maw.map1543", mapID = 1543, x = 0.6900, y = 0.3100, kind = "instance", journal = 1193 }, -- Sanctum of Domination
     { id = "THE_MAW", container = "sl_the_maw.map1543", mapID = 1543, x = 0.4500, y = 0.4100 }, -- Entrance
     { id = "THE_MAW_WORMHOLE", container = "sl_the_maw.map1543", mapID = 1543, x = 0.2246, y = 0.2816 }, -- Wasteland of the Damned
-    { id = "KORTHIA_WORMHOLE", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6241, y = 0.2458 }, -- Korthia (Wormhole)
+    { id = "KORTHIA_WORMHOLE", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6241, y = 0.2458, area = 13570 }, -- Korthia (Wormhole)
     { id = "KORTHIA", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6440, y = 0.2410 }, -- Entrance Portal
     { id = "TAXI_2395", container = "sl_oribos.map1671", mapID = 1671, x = 0.6070, y = 0.6840 }, -- Flightmaster, Oribos
-    { id = "ORIBOS_WORMHOLE", container = "sl_oribos.map1670", mapID = 1670, x = 0.5208, y = 0.2613 }, -- Oribos, The Eternal City
+    { id = "ORIBOS_WORMHOLE", container = "sl_oribos.map1670", mapID = 1670, x = 0.5208, y = 0.2613, area = 10565 }, -- Oribos, The Eternal City
     { id = "ORIBOS", container = "sl_oribos.map1670", mapID = 1670, x = 0.2030, y = 0.5030 }, -- Entrance, Oribos
     { id = "TAXI_2558", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.3897, y = 0.5524 }, -- The Spearhead
     { id = "MALDRAXXUS_WORMHOLE", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.4244, y = 0.4399 }, -- Citadel of the Necrolords
@@ -49,7 +49,7 @@ addon.Nodes.Shadowlands = {
     { id = "INSTANCE_PLAGUEFALL", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5900, y = 0.6500, kind = "instance", journal = 1183 }, -- Plaguefall
     { id = "TAXI_2561", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.6789, y = 0.4594 }, -- Renounced Bastille
     { id = "TAXI_2560", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5366, y = 0.3027 }, -- Keres' Rest
-    { id = "MALDRAXXUS_MOLE", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5350, y = 0.5980 }, -- Valley of a Thousand Legs
+    { id = "MALDRAXXUS_MOLE", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5350, y = 0.5980, area = 13406 }, -- Valley of a Thousand Legs
     { id = "TAXI_2559", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.3770, y = 0.2907 }, -- Spider's Watch
     { id = "PORTAL_MALDRAXXUS_POCKET", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5200, y = 0.5400 }, -- Theater of Pain
     { id = "TAXI_2728", container = "sl_zm.map1970", mapID = 1970, x = 0.6135, y = 0.4990 }, -- Pilgrim's Grace

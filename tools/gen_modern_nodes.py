@@ -229,12 +229,26 @@ def main():
     id_plan, rename_collisions = modern_ids.plan(source_ids, manual.INSTANCE_JOURNALS)
     modern_ids.write(id_plan)
 
+    # Area ids for nodes nothing else names (tools/match_modern_area_nodes.py, and modern_manual.AREA_OVERRIDES).
+    area_of = {}
+    area_file = ROOT / "tools" / "modern_source" / "area_node_matches.tsv"
+    if area_file.exists():
+        for line in area_file.read_text(encoding="utf-8").splitlines():
+            if line and not line.startswith("#"):
+                source, _new, verdict, found = line.split("\t")[:4]
+                if verdict != "zero":
+                    area_of[source] = int(found.split(",")[0])
+    area_of.update(getattr(manual, "AREA_OVERRIDES", {}))
+
     def node_fields(source_id):
-        """The new id, and the instance fields (kind, journal, faction) to write after the position."""
+        """The new id, and the fields to write after the position: an area that names it, and the instance fields
+        (kind, journal, faction)."""
         new_id, journal, faction = id_plan[source_id]
         extra = ""
+        if source_id in area_of and journal is None:
+            extra = f", area = {area_of[source_id]}"
         if journal is not None:
-            extra = f', kind = "instance", journal = {journal}' + (f', faction = "{faction}"' if faction else "")
+            extra += f', kind = "instance", journal = {journal}' + (f', faction = "{faction}"' if faction else "")
         return new_id, extra
 
     for filename, out_key, out_name in FILES:
@@ -278,6 +292,8 @@ def main():
             seen_ids[mn["id"]] = (out_name, "manual")
             area = f', area = {mn["area"]}' if mn.get("area") else ""
             out_id, extra = node_fields(mn["id"])
+            if area:
+                extra = extra.replace(f", area = {area_of.get(mn['id'])}", "")      # its own area wins
             lines.append(
                 f'    {{ id = "{out_id}", container = "{mn["container"]}", '
                 f'mapID = {mn["mapID"]}, x = {mn["x"]:.4f}, y = {mn["y"]:.4f}{area}{extra} }}, '

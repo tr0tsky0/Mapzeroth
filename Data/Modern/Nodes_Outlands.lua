@@ -8,20 +8,20 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Outlands = {
-    { id = "HONOR_HOLD_MOLE", container = "outlands.map100", mapID = 100, x = 0.5610, y = 0.6310 }, -- Hellfire Peninsula (Outland - Honor Hold)
+    { id = "HONOR_HOLD_MOLE", container = "outlands.map100", mapID = 100, x = 0.5610, y = 0.6310, area = 3538 }, -- Hellfire Peninsula (Outland - Honor Hold)
     { id = "TAXI_163", container = "outlands.map105", mapID = 105, x = 0.7594, y = 0.6561 }, -- Mok'Nathal Village
     { id = "TAXI_102", container = "outlands.map100", mapID = 100, x = 0.2802, y = 0.6109 }, -- Falcon Watch
     { id = "TAXI_150", container = "outlands.map109", mapID = 109, x = 0.6500, y = 0.6560 }, -- Cosmowrench
-    { id = "BLACK_TEMPLE", container = "outlands.map104", mapID = 104, x = 0.6620, y = 0.4400 }, -- The Black Temple
+    { id = "BLACK_TEMPLE", container = "outlands.map104", mapID = 104, x = 0.6620, y = 0.4400, area = 3840 }, -- The Black Temple
     { id = "INSTANCE_BLACK_TEMPLE", container = "outlands.map104", mapID = 104, x = 0.7100, y = 0.4600, kind = "instance", journal = 751 }, -- Black Temple
     { id = "TAXI_100", container = "outlands.map100", mapID = 100, x = 0.5560, y = 0.6160 }, -- Honor Hold
-    { id = "TEMPEST_KEEP_RAID", container = "outlands.map109", mapID = 109, x = 0.5200, y = 0.3400 }, -- Tempest Keep
+    { id = "TEMPEST_KEEP_RAID", container = "outlands.map109", mapID = 109, x = 0.5200, y = 0.3400, area = 3842 }, -- Tempest Keep
     { id = "INSTANCE_SERPENTSHRINE_CAVERN", container = "outlands.map102", mapID = 102, x = 0.5200, y = 0.3400, kind = "instance", journal = 748 }, -- Serpentshrine Cavern
     { id = "TAXI_151", container = "outlands.map102", mapID = 102, x = 0.8606, y = 0.5325 }, -- Swamprat Post
     { id = "INSTANCE_GRUULS_LAIR", container = "outlands.map105", mapID = 105, x = 0.6800, y = 0.2400, kind = "instance", journal = 746 }, -- Gruul's Lair
     { id = "TAXI_122", container = "outlands.map109", mapID = 109, x = 0.3100, y = 0.6590 }, -- Area 52
     { id = "TAXI_159", container = "outlands.map104", mapID = 104, x = 0.5770, y = 0.5790 }, -- Sanctum of the Stars
-    { id = "TOSHLEYS_STATION_TRANSPORTER", container = "outlands.map105", mapID = 105, x = 0.6000, y = 0.6800 }, -- Toshley's Station
+    { id = "TOSHLEYS_STATION_TRANSPORTER", container = "outlands.map105", mapID = 105, x = 0.6000, y = 0.6800, area = 3918 }, -- Toshley's Station
     { id = "FLIGHT_HELLFIRE_PENINSULA_ALLIANCE", container = "outlands.map100", mapID = 100, x = 0.8740, y = 0.4940 }, -- Dark Portal Flightmaster
     { id = "TAXI_156", container = "outlands.map105", mapID = 105, x = 0.6070, y = 0.7040 }, -- Toshley's Station Flightmaster
     { id = "INSTANCE_THE_MECHANAR", container = "outlands.map109", mapID = 109, x = 0.7000, y = 0.6900, kind = "instance", journal = 258 }, -- The Mechanar
@@ -32,16 +32,16 @@ addon.Nodes.Outlands = {
     { id = "INSTANCE_AUCHENAI_CRYPTS", container = "outlands.map108", mapID = 108, x = 0.3700, y = 0.6500, kind = "instance", journal = 247 }, -- Auchenai Crypts
     { id = "TAXI_118", container = "outlands.map102", mapID = 102, x = 0.3238, y = 0.5095 }, -- Zabra'jin
     { id = "INSTANCE_SHADOW_LABYRINTH", container = "outlands.map108", mapID = 108, x = 0.3900, y = 0.7100, kind = "instance", journal = 253 }, -- Shadow Labyrinth
-    { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160 }, -- World's End Tavern
+    { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160, area = 8606 }, -- World's End Tavern
     { id = "INSTANCE_THE_ARCATRAZ", container = "outlands.map109", mapID = 109, x = 0.7400, y = 0.5700, kind = "instance", journal = 254 }, -- The Arcatraz
     { id = "TAXI_148", container = "outlands.map100", mapID = 100, x = 0.7820, y = 0.3490 }, -- Shatter Point
     { id = "FLIGHT_HELLFIRE_PENINSULA_HORDE", container = "outlands.map100", mapID = 100, x = 0.8747, y = 0.4908 }, -- Dark Portal Flightmaster
     { id = "TAXI_164", container = "outlands.map102", mapID = 102, x = 0.4070, y = 0.2790 }, -- Orebor Harborage
     { id = "DARK_PORTAL_OUTLANDS", container = "outlands.map100", mapID = 100, x = 0.8923, y = 0.5093 }, -- The Dark Portal
     { id = "INSTANCE_MANATOMBS", container = "outlands.map108", mapID = 108, x = 0.3900, y = 0.6100, kind = "instance", journal = 250 }, -- Mana-Tombs
-    { id = "SHADOWMOON_VALLEY_OUTLANDS_MOLE", container = "outlands.map104", mapID = 104, x = 0.5070, y = 0.3530 }, -- Shadowmoon Valley (Outland - Fel Pits)
+    { id = "SHADOWMOON_VALLEY_OUTLANDS_MOLE", container = "outlands.map104", mapID = 104, x = 0.5070, y = 0.3530, area = 3520 }, -- Shadowmoon Valley (Outland - Fel Pits)
     { id = "TAXI_123", container = "outlands.map104", mapID = 104, x = 0.3109, y = 0.2924 }, -- Shadowmoon Village
-    { id = "BLADES_EDGE_MOUNTAINS_MOLE", container = "outlands.map105", mapID = 105, x = 0.7250, y = 0.1760 }, -- Blade's Edge Mountains (Outland - Skald)
+    { id = "BLADES_EDGE_MOUNTAINS_MOLE", container = "outlands.map105", mapID = 105, x = 0.7250, y = 0.1760, area = 3866 }, -- Blade's Edge Mountains (Outland - Skald)
     { id = "INSTANCE_THE_SHATTERED_HALLS", container = "outlands.map100", mapID = 100, x = 0.4800, y = 0.5200, kind = "instance", journal = 259 }, -- The Shattered Halls
     { id = "INSTANCE_THE_UNDERBOG", container = "outlands.map102", mapID = 102, x = 0.5200, y = 0.3400, kind = "instance", journal = 262 }, -- The Underbog
     { id = "INSTANCE_THE_STEAMVAULT", container = "outlands.map102", mapID = 102, x = 0.5000, y = 0.4000, kind = "instance", journal = 261 }, -- The Steamvault
@@ -51,7 +51,7 @@ addon.Nodes.Outlands = {
     { id = "INSTANCE_HELLFIRE_RAMPARTS", container = "outlands.map100", mapID = 100, x = 0.4800, y = 0.5500, kind = "instance", journal = 248 }, -- Hellfire Ramparts
     { id = "TAXI_127", container = "outlands.map108", mapID = 108, x = 0.4886, y = 0.4319 }, -- Stonebreaker Hold
     { id = "TAXI_120", container = "outlands.map107", mapID = 107, x = 0.5793, y = 0.3584 }, -- Garadar
-    { id = "AREA_52_RIPPER", container = "outlands.map109", mapID = 109, x = 0.3200, y = 0.6400 }, -- Area 52
+    { id = "AREA_52_RIPPER", container = "outlands.map109", mapID = 109, x = 0.3200, y = 0.6400, area = 3712 }, -- Area 52
     { id = "INSTANCE_THE_SLAVE_PENS", container = "outlands.map102", mapID = 102, x = 0.4900, y = 0.3500, kind = "instance", journal = 260 }, -- The Slave Pens
     { id = "SHATTRATH_OUTLANDS", container = "outlands.map111", mapID = 111, x = 0.5497, y = 0.4023 }, -- Shattrath
     { id = "TAXI_140", container = "outlands.map104", mapID = 104, x = 0.6280, y = 0.3020 }, -- Altar of Sha'tar

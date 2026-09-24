@@ -48,7 +48,7 @@ addon.Nodes.KhazAlgar = {
     { id = "TAXI_2893", container = "khaz_algar.map2216", mapID = 2216, x = 0.5389, y = 0.4498 }, -- The Burrows
     { id = "TAXI_2920", container = "khaz_algar.map2255", mapID = 2255, x = 0.5951, y = 0.1881 }, -- Faerin's Advance
     { id = "TAXI_2932", container = "khaz_algar.map2248", mapID = 2248, x = 0.5905, y = 0.2855 }, -- Rambleshire
-    { id = "AZJKAHET", container = "khaz_algar.map2255", mapID = 2255, x = 0.5740, y = 0.4180 }, -- The Weaver's Lair
+    { id = "AZJKAHET", container = "khaz_algar.map2255", mapID = 2255, x = 0.5740, y = 0.4180, area = 14755 }, -- The Weaver's Lair
     { id = "TAXI_2999", container = "undermine.map2346", mapID = 2346, x = 0.6135, y = 0.4791 }, -- The Gallagio
     { id = "TAXI_2996", container = "undermine.map2346", mapID = 2346, x = 0.4344, y = 0.7907 }, -- The Heaps
     { id = "INSTANCE_LIBERATION_OF_UNDERMINE", container = "undermine.map2346", mapID = 2346, x = 0.4200, y = 0.4900, kind = "instance", journal = 1296 }, -- Liberation of Undermine

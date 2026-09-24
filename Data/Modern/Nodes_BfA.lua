@@ -18,12 +18,12 @@ addon.Nodes.BfA = {
     { id = "FLIGHT_TOL_DAGOR_HORDE", container = "tol_dagor.map974", mapID = 974, x = 0.2296, y = 0.4654 }, -- Tol Dagor Flightmaster
     { id = "TAXI_2441", container = "mechagon.map1462", mapID = 1462, x = 0.7335, y = 0.2542 }, -- Prospectus Bay
     { id = "TAXI_2442", container = "mechagon.map1462", mapID = 1462, x = 0.7750, y = 0.4100 }, -- Overspark Expedition Camp
-    { id = "MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7390, y = 0.3650 }, -- Rustbolt
+    { id = "MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7390, y = 0.3650, area = 10418 }, -- Rustbolt
     { id = "INSTANCE_OPERATION_MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7300, y = 0.3600, kind = "instance", journal = 1178 }, -- Operation: Mechagon
     { id = "TAXI_2035", container = "kul_tiras.map896", mapID = 896, x = 0.7000, y = 0.6010 }, -- Fletcher's Hollow
     { id = "TAXI_2091", container = "kul_tiras.map942", mapID = 942, x = 0.3874, y = 0.6692 }, -- Stonetusk Watch
-    { id = "STORMSONG_VALLEY_MOLE", container = "kul_tiras.map942", mapID = 942, x = 0.6420, y = 0.2940 }, -- Tidebreak Summit
-    { id = "TORTOLLAN_BASE_CAMP", container = "kul_tiras.map942", mapID = 942, x = 0.4030, y = 0.3650 }, -- Seekers Vista
+    { id = "STORMSONG_VALLEY_MOLE", container = "kul_tiras.map942", mapID = 942, x = 0.6420, y = 0.2940, area = 9623 }, -- Tidebreak Summit
+    { id = "TORTOLLAN_BASE_CAMP", container = "kul_tiras.map942", mapID = 942, x = 0.4030, y = 0.3650, area = 9693 }, -- Seekers Vista
     { id = "TAXI_2106", container = "kul_tiras.map896", mapID = 896, x = 0.3800, y = 0.5260 }, -- Arom's Stand
     { id = "BORALUS_PET", container = "kul_tiras.map1161", mapID = 1161, x = 0.5002, y = 0.4677 }, -- Pet Shop
     { id = "TAXI_2275", container = "kul_tiras.map896", mapID = 896, x = 0.6181, y = 0.1695 }, -- Mudfisher Cove
