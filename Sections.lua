@@ -10,7 +10,8 @@ local addonName, addon = ...
 --   Cities               their faction's (and neutral) cities
 --   Towns                the same for towns
 --
--- Modern (addon.CURRENT_EXPANSION is set, Data/Modern/Places.lua) has too many places for that, so the page
+-- Which page a dataset gets is declared by its addon.PICKER_LAYOUT: "settlements" (Forever, Data/Forever/Game.lua)
+-- is the page above. Modern's is "expansions" (Data/Modern/Places.lua): it has too many places for that, so the page
 -- shows the current expansion and what is used every day:
 --   Cities               the current expansion's, and the hub cities of any expansion
 --   Dungeons             the current expansion's, and the older ones in this season's Mythic+ pool
@@ -99,6 +100,7 @@ end
 -- Returns { { id, title, items, children? }, ... } for this player's entries (from Destinations:Build) and context.
 -- `index` (by node id) is set on the result for Price.
 function Sections:Build(entries, ctx, waypoint)
+    local byExpansion = addon.PICKER_LAYOUT == "expansions"
     local leylines, cities, towns = {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
@@ -113,7 +115,7 @@ function Sections:Build(entries, ctx, waypoint)
             end
             table.insert(trainers[entry.trainer], entry.nodeID)
             index[entry.nodeID] = entry
-        elseif entry.group == "place" and entry.relevant and not addon.CURRENT_EXPANSION then
+        elseif entry.group == "place" and entry.relevant and not byExpansion then
             table.insert(entry.kind == "city" and cities or towns, entry)
             entry.eta, entry.nearest = nil, nil
         end
@@ -155,7 +157,7 @@ function Sections:Build(entries, ctx, waypoint)
         if #items > 0 then sections[#sections + 1] = { id = id, title = title, items = items } end
     end
     add("relevant", L["SECTION_RELEVANT"], picks)
-    if addon.CURRENT_EXPANSION then
+    if byExpansion then
         modernSections(entries, add, sections)
     else
         add("cities", L["SECTION_CITIES"], cities)

@@ -129,6 +129,16 @@ function addon:ValidateData()
         end
     end
 
+    -- What a dataset declares instead of the engine guessing from which tables happen to be loaded.
+    if addon.PICKER_LAYOUT ~= "settlements" and addon.PICKER_LAYOUT ~= "expansions" then
+        add("error", ("PICKER_LAYOUT is %s, not \"settlements\" or \"expansions\""):format(tostring(addon.PICKER_LAYOUT)))
+    elseif addon.PICKER_LAYOUT == "expansions" and not addon.CURRENT_EXPANSION then
+        add("error", "PICKER_LAYOUT is \"expansions\" but CURRENT_EXPANSION is not set")
+    end
+    if addon.RidingSkills and addon.DEFAULT_MOUNT_BONUS then
+        add("error", "both RidingSkills and DEFAULT_MOUNT_BONUS are set: riding data wins, so the bonus is never used")
+    end
+
     local abilities = addon.Abilities or {}
     for category, list in pairs(abilities) do
         for i, ability in ipairs(list) do

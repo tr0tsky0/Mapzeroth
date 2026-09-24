@@ -98,3 +98,15 @@ for _, item in ipairs(section(sections, "cities").items) do
     end
 end
 check(last > 0, "and at least one city is reachable")
+
+-- Finding 7: the page layout is what the dataset declares, not inferred from which tables are loaded. A Forever
+-- dataset that one day gains CURRENT_EXPANSION keeps its cities and towns.
+do
+    check(addon.PICKER_LAYOUT == "settlements", "Forever declares the settlements page")
+    local realCurrent = addon.CURRENT_EXPANSION
+    addon.CURRENT_EXPANSION = 12
+    local withExpansion = sectionsFor({ class = "MAGE", faction = "Alliance" })
+    addon.CURRENT_EXPANSION = realCurrent
+    check(section(withExpansion, "cities") and section(withExpansion, "towns"),
+        "Forever with a CURRENT_EXPANSION set still lists cities and towns")
+end

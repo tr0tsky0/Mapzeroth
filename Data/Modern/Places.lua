@@ -4,6 +4,9 @@
 
 local addonName, addon = ...
 
+-- The picker's main page is laid out by expansion (Sections.lua), not as Forever's cities and towns.
+addon.PICKER_LAYOUT = "expansions"
+
 -- Change when a new expansion launches: the main page shows this expansion's cities, dungeons and raids.
 addon.CURRENT_EXPANSION = 12
 

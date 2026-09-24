@@ -1,5 +1,5 @@
 -- Game.lua (Forever) -- HAND-MAINTAINED. Facts about the game this dataset is for that aren't places or
--- travel: the classes it has and the perks that change how fast a trip is.
+-- travel: the classes it has, the perks that change how fast a trip is, and how the picker lays out its page.
 
 local addonName, addon = ...
 
@@ -15,3 +15,6 @@ addon.CLASS_TOKENS = {
 -- flight-path mount, which none of our baked-in flight `cost` seconds account for on their own -- see
 -- addon:GetFlightSpeedMultiplier (MovementSpeed.lua). Optional: a dataset without it has no such perk.
 addon.FREQUENT_FLIER = { spellID = 1225490, speedBonus = 0.20 }
+
+-- The picker's main page lists cities and towns (Sections.lua), not Modern's expansions.
+addon.PICKER_LAYOUT = "settlements"

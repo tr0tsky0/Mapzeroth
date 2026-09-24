@@ -408,3 +408,7 @@ do
     check(addon.FREQUENT_FLIER == nil, "Modern has no Frequent Flier perk")
     check(addon:GetFlightSpeedMultiplier(makeCtx({})) == 1, "and so no flight speed bonus")
 end
+
+-- Finding 7: Modern declares the expansion page and a flat mount bonus with no riding data.
+check(addon.PICKER_LAYOUT == "expansions" and addon.CURRENT_EXPANSION, "Modern declares the expansion page")
+check(addon.RidingSkills == nil and addon.DEFAULT_MOUNT_BONUS == 1.0, "Modern has a flat mount bonus, no riding data")

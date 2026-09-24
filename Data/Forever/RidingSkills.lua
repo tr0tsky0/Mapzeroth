@@ -11,6 +11,10 @@
 
 local addonName, addon = ...
 
+-- Riding data decides mounted speed when a dataset has it: a character is mounted only as fast as the skills
+-- they know. So Forever has no flat mount bonus (Modern's Data/Modern/Movement.lua sets one instead of skills).
+addon.DEFAULT_MOUNT_BONUS = nil
+
 addon.RidingSkills = {
     { spellID = 33388, bonus = 0.60 }, -- Apprentice Riding (skill 75)
     { spellID = 33391, bonus = 1.00 }, -- Journeyman Riding (skill 150)
