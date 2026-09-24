@@ -112,6 +112,30 @@ def holiday_key(name):
     return key
 
 
+def node_places():
+    """{ node id: (container path, mapID) } from the converted Nodes_*.lua."""
+    places = {}
+    for path in sorted(OUT.glob("Nodes_*.lua")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.match(r'\s*\{ id = "([^"]+)", container = "([^"]+)", mapID = (\d+)', line)
+            if m:
+                places[m.group(1)] = (m.group(2), int(m.group(3)))
+    return places
+
+
+def phase_gate(from_id, to_id, places):
+    """The inert `mapArtID = { mapID, artID }` gate a phaseswitch edge carries, like the other phase-gated edges:
+    the map and art of the container the switch is used from (the `_art<N>` suffix of its path), so it fails
+    closed until the phase model exists (see the docstring). Finding 3 of docs/REVIEW-2026-09-24.md."""
+    for node_id in (from_id, to_id):
+        container, map_id = places.get(node_id, ("", 0))
+        m = re.search(r"_art(\d+)$", container)
+        if m:
+            return [map_id, int(m.group(1))]
+    raise SystemExit(f"phaseswitch edge {from_id} -> {to_id}: neither end is in an `_art<N>` container, "
+                     "so there is no mapArtID to gate it with")
+
+
 def lua_requirements(reqs):
     if reqs is None:
         return None, []
@@ -131,6 +155,8 @@ def format_value(v):
         return f'"{v}"'
     if isinstance(v, bool):
         return "true" if v else "false"
+    if isinstance(v, (list, tuple)):
+        return "{ " + ", ".join(format_value(item) for item in v) + " }"
     if hasattr(v, "items"):     # a Lua table -- the mapArtID {mapID, artID} pair, or anyOf
         parts = []
         for k, item in v.items():
@@ -152,6 +178,7 @@ def main():
         raise SystemExit(f"syntax error in {SRC.name}: {chunk[1]}")
     chunk("Mapzeroth", ns)
 
+    places = node_places()
     node_ids = known_node_ids()
     if not node_ids:
         raise SystemExit("no Data/Modern/Nodes_*.lua found -- run tools/gen_modern_nodes.py first")
@@ -193,6 +220,8 @@ def main():
             cost = FALLBACK_COST[method]
             cost_filled[method] = cost_filled.get(method, 0) + 1
         reqs, unknown = lua_requirements(e["requirements"])
+        if method == "phaseswitch" and not (reqs and "mapArtID" in reqs):
+            reqs = {"mapArtID": phase_gate(from_id, to_id, places), **(reqs or {})}
         # An exact repeat (same ends, method and requirements) adds nothing but a second edge for the search
         # to weigh; the first is kept. (Two edges that differ only in requirements, one per faction, are not repeats.)
         edge_key = (from_id, to_id, method,

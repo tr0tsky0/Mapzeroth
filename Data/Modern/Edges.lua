@@ -265,13 +265,13 @@ addon.Edges = {
     { from = "EMERALD_DREAMWAY_HINTERLANDS_PORTAL", to = "HINTERLANDS_DRUID", method = "portal", cost = 0, requirements = { class = "DRUID" } },
     { from = "EMERALD_DREAMWAY_DUSKWOOD_PORTAL", to = "DUSKWOOD_DRUID", method = "portal", cost = 0, requirements = { class = "DRUID" } },
     { from = "VALSHARAH_DRUID_DALARAN_PORTAL", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, requirements = { class = "DRUID" } },
-    { from = "TIRISFAL_ZIDORMI_PAST", to = "TIRISFAL_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { anyQuest = { 50769, 47098 } } },
-    { from = "VALE_ZIDORMI_PAST", to = "VALE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { quest = 58506 } },
-    { from = "ULDUM_ZIDORMI_PAST", to = "ULDUM_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
-    { from = "DARKSHORE_ZIDORMI_PAST", to = "DARKSHORE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
-    { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
-    { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
-    { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
+    { from = "TIRISFAL_ZIDORMI_PAST", to = "TIRISFAL_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 18, 19 }, anyQuest = { 50769, 47098 } } },
+    { from = "VALE_ZIDORMI_PAST", to = "VALE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 390, 402 }, quest = 58506 } },
+    { from = "ULDUM_ZIDORMI_PAST", to = "ULDUM_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 249, 289 } } },
+    { from = "DARKSHORE_ZIDORMI_PAST", to = "DARKSHORE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 62, 67 } } },
+    { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 17, 18 } } },
+    { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 81, 86 } } },
+    { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, requirements = { mapArtID = { 70, 75 } } },
     { from = "LYCANEUM_ENTRANCE", to = "MAGISTERS_SILVERMOON_PORTAL", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "MAGISTERS_SILVERMOON_PORTAL", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py

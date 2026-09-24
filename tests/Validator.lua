@@ -104,8 +104,10 @@ function addon:ValidateData()
             add("error", ("edge %d (%s -> %s): unknown holiday '%s'"):format(
                 i, tostring(edge.from), tostring(edge.to), tostring(holiday)))
         end
-        -- A phase switch between containers with no phase group changes nothing the search can see.
+        -- A phase switch between containers with no phase group changes nothing the search can see. (One that
+        -- carries a phase gate, which nothing satisfies yet, is closed off, so it isn't a live edge to worry about.)
         if edge.method == "phaseswitch" and World:GetNode(edge.from) and World:GetNode(edge.to)
+                and not (edge.requirements and edge.requirements.mapArtID)
                 and not World:GetPhase(World:GetNodeContainer(edge.from))
                 and not World:GetPhase(World:GetNodeContainer(edge.to)) then
             add("warn", ("edge %d (%s -> %s): phaseswitch between containers with no phaseGroup"):format(

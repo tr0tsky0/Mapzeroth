@@ -101,7 +101,7 @@
 272 edges written.
 
 - Cost filled in from the old flat per-method default (see the script's docstring) for: phaseswitch (7), portal (175), ship (1), taxi (4), tram (1), zeppelin (2).
-- 18 edges carry an inert `mapArtID` requirement -- unusable until the
+- 25 edges carry an inert `mapArtID` requirement -- unusable until the
   phase model is wired up for real (see the node-conversion note above); listed there,
   not repeated here.
 - No dangling `from`/`to`: every edge resolved to a node from the conversion pass.

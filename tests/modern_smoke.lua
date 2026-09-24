@@ -339,3 +339,40 @@ local speedCtx = makeCtx({})
 check(addon.WALK_SPEED == 7 and math.abs(addon.FLY_SPEED - 59.5) < 1e-9, "flying is 59.5 yards a second: " .. tostring(addon.FLY_SPEED))
 check(math.abs(addon:GetGroundSpeed(addon.World:GetContainerForMap(84), speedCtx) - 14) < 1e-9, "mounted on the street: 14 yards a second")
 check(math.abs(addon:GetGroundSpeed(addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM"), speedCtx) - 7) < 1e-9, "on foot indoors: 7")
+
+-- Phase-split zones (a container with `_art` in its path: Zidormi's past and present) are not part of the fly mesh:
+-- no fly step leaves or reaches one (finding 3, docs/REVIEW-2026-09-24.md; temporary until containers carry a
+-- phaseGroup). Checked on the shipped Geometry.lua and on the geometry the client would compute itself.
+do
+    local function isPhased(id)
+        local c = addon.World:GetNodeContainer(id)
+        return c ~= nil and c.path:find("_art", 1, true) ~= nil
+    end
+    local function phasedFlyEdges(g)
+        local bad, flies = {}, 0
+        for from, steps in pairs(g.adjacency) do
+            for _, step in ipairs(steps) do
+                if step.method == "fly" then
+                    flies = flies + 1
+                    if isPhased(from) or isPhased(step.to) then bad[#bad + 1] = from .. " -> " .. step.to end
+                end
+            end
+        end
+        return bad, flies
+    end
+    check(isPhased("TIRISFAL_ZIDORMI_PAST"), "Zidormi's past Tirisfal is a phase-split container")
+    local allianceCtx = makeCtx({ faction = "Alliance" })
+
+    local bad, flies = phasedFlyEdges(addon.TravelGraph:Build(allianceCtx))
+    check(flies > 0, "the fly mesh exists")
+    check(#bad == 0, "no fly step reaches a phase-split node (shipped geometry): " .. tostring(bad[1]))
+
+    local shipped, shippedMeta = addon.Geometry, addon.GeometryMeta
+    addon.Geometry, addon.GeometryMeta = nil, nil
+    addon.World:Build()
+    bad, flies = phasedFlyEdges(addon.TravelGraph:Build(allianceCtx))
+    check(flies > 0, "the computed fly mesh exists")
+    check(#bad == 0, "no fly step reaches a phase-split node (computed geometry): " .. tostring(bad[1]))
+    addon.Geometry, addon.GeometryMeta = shipped, shippedMeta
+    addon.World:Build()
+end

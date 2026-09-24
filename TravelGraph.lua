@@ -118,10 +118,15 @@ function addon:GetFlightOwner(nodeID)
 end
 
 -- A node the fly mesh can use: its container exists, allows flying and is outdoors. Returns the container.
+-- TEMPORARY (finding 3, docs/REVIEW-2026-09-24.md): a container with `_art` in its path is one state of a
+-- phase-split zone (Zidormi's past or present). The fly mesh joins nodes whatever their phase, so a route could
+-- fly into a phase the player isn't in. Until containers carry `phaseGroup` and the fly pass honours it, they are left out.
 local function isFlyable(node)
     local World = addon.World
     local c = World:GetNodeContainer(node.id)
-    if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then return c end
+    if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and not c.path:find("_art", 1, true) then
+        return c
+    end
     return nil
 end
 
