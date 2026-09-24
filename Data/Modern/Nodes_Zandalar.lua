@@ -10,7 +10,7 @@ addon.Nodes = addon.Nodes or {}
 addon.Nodes.Zandalar = {
     { id = "TAXI_2161", container = "zandalar.map863", mapID = 863, x = 0.5070, y = 0.2070 }, -- Redfield's Watch
     { id = "TAXI_2157", container = "zandalar.map862", mapID = 862, x = 0.4460, y = 0.3630 }, -- Veiled Grotto
-    { id = "THE_MOTHERLODE_DUNGEON_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4000, y = 0.7200 }, -- The MOTHERLODE!!
+    { id = "INSTANCE_THE_MOTHERLODE_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4000, y = 0.7200, kind = "instance", journal = 1012, faction = "Alliance" }, -- The MOTHERLODE!!
     { id = "DAZARALOR_PORTAL_ROOM", container = "zandalar.map1165", mapID = 1165, x = 0.6572, y = 0.7433 }, -- Portal Room
     { id = "TAXI_2117", container = "zandalar.map864", mapID = 864, x = 0.5663, y = 0.4919 }, -- Vulpera Hideaway
     { id = "TAXI_1954", container = "zandalar.map863", mapID = 863, x = 0.4003, y = 0.4301 }, -- Zo'bal Ruins
@@ -22,44 +22,44 @@ addon.Nodes.Zandalar = {
     { id = "TAXI_2118", container = "zandalar.map864", mapID = 864, x = 0.5357, y = 0.8927 }, -- Temple of Akunda
     { id = "TAXI_1953", container = "zandalar.map863", mapID = 863, x = 0.3874, y = 0.7797 }, -- Zul'jan
     { id = "TAXI_2119", container = "zandalar.map864", mapID = 864, x = 0.2783, y = 0.5032 }, -- Sanctuary of the Devoted
-    { id = "DAZARALOR_DOCK", container = "zandalar.map862", mapID = 862, x = 0.5769, y = 0.6480 }, -- Dazar'alor Dock
-    { id = "BATTLE_OF_DAZARALOR_RAID_HORDE", container = "zandalar.map1165", mapID = 1165, x = 0.3900, y = 0.0200 }, -- Battle of Dazar'alor
+    { id = "DOCK_DAZARALOR", container = "zandalar.map862", mapID = 862, x = 0.5769, y = 0.6480 }, -- Dazar'alor Dock
+    { id = "INSTANCE_BATTLE_OF_DAZARALOR_HORDE", container = "zandalar.map1165", mapID = 1165, x = 0.3900, y = 0.0200, kind = "instance", journal = 1176, faction = "Horde" }, -- Battle of Dazar'alor
     { id = "TAXI_2148", container = "zandalar.map862", mapID = 862, x = 0.4460, y = 0.2720 }, -- Mugamba Overlook
     { id = "TAXI_1956", container = "zandalar.map863", mapID = 863, x = 0.8147, y = 0.2606 }, -- Forlorn Ruins
-    { id = "SHATTERSTONE_HARBOR_DOCK", container = "zandalar.map864", mapID = 864, x = 0.3665, y = 0.3414 }, -- Shatterstone Harbor
+    { id = "DOCK_SHATTERSTONE_HARBOR", container = "zandalar.map864", mapID = 864, x = 0.3665, y = 0.3414 }, -- Shatterstone Harbor
     { id = "TAXI_2164", container = "zandalar.map862", mapID = 862, x = 0.5428, y = 0.8733 }, -- Isle of Fangs
     { id = "TAXI_2009", container = "zandalar.map862", mapID = 862, x = 0.4804, y = 0.5996 }, -- Warport Rastari
     { id = "TAXI_2078", container = "zandalar.map863", mapID = 863, x = 0.6180, y = 0.4100 }, -- Fort Victory
-    { id = "THE_MOTHERLODE_DUNGEON_HORDE", container = "zandalar.map862", mapID = 862, x = 0.5600, y = 0.6000 }, -- The MOTHERLODE!!
+    { id = "INSTANCE_THE_MOTHERLODE_HORDE", container = "zandalar.map862", mapID = 862, x = 0.5600, y = 0.6000, kind = "instance", journal = 1012, faction = "Horde" }, -- The MOTHERLODE!!
     { id = "TAXI_2075", container = "zandalar.map862", mapID = 862, x = 0.7042, y = 0.6495 }, -- Seeker's Outpost
     { id = "TAXI_2112", container = "zandalar.map864", mapID = 864, x = 0.5330, y = 0.3780 }, -- Vulture's Nest
-    { id = "INSTANCE_1030", container = "zandalar.map864", mapID = 864, x = 0.5200, y = 0.2500 }, -- Temple of Sethraliss
+    { id = "INSTANCE_TEMPLE_OF_SETHRALISS", container = "zandalar.map864", mapID = 864, x = 0.5200, y = 0.2500, kind = "instance", journal = 1030 }, -- Temple of Sethraliss
     { id = "TAXI_2120", container = "zandalar.map864", mapID = 864, x = 0.6169, y = 0.2139 }, -- Tortaka Refuge
     { id = "TAXI_2080", container = "zandalar.map863", mapID = 863, x = 0.3390, y = 0.6320 }, -- Grimwatt's Crash
-    { id = "INSTANCE_968", container = "zandalar.map862", mapID = 862, x = 0.4400, y = 0.3900 }, -- Atal'Dazar
-    { id = "XIBALA_FLIGHT_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4090, y = 0.7140 }, -- Xibala
+    { id = "INSTANCE_ATALDAZAR", container = "zandalar.map862", mapID = 862, x = 0.4400, y = 0.3900, kind = "instance", journal = 968 }, -- Atal'Dazar
+    { id = "FLIGHT_XIBALA_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4090, y = 0.7140 }, -- Xibala
     { id = "DAZARALOR_PET", container = "zandalar.map1165", mapID = 1165, x = 0.5633, y = 0.3097 }, -- Pet Shop
     { id = "TAXI_1955", container = "zandalar.map863", mapID = 863, x = 0.6675, y = 0.4319 }, -- Gloom Hollow
     { id = "TAXI_1965", container = "zandalar.map862", mapID = 862, x = 0.6628, y = 0.1760 }, -- Nesingwary's Gameland
     { id = "TAXI_2147", container = "zandalar.map862", mapID = 862, x = 0.7760, y = 0.5470 }, -- Castaway Encampment
     { id = "TAXI_2111", container = "zandalar.map864", mapID = 864, x = 0.4686, y = 0.3506 }, -- Vorrik's Sanctum
     { id = "TAXI_2045", container = "zandalar.map862", mapID = 862, x = 0.4898, y = 0.2588 }, -- Garden of the Loa
-    { id = "XIBALA_DOCK", container = "zandalar.map862", mapID = 862, x = 0.4028, y = 0.7113 }, -- Xibala Dock
+    { id = "DOCK_XIBALA", container = "zandalar.map862", mapID = 862, x = 0.4028, y = 0.7113 }, -- Xibala Dock
     { id = "TAXI_2046", container = "zandalar.map862", mapID = 862, x = 0.4557, y = 0.3595 }, -- Atal'Dazar
-    { id = "INSTANCE_1031", container = "zandalar.map863", mapID = 863, x = 0.5400, y = 0.5300 }, -- Uldir
+    { id = "INSTANCE_ULDIR", container = "zandalar.map863", mapID = 863, x = 0.5400, y = 0.5300, kind = "instance", journal = 1031 }, -- Uldir
     { id = "TAXI_1957", container = "zandalar.map1165", mapID = 1165, x = 0.5192, y = 0.8970 }, -- Port of Zandalar
-    { id = "FORT_VICTORY_DOCK", container = "zandalar.map863", mapID = 863, x = 0.6201, y = 0.4014 }, -- Fort Victory Dock
+    { id = "DOCK_FORT_VICTORY", container = "zandalar.map863", mapID = 863, x = 0.6201, y = 0.4014 }, -- Fort Victory Dock
     { id = "TAXI_1966", container = "zandalar.map862", mapID = 862, x = 0.6675, y = 0.4266 }, -- Warbeast Kraal
     { id = "TAXI_1975", container = "zandalar.map862", mapID = 862, x = 0.7688, y = 0.1529 }, -- Zeb'ahari
     { id = "TAXI_2126", container = "zandalar.map862", mapID = 862, x = 0.7042, y = 0.2948 }, -- Scaletrader Post
     { id = "TAXI_2145", container = "zandalar.map862", mapID = 862, x = 0.5540, y = 0.2460 }, -- Verdant Hollow
     { id = "NAZMIR_MOLE", container = "zandalar.map863", mapID = 863, x = 0.3440, y = 0.4520 }, -- Zalamar Invasion
     { id = "TAXI_2143", container = "zandalar.map864", mapID = 864, x = 0.4368, y = 0.7557 }, -- Scorched Sands Outpost
-    { id = "INSTANCE_1041", container = "zandalar.map862", mapID = 862, x = 0.3800, y = 0.3900 }, -- Kings' Rest
-    { id = "XIBALA_FLIGHT_HORDE", container = "zandalar.map862", mapID = 862, x = 0.4451, y = 0.7222 }, -- Xibala
+    { id = "INSTANCE_KINGS_REST", container = "zandalar.map862", mapID = 862, x = 0.3800, y = 0.3900, kind = "instance", journal = 1041 }, -- Kings' Rest
+    { id = "FLIGHT_XIBALA_HORDE", container = "zandalar.map862", mapID = 862, x = 0.4451, y = 0.7222 }, -- Xibala
     { id = "KAJACOAST_ROCKET", container = "zandalar.map862", mapID = 862, x = 0.2234, y = 0.5415 }, -- Kaja'Coast Rocket
     { id = "TAXI_2381", container = "zandalar.map862", mapID = 862, x = 0.5310, y = 0.5643 }, -- The Mugambala
     { id = "TAXI_2153", container = "zandalar.map862", mapID = 862, x = 0.6420, y = 0.4750 }, -- Mistvine Ledge
     { id = "ZULDAZAR_MOLE", container = "zandalar.map862", mapID = 862, x = 0.3820, y = 0.7240 }, -- Xibala Incursion
-    { id = "INSTANCE_1022", container = "zandalar.map863", mapID = 863, x = 0.5200, y = 0.6600 }, -- The Underrot
+    { id = "INSTANCE_THE_UNDERROT", container = "zandalar.map863", mapID = 863, x = 0.5200, y = 0.6600, kind = "instance", journal = 1022 }, -- The Underrot
 }

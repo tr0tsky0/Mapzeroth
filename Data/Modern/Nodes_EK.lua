@@ -8,19 +8,19 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.EK = {
-    { id = "DEEPHOLM_STORMWIND_PORTAL", container = "deepholm.map207", mapID = 207, x = 0.4855, y = 0.5380 }, -- Stormwind Portal
-    { id = "INSTANCE_67", container = "deepholm.map207", mapID = 207, x = 0.4700, y = 0.5200 }, -- The Stonecore
-    { id = "THERAZANES_THRONE_PORTAL", container = "deepholm.map207", mapID = 207, x = 0.5703, y = 0.1346 }, -- Portal to Temple of Earth
-    { id = "TEMPLE_OF_EARTH_PORTAL", container = "deepholm.map207", mapID = 207, x = 0.4928, y = 0.5040 }, -- Portal to Therazane's Throne
-    { id = "DEEPHOLM_ORGRIMMAR_PORTAL", container = "deepholm.map207", mapID = 207, x = 0.5089, y = 0.5307 }, -- Orgrimmar Portal
-    { id = "EVERSONG_HARANDAR_PORTAL", container = "ek_overworld.map2395", mapID = 2395, x = 0.4524, y = 0.4689 }, -- Rootway to Harandar
+    { id = "PORTAL_DEEPHOLM_STORMWIND", container = "deepholm.map207", mapID = 207, x = 0.4855, y = 0.5380 }, -- Stormwind Portal
+    { id = "INSTANCE_THE_STONECORE", container = "deepholm.map207", mapID = 207, x = 0.4700, y = 0.5200, kind = "instance", journal = 67 }, -- The Stonecore
+    { id = "PORTAL_THERAZANES_THRONE", container = "deepholm.map207", mapID = 207, x = 0.5703, y = 0.1346 }, -- Portal to Temple of Earth
+    { id = "PORTAL_TEMPLE_OF_EARTH", container = "deepholm.map207", mapID = 207, x = 0.4928, y = 0.5040 }, -- Portal to Therazane's Throne
+    { id = "PORTAL_DEEPHOLM_ORGRIMMAR", container = "deepholm.map207", mapID = 207, x = 0.5089, y = 0.5307 }, -- Orgrimmar Portal
+    { id = "PORTAL_EVERSONG_HARANDAR", container = "ek_overworld.map2395", mapID = 2395, x = 0.4524, y = 0.4689 }, -- Rootway to Harandar
     { id = "TAXI_6", container = "ek_overworld.map87", mapID = 87, x = 0.5570, y = 0.4790 }, -- Flightmaster
     { id = "TAXI_590", container = "ek_overworld.map50", mapID = 50, x = 0.5260, y = 0.6590 }, -- Fort Livingston
-    { id = "INSTANCE_76", container = "ek_overworld.map50", mapID = 50, x = 0.6700, y = 0.3200 }, -- Zul'Gurub
-    { id = "SILVERMOON_STORMWIND_PORTAL", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5275, y = 0.6471 }, -- Portal to Stormwind
+    { id = "INSTANCE_ZULGURUB", container = "ek_overworld.map50", mapID = 50, x = 0.6700, y = 0.3200, kind = "instance", journal = 76 }, -- Zul'Gurub
+    { id = "PORTAL_SILVERMOON_STORMWIND", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5275, y = 0.6471 }, -- Portal to Stormwind
     { id = "STORMWIND_MAGE_TOWER_ENTRANCE", container = "ek_overworld.map84", mapID = 84, x = 0.4951, y = 0.8666 }, -- Mage Tower
     { id = "TAXI_634", container = "ek_overworld.map15", mapID = 15, x = 0.2220, y = 0.5880 }, -- Dragon's Mouth
-    { id = "INSTANCE_64", container = "ek_overworld.map21", mapID = 21, x = 0.4500, y = 0.6800 }, -- Shadowfang Keep
+    { id = "INSTANCE_SHADOWFANG_KEEP", container = "ek_overworld.map21", mapID = 21, x = 0.4500, y = 0.6800, kind = "instance", journal = 64 }, -- Shadowfang Keep
     { id = "TAXI_630", container = "ek_overworld.map23", mapID = 23, x = 0.5400, y = 0.5350 }, -- Light's Shield Tower
     { id = "TAXI_633", container = "ek_overworld.map15", mapID = 15, x = 0.4840, y = 0.3650 }, -- Dustwind Dig
     { id = "TAXI_668", container = "ek_overworld.map25", mapID = 25, x = 0.2838, y = 0.6402 }, -- Southpoint Gate
@@ -30,144 +30,144 @@ addon.Nodes.EK = {
     { id = "TAXI_3127", container = "ek_overworld.map2437", mapID = 2437, x = 0.4483, y = 0.6544 }, -- Amani'Zar Flightmaster
     { id = "TAXI_673", container = "ek_overworld.map32", mapID = 32, x = 0.4080, y = 0.6900 }, -- Iron Summit
     { id = "TAXI_84", container = "ek_overworld.map23", mapID = 23, x = 0.1840, y = 0.2890 }, -- Plaguewood Tower
-    { id = "BOOTY_BAY_DOCK", container = "ek_overworld.map210", mapID = 210, x = 0.3886, y = 0.6692 }, -- Booty Bay Dock
+    { id = "DOCK_BOOTY_BAY", container = "ek_overworld.map210", mapID = 210, x = 0.3886, y = 0.6692 }, -- Booty Bay Dock
     { id = "TAXI_10", container = "ek_overworld.map21", mapID = 21, x = 0.4521, y = 0.4230 }, -- The Sepulcher
     { id = "TAXI_656", container = "ek_overworld.map1275", mapID = 1275, x = 0.4533, y = 0.7568 }, -- Crushblow
     { id = "TAXI_66", container = "ek_overworld.map22", mapID = 22, x = 0.4210, y = 0.8360 }, -- Chillwind Camp
-    { id = "BOOTY_BAY_FLIGHT_ALLIANCE", container = "ek_overworld.map210", mapID = 210, x = 0.4140, y = 0.7440 }, -- Booty Bay
-    { id = "SILVERMOON_HARANDAR_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.3689, y = 0.6811 }, -- Rootway to Harandar
+    { id = "FLIGHT_BOOTY_BAY_ALLIANCE", container = "ek_overworld.map210", mapID = 210, x = 0.4140, y = 0.7440 }, -- Booty Bay
+    { id = "PORTAL_SILVERMOON_HARANDAR", container = "ek_overworld.map2393", mapID = 2393, x = 0.3689, y = 0.6811 }, -- Rootway to Harandar
     { id = "DRAGONMAW_PORT", container = "ek_overworld.map1275", mapID = 1275, x = 0.7430, y = 0.5080 }, -- Dragonmaw Port
     { id = "STORMWIND_HARBOR", container = "ek_overworld.map84", mapID = 84, x = 0.2680, y = 0.3550 }, -- Harbour
     { id = "TAXI_659", container = "ek_overworld.map1275", mapID = 1275, x = 0.5475, y = 0.4266 }, -- Bloodgulch
     { id = "TAXI_661", container = "ek_overworld.map1275", mapID = 1275, x = 0.7347, y = 0.5254 }, -- Dragonmaw Port Flightmaster
-    { id = "INSTANCE_742", container = "ek_overworld.map33", mapID = 33, x = 0.6432, y = 0.7080 }, -- Blackwing Lair
-    { id = "STORMWIND_STORMSHIELD_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4126, y = 0.8995 }, -- Portal to Stormshield
+    { id = "INSTANCE_BLACKWING_LAIR", container = "ek_overworld.map33", mapID = 33, x = 0.6432, y = 0.7080, kind = "instance", journal = 742 }, -- Blackwing Lair
+    { id = "PORTAL_STORMWIND_STORMSHIELD", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4126, y = 0.8995 }, -- Portal to Stormshield
     { id = "BLACKROCK_MOUNTAIN_MOLE", container = "ek_overworld.map35.interior", mapID = 35, x = 0.3320, y = 0.2510 }, -- Blackrock Mountain (Eastern Kingdoms - The Masonary)
-    { id = "STORMWIND_DORNOGAL_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4797, y = 0.9211 }, -- Portal to Dornogal
+    { id = "PORTAL_STORMWIND_DORNOGAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4797, y = 0.9211 }, -- Portal to Dornogal
     { id = "TIRISFAL_ZIDORMI_PRESENT", container = "ek_overworld.map2070_art1136", mapID = 2070, x = 0.6941, y = 0.6274 }, -- Zidormi (Present Tirisfal)
     { id = "TIRISFAL_ZIDORMI_PAST", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6942, y = 0.6269 }, -- Zidormi (Past Tirisfal)
     { id = "STRATHOLME_DUNGEON", container = "ek_overworld.map23", mapID = 23, x = 0.2600, y = 0.1400 }, -- Stratholme
-    { id = "INSTANCE_73", container = "ek_overworld.map13", mapID = 13, x = 0.4754, y = 0.6893 }, -- Blackwing Descent
+    { id = "INSTANCE_BLACKWING_DESCENT", container = "ek_overworld.map13", mapID = 13, x = 0.4754, y = 0.6893, kind = "instance", journal = 73 }, -- Blackwing Descent
     { id = "BLASTED_LANDS_ZIDORMI_PAST", container = "ek_overworld.map17_art18", mapID = 17, x = 0.4812, y = 0.0732 }, -- Zidormi (Past Blasted Lands)
     { id = "TAXI_43", container = "ek_overworld.map26", mapID = 26, x = 0.1080, y = 0.4700 }, -- Aerie Peak
     { id = "TAXI_7", container = "ek_overworld.map56", mapID = 56, x = 0.0900, y = 0.5930 }, -- Menethil Harbor Flightmaster
-    { id = "INSTANCE_1320", container = "ek_overworld.map2509", mapID = 2509, x = 0.4739, y = 0.2303 }, -- The Venomous Abyss
-    { id = "INSTANCE_246", container = "ek_overworld.map22", mapID = 22, x = 0.6900, y = 0.7300 }, -- Scholomance
-    { id = "ANDORHAL_FLIGHT_HORDE", container = "ek_overworld.map22", mapID = 22, x = 0.4674, y = 0.6473 }, -- Andorhal
-    { id = "STORMWIND_BELAMETH_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4336, y = 0.9753 }, -- Portal to Bel'ameth
-    { id = "INSTANCE_1308", container = "ek_overworld.map2424", mapID = 2424, x = 0.5230, y = 0.8537 }, -- March on Quel'Danas
+    { id = "INSTANCE_THE_VENOMOUS_ABYSS", container = "ek_overworld.map2509", mapID = 2509, x = 0.4739, y = 0.2303, kind = "instance", journal = 1320 }, -- The Venomous Abyss
+    { id = "INSTANCE_SCHOLOMANCE", container = "ek_overworld.map22", mapID = 22, x = 0.6900, y = 0.7300, kind = "instance", journal = 246 }, -- Scholomance
+    { id = "FLIGHT_ANDORHAL_HORDE", container = "ek_overworld.map22", mapID = 22, x = 0.4674, y = 0.6473 }, -- Andorhal
+    { id = "PORTAL_STORMWIND_BELAMETH", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4336, y = 0.9753 }, -- Portal to Bel'ameth
+    { id = "INSTANCE_MARCH_ON_QUELDANAS", container = "ek_overworld.map2424", mapID = 2424, x = 0.5230, y = 0.8537, kind = "instance", journal = 1308 }, -- March on Quel'Danas
     { id = "TAXI_3128", container = "ek_overworld.map2536", mapID = 2536, x = 0.4006, y = 0.4113 }, -- Atal'Aman Flightmaster
     { id = "BADLANDS", container = "ek_overworld.map15", mapID = 15, x = 0.4520, y = 0.1250 }, -- Uldaman
-    { id = "STORMWIND_BORALUS_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4097, y = 0.9262 }, -- Portal to Boralus
-    { id = "STORMWIND_DALARAN_NORTHREND_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4442, y = 0.8861 }, -- Portal to Northrend Dalaran
-    { id = "STORMWIND_VALDRAKKEN_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4874, y = 0.9356 }, -- Portal to Valdrakken
+    { id = "PORTAL_STORMWIND_BORALUS", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4097, y = 0.9262 }, -- Portal to Boralus
+    { id = "PORTAL_STORMWIND_DALARAN_NORTHREND", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4442, y = 0.8861 }, -- Portal to Northrend Dalaran
+    { id = "PORTAL_STORMWIND_VALDRAKKEN", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4874, y = 0.9356 }, -- Portal to Valdrakken
     { id = "TAXI_651", container = "ek_overworld.map22", mapID = 22, x = 0.5140, y = 0.5320 }, -- The Menders' Stead
     { id = "TAXI_1538", container = "ek_overworld.map17", mapID = 17, x = 0.6730, y = 0.2750 }, -- Shattered Beachhead
-    { id = "NORTHERN_AMANI_BULWARK_FLIGHT", container = "ek_overworld.map2509", mapID = 2509, x = 0.4153, y = 0.2341 }, -- Northern Amani Bulwark Windcaller
+    { id = "FLIGHT_NORTHERN_AMANI_BULWARK", container = "ek_overworld.map2509", mapID = 2509, x = 0.4153, y = 0.2341 }, -- Northern Amani Bulwark Windcaller
     { id = "TAXI_3168", container = "ek_overworld.map2512", mapID = 2512, x = 0.5788, y = 0.4576 }, -- Tokka's Landing
-    { id = "ANDORHAL_FLIGHT_ALLIANCE", container = "ek_overworld.map22", mapID = 22, x = 0.3920, y = 0.6950 }, -- Andorhal
+    { id = "FLIGHT_ANDORHAL_ALLIANCE", container = "ek_overworld.map22", mapID = 22, x = 0.3920, y = 0.6950 }, -- Andorhal
     { id = "GILNEAS", container = "ek_overworld.map217", mapID = 217, x = 0.5890, y = 0.4746 }, -- Gilneas City
     { id = "BLASTED_LANDS_ZIDORMI_PRESENT", container = "ek_overworld.map17_art628", mapID = 17, x = 0.4812, y = 0.0732 }, -- Zidormi (Present Blasted Lands)
-    { id = "INSTANCE_741", container = "ek_overworld.map35", mapID = 35, x = 0.5446, y = 0.8361 }, -- Molten Core
+    { id = "INSTANCE_MOLTEN_CORE", container = "ek_overworld.map35", mapID = 35, x = 0.5446, y = 0.8361, kind = "instance", journal = 741 }, -- Molten Core
     { id = "TAXI_620", container = "ek_overworld.map27", mapID = 27, x = 0.7680, y = 0.5370 }, -- Gol'Bolar Quarry
     { id = "SW_EMBASSY", container = "ek_overworld.map84", mapID = 84, x = 0.6610, y = 0.2280 }, -- Embassy
-    { id = "THE_UNDERBELLY_FLIGHT", container = "ek_overworld.map2509", mapID = 2509, x = 0.4557, y = 0.1165 }, -- The Underbelly Windcaller
+    { id = "FLIGHT_THE_UNDERBELLY", container = "ek_overworld.map2509", mapID = 2509, x = 0.4557, y = 0.1165 }, -- The Underbelly Windcaller
     { id = "TAXI_70", container = "ek_overworld.map36", mapID = 36, x = 0.5581, y = 0.2447 }, -- Flame Crest
-    { id = "INSTANCE_1322", container = "ek_overworld.map2509", mapID = 2509, x = 0.4723, y = 0.6843 }, -- Altar of Fangs
-    { id = "INSTANCE_249", container = "ek_overworld.map2424", mapID = 2424, x = 0.6331, y = 0.1527 }, -- Magisters' Terrace
+    { id = "INSTANCE_ALTAR_OF_FANGS", container = "ek_overworld.map2509", mapID = 2509, x = 0.4723, y = 0.6843, kind = "instance", journal = 1322 }, -- Altar of Fangs
+    { id = "INSTANCE_MAGISTERS_TERRACE", container = "ek_overworld.map2424", mapID = 2424, x = 0.6331, y = 0.1527, kind = "instance", journal = 1300 }, -- Magisters' Terrace
     { id = "TAXI_589", container = "ek_overworld.map37", mapID = 37, x = 0.8210, y = 0.6560 }, -- Eastvale Logging Camp
-    { id = "INSTANCE_1315", container = "ek_overworld.map2437", mapID = 2437, x = 0.4385, y = 0.3953 }, -- Maisara Caverns
+    { id = "INSTANCE_MAISARA_CAVERNS", container = "ek_overworld.map2437", mapID = 2437, x = 0.4385, y = 0.3953, kind = "instance", journal = 1315 }, -- Maisara Caverns
     { id = "HINTERLANDS_DRUID", container = "ek_overworld.map26", mapID = 26, x = 0.6249, y = 0.2350 }, -- Seradane, Hinterlands
     { id = "DUSKWOOD_DRUID", container = "ek_overworld.map47", mapID = 47, x = 0.4659, y = 0.3706 }, -- Twilight Grove
-    { id = "STORMWIND_ORIBOS_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4772, y = 0.9478 }, -- Portal to Oribos
+    { id = "PORTAL_STORMWIND_ORIBOS", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4772, y = 0.9478 }, -- Portal to Oribos
     { id = "TAXI_663", container = "ek_overworld.map241", mapID = 241, x = 0.4340, y = 0.5700 }, -- Victor's Point
-    { id = "SILVERMOON_VOIDSTORM_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.3526, y = 0.6584 }, -- Portal to Voidstorm
+    { id = "PORTAL_SILVERMOON_VOIDSTORM", container = "ek_overworld.map2393", mapID = 2393, x = 0.3526, y = 0.6584 }, -- Portal to Voidstorm
     { id = "TAXI_4", container = "ek_overworld.map52", mapID = 52, x = 0.5600, y = 0.4910 }, -- Sentinel Hill
-    { id = "STORMWIND_CAVERNS_OF_TIME_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4379, y = 0.8550 }, -- Portal to Caverns of Time
+    { id = "PORTAL_STORMWIND_CAVERNS_OF_TIME", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4379, y = 0.8550 }, -- Portal to Caverns of Time
     { id = "TAXI_71", container = "ek_overworld.map36", mapID = 36, x = 0.7190, y = 0.6590 }, -- Morgan's Vigil
-    { id = "INSTANCE_1299", container = "ek_overworld.map2395", mapID = 2395, x = 0.3548, y = 0.7883 }, -- Windrunner Spire
-    { id = "INSTANCE_65", container = "ek_overworld.map204", mapID = 204, x = 0.7000, y = 0.3000 }, -- Throne of the Tides
-    { id = "STORMWIND_AZSUNA_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4197, y = 0.9150 }, -- Portal to Bel'ameth
+    { id = "INSTANCE_WINDRUNNER_SPIRE", container = "ek_overworld.map2395", mapID = 2395, x = 0.3548, y = 0.7883, kind = "instance", journal = 1299 }, -- Windrunner Spire
+    { id = "INSTANCE_THRONE_OF_THE_TIDES", container = "ek_overworld.map204", mapID = 204, x = 0.7000, y = 0.3000, kind = "instance", journal = 65 }, -- Throne of the Tides
+    { id = "PORTAL_STORMWIND_AZSUNA", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4197, y = 0.9150 }, -- Portal to Bel'ameth
     { id = "TAXI_8", container = "ek_overworld.map48", mapID = 48, x = 0.3400, y = 0.5060 }, -- Thelsamar
-    { id = "BOOTY_BAY_FLIGHT_HORDE", container = "ek_overworld.map210", mapID = 210, x = 0.4015, y = 0.7328 }, -- Booty Bay
+    { id = "FLIGHT_BOOTY_BAY_HORDE", container = "ek_overworld.map210", mapID = 210, x = 0.4015, y = 0.7328 }, -- Booty Bay
     { id = "TAXI_582", container = "ek_overworld.map37", mapID = 37, x = 0.4220, y = 0.6540 }, -- Goldshire
-    { id = "INSTANCE_1304", container = "ek_overworld.map2393", mapID = 2393, x = 0.5702, y = 0.6108 }, -- Murder Row
+    { id = "INSTANCE_MURDER_ROW", container = "ek_overworld.map2393", mapID = 2393, x = 0.5702, y = 0.6108, kind = "instance", journal = 1304 }, -- Murder Row
     { id = "TAXI_526", container = "ek_overworld.map204", mapID = 204, x = 0.6004, y = 0.5625 }, -- Tenebrous Cavern
-    { id = "INSTANCE_860", container = "ek_overworld.map42", mapID = 42, x = 0.4700, y = 0.7400 }, -- Return to Karazhan
-    { id = "INSTANCE_1197", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000 }, -- Uldaman: Legacy of Tyr
+    { id = "INSTANCE_RETURN_TO_KARAZHAN", container = "ek_overworld.map42", mapID = 42, x = 0.4700, y = 0.7400, kind = "instance", journal = 860 }, -- Return to Karazhan
+    { id = "INSTANCE_ULDAMAN_LEGACY_OF_TYR", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000, kind = "instance", journal = 1197 }, -- Uldaman: Legacy of Tyr
     { id = "STONARD", container = "ek_overworld.map76", mapID = 76, x = 0.4984, y = 0.5581 }, -- Stonard
     { id = "TAXI_600", container = "ek_overworld.map51", mapID = 51, x = 0.2940, y = 0.3340 }, -- The Harborage
-    { id = "INSTANCE_239", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000 }, -- Uldaman
+    { id = "INSTANCE_ULDAMAN", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000, kind = "instance", journal = 239 }, -- Uldaman
     { id = "SUNKEN_TEMPLE_DUNGEON", container = "ek_overworld.map51", mapID = 51, x = 0.6900, y = 0.5400 }, -- Sunken Temple
     { id = "TAXI_583", container = "ek_overworld.map52", mapID = 52, x = 0.4160, y = 0.6310 }, -- Moonbrook
     { id = "AERIE_PEAK_MOLE", container = "ek_overworld.map26", mapID = 26, x = 0.1340, y = 0.4670 }, -- Aerie Peak (Eastern Kingdoms)
     { id = "LIGHTS_HOPE_CHAPEL", container = "ek_overworld.map23", mapID = 23, x = 0.7570, y = 0.5330 }, -- Light's Hope Chapel
     { id = "TAXI_554", container = "ek_overworld.map56", mapID = 56, x = 0.5770, y = 0.7150 }, -- Slabchisel's Survey
-    { id = "INSTANCE_311", container = "ek_overworld.map18", mapID = 18, x = 0.8200, y = 0.3300 }, -- Scarlet Halls
-    { id = "INSTANCE_316", container = "ek_overworld.map18", mapID = 18, x = 0.8200, y = 0.3300 }, -- Scarlet Monastery
-    { id = "INSTANCE_66", container = "ek_overworld.map34", mapID = 34, x = 0.7059, y = 0.5359 }, -- Blackrock Caverns
-    { id = "COILED_ISLE_SILVERMOON_PORTAL", container = "ek_overworld.map2512", mapID = 2512, x = 0.5822, y = 0.4848 }, -- Portal to Astalor's Sanctum
-    { id = "INSTANCE_559", container = "ek_overworld.map33", mapID = 33, x = 0.7897, y = 0.3373 }, -- Upper Blackrock Spire
+    { id = "INSTANCE_SCARLET_HALLS", container = "ek_overworld.map18", mapID = 18, x = 0.8200, y = 0.3300, kind = "instance", journal = 311 }, -- Scarlet Halls
+    { id = "INSTANCE_SCARLET_MONASTERY", container = "ek_overworld.map18", mapID = 18, x = 0.8200, y = 0.3300, kind = "instance", journal = 316 }, -- Scarlet Monastery
+    { id = "INSTANCE_BLACKROCK_CAVERNS", container = "ek_overworld.map34", mapID = 34, x = 0.7059, y = 0.5359, kind = "instance", journal = 66 }, -- Blackrock Caverns
+    { id = "PORTAL_COILED_ISLE_SILVERMOON", container = "ek_overworld.map2512", mapID = 2512, x = 0.5822, y = 0.4848 }, -- Portal to Astalor's Sanctum
+    { id = "INSTANCE_UPPER_BLACKROCK_SPIRE", container = "ek_overworld.map33", mapID = 33, x = 0.7897, y = 0.3373, kind = "instance", journal = 559 }, -- Upper Blackrock Spire
     { id = "TAXI_2", container = "ek_overworld.map84", mapID = 84, x = 0.7130, y = 0.7240 }, -- Flightmaster
-    { id = "INSTANCE_229", container = "ek_overworld.map33", mapID = 33, x = 0.8036, y = 0.4055 }, -- Lower Blackrock Spire
-    { id = "INSTANCE_228", container = "ek_overworld.map35.interior", mapID = 35, x = 0.3353, y = 0.2391 }, -- Blackrock Depths
+    { id = "INSTANCE_LOWER_BLACKROCK_SPIRE", container = "ek_overworld.map33", mapID = 33, x = 0.8036, y = 0.4055, kind = "instance", journal = 229 }, -- Lower Blackrock Spire
+    { id = "INSTANCE_BLACKROCK_DEPTHS", container = "ek_overworld.map35.interior", mapID = 35, x = 0.3353, y = 0.2391, kind = "instance", journal = 228 }, -- Blackrock Depths
     { id = "TAXI_5", container = "ek_overworld.map49", mapID = 49, x = 0.2920, y = 0.5320 }, -- Lakeshire
     { id = "TAXI_672", container = "ek_overworld.map22", mapID = 22, x = 0.4440, y = 0.1530 }, -- Hearthglen
     { id = "TAXI_619", container = "ek_overworld.map27", mapID = 27, x = 0.5440, y = 0.5250 }, -- Kharanos
     { id = "TAXI_3130", container = "ek_overworld.map2437", mapID = 2437, x = 0.3887, y = 0.2323 }, -- Witherbark Bluffs Flightmaster
     { id = "TAXI_13", container = "ek_overworld.map25", mapID = 25, x = 0.5581, y = 0.4583 }, -- Tarren Mill
-    { id = "INSTANCE_238", container = "ek_overworld.map84", mapID = 84, x = 0.5100, y = 0.6800 }, -- The Stockade
-    { id = "INSTANCE_231", container = "ek_overworld.map27", mapID = 27, x = 0.3120, y = 0.3789 }, -- Gnomeregan
+    { id = "INSTANCE_THE_STOCKADE", container = "ek_overworld.map84", mapID = 84, x = 0.5100, y = 0.6800, kind = "instance", journal = 238 }, -- The Stockade
+    { id = "INSTANCE_GNOMEREGAN", container = "ek_overworld.map27", mapID = 27, x = 0.3120, y = 0.3789, kind = "instance", journal = 231 }, -- Gnomeregan
     { id = "TAXI_3288", container = "ek_overworld.map2509", mapID = 2509, x = 0.4439, y = 0.6236 }, -- Amani Foothold
     { id = "TAXI_610", container = "ek_overworld.map205", mapID = 205, x = 0.5381, y = 0.6551 }, -- Stygian Bounty
-    { id = "EASTERN_AMANI_OUTPOST_FLIGHT", container = "ek_overworld.map2509", mapID = 2509, x = 0.5431, y = 0.3947 }, -- Eastern Amani Outpost Windcaller
+    { id = "FLIGHT_EASTERN_AMANI_OUTPOST", container = "ek_overworld.map2509", mapID = 2509, x = 0.5431, y = 0.3947 }, -- Eastern Amani Outpost Windcaller
     { id = "STORMWIND_PORTAL_ROOM_LOWER", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4634, y = 0.9024 }, -- Portal Room (Lower)
     { id = "TAXI_592", container = "ek_overworld.map210", mapID = 210, x = 0.3556, y = 0.2888 }, -- Hardwrench Hideaway
-    { id = "SW_TRAM", container = "ek_overworld.map84", mapID = 84, x = 0.6500, y = 0.3230 }, -- Deeprun Tram
-    { id = "INSTANCE_72", container = "ek_overworld.map241", mapID = 241, x = 0.3400, y = 0.7700 }, -- Bastion of Twilight
+    { id = "TRAM_SW", container = "ek_overworld.map84", mapID = 84, x = 0.6500, y = 0.3230 }, -- Deeprun Tram
+    { id = "INSTANCE_BASTION_OF_TWILIGHT", container = "ek_overworld.map241", mapID = 241, x = 0.3400, y = 0.7700, kind = "instance", journal = 72 }, -- Bastion of Twilight
     { id = "AMANI_FOOTHOLD_FLIGHT_2", container = "ek_overworld.map2509", mapID = 2509, x = 0.4999, y = 0.6189 }, -- Amani Foothold Windcaller
-    { id = "INSTANCE_745", container = "ek_overworld.map42", mapID = 42, x = 0.4688, y = 0.7468 }, -- Karazhan (Burning Crusade)
+    { id = "INSTANCE_KARAZHAN", container = "ek_overworld.map42", mapID = 42, x = 0.4688, y = 0.7468, kind = "instance", journal = 745 }, -- Karazhan (Burning Crusade)
     { id = "EASTERN_EARTHSHRINE_SW", container = "ek_overworld.map84", mapID = 84, x = 0.7240, y = 0.1640 }, -- Eastern Earthshrine
     { id = "TAXI_3106", container = "ek_overworld.map2437", mapID = 2437, x = 0.4729, y = 0.2550 }, -- Camp Stonewash Flightmaster
     { id = "TAXI_3129", container = "ek_overworld.map2437", mapID = 2437, x = 0.4402, y = 0.3367 }, -- Shadebasin Watch Flightmaster
-    { id = "THORIUM_POINT_FLIGHT_HORDE", container = "ek_overworld.map32", mapID = 32, x = 0.3721, y = 0.2772 }, -- Thorium Point
-    { id = "STORMWIND_SILVERMOON_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4865, y = 0.9497 }, -- Portal to Silvermoon City
-    { id = "INSTANCE_63", container = "ek_overworld.map52", mapID = 52, x = 0.4239, y = 0.7126 }, -- The Deadmines
+    { id = "FLIGHT_THORIUM_POINT_HORDE", container = "ek_overworld.map32", mapID = 32, x = 0.3721, y = 0.2772 }, -- Thorium Point
+    { id = "PORTAL_STORMWIND_SILVERMOON", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4865, y = 0.9497 }, -- Portal to Silvermoon City
+    { id = "INSTANCE_DEADMINES", container = "ek_overworld.map52", mapID = 52, x = 0.4239, y = 0.7126, kind = "instance", journal = 63 }, -- The Deadmines
     { id = "TAXI_584", container = "ek_overworld.map52", mapID = 52, x = 0.5060, y = 0.1860 }, -- Furlbrow's Pumpkin Farm
     { id = "TAXI_666", container = "ek_overworld.map1275", mapID = 1275, x = 0.5781, y = 0.1582 }, -- Kirthaven
     { id = "TAXI_3126", container = "ek_overworld.map2437", mapID = 2437, x = 0.3388, y = 0.7836 }, -- Torntusk Overlook Flightmaster
-    { id = "STORMWIND_FOUNDERS_POINT_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4701, y = 0.9326 }, -- Portal to Founder's Point
+    { id = "PORTAL_STORMWIND_FOUNDERS_POINT", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4701, y = 0.9326 }, -- Portal to Founder's Point
     { id = "TAXI_665", container = "ek_overworld.map241", mapID = 241, x = 0.4740, y = 0.2960 }, -- Thundermar
     { id = "TAXI_632", container = "ek_overworld.map15", mapID = 15, x = 0.5216, y = 0.5254 }, -- Bloodwatcher Point
-    { id = "GILNEAS_DOCK", container = "ek_overworld.map217", mapID = 217, x = 0.6360, y = 0.9560 }, -- Dock
+    { id = "DOCK_GILNEAS", container = "ek_overworld.map217", mapID = 217, x = 0.6360, y = 0.9560 }, -- Dock
     { id = "TAXI_83", container = "ek_overworld.map2395", mapID = 2395, x = 0.4784, y = 0.6715 }, -- Tranquillien Flightmaster
     { id = "TAXI_660", container = "ek_overworld.map1275", mapID = 1275, x = 0.7488, y = 0.1758 }, -- The Krazzworks
     { id = "SILVERMOON_PORTAL_ROOM", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5274, y = 0.6535 }, -- Portal Room
     { id = "TAXI_615", container = "ek_overworld.map49", mapID = 49, x = 0.5380, y = 0.5510 }, -- Camp Everstill
-    { id = "MAGISTERS_SILVERMOON_PORTAL", container = "ek_overworld.map2649", mapID = 2649, x = 0.5646, y = 0.1400 }, -- Portal to Silvermoon City
+    { id = "PORTAL_MAGISTERS_SILVERMOON", container = "ek_overworld.map2649", mapID = 2649, x = 0.5646, y = 0.1400 }, -- Portal to Silvermoon City
     { id = "TAXI_667", container = "ek_overworld.map25", mapID = 25, x = 0.4886, y = 0.6526 }, -- Ruins of Southshore
-    { id = "SILVERMOON_ORGRIMMAR_PORTAL", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5225, y = 0.6532 }, -- Portal to Orgrimmar
-    { id = "SILVERMOON_MAGISTERS_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.4798, y = 0.5181 }, -- Portal to Magisters' Terrace
-    { id = "SILVERMOON_ARCANTINA_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.5641, y = 0.7077 }, -- Portal to the Arcantina
+    { id = "PORTAL_SILVERMOON_ORGRIMMAR", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5225, y = 0.6532 }, -- Portal to Orgrimmar
+    { id = "PORTAL_SILVERMOON_MAGISTERS", container = "ek_overworld.map2393", mapID = 2393, x = 0.4798, y = 0.5181 }, -- Portal to Magisters' Terrace
+    { id = "PORTAL_SILVERMOON_ARCANTINA", container = "ek_overworld.map2393", mapID = 2393, x = 0.5641, y = 0.7077 }, -- Portal to the Arcantina
     { id = "SILVERMOON_INN", container = "ek_overworld.map2393", mapID = 2393, x = 0.5628, y = 0.7037 }, -- Wayfarer's Rest
     { id = "TAXI_525", container = "ek_overworld.map205", mapID = 205, x = 0.5027, y = 0.6639 }, -- Legion's Rest
-    { id = "DARKBREAK_COVE_PORTAL", container = "ek_overworld.map204", mapID = 204, x = 0.5570, y = 0.7280 }, -- Darkbreak Cove Portal
+    { id = "PORTAL_DARKBREAK_COVE", container = "ek_overworld.map204", mapID = 204, x = 0.5570, y = 0.7280 }, -- Darkbreak Cove Portal
     { id = "TAXI_82", container = "ek_overworld.map2393", mapID = 2393, x = 0.5107, y = 0.7108 }, -- Silvermoon City Flightmaster
     { id = "BLACKROCK_QUARRY_EXTERIOR", container = "ek_overworld.map35", mapID = 35, x = 0.5513, y = 0.8454 }, -- Blackrock Quarry Interior
     { id = "TAXI_17", container = "ek_overworld.map14", mapID = 14, x = 0.6864, y = 0.3400 }, -- Hammerfall
-    { id = "INSTANCE_71", container = "ek_overworld.map241", mapID = 241, x = 0.1900, y = 0.5400 }, -- Grim Batol
+    { id = "INSTANCE_GRIM_BATOL", container = "ek_overworld.map241", mapID = 241, x = 0.1900, y = 0.5400, kind = "instance", journal = 71 }, -- Grim Batol
     { id = "TAXI_524", container = "ek_overworld.map204", mapID = 204, x = 0.5780, y = 0.7860 }, -- Darkbreak Cove
     { id = "TAXI_675", container = "ek_overworld.map36", mapID = 36, x = 0.1650, y = 0.5250 }, -- Flamestar Post
-    { id = "INSTANCE_1311", container = "ek_overworld.map2437", mapID = 2437, x = 0.2987, y = 0.8449 }, -- Den of Nalorakk
-    { id = "THE_VENOMOUS_ABYSS_FLIGHT", container = "ek_overworld.map2509", mapID = 2509, x = 0.4845, y = 0.2704 }, -- The Venomous Abyss Windcaller
+    { id = "INSTANCE_DEN_OF_NALORAKK", container = "ek_overworld.map2437", mapID = 2437, x = 0.2987, y = 0.8449, kind = "instance", journal = 1311 }, -- Den of Nalorakk
+    { id = "FLIGHT_THE_VENOMOUS_ABYSS", container = "ek_overworld.map2509", mapID = 2509, x = 0.4845, y = 0.2704 }, -- The Venomous Abyss Windcaller
     { id = "TAXI_12", container = "ek_overworld.map47", mapID = 47, x = 0.7740, y = 0.4440 }, -- Darkshire
     { id = "TAXI_522", container = "ek_overworld.map205", mapID = 205, x = 0.4930, y = 0.4000 }, -- Silver Tide Hollow
-    { id = "STORMWIND_PAWDON_VILLAGE_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4559, y = 0.8730 }, -- Portal to Paw'don Village
-    { id = "SANDY_BEACH_FLIGHT_HORDE", container = "ek_overworld.map205", mapID = 205, x = 0.6075, y = 0.2754 }, -- Sandy Beach
-    { id = "SANDY_BEACH_FLIGHT_ALLIANCE", container = "ek_overworld.map205", mapID = 205, x = 0.5690, y = 0.1730 }, -- Sandy Beach
+    { id = "PORTAL_STORMWIND_PAWDON_VILLAGE", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4559, y = 0.8730 }, -- Portal to Paw'don Village
+    { id = "FLIGHT_SANDY_BEACH_HORDE", container = "ek_overworld.map205", mapID = 205, x = 0.6075, y = 0.2754 }, -- Sandy Beach
+    { id = "FLIGHT_SANDY_BEACH_ALLIANCE", container = "ek_overworld.map205", mapID = 205, x = 0.5690, y = 0.1730 }, -- Sandy Beach
     { id = "TAXI_76", container = "ek_overworld.map26", mapID = 26, x = 0.8065, y = 0.8115 }, -- Revantusk Village
     { id = "TAXI_523", container = "ek_overworld.map205", mapID = 205, x = 0.4870, y = 0.5760 }, -- Tranquil Wash
-    { id = "TENEBROUS_CAVERN_PORTAL", container = "ek_overworld.map204", mapID = 204, x = 0.6004, y = 0.5625 }, -- Tenebrous Cavern Portal
+    { id = "PORTAL_TENEBROUS_CAVERN", container = "ek_overworld.map204", mapID = 204, x = 0.6004, y = 0.5625 }, -- Tenebrous Cavern Portal
     { id = "TAXI_551", container = "ek_overworld.map56", mapID = 56, x = 0.3990, y = 0.3880 }, -- Whelgar's Retreat
     { id = "TAXI_521", container = "ek_overworld.map201", mapID = 201, x = 0.5570, y = 0.3420 }, -- Smuggler's Scar
     { id = "TAXI_617", container = "ek_overworld.map26", mapID = 26, x = 0.3215, y = 0.5713 }, -- Hiri'watha Research Station
@@ -175,24 +175,24 @@ addon.Nodes.EK = {
     { id = "TAXI_21", container = "ek_overworld.map15", mapID = 15, x = 0.1719, y = 0.4107 }, -- New Kargath
     { id = "TAXI_593", container = "ek_overworld.map50", mapID = 50, x = 0.6146, y = 0.3902 }, -- Bambala
     { id = "TAXI_552", container = "ek_overworld.map56", mapID = 56, x = 0.5530, y = 0.4170 }, -- Greenwarden's Grove
-    { id = "LIGHTS_HOPE_CHAPEL_FLIGHT_ALLIANCE", container = "ek_overworld.map23", mapID = 23, x = 0.7540, y = 0.5340 }, -- Light's Hope Chapel
+    { id = "FLIGHT_LIGHTS_HOPE_CHAPEL_ALLIANCE", container = "ek_overworld.map23", mapID = 23, x = 0.7540, y = 0.5340 }, -- Light's Hope Chapel
     { id = "STORMWIND_CITY_MOLE", container = "ek_overworld.map84", mapID = 84, x = 0.6330, y = 0.3730 }, -- Stormwind (Eastern Kingdoms)
-    { id = "STORMWIND_SHATTRATH_OUTLANDS_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4480, y = 0.8584 }, -- Portal to Shattrath
-    { id = "SILVERMOON_COILED_ISLE_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.5684, y = 0.6738 }, -- Portal to the Coiled Isle
+    { id = "PORTAL_STORMWIND_SHATTRATH_OUTLANDS", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4480, y = 0.8584 }, -- Portal to Shattrath
+    { id = "PORTAL_SILVERMOON_COILED_ISLE", container = "ek_overworld.map2393", mapID = 2393, x = 0.5684, y = 0.6738 }, -- Portal to the Coiled Isle
     { id = "TAXI_553", container = "ek_overworld.map56", mapID = 56, x = 0.5000, y = 0.1850 }, -- Dun Modr
     { id = "TAXI_664", container = "ek_overworld.map241", mapID = 241, x = 0.6020, y = 0.5850 }, -- Firebeard's Patrol
     { id = "TAXI_86", container = "ek_overworld.map23", mapID = 23, x = 0.6270, y = 0.4280 }, -- Eastwall Tower
     { id = "TAXI_670", container = "ek_overworld.map25", mapID = 25, x = 0.5851, y = 0.2429 }, -- Strahnbrad
-    { id = "STORMWIND_EXODAR_PORTAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4372, y = 0.8709 }, -- Portal to The Exodar
+    { id = "PORTAL_STORMWIND_EXODAR", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4372, y = 0.8709 }, -- Portal to The Exodar
     { id = "TAXI_645", container = "ek_overworld.map21", mapID = 21, x = 0.5781, y = 0.1034 }, -- Forsaken High Command
-    { id = "STORMWIND_DARNASSUS_PORTAL", container = "ek_overworld.map84", mapID = 84, x = 0.2391, y = 0.5602 }, -- Portal to Darnassus
-    { id = "THORIUM_POINT_FLIGHT_ALLIANCE", container = "ek_overworld.map32", mapID = 32, x = 0.3770, y = 0.2740 }, -- Thorium Point
+    { id = "PORTAL_STORMWIND_DARNASSUS", container = "ek_overworld.map84", mapID = 84, x = 0.2391, y = 0.5602 }, -- Portal to Darnassus
+    { id = "FLIGHT_THORIUM_POINT_ALLIANCE", container = "ek_overworld.map32", mapID = 32, x = 0.3770, y = 0.2740 }, -- Thorium Point
     { id = "SANCTUM_OF_LIGHT", container = "ek_overworld.map24", mapID = 24, x = 0.3942, y = 0.6146 }, -- Sanctum of Light
     { id = "TAXI_3190", container = "ek_overworld.map2395", mapID = 2395, x = 0.3103, y = 0.9008 }, -- Silverglade Refuge Flightmaster
     { id = "DARK_PORTAL_BL", container = "ek_overworld.map17", mapID = 17, x = 0.5489, y = 0.5011 }, -- The Dark Portal
     { id = "TAXI_654", container = "ek_overworld.map21", mapID = 21, x = 0.4992, y = 0.6367 }, -- The Forsaken Front
     { id = "TAXI_618", container = "ek_overworld.map26", mapID = 26, x = 0.6620, y = 0.4470 }, -- Stormfeather Outpost
-    { id = "MENETHIL_HARBOR_DOCK", container = "ek_overworld.map56", mapID = 56, x = 0.0613, y = 0.5890 }, -- Menethil Harbor Dock
+    { id = "DOCK_MENETHIL_HARBOR", container = "ek_overworld.map56", mapID = 56, x = 0.0613, y = 0.5890 }, -- Menethil Harbor Dock
     { id = "DALARAN_CRATER", container = "ek_overworld.map25", mapID = 25, x = 0.2000, y = 0.5860 }, -- Dalaran Crater
     { id = "TAXI_596", container = "ek_overworld.map49", mapID = 49, x = 0.7760, y = 0.6490 }, -- Shalewind Canyon
     { id = "TAXI_195", container = "ek_overworld.map50", mapID = 50, x = 0.4790, y = 0.1180 }, -- Rebel Camp
@@ -209,11 +209,11 @@ addon.Nodes.EK = {
     { id = "IRONFORGE", container = "ek_overworld.map87", mapID = 87, x = 0.2551, y = 0.0843 }, -- Hall of Mysteries
     { id = "TAXI_87", container = "ek_overworld.map23", mapID = 23, x = 0.3660, y = 0.6920 }, -- Crown Guard Tower
     { id = "TAXI_662", container = "ek_overworld.map241", mapID = 241, x = 0.8130, y = 0.7660 }, -- Highbank Flightmaster
-    { id = "LIGHTS_HOPE_CHAPEL_FLIGHT_HORDE", container = "ek_overworld.map23", mapID = 23, x = 0.7488, y = 0.5360 }, -- Light's Hope Chapel
+    { id = "FLIGHT_LIGHTS_HOPE_CHAPEL_HORDE", container = "ek_overworld.map23", mapID = 23, x = 0.7488, y = 0.5360 }, -- Light's Hope Chapel
     { id = "TAXI_20", container = "ek_overworld.map50", mapID = 50, x = 0.3874, y = 0.5103 }, -- Grom'gol
-    { id = "IF_TRAM", container = "ek_overworld.map87", mapID = 87, x = 0.7060, y = 0.4870 }, -- Deeprun Tram
+    { id = "TRAM_IF", container = "ek_overworld.map87", mapID = 87, x = 0.7060, y = 0.4870 }, -- Deeprun Tram
     { id = "TAXI_383", container = "ek_overworld.map23", mapID = 23, x = 0.1070, y = 0.6490 }, -- Thondroril River
-    { id = "GROMGOL_ZEPPELIN", container = "ek_overworld.map50", mapID = 50, x = 0.4180, y = 0.3365 }, -- Grom'gol Zeppelin
+    { id = "ZEPPELIN_GROMGOL", container = "ek_overworld.map50", mapID = 50, x = 0.4180, y = 0.3365 }, -- Grom'gol Zeppelin
     { id = "TAXI_555", container = "ek_overworld.map48", mapID = 48, x = 0.8360, y = 0.6370 }, -- Farstrider Lodge
     { id = "TAXI_591", container = "ek_overworld.map210", mapID = 210, x = 0.5600, y = 0.4240 }, -- Explorers' League Digsite
     { id = "TAXI_635", container = "ek_overworld.map15", mapID = 15, x = 0.6470, y = 0.3510 }, -- Fuselight
@@ -231,18 +231,18 @@ addon.Nodes.EK = {
     { id = "TAXI_3125", container = "ek_overworld.map2424", mapID = 2424, x = 0.5762, y = 0.3382 }, -- Terrace of the Sun
     { id = "TOL_BARAD_ALLIANCE", container = "tol_barad.map245", mapID = 245, x = 0.7240, y = 0.5620 }, -- Tol Barad Camp
     { id = "TOL_BARAD_HORDE", container = "tol_barad.map245", mapID = 245, x = 0.5310, y = 0.7600 }, -- Tol Barad Camp
-    { id = "BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700 }, -- Baradin Hold
+    { id = "INSTANCE_BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700, kind = "instance", journal = 75 }, -- Baradin Hold
     { id = "FOUNDERS_POINT", container = "founders_point.map2352", mapID = 2352, x = 0.5740, y = 0.2680 }, -- Entrance Portal
     { id = "LYCANEUM_ENTRANCE", container = "ek_overworld.map2424", mapID = 2424, x = 0.6409, y = 0.2895, area = 16754 }, -- Entrance to the Lycaneum (Court of the Phoenix) (hand-added: tools/modern_manual.py)
-    { id = "INSTANCE_236", container = "ek_overworld.map23", mapID = 23, x = 0.2660, y = 0.1180 }, -- Stratholme - Main Gate (Eastern Plaguelands) (hand-added: tools/modern_manual.py)
-    { id = "INSTANCE_1292", container = "ek_overworld.map23", mapID = 23, x = 0.4330, y = 0.1900 }, -- Stratholme - Service Entrance (the back door) (hand-added: tools/modern_manual.py)
-    { id = "INSTANCE_237", container = "ek_overworld.map51", mapID = 51, x = 0.7010, y = 0.5430 }, -- The Temple of Atal'hakkar (Swamp of Sorrows) (hand-added: tools/modern_manual.py)
-    { id = "INSTANCE_1317", container = "ek_overworld.map2509", mapID = 2509, x = 0.6000, y = 0.6640 }, -- The Tidebound Grotto (Coiled Isle): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_STRATHOLME_MAIN_GATE", container = "ek_overworld.map23", mapID = 23, x = 0.2660, y = 0.1180, kind = "instance", journal = 236 }, -- Stratholme - Main Gate (Eastern Plaguelands) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_STRATHOLME_SERVICE_ENTRANCE", container = "ek_overworld.map23", mapID = 23, x = 0.4330, y = 0.1900, kind = "instance", journal = 1292 }, -- Stratholme - Service Entrance (the back door) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_THE_TEMPLE_OF_ATALHAKKAR", container = "ek_overworld.map51", mapID = 51, x = 0.7010, y = 0.5430, kind = "instance", journal = 237 }, -- The Temple of Atal'hakkar (Swamp of Sorrows) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_THE_TIDEBOUND_GROTTO", container = "ek_overworld.map2509", mapID = 2509, x = 0.6000, y = 0.6640, kind = "instance", journal = 1317 }, -- The Tidebound Grotto (Coiled Isle): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
     { id = "BIZMOS_BRAWLPUB", container = "deeprun_tram.map500", mapID = 500, x = 0.5111, y = 0.2731 }, -- Bizmo's Brawlpub: where the Pugilist's ring lands you (hand-added: tools/modern_manual.py)
-    { id = "BIZMOS_TO_TRAM", container = "deeprun_tram.map500", mapID = 500, x = 0.7221, y = 0.0324 }, -- Bizmo's Brawlpub: the way out to the tram (hand-added: tools/modern_manual.py)
+    { id = "TRAM_BIZMOS_TO", container = "deeprun_tram.map500", mapID = 500, x = 0.7221, y = 0.0324 }, -- Bizmo's Brawlpub: the way out to the tram (hand-added: tools/modern_manual.py)
     { id = "TRAM_TO_BIZMOS", container = "deeprun_tram.map499", mapID = 499, x = 0.5249, y = 0.7033 }, -- Deeprun Tram: the way in to Bizmo's Brawlpub (hand-added: tools/modern_manual.py)
     { id = "DEEPRUN_TRAM_TO_STORMWIND", container = "deeprun_tram.map499", mapID = 499, x = 0.4242, y = 0.1214 }, -- Deeprun Tram: the way up to Stormwind (hand-added: tools/modern_manual.py)
-    { id = "STORMWIND_TO_DEEPRUN_TRAM", container = "ek_overworld.map84", mapID = 84, x = 0.6937, y = 0.3138 }, -- Stormwind (Dwarven District): the way down to the Deeprun Tram (hand-added: tools/modern_manual.py)
+    { id = "TRAM_STORMWIND_TO_DEEPRUN", container = "ek_overworld.map84", mapID = 84, x = 0.6937, y = 0.3138 }, -- Stormwind (Dwarven District): the way down to the Deeprun Tram (hand-added: tools/modern_manual.py)
     { id = "SILVERMOON_PORTAL_ROOM_ENTRANCE", container = "ek_overworld.map2393", mapID = 2393, x = 0.5323, y = 0.6611 }, -- Silvermoon: the portal room's door, street side (hand-added: tools/modern_manual.py)
     { id = "SILVERMOON_PORTAL_ROOM_EXIT", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5316, y = 0.6604 }, -- Silvermoon: the portal room's door, room side (hand-added: tools/modern_manual.py)
 }

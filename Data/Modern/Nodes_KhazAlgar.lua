@@ -10,7 +10,7 @@ addon.Nodes = addon.Nodes or {}
 addon.Nodes.KhazAlgar = {
     { id = "TAXI_2929", container = "khaz_algar.map2248", mapID = 2248, x = 0.4092, y = 0.7287 }, -- Freywold Village
     { id = "TAXI_2882", container = "khaz_algar.map2255", mapID = 2255, x = 0.5689, y = 0.4676 }, -- Weaver's Lair
-    { id = "INSTANCE_1270", container = "khaz_algar.map2215", mapID = 2215, x = 0.5470, y = 0.6290 }, -- The Dawnbreaker
+    { id = "INSTANCE_THE_DAWNBREAKER", container = "khaz_algar.map2215", mapID = 2215, x = 0.5470, y = 0.6290, kind = "instance", journal = 1270 }, -- The Dawnbreaker
     { id = "TAXI_2924", container = "khaz_algar.map2215", mapID = 2215, x = 0.4034, y = 0.7108 }, -- Light's Redoubt
     { id = "TAXI_2970", container = "khaz_algar.map2248", mapID = 2248, x = 0.2967, y = 0.5816 }, -- Tranquil Strand
     { id = "DORNOGAL_DELVE_HALL", container = "khaz_algar.map2339", mapID = 2339, x = 0.4946, y = 0.4441 }, -- Delver's Office
@@ -19,28 +19,28 @@ addon.Nodes.KhazAlgar = {
     { id = "TAXI_2950", container = "khaz_algar.map2215", mapID = 2215, x = 0.7110, y = 0.5644 }, -- The Aegis Wall
     { id = "TAXI_3000", container = "khaz_algar.map2214", mapID = 2214, x = 0.7110, y = 0.8337 }, -- Gutterville
     { id = "TAXI_2926", container = "khaz_algar.map2214", mapID = 2214, x = 0.5400, y = 0.6392 }, -- Camp Murroch
-    { id = "DORNOGAL_KARESH_PORTAL", container = "khaz_algar.map2339", mapID = 2339, x = 0.4040, y = 0.4040 }, -- Karesh Portal
+    { id = "PORTAL_DORNOGAL_KARESH", container = "khaz_algar.map2339", mapID = 2339, x = 0.4040, y = 0.4040 }, -- Karesh Portal
     { id = "TAXI_2944", container = "khaz_algar.map2215", mapID = 2215, x = 0.6089, y = 0.3062 }, -- Hillhelm Family Farm
     { id = "TAXI_2942", container = "khaz_algar.map2215", mapID = 2215, x = 0.4069, y = 0.3389 }, -- Priory of the Sacred Flame
     { id = "TAXI_2941", container = "khaz_algar.map2215", mapID = 2215, x = 0.4143, y = 0.5247 }, -- Mereldar
     { id = "TAXI_2919", container = "khaz_algar.map2255", mapID = 2255, x = 0.4436, y = 0.6702 }, -- Wildcamp Ul'ar
     { id = "TAXI_2963", container = "khaz_algar.map2214", mapID = 2214, x = 0.5710, y = 0.4791 }, -- Shadowvein Point
-    { id = "DORNOGAL_UNDERMINE_PORTAL", container = "khaz_algar.map2339", mapID = 2339, x = 0.5230, y = 0.5070 }, -- Undermine Portal
-    { id = "DORNOGAL_AZJKAHET_PORTAL", container = "khaz_algar.map2339", mapID = 2339, x = 0.6360, y = 0.5210 }, -- Azj-Kahet Portal
-    { id = "INSTANCE_1274", container = "khaz_algar.map2255", mapID = 2255, x = 0.4700, y = 0.6900 }, -- City of Threads
+    { id = "PORTAL_DORNOGAL_UNDERMINE", container = "khaz_algar.map2339", mapID = 2339, x = 0.5230, y = 0.5070 }, -- Undermine Portal
+    { id = "PORTAL_DORNOGAL_AZJKAHET", container = "khaz_algar.map2339", mapID = 2339, x = 0.6360, y = 0.5210 }, -- Azj-Kahet Portal
+    { id = "INSTANCE_CITY_OF_THREADS", container = "khaz_algar.map2255", mapID = 2255, x = 0.4700, y = 0.6900, kind = "instance", journal = 1274 }, -- City of Threads
     { id = "TAXI_2943", container = "khaz_algar.map2215", mapID = 2215, x = 0.4803, y = 0.4060 }, -- Lorel's Crossing
-    { id = "INSTANCE_1269", container = "khaz_algar.map2248", mapID = 2248, x = 0.4200, y = 0.0900 }, -- The Stonevault
+    { id = "INSTANCE_THE_STONEVAULT", container = "khaz_algar.map2248", mapID = 2248, x = 0.4200, y = 0.0900, kind = "instance", journal = 1269 }, -- The Stonevault
     { id = "TAXI_2928", container = "khaz_algar.map2339", mapID = 2339, x = 0.4471, y = 0.5100 }, -- Flightmaster
     { id = "TAXI_2923", container = "khaz_algar.map2215", mapID = 2215, x = 0.5272, y = 0.6139 }, -- Lightspark
-    { id = "INSTANCE_1267", container = "khaz_algar.map2215", mapID = 2215, x = 0.4120, y = 0.4960 }, -- Priory of the Sacred Flame
-    { id = "INSTANCE_1272", container = "khaz_algar.map2248", mapID = 2248, x = 0.7600, y = 0.4500 }, -- Cinderbrew Meadery
-    { id = "INSTANCE_1271", container = "khaz_algar.map2255", mapID = 2255, x = 0.4900, y = 0.8100 }, -- Ara-Kara, City of Echoes
+    { id = "INSTANCE_PRIORY_OF_THE_SACRED_FLAME", container = "khaz_algar.map2215", mapID = 2215, x = 0.4120, y = 0.4960, kind = "instance", journal = 1267 }, -- Priory of the Sacred Flame
+    { id = "INSTANCE_CINDERBREW_MEADERY", container = "khaz_algar.map2248", mapID = 2248, x = 0.7600, y = 0.4500, kind = "instance", journal = 1272 }, -- Cinderbrew Meadery
+    { id = "INSTANCE_ARA_KARA_CITY_OF_ECHOES", container = "khaz_algar.map2255", mapID = 2255, x = 0.4900, y = 0.8100, kind = "instance", journal = 1271 }, -- Ara-Kara, City of Echoes
     { id = "TAXI_2925", container = "khaz_algar.map2214", mapID = 2214, x = 0.6020, y = 0.7821 }, -- Opportunity Point
     { id = "TAXI_2889", container = "khaz_algar.map2255", mapID = 2255, x = 0.2313, y = 0.5135 }, -- Wildcamp Or'lay
-    { id = "INSTANCE_1268", container = "khaz_algar.map2339", mapID = 2339, x = 0.3170, y = 0.3580 }, -- The Rookery
-    { id = "INSTANCE_1298", container = "khaz_algar.map2214", mapID = 2214, x = 0.4209, y = 0.3948 }, -- Operation: Floodgate
-    { id = "INSTANCE_1273", container = "khaz_algar.map2255", mapID = 2255, x = 0.3500, y = 0.7200 }, -- Nerub-ar Palace
-    { id = "INSTANCE_1210", container = "khaz_algar.map2214", mapID = 2214, x = 0.5600, y = 0.2100 }, -- Darkflame Cleft
+    { id = "INSTANCE_THE_ROOKERY", container = "khaz_algar.map2339", mapID = 2339, x = 0.3170, y = 0.3580, kind = "instance", journal = 1268 }, -- The Rookery
+    { id = "INSTANCE_OPERATION_FLOODGATE", container = "khaz_algar.map2214", mapID = 2214, x = 0.4209, y = 0.3948, kind = "instance", journal = 1298 }, -- Operation: Floodgate
+    { id = "INSTANCE_NERUBAR_PALACE", container = "khaz_algar.map2255", mapID = 2255, x = 0.3500, y = 0.7200, kind = "instance", journal = 1273 }, -- Nerub-ar Palace
+    { id = "INSTANCE_DARKFLAME_CLEFT", container = "khaz_algar.map2214", mapID = 2214, x = 0.5600, y = 0.2100, kind = "instance", journal = 1210 }, -- Darkflame Cleft
     { id = "TAXI_2962", container = "khaz_algar.map2214", mapID = 2214, x = 0.4275, y = 0.3342 }, -- Gundargaz
     { id = "GUTTERVILLE_ROCKET", container = "khaz_algar.map2214", mapID = 2214, x = 0.7271, y = 0.7321 }, -- Gutterville Rocket
     { id = "TAXI_2921", container = "khaz_algar.map2255", mapID = 2255, x = 0.7684, y = 0.6426 }, -- Mmarl
@@ -51,7 +51,7 @@ addon.Nodes.KhazAlgar = {
     { id = "AZJKAHET", container = "khaz_algar.map2255", mapID = 2255, x = 0.5740, y = 0.4180 }, -- The Weaver's Lair
     { id = "TAXI_2999", container = "undermine.map2346", mapID = 2346, x = 0.6135, y = 0.4791 }, -- The Gallagio
     { id = "TAXI_2996", container = "undermine.map2346", mapID = 2346, x = 0.4344, y = 0.7907 }, -- The Heaps
-    { id = "INSTANCE_1296", container = "undermine.map2346", mapID = 2346, x = 0.4200, y = 0.4900 }, -- Liberation of Undermine
+    { id = "INSTANCE_LIBERATION_OF_UNDERMINE", container = "undermine.map2346", mapID = 2346, x = 0.4200, y = 0.4900, kind = "instance", journal = 1296 }, -- Liberation of Undermine
     { id = "UNDERMINE", container = "undermine.map2346", mapID = 2346, x = 0.2760, y = 0.5380 }, -- Dornogal Portal
     { id = "UNDERMINE_ROCKET_LAUNCH", container = "undermine.map2346", mapID = 2346, x = 0.1892, y = 0.5099 }, -- Rocket Launch
     { id = "TAXI_2998", container = "undermine.map2346", mapID = 2346, x = 0.5791, y = 0.0882 }, -- Demolition Dome

@@ -56,6 +56,7 @@ local function weaponDetails(node, skills)
 end
 
 local TRANSPORT = { DOCK = true, ZEPPELIN = true, TRAM = true, PORTAL = true, TELEPORT = true }
+local FLIGHT = { TAXI = true, FLIGHT = true }
 
 -- What sort of destination a node is, or nil for one that isn't offered (border crossings
 -- are plumbing between zones, not places).
@@ -64,10 +65,10 @@ local function groupOf(node)
     -- destinations of their own: they are offered through the city or town's entry.
     if node.kind == "settlement" or node.kind == "entrance" then return nil end
     if node.kind then return node.kind end
-    local kind = addon:NodeKindFromID(node.id)       -- DOCK_STORMWIND (Forever) and BORALUS_DOCK (Modern) alike
-    if kind == "TAXI" then return "flight" end
+    local kind = addon:NodeKindFromID(node.id)       -- <KIND>_<PLACE>, in both flavours
+    if FLIGHT[kind] then return "flight" end
     if kind == "BORDER" then return nil end
-    if kind == "INSTANCE" or (addon.InstanceNodeAliases and addon.InstanceNodeAliases[node.id]) then return "instance" end
+    if kind == "INSTANCE" then return "instance" end
     if TRANSPORT[kind] then return "transport" end
     return "other"
 end

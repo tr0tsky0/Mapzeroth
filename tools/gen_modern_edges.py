@@ -34,6 +34,7 @@ from lupa.lua51 import LuaRuntime
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import modern_manual as manual
+import modern_ids
 import conversion_notes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -68,20 +69,8 @@ MATCH_FILES = {
 
 
 def load_renames():
-    """Same "one" or "many" (first candidate) policy as tools/gen_modern_nodes.py's own
-    load_renames -- see its docstring."""
-    renames = {}
-    for filename, prefix in MATCH_FILES.items():
-        path = ROOT / "tools" / "modern_source" / filename
-        if not path.exists():
-            continue
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if not line.strip() or line.startswith("#"):
-                continue
-            node_id, verdict, real_ids, _name = line.split("\t", 3)
-            if verdict in ("one", "many"):
-                renames[node_id] = f"{prefix}{real_ids.split(',')[0]}"
-    return renames
+    """source id -> Modern id: the map tools/gen_modern_nodes.py wrote (tools/modern_ids.py has the rules)."""
+    return modern_ids.load()
 
 
 def known_node_ids():
@@ -241,7 +230,7 @@ def main():
             stray_fields[stray] = stray_fields.get(stray, 0) + 1
         from_id, to_id, method = resolve_id(e["from"]), resolve_id(e["to"]), e["method"]
         method = METHOD_RENAME.get(method, method)
-        if any(d["from"] == from_id and d["to"] == to_id and d["method"] == method
+        if any(resolve_id(d["from"]) == from_id and resolve_id(d["to"]) == to_id and d["method"] == method
                for d in getattr(manual, "DROP_EDGES", [])):
             continue            # replaced by a hand-added route (tools/modern_manual.py)
         if from_id not in node_ids or to_id not in node_ids:
@@ -289,9 +278,10 @@ def main():
 
     # Hand-added edges (tools/modern_manual.py).
     for me in manual.EDGES:
-        if me["from"] not in node_ids or me["to"] not in node_ids:
+        me_from, me_to = resolve_id(me["from"]), resolve_id(me["to"])     # written in source ids, like the old data
+        if me_from not in node_ids or me_to not in node_ids:
             raise SystemExit(f"manual edge {me['from']} -> {me['to']} names a node that doesn't exist")
-        parts = [f'from = "{me["from"]}"', f'to = "{me["to"]}"', f'method = "{me["method"]}"']
+        parts = [f'from = "{me_from}"', f'to = "{me_to}"', f'method = "{me["method"]}"']
         if me.get("cost") is not None:
             parts.append(f'cost = {me["cost"]}')
         if me.get("oneway"):

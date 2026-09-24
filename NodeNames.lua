@@ -188,24 +188,15 @@ local function borderPartner(nodeID)
     return borderPartners[nodeID]
 end
 
--- The kind of place an id names, from the id alone: Forever's ids lead with it (DOCK_STORMWIND, TAXI_2), Modern's
--- end with it (BORALUS_DOCK), sometimes with a faction, level or phase after it (DALARAN_PALADIN_PORTAL_HORDE,
--- WAKING_SHORES_ORGRIMMAR_ZEP). nil when it names none of ID_KINDS (DARK_PORTAL_SHADOWMOON_VALLEY is a place).
-local ID_KINDS = { TAXI = true, BORDER = true, INSTANCE = true, DOCK = true, ZEPPELIN = true, TRAM = true,
-                   PORTAL = true, TELEPORT = true }
-local SUFFIX_ALIASES = { ZEP = "ZEPPELIN" }
-local QUALIFIERS = { ALLIANCE = true, HORDE = true, UPPER = true, LOWER = true, PAST = true, PRESENT = true }
+-- The kind of place an id names: both flavours' ids lead with it, <KIND>_<PLACE> (DOCK_STORMWIND, TAXI_2,
+-- PORTAL_STORMWIND_BORALUS; tools/modern_ids.py writes Modern's that way). nil for an id that is a place's own name
+-- (DARK_PORTAL_BL, ORIBOS). FLIGHT is a flight master with no TaxiNodes id to be named by.
+local ID_KINDS = { TAXI = true, FLIGHT = true, BORDER = true, INSTANCE = true, DOCK = true, ZEPPELIN = true,
+                   TRAM = true, PORTAL = true, TELEPORT = true }
 
 function addon:NodeKindFromID(nodeID)
     local prefix = nodeID:match("^(%u+)_")
-    if prefix and ID_KINDS[prefix] then return prefix end
-    local tokens = {}
-    for token in nodeID:gmatch("[^_]+") do tokens[#tokens + 1] = token end
-    local i = #tokens
-    while i > 1 and QUALIFIERS[tokens[i]] do i = i - 1 end
-    local last = SUFFIX_ALIASES[tokens[i]] or tokens[i]
-    if i > 1 and ID_KINDS[last] then return last end
-    return nil
+    return prefix and ID_KINDS[prefix] and prefix or nil
 end
 
 local function resolve(nodeID)
@@ -222,6 +213,12 @@ local function resolve(nodeID)
     if node.area and C_Map.GetAreaInfo then
         local name = C_Map.GetAreaInfo(node.area)
         if name then return name end
+    end
+
+    -- A dungeon or raid entrance with a journal instance: the client's Dungeon Journal names it.
+    if node.journal and EJ_GetInstanceInfo then
+        local name = EJ_GetInstanceInfo(node.journal)
+        if name and name ~= "" then return name end
     end
 
     -- Places ("Goldshire Inn", "Stormwind Mage Trainer"): a kind pattern over the name
@@ -254,18 +251,11 @@ local function resolve(nodeID)
         return raw
     end
 
-    -- A dungeon or raid entrance, named from the client's own Dungeon Journal (Modern only
-    -- so far: tools/match_modern_instance_nodes.py renamed it INSTANCE_<journalInstanceID>).
-    local instanceID = addon:GetInstanceRef(nodeID)
-    if instanceID and EJ_GetInstanceInfo then
-        local name = EJ_GetInstanceInfo(instanceID)
-        if name and name ~= "" then return name end
-    end
-
     local kind = nodeID:match("^(%u+)_")
-    if not (kind == "BORDER" or (kind and addon:HasString("NODE_KIND_" .. kind))) then
-        kind = addon:NodeKindFromID(nodeID)
-        if kind == "PORTAL" then kind = nil end     -- a portal is named by where it leads (portalName, below)
+    if kind == "PORTAL" then
+        return nil                               -- no name of its own: GetNodeName says where it leads
+    elseif kind == "FLIGHT" then
+        kind = "FLIGHTMASTER"                    -- "Tol Dagor Flight Master": its zone's name
     end
     if kind == "BORDER" then
         local partner = addon.World:GetNode(borderPartner(nodeID) or "")
@@ -340,14 +330,10 @@ function addon:ClearNodeNameCache()
     if addon.Search then addon.Search:ClearFoldMemo() end
 end
 
--- The journal instance a dungeon or raid node stands for, and the faction that can use it (nil: either).
--- Hand-listed in Data/Modern/Places.lua (addon.InstanceNodeAliases: [nodeID] = journalInstanceID, or
--- { journalInstanceID, faction = "Alliance" }) for entrances whose node id doesn't say, and first, so a
--- node can be pointed at a different instance than its id names; else INSTANCE_<id> carries it.
+-- The journal instance a dungeon or raid node stands for, and the faction that can use it (nil: either): the
+-- node's own `journal` and `faction` (Modern's, from tools/modern_ids.py; Forever's instances have no journal id).
 function addon:GetInstanceRef(nodeID)
-    local alias = addon.InstanceNodeAliases and addon.InstanceNodeAliases[nodeID]
-    if type(alias) == "table" then return alias[1], alias.faction end
-    if alias then return alias end
-    local id = nodeID:match("^INSTANCE_(%d+)$")
-    return id and tonumber(id) or nil
+    local node = addon.World:GetNode(nodeID)
+    if not node then return nil end
+    return node.journal, node.faction
 end

@@ -10,29 +10,29 @@ addon.Nodes = addon.Nodes or {}
 addon.Nodes.Shadowlands = {
     { id = "TAXI_2636", container = "sl_bastion.map1536", mapID = 1536, x = 0.3564, y = 0.2098 }, -- Terrace of the Collectors
     { id = "TAXI_2529", container = "sl_bastion.map1533", mapID = 1533, x = 0.5136, y = 0.4663 }, -- Hero's Rest
-    { id = "BASTION_POCKET_PORTAL", container = "sl_bastion.map1533", mapID = 1533, x = 0.4200, y = 0.4800 }, -- Temple of Courage
+    { id = "PORTAL_BASTION_POCKET", container = "sl_bastion.map1533", mapID = 1533, x = 0.4200, y = 0.4800 }, -- Temple of Courage
     { id = "BASTION_WORMHOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5186, y = 0.8776 }, -- Home of the Kyrian
-    { id = "INSTANCE_1182", container = "sl_bastion.map1533", mapID = 1533, x = 0.4000, y = 0.5500 }, -- The Necrotic Wake
+    { id = "INSTANCE_THE_NECROTIC_WAKE", container = "sl_bastion.map1533", mapID = 1533, x = 0.4000, y = 0.5500, kind = "instance", journal = 1182 }, -- The Necrotic Wake
     { id = "BASTION_MOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5180, y = 0.1320 }, -- The Eternal Forge
     { id = "TAXI_2528", container = "sl_bastion.map1533", mapID = 1533, x = 0.6534, y = 0.1705 }, -- Elysian Hold
-    { id = "INSTANCE_1186", container = "sl_bastion.map1533", mapID = 1533, x = 0.5800, y = 0.2900 }, -- Spires of Ascension
+    { id = "INSTANCE_SPIRES_OF_ASCENSION", container = "sl_bastion.map1533", mapID = 1533, x = 0.5800, y = 0.2900, kind = "instance", journal = 1186 }, -- Spires of Ascension
     { id = "TAXI_2519", container = "sl_bastion.map1533", mapID = 1533, x = 0.4810, y = 0.7420 }, -- Aspirant's Rest
     { id = "TAXI_2520", container = "sl_bastion.map1533", mapID = 1533, x = 0.4390, y = 0.3234 }, -- Sagehaven
     { id = "TAXI_2584", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5159, y = 0.3423 }, -- Glitterfall Basin
     { id = "ARDENWEALD_WORMHOLE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5443, y = 0.6033 }, -- Forest of the Night Fae
     { id = "TAXI_2585", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6340, y = 0.3750 }, -- Tirna Vaal
-    { id = "ARDENWEALD_POCKET_PORTAL", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4800, y = 0.4800 }, -- Heart of the Forest
+    { id = "PORTAL_ARDENWEALD_POCKET", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4800, y = 0.4800 }, -- Heart of the Forest
     { id = "ARDENWEALD_MOLE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6650, y = 0.5050 }, -- Soryn's Meadow
     { id = "TAXI_2586", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6032, y = 0.5334 }, -- Hibernal Hollow
     { id = "TAXI_2588", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.3518, y = 0.5145 }, -- Root-Home
     { id = "TAXI_2589", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5136, y = 0.7090 }, -- Claw's Edge
-    { id = "INSTANCE_1184", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.3500, y = 0.5400 }, -- Mists of Tirna Scithe
+    { id = "INSTANCE_MISTS_OF_TIRNA_SCITHE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.3500, y = 0.5400, kind = "instance", journal = 1184 }, -- Mists of Tirna Scithe
     { id = "TAXI_2587", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4557, y = 0.5325 }, -- Heart of the Forest
     { id = "TAXI_2590", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4930, y = 0.5197 }, -- Refugee Camp
-    { id = "INSTANCE_1188", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6900, y = 0.6600 }, -- De Other Side
+    { id = "INSTANCE_DE_OTHER_SIDE", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6900, y = 0.6600, kind = "instance", journal = 1188 }, -- De Other Side
     { id = "TAXI_2700", container = "sl_the_maw.map1543", mapID = 1543, x = 0.4723, y = 0.4319 }, -- Ve'nari's Refuge
     { id = "TAXI_2698", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6502, y = 0.2380 }, -- Keeper's Respite
-    { id = "INSTANCE_1193", container = "sl_the_maw.map1543", mapID = 1543, x = 0.6900, y = 0.3100 }, -- Sanctum of Domination
+    { id = "INSTANCE_SANCTUM_OF_DOMINATION", container = "sl_the_maw.map1543", mapID = 1543, x = 0.6900, y = 0.3100, kind = "instance", journal = 1193 }, -- Sanctum of Domination
     { id = "THE_MAW", container = "sl_the_maw.map1543", mapID = 1543, x = 0.4500, y = 0.4100 }, -- Entrance
     { id = "THE_MAW_WORMHOLE", container = "sl_the_maw.map1543", mapID = 1543, x = 0.2246, y = 0.2816 }, -- Wasteland of the Damned
     { id = "KORTHIA_WORMHOLE", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6241, y = 0.2458 }, -- Korthia (Wormhole)
@@ -45,13 +45,13 @@ addon.Nodes.Shadowlands = {
     { id = "TAXI_2564", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5000, y = 0.5320 }, -- Theater of Pain
     { id = "TAXI_2569", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5813, y = 0.7211 }, -- Plague Watch
     { id = "TAXI_2398", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5274, y = 0.6746 }, -- Bleak Redoubt
-    { id = "INSTANCE_1187", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5300, y = 0.5300 }, -- Theater of Pain
-    { id = "INSTANCE_1183", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5900, y = 0.6500 }, -- Plaguefall
+    { id = "INSTANCE_THEATER_OF_PAIN", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5300, y = 0.5300, kind = "instance", journal = 1187 }, -- Theater of Pain
+    { id = "INSTANCE_PLAGUEFALL", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5900, y = 0.6500, kind = "instance", journal = 1183 }, -- Plaguefall
     { id = "TAXI_2561", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.6789, y = 0.4594 }, -- Renounced Bastille
     { id = "TAXI_2560", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5366, y = 0.3027 }, -- Keres' Rest
     { id = "MALDRAXXUS_MOLE", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5350, y = 0.5980 }, -- Valley of a Thousand Legs
     { id = "TAXI_2559", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.3770, y = 0.2907 }, -- Spider's Watch
-    { id = "MALDRAXXUS_POCKET_PORTAL", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5200, y = 0.5400 }, -- Theater of Pain
+    { id = "PORTAL_MALDRAXXUS_POCKET", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5200, y = 0.5400 }, -- Theater of Pain
     { id = "TAXI_2728", container = "sl_zm.map1970", mapID = 1970, x = 0.6135, y = 0.4990 }, -- Pilgrim's Grace
     { id = "ZERETH_MORTIS", container = "sl_zm.map1970", mapID = 1970, x = 0.3330, y = 0.6940 }, -- Entrance Portal
     { id = "TAXI_2736", container = "sl_zm.map1970", mapID = 1970, x = 0.6479, y = 0.5403 }, -- Sepulcher Overlook
@@ -59,17 +59,17 @@ addon.Nodes.Shadowlands = {
     { id = "TAXI_2737", container = "sl_zm.map1970", mapID = 1970, x = 0.7283, y = 0.5317 }, -- Sepulcher Of The First Ones
     { id = "TAXI_2725", container = "sl_zm.map1970", mapID = 1970, x = 0.3552, y = 0.4491 }, -- Faith's Repose
     { id = "TAXI_2733", container = "sl_zm.map1970", mapID = 1970, x = 0.4585, y = 0.2253 }, -- Zovaal's Grasp
-    { id = "INSTANCE_1195", container = "sl_zm.map1970", mapID = 1970, x = 0.8100, y = 0.5300 }, -- Sepulcher of the First Ones
+    { id = "INSTANCE_SEPULCHER_OF_THE_FIRST_ONES", container = "sl_zm.map1970", mapID = 1970, x = 0.8100, y = 0.5300, kind = "instance", journal = 1195 }, -- Sepulcher of the First Ones
     { id = "TAXI_2724", container = "sl_zm.map1970", mapID = 1970, x = 0.3564, y = 0.6522 }, -- Haven
-    { id = "INSTANCE_1190", container = "sl_revendreth.map1525", mapID = 1525, x = 0.4600, y = 0.4100 }, -- Castle Nathria
-    { id = "INSTANCE_1189", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5100, y = 0.3000 }, -- Sanguine Depths
-    { id = "INSTANCE_1185", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7846, y = 0.4905 }, -- Halls of Atonement
+    { id = "INSTANCE_CASTLE_NATHRIA", container = "sl_revendreth.map1525", mapID = 1525, x = 0.4600, y = 0.4100, kind = "instance", journal = 1190 }, -- Castle Nathria
+    { id = "INSTANCE_SANGUINE_DEPTHS", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5100, y = 0.3000, kind = "instance", journal = 1189 }, -- Sanguine Depths
+    { id = "INSTANCE_HALLS_OF_ATONEMENT", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7846, y = 0.4905, kind = "instance", journal = 1185 }, -- Halls of Atonement
     { id = "REVENDRETH_WORMHOLE", container = "sl_revendreth.map1525", mapID = 1525, x = 0.3750, y = 0.7655 }, -- Court of the Venthyr
     { id = "TAXI_2548", container = "sl_revendreth.map1525", mapID = 1525, x = 0.2979, y = 0.3948 }, -- Sinfall
     { id = "TAXI_2518", container = "sl_revendreth.map1525", mapID = 1525, x = 0.4769, y = 0.6918 }, -- Wanecrypt Hill
     { id = "TAXI_2512", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7143, y = 0.4012 }, -- Halls of Atonement
     { id = "REVENDRETH_MOLE", container = "sl_revendreth.map1525", mapID = 1525, x = 0.1990, y = 0.3880 }, -- Scorched Crypt
-    { id = "REVENDRETH_POCKET_PORTAL", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5700, y = 0.5100 }, -- Castle Nathria
+    { id = "PORTAL_REVENDRETH_POCKET", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5700, y = 0.5100 }, -- Castle Nathria
     { id = "TAXI_2511", container = "sl_revendreth.map1525", mapID = 1525, x = 0.3059, y = 0.4869 }, -- Sanctuary of the Mad
     { id = "TAXI_2488", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6066, y = 0.6040 }, -- Darkhaven
     { id = "TAXI_2537", container = "sl_revendreth.map1525", mapID = 1525, x = 0.3885, y = 0.4904 }, -- Charred Ramparts

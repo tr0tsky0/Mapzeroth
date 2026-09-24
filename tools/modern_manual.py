@@ -19,6 +19,9 @@ DROP_NODES  old-data nodes to leave out, by id (usually because a NODES entry of
          the right place).
 DROP_EDGES  old-data edges to leave out (usually because a hand-added route replaces them):
          { "from", "to", "method" }.
+INSTANCE_JOURNALS  { source node id: journalInstanceID, or (journalInstanceID, "Alliance"/"Horde") }: the dungeon
+         and raid entrances tools/match_modern_instance_nodes.py can't match, or matches wrongly; the faction for an
+         entrance only one faction has. Two entrances to one instance become one destination.
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -180,4 +183,22 @@ CITIES = {
     "dornogal":             {"maps": [2339], "expansion": 11, "faction": "Both", "hub": True},
     "undermine":            {"maps": [2346], "expansion": 11, "faction": "Both"},
     "silvermoon":           {"maps": [2393], "expansion": 12, "faction": "Both", "hub": True},
+}
+
+# Moved here from Data/Modern/Places.lua's InstanceNodeAliases (2026-09-24): the journal id is a field on the node now.
+INSTANCE_JOURNALS = {
+    "NEXUS_POINT_XENAS_DUNGEON": 1316,
+    "DAWN_OF_THE_INFINITES_DUNGEON": 1209,          # two wings in Group Finder, one entrance
+    "BARADIN_HOLD": 75,
+    "LOST_CITY_OF_THE_TOLVIR": 69,
+    "MAGISTERS_TERRACE_DUNGEON": 1300,              # the Midnight Magisters' Terrace (Quel'Thalas), not the old one
+    "MAGISTERS_TERRACE_BC_DUNGEON": 249,            # the Burning Crusade one, Isle of Quel'Danas
+    "BATTLE_OF_DAZARALOR_RAID_ALLIANCE": (1176, "Alliance"),
+    "BATTLE_OF_DAZARALOR_RAID_HORDE": (1176, "Horde"),
+    "SIEGE_OF_BORALUS_DUNGEON_ALLIANCE": (1023, "Alliance"),
+    "SIEGE_OF_BORALUS_DUNGEON_HORDE": (1023, "Horde"),
+    "THE_MOTHERLODE_DUNGEON_ALLIANCE": (1012, "Alliance"),
+    "THE_MOTHERLODE_DUNGEON_HORDE": (1012, "Horde"),
+    "NYALOTHA_THE_WAKING_CITY_RAID_ULDUM": 1180,    # two entrances that swap each week: one destination,
+    "NYALOTHA_THE_WAKING_CITY_RAID_PANDARIA": 1180, # whichever is nearer
 }

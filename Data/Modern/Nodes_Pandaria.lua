@@ -10,9 +10,9 @@ addon.Nodes = addon.Nodes or {}
 addon.Nodes.Pandaria = {
     { id = "KIRIN_TOR_BASE", container = "isle_of_thunder.map504", mapID = 504, x = 0.6408, y = 0.7248 }, -- Kirin Tor Base
     { id = "SUNREAVER_BASE", container = "isle_of_thunder.map504", mapID = 504, x = 0.3262, y = 0.3425 }, -- Sunreaver Base
-    { id = "INSTANCE_362", container = "isle_of_thunder.map504", mapID = 504, x = 0.6300, y = 0.3200 }, -- Throne of Thunder
-    { id = "NYALOTHA_THE_WAKING_CITY_RAID_PANDARIA", container = "pandaria.map390", mapID = 390, x = 0.5700, y = 0.4800 }, -- Ny'alotha, the Waking City (Pandaria)
-    { id = "PAWDON_VILLAGE_PORTAL", container = "pandaria.map371", mapID = 371, x = 0.4620, y = 0.8510 }, -- Paw'Don Village Portal
+    { id = "INSTANCE_THRONE_OF_THUNDER", container = "isle_of_thunder.map504", mapID = 504, x = 0.6300, y = 0.3200, kind = "instance", journal = 362 }, -- Throne of Thunder
+    { id = "INSTANCE_NYALOTHA_THE_WAKING_CITY_PANDARIA", container = "pandaria.map390", mapID = 390, x = 0.5700, y = 0.4800, kind = "instance", journal = 1180 }, -- Ny'alotha, the Waking City (Pandaria)
+    { id = "PORTAL_PAWDON_VILLAGE", container = "pandaria.map371", mapID = 371, x = 0.4620, y = 0.8510 }, -- Paw'Don Village Portal
     { id = "VALLEY_OF_THE_FOUR_WINDS_MOLE", container = "pandaria.map376", mapID = 376, x = 0.3150, y = 0.7360 }, -- Valley of the Four Winds (Stormstout Brewery)
     { id = "TAXI_970", container = "pandaria.map371", mapID = 371, x = 0.5160, y = 0.2760 }, -- Emperor's Omen
     { id = "TAXI_991", container = "pandaria.map418", mapID = 418, x = 0.2490, y = 0.3320 }, -- Sentinel Basecamp
@@ -21,18 +21,18 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_989", container = "pandaria.map376", mapID = 376, x = 0.2000, y = 0.5820 }, -- Stoneplow
     { id = "VALE_ZIDORMI_PAST", container = "pandaria.map390_art402", mapID = 390, x = 0.8052, y = 0.3192 }, -- Zidormi (Past Vale of Eternal Blossoms)
     { id = "TAXI_2544", container = "pandaria.map390", mapID = 390, x = 0.3880, y = 0.7240 }, -- Mistfall Village
-    { id = "INSTANCE_317", container = "pandaria.map379", mapID = 379, x = 0.6000, y = 0.3900 }, -- Mogu'shan Vaults
+    { id = "INSTANCE_MOGUSHAN_VAULTS", container = "pandaria.map379", mapID = 379, x = 0.6000, y = 0.3900, kind = "instance", journal = 317 }, -- Mogu'shan Vaults
     { id = "TAXI_968", container = "pandaria.map371", mapID = 371, x = 0.5550, y = 0.6270 }, -- Jade Temple Grounds
     { id = "TAXI_967", container = "pandaria.map371", mapID = 371, x = 0.5790, y = 0.4500 }, -- The Arboretum
     { id = "TAXI_971", container = "pandaria.map371", mapID = 371, x = 0.4440, y = 0.2550 }, -- Tian Monastery
     { id = "TAXI_987", container = "pandaria.map418", mapID = 418, x = 0.5887, y = 0.2436 }, -- Thunder Cleft
     { id = "TAXI_992", container = "pandaria.map418", mapID = 418, x = 0.3100, y = 0.6260 }, -- Cradle of Chi-Ji
     { id = "TAXI_986", container = "pandaria.map418", mapID = 418, x = 0.7660, y = 0.0860 }, -- Zhu's Watch
-    { id = "INSTANCE_320", container = "pandaria.map433", mapID = 433, x = 0.4900, y = 0.6200 }, -- Terrace of Endless Spring
+    { id = "INSTANCE_TERRACE_OF_ENDLESS_SPRING", container = "pandaria.map433", mapID = 433, x = 0.4900, y = 0.6200, kind = "instance", journal = 320 }, -- Terrace of Endless Spring
     { id = "TAXI_1070", container = "pandaria.map422", mapID = 422, x = 0.5580, y = 0.3480 }, -- Klaxxi'vess
     { id = "TAXI_1115", container = "pandaria.map422", mapID = 422, x = 0.7350, y = 0.3290 }, -- The Lion's Redoubt
     { id = "TAXI_1021", container = "pandaria.map379", mapID = 379, x = 0.6240, y = 0.2990 }, -- Zouchin Village
-    { id = "INSTANCE_330", container = "pandaria.map422", mapID = 422, x = 0.4000, y = 0.3400 }, -- Heart of Fear
+    { id = "INSTANCE_HEART_OF_FEAR", container = "pandaria.map422", mapID = 422, x = 0.4000, y = 0.3400, kind = "instance", journal = 330 }, -- Heart of Fear
     { id = "TAXI_1080", container = "pandaria.map371", mapID = 371, x = 0.4290, y = 0.6820 }, -- Serpent's Overlook
     { id = "KUN_LAI_SUMMIT_MOLE", container = "pandaria.map379", mapID = 379, x = 0.5770, y = 0.6280 }, -- Kun-Lai Summit (One Keg)
     { id = "TAXI_1053", container = "pandaria.map388", mapID = 388, x = 0.7100, y = 0.5710 }, -- Longying Outpost
@@ -46,34 +46,34 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_1017", container = "pandaria.map379", mapID = 379, x = 0.7250, y = 0.9420 }, -- Binan Village
     { id = "TAXI_1056", container = "pandaria.map388", mapID = 388, x = 0.4980, y = 0.7160 }, -- Shado-Pan Garrison
     { id = "TAXI_985", container = "pandaria.map376", mapID = 376, x = 0.5630, y = 0.5010 }, -- Halfhill
-    { id = "INSTANCE_302", container = "pandaria.map376", mapID = 376, x = 0.3600, y = 0.6900 }, -- Stormstout Brewery
-    { id = "INSTANCE_312", container = "pandaria.map379", mapID = 379, x = 0.3700, y = 0.4800 }, -- Shado-Pan Monastery
+    { id = "INSTANCE_STORMSTOUT_BREWERY", container = "pandaria.map376", mapID = 376, x = 0.3600, y = 0.6900, kind = "instance", journal = 302 }, -- Stormstout Brewery
+    { id = "INSTANCE_SHADOPAN_MONASTERY", container = "pandaria.map379", mapID = 379, x = 0.3700, y = 0.4800, kind = "instance", journal = 312 }, -- Shado-Pan Monastery
     { id = "TAXI_972", container = "pandaria.map371", mapID = 371, x = 0.5880, y = 0.8340 }, -- Pearlfin Village
-    { id = "SHADOPAN_ISLE_OF_THUNDER_PORTAL_HORDE", container = "pandaria.map388", mapID = 388, x = 0.5065, y = 0.7336 }, -- Isle of Thunder Portal
+    { id = "PORTAL_SHADOPAN_ISLE_OF_THUNDER_HORDE", container = "pandaria.map388", mapID = 388, x = 0.5065, y = 0.7336 }, -- Isle of Thunder Portal
     { id = "TAXI_969", container = "pandaria.map371", mapID = 371, x = 0.5620, y = 0.2430 }, -- Sri-La Village
     { id = "TAXI_1052", container = "pandaria.map376", mapID = 376, x = 0.7060, y = 0.2400 }, -- Grassy Cline
     { id = "VALE_ZIDORMI_PRESENT", container = "pandaria.map1530_art1342", mapID = 1530, x = 0.8101, y = 0.2945 }, -- Zidormi (Present Vale of Eternal Blossoms)
     { id = "TAXI_966", container = "pandaria.map371", mapID = 371, x = 0.4690, y = 0.8610 }, -- Paw'Don Village
     { id = "SHRINE_OF_TWO_MOONS", container = "pandaria.map390", mapID = 390, x = 0.6250, y = 0.2182 }, -- Shrine of Two Moons
     { id = "TAXI_1055", container = "pandaria.map388", mapID = 388, x = 0.5400, y = 0.7880 }, -- Rensai's Watchpost
-    { id = "INSTANCE_313", container = "pandaria.map371", mapID = 371, x = 0.5600, y = 0.5800 }, -- Temple of the Jade Serpent
-    { id = "INSTANCE_324", container = "pandaria.map388", mapID = 388, x = 0.3500, y = 0.8200 }, -- Siege of Niuzao Temple
-    { id = "INSTANCE_303", container = "pandaria.map390", mapID = 390, x = 0.1600, y = 0.7400 }, -- Gate of the Setting Sun
-    { id = "INSTANCE_321", container = "pandaria.map390", mapID = 390, x = 0.7900, y = 0.3400 }, -- Mogu'shan Palace
-    { id = "SHADOPAN_ISLE_OF_THUNDER_PORTAL_ALLIANCE", container = "pandaria.map388", mapID = 388, x = 0.4974, y = 0.6871 }, -- Isle of Thunder Portal
+    { id = "INSTANCE_TEMPLE_OF_THE_JADE_SERPENT", container = "pandaria.map371", mapID = 371, x = 0.5600, y = 0.5800, kind = "instance", journal = 313 }, -- Temple of the Jade Serpent
+    { id = "INSTANCE_SIEGE_OF_NIUZAO_TEMPLE", container = "pandaria.map388", mapID = 388, x = 0.3500, y = 0.8200, kind = "instance", journal = 324 }, -- Siege of Niuzao Temple
+    { id = "INSTANCE_GATE_OF_THE_SETTING_SUN", container = "pandaria.map390", mapID = 390, x = 0.1600, y = 0.7400, kind = "instance", journal = 303 }, -- Gate of the Setting Sun
+    { id = "INSTANCE_MOGUSHAN_PALACE", container = "pandaria.map390", mapID = 390, x = 0.7900, y = 0.3400, kind = "instance", journal = 321 }, -- Mogu'shan Palace
+    { id = "PORTAL_SHADOPAN_ISLE_OF_THUNDER_ALLIANCE", container = "pandaria.map388", mapID = 388, x = 0.4974, y = 0.6871 }, -- Isle of Thunder Portal
     { id = "TAXI_1195", container = "pandaria.map418", mapID = 418, x = 0.0943, y = 0.5244 }, -- Domination Point
     { id = "TAXI_990", container = "pandaria.map418", mapID = 418, x = 0.2850, y = 0.5050 }, -- Dawnchaser Retreat
     { id = "TAXI_1190", container = "pandaria.map418", mapID = 418, x = 0.8800, y = 0.3440 }, -- Lion's Landing
     { id = "TAXI_1058", container = "pandaria.map390", mapID = 390, x = 0.6281, y = 0.2181 }, -- Shrine of Two Moons
     { id = "TAXI_894", container = "pandaria.map371", mapID = 371, x = 0.2838, y = 0.4891 }, -- Grookin Hill
-    { id = "INSTANCE_369", container = "pandaria.map390", mapID = 390, x = 0.7400, y = 0.4200 }, -- Siege of Orgrimmar
+    { id = "INSTANCE_SIEGE_OF_ORGRIMMAR", container = "pandaria.map390", mapID = 390, x = 0.7400, y = 0.4200, kind = "instance", journal = 369 }, -- Siege of Orgrimmar
     { id = "TAXI_1054", container = "pandaria.map388", mapID = 388, x = 0.7420, y = 0.8110 }, -- Gao-Ran Battlefront
     { id = "TAXI_1029", container = "pandaria.map433", mapID = 433, x = 0.5660, y = 0.7540 }, -- Tavern in the Mists
     { id = "TAXI_1018", container = "pandaria.map379", mapID = 379, x = 0.6620, y = 0.5060 }, -- Temple of the White Tiger
     { id = "TAXI_993", container = "pandaria.map418", mapID = 418, x = 0.5240, y = 0.7660 }, -- Marista
-    { id = "SERPENTS_SPINE_FLIGHT_ALLIANCE", container = "pandaria.map390", mapID = 390, x = 0.1360, y = 0.7720 }, -- Serpent's Spine
+    { id = "FLIGHT_SERPENTS_SPINE_ALLIANCE", container = "pandaria.map390", mapID = 390, x = 0.1360, y = 0.7720 }, -- Serpent's Spine
     { id = "TAXI_1019", container = "pandaria.map379", mapID = 379, x = 0.6205, y = 0.8062 }, -- Eastwind Rest
-    { id = "SERPENTS_SPINE_FLIGHT_HORDE", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
+    { id = "FLIGHT_SERPENTS_SPINE_HORDE", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
     { id = "TAXI_973", container = "pandaria.map371", mapID = 371, x = 0.2744, y = 0.1571 }, -- Honeydew Village
     { id = "TAXI_1025", container = "pandaria.map379", mapID = 379, x = 0.3450, y = 0.5900 }, -- Winter's Blossom
     { id = "TAXI_1057", container = "pandaria.map390", mapID = 390, x = 0.8500, y = 0.6010 }, -- Shrine of Seven Stars

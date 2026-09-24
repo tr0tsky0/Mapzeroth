@@ -96,7 +96,7 @@ check(addon.Sections:Count(older) > #older.children, "the heading counts every p
 
 -- Pricing reaches the sections inside a section.
 -- The seasonal dungeons are made the farthest, so only the seasonal-first rule can put them ahead.
-local farthest = { INSTANCE_1201 = true, INSTANCE_476 = true }
+local farthest = { INSTANCE_ALGETHAR_ACADEMY = true, INSTANCE_SKYREACH = true }
 addon.Journey.Nearest = function(_, nodeIDs) return nodeIDs[1], farthest[nodeIDs[1]] and 100 or 10 end
 addon.Sections:Price(sections, {})
 check(classic["Ironforge"].eta == 10, "older content is priced too")
@@ -123,16 +123,16 @@ local function entryFor(list, instanceID)
     return found
 end
 local siegeA, siegeH = entryFor(entriesFor("Alliance"), 1023), entryFor(entriesFor("Horde"), 1023)
-check(#siegeA == 1 and siegeA[1].nodeID == "SIEGE_OF_BORALUS_DUNGEON_ALLIANCE", "an Alliance character gets the Alliance entrance only: " .. #siegeA .. " " .. tostring(siegeA[1] and siegeA[1].nodeID))
-check(#siegeH == 1 and siegeH[1].nodeID == "SIEGE_OF_BORALUS_DUNGEON_HORDE", "and a Horde one gets theirs")
+check(#siegeA == 1 and siegeA[1].nodeID == "INSTANCE_SIEGE_OF_BORALUS_ALLIANCE", "an Alliance character gets the Alliance entrance only: " .. #siegeA .. " " .. tostring(siegeA[1] and siegeA[1].nodeID))
+check(#siegeH == 1 and siegeH[1].nodeID == "INSTANCE_SIEGE_OF_BORALUS_HORDE", "and a Horde one gets theirs")
 local nyalotha = entryFor(entriesFor("Alliance"), 1180)
 check(#nyalotha == 1 and #nyalotha[1].nodeIDs == 2, "Ny'alotha's two entrances are one destination")
 check(nyalotha[1].name == "Instance 1180", "named from the journal, not the entrance's own map: " .. tostring(nyalotha[1].name))
 local terrace = entryFor(entriesFor("Alliance"), 1300)
-check(#terrace == 1 and terrace[1].nodeID == "INSTANCE_249" and terrace[1].expansion == 12, "the Midnight Magisters' Terrace is filed under Midnight")
+check(#terrace == 1 and terrace[1].nodeID == "INSTANCE_MAGISTERS_TERRACE" and terrace[1].expansion == 12, "the Midnight Magisters' Terrace is filed under Midnight")
 check(#entryFor(entriesFor("Alliance"), 249) == 1, "and the old one under its own expansion")
-check(addon.World:GetNode("INSTANCE_236") and addon.World:GetNode("INSTANCE_1292") and addon.World:GetNode("INSTANCE_237")
-    and addon.World:GetNode("INSTANCE_749") and addon.World:GetNode("INSTANCE_230") and addon.World:GetNode("INSTANCE_1305") and addon.World:GetNode("INSTANCE_1317"), "the hand-added dungeon and raid entrances exist")
+check(addon.World:GetNode("INSTANCE_STRATHOLME_MAIN_GATE") and addon.World:GetNode("INSTANCE_STRATHOLME_SERVICE_ENTRANCE") and addon.World:GetNode("INSTANCE_THE_TEMPLE_OF_ATALHAKKAR")
+    and addon.World:GetNode("INSTANCE_THE_EYE") and addon.World:GetNode("INSTANCE_DIRE_MAUL_CAPITAL_GARDENS") and addon.World:GetNode("INSTANCE_SPOREFALL") and addon.World:GetNode("INSTANCE_THE_TIDEBOUND_GROTTO"), "the hand-added dungeon and raid entrances exist")
 
 -- A city the client can't name isn't offered; an instance with no expansion isn't filed.
 check(not cities["Frostwall"], "no name, no city")

@@ -8,18 +8,18 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.BfA = {
-    { id = "TRANQUILLIEN_BC_FLIGHT", container = "quelthalas.map95", mapID = 95, x = 0.4592, y = 0.3054 }, -- Tranquillien
+    { id = "FLIGHT_TRANQUILLIEN_BC", container = "quelthalas.map95", mapID = 95, x = 0.4592, y = 0.3054 }, -- Tranquillien
     { id = "TAXI_205", container = "quelthalas.map95", mapID = 95, x = 0.7350, y = 0.6710 }, -- Zul'Aman
     { id = "SILVERMOON", container = "quelthalas.map110", mapID = 110, x = 0.5826, y = 0.1924 }, -- Orgrimmar Portal
     { id = "TAXI_631", container = "quelthalas.map110", mapID = 110, x = 0.3014, y = 0.7963 }, -- Falconwing Square
-    { id = "INSTANCE_77", container = "quelthalas.map95", mapID = 95, x = 0.8200, y = 0.6400 }, -- Zul'Aman
-    { id = "TOL_DAGOR_FLIGHT_ALLIANCE", container = "tol_dagor.map974", mapID = 974, x = 0.3744, y = 0.9210 }, -- Tol Dagor Flightmaster
-    { id = "INSTANCE_1002", container = "tol_dagor.map974", mapID = 974, x = 0.3900, y = 0.7000 }, -- Tol Dagor
-    { id = "TOL_DAGOR_FLIGHT_HORDE", container = "tol_dagor.map974", mapID = 974, x = 0.2296, y = 0.4654 }, -- Tol Dagor Flightmaster
+    { id = "INSTANCE_ZULAMAN", container = "quelthalas.map95", mapID = 95, x = 0.8200, y = 0.6400, kind = "instance", journal = 77 }, -- Zul'Aman
+    { id = "FLIGHT_TOL_DAGOR_ALLIANCE", container = "tol_dagor.map974", mapID = 974, x = 0.3744, y = 0.9210 }, -- Tol Dagor Flightmaster
+    { id = "INSTANCE_TOL_DAGOR", container = "tol_dagor.map974", mapID = 974, x = 0.3900, y = 0.7000, kind = "instance", journal = 1002 }, -- Tol Dagor
+    { id = "FLIGHT_TOL_DAGOR_HORDE", container = "tol_dagor.map974", mapID = 974, x = 0.2296, y = 0.4654 }, -- Tol Dagor Flightmaster
     { id = "TAXI_2441", container = "mechagon.map1462", mapID = 1462, x = 0.7335, y = 0.2542 }, -- Prospectus Bay
     { id = "TAXI_2442", container = "mechagon.map1462", mapID = 1462, x = 0.7750, y = 0.4100 }, -- Overspark Expedition Camp
     { id = "MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7390, y = 0.3650 }, -- Rustbolt
-    { id = "INSTANCE_1178", container = "mechagon.map1462", mapID = 1462, x = 0.7300, y = 0.3600 }, -- Operation: Mechagon
+    { id = "INSTANCE_OPERATION_MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7300, y = 0.3600, kind = "instance", journal = 1178 }, -- Operation: Mechagon
     { id = "TAXI_2035", container = "kul_tiras.map896", mapID = 896, x = 0.7000, y = 0.6010 }, -- Fletcher's Hollow
     { id = "TAXI_2091", container = "kul_tiras.map942", mapID = 942, x = 0.3874, y = 0.6692 }, -- Stonetusk Watch
     { id = "STORMSONG_VALLEY_MOLE", container = "kul_tiras.map942", mapID = 942, x = 0.6420, y = 0.2940 }, -- Tidebreak Summit
@@ -32,26 +32,26 @@ addon.Nodes.BfA = {
     { id = "TAXI_2278", container = "kul_tiras.map1161", mapID = 1161, x = 0.7630, y = 0.7280 }, -- Mariner's Row
     { id = "TIRAGARDE_SOUND_MOLE", container = "kul_tiras.map895", mapID = 895, x = 0.8820, y = 0.7150 }, -- Wailing Tideways
     { id = "TAXI_2037", container = "kul_tiras.map896", mapID = 896, x = 0.6240, y = 0.2370 }, -- Barbthorn Ridge
-    { id = "INSTANCE_1021", container = "kul_tiras.map896", mapID = 896, x = 0.3400, y = 0.1300 }, -- Waycrest Manor
+    { id = "INSTANCE_WAYCREST_MANOR", container = "kul_tiras.map896", mapID = 896, x = 0.3400, y = 0.1300, kind = "instance", journal = 1021 }, -- Waycrest Manor
     { id = "TAXI_2062", container = "kul_tiras.map895", mapID = 895, x = 0.6169, y = 0.1341 }, -- Wolf's Den
     { id = "TAXI_2137", container = "kul_tiras.map942", mapID = 942, x = 0.3050, y = 0.6640 }, -- Millstone Hamlet
     { id = "TAXI_2108", container = "kul_tiras.map896", mapID = 896, x = 0.2710, y = 0.7210 }, -- Falconhurst
     { id = "TAXI_2034", container = "kul_tiras.map896", mapID = 896, x = 0.7080, y = 0.4030 }, -- Hangman's Point
     { id = "TAXI_2101", container = "kul_tiras.map942", mapID = 942, x = 0.5060, y = 0.7000 }, -- The Amber Waves
-    { id = "SIEGE_OF_BORALUS_DUNGEON_HORDE", container = "kul_tiras.map895", mapID = 895, x = 0.8800, y = 0.5100 }, -- Siege of Boralus
+    { id = "INSTANCE_SIEGE_OF_BORALUS_HORDE", container = "kul_tiras.map895", mapID = 895, x = 0.8800, y = 0.5100, kind = "instance", journal = 1023, faction = "Horde" }, -- Siege of Boralus
     { id = "TAXI_2138", container = "kul_tiras.map942", mapID = 942, x = 0.3400, y = 0.4680 }, -- Fort Daelin
-    { id = "BATTLE_OF_DAZARALOR_RAID_ALLIANCE", container = "kul_tiras.map1161", mapID = 1161, x = 0.7000, y = 0.3500 }, -- Battle of Dazar'alor
-    { id = "SIEGE_OF_BORALUS_DUNGEON_ALLIANCE", container = "kul_tiras.map895", mapID = 895, x = 0.7200, y = 0.2300 }, -- Siege of Boralus
-    { id = "INSTANCE_1001", container = "kul_tiras.map895", mapID = 895, x = 0.8500, y = 0.7900 }, -- Freehold
-    { id = "SHRINE_OF_THE_STORM_FLIGHT_HORDE", container = "kul_tiras.map942", mapID = 942, x = 0.7759, y = 0.2383 }, -- Shrine of the Storm
+    { id = "INSTANCE_BATTLE_OF_DAZARALOR_ALLIANCE", container = "kul_tiras.map1161", mapID = 1161, x = 0.7000, y = 0.3500, kind = "instance", journal = 1176, faction = "Alliance" }, -- Battle of Dazar'alor
+    { id = "INSTANCE_SIEGE_OF_BORALUS_ALLIANCE", container = "kul_tiras.map895", mapID = 895, x = 0.7200, y = 0.2300, kind = "instance", journal = 1023, faction = "Alliance" }, -- Siege of Boralus
+    { id = "INSTANCE_FREEHOLD", container = "kul_tiras.map895", mapID = 895, x = 0.8500, y = 0.7900, kind = "instance", journal = 1001 }, -- Freehold
+    { id = "FLIGHT_SHRINE_OF_THE_STORM_HORDE", container = "kul_tiras.map942", mapID = 942, x = 0.7759, y = 0.2383 }, -- Shrine of the Storm
     { id = "BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.7060, y = 0.1700 }, -- Portal Room
     { id = "TAXI_2086", container = "kul_tiras.map942", mapID = 942, x = 0.5940, y = 0.7020 }, -- Brennadam
-    { id = "BORALUS_DOCK", container = "kul_tiras.map1161", mapID = 1161, x = 0.6805, y = 0.2651 }, -- Dock
+    { id = "DOCK_BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.6805, y = 0.2651 }, -- Dock
     { id = "TAXI_2109", container = "kul_tiras.map896", mapID = 896, x = 0.2565, y = 0.1640 }, -- Whitegrove Chapel
     { id = "TAXI_2077", container = "kul_tiras.map895", mapID = 895, x = 0.8626, y = 0.8106 }, -- Castaway Point
     { id = "TAXI_2092", container = "kul_tiras.map942", mapID = 942, x = 0.5404, y = 0.4891 }, -- Diretusk Hollow
     { id = "TAXI_2274", container = "kul_tiras.map896", mapID = 896, x = 0.6628, y = 0.5915 }, -- Swiftwind Post
-    { id = "PLUNDER_HARBOR_DOCK", container = "kul_tiras.map895", mapID = 895, x = 0.8815, y = 0.5105 }, -- Plunder Harbor
+    { id = "DOCK_PLUNDER_HARBOR", container = "kul_tiras.map895", mapID = 895, x = 0.8815, y = 0.5105 }, -- Plunder Harbor
     { id = "TAXI_2140", container = "kul_tiras.map895", mapID = 895, x = 0.8547, y = 0.5014 }, -- Plunder Harbor
     { id = "TAXI_2079", container = "kul_tiras.map895", mapID = 895, x = 0.7630, y = 0.6530 }, -- Kennings Lodge
     { id = "TAXI_2279", container = "kul_tiras.map895", mapID = 895, x = 0.5275, y = 0.6286 }, -- Stonefist Watch
@@ -60,10 +60,10 @@ addon.Nodes.BfA = {
     { id = "TAXI_2023", container = "kul_tiras.map895", mapID = 895, x = 0.7723, y = 0.8263 }, -- Freehold
     { id = "TAXI_2087", container = "kul_tiras.map895", mapID = 895, x = 0.3530, y = 0.2470 }, -- Outrigger Post
     { id = "TAXI_2084", container = "kul_tiras.map895", mapID = 895, x = 0.5250, y = 0.2860 }, -- Norwington Estate
-    { id = "WARFANG_HOLD_DOCK", container = "kul_tiras.map942", mapID = 942, x = 0.5193, y = 0.2434 }, -- Warfang Hold Dock
+    { id = "DOCK_WARFANG_HOLD", container = "kul_tiras.map942", mapID = 942, x = 0.5193, y = 0.2434 }, -- Warfang Hold Dock
     { id = "TAXI_2083", container = "kul_tiras.map1161", mapID = 1161, x = 0.6670, y = 0.1510 }, -- Tradewinds Market
     { id = "TAXI_2273", container = "kul_tiras.map895", mapID = 895, x = 0.3933, y = 0.1836 }, -- Waning Glacier
-    { id = "SHRINE_OF_THE_STORM_FLIGHT_ALLIANCE", container = "kul_tiras.map942", mapID = 942, x = 0.7790, y = 0.2910 }, -- Shrine of the Storm
+    { id = "FLIGHT_SHRINE_OF_THE_STORM_ALLIANCE", container = "kul_tiras.map942", mapID = 942, x = 0.7790, y = 0.2910 }, -- Shrine of the Storm
     { id = "TAXI_2277", container = "kul_tiras.map1161", mapID = 1161, x = 0.4750, y = 0.6490 }, -- Proudmoore Keep
     { id = "TAXI_2139", container = "kul_tiras.map942", mapID = 942, x = 0.6052, y = 0.2736 }, -- Windfall Cavern
     { id = "TAXI_2085", container = "kul_tiras.map942", mapID = 942, x = 0.6540, y = 0.4780 }, -- Tidecross
@@ -74,11 +74,11 @@ addon.Nodes.BfA = {
     { id = "TAXI_2107", container = "kul_tiras.map896", mapID = 896, x = 0.3160, y = 0.3030 }, -- Watchman's Rise
     { id = "TAXI_2089", container = "kul_tiras.map942", mapID = 942, x = 0.3989, y = 0.3723 }, -- Seekers Vista
     { id = "TAXI_2097", container = "kul_tiras.map942", mapID = 942, x = 0.4260, y = 0.5710 }, -- Deadwash
-    { id = "INSTANCE_1036", container = "kul_tiras.map942", mapID = 942, x = 0.7800, y = 0.2400 }, -- Shrine of the Storm
+    { id = "INSTANCE_SHRINE_OF_THE_STORM", container = "kul_tiras.map942", mapID = 942, x = 0.7800, y = 0.2400, kind = "instance", journal = 1036 }, -- Shrine of the Storm
     { id = "TAXI_2135", container = "kul_tiras.map896", mapID = 896, x = 0.3709, y = 0.2419 }, -- Krazzlefrazz Outpost
     { id = "TAXI_2060", container = "kul_tiras.map895", mapID = 895, x = 0.6650, y = 0.2310 }, -- Hatherford
-    { id = "ANYPORT_DOCK", container = "kul_tiras.map896", mapID = 896, x = 0.2056, y = 0.4553 }, -- Anyport Dock
-    { id = "INSTANCE_1177", container = "kul_tiras.map942", mapID = 942, x = 0.8400, y = 0.4700 }, -- Crucible of Storms
+    { id = "DOCK_ANYPORT", container = "kul_tiras.map896", mapID = 896, x = 0.2056, y = 0.4553 }, -- Anyport Dock
+    { id = "INSTANCE_CRUCIBLE_OF_STORMS", container = "kul_tiras.map942", mapID = 942, x = 0.8400, y = 0.4700, kind = "instance", journal = 1177 }, -- Crucible of Storms
     { id = "TAXI_2033", container = "kul_tiras.map896", mapID = 896, x = 0.5490, y = 0.3480 }, -- Fallhaven
     { id = "TAXI_2093", container = "kul_tiras.map942", mapID = 942, x = 0.7570, y = 0.6392 }, -- Ironmaul Overlook
 }

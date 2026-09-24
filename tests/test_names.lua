@@ -50,21 +50,22 @@ check(addon:GetNodeName("BORDER_DUROTAR_TO_THE_BARRENS") == "Durotar / The Barre
 -- 4. A node with no string falls back to a kind pattern over the zone name.
 addon:RegisterLocale("enUS", {}) -- no-op; keeps the API exercised
 table.insert(addon.Nodes.Kalimdor, { id = "DOCK_TESTONLY", container = "kalimdor.durotar", mapID = 1411, x = 0.5, y = 0.5 })
-table.insert(addon.Nodes.Kalimdor, { id = "INSTANCE_67", container = "kalimdor.durotar", mapID = 1411, x = 0.5, y = 0.5 })
+table.insert(addon.Nodes.Kalimdor, { id = "INSTANCE_THE_STONECORE", container = "kalimdor.durotar", mapID = 1411, x = 0.5, y = 0.5,
+    kind = "instance", journal = 67 })
 addon.World:Build()
 addon:ClearNodeNameCache()
 check(addon:GetNodeName("DOCK_TESTONLY") == "Durotar Harbor", "kind fallback: " .. addon:GetNodeName("DOCK_TESTONLY"))
 check(addon:GetNodeName("NOT_A_NODE") == "NOT_A_NODE", "unknown id falls back to itself")
 
--- A dungeon/raid entrance (Modern only so far) is named from the client's own Dungeon
--- Journal by its journalInstanceID, not a kind pattern -- there's no settlement or zone
+-- A dungeon/raid entrance with a `journal` field (Modern's so far) is named from the client's own Dungeon
+-- Journal by that journalInstanceID, not a kind pattern -- there's no settlement or zone
 -- name that would say "The Stonecore" on its own.
 EJ_GetInstanceInfo = function(id) if id == 67 then return "The Stonecore" end end
-check(addon:GetNodeName("INSTANCE_67") == "The Stonecore", "instance name: " .. addon:GetNodeName("INSTANCE_67"))
+check(addon:GetNodeName("INSTANCE_THE_STONECORE") == "The Stonecore", "instance name: " .. addon:GetNodeName("INSTANCE_THE_STONECORE"))
 EJ_GetInstanceInfo = nil
 addon:ClearNodeNameCache()
-check(addon:GetNodeName("INSTANCE_67") == "Durotar", "and without that API takes its map's name, not a raw id")
-check(not addon:HasNodeName("INSTANCE_67"), "though nothing actually names it (a portal like that is described by where it comes out)")
+check(addon:GetNodeName("INSTANCE_THE_STONECORE") == "Durotar", "and without that API takes its map's name, not a raw id")
+check(not addon:HasNodeName("INSTANCE_THE_STONECORE"), "though nothing actually names it (a portal like that is described by where it comes out)")
 check(addon:HasNodeName("DOCK_TESTONLY"), "while a node with a kind pattern is named")
 
 -- 5. Locales: a translation wins, and anything untranslated falls back to English.
@@ -195,10 +196,8 @@ do
     addon:ClearNodeNameCache()
 end
 
--- Finding 6 (suffix fallback): the kind an id names, whether it leads (Forever) or ends (Modern) the id.
-check(addon:NodeKindFromID("DOCK_STORMWIND") == "DOCK" and addon:NodeKindFromID("TAXI_2") == "TAXI", "a Forever id leads with its kind")
-check(addon:NodeKindFromID("BORALUS_DOCK") == "DOCK", "a Modern id ends with it")
-check(addon:NodeKindFromID("DALARAN_PALADIN_PORTAL_HORDE") == "PORTAL", "a faction after the kind is skipped")
-check(addon:NodeKindFromID("WAKING_SHORES_ORGRIMMAR_ZEP") == "ZEPPELIN", "ZEP is a zeppelin")
-check(addon:NodeKindFromID("DARK_PORTAL_SHADOWMOON_VALLEY") == nil, "a place named for a portal is not a portal")
-check(addon:NodeKindFromID("STORMWIND_PORTAL_ROOM_LOWER") == nil, "nor is a portal room")
+-- Finding 6: the kind an id names leads it, in both flavours (Modern's ids are written that way: tools/modern_ids.py).
+check(addon:NodeKindFromID("DOCK_STORMWIND") == "DOCK" and addon:NodeKindFromID("TAXI_2") == "TAXI", "an id leads with its kind")
+check(addon:NodeKindFromID("FLIGHT_TOL_DAGOR_ALLIANCE") == "FLIGHT", "FLIGHT is a flight master with no TaxiNodes id")
+check(addon:NodeKindFromID("BORALUS_DOCK") == nil, "a kind at the end is not read (no Modern id is written that way now)")
+check(addon:NodeKindFromID("DARK_PORTAL_BL") == nil, "a place named for a portal is not a portal")

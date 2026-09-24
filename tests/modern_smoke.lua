@@ -30,10 +30,10 @@ check(addon:GetNodeName("TAXI_6") == "Ironforge Flight Master",
 
 -- Same idea for a dungeon entrance (tools/match_modern_instance_nodes.py, matched by name
 -- against the real JournalInstance table): The Stonecore matched to journalInstanceID 67.
-check(addon.World:GetNode("INSTANCE_67"), "The Stonecore carried its real journal instance id through the rename")
+check(addon.World:GetNode("INSTANCE_THE_STONECORE"), "The Stonecore carried its real journal instance id through the rename")
 EJ_GetInstanceInfo = function(id) if id == 67 then return "The Stonecore" end end
-check(addon:GetNodeName("INSTANCE_67") == "The Stonecore",
-    "a renamed dungeon entrance resolves via the Dungeon Journal, not its raw id: " .. addon:GetNodeName("INSTANCE_67"))
+check(addon:GetNodeName("INSTANCE_THE_STONECORE") == "The Stonecore",
+    "a renamed dungeon entrance resolves via the Dungeon Journal, not its raw id: " .. addon:GetNodeName("INSTANCE_THE_STONECORE"))
 
 local total, containers = 0, {}
 addon.World:ForEachNode(function(node)
@@ -83,7 +83,7 @@ check(stormwindNeighbors and #stormwindNeighbors > 0,
     "a Stormwind outdoor node walks to at least one other Stormwind outdoor node, from geometry alone")
 
 -- A real portal route: cost 0 + the loading tax, per the edge-conversion cost rules.
-local toBoralus = addon.Pathfinder:FindPath(graph, "STORMWIND_BORALUS_PORTAL", "BORALUS")
+local toBoralus = addon.Pathfinder:FindPath(graph, "PORTAL_STORMWIND_BORALUS", "BORALUS")
 check(toBoralus and #toBoralus.steps == 1 and toBoralus.steps[1].method == "portal",
     "a converted portal edge actually routes")
 check(math.abs(toBoralus.cost - ctx.loadingScreenTax) < 0.01,
@@ -123,7 +123,7 @@ check(not noTeleport or noTeleport.steps[1].method ~= "teleport", "without the s
 
 -- A dungeon-teleport toy (an Item, itemID-gated, fixed destination) that only made it into
 -- the data because its old destination got renamed to a real INSTANCE_<id> first.
-check(addon.World:GetNode("INSTANCE_67"), "The Stonecore (from the earlier instance-rename pass) still exists")
+check(addon.World:GetNode("INSTANCE_THE_STONECORE"), "The Stonecore (from the earlier instance-rename pass) still exists")
 local karazhanSeal = makeCtx({ faction = "Alliance", items = { 142469 } })
 local viaItem = addon.Pathfinder:FindPath(addon.TravelGraph:Build(karazhanSeal), "IRONFORGE", "KARAZHAN")
 check(viaItem and viaItem.steps[1].method == "teleport",
@@ -143,8 +143,8 @@ local lycGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
 local flyIntoLycaneum, walkOut = false, false
 for from, list in pairs(lycGraph.adjacency) do
     for _, e in ipairs(list) do
-        if e.method == "fly" and (from == "MAGISTERS_SILVERMOON_PORTAL" or e.to == "MAGISTERS_SILVERMOON_PORTAL") then flyIntoLycaneum = true end
-        if from == "LYCANEUM_ENTRANCE" and e.to == "MAGISTERS_SILVERMOON_PORTAL" and e.method == "walk" and e.cost > 0 then walkOut = true end
+        if e.method == "fly" and (from == "PORTAL_MAGISTERS_SILVERMOON" or e.to == "PORTAL_MAGISTERS_SILVERMOON") then flyIntoLycaneum = true end
+        if from == "LYCANEUM_ENTRANCE" and e.to == "PORTAL_MAGISTERS_SILVERMOON" and e.method == "walk" and e.cost > 0 then walkOut = true end
     end
 end
 check(not flyIntoLycaneum, "nothing flies to or from the Lycaneum's portal room (an interior: no 2 s hop into it)")
@@ -170,7 +170,7 @@ local function flies(from, to)
     end
     return false
 end
-check(flies("SILVERMOON_ARCANTINA_PORTAL", "INSTANCE_1299") or flies("SILVERMOON_ARCANTINA_PORTAL", "EVERSONG_HARANDAR_PORTAL"),
+check(flies("PORTAL_SILVERMOON_ARCANTINA", "INSTANCE_WINDRUNNER_SPIRE") or flies("PORTAL_SILVERMOON_ARCANTINA", "PORTAL_EVERSONG_HARANDAR"),
     "the live pass gives Eastern Kingdoms its fly edges, however many flyable nodes it has")
 
 -- Oribos: the flight master is on the Ring, a floor (map) of its own, reached by the pad on the main floor. The old
@@ -188,7 +188,7 @@ for _, e in ipairs(oribos.adjacency["ORIBOS_TRANSFERENCE_PAD"] or {}) do
 end
 check(not direct, "no one-hop walk from the Oribos entrance to the flight master any more")
 check(padCost == 3, "the pad is a short hop with no loading screen: " .. tostring(padCost))
-local plaguefall = addon.Pathfinder:FindPath(oribos, "ORIBOS", "INSTANCE_1183")
+local plaguefall = addon.Pathfinder:FindPath(oribos, "ORIBOS", "INSTANCE_PLAGUEFALL")
 local viaPad = false
 for _, step in ipairs(plaguefall and plaguefall.steps or {}) do
     if step.to == "ORIBOS_TRANSFERENCE_RING" then viaPad = true end
@@ -199,12 +199,12 @@ check(plaguefall and viaPad, "Plaguefall from Oribos goes up by the pad, then th
 local unsure = makeCtx({ faction = "Alliance" })
 setFlights(unsure, function() return nil end)
 local session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
-local plan, why = addon.Journey:Plan(session, "INSTANCE_1190")
+local plan, why = addon.Journey:Plan(session, "INSTANCE_CASTLE_NATHRIA")
 check(plan == nil and why and why.nodeID and not why.known, "no route, with the flight in the way named: " .. tostring(why and why.nodeID))
 check(addon.Journey:HintText(why):find("flight"), "and a sentence for it: " .. tostring(addon.Journey:HintText(why)))
 setFlights(unsure, function(id) if id == "TAXI_2514" then return false end return true end)
 session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
-local _, known = addon.Journey:Plan(session, "INSTANCE_1190")
+local _, known = addon.Journey:Plan(session, "INSTANCE_CASTLE_NATHRIA")
 check(known and known.known and known.nodeID == "TAXI_2514", "a flight a window said isn't found is named as such")
 
 -- "Assume flight points are found" (ctx.flightUsable): a flight point no window has said anything about is used, and
@@ -212,10 +212,10 @@ check(known and known.known and known.nodeID == "TAXI_2514", "a flight a window 
 local assuming = makeCtx({ faction = "Alliance" })
 setFlights(assuming, function(id) if id == "TAXI_2519" then return false end return nil end, true)
 local start = { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 }
-local assumedPlan = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1190")
+local assumedPlan = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_CASTLE_NATHRIA")
 check(assumedPlan and assumedPlan.assumed and #assumedPlan.assumed >= 1, "an unconfirmed flight is used, and the plan says which")
 check(addon.Journey:AssumedText(assumedPlan):find("flight master"), "with a line telling the player how to confirm it")
-local blocked = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1186")      -- Spires of Ascension: only via TAXI_2519
+local blocked = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_SPIRES_OF_ASCENSION")      -- Spires of Ascension: only via TAXI_2519
 check(blocked == nil, "but a flight a window said isn't found is never taken, however the setting reads")
 
 -- A waypoint on Stormwind's map (the Trade District) is out in the open, not among the portal rooms: a map's
@@ -245,7 +245,7 @@ check(landing and landing.mapID == 500 and addon.World:GetFlag(addon.World:GetNo
 local brawlCtx = makeCtx({ faction = "Alliance" })
 local brawlGraph = addon.TravelGraph:Build(brawlCtx)
 local flyOutOfInterior = false
-for _, id in ipairs({ "BIZMOS_BRAWLPUB", "BIZMOS_TO_TRAM", "TRAM_TO_BIZMOS", "DEEPRUN_TRAM_TO_STORMWIND" }) do
+for _, id in ipairs({ "BIZMOS_BRAWLPUB", "TRAM_BIZMOS_TO", "TRAM_TO_BIZMOS", "DEEPRUN_TRAM_TO_STORMWIND" }) do
     for _, e in ipairs(brawlGraph.adjacency[id] or {}) do
         if e.method == "fly" then flyOutOfInterior = true end
     end
@@ -268,19 +268,19 @@ check(math.abs((brawlTrip.cost - freeTrip.cost) - brawlCtx.loadingScreenTax) < 1
 maps[85] = { name = "Orgrimmar", mapType = 3, parentMapID = 12 }
 maps[2393] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
 addon:ClearNodeNameCache()
-check(addon:GetNodeName("SILVERMOON_ORGRIMMAR_PORTAL") == "Orgrimmar Portal",
-    "a one-way-out portal is named for its destination: " .. addon:GetNodeName("SILVERMOON_ORGRIMMAR_PORTAL"))
-check(addon:HasNodeName("SILVERMOON_ORGRIMMAR_PORTAL") == false, "though that isn't a name of its own, so the portal step still reads 'Take the portal to ...'")
+check(addon:GetNodeName("PORTAL_SILVERMOON_ORGRIMMAR") == "Orgrimmar Portal",
+    "a one-way-out portal is named for its destination: " .. addon:GetNodeName("PORTAL_SILVERMOON_ORGRIMMAR"))
+check(addon:HasNodeName("PORTAL_SILVERMOON_ORGRIMMAR") == false, "though that isn't a name of its own, so the portal step still reads 'Take the portal to ...'")
 check(addon:GetNodeName("SILVERMOON_PORTAL_ROOM") == "Silvermoon City", "a portal room with no single destination keeps its map's name: " .. addon:GetNodeName("SILVERMOON_PORTAL_ROOM"))
 
 -- Silvermoon's portal room (Stormwind, Orgrimmar and where their portals arrive) is an interior with one door: in the
 -- open you can fly up to the door, not into the room.
 addon.World:Build()
-local room = addon.World:GetNodeContainer("SILVERMOON_ORGRIMMAR_PORTAL")
+local room = addon.World:GetNodeContainer("PORTAL_SILVERMOON_ORGRIMMAR")
 check(room and addon.World:GetFlag(room, "indoor") == true, "the portal room is indoor")
 check(addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM").path == room.path
     and addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM_EXIT").path == room.path, "with its arrival point and inner door")
-check(not addon.World:GetFlag(addon.World:GetNodeContainer("SILVERMOON_HARANDAR_PORTAL"), "indoor"), "the street's other portals stay outside")
+check(not addon.World:GetFlag(addon.World:GetNodeContainer("PORTAL_SILVERMOON_HARANDAR"), "indoor"), "the street's other portals stay outside")
 local roomGraph = addon.TravelGraph:Build(makeCtx({ faction = "Horde" }))
 local flyIntoRoom = false
 for from, list in pairs(roomGraph.adjacency) do
@@ -290,7 +290,7 @@ for from, list in pairs(roomGraph.adjacency) do
 end
 check(not flyIntoRoom, "nothing flies into or out of the portal room")
 local streetStart = { id = "START_SILVERMOON", mapID = 2393, x = 0.60, y = 0.75 }
-local toRoom = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = "Horde" }), streetStart), "SILVERMOON_ORGRIMMAR_PORTAL")
+local toRoom = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = "Horde" }), streetStart), "PORTAL_SILVERMOON_ORGRIMMAR")
 local roomKinds = {}
 for _, step in ipairs(toRoom and toRoom.steps or {}) do roomKinds[#roomKinds + 1] = step.method end
 check(toRoom and roomKinds[#roomKinds] == "walk", "the last stretch to the portal is on foot, through the door: " .. table.concat(roomKinds, ","))
@@ -381,7 +381,7 @@ do
     check(past and not uses(past, "phaseswitch"), "Darnassus with Darkshore in the past: no Zidormi needed")
     local present = route({ [62] = 1176 }, "DARNASSUS")
     check(present and uses(present, "phaseswitch"), "Darnassus with Darkshore in the present: through Zidormi")
-    check(not takes(present, "STORMWIND_DARNASSUS_PORTAL", "RUTTHERAN_EXODAR_PORTAL"),
+    check(not takes(present, "PORTAL_STORMWIND_DARNASSUS", "PORTAL_RUTTHERAN_EXODAR"),
         "and not by the Rut'theran portal, which only exists in the past")
     local unknown = route({}, "DARNASSUS")
     check(unknown and not uses(unknown, "phaseswitch"), "an unknown phase is open: no switch needed")

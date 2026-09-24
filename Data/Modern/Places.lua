@@ -23,24 +23,7 @@ addon.SEASONAL_DUNGEONS = {
     1030    -- Temple of Sethraliss
 }
 
--- Dungeon and raid nodes that never got a journal-instance id in their node id (INSTANCE_<id> carries it),
--- so which instance they are can't be read from it: [nodeID] = journalInstanceID, or { journalInstanceID,
--- faction = "Alliance" } for an entrance only one faction has. Two entrances to one instance become one destination.
-addon.InstanceNodeAliases = {
-    NEXUS_POINT_XENAS_DUNGEON = 1316,
-    DAWN_OF_THE_INFINITES_DUNGEON = 1209,      -- two wings in Group Finder, one entrance
-    BARADIN_HOLD = 75,
-    LOST_CITY_OF_THE_TOLVIR = 69,
-    INSTANCE_249 = 1300,                       -- the Midnight Magisters' Terrace (Quel'Thalas), not the old one
-    MAGISTERS_TERRACE_BC_DUNGEON = 249,        -- the Burning Crusade one, Isle of Quel'Danas
-    BATTLE_OF_DAZARALOR_RAID_ALLIANCE = { 1176, faction = "Alliance" },
-    BATTLE_OF_DAZARALOR_RAID_HORDE = { 1176, faction = "Horde" },
-    SIEGE_OF_BORALUS_DUNGEON_ALLIANCE = { 1023, faction = "Alliance" },
-    SIEGE_OF_BORALUS_DUNGEON_HORDE = { 1023, faction = "Horde" },
-    THE_MOTHERLODE_DUNGEON_ALLIANCE = { 1012, faction = "Alliance" },
-    THE_MOTHERLODE_DUNGEON_HORDE = { 1012, faction = "Horde" },
-    NYALOTHA_THE_WAKING_CITY_RAID_ULDUM = 1180,       -- two entrances that swap each week: one destination,
-    NYALOTHA_THE_WAKING_CITY_RAID_PANDARIA = 1180,    -- whichever is nearer
-}
+-- A dungeon or raid node's journal instance is a field on the node (`journal`, and `faction` for an entrance only one
+-- faction has): tools/modern_ids.py and tools/modern_manual.py's INSTANCE_JOURNALS.
 
 -- The cities are in Settlements.lua, generated from tools/modern_manual.py's CITIES (Forever's addon.Cities shape).

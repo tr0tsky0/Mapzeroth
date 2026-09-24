@@ -37,6 +37,7 @@ import pathlib
 from lupa.lua51 import LuaRuntime
 
 import modern_manual as manual
+import modern_ids
 import conversion_notes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -53,18 +54,8 @@ FACTION = {"ALLIANCE": "Alliance", "HORDE": "Horde"}
 
 
 def load_renames():
-    renames = {}
-    for filename, prefix in MATCH_FILES.items():
-        path = ROOT / "tools" / "modern_source" / filename
-        if not path.exists():
-            continue
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if not line.strip() or line.startswith("#"):
-                continue
-            node_id, verdict, real_ids, _name = line.split("\t", 3)
-            if verdict in ("one", "many"):
-                renames[node_id] = f"{prefix}{real_ids.split(',')[0]}"
-    return renames
+    """source id -> Modern id: the map tools/gen_modern_nodes.py wrote (tools/modern_ids.py has the rules)."""
+    return modern_ids.load()
 
 
 def known_node_ids():

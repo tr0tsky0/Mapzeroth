@@ -71,12 +71,11 @@
   | EK_OVERWORLD | 84 | 17 |
   | KALIMDOR_OVERWORLD | 85 | 17 |
 
-- **Naming**: 651 flight-master nodes were renamed to `TAXI_<realID>` (tools/match_modern_taxi_nodes.py, matched against the real retail TaxiNodes table by name) and 184 dungeon/raid entrances to `INSTANCE_<journalInstanceID>` (tools/match_modern_instance_nodes.py, matched against JournalInstance) -- both now get a free, properly-localized name from the client at runtime (C_TaxiMap / EJ_GetInstanceInfo, see NodeNames.lua), the same way Forever's flight masters already do. Everything else -- the flight/instance nodes with no confident match (see those scripts' own *_matches.tsv), and every portal/mole-machine/item-destination node -- still has no name at all: NodeNames.lua's resolve() has nothing to go on for an id like `STORMWIND_BORALUS_PORTAL` (place name first, not a kind prefix the way Forever's own ids are written). Worth a suffix-based resolve() fallback at some point (most portal ids end `_PORTAL`, the mirror image of Forever's prefix convention) for whatever's left.
-  - 4 rename collision(s) (two old nodes matched the same real id -- kept the first, left the other under its old id):
+- **Ids** follow Forever's `<KIND>_<PLACE>` convention (tools/modern_ids.py has the rules; the whole map is tools/modern_source/id_map.tsv): 651 flight masters are `TAXI_<realID>`, 204 dungeon and raid entrances are `INSTANCE_<NAME>` nodes with `kind = "instance"` and their `journal` id, and 169 transports had their kind moved to the front (`BORALUS_DOCK` -> `DOCK_BORALUS`).
+  - 3 rename collision(s) (two old nodes would get the same id -- the first keeps it, the other takes the next rule, see tools/modern_ids.py):
     - `DALARAN_BROKEN_ISLES_FLIGHT` -> TAXI_310, already claimed by `DALARAN_NORTHREND_FLIGHT`
     - `LUNARFALL_ALLIANCE_FLIGHT` -> TAXI_1476, already claimed by `LUNARFALL_GARRISON_FLIGHT`
     - `TRANQUILLIEN_BC_FLIGHT` -> TAXI_83, already claimed by `TRANQUILLIEN_FLIGHT`
-    - `MAGISTERS_TERRACE_BC_DUNGEON` -> INSTANCE_249, already claimed by `MAGISTERS_TERRACE_DUNGEON`
 
 ## Resolved during this pass
 
@@ -102,7 +101,7 @@
   of their phase group. Zidormi's `phaseswitch` edges carry `overridesPhase` instead.
 - No dangling `from`/`to`: every edge resolved to a node from the conversion pass.
 - 1 exact duplicate edge(s) dropped (same `from`, `to`, method and requirements as an earlier edge; the first is kept):
-  - `STORMWIND_EXODAR_PORTAL` -> `EXODAR` (portal)
+  - `PORTAL_STORMWIND_EXODAR` -> `EXODAR` (portal)
 - No unrecognized requirement keys.
 
 ## Ability conversion (tools/gen_modern_abilities.py)

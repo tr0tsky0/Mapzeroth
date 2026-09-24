@@ -9,6 +9,10 @@ local function isPlaceholder(container)
     return container == nil or container == "" or container == "TODO"
 end
 
+-- Id kinds NodeNames names without a string of their own: a pattern over the zone ("Tiragarde Sound Harbor"), or a
+-- portal by where it leads.
+local NAMED_BY_KIND = { DOCK = true, ZEPPELIN = true, TRAM = true, TELEPORT = true, FLIGHT = true, PORTAL = true }
+
 function addon:ValidateData()
     local issues = {}
     local function add(level, message)
@@ -32,9 +36,9 @@ function addon:ValidateData()
             -- zones; everything else we created needs a locale string.
             local id = tostring(node.id)
             if node.kind == "instance" then
-                -- An instance entrance is named by the client (its area) or by a string of ours.
-                if not (node.area or addon:HasString("NODE_" .. id)) then
-                    add("warn", "instance has no name source (area id or NODE_ string): " .. id)
+                -- An instance entrance is named by the client (its area, or its journal instance) or by a string of ours.
+                if not (node.area or node.journal or addon:HasString("NODE_" .. id)) then
+                    add("warn", "instance has no name source (area id, journal id or NODE_ string): " .. id)
                 end
             elseif node.kind then
                 -- A place in a city or town is named from its kind and its settlement.
@@ -58,7 +62,7 @@ function addon:ValidateData()
                     add("error", ("node %s: no name pattern for kind '%s'"):format(id, node.kind))
                 end
             elseif not node.area and not id:find("^TAXI_%d+$") and not id:find("^BORDER_")
-                    and not addon:HasString("NODE_" .. id) then
+                    and not addon:HasString("NODE_" .. id) and not NAMED_BY_KIND[addon:NodeKindFromID(id) or ""] then
                 add("warn", "node has no name string (NODE_" .. id .. ")")
             end
         end

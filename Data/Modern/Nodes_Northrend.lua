@@ -8,8 +8,8 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Northrend = {
-    { id = "VENGEANCE_LANDING_ZEPPELIN", container = "northrend.map117", mapID = 117, x = 0.7770, y = 0.3029 }, -- Vengeance Hold (Zeppelin)
-    { id = "INSTANCE_756", container = "northrend.map114", mapID = 114, x = 0.2800, y = 0.2900 }, -- The Eye of Eternity
+    { id = "ZEPPELIN_VENGEANCE_LANDING", container = "northrend.map117", mapID = 117, x = 0.7770, y = 0.3029 }, -- Vengeance Hold (Zeppelin)
+    { id = "INSTANCE_THE_EYE_OF_ETERNITY", container = "northrend.map114", mapID = 114, x = 0.2800, y = 0.2900, kind = "instance", journal = 756 }, -- The Eye of Eternity
     { id = "TAXI_337", container = "northrend.map127", mapID = 127, x = 0.7759, y = 0.4813 }, -- Sunreaver's Command
     { id = "TAXI_191", container = "northrend.map117", mapID = 117, x = 0.7864, y = 0.2959 }, -- Vengeance Landing
     { id = "TAXI_294", container = "northrend.map115", mapID = 115, x = 0.4740, y = 0.7370 }, -- Moa'ki
@@ -24,68 +24,68 @@ addon.Nodes.Northrend = {
     { id = "ARGENT_TOURNAMENT_GROUNDS", container = "northrend.map118", mapID = 118, x = 0.6940, y = 0.2260 }, -- Argent Tournament Grounds
     { id = "TAXI_310", container = "northrend.map127", mapID = 127, x = 0.3660, y = 0.3770 }, -- Dalaran (Northrend) Flightmaster
     { id = "TAXI_331", container = "northrend.map121", mapID = 121, x = 0.7030, y = 0.2290 }, -- Gundrak
-    { id = "VALGARDE_PORT_DOCK", container = "northrend.map117", mapID = 117, x = 0.6110, y = 0.6243 }, -- Valgarde Port Dock
+    { id = "DOCK_VALGARDE_PORT", container = "northrend.map117", mapID = 117, x = 0.6110, y = 0.6243 }, -- Valgarde Port Dock
     { id = "TAXI_324", container = "northrend.map120", mapID = 120, x = 0.6840, y = 0.4990 }, -- Camp Tunka'lo
-    { id = "INSTANCE_755", container = "northrend.map115", mapID = 115, x = 0.6000, y = 0.5400 }, -- The Obsidian Sanctum
+    { id = "INSTANCE_THE_OBSIDIAN_SANCTUM", container = "northrend.map115", mapID = 115, x = 0.6000, y = 0.5400, kind = "instance", journal = 755 }, -- The Obsidian Sanctum
     { id = "TAXI_334", container = "northrend.map118", mapID = 118, x = 0.8790, y = 0.7570 }, -- The Argent Vanguard
-    { id = "INSTANCE_285", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.5000 }, -- Utgarde Keep
+    { id = "INSTANCE_UTGARDE_KEEP", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.5000, kind = "instance", journal = 285 }, -- Utgarde Keep
     { id = "TAXI_322", container = "northrend.map120", mapID = 120, x = 0.6250, y = 0.6130 }, -- Dun Niffelem
     { id = "ARGENT_TOURNAMENT_GROUNDS_MOLE", container = "northrend.map118", mapID = 118, x = 0.7700, y = 0.1860 }, -- Argent Tournament Grounds (Icecrown)
     { id = "DALARAN_NORTHREND", container = "northrend.map125", mapID = 125, x = 0.5592, y = 0.4678 }, -- Dalaran (Northrend)
-    { id = "DALARAN_NORTHREND_ORGRIMMAR_PORTAL", container = "northrend.map125", mapID = 125, x = 0.5757, y = 0.1942 }, -- Portal to Orgrimmar
-    { id = "INSTANCE_277", container = "northrend.map120", mapID = 120, x = 0.4000, y = 0.2700 }, -- Halls of Stone
+    { id = "PORTAL_DALARAN_NORTHREND_ORGRIMMAR", container = "northrend.map125", mapID = 125, x = 0.5757, y = 0.1942 }, -- Portal to Orgrimmar
+    { id = "INSTANCE_HALLS_OF_STONE", container = "northrend.map120", mapID = 120, x = 0.4000, y = 0.2700, kind = "instance", journal = 277 }, -- Halls of Stone
     { id = "TAXI_336", container = "northrend.map127", mapID = 127, x = 0.7260, y = 0.8090 }, -- Windrunner's Overlook
     { id = "TAXI_190", container = "northrend.map117", mapID = 117, x = 0.5074, y = 0.6967 }, -- New Agamand
     { id = "TAXI_340", container = "northrend.map118", mapID = 118, x = 0.7240, y = 0.2250 }, -- Argent Tournament Grounds
-    { id = "INSTANCE_286", container = "northrend.map117", mapID = 117, x = 0.5700, y = 0.4800 }, -- Utgarde Pinnacle
+    { id = "INSTANCE_UTGARDE_PINNACLE", container = "northrend.map117", mapID = 117, x = 0.5700, y = 0.4800, kind = "instance", journal = 286 }, -- Utgarde Pinnacle
     { id = "TAXI_335", container = "northrend.map118", mapID = 118, x = 0.7920, y = 0.7210 }, -- Crusaders' Pinnacle
     { id = "TAXI_246", container = "northrend.map114", mapID = 114, x = 0.5630, y = 0.2080 }, -- Fizzcrank Airstrip
     { id = "STORM_PEAKS_WORMHOLE", container = "northrend.map120", mapID = 120, x = 0.4300, y = 0.2500 }, -- The Storm Peaks (Wormhole)
     { id = "TAXI_253", container = "northrend.map116", mapID = 116, x = 0.3130, y = 0.6090 }, -- Amberpine Lodge
     { id = "HOWLING_FJORD_WORMHOLE", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.4700 }, -- Howling Fjord (Wormhole)
     { id = "TAXI_304", container = "northrend.map121", mapID = 121, x = 0.4230, y = 0.6820 }, -- The Argent Stand
-    { id = "INSTANCE_761", container = "northrend.map115", mapID = 115, x = 0.6100, y = 0.5300 }, -- The Ruby Sanctum
+    { id = "INSTANCE_THE_RUBY_SANCTUM", container = "northrend.map115", mapID = 115, x = 0.6100, y = 0.5300, kind = "instance", journal = 761 }, -- The Ruby Sanctum
     { id = "TAXI_257", container = "northrend.map114", mapID = 114, x = 0.3921, y = 0.5138 }, -- Warsong Hold
-    { id = "INSTANCE_757", container = "northrend.map118", mapID = 118, x = 0.7500, y = 0.2100 }, -- Trial of the Crusader
-    { id = "INSTANCE_282", container = "northrend.map114", mapID = 114, x = 0.2800, y = 0.2500 }, -- The Oculus
+    { id = "INSTANCE_TRIAL_OF_THE_CRUSADER", container = "northrend.map118", mapID = 118, x = 0.7500, y = 0.2100, kind = "instance", journal = 757 }, -- Trial of the Crusader
+    { id = "INSTANCE_THE_OCULUS", container = "northrend.map114", mapID = 114, x = 0.2800, y = 0.2500, kind = "instance", journal = 282 }, -- The Oculus
     { id = "TAXI_249", container = "northrend.map116", mapID = 116, x = 0.6628, y = 0.4661 }, -- Camp Oneqwah
     { id = "TAXI_333", container = "northrend.map118", mapID = 118, x = 0.4370, y = 0.2700 }, -- The Shadow Vault
-    { id = "INSTANCE_753", container = "northrend.map123", mapID = 123, x = 0.5000, y = 0.1600 }, -- Vault of Archavon
-    { id = "INSTANCE_754", container = "northrend.map115", mapID = 115, x = 0.8700, y = 0.5100 }, -- Naxxramas
+    { id = "INSTANCE_VAULT_OF_ARCHAVON", container = "northrend.map123", mapID = 123, x = 0.5000, y = 0.1600, kind = "instance", journal = 753 }, -- Vault of Archavon
+    { id = "INSTANCE_NAXXRAMAS", container = "northrend.map115", mapID = 115, x = 0.8700, y = 0.5100, kind = "instance", journal = 754 }, -- Naxxramas
     { id = "SHOLAZAR_BASIN_WORMHOLE", container = "northrend.map119", mapID = 119, x = 0.4920, y = 0.3960 }, -- Sholazar Basin (Wormhole)
-    { id = "INSTANCE_276", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900 }, -- Halls of Reflection
-    { id = "INSTANCE_274", container = "northrend.map121", mapID = 121, x = 0.8100, y = 0.2900 }, -- Gundrak
-    { id = "INSTANCE_271", container = "northrend.map115", mapID = 115, x = 0.2800, y = 0.5200 }, -- Ahn'kahet: The Old Kingdom
-    { id = "INSTANCE_280", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900 }, -- The Forge of Souls
+    { id = "INSTANCE_HALLS_OF_REFLECTION", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900, kind = "instance", journal = 276 }, -- Halls of Reflection
+    { id = "INSTANCE_GUNDRAK", container = "northrend.map121", mapID = 121, x = 0.8100, y = 0.2900, kind = "instance", journal = 274 }, -- Gundrak
+    { id = "INSTANCE_AHNKAHET_THE_OLD_KINGDOM", container = "northrend.map115", mapID = 115, x = 0.2800, y = 0.5200, kind = "instance", journal = 271 }, -- Ahn'kahet: The Old Kingdom
+    { id = "INSTANCE_THE_FORGE_OF_SOULS", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900, kind = "instance", journal = 280 }, -- The Forge of Souls
     { id = "TAXI_248", container = "northrend.map117", mapID = 117, x = 0.2579, y = 0.2500 }, -- Apothecary Camp
     { id = "TAXI_185", container = "northrend.map117", mapID = 117, x = 0.3210, y = 0.4460 }, -- Westguard Keep
     { id = "TAXI_303", container = "northrend.map123", mapID = 123, x = 0.7200, y = 0.3110 }, -- Valiance Landing Camp
-    { id = "VALIANCE_KEEP_DOCK", container = "northrend.map114", mapID = 114, x = 0.5946, y = 0.6914 }, -- Valiance Keep Dock
+    { id = "DOCK_VALIANCE_KEEP", container = "northrend.map114", mapID = 114, x = 0.5946, y = 0.6914 }, -- Valiance Keep Dock
     { id = "TAXI_255", container = "northrend.map116", mapID = 116, x = 0.5920, y = 0.2680 }, -- Westfall Brigade
     { id = "TAXI_305", container = "northrend.map121", mapID = 121, x = 0.1530, y = 0.7440 }, -- Ebon Watch
-    { id = "INSTANCE_284", container = "northrend.map118", mapID = 118, x = 0.7400, y = 0.2000 }, -- Trial of the Champion
-    { id = "INSTANCE_275", container = "northrend.map120", mapID = 120, x = 0.4200, y = 0.2100 }, -- Halls of Lightning
-    { id = "INSTANCE_278", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900 }, -- Pit of Saron
-    { id = "INSTANCE_283", container = "northrend.map125", mapID = 125, x = 0.6600, y = 0.6800 }, -- The Violet Hold
+    { id = "INSTANCE_TRIAL_OF_THE_CHAMPION", container = "northrend.map118", mapID = 118, x = 0.7400, y = 0.2000, kind = "instance", journal = 284 }, -- Trial of the Champion
+    { id = "INSTANCE_HALLS_OF_LIGHTNING", container = "northrend.map120", mapID = 120, x = 0.4200, y = 0.2100, kind = "instance", journal = 275 }, -- Halls of Lightning
+    { id = "INSTANCE_PIT_OF_SARON", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900, kind = "instance", journal = 278 }, -- Pit of Saron
+    { id = "INSTANCE_THE_VIOLET_HOLD", container = "northrend.map125", mapID = 125, x = 0.6600, y = 0.6800, kind = "instance", journal = 283 }, -- The Violet Hold
     { id = "TAXI_295", container = "northrend.map117", mapID = 117, x = 0.2500, y = 0.5970 }, -- Kamagua
-    { id = "INSTANCE_758", container = "northrend.map118", mapID = 118, x = 0.5300, y = 0.8600 }, -- Icecrown Citadel
-    { id = "INSTANCE_273", container = "northrend.map121", mapID = 121, x = 0.2800, y = 0.8700 }, -- Drak'Tharon Keep
+    { id = "INSTANCE_ICECROWN_CITADEL", container = "northrend.map118", mapID = 118, x = 0.5300, y = 0.8600, kind = "instance", journal = 758 }, -- Icecrown Citadel
+    { id = "INSTANCE_DRAKTHARON_KEEP", container = "northrend.map121", mapID = 121, x = 0.2800, y = 0.8700, kind = "instance", journal = 273 }, -- Drak'Tharon Keep
     { id = "BOREAN_TUNDRA_WORMHOLE", container = "northrend.map114", mapID = 114, x = 0.5300, y = 0.1500 }, -- Borean Tundra (Wormhole)
     { id = "TAXI_221", container = "northrend.map114", mapID = 114, x = 0.4490, y = 0.3370 }, -- Amber Ledge
     { id = "TAXI_296", container = "northrend.map114", mapID = 114, x = 0.7750, y = 0.4940 }, -- Unu'pe
     { id = "TAXI_250", container = "northrend.map116", mapID = 116, x = 0.2343, y = 0.6498 }, -- Conquest Hold
-    { id = "INSTANCE_759", container = "northrend.map120", mapID = 120, x = 0.4100, y = 0.1800 }, -- Ulduar
+    { id = "INSTANCE_ULDUAR", container = "northrend.map120", mapID = 120, x = 0.4100, y = 0.1800, kind = "instance", journal = 759 }, -- Ulduar
     { id = "TAXI_256", container = "northrend.map115", mapID = 115, x = 0.3815, y = 0.4636 }, -- Agmar's Hammer
-    { id = "WARSONG_HOLD_ZEPPELIN", container = "northrend.map114", mapID = 114, x = 0.4145, y = 0.5272 }, -- Warsong Hold (Zeppelin)
+    { id = "ZEPPELIN_WARSONG_HOLD", container = "northrend.map114", mapID = 114, x = 0.4145, y = 0.5272 }, -- Warsong Hold (Zeppelin)
     { id = "TAXI_247", container = "northrend.map115", mapID = 115, x = 0.2980, y = 0.5490 }, -- Stars' Rest
     { id = "RUBY_DRAGONSHRINE_MOLE", container = "northrend.map115", mapID = 115, x = 0.4530, y = 0.4990 }, -- Ruby Dragonshrine (Dragonblight)
     { id = "TAXI_260", container = "northrend.map115", mapID = 115, x = 0.4368, y = 0.1723 }, -- Kor'kron Vanguard
     { id = "TAXI_192", container = "northrend.map117", mapID = 117, x = 0.4992, y = 0.1034 }, -- Camp Winterhoof
     { id = "TAXI_332", container = "northrend.map123", mapID = 123, x = 0.2143, y = 0.3436 }, -- Warsong Camp
-    { id = "INSTANCE_272", container = "northrend.map115", mapID = 115, x = 0.2600, y = 0.4900 }, -- Azjol-Nerub
+    { id = "INSTANCE_AZJOLNERUB", container = "northrend.map115", mapID = 115, x = 0.2600, y = 0.4900, kind = "instance", journal = 272 }, -- Azjol-Nerub
     { id = "TAXI_321", container = "northrend.map120", mapID = 120, x = 0.2800, y = 0.7440 }, -- Frosthold
     { id = "TAXI_258", container = "northrend.map114", mapID = 114, x = 0.7735, y = 0.3902 }, -- Taunka'le Village
-    { id = "INSTANCE_281", container = "northrend.map114", mapID = 114, x = 0.2700, y = 0.2600 }, -- The Nexus
+    { id = "INSTANCE_THE_NEXUS", container = "northrend.map114", mapID = 114, x = 0.2700, y = 0.2600, kind = "instance", journal = 281 }, -- The Nexus
     { id = "GRIZZLY_HILLS_DRUID", container = "northrend.map116", mapID = 116, x = 0.5043, y = 0.2975 }, -- Ursoc's Den, Grizzly Hills
     { id = "VALGARDE_BOAT", container = "northrend.map117", mapID = 117, x = 0.5930, y = 0.6320 }, -- Valgarde Port
     { id = "TAXI_252", container = "northrend.map115", mapID = 115, x = 0.6010, y = 0.5040 }, -- Wyrmrest Temple
@@ -95,7 +95,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_308", container = "northrend.map119", mapID = 119, x = 0.4990, y = 0.6110 }, -- River's Heart
     { id = "TAXI_323", container = "northrend.map120", mapID = 120, x = 0.3685, y = 0.4990 }, -- Grom'arsh Crash-Site
     { id = "TAXI_326", container = "northrend.map120", mapID = 120, x = 0.4600, y = 0.2410 }, -- Ulduar
-    { id = "DALARAN_NORTHREND_STORMWIND_PORTAL", container = "northrend.map125", mapID = 125, x = 0.3998, y = 0.6265 }, -- Portal to Stormwind
+    { id = "PORTAL_DALARAN_NORTHREND_STORMWIND", container = "northrend.map125", mapID = 125, x = 0.3998, y = 0.6265 }, -- Portal to Stormwind
     { id = "TAXI_320", container = "northrend.map120", mapID = 120, x = 0.4200, y = 0.8450 }, -- K3
     { id = "TAXI_327", container = "northrend.map120", mapID = 120, x = 0.3050, y = 0.3580 }, -- Bouldercrag's Refuge
     { id = "TAXI_244", container = "northrend.map115", mapID = 115, x = 0.7680, y = 0.4990 }, -- Wintergarde Keep

@@ -55,6 +55,7 @@ from lupa.lua51 import LuaRuntime
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import modern_manual as manual
+import modern_ids
 import conversion_notes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -210,10 +211,31 @@ def main():
     mapid_groups = {}       # raw mapID -> set of traversalGroups a node was seen on it with
     per_group_counts = {}
     total_written = 0
-    renames = load_renames()
-    used_new_ids = {}       # "TAXI_<realID>"/"INSTANCE_<realID>" -> the old node id that claimed it first
-    rename_collisions = []  # (old_id, new_id, first_old_id) two old nodes matched the same real id
     emitted = []            # (id, container, mapID, x, y) of every node written, for the cities' centres
+
+    # First pass: every source id in the order the second pass writes them, for tools/modern_ids.py's one rule.
+    source_ids, seen_first = [], set()
+    for filename, _out_key, out_name in FILES:
+        ns = load(lua, loadstring, SRC / filename)
+        for _group_name, group in ns.Nodes.items():
+            for node_id in group.keys():
+                if node_id in getattr(manual, "DROP_NODES", []) or node_id in seen_first:
+                    continue
+                seen_first.add(node_id)
+                source_ids.append(node_id)
+        for mn in manual.NODES:
+            if mn["out"] == out_name:
+                source_ids.append(mn["id"])
+    id_plan, rename_collisions = modern_ids.plan(source_ids, manual.INSTANCE_JOURNALS)
+    modern_ids.write(id_plan)
+
+    def node_fields(source_id):
+        """The new id, and the instance fields (kind, journal, faction) to write after the position."""
+        new_id, journal, faction = id_plan[source_id]
+        extra = ""
+        if journal is not None:
+            extra = f', kind = "instance", journal = {journal}' + (f', faction = "{faction}"' if faction else "")
+        return new_id, extra
 
     for filename, out_key, out_name in FILES:
         ns = load(lua, loadstring, SRC / filename)
@@ -239,17 +261,10 @@ def main():
                 if node["mapArtID"] is not None:
                     phase_nodes.append((node_id, group_name, int(node["mapID"]), int(node["mapArtID"])))
                 name = node["name"] or ""
-                out_id = node_id
-                if node_id in renames:
-                    new_id = renames[node_id]
-                    if new_id in used_new_ids:
-                        rename_collisions.append((node_id, new_id, used_new_ids[new_id]))
-                    else:
-                        used_new_ids[new_id] = node_id
-                        out_id = new_id
+                out_id, extra = node_fields(node_id)
                 lines.append(
                     f'    {{ id = "{out_id}", container = "{container}", '
-                    f'mapID = {int(node["mapID"])}, x = {x:.4f}, y = {y:.4f} }}, -- {name}'
+                    f'mapID = {int(node["mapID"])}, x = {x:.4f}, y = {y:.4f}{extra} }}, -- {name}'
                 )
                 emitted.append((out_id, container, int(node["mapID"]), x, y))
                 count += 1
@@ -262,12 +277,13 @@ def main():
                 raise SystemExit(f"manual node {mn['id']} collides with an id already converted")
             seen_ids[mn["id"]] = (out_name, "manual")
             area = f', area = {mn["area"]}' if mn.get("area") else ""
+            out_id, extra = node_fields(mn["id"])
             lines.append(
-                f'    {{ id = "{mn["id"]}", container = "{mn["container"]}", '
-                f'mapID = {mn["mapID"]}, x = {mn["x"]:.4f}, y = {mn["y"]:.4f}{area} }}, '
+                f'    {{ id = "{out_id}", container = "{mn["container"]}", '
+                f'mapID = {mn["mapID"]}, x = {mn["x"]:.4f}, y = {mn["y"]:.4f}{area}{extra} }}, '
                 f'-- {mn["note"]} (hand-added: tools/modern_manual.py)'
             )
-            emitted.append((mn["id"], mn["container"], mn["mapID"], mn["x"], mn["y"]))
+            emitted.append((out_id, mn["container"], mn["mapID"], mn["x"], mn["y"]))
             total_written += 1
         lines.append('}')
         (OUT / out_name).write_text(
@@ -396,26 +412,20 @@ def main():
     for (group, mapid), count in sorted(interior_mapids.items()):
         notes.append(f"  | {group} | {mapid} | {count} |")
 
-    taxi_count = sum(1 for v in used_new_ids if v.startswith("TAXI_"))
-    instance_count = sum(1 for v in used_new_ids if v.startswith("INSTANCE_"))
+    renamed = [(s, v) for s, v in id_plan.items() if v[0] != s]
+    taxi_count = sum(1 for _s, v in renamed if v[0].startswith("TAXI_"))
+    instance_count = sum(1 for _s, v in id_plan.items() if v[1] is not None)
+    kind_count = len(renamed) - taxi_count - sum(1 for _s, v in renamed if v[0].startswith("INSTANCE_"))
     notes += [
         "",
-        f"- **Naming**: {taxi_count} flight-master nodes were renamed to `TAXI_<realID>` "
-        "(tools/match_modern_taxi_nodes.py, matched against the real retail TaxiNodes table by "
-        f"name) and {instance_count} dungeon/raid entrances to `INSTANCE_<journalInstanceID>` "
-        "(tools/match_modern_instance_nodes.py, matched against JournalInstance) -- both now get "
-        "a free, properly-localized name from the client at runtime (C_TaxiMap / "
-        "EJ_GetInstanceInfo, see NodeNames.lua), the same way Forever's flight masters already "
-        "do. Everything else -- the flight/instance nodes with no confident match (see those "
-        "scripts' own *_matches.tsv), and every portal/mole-machine/item-destination node -- "
-        "still has no name at all: NodeNames.lua's resolve() has nothing to go on for an id like "
-        "`STORMWIND_BORALUS_PORTAL` (place name first, not a kind prefix the way Forever's own "
-        "ids are written). Worth a suffix-based resolve() fallback at some point (most portal ids "
-        "end `_PORTAL`, the mirror image of Forever's prefix convention) for whatever's left.",
+        f"- **Ids** follow Forever's `<KIND>_<PLACE>` convention (tools/modern_ids.py has the rules; the whole map is "
+        f"tools/modern_source/id_map.tsv): {taxi_count} flight masters are `TAXI_<realID>`, {instance_count} dungeon "
+        f"and raid entrances are `INSTANCE_<NAME>` nodes with `kind = \"instance\"` and their `journal` id, and "
+        f"{kind_count} transports had their kind moved to the front (`BORALUS_DOCK` -> `DOCK_BORALUS`).",
     ]
     if rename_collisions:
-        notes.append(f"  - {len(rename_collisions)} rename collision(s) (two old nodes matched the same real "
-                      "id -- kept the first, left the other under its old id):")
+        notes.append(f"  - {len(rename_collisions)} rename collision(s) (two old nodes would get the same "
+                      "id -- the first keeps it, the other takes the next rule, see tools/modern_ids.py):")
         for node_id, new_id, first in rename_collisions:
             notes.append(f"    - `{node_id}` -> {new_id}, already claimed by `{first}`")
 
@@ -448,7 +458,7 @@ def main():
           + (", ".join(cities_left_out) or "none"))
     print(f"{len(dupes_seen)} id collision(s), {len(phase_nodes)} phase-tagged node(s), "
           f"{len(interior_mapids)} interior (group, mapID) pair(s), "
-          f"{len(used_new_ids)} renamed to a real id -- see CONVERSION_NOTES.md")
+          f"{sum(1 for s, v in id_plan.items() if v[0] != s)} renamed, {len(rename_collisions)} rename collision(s) -- see CONVERSION_NOTES.md")
 
 
 if __name__ == "__main__":
