@@ -203,6 +203,25 @@ def main():
     cost_filled = {}        # method -> count of edges that got a fallback cost written in
     total = 0
 
+    def edge_identity(e):
+        """(from, to, method, requirements) for one old edge, after renames and the phaseswitch gate: what
+        makes two edges the same edge. None when the edge is dropped or dangling (the loop below reports those)."""
+        from_id, to_id, method = resolve_id(e["from"]), resolve_id(e["to"]), e["method"]
+        method = METHOD_RENAME.get(method, method)
+        if from_id not in node_ids or to_id not in node_ids:
+            return None
+        reqs, _ = lua_requirements(e["requirements"])
+        if method == "phaseswitch" and not (reqs and "mapArtID" in reqs):
+            reqs = {"mapArtID": phase_gate(from_id, to_id, places), **(reqs or {})}
+        return (from_id, to_id, method, tuple(sorted((k, format_value(v)) for k, v in (reqs or {}).items())))
+
+    # The old data has the Stormwind -> Exodar portal twice, once bidirectional and once one-way, and only the
+    # one-way is right (the Exodar side's return portal lands in Stormwind's portal room, an edge of its own;
+    # captured in game 2026-09-24). Where two edges are the same edge and one says oneway, the one-way copy is
+    # the one kept: a missing reverse only lengthens a route, a false one gives a route nobody can travel.
+    oneway_keys = {edge_identity(e) for e in ns.Edges.values() if e["oneway"]}
+    oneway_keys.discard(None)
+
     for e in ns.Edges.values():
         keys = set(e.keys())
         for stray in keys - {"from", "to", "method", "cost", "oneway", "requirements", "mapArtID"}:
@@ -223,10 +242,10 @@ def main():
         if method == "phaseswitch" and not (reqs and "mapArtID" in reqs):
             reqs = {"mapArtID": phase_gate(from_id, to_id, places), **(reqs or {})}
         # An exact repeat (same ends, method and requirements) adds nothing but a second edge for the search
-        # to weigh; the first is kept. (Two edges that differ only in requirements, one per faction, are not repeats.)
-        edge_key = (from_id, to_id, method,
-                    tuple(sorted((k, format_value(v)) for k, v in (reqs or {}).items())))
-        if edge_key in seen_edges:
+        # to weigh; the first is kept, unless a one-way copy exists, which wins (see oneway_keys above).
+        # (Two edges that differ only in requirements, one per faction, are not repeats.)
+        edge_key = edge_identity(e)
+        if edge_key in seen_edges or (edge_key in oneway_keys and not e["oneway"]):
             duplicates.append((from_id, to_id, method))
             continue
         seen_edges.add(edge_key)
