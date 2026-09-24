@@ -113,6 +113,8 @@ function addon:GetPlayerContext()
     }
 end
 
+-- (`cooldown` on an ability in the data files, and `bind` on Forever's hearthstone, are documentation
+-- only: nothing reads them, routing asks the live cooldown APIs through the context.)
 -- The "Anywhere -> Node" abilities the player can use right now: class teleports they
 -- know, an item-based teleport (a toy/trinket to a fixed spot, addon.Abilities.Items) they
 -- carry, and the hearthstone if they carry it and have a bind. Each entry says where it

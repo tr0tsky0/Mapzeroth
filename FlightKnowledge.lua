@@ -42,6 +42,7 @@ function FlightKnowledge:IsFound(nodeID)
     return found[nodeID]
 end
 
+-- Tests only.
 function FlightKnowledge:Reset()
     found = {}
     fareFactor, originFactors = nil, {}

@@ -11,7 +11,7 @@ addon.Options = Options
 
 -- key -> { default, min, max, step } for numbers; text settings have only a default; on/off ones say boolean.
 local definitions = {
-    loadingScreenTax = { default = addon.DEFAULT_LOADING_SCREEN_TAX or 10, min = 0, max = 20, step = 1 },   -- seconds a loading screen costs a route
+    loadingScreenTax = { default = addon.DEFAULT_LOADING_SCREEN_TAX, min = 0, max = 20, step = 1 },   -- seconds a loading screen costs a route
     scale = { default = 1, min = 0.7, max = 1.5, step = 0.05 },           -- size of our windows
     theme = { default = "moderndark" },
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map

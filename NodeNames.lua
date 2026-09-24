@@ -119,6 +119,7 @@ end
 function addon:GetTownName(key) return settlementName(addon.Towns, key, "TOWN_") end
 function addon:GetCityName(key) return settlementName(addon.Cities, key, "CITY_") end
 
+-- Tests only.
 -- A spell's name and rank text ("Tailoring", "Journeyman"), in the client's language.
 -- Rank text is loaded lazily: the first lookup can return a name with no rank, so this
 -- asks the client to load the spell data and the caller should look again on

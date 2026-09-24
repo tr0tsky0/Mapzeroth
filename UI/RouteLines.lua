@@ -193,22 +193,11 @@ function RouteLines:Follow(plan, current)
     end
 end
 
--- Show this plan's route on the map. (Its steps carry their paths: Journey.)
-function RouteLines:Show(plan)
-    state.plan, state.current = plan, nil
-    self:Redraw()
-end
-
 -- Which step the trip is on: earlier ones fade, this one's badge is filled.
 function RouteLines:SetCurrent(index)
     if state.current == index then return end
     state.current = index
     self:Redraw()
-end
-
-function RouteLines:Clear()
-    state.plan, state.current = nil, nil
-    self:Hide()
 end
 
 -- Redraw when the map changes what it shows (another map, a zoom). (Opening the map is the panel's: it

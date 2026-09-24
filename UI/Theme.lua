@@ -229,11 +229,6 @@ function Theme:Panel(parent, name)
     return register(CreateFrame("Frame", name, parent, "BackdropTemplate"), "panel")
 end
 
--- A coloured strip texture on `parent`; `color` names one of the theme's colours.
-function Theme:Strip(parent, color, layer)
-    return register(parent:CreateTexture(nil, layer or "BACKGROUND"), "strip", { color = color })
-end
-
 -- style: "title", "body", "small", "dim", "accent", "good" or "warn".
 function Theme:Text(parent, style)
     local fs = withFont(parent:CreateFontString(nil, "OVERLAY"))

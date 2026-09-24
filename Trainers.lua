@@ -84,7 +84,7 @@ local function talksTo(npc, gate)
     local teaches = asSet(npc.teaches)
     for i = #gate.ranks, 1, -1 do
         if teaches[gate.ranks[i]] then
-            return i - gate.known <= (addon.PROFESSION_TRAINER_REACH or 2)
+            return i - gate.known <= addon.PROFESSION_TRAINER_REACH
         end
     end
     return true

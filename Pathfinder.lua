@@ -85,7 +85,7 @@ local function gameTicketTimes(graph, origin)
     local times = graph.ticketTimes[origin]
     if times then return times end
     times = {}
-    local saving = addon.FLIGHT_CHAIN_SAVING or 0
+    local saving = addon.FLIGHT_CHAIN_SAVING
     local best, heap = { [origin .. "|0"] = 0 }, {}
     heapPush(heap, { 0, { id = origin, started = false } })
     while #heap > 0 do
@@ -143,15 +143,11 @@ local function expandStep(graph, node, step, d, opts)
         return { { base, node.id, true, false, fareBoughtAt(node.id), d } }
     end
     -- (Never below d: see gameTicketTimes -- the clock must not run backwards.)
-    local options = { { math.max(d, d + step.cost * (1 - (addon.FLIGHT_CHAIN_SAVING or 0))), node.origin, false, true, fareBoughtAt(node.origin), node.startD } }
+    local options = { { math.max(d, d + step.cost * (1 - addon.FLIGHT_CHAIN_SAVING)), node.origin, false, true, fareBoughtAt(node.origin), node.startD } }
     if canLand(graph, node) and not opts.oneTicket then
         options[#options + 1] = { base, node.id, true, false, fareBoughtAt(node.id), d }
     end
     return options
-end
-
-local function airKey(option)
-    return option[2] and ("|air:" .. option[2] .. (option[3] and "1" or "0")) or ""
 end
 
 local function phaseKey(state)
@@ -382,7 +378,7 @@ function Pathfinder:CollapseSteps(steps)
         end
         if joins then
             last.to = step.to
-            last.cost = last.cost + step.cost * (1 - (step.method == "taxi" and (addon.FLIGHT_CHAIN_SAVING or 0) or 0))
+            last.cost = last.cost + step.cost * (1 - (step.method == "taxi" and addon.FLIGHT_CHAIN_SAVING or 0))
             last.parts[#last.parts + 1] = step
         else
             collapsed[#collapsed + 1] = {

@@ -95,6 +95,7 @@ function World:GetNode(nodeID)
     return nodes[nodeID]
 end
 
+-- Tests only.
 function World:GetContainer(path)
     return containers[path]
 end

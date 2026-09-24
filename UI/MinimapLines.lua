@@ -226,10 +226,6 @@ function MinimapLines:Follow(plan, current)
     end
 end
 
-function MinimapLines:Clear()
-    self:Follow(nil)
-end
-
 -- The settings: switching it on or off takes effect at once.
 addon.Options:OnChange(function(key)
     if key ~= "showRouteOnMinimap" then return end

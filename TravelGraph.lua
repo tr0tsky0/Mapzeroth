@@ -202,7 +202,7 @@ local function buildStaticGeometry()
             for j = i + 1, #nodes do
                 local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
-                    local cost = dist / (addon.FLY_SPEED or 50)
+                    local cost = dist / (addon.FLY_SPEED)
                     link(nodes[i].id, nodes[j].id, cost, "fly")
                     link(nodes[j].id, nodes[i].id, cost, "fly")
                 end
@@ -371,7 +371,7 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
             if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(dest) then
                 local dist = TravelGraph.DistanceProvider(node, dest)
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
-                    add(node, dist / (addon.FLY_SPEED or 50), "fly")
+                    add(node, dist / (addon.FLY_SPEED), "fly")
                     flew = true
                 end
             end
@@ -412,15 +412,15 @@ function TravelGraph:AddStart(graph, ctx, start)
     -- a short walk would read as "fly".
     local World = addon.World
     if World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor") then
-        local flySpeed = addon.FLY_SPEED or 50
+        local flySpeed = addon.FLY_SPEED
         World:ForEachNode(function(node)
             local c = World:GetNodeContainer(node.id)
             if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(start) then
                 local dist = TravelGraph.DistanceProvider(start, node)
-                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE and dist / flySpeed >= (addon.MIN_FLY_SECONDS or 0) then
+                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE and dist / flySpeed >= addon.MIN_FLY_SECONDS then
                     list[#list + 1] = {
                         from = start.id, to = node.id, method = "fly",
-                        cost = (addon.MOUNT_SECONDS or 0) + dist / flySpeed,
+                        cost = addon.MOUNT_SECONDS + dist / flySpeed,
                     }
                 end
             end

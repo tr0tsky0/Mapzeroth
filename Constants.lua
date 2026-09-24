@@ -77,6 +77,8 @@ addon.HOLIDAYS = {
 -- addon:GetFlightSpeedMultiplier (MovementSpeed.lua).
 addon.FREQUENT_FLIER = { spellID = 1225490, speedBonus = 0.20 }
 
+-- Tool-facing API (MapzerothDataTools' /mzr world calls GetRuleset); the addon itself doesn't use
+-- either: each toc loads its own dataset.
 -- Forever reports WOW_PROJECT_ID == WOW_PROJECT_MAINLINE, so the interface
 -- version is the only reliable discriminator: 16001 for Forever vs a six-digit
 -- number for Modern.

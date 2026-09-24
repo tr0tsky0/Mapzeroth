@@ -55,6 +55,7 @@ local function costs(session)
     return session.costs
 end
 
+-- Tests only.
 -- Seconds to reach a node, or nil if it can't be reached.
 function Journey:Cost(session, nodeID)
     return costs(session)[nodeID]
@@ -72,12 +73,6 @@ function Journey:Nearest(session, nodeIDs)
         if cost and (not bestCost or cost < bestCost) then best, bestCost = id, cost end
     end
     return best, bestCost
-end
-
--- Seconds to reach a destination entry (the nearest of its nodes), or nil.
-function Journey:EntryCost(session, entry)
-    local _, cost = self:Nearest(session, goalsOf(entry))
-    return cost
 end
 
 -- The client's name for the spell or item an ability step uses, and which it is ("spell" / "item"), or
@@ -99,7 +94,7 @@ end
 
 -- Steps that are the player using something of their own: "Cast Path of the Devoted Magistry",
 -- "Use Personal Key to the Arcantina", named for the spell or item rather than for where it lands.
-local ABILITY_METHODS = { teleport = true, racial = true }
+local ABILITY_METHODS = { teleport = true }
 
 local function stepText(method, name, via, source)
     if method == "equip" then

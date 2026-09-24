@@ -199,6 +199,7 @@ function Destinations:Build(ctx)
     return addon.Search:Prepare(entries)
 end
 
+-- Tests only.
 -- The entry for a node, or nil. A city and its flight master share a node, so a group
 -- ("place", "flight", ...) can say which is meant.
 function Destinations:Find(entries, nodeID, group)
