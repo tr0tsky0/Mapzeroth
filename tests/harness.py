@@ -64,6 +64,7 @@ function makeCtx(overrides)
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,
+        mapArtID = function(id) return (overrides.mapArt or {})[id] end,     -- which side of Zidormi's zones
     }
     setFlights(ctx, overrides.flights or "all", overrides.assumeFlights)
     return ctx

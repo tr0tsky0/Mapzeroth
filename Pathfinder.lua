@@ -14,7 +14,16 @@ local addonName, addon = ...
 -- simulated side to match that container's side. An edge listing the group in
 -- `overridesPhase` skips that check and forces the state to the destination's
 -- side instead (a Zidormi conversation, or Teleport: Undercity landing on the
--- present side regardless).
+-- present side regardless). An edge with `inPhase = { group, side }` can only be
+-- taken on that side (the portal at the Dark Portal goes to Outland in the past,
+-- to Draenor in the present), wherever its ends are.
+-- A group the start state doesn't name (the client couldn't tell which side the
+-- player is on) is open: either side can be entered, and nothing is recorded (it
+-- is already as open as a state can be, so a switch there changes nothing either).
+-- A route takes at most one phase switch (a known group changing side): every
+-- switch is a new state the whole graph is searched in again, and nobody needs
+-- two Zidormi conversations in one trip. So a search holds at most one state per
+-- known group, plus the start's.
 
 -- Flights are single legs (Data/Forever/Flights.lua), and the game sells tickets over them. A ticket
 -- from A to B may fly through other flight points without landing (each extra leg saves
@@ -182,24 +191,31 @@ local function phaseOf(nodeID)
     return memo
 end
 
+local SWITCHED = "~"          -- in a phase state: this route has used its one phase switch
+
 local function nextPhaseState(state, step)
+    local need = step.inPhase
+    if need then
+        local current = state[need[1]]
+        if current ~= nil and current ~= need[2] then return nil end
+    end
     local memo = phaseOf(step.to)
     if not memo then return state end
     local group, side = memo[1], memo[2]
+    local current = state[group]
+    if current == nil or current == side then return state end
 
-    if step.overridesPhase then
+    if step.overridesPhase and not state[SWITCHED] then
         for _, g in ipairs(step.overridesPhase) do
             if g == group then
-                if state[group] == side then return state end
                 local copy = {}
                 for k, v in pairs(state) do copy[k] = v end
-                copy[group] = side
+                copy[group], copy[SWITCHED] = side, 1
                 return copy
             end
         end
     end
-    if state[group] ~= side then return nil end
-    return state
+    return nil
 end
 
 -- A label is one way of having got to a search state (a node, and what came with arriving: the

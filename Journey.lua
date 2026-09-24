@@ -23,8 +23,11 @@ end
 -- Builds the graph for this player from `start` (see TravelGraph:AddStart). Nothing is
 -- priced yet: a plan searches for one destination, and Cost prices everywhere on first use.
 -- Returns nil, "nowhere" if we have no nodes on the start's map.
+-- graph.phase is the side the player is on in each phase group (World:LivePhases): where the start and the
+-- extras sit on a map split between phases, and the state every search of this session starts from.
 function Journey:Build(ctx, start, extras)
     local graph = addon.TravelGraph:Build(ctx)
+    graph.phase = addon.World:LivePhases(ctx.mapArtID)
     if not addon.TravelGraph:AddStart(graph, ctx, start) then return nil, "nowhere" end
     for _, dest in ipairs(extras or {}) do addon.TravelGraph:AddDestination(graph, ctx, dest, start) end
     return { ctx = ctx, start = start, graph = graph, extras = extras }
@@ -40,14 +43,14 @@ end
 local function costs(session)
     if session.costs then return session.costs end
     local money = session.ctx.money
-    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, nil, searchOptions(session, nil))
+    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, nil))
     session.costs = quickest
     if money then
         -- The exact search that keeps every trade of time against fare is dearer, so it only runs when some
         -- place's quickest route is one the player can't pay for (and then covers the whole map at once).
         for _, fare in pairs(fares) do
             if fare > money then
-                session.costs = addon.Pathfinder:FindCosts(session.graph, session.start.id, nil, searchOptions(session, money))
+                session.costs = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, money))
                 break
             end
         end
@@ -191,7 +194,7 @@ local function freeRoute(session, goalID)
     free.flightUsable = anyFlight
     session.free = session.free or Journey:Build(free, session.start, session.extras)
     if not session.free then return nil end
-    return addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
+    return addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID, session.free.graph.phase)
 end
 
 -- The first flight on a route that this player isn't known to be able to take: { nodeID, name, known }
@@ -230,11 +233,11 @@ end
 -- have found is all that stands in the way).
 function Journey:Plan(session, goalID)
     local money = session.ctx.money
-    local fastest = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, nil))
+    local fastest = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, nil))
     if not fastest then return nil, missingFlightHint(session, goalID) end
     local chosen = fastest
     if money and fastest.fare > money then
-        chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, money))
+        chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, money))
     end
     local result = chosen or fastest
     local plan = { cost = result.cost, steps = readableSteps(result, session), goal = result.goal,

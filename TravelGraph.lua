@@ -121,16 +121,25 @@ function addon:GetFlightOwner(nodeID)
 end
 
 -- A node the fly mesh can use: its container exists, allows flying and is outdoors. Returns the container.
--- TEMPORARY (finding 3, docs/REVIEW-2026-09-24.md): a container with `_art` in its path is one state of a
--- phase-split zone (Zidormi's past or present). The fly mesh joins nodes whatever their phase, so a route could
--- fly into a phase the player isn't in. Until containers carry `phaseGroup` and the fly pass honours it, they are left out.
+-- A phase-tagged node (Zidormi's past or present) is flyable too: the search only lets a route into it on the
+-- side the player is on (Pathfinder.lua), and the fly pass never joins two sides of one group (see below).
 local function isFlyable(node)
     local World = addon.World
     local c = World:GetNodeContainer(node.id)
-    if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and not c.path:find("_art", 1, true) then
+    if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then
         return c
     end
     return nil
+end
+
+-- Two containers that are different sides of one phase group: the same ground in two states, never
+-- a flight apart (Zidormi is the way between them).
+local function otherSide(a, b)
+    local World = addon.World
+    local groupA, sideA = World:GetPhase(a)
+    if not groupA then return false end
+    local groupB, sideB = World:GetPhase(b)
+    return groupA == groupB and sideA ~= sideB
 end
 
 -- The geometry-only part of the graph: walk edges (container-scoped), city-gate joins and fly
@@ -200,7 +209,7 @@ local function buildStaticGeometry()
         end
     end
 
-    -- Flying: continent-wide, only between flyable, outdoor nodes.
+    -- Flying: continent-wide, only between flyable, outdoor nodes, and never between two sides of a phase group.
     local flyable = {}
     for _, list in pairs(addon.Nodes or {}) do
         for _, node in ipairs(list) do
@@ -222,7 +231,8 @@ local function buildStaticGeometry()
         -- made whole regions unreachable ("no route") to save time that was never being spent.
         for i = 1, #nodes - 1 do
             for j = i + 1, #nodes do
-                local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
+                local dist = not otherSide(World:GetNodeContainer(nodes[i].id), World:GetNodeContainer(nodes[j].id))
+                    and TravelGraph.DistanceProvider(nodes[i], nodes[j])
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
                     local cost = dist / (addon.FLY_SPEED)
                     link(nodes[i].id, nodes[j].id, cost, "fly")
@@ -330,7 +340,7 @@ function TravelGraph:Build(ctx)
     local World = addon.World
     local adjacency = {}
 
-    local function link(from, to, cost, method, source, overridesPhase)
+    local function link(from, to, cost, method, source, overridesPhase, inPhase)
         local list = adjacency[from]
         if not list then
             list = {}
@@ -338,7 +348,7 @@ function TravelGraph:Build(ctx)
         end
         list[#list + 1] = {
             from = from, to = to, cost = cost, method = method,
-            source = source, overridesPhase = overridesPhase,
+            source = source, overridesPhase = overridesPhase, inPhase = inPhase,
             fare = source and source.fare,           -- copper, for a flight
         }
     end
@@ -377,11 +387,11 @@ function TravelGraph:Build(ctx)
             if cost then
                 cost = cost + loadingCost(edge, ctx)
                 if not unfound(edge, edge.to) then
-                    link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase)
+                    link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase, edge.inPhase)
                 end
                 local reverseAuthored = authored[edge.to .. "|" .. edge.from .. "|" .. edge.method]
                 if not edge.oneway and not reverseAuthored and not unfound(edge, edge.from) then
-                    link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase)
+                    link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase, edge.inPhase)
                 end
             end
         end
@@ -426,7 +436,7 @@ end
 -- Walking edges lead to it from every node in its container, and from the start if that is in the same one.
 function TravelGraph:AddDestination(graph, ctx, dest, start)
     local World = addon.World
-    local container = World:GetContainerForMap(dest.mapID)
+    local container = World:GetContainerForMap(dest.mapID, graph.phase)
     local function add(from, cost, method)
         local list = graph.adjacency[from.id]
         if not list then list = {}; graph.adjacency[from.id] = list end
@@ -459,12 +469,14 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
     for _, node in ipairs(container.nodes) do
         if insideCity(node) == insideCity(dest) then walk(node) end
     end
-    if start and World:GetContainerForMap(start.mapID) == container and insideCity(start) == insideCity(dest) then walk(start) end
+    if start and World:GetContainerForMap(start.mapID, graph.phase) == container and insideCity(start) == insideCity(dest) then walk(start) end
     return true
 end
 
+-- On a map split between phases the player walks among the nodes of the side they are on (graph.phase, the
+-- live phases Journey:Build set).
 function TravelGraph:AddStart(graph, ctx, start)
-    local container = addon.World:GetContainerForMap(start.mapID)
+    local container = addon.World:GetContainerForMap(start.mapID, graph.phase)
     if not container then return false end
     local speed = addon:GetGroundSpeed(container, ctx)
     local list = graph.adjacency[start.id]

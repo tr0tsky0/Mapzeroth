@@ -16,6 +16,8 @@ local nodes = {}           -- nodeID -> node
 local nodeContainer = {}   -- nodeID -> container
 local duplicates = {}      -- nodeIDs seen more than once
 local mapContainer = {}    -- uiMapID -> the container most of that map's nodes are in
+local mapPhased = {}       -- uiMapID -> { container, ... }: its outdoor phase-tagged containers (one per side)
+local phaseGroups = {}     -- phaseGroup -> { [side] = phaseMap }: the map whose art tells that side is live
 
 local function parentPath(path)
     return path:match("^(.*)%.[^.]+$") or ROOT
@@ -48,6 +50,7 @@ end
 -- pass) knows to redo it rather than serve a stale cache.
 function World:Build()
     containers, nodes, nodeContainer, duplicates, mapContainer = {}, {}, {}, {}, {}
+    mapPhased, phaseGroups = {}, {}
     World.generation = (World.generation or 0) + 1
     local mapCounts = {}    -- uiMapID -> { [container] = node count }
 
@@ -88,6 +91,23 @@ function World:Build()
             if not World:GetFlag(c, "indoor") and better(bestOutdoor) then bestOutdoor = c end
         end
         mapContainer[mapID] = bestOutdoor or best
+        for c in pairs(counts) do
+            if c.own and c.own.phaseGroup and not World:GetFlag(c, "indoor") then
+                local list = mapPhased[mapID] or {}
+                mapPhased[mapID] = list
+                list[#list + 1] = c
+            end
+        end
+    end
+
+    -- Phase groups (Zidormi's zones, Modern only): each side of a group is a container tagged
+    -- { phaseGroup, phaseSide = the map art id of that side, phaseMap = the map whose art shows it }.
+    for _, c in pairs(containers) do
+        local own = c.own
+        if own and own.phaseGroup then
+            phaseGroups[own.phaseGroup] = phaseGroups[own.phaseGroup] or {}
+            phaseGroups[own.phaseGroup][own.phaseSide] = own.phaseMap
+        end
     end
 end
 
@@ -100,9 +120,41 @@ function World:GetContainer(path)
     return containers[path]
 end
 
--- The container a map's nodes live in (nil for a map we have no nodes on).
-function World:GetContainerForMap(mapID)
-    return mapContainer[mapID]
+-- The container a map's nodes live in (nil for a map we have no nodes on). A map split between the sides of
+-- a phase group (Darkshore past and present are one map) gives the side in `phases` ({ group = side }, the
+-- player's live phases) when it names one.
+function World:GetContainerForMap(mapID, phases)
+    local c = mapContainer[mapID]
+    local group, side = self:GetPhase(c)
+    if phases and group and phases[group] ~= nil and phases[group] ~= side then
+        for _, other in ipairs(mapPhased[mapID] or {}) do
+            local g, s = self:GetPhase(other)
+            if g == group and s == phases[group] then return other end
+        end
+    end
+    return c
+end
+
+-- The side the player is on in each phase group, as { group = side }, for the search to start from (see
+-- Pathfinder.lua). mapArtID(mapID) is the client's art id for a map (ctx.mapArtID). A group is left out when
+-- the client can't tell: no answer, or more than one side's art showing (past and present Tirisfal are two maps,
+-- each always with its own art); the search then takes whichever side a route first enters.
+function World:LivePhases(mapArtID)
+    local live = {}
+    if not mapArtID then return live end
+    for group, sides in pairs(phaseGroups) do
+        local found, count = nil, 0
+        for side, phaseMap in pairs(sides) do
+            if mapArtID(phaseMap) == side then found, count = side, count + 1 end
+        end
+        if count == 1 then live[group] = found end
+    end
+    return live
+end
+
+-- Tests and the validator: { group = { [side] = phaseMap } }.
+function World:GetPhaseGroups()
+    return phaseGroups
 end
 
 -- Calls fn(node) for every node.

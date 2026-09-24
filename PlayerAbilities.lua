@@ -118,6 +118,8 @@ function addon:GetPlayerContext()
         flightUsable = function(nodeID)
             return addon.FlightKnowledge.Usable(addon.FlightKnowledge:IsFound(nodeID), addon.Options:Get("assumeFlightsFound"))
         end,
+        -- The art id the client shows for a map: which side of a phase group (Zidormi) the player is on.
+        mapArtID = function(mapID) return C_Map and C_Map.GetMapArtID and C_Map.GetMapArtID(mapID) or nil end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
         fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master

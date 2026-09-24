@@ -23,12 +23,9 @@
 
 - **Phase-tagged nodes** (mapArtID present) are kept apart from each other (see the
   `_art<N>` container suffix) so nothing wrongly claims two phase-states of a zone are
-  walkably joined, but that's as far as this pass goes. 27 nodes carry
-  mapArtID; none of them have a phaseGroup/phaseSide tag or a phaseswitch edge yet, so
-  right now they're simply unreachable until both are added by hand, zone by zone
-  (the Fable review findings on the wip/timephased-routing branch of the original addon
-  already worked out several of these zone/mapArtID pairings and are worth reusing
-  rather than re-deriving from scratch).
+  walkably joined. 27 nodes carry mapArtID; their containers are tagged
+  with 7 phase groups named after the Zidormi
+  nodes (see the script's docstring), and the search follows the player's side.
 
   | node | traversalGroup | mapID | mapArtID |
   |---|---|---|---|
@@ -101,9 +98,8 @@
 272 edges written.
 
 - Cost filled in from the old flat per-method default (see the script's docstring) for: phaseswitch (7), portal (175), ship (1), taxi (4), tram (1), zeppelin (2).
-- 25 edges carry an inert `mapArtID` requirement -- unusable until the
-  phase model is wired up for real (see the node-conversion note above); listed there,
-  not repeated here.
+- 18 edges carry `inPhase` (the old `mapArtID` gate): usable only on that side
+  of their phase group. Zidormi's `phaseswitch` edges carry `overridesPhase` instead.
 - No dangling `from`/`to`: every edge resolved to a node from the conversion pass.
 - 1 exact duplicate edge(s) dropped (same `from`, `to`, method and requirements as an earlier edge; the first is kept):
   - `STORMWIND_EXODAR_PORTAL` -> `EXODAR` (portal)

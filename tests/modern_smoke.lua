@@ -100,13 +100,15 @@ local oneQuest = makeCtx({ quests = { [47098] = true } })
 check(not addon:MeetsRequirements({ anyQuest = { 50769, 47098 } }, neitherQuest), "anyQuest: neither done, closed")
 check(addon:MeetsRequirements({ anyQuest = { 50769, 47098 } }, oneQuest), "anyQuest: either one is enough")
 
--- A phase-gated edge (inert `mapArtID`, see CONVERSION_NOTES.md) never passes, even when
--- every requirement the new engine DOES understand is satisfied -- an unrecognized
--- requirement key fails closed by design (EdgeRequirements.lua), which is exactly the
--- "unreachable until it's done properly" safety net this conversion is relying on.
-local horde = makeCtx({ faction = "Horde", quests = { [34378] = false } })
-check(not addon:MeetsRequirements({ faction = "Horde", notQuest = 34378, mapArtID = { 17, 18 } }, horde),
-    "a phase-gated edge stays closed even when its other requirements are met")
+-- The old `mapArtID` gate is not a requirement any more: the generator turns it into the edge's `inPhase`.
+do
+    local gated = 0
+    for _, edge in ipairs(addon.Edges) do
+        check(not (edge.requirements and edge.requirements.mapArtID), "no edge keeps a mapArtID requirement")
+        if edge.inPhase then gated = gated + 1 end
+    end
+    check(gated == 18, "18 edges are gated on a phase: " .. gated)
+end
 
 -- Abilities (tools/gen_modern_abilities.py): a real converted Mage teleport seeds the
 -- search from anywhere, exactly like Forever's own Moonglade teleport does.
@@ -339,41 +341,90 @@ check(addon.WALK_SPEED == 7 and math.abs(addon.FLY_SPEED - 59.5) < 1e-9, "flying
 check(math.abs(addon:GetGroundSpeed(addon.World:GetContainerForMap(84), speedCtx) - 14) < 1e-9, "mounted on the street: 14 yards a second")
 check(math.abs(addon:GetGroundSpeed(addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM"), speedCtx) - 7) < 1e-9, "on foot indoors: 7")
 
--- Phase-split zones (a container with `_art` in its path: Zidormi's past and present) are not part of the fly mesh:
--- no fly step leaves or reaches one (finding 3, docs/REVIEW-2026-09-24.md; temporary until containers carry a
--- phaseGroup). Checked on the shipped Geometry.lua and on the geometry the client would compute itself.
+-- Phases (finding 3): Zidormi's zones are phase groups; the search follows the side the player is on.
 do
-    local function isPhased(id)
-        local c = addon.World:GetNodeContainer(id)
-        return c ~= nil and c.path:find("_art", 1, true) ~= nil
+    local World, PF = addon.World, addon.Pathfinder
+    local function phaseOf(id) return World:GetPhase(World:GetNodeContainer(id)) end
+    local g, s = phaseOf("DARKSHORE_ZIDORMI_PAST")
+    check(g == "darkshore" and s == 67, "Zidormi's past Darkshore is darkshore side 67: " .. tostring(g) .. " " .. tostring(s))
+    g, s = phaseOf("TAXI_27")
+    check(g == "darkshore" and s == 67, "Rut'theran (Teldrassil) is on Darkshore's past side")
+    check(phaseOf("TIRISFAL_ZIDORMI_PAST") == "tirisfal" and phaseOf("TIRISFAL_ZIDORMI_PRESENT") == "tirisfal",
+        "past and present Tirisfal (two maps) are one group")
+    local groups = 0
+    for _ in pairs(World:GetPhaseGroups()) do groups = groups + 1 end
+    check(groups == 7, "seven phase groups, one per Zidormi: " .. groups)
+
+    -- The live side: one map's art decides it; past and present Tirisfal each always show their own art, so unknown.
+    local arts = { [62] = 1176, [17] = 628, [18] = 19, [2070] = 1136 }
+    local live = World:LivePhases(function(id) return arts[id] end)
+    check(live.darkshore == 1176 and live.blasted_lands == 628, "Darkshore and Blasted Lands read as present")
+    check(live.tirisfal == nil and live.uldum == nil, "a group the client can't tell apart stays unknown")
+
+    -- Routes, as an Alliance player standing in Stormwind.
+    local start = { id = "YOU_phase", mapID = 84, x = 0.50, y = 0.60 }
+    local function route(art, goal)
+        local ctx = makeCtx({ faction = "Alliance", mapArt = art })
+        local session = addon.Journey:Build(ctx, start)
+        return PF:FindPath(session.graph, start.id, goal, session.graph.phase), session.graph.phase
     end
-    local function phasedFlyEdges(g)
-        local bad, flies = {}, 0
-        for from, steps in pairs(g.adjacency) do
+    local function uses(r, method)
+        for _, step in ipairs(r and r.steps or {}) do if step.method == method then return true end end
+        return false
+    end
+    local function takes(r, from, to)
+        for _, step in ipairs(r and r.steps or {}) do if step.from == from and step.to == to then return true end end
+        return false
+    end
+    local past, phase = route({ [62] = 67 }, "DARNASSUS")
+    check(phase.darkshore == 67, "the session starts on Darkshore's past side")
+    check(past and not uses(past, "phaseswitch"), "Darnassus with Darkshore in the past: no Zidormi needed")
+    local present = route({ [62] = 1176 }, "DARNASSUS")
+    check(present and uses(present, "phaseswitch"), "Darnassus with Darkshore in the present: through Zidormi")
+    check(not takes(present, "STORMWIND_DARNASSUS_PORTAL", "RUTTHERAN_EXODAR_PORTAL"),
+        "and not by the Rut'theran portal, which only exists in the past")
+    local unknown = route({}, "DARNASSUS")
+    check(unknown and not uses(unknown, "phaseswitch"), "an unknown phase is open: no switch needed")
+
+    -- inPhase on an edge whose ends aren't phased: the Stormwind portal to the Dark Portal goes to Outland in the past.
+    local pastBL = route({ [17] = 18 }, "DARK_PORTAL_OUTLANDS")
+    check(takes(pastBL, "STORMWIND_DARK_PORTAL_BL_NPC", "DARK_PORTAL_OUTLANDS"), "past Blasted Lands: the portal goes to Outland")
+    local presentBL = route({ [17] = 628 }, "DARK_PORTAL_OUTLANDS")
+    check(not takes(presentBL, "STORMWIND_DARK_PORTAL_BL_NPC", "DARK_PORTAL_OUTLANDS"), "present Blasted Lands: it doesn't")
+
+    -- One switch per route at most: two Zidormi conversations would be a second phase state for the whole graph.
+    local twice = false
+    for _, r in ipairs({ past, present, unknown, pastBL, presentBL }) do
+        local n = 0
+        for _, step in ipairs(r and r.steps or {}) do if step.method == "phaseswitch" then n = n + 1 end end
+        if n > 1 then twice = true end
+    end
+    check(not twice, "no route talks to Zidormi twice")
+
+    -- The fly pass never joins two sides of one group, and does reach phased nodes. Checked on the geometry the
+    -- client computes; the shipped Geometry.lua still has none into phased nodes until it is re-dumped.
+    local function sidesJoined(graph)
+        local bad, reach = {}, 0
+        for from, steps in pairs(graph.adjacency) do
             for _, step in ipairs(steps) do
                 if step.method == "fly" then
-                    flies = flies + 1
-                    if isPhased(from) or isPhased(step.to) then bad[#bad + 1] = from .. " -> " .. step.to end
+                    local ga, sa = phaseOf(from)
+                    local gb, sb = phaseOf(step.to)
+                    if gb then reach = reach + 1 end
+                    if ga and ga == gb and sa ~= sb then bad[#bad + 1] = from .. " -> " .. step.to end
                 end
             end
         end
-        return bad, flies
+        return bad, reach
     end
-    check(isPhased("TIRISFAL_ZIDORMI_PAST"), "Zidormi's past Tirisfal is a phase-split container")
-    local allianceCtx = makeCtx({ faction = "Alliance" })
-
-    local bad, flies = phasedFlyEdges(addon.TravelGraph:Build(allianceCtx))
-    check(flies > 0, "the fly mesh exists")
-    check(#bad == 0, "no fly step reaches a phase-split node (shipped geometry): " .. tostring(bad[1]))
-
     local shipped, shippedMeta = addon.Geometry, addon.GeometryMeta
     addon.Geometry, addon.GeometryMeta = nil, nil
-    addon.World:Build()
-    bad, flies = phasedFlyEdges(addon.TravelGraph:Build(allianceCtx))
-    check(flies > 0, "the computed fly mesh exists")
-    check(#bad == 0, "no fly step reaches a phase-split node (computed geometry): " .. tostring(bad[1]))
+    World:Build()
+    local bad, reach = sidesJoined(addon.TravelGraph:Build(makeCtx({ faction = "Alliance" })))
+    check(#bad == 0, "no fly step joins two sides of a phase group: " .. tostring(bad[1]))
+    check(reach > 0, "the computed fly mesh reaches phased nodes")
     addon.Geometry, addon.GeometryMeta = shipped, shippedMeta
-    addon.World:Build()
+    World:Build()
 end
 
 -- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build

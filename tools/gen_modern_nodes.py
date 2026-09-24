@@ -24,9 +24,14 @@ Container-path scheme (docs/DESIGN.md section 2):
   mapID is the only reliable zone proxy available in the source.
 - _art<mapArtID>, when a node carries the old mapArtID marker, keeps time-phase siblings
   that share one mapID from being merged into one container -- that would silently claim
-  they're walkably connected, which is exactly backwards for two states of one zone. This
-  does NOT build the actual phaseGroup/phaseSide/phaseswitch-edge wiring; that needs the
-  specific Zidormi-NPC pairing per zone, done by hand later (see CONVERSION_NOTES.md).
+  they're walkably connected, which is exactly backwards for two states of one zone.
+  Each such container is tagged with its phase (docs/DESIGN.md section 2):
+  { phaseGroup, phaseSide = the art id, phaseMap = the map whose art shows that side }.
+  The groups come from Zidormi herself: `<ZONE>_ZIDORMI_PAST` / `_PRESENT` nodes name the
+  group (<zone> lower-cased) and their map and art define its sides. Any other phase node
+  joins the group whose side has its art id -- Teldrassil's nodes carry Darkshore's past
+  art (67) on their own maps, so they are Darkshore-past, decided by map 62's art (the old
+  data's phaseCheckMapID said the same). An art id no Zidormi node has stops the run.
 - .interior groups every node the old data flagged `interior = true` on that mapID into
   one shared sub-container, walled off from the outdoor part the same way a captured city
   is (TravelGraph.lua's container-based walking pass). KNOWN SIMPLIFICATION: two distinct
@@ -44,6 +49,7 @@ instead of needing a hand-authored override. gen_modern_edges.py applies the sam
 every edge's from/to so the two files stay consistent.
 """
 import pathlib
+import re
 import sys
 from lupa.lua51 import LuaRuntime
 
@@ -259,6 +265,24 @@ def main():
         container_lines.append(f'addon.Containers["{path}"] = {{ indoor = true }} -- {count} interior node(s)')
     for path in manual.INDOOR:
         container_lines.append(f'addon.Containers["{path}"] = {{ indoor = true }} -- hand-marked interior (tools/modern_manual.py)')
+    # Phase groups (see the docstring): art id -> (group, phaseMap) from the Zidormi nodes, then a tag for every
+    # phase-split container.
+    sides = {}
+    for node_id, _group, map_id, art_id in phase_nodes:
+        m = re.match(r"^(.+)_ZIDORMI_(PAST|PRESENT)$", node_id)
+        if m:
+            sides[art_id] = (m.group(1).lower(), map_id)
+    phase_containers = {}
+    for node_id, group_name, map_id, art_id in phase_nodes:
+        if art_id not in sides:
+            raise SystemExit(f"phase node {node_id} (map {map_id}, art {art_id}): no Zidormi node has art {art_id}, "
+                             "so it belongs to no phase group")
+        phase_containers[f"{group_name.lower()}.map{map_id}_art{art_id}"] = (sides[art_id], art_id)
+    container_lines.append("")
+    container_lines.append("-- Phase groups (Zidormi's zones): phaseSide is the side's map art id, phaseMap the map whose art shows it.")
+    for path, ((group, phase_map), art_id) in sorted(phase_containers.items()):
+        container_lines.append(f'addon.Containers["{path}"] = {{ phaseGroup = "{group}", phaseSide = {art_id}, '
+                               f'phaseMap = {phase_map} }}')
     (OUT / "Containers.lua").write_text("\n".join(container_lines) + "\n", encoding="utf-8")
 
     # Known collisions we deliberately resolved, so they don't silently vanish from the report.
@@ -291,12 +315,9 @@ def main():
         "",
         "- **Phase-tagged nodes** (mapArtID present) are kept apart from each other (see the",
         "  `_art<N>` container suffix) so nothing wrongly claims two phase-states of a zone are",
-        f"  walkably joined, but that's as far as this pass goes. {len(phase_nodes)} nodes carry",
-        "  mapArtID; none of them have a phaseGroup/phaseSide tag or a phaseswitch edge yet, so",
-        "  right now they're simply unreachable until both are added by hand, zone by zone",
-        "  (the Fable review findings on the wip/timephased-routing branch of the original addon",
-        "  already worked out several of these zone/mapArtID pairings and are worth reusing",
-        "  rather than re-deriving from scratch).",
+        f"  walkably joined. {len(phase_nodes)} nodes carry mapArtID; their containers are tagged",
+        f"  with {len(set(g for (g, _m) in sides.values()))} phase groups named after the Zidormi",
+        "  nodes (see the script's docstring), and the search follows the player's side.",
     ]
     if phase_nodes:
         notes.append("")

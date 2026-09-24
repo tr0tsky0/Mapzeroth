@@ -37,3 +37,21 @@ addon.Containers["ek_overworld.map2649"] = { indoor = true } -- hand-marked inte
 addon.Containers["deeprun_tram"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 addon.Containers["ek_overworld.map2393.interior"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 addon.Containers["brawlgar_arena"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
+
+-- Phase groups (Zidormi's zones): phaseSide is the side's map art id, phaseMap the map whose art shows it.
+addon.Containers["ek_overworld.map17_art18"] = { phaseGroup = "blasted_lands", phaseSide = 18, phaseMap = 17 }
+addon.Containers["ek_overworld.map17_art628"] = { phaseGroup = "blasted_lands", phaseSide = 628, phaseMap = 17 }
+addon.Containers["ek_overworld.map18_art19"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
+addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", phaseSide = 1136, phaseMap = 2070 }
+addon.Containers["kalimdor_overworld.map1527_art260"] = { phaseGroup = "uldum", phaseSide = 260, phaseMap = 1527 }
+addon.Containers["kalimdor_overworld.map249_art289"] = { phaseGroup = "uldum", phaseSide = 289, phaseMap = 249 }
+addon.Containers["kalimdor_overworld.map62_art1176"] = { phaseGroup = "darkshore", phaseSide = 1176, phaseMap = 62 }
+addon.Containers["kalimdor_overworld.map62_art67"] = { phaseGroup = "darkshore", phaseSide = 67, phaseMap = 62 }
+addon.Containers["kalimdor_overworld.map70_art498"] = { phaseGroup = "dustwallow", phaseSide = 498, phaseMap = 70 }
+addon.Containers["kalimdor_overworld.map70_art75"] = { phaseGroup = "dustwallow", phaseSide = 75, phaseMap = 70 }
+addon.Containers["kalimdor_overworld.map81_art86"] = { phaseGroup = "silithus", phaseSide = 86, phaseMap = 81 }
+addon.Containers["kalimdor_overworld.map81_art962"] = { phaseGroup = "silithus", phaseSide = 962, phaseMap = 81 }
+addon.Containers["pandaria.map1530_art1342"] = { phaseGroup = "vale", phaseSide = 1342, phaseMap = 1530 }
+addon.Containers["pandaria.map390_art402"] = { phaseGroup = "vale", phaseSide = 402, phaseMap = 390 }
+addon.Containers["teldrassil.map57_art67"] = { phaseGroup = "darkshore", phaseSide = 67, phaseMap = 62 }
+addon.Containers["teldrassil.map89_art67"] = { phaseGroup = "darkshore", phaseSide = 67, phaseMap = 62 }

@@ -116,14 +116,24 @@ function addon:ValidateData()
             add("error", ("edge %d (%s -> %s): unknown holiday '%s'"):format(
                 i, tostring(edge.from), tostring(edge.to), tostring(holiday)))
         end
-        -- A phase switch between containers with no phase group changes nothing the search can see. (One that
-        -- carries a phase gate, which nothing satisfies yet, is closed off, so it isn't a live edge to worry about.)
+        -- A phase switch between containers with no phase group changes nothing the search can see.
         if edge.method == "phaseswitch" and World:GetNode(edge.from) and World:GetNode(edge.to)
-                and not (edge.requirements and edge.requirements.mapArtID)
                 and not World:GetPhase(World:GetNodeContainer(edge.from))
                 and not World:GetPhase(World:GetNodeContainer(edge.to)) then
             add("warn", ("edge %d (%s -> %s): phaseswitch between containers with no phaseGroup"):format(
                 i, tostring(edge.from), tostring(edge.to)))
+        end
+        -- A phase an edge names must be a side of a group the containers define.
+        local groups = World:GetPhaseGroups()
+        if edge.inPhase and not (groups[edge.inPhase[1]] and groups[edge.inPhase[1]][edge.inPhase[2]] ~= nil) then
+            add("error", ("edge %d (%s -> %s): inPhase names no phase side (%s %s)"):format(
+                i, tostring(edge.from), tostring(edge.to), tostring(edge.inPhase[1]), tostring(edge.inPhase[2])))
+        end
+        for _, group in ipairs(edge.overridesPhase or {}) do
+            if not groups[group] then
+                add("error", ("edge %d (%s -> %s): overridesPhase names no phase group '%s'"):format(
+                    i, tostring(edge.from), tostring(edge.to), tostring(group)))
+            end
         end
         -- A walk edge without a cost is a tunnel: the engine derives its cost
         -- from the distance between its ends.
