@@ -97,6 +97,8 @@ function addon:GetPlayerContext()
         hearthNode = addon:GetBoundInnNode(),
         questCompleted = isQuestCompleted,
         holidayActive = isHolidayActive,
+        isEquippable = function(itemID) return IsEquippableItem ~= nil and IsEquippableItem(itemID) and true or false end,
+        isEquipped = function(itemID) return IsEquippedItem ~= nil and IsEquippedItem(itemID) and true or false end,
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
         -- Can they fly to this point? Found (true), or not yet known either way and the setting says to assume so;
         -- never one a flight master's window said isn't found. Routing uses this; flightNodeFound is the raw fact.
@@ -132,10 +134,24 @@ function addon:GetKnownTeleports(ctx)
         return not ability.itemID or not ctx.itemCooldownRemaining
             or (ctx.itemCooldownRemaining(ability.itemID) or 0) <= 0
     end
+    -- An equippable item that isn't worn is put on first (its own step, priced at its equip cooldown), then used.
+    local function equipSeconds(ability)
+        if not ability.itemID or ability.toy then return nil end
+        if not (ctx.isEquippable and ctx.isEquippable(ability.itemID)) then return nil end
+        if ctx.isEquipped and ctx.isEquipped(ability.itemID) then return nil end
+        return ability.equipCooldown or addon.DEFAULT_EQUIP_SECONDS or 0
+    end
     local function add(ability, to)
+        local wait = equipSeconds(ability)
+        local source = ability
+        if wait then
+            source = {}
+            for k, v in pairs(ability) do source[k] = v end
+            source.equipSeconds = wait                       -- the route's steps read this to make a step of it
+        end
         known[#known + 1] = {
-            to = to, cost = ability.cost or 0, method = ability.method or "teleport",
-            loadingScreens = ability.loadingScreens, ability = ability,
+            to = to, cost = (ability.cost or 0) + (wait or 0), method = ability.method or "teleport",
+            loadingScreens = ability.loadingScreens, ability = source,
         }
     end
     local function addAll(ability, to)

@@ -153,7 +153,7 @@ addon.Abilities.Items = {
     { itemID = 40586, to = "DALARAN_NORTHREND", cost = 10, cooldown = 1800 },
     { itemID = 144392, to = "BRAWLGAR_ARENA", cost = 10, cooldown = 3600 },
     { itemID = 202046, to = "TORTOLLAN_BASE_CAMP", cost = 10, cooldown = 3600 },
-    { itemID = 32757, to = "BLACK_TEMPLE", cost = 40, cooldown = 900 },
+    { itemID = 32757, to = "BLACK_TEMPLE", cost = 10, cooldown = 900, equipCooldown = 30 },
     { itemID = 18986, to = "GADGETZAN_TRANSPORTER", cost = 10, cooldown = 14400, toy = true },
     { itemID = 144391, to = "BIZMOS_BRAWLPUB", cost = 10, cooldown = 3600 },
     { itemID = 63207, to = "ORGRIMMAR_PORTAL_ROOM_UPPER", cost = 10, cooldown = 14400 },

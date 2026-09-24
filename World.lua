@@ -76,13 +76,18 @@ function World:Build()
     end
 
     -- A city map sits inside its zone's container, so a map can be looked up by the
-    -- container most of its nodes are in (ties go to the earlier path, to stay stable).
+    -- container most of its nodes are in (ties go to the earlier path, to stay stable). A place on a map
+    -- (the player, a waypoint) is out in the open unless the map has nothing but interiors, so a container
+    -- that isn't indoor wins over an indoor one whatever the counts: Stormwind's portal rooms outnumber its
+    -- streets, and a waypoint in the Trade District was being placed inside them.
     for mapID, counts in pairs(mapCounts) do
-        local best
+        local best, bestOutdoor
         for c, n in pairs(counts) do
-            if not best or n > counts[best] or (n == counts[best] and c.path < best.path) then best = c end
+            local function better(current) return not current or n > counts[current] or (n == counts[current] and c.path < current.path) end
+            if better(best) then best = c end
+            if not World:GetFlag(c, "indoor") and better(bestOutdoor) then bestOutdoor = c end
         end
-        mapContainer[mapID] = best
+        mapContainer[mapID] = bestOutdoor or best
     end
 end
 

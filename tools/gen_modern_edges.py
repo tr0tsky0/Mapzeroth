@@ -35,6 +35,7 @@ from lupa.lua51 import LuaRuntime
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import modern_manual as manual
+import conversion_notes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\Data\Mapzeroth_Data_Edges.lua")
@@ -248,14 +249,9 @@ def main():
         for key, count in sorted(stray_fields.items()):
             notes.append(f"  - `{key}` ({count})")
 
-    # Idempotent: drop this script's own section from a prior run before appending the
-    # fresh one, so re-running it alone doesn't pile up duplicate sections.
-    notes_path = OUT / "CONVERSION_NOTES.md"
-    heading = "## Edge conversion (tools/gen_modern_edges.py)"
-    existing = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
-    if heading in existing:
-        existing = existing[:existing.index(heading)].rstrip("\n") + "\n"
-    notes_path.write_text(existing + "\n".join(notes) + "\n", encoding="utf-8")
+    # Replaces only this script's own section (conversion_notes.py); everything else in the file stays.
+    conversion_notes.write_section(OUT / "CONVERSION_NOTES.md",
+                                   "## Edge conversion (tools/gen_modern_edges.py)", notes)
 
     print(f"wrote {total} edges to {OUT / 'Edges.lua'}")
     print(f"{len(dangling)} dangling, {phase_gated} phase-gated (inert), "

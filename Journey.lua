@@ -102,6 +102,10 @@ end
 local ABILITY_METHODS = { teleport = true, racial = true }
 
 local function stepText(method, name, via, source)
+    if method == "equip" then
+        local label = abilityName(source)
+        return L["STEP_EQUIP_ITEM"]:format(label or name)
+    end
     if via and #via > 0 then
         return L["STEP_TAXI_VIA"]:format(name, table.concat(via, ", "))
     end
@@ -156,9 +160,19 @@ local function readableSteps(result, session)
             end
             add(step.from)
             for _, part in ipairs(step.parts or {}) do add(part.to) end
+            -- Using an item that must be worn first is two steps: put it on (priced at its equip cooldown), then use it.
+            local seconds = step.cost
+            local wait = step.source and step.source.equipSeconds
+            if wait then
+                steps[#steps + 1] = {
+                    method = "equip", nodeID = step.from, fromID = step.from, source = step.source,
+                    seconds = wait, name = name, path = {}, text = stepText("equip", name, nil, step.source),
+                }
+                seconds = step.cost - wait
+            end
             steps[#steps + 1] = {
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
-                seconds = step.cost, name = name, via = via, path = path,
+                seconds = seconds, name = name, via = via, path = path,
                 text = (step.method == "portal" and not ownName)
                     and L["STEP_PORTAL_TO"]:format(name) or stepText(step.method, name, via, step.source),
                 approx = step.method == "walk",     -- a walk is an estimate

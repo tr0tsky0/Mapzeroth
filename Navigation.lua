@@ -15,6 +15,8 @@ local addonName, addon = ...
 --              point, then a bar from how much of the way to the far dock is covered (or from
 --              elapsed time when positions aren't readable at sea), done on arrival;
 --   ability    (hearthstone, teleport) a button to use it; done when the player arrives;
+--   equip      the step before using an item that has to be worn: a button to put it on; done once
+--              it is worn (sample.equipped(itemID));
 --   portal     walk into it; done when the player arrives.
 -- A step is done when the player is within a small radius of its destination (a landing or a
 -- ship's arrival counts too; a teleport or portal also counts the moment the player is suddenly
@@ -34,7 +36,7 @@ local NOTICE_TIME = 8        -- seconds a note ("Route updated") stays up
 local KINDS = {
     walk = "walk", transition = "walk", taxi = "flight",
     ship = "transport", zeppelin = "transport", tram = "transport",
-    teleport = "ability", hearthstone = "ability", portal = "portal",
+    teleport = "ability", hearthstone = "ability", portal = "portal", equip = "ability",
 }
 
 local function kindOf(method)
@@ -116,6 +118,7 @@ local function radiusOf(step)
 end
 
 local function arrived(step, sample)
+    if step.method == "equip" then return false end       -- putting something on isn't going anywhere
     local d = distance(sample, nodeOf(step.nodeID))
     return d ~= nil and d <= radiusOf(step)
 end
@@ -176,6 +179,10 @@ local function completed(step, sample)
             return true
         end
         return false
+    end
+    if step.method == "equip" then
+        -- Done once the item is worn (the sample says: it needs the client).
+        return sample.equipped ~= nil and step.source ~= nil and sample.equipped(step.source.itemID) == true
     end
     if kind == "ability" or kind == "portal" then
         return arrived(step, sample) or active.jumped == true
@@ -359,7 +366,8 @@ end
 -- Where the player is right now, as a sample (needs the client).
 function Navigation:Sample()
     local sample = { now = GetTime(), onTaxi = UnitOnTaxi and UnitOnTaxi("player") or false,
-                     facing = GetPlayerFacing and GetPlayerFacing() or nil }
+                     facing = GetPlayerFacing and GetPlayerFacing() or nil,
+                     equipped = function(itemID) return IsEquippedItem ~= nil and IsEquippedItem(itemID) and true or false end }
     local mapID = C_Map.GetBestMapForUnit("player")
     local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
     if pos then

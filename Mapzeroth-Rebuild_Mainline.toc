@@ -70,6 +70,7 @@ FlightKnowledge.lua
 Trainers.lua
 Relevance.lua
 PlayerAbilities.lua
+Equipment.lua
 MovementSpeed.lua
 EdgeRequirements.lua
 TravelGraph.lua

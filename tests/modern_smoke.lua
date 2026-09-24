@@ -216,3 +216,20 @@ check(assumedPlan and assumedPlan.assumed and #assumedPlan.assumed >= 1, "an unc
 check(addon.Journey:AssumedText(assumedPlan):find("flight master"), "with a line telling the player how to confirm it")
 local blocked = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1186")      -- Spires of Ascension: only via TAXI_2519
 check(blocked == nil, "but a flight a window said isn't found is never taken, however the setting reads")
+
+-- A waypoint on Stormwind's map (the Trade District) is out in the open, not among the portal rooms: a map's
+-- container prefers an outdoor one, though the portal rooms outnumber the streets. Teleport in, walk out of the
+-- Mage Tower, fly to the waypoint -- not one "walk to the waypoint" from the portal room.
+addon.World:Build()
+local streets = addon.World:GetContainerForMap(84)
+check(streets and not addon.World:GetFlag(streets, "indoor"), "Stormwind's map is the outdoor city: " .. tostring(streets and streets.path))
+local waypoint = { id = "WAYPOINT_TEST", mapID = 84, x = 0.58, y = 0.70 }
+local mageCtx = makeCtx({ faction = "Alliance", class = "MAGE", spells = { 3561 } })
+local ironforgeNode = addon.World:GetNode("IRONFORGE")
+local from = { id = "START_IF", mapID = ironforgeNode.mapID, x = ironforgeNode.x, y = ironforgeNode.y }
+local session = addon.Journey:Build(mageCtx, from, { waypoint })
+local trip = addon.Journey:Plan(session, "WAYPOINT_TEST")
+local kinds = {}
+for _, step in ipairs(trip and trip.steps or {}) do kinds[#kinds + 1] = step.method end
+check(trip and kinds[#kinds] == "fly", "the last leg to a waypoint in Stormwind is a flight: " .. table.concat(kinds, ","))
+check(trip and #kinds >= 3 and kinds[1] == "teleport" and kinds[2] == "walk", "teleport, walk out of the tower, then fly: " .. table.concat(kinds, ","))

@@ -41,6 +41,7 @@ addon:RegisterLocale("enUS", {
     PANEL_POPOUT      = "Pop out",
     PANEL_DOCK        = "Dock",
     ROUTE_TOTAL       = "%s in total",
+    NAV_ITEM_READY_IN = "Ready to use in %d s",
     ROUTE_MORE_ABOVE  = "%d more above",
     ROUTE_MORE_BELOW  = "%d more below",
     ROUTE_ALREADY     = "You're already here.",

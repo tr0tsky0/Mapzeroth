@@ -36,6 +36,9 @@ Skipped, not silently dropped -- each is counted and listed in CONVERSION_NOTES.
 import pathlib
 from lupa.lua51 import LuaRuntime
 
+import modern_manual as manual
+import conversion_notes
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\PlayerAbilities.lua")
 OUT = ROOT / "Data" / "Modern" / "Abilities.lua"
@@ -170,13 +173,16 @@ def main():
             parts.append('toList = { ' + ", ".join(f'"{d}"' for d in entry["toList"]) + ' }')
         elif "to" in entry:
             parts.append(f'to = "{entry["to"]}"')
-        parts.append(f'cost = {int(entry["cost"])}')
+        cost = manual.ITEM_COSTS.get(entry.get("itemID"), entry["cost"])
+        parts.append(f'cost = {int(cost)}')
         if entry.get("cooldown"):
             parts.append(f'cooldown = {int(entry["cooldown"])}')
         if entry.get("faction"):
             parts.append(f'faction = "{entry["faction"]}"')
         if entry.get("toy"):
             parts.append("toy = true")
+        if entry.get("itemID") in manual.EQUIP_COOLDOWNS:
+            parts.append(f'equipCooldown = {int(manual.EQUIP_COOLDOWNS[entry["itemID"]])}')
         return "    { " + ", ".join(parts) + " },"
 
     lines = [
@@ -225,13 +231,8 @@ def main():
     if not (skipped_random or skipped_phase or dangling):
         notes.append("- Nothing skipped or dangling.")
 
-    # Idempotent: drop this script's own section from a prior run before appending the
-    # fresh one, so re-running it alone doesn't pile up duplicate sections.
-    heading = "## Ability conversion (tools/gen_modern_abilities.py)"
-    existing = NOTES.read_text(encoding="utf-8") if NOTES.exists() else ""
-    if heading in existing:
-        existing = existing[:existing.index(heading)].rstrip("\n") + "\n"
-    NOTES.write_text(existing + "\n".join(notes) + "\n", encoding="utf-8")
+    # Replaces only this script's own section (conversion_notes.py); everything else in the file stays.
+    conversion_notes.write_section(NOTES, "## Ability conversion (tools/gen_modern_abilities.py)", notes)
 
     print(f"wrote {len(teleports)} Teleports, {len(hearthstones)} Hearthstones, {len(items)} Items to {OUT}")
     print(f"{len(skipped_random)} skipped (isRandom), {len(skipped_phase)} skipped (phase-gated), "

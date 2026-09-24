@@ -45,6 +45,9 @@ function makeCtx(overrides)
     for _, id in ipairs(overrides.spells or {}) do known[id] = true end
     for _, id in ipairs(overrides.items or {}) do items[id] = true end
     for _, id in ipairs(overrides.toys or {}) do toys[id] = true end
+    local equippable, equipped = {}, {}
+    for _, id in ipairs(overrides.equippable or {}) do equippable[id] = true end
+    for _, id in ipairs(overrides.equipped or {}) do equipped[id] = true end
     return {
         faction = overrides.faction or "Alliance",
         class = overrides.class or "MAGE",
@@ -53,6 +56,8 @@ function makeCtx(overrides)
         knowsSpell = function(id) return known[id] or false end,
         hasItem = function(id) return items[id] or false end,
         hasToy = function(id) return toys[id] or false end,
+        isEquippable = function(id) return equippable[id] or false end,
+        isEquipped = function(id) return equipped[id] or false end,
         cooldownRemaining = function(id) return (overrides.cooldowns or {})[id] or 0 end,
         itemCooldownRemaining = function(id) return (overrides.itemCooldowns or {})[id] or 0 end,
         hearthNode = overrides.hearthNode,

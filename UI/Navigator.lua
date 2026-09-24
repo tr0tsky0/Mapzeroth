@@ -92,6 +92,10 @@ local function build()
     ui.use = Theme:Button(frame, "", INNER, 26, true, "SecureActionButtonTemplate")
     ui.use:SetPoint("BOTTOMLEFT", PAD, 10)
     ui.use:RegisterForClicks("AnyUp", "AnyDown")
+    -- For an "Equip" step the button is not secure (equipping isn't protected): after the click, put the item on.
+    ui.use:SetScript("PostClick", function(self)
+        if self.equipItem then addon.Equipment:Equip(self.equipItem) end
+    end)
 
     Navigator:ApplyScale()
 end
@@ -108,6 +112,15 @@ local function configureUse(step)
 
     local source = step.source or {}
     local label = step.text
+    ui.use.equipItem = nil
+    if step.method == "equip" then
+        ui.use:SetAttribute("type", nil)
+        ui.use:SetAttribute("item", nil)
+        ui.use:SetAttribute("spell", nil)
+        ui.use.equipItem = source.itemID
+        ui.use.label:SetText(label)
+        return
+    end
     if source.itemID then
         ui.use:SetAttribute("type", "item")
         ui.use:SetAttribute("item", "item:" .. source.itemID)
@@ -150,6 +163,7 @@ function Navigator:Render(model)
         self:Replan(model.entry)
         return
     end
+    addon.Equipment:Sync(model)             -- put back what an equip step replaced, once the trip is past using it
     if not model then
         ui.frame:Hide()
         addon.Panel:OnTripUpdate(nil)
@@ -201,6 +215,10 @@ function Navigator:Render(model)
         showBar = model.phase == "underway"
     elseif model.kind == "ability" then
         showUse = true
+        -- An item just put on has a cooldown before it can be used: say how long is left.
+        local itemID = model.step.source and model.step.source.itemID
+        local wait = itemID and model.step.method ~= "equip" and addon.Equipment:CooldownLeft(itemID) or 0
+        if wait > 0.5 then status = L["NAV_ITEM_READY_IN"]:format(math.ceil(wait)) end
     elseif model.kind == "portal" then
         status = L["NAV_PORTAL"]
     end
@@ -244,6 +262,7 @@ end
 -- Stop following the trip and close the window.
 function Navigator:Stop()
     Navigation:Stop()
+    addon.Equipment:Sync(nil)
     if addon.RouteLines then addon.RouteLines:Follow(nil) end
     if addon.MinimapLines then addon.MinimapLines:Follow(nil) end
     self:Hide()

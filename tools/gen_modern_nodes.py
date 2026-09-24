@@ -49,6 +49,7 @@ from lupa.lua51 import LuaRuntime
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import modern_manual as manual
+import conversion_notes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\Data")
@@ -352,14 +353,15 @@ def main():
         "  zone container, not threaded per-node through the search.",
         "- Cross-file id collisions: " + (str(len(dupes_seen)) + " found." if dupes_seen else "none found."),
     ]
-    for node_id, kept, dropped in dupes_seen:
+    for node_id, kept, dropped in sorted(dupes_seen, key=str):      # a fixed order: a rerun changes nothing
         notes.append(f"  - `{node_id}`: kept {kept}, dropped {dropped}")
     notes.append(
         "- NO_FLY_MAPS entries with no surviving node to hang a container override off: "
         + (", ".join(f"{mapid} ({comment})" for mapid, comment in no_fly_unmatched) if no_fly_unmatched else "none.")
     )
 
-    (OUT / "CONVERSION_NOTES.md").write_text("\n".join(notes) + "\n", encoding="utf-8")
+    # Only the top of the file is ours: the edge and ability generators' sections are kept (conversion_notes.py).
+    conversion_notes.write_head(OUT / "CONVERSION_NOTES.md", "\n".join(notes) + "\n")
 
     print(f"wrote {total_written} nodes across {len(FILES)} files to {OUT}")
     print(f"{len(dupes_seen)} id collision(s), {len(phase_nodes)} phase-tagged node(s), "
