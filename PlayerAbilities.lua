@@ -54,6 +54,11 @@ local function itemCooldownRemaining(itemID)
     return math.max(0, start + duration - GetTime())
 end
 
+-- The one item-cooldown rule, for the planner and for the navigator's "ready in" text.
+function addon:ItemCooldownRemaining(itemID)
+    return itemCooldownRemaining(itemID)
+end
+
 local function isQuestCompleted(questID)
     return C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted(questID) and true or false
 end

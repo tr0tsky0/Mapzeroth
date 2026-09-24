@@ -111,6 +111,14 @@ function addon:GetFlightOwner(nodeID)
     return flightOwners[nodeID]
 end
 
+-- A node the fly mesh can use: its container exists, allows flying and is outdoors. Returns the container.
+local function isFlyable(node)
+    local World = addon.World
+    local c = World:GetNodeContainer(node.id)
+    if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then return c end
+    return nil
+end
+
 -- The geometry-only part of the graph: walk edges (container-scoped), city-gate joins and fly
 -- edges (continent-wide). None of it depends on the player (ctx) -- only on node positions --
 -- so it doesn't need computing at all client-side, ideally: node/edge data only ever changes
@@ -182,8 +190,8 @@ local function buildStaticGeometry()
     local flyable = {}
     for _, list in pairs(addon.Nodes or {}) do
         for _, node in ipairs(list) do
-            local c = World:GetNodeContainer(node.id)
-            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") then
+            local c = isFlyable(node)
+            if c then
                 local continent = World:GetContinent(c)
                 local key = continent and continent.path
                 if key then
@@ -367,8 +375,7 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
     local flew = false
     if flyable then
         World:ForEachNode(function(node)
-            local c = World:GetNodeContainer(node.id)
-            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(dest) then
+            if isFlyable(node) and insideCity(node) == insideCity(dest) then
                 local dist = TravelGraph.DistanceProvider(node, dest)
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
                     add(node, dist / (addon.FLY_SPEED), "fly")
@@ -414,8 +421,7 @@ function TravelGraph:AddStart(graph, ctx, start)
     if World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor") then
         local flySpeed = addon.FLY_SPEED
         World:ForEachNode(function(node)
-            local c = World:GetNodeContainer(node.id)
-            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(start) then
+            if isFlyable(node) and insideCity(node) == insideCity(start) then
                 local dist = TravelGraph.DistanceProvider(start, node)
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE and dist / flySpeed >= addon.MIN_FLY_SECONDS then
                     list[#list + 1] = {

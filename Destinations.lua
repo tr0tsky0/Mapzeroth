@@ -87,13 +87,9 @@ end
 
 -- The name of the continent a map is on, for telling two cities of one name apart.
 local function continentName(mapID)
-    local guard = 0
-    while mapID and mapID ~= 0 and guard < 10 do
-        local info = C_Map and C_Map.GetMapInfo and C_Map.GetMapInfo(mapID)
-        if not info then return nil end
-        if Enum and Enum.UIMapType and info.mapType == Enum.UIMapType.Continent then return info.name end
-        mapID, guard = info.parentMapID, guard + 1
-    end
+    local continent = addon:GetContinentMapID(mapID)
+    local info = continent and C_Map.GetMapInfo(continent)
+    return info and info.name
 end
 
 -- Modern's cities (addon.CityPlaces): a city is every node on its maps. Two cities the client gives the

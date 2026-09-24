@@ -92,6 +92,11 @@ local function abilityName(source)
     end
 end
 
+-- The client's name for the spell or item an ability source uses (and "spell" / "item"), or nil. Also for the navigator.
+function addon:GetAbilityLabel(source)
+    return abilityName(source)
+end
+
 -- Steps that are the player using something of their own: "Cast Path of the Devoted Magistry",
 -- "Use Personal Key to the Arcantina", named for the spell or item rather than for where it lands.
 local ABILITY_METHODS = { teleport = true }

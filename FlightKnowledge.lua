@@ -184,13 +184,7 @@ local function taxiMapID()
         local id = GetTaxiMapID()
         if id then return id end
     end
-    local mapID = C_Map.GetBestMapForUnit("player")
-    while mapID do
-        local info = C_Map.GetMapInfo(mapID)
-        if not info then return nil end
-        if info.mapType == 2 then return mapID end     -- Enum.UIMapType.Continent
-        mapID = info.parentMapID
-    end
+    return addon:GetContinentMapID(C_Map.GetBestMapForUnit("player"))
 end
 
 -- The flight points a chosen flight lands at, in order, the last being where it ends, as node ids: the

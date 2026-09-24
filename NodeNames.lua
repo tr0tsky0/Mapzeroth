@@ -26,13 +26,16 @@ function addon:GetZoneName(mapID)
     return zoneName(mapID)
 end
 
-local function continentOf(mapID)
-    local id = mapID
-    while id and id ~= 0 do
-        local info = C_Map.GetMapInfo(id)
+-- The map id of the continent a map is on (the map itself if it is one), or nil when the client
+-- doesn't say. The one place that walks up to the continent.
+function addon:GetContinentMapID(mapID)
+    if not (Enum and Enum.UIMapType and C_Map and C_Map.GetMapInfo) then return nil end
+    local guard = 0
+    while mapID and mapID ~= 0 and guard < 10 do
+        local info = C_Map.GetMapInfo(mapID)
         if not info then return nil end
-        if info.mapType == Enum.UIMapType.Continent then return id end
-        id = info.parentMapID
+        if info.mapType == Enum.UIMapType.Continent then return mapID end
+        mapID, guard = info.parentMapID, guard + 1
     end
 end
 
@@ -55,7 +58,7 @@ local function loadTaxiNames()
     end
     for _, list in pairs(addon.Nodes or {}) do
         for _, node in ipairs(list) do
-            if node.id:find("^TAXI_%d+$") then query(continentOf(node.mapID)) end
+            if node.id:find("^TAXI_%d+$") then query(addon:GetContinentMapID(node.mapID)) end
         end
     end
     -- What the continents didn't return: ask for the node's own map (some maps, like the Vaults of

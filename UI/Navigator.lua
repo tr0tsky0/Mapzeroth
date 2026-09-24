@@ -158,14 +158,12 @@ local function configureUse(step)
         ui.use:SetAttribute("type", "item")
         ui.use:SetAttribute("item", "item:" .. source.itemID)
         ui.use:SetAttribute("spell", nil)
-        local name = GetItemInfo and GetItemInfo(source.itemID)
-        label = name or label
+        label = addon:GetAbilityLabel(source) or label
     elseif source.spellID then
         ui.use:SetAttribute("type", "spell")
         ui.use:SetAttribute("spell", source.spellID)
         ui.use:SetAttribute("item", nil)
-        local info = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(source.spellID)
-        label = info and info.name or label
+        label = addon:GetAbilityLabel(source) or label
     end
     ui.use.label:SetText(label)
 end

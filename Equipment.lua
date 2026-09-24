@@ -92,12 +92,5 @@ end
 
 -- Seconds until the item can be used, 0 when it can be (an item just put on has a cooldown).
 function Equipment:CooldownLeft(itemID)
-    local start, duration
-    if C_Item and C_Item.GetItemCooldown then
-        start, duration = C_Item.GetItemCooldown(itemID)
-    elseif GetItemCooldown then
-        start, duration = GetItemCooldown(itemID)
-    end
-    if not start or not duration or start == 0 or duration == 0 then return 0 end
-    return math.max(0, start + duration - GetTime())
+    return addon:ItemCooldownRemaining(itemID)
 end

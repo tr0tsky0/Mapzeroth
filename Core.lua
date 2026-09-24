@@ -51,7 +51,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
     end
     addon.World:Build()
     addon.FlightKnowledge:Load()
-    addon.Theme:Init("moderndark")
+    addon.Theme:Init(addon.Options:Default("theme"))
     addon.OptionsPanel:Register()
     addon.Panel:Init()
     -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
