@@ -13,6 +13,8 @@ EDGES    connections the old data lacks: { "from", "to", "method", optional "cos
 EQUIP_COOLDOWNS  { itemID: seconds }: how long an equippable teleport item is on cooldown after it is put on, which
          is what its "Equip" step is priced at (the route then "Uses" it). An item not listed gets
          addon.DEFAULT_EQUIP_SECONDS (Constants.lua, 0). Only items that have to be worn matter; the game says which.
+DROP_NODES  old-data nodes to leave out, by id (usually because a NODES entry of the same id replaces them, in
+         the right place).
 DROP_EDGES  old-data edges to leave out (usually because a hand-added route replaces them):
          { "from", "to", "method" }.
 """
@@ -45,11 +47,27 @@ NODES = [
      "mapID": 1670, "x": 0.486, "y": 0.506, "note": "The pad up to the Ring of Transference (main floor)"},
     {"id": "ORIBOS_TRANSFERENCE_RING", "out": "Nodes_Shadowlands.lua", "container": "sl_oribos.map1671",
      "mapID": 1671, "x": 0.486, "y": 0.506, "note": "Where the pad lands on the Ring (flight master floor)"},
+    # Bizmo's Brawlpub, off the Deeprun Tram: the Pugilist's Powerful Punching Ring lands you in it. Its own map
+    # (500), and the tram is another (499); both are interiors of a container of their own. The old data had
+    # BIZMOS_BRAWLPUB on Stormwind's street (the tram's door), so it is dropped and put where the ring lands.
+    {"id": "BIZMOS_BRAWLPUB", "out": "Nodes_EK.lua", "container": "deeprun_tram.map500", "mapID": 500,
+     "x": 0.5111, "y": 0.2731, "note": "Bizmo's Brawlpub: where the Pugilist's ring lands you"},
+    {"id": "BIZMOS_TO_TRAM", "out": "Nodes_EK.lua", "container": "deeprun_tram.map500", "mapID": 500,
+     "x": 0.7221, "y": 0.0324, "note": "Bizmo's Brawlpub: the way out to the tram"},
+    {"id": "TRAM_TO_BIZMOS", "out": "Nodes_EK.lua", "container": "deeprun_tram.map499", "mapID": 499,
+     "x": 0.5249, "y": 0.7033, "note": "Deeprun Tram: the way in to Bizmo's Brawlpub"},
+    {"id": "DEEPRUN_TRAM_TO_STORMWIND", "out": "Nodes_EK.lua", "container": "deeprun_tram.map499", "mapID": 499,
+     "x": 0.4242, "y": 0.1214, "note": "Deeprun Tram: the way up to Stormwind"},
+    {"id": "STORMWIND_TO_DEEPRUN_TRAM", "out": "Nodes_EK.lua", "container": "ek_overworld.map84", "mapID": 84,
+     "x": 0.6937, "y": 0.3138, "note": "Stormwind (Dwarven District): the way down to the Deeprun Tram"},
 ]
+
+# Old-data nodes replaced by a NODES entry of the same id.
+DROP_NODES = ["BIZMOS_BRAWLPUB"]
 
 # The Lycaneum's own map: its portal room is an interior reached on foot from the entrance above,
 # not a point you can fly to.
-INDOOR = ["ek_overworld.map2649"]
+INDOOR = ["ek_overworld.map2649", "deeprun_tram"]        # the tram and Bizmo's Brawlpub are both under it
 
 EDGES = [
     # Running from the entrance to the portal inside, and back out: an explicit edge, since an interior
@@ -61,6 +79,13 @@ EDGES = [
     # the pad, are ordinary walks the engine works out from distance within each floor.
     {"from": "ORIBOS_TRANSFERENCE_PAD", "to": "ORIBOS_TRANSFERENCE_RING", "method": "portal", "cost": 3,
      "loadingScreens": 0},
+    # Bizmo's Brawlpub <-> the Deeprun Tram <-> Stormwind: the doors between three maps, whose distances the
+    # client can't measure, so each is an explicit walk (a few seconds through the door). The walks inside each map
+    # are costed from distance as usual. No loading screen between Bizmo's and the tram; one between the tram and
+    # Stormwind (confirmed in game 2026-09-24).
+    {"from": "BIZMOS_TO_TRAM", "to": "TRAM_TO_BIZMOS", "method": "walk", "cost": 2, "loadingScreens": 0},
+    {"from": "DEEPRUN_TRAM_TO_STORMWIND", "to": "STORMWIND_TO_DEEPRUN_TRAM", "method": "walk", "cost": 2,
+     "loadingScreens": 1},
 ]
 
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above

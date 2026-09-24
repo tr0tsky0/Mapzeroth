@@ -353,6 +353,11 @@ function Navigation:Update(sample)
         -- Did the player just appear somewhere far from where they were a moment ago?
         local jump = active.last and distance(active.last, { id = "JUMP", nocache = true, mapID = sample.mapID, x = sample.x, y = sample.y })
         active.jumped = jump ~= nil and jump > JUMP
+        -- No distance can be read between two maps the client won't put on one plane (a teleport into an interior:
+        -- Bizmo's Brawlpub is its own map), but the map itself changing in one update is as good as a jump.
+        if jump == nil and active.last and active.last.mapID and sample.mapID and sample.mapID ~= active.last.mapID then
+            active.jumped = true
+        end
         while not active.finished and completed(active.steps[active.index], sample) do
             advance(sample)
             active.jumped = false           -- one jump ends one step

@@ -126,6 +126,21 @@ N:Update(at("TAXI_2", 0.2, 0, { now = 0 }))
 m = N:Update(at("TAXI_6", 0.3, 0, { now = 20 }))
 check(m.index == 2, "one jump ends one step, not two: " .. tostring(m.index))
 
+-- A teleport into somewhere the client can't measure from where we were (an interior that is a map of its own): the
+-- map changing is what ends the step, not a distance.
+local realDistance = addon.TravelGraph.DistanceProvider
+addon.TravelGraph.DistanceProvider = function(a, b)
+    if a.mapID ~= b.mapID then return nil end
+    return realDistance(a, b)
+end
+local interior = { steps = { step("teleport", "YOU", "TAXI_4", 10, { itemID = 144391 }), step("walk", "TAXI_4", "TAXI_8", 60) } }
+N:Start(entry, interior)
+m = N:Update(at("TAXI_2", 0, 0, { now = 0 }))
+check(m.index == 1 and m.kind == "ability", "waiting to use the ring")
+m = N:Update({ mapID = 500, x = 0.51, y = 0.27, now = 5, onTaxi = false })         -- landed on a map we can't measure to
+check(m.index == 2, "landing on another map ends the step even with no distance to read: " .. tostring(m.index))
+addon.TravelGraph.DistanceProvider = realDistance
+
 -- Heading: which way to turn to face a node. 0 is straight ahead, positive is left (the game
 -- measures facing counter-clockwise from north), negative is right. TAXI_2 is the target.
 local target = addon.World:GetNode("TAXI_2")

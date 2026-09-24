@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1225, "every converted node made it into the tree (1215 converted + 10 hand-added): " .. total)
+check(total == 1229, "every converted node made it into the tree (1214 converted + 15 hand-added): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -233,3 +233,31 @@ local kinds = {}
 for _, step in ipairs(trip and trip.steps or {}) do kinds[#kinds + 1] = step.method end
 check(trip and kinds[#kinds] == "fly", "the last leg to a waypoint in Stormwind is a flight: " .. table.concat(kinds, ","))
 check(trip and #kinds >= 3 and kinds[1] == "teleport" and kinds[2] == "walk", "teleport, walk out of the tower, then fly: " .. table.concat(kinds, ","))
+
+-- Bizmo's Brawlpub (where the Pugilist's ring lands you) is on a map of its own inside the Deeprun Tram's: walk to the
+-- door, through to the tram (no loading screen), along to the stairs, up to Stormwind (one loading screen), then fly.
+-- Nothing flies out of the interiors, and the ring's destination is where you actually land.
+addon.World:Build()
+local landing = addon.World:GetNode("BIZMOS_BRAWLPUB")
+check(landing and landing.mapID == 500 and addon.World:GetFlag(addon.World:GetNodeContainer("BIZMOS_BRAWLPUB"), "indoor") == true,
+    "Bizmo's Brawlpub is an indoor map of its own")
+local brawlCtx = makeCtx({ faction = "Alliance" })
+local brawlGraph = addon.TravelGraph:Build(brawlCtx)
+local flyOutOfInterior = false
+for _, id in ipairs({ "BIZMOS_BRAWLPUB", "BIZMOS_TO_TRAM", "TRAM_TO_BIZMOS", "DEEPRUN_TRAM_TO_STORMWIND" }) do
+    for _, e in ipairs(brawlGraph.adjacency[id] or {}) do
+        if e.method == "fly" then flyOutOfInterior = true end
+    end
+end
+check(not flyOutOfInterior, "nothing flies out of the tram or the brawlpub")
+local brawlStart = { id = "START_BRAWLPUB", mapID = landing.mapID, x = landing.x, y = landing.y }
+local brawlTrip = addon.Journey:Plan(addon.Journey:Build(brawlCtx, brawlStart, { { id = "WAYPOINT_SW", mapID = 84, x = 0.58, y = 0.70 } }), "WAYPOINT_SW")
+local brawlKinds = {}
+for _, step in ipairs(brawlTrip and brawlTrip.steps or {}) do brawlKinds[#brawlKinds + 1] = step.method end
+check(brawlTrip and brawlKinds[#brawlKinds] == "fly" and brawlKinds[1] == "walk", "out through the tram, then a flight: " .. table.concat(brawlKinds, ","))
+-- Exactly one loading screen on the way (the tram to Stormwind; Bizmo's to the tram has none): the same trip priced
+-- with the loading screens free is one tax cheaper.
+local freeCtx = makeCtx({ faction = "Alliance", loadingScreenTax = 0 })
+local freeTrip = addon.Journey:Plan(addon.Journey:Build(freeCtx, brawlStart, { { id = "WAYPOINT_SW", mapID = 84, x = 0.58, y = 0.70 } }), "WAYPOINT_SW")
+check(math.abs((brawlTrip.cost - freeTrip.cost) - brawlCtx.loadingScreenTax) < 1e-6,
+    "one loading screen on the way out: " .. tostring(brawlTrip.cost - freeTrip.cost))

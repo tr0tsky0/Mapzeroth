@@ -162,6 +162,8 @@ def main():
         for group_name, group in ns.Nodes.items():
             count = 0
             for node_id, node in group.items():
+                if node_id in getattr(manual, "DROP_NODES", []):
+                    continue        # replaced by a hand-added node of the same id (tools/modern_manual.py)
                 if node_id in seen_ids:
                     if node_id in KNOWN_DUPES:
                         continue    # already emitted from the file that owns it

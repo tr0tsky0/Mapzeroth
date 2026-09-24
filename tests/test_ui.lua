@@ -240,6 +240,57 @@ check(model and model.step and model.total == #state.plan.steps, "a tick reads t
 check(w.step._text == model.step.text, "the navigator shows the step: " .. tostring(w.step._text))
 check(w.count._text == "Step 1 of " .. model.total or w.count._text:find("Step"), "and where in the trip: " .. tostring(w.count._text))
 
+-- The trip window: under the panel until the player has moved it, then wherever they left it (kept in the saved
+-- variables). (The mock frames have no geometry, so give the two frames some and record where the window is put.)
+local nav = addon.Navigator.widgets.frame
+local panelFrame = addon.Panel:GetFrame()
+local placed
+nav.SetPoint = function(self, ...) placed = { ... } end
+nav.ClearAllPoints = function() placed = nil end
+nav.GetEffectiveScale = function() return 1 end
+panelFrame.GetLeft = function() return 400 end
+panelFrame.GetBottom = function() return 300 end
+panelFrame.GetEffectiveScale = function() return 1 end
+MapzerothRebuildDB = MapzerothRebuildDB or {}
+MapzerothRebuildDB.navPos = nil
+addon.Navigator:Show()
+check(placed and placed[1] == "TOPLEFT" and placed[2] == UIParent and placed[3] == "BOTTOMLEFT" and placed[4] == 400 and placed[5] == 296,
+    "with nowhere saved it sits just under the panel: " .. tostring(placed and placed[4]) .. ", " .. tostring(placed and placed[5]))
+panelFrame.GetEffectiveScale = function() return 0.5 end
+addon.Navigator:Show()
+check(placed[4] == 200 and placed[5] == 146, "allowing for the panel's scale being different: " .. tostring(placed[4]) .. ", " .. tostring(placed[5]))
+
+nav.GetLeft = function() return 50 end
+nav.GetTop = function() return 700 end
+nav._scripts.OnDragStop(nav)
+check(MapzerothRebuildDB.navPos and MapzerothRebuildDB.navPos.x == 50 and MapzerothRebuildDB.navPos.y == 700, "dragging it saves where it was left")
+panelFrame.GetLeft = function() return 900 end             -- the panel has moved elsewhere since
+addon.Navigator:Show()
+check(placed[4] == 50 and placed[5] == 700, "and from then on it goes there, not under the panel")
+MapzerothRebuildDB.navPos = nil
+
+-- Arrived: the window stays up a few seconds, then clears the trip by itself.
+local clock = 100
+GetTime = function() return clock end
+addon.Navigation:Start({ name = "Somewhere" }, { steps = { { method = "walk", fromID = "YOU", nodeID = "TAXI_4", seconds = 5, text = "Walk" } } })
+addon.Navigator:Show()
+local arrivedModel = { finished = true, total = 1, destination = "Somewhere" }
+addon.Navigator:Render(arrivedModel)
+check(addon.Navigator.widgets.frame._shown and addon.Navigation:IsActive(), "on arrival the window stays up")
+clock = 104
+addon.Navigator:Render(arrivedModel)
+check(addon.Navigator.widgets.frame._shown and addon.Navigation:IsActive(), "still there a moment later")
+clock = 105.5
+addon.Navigator:Render(arrivedModel)
+check(not addon.Navigator.widgets.frame._shown and not addon.Navigation:IsActive(), "and after five seconds it clears itself")
+clock = 200
+addon.Navigation:Start({ name = "Again" }, { steps = { { method = "walk", fromID = "YOU", nodeID = "TAXI_4", seconds = 5, text = "Walk" } } })
+addon.Navigator:Show()
+addon.Navigator:Render(arrivedModel)
+check(addon.Navigator.widgets.frame._shown, "a new trip gets its own five seconds")
+addon.Navigator:Stop()
+GetTime = function() return 100 end
+
 -- An item-use step shows a button set up to use the item (the hearthstone).
 local usePlan = { steps = { { method = "hearthstone", fromID = "YOU", nodeID = "TAXI_4", seconds = 25,
     source = { itemID = 6948 }, text = "Use your Hearthstone" } } }

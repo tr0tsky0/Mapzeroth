@@ -187,7 +187,6 @@ addon.Nodes.EK = {
     { id = "TAXI_645", container = "ek_overworld.map21", mapID = 21, x = 0.5781, y = 0.1034 }, -- Forsaken High Command
     { id = "STORMWIND_DARNASSUS_PORTAL", container = "ek_overworld.map84", mapID = 84, x = 0.2391, y = 0.5602 }, -- Portal to Darnassus
     { id = "THORIUM_POINT_FLIGHT_ALLIANCE", container = "ek_overworld.map32", mapID = 32, x = 0.3770, y = 0.2740 }, -- Thorium Point
-    { id = "BIZMOS_BRAWLPUB", container = "ek_overworld.map84", mapID = 84, x = 0.6943, y = 0.3133 }, -- Bizmo's Brawlpub
     { id = "SANCTUM_OF_LIGHT", container = "ek_overworld.map24", mapID = 24, x = 0.3942, y = 0.6146 }, -- Sanctum of Light
     { id = "TAXI_3190", container = "ek_overworld.map2395", mapID = 2395, x = 0.3103, y = 0.9008 }, -- Silverglade Refuge Flightmaster
     { id = "DARK_PORTAL_BL", container = "ek_overworld.map17", mapID = 17, x = 0.5489, y = 0.5011 }, -- The Dark Portal
@@ -239,4 +238,9 @@ addon.Nodes.EK = {
     { id = "INSTANCE_1292", container = "ek_overworld.map23", mapID = 23, x = 0.4330, y = 0.1900 }, -- Stratholme - Service Entrance (the back door) (hand-added: tools/modern_manual.py)
     { id = "INSTANCE_237", container = "ek_overworld.map51", mapID = 51, x = 0.7010, y = 0.5430 }, -- The Temple of Atal'hakkar (Swamp of Sorrows) (hand-added: tools/modern_manual.py)
     { id = "INSTANCE_1317", container = "ek_overworld.map2509", mapID = 2509, x = 0.6000, y = 0.6640 }, -- The Tidebound Grotto (Coiled Isle): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
+    { id = "BIZMOS_BRAWLPUB", container = "deeprun_tram.map500", mapID = 500, x = 0.5111, y = 0.2731 }, -- Bizmo's Brawlpub: where the Pugilist's ring lands you (hand-added: tools/modern_manual.py)
+    { id = "BIZMOS_TO_TRAM", container = "deeprun_tram.map500", mapID = 500, x = 0.7221, y = 0.0324 }, -- Bizmo's Brawlpub: the way out to the tram (hand-added: tools/modern_manual.py)
+    { id = "TRAM_TO_BIZMOS", container = "deeprun_tram.map499", mapID = 499, x = 0.5249, y = 0.7033 }, -- Deeprun Tram: the way in to Bizmo's Brawlpub (hand-added: tools/modern_manual.py)
+    { id = "DEEPRUN_TRAM_TO_STORMWIND", container = "deeprun_tram.map499", mapID = 499, x = 0.4242, y = 0.1214 }, -- Deeprun Tram: the way up to Stormwind (hand-added: tools/modern_manual.py)
+    { id = "STORMWIND_TO_DEEPRUN_TRAM", container = "ek_overworld.map84", mapID = 84, x = 0.6937, y = 0.3138 }, -- Stormwind (Dwarven District): the way down to the Deeprun Tram (hand-added: tools/modern_manual.py)
 }

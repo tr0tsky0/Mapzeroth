@@ -276,4 +276,6 @@ addon.Edges = {
     { from = "LYCANEUM_ENTRANCE", to = "MAGISTERS_SILVERMOON_PORTAL", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "MAGISTERS_SILVERMOON_PORTAL", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py
+    { from = "BIZMOS_TO_TRAM", to = "TRAM_TO_BIZMOS", method = "walk", cost = 2, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py
+    { from = "DEEPRUN_TRAM_TO_STORMWIND", to = "STORMWIND_TO_DEEPRUN_TRAM", method = "walk", cost = 2, loadingScreens = 1 }, -- hand-added: tools/modern_manual.py
 }

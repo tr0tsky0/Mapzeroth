@@ -19,11 +19,41 @@ local WIDTH, HEIGHT, PAD = 330, 124, 14
 local INNER = WIDTH - 2 * PAD
 local INTERVAL = 0.5            -- seconds between updates
 local ARROW = 44                -- the direction arrow, in pixels
+local LINGER = 5                -- seconds "arrived" stays up before the window closes itself
 
 local ui
 
 function Navigator:ApplyScale()
     if ui then ui.frame:SetScale(addon.Options:Get("scale")) end
+end
+
+-- Where the window sits. Where the player last dragged it, kept in the saved variables; until they have, just
+-- below the panel (the picker), so a trip starts under it instead of somewhere across the screen. The panel's
+-- position is read once, here, not followed: the trip window has to stay put when the map closes.
+function Navigator:SavePosition()
+    local left, top = ui.frame:GetLeft(), ui.frame:GetTop()
+    if not (left and top) then return end
+    MapzerothRebuildDB = MapzerothRebuildDB or {}
+    MapzerothRebuildDB.navPos = { x = left, y = top }
+end
+
+function Navigator:Place()
+    local frame = ui.frame
+    frame:ClearAllPoints()
+    local saved = MapzerothRebuildDB and MapzerothRebuildDB.navPos
+    if saved then
+        frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", saved.x, saved.y)
+        return
+    end
+    local panel = addon.Panel and addon.Panel:GetFrame()
+    local left, bottom = panel and panel:GetLeft(), panel and panel:GetBottom()
+    if left and bottom then
+        -- Screen units differ between the two frames (the panel lives under the map, which can be scaled).
+        local ratio = panel:GetEffectiveScale() / frame:GetEffectiveScale()
+        frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left * ratio, bottom * ratio - 4)
+        return
+    end
+    frame:SetPoint("TOP", UIParent, "TOP", 0, -160)
 end
 
 local function build()
@@ -32,14 +62,17 @@ local function build()
     addon.Options:OnChange(function(key) if key == "scale" then Navigator:ApplyScale() end end)
     local frame = Theme:Panel(UIParent, "MapzerothRebuildNavigator")
     frame:SetSize(WIDTH, HEIGHT)
-    frame:SetPoint("TOP", UIParent, "TOP", 0, -160)
+    frame:SetPoint("TOP", UIParent, "TOP", 0, -160)         -- until Place puts it where it belongs
     frame:SetFrameStrata("HIGH")
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+    frame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        Navigator:SavePosition()
+    end)
     frame:SetScript("OnUpdate", function(_, elapsed)
         ui.timer = (ui.timer or 0) + elapsed
         if ui.timer >= INTERVAL then
@@ -174,6 +207,12 @@ function Navigator:Render(model)
     ui.title:SetText(model.destination or "")
 
     if model.finished then
+        -- Arrived: leave it up for a moment, then clear the trip (the same as pressing Close).
+        ui.arrivedAt = ui.arrivedAt or GetTime()
+        if GetTime() - ui.arrivedAt >= LINGER then
+            self:Stop()
+            return
+        end
         ui.count:SetText("")
         ui.step:SetText(L["NAV_ARRIVED"])
         ui.status:SetText("")
@@ -251,6 +290,8 @@ end
 function Navigator:Show()
     if not ui then build() end
     ui.useStep = nil
+    ui.arrivedAt = nil
+    self:Place()
     ui.frame:Show()
     self:Tick()
 end
@@ -261,6 +302,7 @@ end
 
 -- Stop following the trip and close the window.
 function Navigator:Stop()
+    if ui then ui.arrivedAt = nil end
     Navigation:Stop()
     addon.Equipment:Sync(nil)
     if addon.RouteLines then addon.RouteLines:Follow(nil) end
