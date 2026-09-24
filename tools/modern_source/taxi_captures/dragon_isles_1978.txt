@@ -1,0 +1,49 @@
+-- /mzdump nodes 1978 (Dragon Isles), retail, captured 2026-09-24.
+{ id = "TAXI_2773", container = "TODO", mapID = 2024, x = 0.3710, y = 0.6082 }, -- Azure Archives, Azure Span
+{ id = "TAXI_2774", container = "TODO", mapID = 2024, x = 0.4674, y = 0.3959 }, -- Camp Antonidas, Azure Span
+{ id = "TAXI_2775", container = "TODO", mapID = 2024, x = 0.1325, y = 0.4883 }, -- Iskaara, Azure Span
+{ id = "TAXI_2784", container = "TODO", mapID = 2024, x = 0.6345, y = 0.5866 }, -- Camp Nowhere, Azure Span
+{ id = "TAXI_2786", container = "TODO", mapID = 2024, x = 0.6600, y = 0.2540 }, -- Rhonin's Shield, Azure Span
+{ id = "TAXI_2787", container = "TODO", mapID = 2024, x = 0.4912, y = 0.2271 }, -- Cobalt Assembly, Azure Span
+{ id = "TAXI_2788", container = "TODO", mapID = 2024, x = 0.6534, y = 0.1636 }, -- Theron's Watch, Azure Span
+{ id = "TAXI_2789", container = "TODO", mapID = 2024, x = 0.1914, y = 0.2368 }, -- Three-Falls Lookout, Azure Span
+{ id = "TAXI_2790", container = "TODO", mapID = 2023, x = 0.8522, y = 0.2411 }, -- Timberstep Outpost, Ohn'ahran Plains
+{ id = "TAXI_2792", container = "TODO", mapID = 2023, x = 0.6301, y = 0.4215 }, -- Maruukai, Ohn'ahran Plains
+{ id = "TAXI_2793", container = "TODO", mapID = 2023, x = 0.7167, y = 0.7920 }, -- Forkriver Crossing, Ohn'ahran Plains
+{ id = "TAXI_2794", container = "TODO", mapID = 2023, x = 0.4005, y = 0.6124 }, -- Teerakai, Ohn'ahran Plains
+{ id = "TAXI_2795", container = "TODO", mapID = 2023, x = 0.4653, y = 0.4136 }, -- Broadhoof Outpost, Ohn'ahran Plains
+{ id = "TAXI_2796", container = "TODO", mapID = 2023, x = 0.2980, y = 0.5773 }, -- Shady Sanctuary, Ohn'ahran Plains
+{ id = "TAXI_2797", container = "TODO", mapID = 2023, x = 0.6682, y = 0.2524 }, -- Emberwatch, Ohn'ahran Plains
+{ id = "TAXI_2798", container = "TODO", mapID = 2023, x = 0.8045, y = 0.5795 }, -- Pinewood Post, Ohn'ahran Plains
+{ id = "TAXI_2799", container = "TODO", mapID = 2023, x = 0.8467, y = 0.3696 }, -- Rusza'thar Reach, Ohn'ahran Plains
+{ id = "TAXI_2800", container = "TODO", mapID = 2022, x = 0.1751, y = 0.8871 }, -- Uktulut Outpost, The Waking Shores
+{ id = "TAXI_2801", container = "TODO", mapID = 2022, x = 0.2378, y = 0.8313 }, -- Apex Observatory, The Waking Shores
+{ id = "TAXI_2802", container = "TODO", mapID = 2022, x = 0.2532, y = 0.5705 }, -- Obsidian Throne, The Waking Shores
+{ id = "TAXI_2803", container = "TODO", mapID = 2022, x = 0.4584, y = 0.2753 }, -- Uktulut Pier, The Waking Shores
+{ id = "TAXI_2804", container = "TODO", mapID = 2022, x = 0.5430, y = 0.3693 }, -- Uktulut Backwater, The Waking Shores
+{ id = "TAXI_2805", container = "TODO", mapID = 2022, x = 0.7602, y = 0.3504 }, -- Wingrest Embassy, The Waking Shores
+{ id = "TAXI_2806", container = "TODO", mapID = 2022, x = 0.6503, y = 0.5735 }, -- Life Vault Ruins, The Waking Shores
+{ id = "TAXI_2807", container = "TODO", mapID = 2022, x = 0.5781, y = 0.6803 }, -- Ruby Life Pools, The Waking Shores
+{ id = "TAXI_2808", container = "TODO", mapID = 2022, x = 0.4226, y = 0.6626 }, -- Obsidian Bulwark, The Waking Shores
+{ id = "TAXI_2809", container = "TODO", mapID = 2022, x = 0.4791, y = 0.8332 }, -- Dragonscale Basecamp, The Waking Shores
+{ id = "TAXI_2810", container = "TODO", mapID = 2025, x = 0.3914, y = 0.6246 }, -- Valdrakken, Thaldraszus
+{ id = "TAXI_2811", container = "TODO", mapID = 2025, x = 0.5111, y = 0.6703 }, -- Gelikyr Post, Thaldraszus
+{ id = "TAXI_2812", container = "TODO", mapID = 2025, x = 0.5990, y = 0.8139 }, -- Temporal Conflux, Thaldraszus
+{ id = "TAXI_2813", container = "TODO", mapID = 2025, x = 0.4950, y = 0.4189 }, -- Algeth'era, Thaldraszus
+{ id = "TAXI_2814", container = "TODO", mapID = 2025, x = 0.6212, y = 0.1891 }, -- Veiled Ossuary, Thaldraszus
+{ id = "TAXI_2815", container = "TODO", mapID = 2025, x = 0.3559, y = 0.7889 }, -- Garden Shrine, Thaldraszus
+{ id = "TAXI_2816", container = "TODO", mapID = 2025, x = 0.5756, y = 0.7899 }, -- Shifting Sands, Thaldraszus
+{ id = "TAXI_2817", container = "TODO", mapID = 2022, x = 0.7280, y = 0.5192 }, -- Skytop Observatory, The Waking Shores
+{ id = "TAXI_2818", container = "TODO", mapID = 2025, x = 0.7215, y = 0.5647 }, -- Vault of the Incarnates, Thaldraszus
+{ id = "TAXI_2825", container = "TODO", mapID = 2023, x = 0.5673, y = 0.7655 }, -- Ohn'iri Springs, Ohn'ahran Plains
+{ id = "TAXI_2834", container = "TODO", mapID = 2025, x = 0.5234, y = 0.7853 }, -- Eon's Fringe, Thaldraszus
+{ id = "TAXI_2836", container = "TODO", mapID = 2025, x = 0.6243, y = 0.4047 }, -- Algeth'era, Thaldraszus
+{ id = "TAXI_2837", container = "TODO", mapID = 2024, x = 0.7759, y = 0.3080 }, -- Vakthros, Azure Span
+{ id = "TAXI_2838", container = "TODO", mapID = 2024, x = 0.4834, y = 0.3016 }, -- Cobalt Assembly, Azure Span
+{ id = "TAXI_2839", container = "TODO", mapID = 2023, x = 0.8131, y = 0.3899 }, -- Rusza'thar Reach, Ohn'ahran Plains
+{ id = "TAXI_2840", container = "TODO", mapID = 2023, x = 0.3066, y = 0.5548 }, -- Shady Sanctuary, Ohn'ahran Plains
+{ id = "TAXI_2841", container = "TODO", mapID = 2022, x = 0.7528, y = 0.5701 }, -- Skytop Observatory, The Waking Shores
+{ id = "TAXI_2842", container = "TODO", mapID = 2022, x = 0.4728, y = 0.9030 }, -- Rubyscale Outpost, The Waking Shores
+{ id = "TAXI_2855", container = "TODO", mapID = 2151, x = 0.3574, y = 0.5918 }, -- Morqut Village, The Forbidden Reach
+{ id = "TAXI_2862", container = "TODO", mapID = 2151, x = 0.2905, y = 0.6246 }, -- Morqut Islet, Forbidden Reach
+{ id = "TAXI_2915", container = "TODO", mapID = 2239, x = 0.5015, y = 0.5579 }, -- Bel'ameth, Amirdrassil
