@@ -174,3 +174,23 @@ loaded = true
 local name2, rank2 = addon:GetSpellLabel(3909)
 check(name2 == "Tailoring" and rank2 == "Journeyman", "second look: rank text is there")
 check(#loadRequests == 1, "no further load request once it has loaded")
+
+-- Finding 18: a zone's name is asked of the client once per map, until the name cache is cleared.
+do
+    local asked = 0
+    C_Map.GetMapInfo = function(id) asked = asked + 1; return maps[id] end
+    addon:ClearNodeNameCache()
+    check(addon:GetZoneName(1411) == "Durotar", "the zone name")
+    check(addon:GetZoneName(1411) == "Durotar" and asked == 1, "the second ask does not reach the client: " .. asked)
+    maps[1411].name = "Durotar (renamed)"
+    check(addon:GetZoneName(1411) == "Durotar", "a name that changes underneath is not noticed (until the cache is cleared)")
+    addon:ClearNodeNameCache()
+    check(addon:GetZoneName(1411) == "Durotar (renamed)", "ClearNodeNameCache clears the zone-name memo")
+    check(addon:GetZoneName(99999) == nil and addon:GetZoneName(99999) == nil, "a map the client can't name is not remembered")
+    maps[99999] = { name = "Late Bloomer" }
+    check(addon:GetZoneName(99999) == "Late Bloomer", "so it is named once the client can")
+    check(addon:GetZoneName(nil) == nil, "no map, no name")
+    maps[99999] = nil
+    maps[1411].name = "Durotar"
+    addon:ClearNodeNameCache()
+end

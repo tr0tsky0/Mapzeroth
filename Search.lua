@@ -46,12 +46,26 @@ local function lowerCyrillic(second)
     return "\209" .. string.char(b - 32)
 end
 
-function Search:Fold(text)
-    text = text:gsub("\195([\128-\191])", function(second)
+-- Place names are a finite set and get folded on every map open, so `Prepare` asks for them to be remembered
+-- (`memo`); what the player types is not (it is different every keystroke).
+local foldMemo = {}
+
+function Search:ClearFoldMemo()
+    foldMemo = {}
+end
+
+function Search:Fold(text, memo)
+    if memo then
+        local known = foldMemo[text]
+        if known then return known end
+    end
+    local result = text:gsub("\195([\128-\191])", function(second)
         return folded[second:byte()]
     end)
-    text = text:gsub("\208([\129\144-\175])", lowerCyrillic)
-    return (text:gsub("[A-Z]", lowerASCII))
+    result = result:gsub("\208([\129\144-\175])", lowerCyrillic)
+    result = result:gsub("[A-Z]", lowerASCII)
+    if memo then foldMemo[text] = result end
+    return result
 end
 
 -- Where `token` hits in the folded `text`: 3 at the start, 2 at the start of a later word,
@@ -75,10 +89,10 @@ end
 -- Adds .key (folded name) and .zoneKey (folded zone) to each entry. Call again if names change.
 function Search:Prepare(entries)
     for _, entry in ipairs(entries) do
-        entry.key = self:Fold(entry.name or "")
-        entry.zoneKey = self:Fold(entry.zone or "")
+        entry.key = self:Fold(entry.name or "", true)
+        entry.zoneKey = self:Fold(entry.zone or "", true)
         for _, detail in ipairs(entry.details or {}) do
-            detail.key = self:Fold(detail.text .. " " .. (detail.alias or ""))
+            detail.key = self:Fold(detail.text .. " " .. (detail.alias or ""), true)
         end
     end
     return entries

@@ -16,9 +16,17 @@ local taxiNames    -- nodeID -> client-supplied name, loaded on first use
 local borderPartners
 local taxiSettlements -- TAXI_ nodeID -> "city" or "town" key it belongs to
 
+-- One client call per map, not per node (the picker asks for every node's zone each time the map opens). A map
+-- the client can't name yet is asked again.
+local zoneNames = {}
 local function zoneName(mapID)
-    local info = mapID and C_Map.GetMapInfo(mapID)
-    return info and info.name
+    if not mapID then return nil end
+    local known = zoneNames[mapID]
+    if known then return known end
+    local info = C_Map.GetMapInfo(mapID)
+    local name = info and info.name
+    if name then zoneNames[mapID] = name end
+    return name
 end
 
 -- The client's name for a map (a zone, a city).
@@ -302,6 +310,8 @@ end
 -- Forget resolved names, e.g. after a locale change or in tests.
 function addon:ClearNodeNameCache()
     nameCache, taxiNames, borderPartners, taxiSettlements, portalDestinations = {}, nil, nil, nil, nil
+    zoneNames = {}
+    if addon.Search then addon.Search:ClearFoldMemo() end
 end
 
 -- The journal instance a dungeon or raid node stands for, and the faction that can use it (nil: either).

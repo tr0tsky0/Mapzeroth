@@ -57,3 +57,26 @@ check(trainers[1].relevant and trainers[1].zone == "Ironforge", "the relevant tr
 -- Limits and empties.
 check(#S:Query(entries, "e", 2) == 2, "the limit is honoured")
 check(#S:Query(entries, "   ") == 0 and #S:Query(entries, "") == 0, "an empty query matches nothing")
+
+-- Finding 18: Prepare remembers the folds of names, but folding itself is unchanged and typed text is not remembered.
+do
+    for _, text in ipairs({ "Stormwind", "Forêt d'Ébène", "Sturmwind Über", "Ленинград Ёж", "暴风城", "" }) do
+        check(S:Fold(text, true) == S:Fold(text), "a remembered fold is the plain fold: " .. text)
+        check(S:Fold(text, true) == S:Fold(text, true), "and asking again gives the same: " .. text)
+    end
+    local function keys(list)
+        local out = {}
+        for i, e in ipairs(list) do out[i] = e.key .. "|" .. e.zoneKey .. "|" .. (e.details and e.details[1].key or "") end
+        return table.concat(out, ";")
+    end
+    local function fresh()
+        return { { name = "Forêt d'Ébène", zone = "Sombrebois" }, { name = "Stormwind City" },
+                 { name = "Weapon Master", zone = "Stormwind", details = { { text = "Swords", alias = "Épées" } } } }
+    end
+    local once, twice = S:Prepare(fresh()), S:Prepare(fresh())
+    check(keys(once) == keys(twice), "Prepare on the same entries twice gives the same keys: " .. keys(once))
+    check(once[1].key == "foret d'ebene" and once[3].details[1].key == "swords epees", "and the right ones: " .. keys(once))
+    S:ClearFoldMemo()
+    check(keys(S:Prepare(fresh())) == keys(once), "clearing the memo changes nothing but the cost")
+    check(S:Fold("Stormwind") == "stormwind" and #S:Query(once, "storm") == 2, "queries are as before")
+end
