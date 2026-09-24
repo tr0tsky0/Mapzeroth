@@ -156,7 +156,7 @@ function addon:GetKnownTeleports(ctx)
         if ctx.isEquipped and ctx.isEquipped(ability.itemID) then return nil end
         return ability.equipCooldown or addon.DEFAULT_EQUIP_SECONDS or 0
     end
-    local function add(ability, to)
+    local function add(ability, to, defaultMethod)
         local wait = equipSeconds(ability)
         local source = ability
         if wait then
@@ -165,7 +165,7 @@ function addon:GetKnownTeleports(ctx)
             source.equipSeconds = wait                       -- the route's steps read this to make a step of it
         end
         known[#known + 1] = {
-            to = to, cost = (ability.cost or 0) + (wait or 0), method = ability.method or "teleport",
+            to = to, cost = (ability.cost or 0) + (wait or 0), method = ability.method or defaultMethod or "teleport",
             loadingScreens = ability.loadingScreens, ability = source,
         }
     end
@@ -189,7 +189,7 @@ function addon:GetKnownTeleports(ctx)
         local owns = ability.itemID and ctx.hasItem(ability.itemID)
             or (not ability.itemID and ability.spellID and ctx.knowsSpell(ability.spellID))
         if owns and ctx.hearthNode and spellReady(ability) and itemReady(ability) then
-            add(ability, ctx.hearthNode)
+            add(ability, ctx.hearthNode, "hearthstone")
         end
     end
     for _, ability in ipairs(abilities.Items or {}) do

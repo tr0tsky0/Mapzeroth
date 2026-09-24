@@ -61,3 +61,15 @@ check(addon:GetBind().name == "Goldshire", "and Alice's is untouched")
 check(MapzerothRebuildDB.hearthstones["Alice-Realm"].name == "Goldshire" and MapzerothRebuildDB.hearthstones["Bob-Realm"].name == "Lakeshire",
     "both are saved under their characters")
 MapzerothRebuildDB = nil
+
+-- 6. An entry in the Hearthstones list that doesn't say its method is still a hearthstone (Modern's data doesn't).
+do
+    local realList = addon.Abilities.Hearthstones
+    addon.Abilities.Hearthstones = { { itemID = 6948, cost = 10 } }
+    local known = addon:GetKnownTeleports(makeCtx({ items = { 6948 }, hearthNode = "INN_295" }))
+    check(#known == 1 and known[1].method == "hearthstone", "a Hearthstones entry with no method is a hearthstone: "
+        .. tostring(known[1] and known[1].method))
+    local r2 = route(makeCtx({ faction = "Horde", items = { 6948 }, hearthNode = "INN_295" }), "TAXI_23", "INN_295")
+    check(r2 and r2.steps[1].method == "hearthstone", "and the route's step says so")
+    addon.Abilities.Hearthstones = realList
+end
