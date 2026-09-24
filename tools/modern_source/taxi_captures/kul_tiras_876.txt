@@ -1,0 +1,46 @@
+-- /mzdump nodes 876 (Kul Tiras), retail, captured 2026-09-24.
+{ id = "TAXI_2023", container = "TODO", mapID = 895, x = 0.7708, y = 0.8291 }, -- Freehold, Tiragarde Sound
+{ id = "TAXI_2033", container = "TODO", mapID = 896, x = 0.5513, y = 0.3479 }, -- Fallhaven, Drustvar
+{ id = "TAXI_2034", container = "TODO", mapID = 896, x = 0.7105, y = 0.4083 }, -- Hangman's Point, Drustvar
+{ id = "TAXI_2035", container = "TODO", mapID = 896, x = 0.7018, y = 0.6040 }, -- Fletcher's Hollow, Drustvar
+{ id = "TAXI_2037", container = "TODO", mapID = 896, x = 0.6264, y = 0.2389 }, -- Barbthorn Ridge, Drustvar
+{ id = "TAXI_2042", container = "TODO", mapID = 895, x = 0.5771, y = 0.6155 }, -- Vigil Hill, Tiragarde Sound
+{ id = "TAXI_2060", container = "TODO", mapID = 895, x = 0.6691, y = 0.2313 }, -- Hatherford, Tiragarde Sound
+{ id = "TAXI_2062", container = "TODO", mapID = 895, x = 0.6203, y = 0.1354 }, -- Wolf's Den, Tiragarde Sound
+{ id = "TAXI_2074", container = "TODO", mapID = 895, x = 0.7578, y = 0.4865 }, -- Bridgeport, Tiragarde Sound
+{ id = "TAXI_2077", container = "TODO", mapID = 895, x = 0.8640, y = 0.8091 }, -- Castaway Point, Tiragarde Sound
+{ id = "TAXI_2079", container = "TODO", mapID = 895, x = 0.7663, y = 0.6541 }, -- Kennings Lodge, Tiragarde Sound
+{ id = "TAXI_2083", container = "TODO", mapID = 895, x = 0.7358, y = 0.2342 }, -- Tradewinds Market, Tiragarde Sound
+{ id = "TAXI_2084", container = "TODO", mapID = 895, x = 0.5288, y = 0.2876 }, -- Norwington Estate, Tiragarde Sound
+{ id = "TAXI_2085", container = "TODO", mapID = 942, x = 0.6552, y = 0.4799 }, -- Tidecross, Stormsong Valley
+{ id = "TAXI_2086", container = "TODO", mapID = 942, x = 0.5968, y = 0.7049 }, -- Brennadam, Stormsong Valley
+{ id = "TAXI_2087", container = "TODO", mapID = 895, x = 0.3557, y = 0.2488 }, -- Outrigger Post, Tiragarde Sound
+{ id = "TAXI_2088", container = "TODO", mapID = 942, x = 0.6854, y = 0.6508 }, -- Mildenhall Meadery, Stormsong Valley
+{ id = "TAXI_2089", container = "TODO", mapID = 942, x = 0.4008, y = 0.3727 }, -- Seekers Vista, Stormsong Valley
+{ id = "TAXI_2090", container = "TODO", mapID = 942, x = 0.5273, y = 0.8025 }, -- Hillcrest Pasture, Stormsong Valley
+{ id = "TAXI_2091", container = "TODO", mapID = 942, x = 0.3885, y = 0.6677 }, -- Stonetusk Watch, Stormsong Valley
+{ id = "TAXI_2092", container = "TODO", mapID = 942, x = 0.5427, y = 0.4926 }, -- Diretusk Hollow, Stormsong Valley
+{ id = "TAXI_2093", container = "TODO", mapID = 942, x = 0.7593, y = 0.6410 }, -- Ironmaul Overlook, Stormsong Valley
+{ id = "TAXI_2095", container = "TODO", mapID = 942, x = 0.7794, y = 0.2407 }, -- Shrine of the Storm, Stormsong Valley
+{ id = "TAXI_2096", container = "TODO", mapID = 1169, x = 0.3799, y = 0.9199 }, -- Tol Dagor, Tiragarde Sound
+{ id = "TAXI_2097", container = "TODO", mapID = 942, x = 0.4279, y = 0.5739 }, -- Deadwash, Stormsong Valley
+{ id = "TAXI_2101", container = "TODO", mapID = 942, x = 0.5082, y = 0.7016 }, -- The Amber Waves, Stormsong Valley
+{ id = "TAXI_2102", container = "TODO", mapID = 895, x = 0.4244, y = 0.2298 }, -- Roughneck Camp, Tiragarde Sound
+{ id = "TAXI_2106", container = "TODO", mapID = 896, x = 0.3815, y = 0.5248 }, -- Arom's Stand, Drustvar
+{ id = "TAXI_2107", container = "TODO", mapID = 896, x = 0.3182, y = 0.3044 }, -- Watchman's Rise, Drustvar
+{ id = "TAXI_2108", container = "TODO", mapID = 896, x = 0.2699, y = 0.7233 }, -- Falconhurst, Drustvar
+{ id = "TAXI_2109", container = "TODO", mapID = 896, x = 0.2570, y = 0.1654 }, -- Whitegrove Chapel, Drustvar
+{ id = "TAXI_2127", container = "TODO", mapID = 896, x = 0.1918, y = 0.4331 }, -- Anyport, Drustvar
+{ id = "TAXI_2133", container = "TODO", mapID = 942, x = 0.7806, y = 0.2879 }, -- Shrine of the Storm, Stormsong Valley
+{ id = "TAXI_2137", container = "TODO", mapID = 942, x = 0.3082, y = 0.6655 }, -- Millstone Hamlet, Stormsong Valley
+{ id = "TAXI_2138", container = "TODO", mapID = 942, x = 0.3429, y = 0.4732 }, -- Fort Daelin, Stormsong Valley
+{ id = "TAXI_2139", container = "TODO", mapID = 942, x = 0.6084, y = 0.2720 }, -- Windfall Cavern, Stormsong Valley
+{ id = "TAXI_2273", container = "TODO", mapID = 895, x = 0.3968, y = 0.1848 }, -- Waning Glacier, Tiragarde Sound
+{ id = "TAXI_2274", container = "TODO", mapID = 896, x = 0.6641, y = 0.5923 }, -- Swiftwind Post, Drustvar
+{ id = "TAXI_2275", container = "TODO", mapID = 895, x = 0.4377, y = 0.3423 }, -- Mudfisher Cove, Drustvar
+{ id = "TAXI_2276", container = "TODO", mapID = 1169, x = 0.2325, y = 0.4654 }, -- Tol Dagor, Tiragarde Sound
+{ id = "TAXI_2277", container = "TODO", mapID = 895, x = 0.6894, y = 0.3558 }, -- Proudmoore Keep, Tiragarde Sound
+{ id = "TAXI_2278", container = "TODO", mapID = 895, x = 0.7591, y = 0.3733 }, -- Mariner's Row, Tiragarde Sound
+{ id = "TAXI_2279", container = "TODO", mapID = 895, x = 0.5320, y = 0.6313 }, -- Stonefist Watch, Tiragarde Sound
+{ id = "TAXI_2441", container = "TODO", mapID = 1462, x = 0.7360, y = 0.2562 }, -- Prospectus Bay, Mechagon
+{ id = "TAXI_2442", container = "TODO", mapID = 1462, x = 0.7786, y = 0.4087 }, -- Overspark Expedition Camp, Mechagon

@@ -8,7 +8,7 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Shadowlands = {
-    { id = "TAXI_2636", container = "sl_bastion.map1536", mapID = 1536, x = 0.3564, y = 0.2098 }, -- Terrace of the Collectors
+    { id = "TAXI_2680", container = "sl_bastion.map1536", mapID = 1536, x = 0.3564, y = 0.2098 }, -- Terrace of the Collectors
     { id = "TAXI_2529", container = "sl_bastion.map1533", mapID = 1533, x = 0.5136, y = 0.4663 }, -- Hero's Rest
     { id = "PORTAL_BASTION_POCKET", container = "sl_bastion.map1533", mapID = 1533, x = 0.4200, y = 0.4800 }, -- Temple of Courage
     { id = "BASTION_WORMHOLE", container = "sl_bastion.map1533", mapID = 1533, x = 0.5186, y = 0.8776 }, -- Home of the Kyrian

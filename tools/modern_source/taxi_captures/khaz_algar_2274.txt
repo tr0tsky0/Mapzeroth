@@ -1,0 +1,25 @@
+-- /mzdump nodes 2274 (Khaz Algar), retail, captured 2026-09-24.
+{ id = "TAXI_2928", container = "TODO", mapID = 2248, x = 0.4840, y = 0.4486 }, -- Dornogal, Isle of Dorn
+{ id = "TAXI_2929", container = "TODO", mapID = 2248, x = 0.4107, y = 0.7294 }, -- Freywold Village, Isle of Dorn
+{ id = "TAXI_2931", container = "TODO", mapID = 2248, x = 0.6743, y = 0.4331 }, -- Durgaz Cabin, Isle of Dorn
+{ id = "TAXI_2932", container = "TODO", mapID = 2248, x = 0.5918, y = 0.2850 }, -- Rambleshire, Isle of Dorn
+{ id = "TAXI_2970", container = "TODO", mapID = 2248, x = 0.2975, y = 0.5828 }, -- Tranquil Strand, Isle of Dorn
+{ id = "TAXI_2882", container = "TODO", mapID = 2255, x = 0.5696, y = 0.4672 }, -- Weaver's Lair, Azj-Kahet
+{ id = "TAXI_2889", container = "TODO", mapID = 2255, x = 0.2320, y = 0.5114 }, -- Wildcamp Or'lay, Azj-Kahet
+{ id = "TAXI_2893", container = "TODO", mapID = 2255, x = 0.5011, y = 0.8064 }, -- The Burrows, Azj-Kahet
+{ id = "TAXI_2919", container = "TODO", mapID = 2256, x = 0.4452, y = 0.6745 }, -- Wildcamp Ul'ar, Azj-Kahet
+{ id = "TAXI_2920", container = "TODO", mapID = 2274, x = 0.4766, y = 0.6388 }, -- Faerin's Advance, Azj-Kahet
+{ id = "TAXI_2921", container = "TODO", mapID = 2255, x = 0.7688, y = 0.6444 }, -- Mmarl, Azj-Kahet
+{ id = "TAXI_2922", container = "TODO", mapID = 2215, x = 0.6750, y = 0.4460 }, -- Dunelle's Kindness, Hallowfall
+{ id = "TAXI_2923", container = "TODO", mapID = 2215, x = 0.5286, y = 0.6121 }, -- Lightspark, Hallowfall
+{ id = "TAXI_2924", container = "TODO", mapID = 2215, x = 0.4045, y = 0.7122 }, -- Light's Redoubt, Hallowfall
+{ id = "TAXI_2925", container = "TODO", mapID = 2214, x = 0.6055, y = 0.7814 }, -- Opportunity Point, The Ringing Deeps
+{ id = "TAXI_2926", container = "TODO", mapID = 2214, x = 0.5403, y = 0.6409 }, -- Camp Murroch, The Ringing Deeps
+{ id = "TAXI_2941", container = "TODO", mapID = 2215, x = 0.4150, y = 0.5249 }, -- Mereldar, Hallowfall
+{ id = "TAXI_2942", container = "TODO", mapID = 2215, x = 0.4108, y = 0.3371 }, -- Priory of the Sacred Flame, Hallowfall
+{ id = "TAXI_2943", container = "TODO", mapID = 2215, x = 0.4835, y = 0.4066 }, -- Lorel's Crossing, Hallowfall
+{ id = "TAXI_2944", container = "TODO", mapID = 2215, x = 0.6133, y = 0.3080 }, -- Hillhelm Family Farm, Hallowfall
+{ id = "TAXI_2950", container = "TODO", mapID = 2215, x = 0.7134, y = 0.5646 }, -- The Aegis Wall, Hallowfall
+{ id = "TAXI_2962", container = "TODO", mapID = 2214, x = 0.4277, y = 0.3341 }, -- Gundargaz, The Ringing Deeps
+{ id = "TAXI_2963", container = "TODO", mapID = 2214, x = 0.5728, y = 0.4785 }, -- Shadowvein Point, The Ringing Deeps
+{ id = "TAXI_3000", container = "TODO", mapID = 2214, x = 0.7143, y = 0.8339 }, -- Gutterville, The Ringing Deeps
