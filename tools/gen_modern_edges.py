@@ -16,7 +16,7 @@ same way Forever's own hand-authored walk edges do.
 
 Requirements: `faction`/`class`/`minLevel`/`maxLevel`/`quest`/`holiday` carry over under
 the same key (the new engine's EdgeRequirements.lua already has checkers for all of
-these -- `holiday` needed adding, done alongside this pass, see Constants.lua/
+these -- `holiday` needed adding, done alongside this pass, see Data/Modern/Game.lua/
 PlayerAbilities.lua). `questNotCompleted` is renamed `notQuest` to match the new checker's
 name; nothing else about it changes. `mapArtID` (the old phase-gate marker, an edge-level
 `{mapID, mapArtID}` pair) is carried through UNTRANSLATED under its own key on purpose --
@@ -96,7 +96,7 @@ def known_node_ids():
     return ids
 
 
-# The keys of addon.HOLIDAYS (Constants.lua): what an edge's `holiday` requirement must say.
+# The keys of addon.HOLIDAYS (Data/Modern/Game.lua): what an edge's `holiday` requirement must say.
 HOLIDAY_KEYS = {"love_is_in_the_air", "darkmoon_faire", "feast_of_winters_veil"}
 
 
@@ -108,7 +108,7 @@ def holiday_key(name):
     key = re.sub(r"[^a-z0-9]+", "_", str(name).lower().replace("'", "")).strip("_")
     if key not in HOLIDAY_KEYS:
         raise SystemExit(f"holiday '{name}' -> '{key}' is not an addon.HOLIDAYS key {sorted(HOLIDAY_KEYS)}; "
-                         "add it to Constants.lua and HOLIDAY_KEYS in this script, or fix the source data")
+                         "add it to Data/Modern/Game.lua and HOLIDAY_KEYS in this script, or fix the source data")
     return key
 
 

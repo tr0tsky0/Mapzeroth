@@ -104,3 +104,10 @@ check(not find(function(n) return n.trainer == "HUNTER" and n.npcs and n.npcs[1]
 -- 5. Anything that isn't a trainer is always relevant.
 local inn = find(function(n) return n.kind == "inn" end)
 check(relevant(inn, { class = "MAGE" }), "an inn is not filtered")
+
+-- Finding 8: Forever's own classes, perks and (no) holidays come from Data/Forever/Game.lua.
+local classCount = 0
+for _ in pairs(addon.CLASS_TOKENS) do classCount = classCount + 1 end
+check(classCount == 9 and not addon.CLASS_TOKENS.DEATHKNIGHT, "Forever has its nine classes")
+check(addon.FREQUENT_FLIER and addon.FREQUENT_FLIER.spellID == 1225490, "Forever has the Frequent Flier perk")
+check(addon.HOLIDAYS == nil, "Forever has no holiday table")

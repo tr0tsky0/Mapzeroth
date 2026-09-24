@@ -27,12 +27,6 @@ addon.FLIGHT_CHAIN_SAVING = 0.10
 -- (so an Apprentice can learn Journeyman from an Expert-tier trainer, and then talk to the Artisan).
 addon.PROFESSION_TRAINER_REACH = 2
 
--- The classes a trainer can be for; their names come from the client.
-addon.CLASS_TOKENS = {
-    WARRIOR = true, PALADIN = true, HUNTER = true, ROGUE = true, PRIEST = true,
-    SHAMAN = true, MAGE = true, WARLOCK = true, DRUID = true,
-}
-
 -- Auto-generated `fly` edges (only where a ruleset has flying) connect nodes
 -- within this many yards of each other, continent-wide.
 addon.MAX_AUTO_EDGE_DISTANCE = 3000
@@ -60,22 +54,7 @@ addon.UNMEASURED_WALK_SECONDS = 20
 -- overrides). Anything not listed defaults to 0.
 addon.DEFAULT_LOADING_SCREENS = { portal = 1, teleport = 1, hearthstone = 1, tram = 2 }
 
--- Seasonal-event portals (a `requirements = { holiday = "..." }` edge, Modern only so
--- far): each key is the set of calendar iconTexture ids the event's day entry can show,
--- matched by PlayerAbilities.lua's ctx.holidayActive against C_Calendar's day events.
-addon.HOLIDAYS = {
-    love_is_in_the_air = { 235466, 235467, 235468 },
-    darkmoon_faire = { 235446, 235447, 235448 },
-    feast_of_winters_veil = { 235482, 235484, 235485 },
-}
-
--- Forever's "Frequent Flier" legacy perk: 50% off flight-path fares (already covered for
--- free by FlightKnowledge's empirically-learned FareFactor -- it measures the client's
--- actual shown price against the base fare, so whatever the real stacking rule with
--- reputation is, the observed ratio already reflects it) and a 20% faster flight-path
--- mount, which none of our baked-in flight `cost` seconds account for on their own -- see
--- addon:GetFlightSpeedMultiplier (MovementSpeed.lua).
-addon.FREQUENT_FLIER = { spellID = 1225490, speedBonus = 0.20 }
+-- Flavour-specific tables (classes, holidays, perks) live in Data/<flavour>/Game.lua, not here.
 
 -- Tool-facing API (MapzerothDataTools' /mzr world calls GetRuleset); the addon itself doesn't use
 -- either: each toc loads its own dataset.

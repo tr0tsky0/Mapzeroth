@@ -36,6 +36,7 @@ Data\Forever\Abilities.lua
 Data\Forever\RidingSkills.lua
 Data\Forever\Professions.lua
 Data\Forever\WeaponSkills.lua
+Data\Forever\Game.lua
 Data\Forever\PathFactors.lua
 Data\Forever\NodeNames_enUS.lua
 Data\Forever\TownNames_enUS.lua

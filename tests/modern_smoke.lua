@@ -398,3 +398,13 @@ do
     check(costBefore == costAfter and stepsBefore == stepsAfter,
         "Stormwind portal room -> Ironforge is identical on the second build: " .. stepsBefore .. " vs " .. stepsAfter)
 end
+
+-- Finding 8: each flavour's classes, holidays and perks come from its own Data/<flavour>/Game.lua.
+do
+    local count = 0
+    for _ in pairs(addon.CLASS_TOKENS) do count = count + 1 end
+    check(count == 13 and addon.CLASS_TOKENS.EVOKER and addon.CLASS_TOKENS.DEATHKNIGHT, "Modern has its 13 classes")
+    check(addon.HOLIDAYS and addon.HOLIDAYS.darkmoon_faire, "Modern knows the Darkmoon Faire")
+    check(addon.FREQUENT_FLIER == nil, "Modern has no Frequent Flier perk")
+    check(addon:GetFlightSpeedMultiplier(makeCtx({})) == 1, "and so no flight speed bonus")
+end
