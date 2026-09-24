@@ -66,7 +66,24 @@ function addon:ValidateData()
         end
     end
 
+    -- An edge repeated with the same requirements is a duplicate (a pair that differs only in its
+    -- requirements, one per faction, is not).
+    local function requirementsKey(requirements)
+        local parts = {}
+        for key, value in pairs(requirements or {}) do parts[#parts + 1] = key .. "=" .. tostring(value) end
+        table.sort(parts)
+        return table.concat(parts, ",")
+    end
+    local seenEdges = {}
     for i, edge in ipairs(addon.Edges or {}) do
+        local edgeKey = tostring(edge.from) .. "|" .. tostring(edge.to) .. "|" .. tostring(edge.method)
+            .. "|" .. requirementsKey(edge.requirements)
+        if seenEdges[edgeKey] then
+            add("warn", ("edge %d (%s -> %s, %s): duplicates edge %d"):format(
+                i, tostring(edge.from), tostring(edge.to), tostring(edge.method), seenEdges[edgeKey]))
+        else
+            seenEdges[edgeKey] = i
+        end
         if not World:GetNode(edge.from) then
             add("error", ("edge %d: unknown from node %s"):format(i, tostring(edge.from)))
         end
@@ -81,6 +98,18 @@ function addon:ValidateData()
                 add("error", ("edge %d (%s -> %s): unknown requirement '%s'"):format(
                     i, tostring(edge.from), tostring(edge.to), key))
             end
+        end
+        local holiday = edge.requirements and edge.requirements.holiday
+        if holiday and not (addon.HOLIDAYS and addon.HOLIDAYS[holiday]) then
+            add("error", ("edge %d (%s -> %s): unknown holiday '%s'"):format(
+                i, tostring(edge.from), tostring(edge.to), tostring(holiday)))
+        end
+        -- A phase switch between containers with no phase group changes nothing the search can see.
+        if edge.method == "phaseswitch" and World:GetNode(edge.from) and World:GetNode(edge.to)
+                and not World:GetPhase(World:GetNodeContainer(edge.from))
+                and not World:GetPhase(World:GetNodeContainer(edge.to)) then
+            add("warn", ("edge %d (%s -> %s): phaseswitch between containers with no phaseGroup"):format(
+                i, tostring(edge.from), tostring(edge.to)))
         end
         -- A walk edge without a cost is a tunnel: the engine derives its cost
         -- from the distance between its ends.
@@ -97,6 +126,11 @@ function addon:ValidateData()
             end
             if ability.to and not World:GetNode(ability.to) then
                 add("error", ("ability %s[%d]: unknown destination node %s"):format(category, i, tostring(ability.to)))
+            end
+            for _, dest in ipairs(ability.toList or {}) do
+                if not World:GetNode(dest) then
+                    add("error", ("ability %s[%d]: unknown destination node %s"):format(category, i, tostring(dest)))
+                end
             end
         end
     end
