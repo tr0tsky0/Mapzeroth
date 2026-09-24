@@ -14,3 +14,8 @@ local addonName, addon = ...
 addon.Containers = addon.Containers or {}
 
 addon.Containers[""] = { fly = false, indoor = false }
+
+-- The Wizard's Sanctum is an interior off Stormwind's map: no mounted speed inside.
+addon.Containers["easternkingdoms.elwynn_forest.stormwind_wizards_sanctum"] = { indoor = true }
+-- Blackrock Mountain's instance approaches are indoors too.
+addon.Containers["easternkingdoms.blackrock_mountain"] = { indoor = true }
