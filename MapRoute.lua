@@ -15,14 +15,8 @@ local addonName, addon = ...
 local MapRoute = {}
 addon.MapRoute = MapRoute
 
-local STYLES = {
-    walk = "foot", transition = "foot", taxi = "flight",
-    ship = "boat", zeppelin = "boat", tram = "boat",
-    teleport = "ability", hearthstone = "ability", portal = "ability",
-}
-
 function MapRoute:StyleOf(method)
-    return STYLES[method] or "foot"
+    return addon:Method(method).style
 end
 
 -- Where a point of a route is on the map being shown, as x, y (0 to 1), or nil.

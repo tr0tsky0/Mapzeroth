@@ -14,7 +14,7 @@ local addonName, addon = ...
 --   panel        { backdrop = <SetBackdrop table> }
 --   button       "flat" (a coloured backdrop) or "blizzard" (the classic red button textures)
 --   edit         { backdrop = <SetBackdrop table> }
---   methods      colours by travel method (walk, taxi, ship, zeppelin, tram, portal, ...)
+--   styles       colours by route style (foot, flight, boat, ability; addon.METHODS gives each method its style)
 --   markers      colours by kind of place (place, flight, transport, instance, ...)
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
@@ -47,10 +47,14 @@ function Theme:Color(name)
     return c[1], c[2], c[3], c[4] or 1
 end
 
-function Theme:MethodColor(method)
-    local c = current and current.methods and (current.methods[method] or current.methods.default)
+function Theme:StyleColor(style)
+    local c = current and current.styles and (current.styles[style] or current.styles.default)
     if not c then return self:Color("text") end
     return c[1], c[2], c[3], c[4] or 1
+end
+
+function Theme:MethodColor(method)
+    return self:StyleColor(addon:Method(method).style)
 end
 
 function Theme:MarkerColor(group)

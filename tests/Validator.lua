@@ -101,6 +101,9 @@ function addon:ValidateData()
         end
         if not edge.method then
             add("error", ("edge %d (%s -> %s): missing method"):format(i, tostring(edge.from), tostring(edge.to)))
+        elseif not addon.METHODS[edge.method] then
+            add("error", ("edge %d (%s -> %s): method '%s' is not in addon.METHODS"):format(
+                i, tostring(edge.from), tostring(edge.to), tostring(edge.method)))
         end
         for key in pairs(edge.requirements or {}) do
             if not addon.RequirementCheckers[key] then
@@ -142,6 +145,9 @@ function addon:ValidateData()
     local abilities = addon.Abilities or {}
     for category, list in pairs(abilities) do
         for i, ability in ipairs(list) do
+            if ability.method and not addon.METHODS[ability.method] then
+                add("error", ("ability %s[%d]: method '%s' is not in addon.METHODS"):format(category, i, ability.method))
+            end
             if not ability.spellID and not ability.itemID then
                 add("error", ("ability %s[%d]: needs a spellID or itemID"):format(category, i))
             end

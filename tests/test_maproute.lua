@@ -11,6 +11,7 @@ check(MapRoute:StyleOf("taxi") == "flight", "a flight is a flight")
 check(MapRoute:StyleOf("ship") == "boat" and MapRoute:StyleOf("zeppelin") == "boat" and MapRoute:StyleOf("tram") == "boat", "boats, zeppelins and trams look alike")
 check(MapRoute:StyleOf("teleport") == "ability" and MapRoute:StyleOf("hearthstone") == "ability" and MapRoute:StyleOf("portal") == "ability", "teleports, the hearthstone and portals too")
 check(MapRoute:StyleOf("nonsense") == "foot", "anything else is on foot")
+check(MapRoute:StyleOf("equip") == "ability", "putting an item on is the player's own ability, like using it")
 
 -- Dashes along a path.
 local function line(...) local pts = {} for i = 1, select("#", ...), 2 do pts[#pts + 1] = { x = select(i, ...), y = select(i + 1, ...) } end return pts end

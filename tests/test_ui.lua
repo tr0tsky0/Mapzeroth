@@ -636,3 +636,24 @@ GetPlayerFacing = nil
 addon.Navigator:Tick()
 check(not nw.arrow._shown, "without a facing there is no arrow")
 addon.Navigator:Stop()
+
+-- Finding 13: every method has one entry in addon.METHODS, and every theme colours every style it can give.
+do
+    local styles = {}
+    for method, m in pairs(addon.METHODS) do
+        check(m.kind and m.style and m.screens, "method " .. method .. " has a kind, a style and a screen count")
+        styles[m.style] = true
+    end
+    check(addon:Method("nonsense") == addon.METHODS.walk, "an unknown method is taken as walk")
+    local saved = Theme:Current().id
+    for _, id in ipairs(Theme:List()) do
+        Theme:Set(id)
+        for style in pairs(styles) do
+            check(Theme:Current().styles[style], id .. " has a colour for style " .. style)
+        end
+        local r, g, b = Theme:MethodColor("zeppelin")
+        local r2, g2, b2 = Theme:StyleColor("boat")
+        check(r == r2 and g == g2 and b == b2, id .. ": a zeppelin takes the boat colour")
+    end
+    Theme:Set(saved)
+end

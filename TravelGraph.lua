@@ -59,7 +59,7 @@ end
 local function loadingCost(edge, ctx)
     local screens = edge.loadingScreens
     if screens == nil then
-        screens = addon.DEFAULT_LOADING_SCREENS[edge.method] or 0
+        screens = addon:Method(edge.method).screens
     end
     return screens * ctx.loadingScreenTax
 end
@@ -408,7 +408,7 @@ function TravelGraph:Build(ctx)
     local anywhere = {}
     for _, entry in ipairs(addon:GetKnownTeleports(ctx)) do
         if World:GetNode(entry.to) then
-            local screens = entry.loadingScreens or addon.DEFAULT_LOADING_SCREENS[entry.method] or 0
+            local screens = entry.loadingScreens or addon:Method(entry.method).screens
             anywhere[#anywhere + 1] = {
                 to = entry.to,
                 cost = entry.cost + screens * ctx.loadingScreenTax,

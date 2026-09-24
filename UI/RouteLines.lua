@@ -18,10 +18,10 @@ local MapRoute = addon.MapRoute
 -- Screen pixels. `color` names a method colour of the theme; `on`/`off` make dots or dashes; `halo` is a wide
 -- faint band under the line.
 local LOOK = {
-    foot = { color = "walk", width = 3.2, on = 2, off = 6.5, halo = 12 },
-    flight = { color = "taxi", width = 3, on = 9, off = 7 },
-    boat = { color = "ship", width = 3.5 },
-    ability = { color = "teleport", width = 3.2, on = 2, off = 6.5 },
+    foot = { width = 3.2, on = 2, off = 6.5, halo = 12 },
+    flight = { width = 3, on = 9, off = 7 },
+    boat = { width = 3.5 },
+    ability = { width = 3.2, on = 2, off = 6.5 },
 }
 local BADGE = 18
 local DONE_ALPHA = 0.35            -- steps already done fade
@@ -110,7 +110,7 @@ end
 
 local function drawPiece(frame, piece, unit, W, H)
     local look = LOOK[piece.style] or LOOK.foot
-    local r, g, b = Theme:MethodColor(look.color)
+    local r, g, b = Theme:StyleColor(LOOK[piece.style] and piece.style or "foot")
     local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
     local points = {}
     for i, p in ipairs(piece.points) do points[i] = { x = p.x * W, y = p.y * H } end
@@ -137,7 +137,7 @@ local function drawMarker(frame, marker, unit, W, H)
         badge.fill:SetColorTexture(r, g, b, 1)
         badge.text:SetText("")
     else
-        local r, g, b = Theme:MethodColor(LOOK[marker.style] and LOOK[marker.style].color or "walk")
+        local r, g, b = Theme:StyleColor(LOOK[marker.style] and marker.style or "foot")
         local current = state.current == marker.index
         local done = state.current and marker.index < state.current
         badge.ring:SetColorTexture(r, g, b, done and DONE_ALPHA or 1)

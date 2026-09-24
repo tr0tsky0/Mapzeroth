@@ -50,9 +50,31 @@ addon.DEFAULT_EQUIP_SECONDS = 0
 -- walk exists, so it is kept at a plausible price, not dropped and the places beyond it cut off.
 addon.UNMEASURED_WALK_SECONDS = 20
 
--- Loading screens an edge incurs when it doesn't say (edge.loadingScreens
--- overrides). Anything not listed defaults to 0.
-addon.DEFAULT_LOADING_SCREENS = { portal = 1, teleport = 1, hearthstone = 1, tram = 2 }
+-- Every travel method a step can have, and what each part of the addon makes of it:
+--   kind     how the trip window follows it (Navigation.lua): walk, flight, transport, ability, portal
+--   style    how a route draws it and which theme colour it takes (MapRoute.lua, UI/RouteLines.lua, UI/Themes):
+--            foot, flight, boat, ability
+--   screens  loading screens an edge of this method incurs when it doesn't say (edge.loadingScreens overrides)
+--   ability  the step is the player using a spell or item of their own: its text names that, not where it lands
+-- A method not listed here is taken as walk (addon:Method).
+addon.METHODS = {
+    walk        = { kind = "walk",      style = "foot",    screens = 0 },
+    transition  = { kind = "walk",      style = "foot",    screens = 0 },
+    fly         = { kind = "walk",      style = "foot",    screens = 0 },
+    phaseswitch = { kind = "walk",      style = "foot",    screens = 0 },
+    taxi        = { kind = "flight",    style = "flight",  screens = 0 },
+    ship        = { kind = "transport", style = "boat",    screens = 0 },
+    zeppelin    = { kind = "transport", style = "boat",    screens = 0 },
+    tram        = { kind = "transport", style = "boat",    screens = 2 },
+    teleport    = { kind = "ability",   style = "ability", screens = 1, ability = true },
+    hearthstone = { kind = "ability",   style = "ability", screens = 1 },
+    equip       = { kind = "ability",   style = "ability", screens = 0 },
+    portal      = { kind = "portal",    style = "ability", screens = 1 },
+}
+
+function addon:Method(method)
+    return addon.METHODS[method] or addon.METHODS.walk
+end
 
 -- Flavour-specific tables (classes, holidays, perks) live in Data/<flavour>/Game.lua, not here.
 

@@ -33,14 +33,8 @@ local JUMP = 300             -- yards between two updates that can only be a tel
 local TICKET_WAIT = 15       -- seconds a chosen flight has to start before we forget it was chosen
 local NOTICE_TIME = 8        -- seconds a note ("Route updated") stays up
 
-local KINDS = {
-    walk = "walk", transition = "walk", taxi = "flight",
-    ship = "transport", zeppelin = "transport", tram = "transport",
-    teleport = "ability", hearthstone = "ability", portal = "portal", equip = "ability",
-}
-
 local function kindOf(method)
-    return KINDS[method] or "walk"
+    return addon:Method(method).kind
 end
 
 local active       -- the trip: { entry, plan, steps, index, state, finished, model }

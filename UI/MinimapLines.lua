@@ -27,10 +27,10 @@ local SIZES = {
 
 -- Screen pixels.
 local LOOK = {
-    foot = { color = "walk", width = 2, on = 1.5, off = 4.5 },
-    flight = { color = "taxi", width = 2, on = 6, off = 4 },
-    boat = { color = "ship", width = 2.5 },
-    ability = { color = "teleport", width = 2, on = 1.5, off = 4.5 },
+    foot = { width = 2, on = 1.5, off = 4.5 },
+    flight = { width = 2, on = 6, off = 4 },
+    boat = { width = 2.5 },
+    ability = { width = 2, on = 1.5, off = 4.5 },
 }
 local MARGIN = 3               -- keep the route off the rim
 local INTERVAL = 0.1           -- seconds between redraws
@@ -193,7 +193,7 @@ local function draw(frame)
 
     for _, piece in ipairs(state.pieces) do
         local look = LOOK[piece.style] or LOOK.foot
-        local r, g, b = Theme:MethodColor(look.color)
+        local r, g, b = Theme:StyleColor(LOOK[piece.style] and piece.style or "foot")
         local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
         for _, s in ipairs(piece.segments) do
             local ax, ay = toPixels(s[1], s[2])

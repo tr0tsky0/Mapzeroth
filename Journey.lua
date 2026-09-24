@@ -97,9 +97,8 @@ function addon:GetAbilityLabel(source)
     return abilityName(source)
 end
 
--- Steps that are the player using something of their own: "Cast Path of the Devoted Magistry",
--- "Use Personal Key to the Arcantina", named for the spell or item rather than for where it lands.
-local ABILITY_METHODS = { teleport = true }
+-- Steps that are the player using something of their own (addon.METHODS' `ability`): "Cast Path of the Devoted
+-- Magistry", "Use Personal Key to the Arcantina", named for the spell or item rather than for where it lands.
 
 local function stepText(method, name, via, source)
     if method == "equip" then
@@ -109,7 +108,7 @@ local function stepText(method, name, via, source)
     if via and #via > 0 then
         return L["STEP_TAXI_VIA"]:format(name, table.concat(via, ", "))
     end
-    if ABILITY_METHODS[method] then
+    if addon:Method(method).ability then
         local label, kind = abilityName(source)
         if label and label ~= "" then
             return L[kind == "item" and "STEP_USE_ITEM" or "STEP_CAST"]:format(label)
