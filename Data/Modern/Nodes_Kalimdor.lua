@@ -100,7 +100,6 @@ addon.Nodes.Kalimdor = {
     { id = "INSTANCE_743", container = "kalimdor_overworld.map327", mapID = 327, x = 0.5800, y = 0.1400 }, -- Ruins of Ahn'Qiraj
     { id = "ORGRIMMAR_WAKING_SHORES_ZEP", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5599, y = 0.1310 }, -- Zeppelin to the Waking Shores
     { id = "TAXI_338", container = "kalimdor_overworld.map63", mapID = 63, x = 0.1780, y = 0.2050 }, -- Blackfathom Camp
-    { id = "BRAWLGAR_ARENA", container = "kalimdor_overworld.map85", mapID = 85, x = 0.7055, y = 0.3117 }, -- Brawl'gar Arena
     { id = "NIGHTHAVEN_FLIGHT_HORDE", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4403, y = 0.4538 }, -- Nighthaven Flightmaster
     { id = "TAXI_80", container = "kalimdor_overworld.map10", mapID = 10, x = 0.6810, y = 0.7180 }, -- Ratchet
     { id = "TAXI_565", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5090, y = 0.1750 }, -- Dreamer's Rest
@@ -196,4 +195,7 @@ addon.Nodes.Kalimdor = {
     { id = "ORGRIMMAR_CAVERNS_OF_TIME_PORTAL", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5640, y = 0.9228 }, -- Portal to Caverns of Time
     { id = "ORGRIMMAR_RAZORWIND_SHORES_PORTAL", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5877, y = 0.8953 }, -- Portal to Razorwind Shores
     { id = "INSTANCE_230", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5960, y = 0.4050 }, -- Dire Maul (Feralas): one entrance for all three wings, listed under Capital Gardens (hand-added: tools/modern_manual.py)
+    { id = "BRAWLGAR_ARENA", container = "brawlgar_arena.map503", mapID = 503, x = 0.4222, y = 0.7481 }, -- Brawl'gar Arena: where the Pugilist's ring lands you (hand-added: tools/modern_manual.py)
+    { id = "BRAWLGAR_TO_ORGRIMMAR", container = "brawlgar_arena.map503", mapID = 503, x = 0.5553, y = 0.1426 }, -- Brawl'gar Arena: the way out to Orgrimmar (hand-added: tools/modern_manual.py)
+    { id = "ORGRIMMAR_TO_BRAWLGAR", container = "kalimdor_overworld.map85", mapID = 85, x = 0.7055, y = 0.3103 }, -- Orgrimmar (Valley of Strength): the way in to Brawl'gar Arena (hand-added: tools/modern_manual.py)
 }

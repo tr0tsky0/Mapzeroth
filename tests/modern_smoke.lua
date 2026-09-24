@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1229, "every converted node made it into the tree (1214 converted + 15 hand-added): " .. total)
+check(total == 1233, "every converted node made it into the tree (1213 converted + 20 hand-added): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -261,3 +261,81 @@ local freeCtx = makeCtx({ faction = "Alliance", loadingScreenTax = 0 })
 local freeTrip = addon.Journey:Plan(addon.Journey:Build(freeCtx, brawlStart, { { id = "WAYPOINT_SW", mapID = 84, x = 0.58, y = 0.70 } }), "WAYPOINT_SW")
 check(math.abs((brawlTrip.cost - freeTrip.cost) - brawlCtx.loadingScreenTax) < 1e-6,
     "one loading screen on the way out: " .. tostring(brawlTrip.cost - freeTrip.cost))
+
+-- A portal we have no name for is named for where it leads (the client's name for the map beyond), so the walk
+-- to it reads "Walk to Orgrimmar Portal", not the name of the map it stands in; a room of several portals isn't.
+maps[85] = { name = "Orgrimmar", mapType = 3, parentMapID = 12 }
+maps[2393] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
+addon:ClearNodeNameCache()
+check(addon:GetNodeName("SILVERMOON_ORGRIMMAR_PORTAL") == "Orgrimmar Portal",
+    "a one-way-out portal is named for its destination: " .. addon:GetNodeName("SILVERMOON_ORGRIMMAR_PORTAL"))
+check(addon:HasNodeName("SILVERMOON_ORGRIMMAR_PORTAL") == false, "though that isn't a name of its own, so the portal step still reads 'Take the portal to ...'")
+check(addon:GetNodeName("SILVERMOON_PORTAL_ROOM") == "Silvermoon City", "a portal room with no single destination keeps its map's name: " .. addon:GetNodeName("SILVERMOON_PORTAL_ROOM"))
+
+-- Silvermoon's portal room (Stormwind, Orgrimmar and where their portals arrive) is an interior with one door: in the
+-- open you can fly up to the door, not into the room.
+addon.World:Build()
+local room = addon.World:GetNodeContainer("SILVERMOON_ORGRIMMAR_PORTAL")
+check(room and addon.World:GetFlag(room, "indoor") == true, "the portal room is indoor")
+check(addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM").path == room.path
+    and addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM_EXIT").path == room.path, "with its arrival point and inner door")
+check(not addon.World:GetFlag(addon.World:GetNodeContainer("SILVERMOON_HARANDAR_PORTAL"), "indoor"), "the street's other portals stay outside")
+local roomGraph = addon.TravelGraph:Build(makeCtx({ faction = "Horde" }))
+local flyIntoRoom = false
+for from, list in pairs(roomGraph.adjacency) do
+    for _, e in ipairs(list) do
+        if e.method == "fly" and (addon.World:GetNodeContainer(e.to) == room or addon.World:GetNodeContainer(from) == room) then flyIntoRoom = true end
+    end
+end
+check(not flyIntoRoom, "nothing flies into or out of the portal room")
+local streetStart = { id = "START_SILVERMOON", mapID = 2393, x = 0.60, y = 0.75 }
+local toRoom = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = "Horde" }), streetStart), "SILVERMOON_ORGRIMMAR_PORTAL")
+local roomKinds = {}
+for _, step in ipairs(toRoom and toRoom.steps or {}) do roomKinds[#roomKinds + 1] = step.method end
+check(toRoom and roomKinds[#roomKinds] == "walk", "the last stretch to the portal is on foot, through the door: " .. table.concat(roomKinds, ","))
+
+-- Where the player starts, in the open where flying is allowed: mount up and fly to an outdoor node in range (the mount
+-- takes MOUNT_SECONDS), but only for a flight of at least MIN_FLY_SECONDS; a nearer node is a walk.
+local sw = addon.World:GetNode("STORMWIND_MAGE_TOWER_ENTRANCE")
+local openStart = { id = "START_OPEN", mapID = sw.mapID, x = sw.x, y = sw.y }
+local openGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+addon.TravelGraph:AddStart(openGraph, makeCtx({ faction = "Alliance" }), openStart)
+local flyTo, walkTo = {}, {}
+for _, e in ipairs(openGraph.adjacency["START_OPEN"]) do
+    if e.method == "fly" then flyTo[e.to] = e.cost else walkTo[e.to] = e.cost end
+end
+check(walkTo["STORMWIND_MAGE_TOWER_ENTRANCE"] and not flyTo["STORMWIND_MAGE_TOWER_ENTRANCE"], "standing at a node, it is a walk: no flight of a second or so")
+local far = addon.World:GetNode("TAXI_2")
+local farDistance = addon.TravelGraph.DistanceProvider(openStart, far)
+check(farDistance / addon.FLY_SPEED >= addon.MIN_FLY_SECONDS and flyTo["TAXI_2"] ~= nil, "a node worth flying to is offered as a flight")
+check(math.abs(flyTo["TAXI_2"] - (addon.MOUNT_SECONDS + farDistance / addon.FLY_SPEED)) < 1e-9, "priced at the mount plus the flight: " .. tostring(flyTo["TAXI_2"]))
+check(addon.World:GetContainerForMap(2393) and not addon.World:GetFlag(addon.World:GetContainerForMap(2393), "indoor"), "a position on Silvermoon's map is out on the street")
+
+-- Brawl'gar Arena (the Horde ring's destination) is an interior map of its own off Orgrimmar's street: the ring lands
+-- you where you arrive, and the way out is one door to the street (a loading screen), then a flight.
+addon.World:Build()
+local arena = addon.World:GetNode("BRAWLGAR_ARENA")
+check(arena and arena.mapID == 503 and addon.World:GetFlag(addon.World:GetNodeContainer("BRAWLGAR_ARENA"), "indoor") == true,
+    "Brawl'gar Arena is an indoor map of its own")
+local hordeCtx = makeCtx({ faction = "Horde" })
+local arenaGraph = addon.TravelGraph:Build(hordeCtx)
+local arenaFly = false
+for _, id in ipairs({ "BRAWLGAR_ARENA", "BRAWLGAR_TO_ORGRIMMAR" }) do
+    for _, e in ipairs(arenaGraph.adjacency[id] or {}) do
+        if e.method == "fly" then arenaFly = true end
+    end
+end
+check(not arenaFly, "nothing flies out of the arena")
+local arenaStart = { id = "START_ARENA", mapID = arena.mapID, x = arena.x, y = arena.y }
+local arenaTrip = addon.Journey:Plan(addon.Journey:Build(hordeCtx, arenaStart, { { id = "WAYPOINT_ORG", mapID = 85, x = 0.5, y = 0.6 } }), "WAYPOINT_ORG")
+local arenaKinds = {}
+for _, step in ipairs(arenaTrip and arenaTrip.steps or {}) do arenaKinds[#arenaKinds + 1] = step.method end
+check(arenaTrip and arenaKinds[1] == "walk" and arenaKinds[#arenaKinds] == "fly", "walk out of the arena, then fly: " .. table.concat(arenaKinds, ","))
+
+-- Speeds: a Modern character is taken to ride a ground mount outdoors (+100%: 14 yards a second) and to walk indoors
+-- (7); flying is +750% (skyriding), 59.5 yards a second.
+addon.World:Build()
+local speedCtx = makeCtx({})
+check(addon.WALK_SPEED == 7 and math.abs(addon.FLY_SPEED - 59.5) < 1e-9, "flying is 59.5 yards a second: " .. tostring(addon.FLY_SPEED))
+check(math.abs(addon:GetGroundSpeed(addon.World:GetContainerForMap(84), speedCtx) - 14) < 1e-9, "mounted on the street: 14 yards a second")
+check(math.abs(addon:GetGroundSpeed(addon.World:GetNodeContainer("SILVERMOON_PORTAL_ROOM"), speedCtx) - 7) < 1e-9, "on foot indoors: 7")

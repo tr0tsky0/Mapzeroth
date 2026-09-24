@@ -406,5 +406,25 @@ function TravelGraph:AddStart(graph, ctx, start)
             }
         end
     end
+
+    -- In the open where flying is allowed the player can also mount up and fly to any outdoor node in range, the
+    -- same rule the fly mesh uses; but only for a flight worth the mount (at least MIN_FLY_SECONDS in the air), or
+    -- a short walk would read as "fly".
+    local World = addon.World
+    if World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor") then
+        local flySpeed = addon.FLY_SPEED or 50
+        World:ForEachNode(function(node)
+            local c = World:GetNodeContainer(node.id)
+            if c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor") and insideCity(node) == insideCity(start) then
+                local dist = TravelGraph.DistanceProvider(start, node)
+                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE and dist / flySpeed >= (addon.MIN_FLY_SECONDS or 0) then
+                    list[#list + 1] = {
+                        from = start.id, to = node.id, method = "fly",
+                        cost = (addon.MOUNT_SECONDS or 0) + dist / flySpeed,
+                    }
+                end
+            end
+        end)
+    end
     return true
 end

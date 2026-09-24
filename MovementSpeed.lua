@@ -20,7 +20,8 @@ function addon:GetGroundSpeed(container, ctx)
     local best = 1.0
 
     if not indoor then
-        local riding = bestRidingBonus(ctx)
+        -- Without riding-skill data (Modern has none) the player is taken to have a mount: addon.DEFAULT_MOUNT_BONUS.
+        local riding = bestRidingBonus(ctx) or (not addon.RidingSkills and addon.DEFAULT_MOUNT_BONUS) or nil
         if riding then best = math.max(best, 1.0 + riding) end
     end
 

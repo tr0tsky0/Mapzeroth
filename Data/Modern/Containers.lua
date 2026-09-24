@@ -35,3 +35,5 @@ addon.Containers["ek_overworld.map84.interior"] = { indoor = true } -- 17 interi
 addon.Containers["kalimdor_overworld.map85.interior"] = { indoor = true } -- 17 interior node(s)
 addon.Containers["ek_overworld.map2649"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 addon.Containers["deeprun_tram"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
+addon.Containers["ek_overworld.map2393.interior"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
+addon.Containers["brawlgar_arena"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)

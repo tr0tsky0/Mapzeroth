@@ -17,7 +17,7 @@ addon.Nodes.EK = {
     { id = "TAXI_6", container = "ek_overworld.map87", mapID = 87, x = 0.5570, y = 0.4790 }, -- Flightmaster
     { id = "TAXI_590", container = "ek_overworld.map50", mapID = 50, x = 0.5260, y = 0.6590 }, -- Fort Livingston
     { id = "INSTANCE_76", container = "ek_overworld.map50", mapID = 50, x = 0.6700, y = 0.3200 }, -- Zul'Gurub
-    { id = "SILVERMOON_STORMWIND_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.5275, y = 0.6471 }, -- Portal to Stormwind
+    { id = "SILVERMOON_STORMWIND_PORTAL", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5275, y = 0.6471 }, -- Portal to Stormwind
     { id = "STORMWIND_MAGE_TOWER_ENTRANCE", container = "ek_overworld.map84", mapID = 84, x = 0.4951, y = 0.8666 }, -- Mage Tower
     { id = "TAXI_634", container = "ek_overworld.map15", mapID = 15, x = 0.2220, y = 0.5880 }, -- Dragon's Mouth
     { id = "INSTANCE_64", container = "ek_overworld.map21", mapID = 21, x = 0.4500, y = 0.6800 }, -- Shadowfang Keep
@@ -142,11 +142,11 @@ addon.Nodes.EK = {
     { id = "GILNEAS_DOCK", container = "ek_overworld.map217", mapID = 217, x = 0.6360, y = 0.9560 }, -- Dock
     { id = "TAXI_83", container = "ek_overworld.map2395", mapID = 2395, x = 0.4784, y = 0.6715 }, -- Tranquillien Flightmaster
     { id = "TAXI_660", container = "ek_overworld.map1275", mapID = 1275, x = 0.7488, y = 0.1758 }, -- The Krazzworks
-    { id = "SILVERMOON_PORTAL_ROOM", container = "ek_overworld.map2393", mapID = 2393, x = 0.5274, y = 0.6535 }, -- Portal Room
+    { id = "SILVERMOON_PORTAL_ROOM", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5274, y = 0.6535 }, -- Portal Room
     { id = "TAXI_615", container = "ek_overworld.map49", mapID = 49, x = 0.5380, y = 0.5510 }, -- Camp Everstill
     { id = "MAGISTERS_SILVERMOON_PORTAL", container = "ek_overworld.map2649", mapID = 2649, x = 0.5646, y = 0.1400 }, -- Portal to Silvermoon City
     { id = "TAXI_667", container = "ek_overworld.map25", mapID = 25, x = 0.4886, y = 0.6526 }, -- Ruins of Southshore
-    { id = "SILVERMOON_ORGRIMMAR_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.5225, y = 0.6532 }, -- Portal to Orgrimmar
+    { id = "SILVERMOON_ORGRIMMAR_PORTAL", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5225, y = 0.6532 }, -- Portal to Orgrimmar
     { id = "SILVERMOON_MAGISTERS_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.4798, y = 0.5181 }, -- Portal to Magisters' Terrace
     { id = "SILVERMOON_ARCANTINA_PORTAL", container = "ek_overworld.map2393", mapID = 2393, x = 0.5641, y = 0.7077 }, -- Portal to the Arcantina
     { id = "SILVERMOON_INN", container = "ek_overworld.map2393", mapID = 2393, x = 0.5628, y = 0.7037 }, -- Wayfarer's Rest
@@ -243,4 +243,6 @@ addon.Nodes.EK = {
     { id = "TRAM_TO_BIZMOS", container = "deeprun_tram.map499", mapID = 499, x = 0.5249, y = 0.7033 }, -- Deeprun Tram: the way in to Bizmo's Brawlpub (hand-added: tools/modern_manual.py)
     { id = "DEEPRUN_TRAM_TO_STORMWIND", container = "deeprun_tram.map499", mapID = 499, x = 0.4242, y = 0.1214 }, -- Deeprun Tram: the way up to Stormwind (hand-added: tools/modern_manual.py)
     { id = "STORMWIND_TO_DEEPRUN_TRAM", container = "ek_overworld.map84", mapID = 84, x = 0.6937, y = 0.3138 }, -- Stormwind (Dwarven District): the way down to the Deeprun Tram (hand-added: tools/modern_manual.py)
+    { id = "SILVERMOON_PORTAL_ROOM_ENTRANCE", container = "ek_overworld.map2393", mapID = 2393, x = 0.5323, y = 0.6611 }, -- Silvermoon: the portal room's door, street side (hand-added: tools/modern_manual.py)
+    { id = "SILVERMOON_PORTAL_ROOM_EXIT", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5316, y = 0.6604 }, -- Silvermoon: the portal room's door, room side (hand-added: tools/modern_manual.py)
 }

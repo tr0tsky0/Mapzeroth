@@ -172,6 +172,7 @@ def main():
                 seen_ids[node_id] = (filename, group_name)
                 x, y = float(node["x"]), float(node["y"])
                 container = container_of(group_name, node)
+                container = getattr(manual, "NODE_CONTAINERS", {}).get(node_id, container)   # an interior the old data lacked
                 mapid_groups.setdefault(int(node["mapID"]), set()).add(group_name)
                 if node["interior"]:
                     interior_mapids[(group_name, int(node["mapID"]))] = \

@@ -245,6 +245,32 @@ local function resolve(nodeID)
 end
 
 -- Returns a display name for a node, in the client's language.
+-- A portal we have no name for is described by where it leads: "Orgrimmar Portal", from the client's name for
+-- the map on its far side. Only when it leads to one place: a portal room with several is not any one of them.
+local portalDestinations
+local function portalName(nodeID)
+    if not portalDestinations then
+        portalDestinations = {}
+        for _, edge in ipairs(addon.Edges or {}) do
+            if edge.method == "portal" then
+                local from, to = addon.World:GetNode(edge.from), addon.World:GetNode(edge.to)
+                if from and to and from.mapID ~= to.mapID then
+                    local list = portalDestinations[edge.from] or {}
+                    portalDestinations[edge.from] = list
+                    list[to.mapID] = true
+                end
+            end
+        end
+    end
+    local maps, only = portalDestinations[nodeID], nil
+    for mapID in pairs(maps or {}) do
+        if only then return nil end
+        only = mapID
+    end
+    local zone = only and zoneName(only)
+    return zone and addon:HasString("NODE_PORTAL_ZONE") and L["NODE_PORTAL_ZONE"]:format(zone) or nil
+end
+
 function addon:GetNodeName(nodeID)
     local cached = nameCache[nodeID]
     if cached then return cached end
@@ -254,7 +280,7 @@ function addon:GetNodeName(nodeID)
         -- Nothing names this node: the client's name for its map says where it is (an arrival, or
         -- a teleport's destination, reads "The Arcantina"), which beats showing a raw id.
         local node = addon.World:GetNode(nodeID)
-        name = node and zoneName(node.mapID)
+        name = portalName(nodeID) or (node and zoneName(node.mapID))
     end
     if name then
         nameCache[nodeID] = name
@@ -271,7 +297,7 @@ end
 
 -- Forget resolved names, e.g. after a locale change or in tests.
 function addon:ClearNodeNameCache()
-    nameCache, taxiNames, borderPartners, taxiSettlements = {}, nil, nil, nil
+    nameCache, taxiNames, borderPartners, taxiSettlements, portalDestinations = {}, nil, nil, nil, nil
 end
 
 -- The journal instance a dungeon or raid node stands for, and the faction that can use it (nil: either).

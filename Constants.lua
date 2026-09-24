@@ -37,6 +37,14 @@ addon.CLASS_TOKENS = {
 -- within this many yards of each other, continent-wide.
 addon.MAX_AUTO_EDGE_DISTANCE = 3000
 
+-- Flying from where the player stands (TravelGraph:AddStart), when they start in the open where flying is allowed:
+-- getting on the mount takes MOUNT_SECONDS, and a flight that would take under MIN_FLY_SECONDS isn't offered (it
+-- is a short walk). FLY_SPEED is yards a second: at the +750% a skyriding player really covers ground (a flying
+-- mount without skyriding is +410%, 35.7 yards a second), on the 7 yards a second of WALK_SPEED.
+addon.FLY_SPEED = addon.WALK_SPEED * (1 + 7.50)
+addon.MOUNT_SECONDS = 1.5
+addon.MIN_FLY_SECONDS = 3
+
 -- Using an equippable teleport item (a cloak, ring, trinket, tabard...) that isn't worn takes an equip step first.
 -- Seconds that step is priced at unless the item's own `equipCooldown` (Data/Modern/Abilities.lua, from
 -- tools/modern_manual.py's EQUIP_COOLDOWNS) says otherwise: most items can be used the moment they are put on

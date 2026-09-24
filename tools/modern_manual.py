@@ -13,6 +13,8 @@ EDGES    connections the old data lacks: { "from", "to", "method", optional "cos
 EQUIP_COOLDOWNS  { itemID: seconds }: how long an equippable teleport item is on cooldown after it is put on, which
          is what its "Equip" step is priced at (the route then "Uses" it). An item not listed gets
          addon.DEFAULT_EQUIP_SECONDS (Constants.lua, 0). Only items that have to be worn matter; the game says which.
+NODE_CONTAINERS  { nodeID: container path }: put an old-data node in another container (usually an interior the old
+         data didn't know about, alongside INDOOR).
 DROP_NODES  old-data nodes to leave out, by id (usually because a NODES entry of the same id replaces them, in
          the right place).
 DROP_EDGES  old-data edges to leave out (usually because a hand-added route replaces them):
@@ -60,14 +62,37 @@ NODES = [
      "x": 0.4242, "y": 0.1214, "note": "Deeprun Tram: the way up to Stormwind"},
     {"id": "STORMWIND_TO_DEEPRUN_TRAM", "out": "Nodes_EK.lua", "container": "ek_overworld.map84", "mapID": 84,
      "x": 0.6937, "y": 0.3138, "note": "Stormwind (Dwarven District): the way down to the Deeprun Tram"},
+    # Silvermoon's portal room (Stormwind and Orgrimmar): a small room off the street, an interior. Its door,
+    # street side and room side, captured in game.
+    {"id": "SILVERMOON_PORTAL_ROOM_ENTRANCE", "out": "Nodes_EK.lua", "container": "ek_overworld.map2393",
+     "mapID": 2393, "x": 0.5323, "y": 0.6611, "note": "Silvermoon: the portal room's door, street side"},
+    {"id": "SILVERMOON_PORTAL_ROOM_EXIT", "out": "Nodes_EK.lua", "container": "ek_overworld.map2393.interior",
+     "mapID": 2393, "x": 0.5316, "y": 0.6604, "note": "Silvermoon: the portal room's door, room side"},
+    # Brawl'gar Arena, Orgrimmar's brawlers' guild: a map of its own (503) off Orgrimmar's street, an interior. The
+    # Pugilist's ring (Horde) lands you in it. The old data had BRAWLGAR_ARENA on the street (the door), so it is
+    # dropped and put where the ring lands, like Bizmo's.
+    {"id": "BRAWLGAR_ARENA", "out": "Nodes_Kalimdor.lua", "container": "brawlgar_arena.map503", "mapID": 503,
+     "x": 0.4222, "y": 0.7481, "note": "Brawl'gar Arena: where the Pugilist's ring lands you"},
+    {"id": "BRAWLGAR_TO_ORGRIMMAR", "out": "Nodes_Kalimdor.lua", "container": "brawlgar_arena.map503", "mapID": 503,
+     "x": 0.5553, "y": 0.1426, "note": "Brawl'gar Arena: the way out to Orgrimmar"},
+    {"id": "ORGRIMMAR_TO_BRAWLGAR", "out": "Nodes_Kalimdor.lua", "container": "kalimdor_overworld.map85", "mapID": 85,
+     "x": 0.7055, "y": 0.3103, "note": "Orgrimmar (Valley of Strength): the way in to Brawl'gar Arena"},
 ]
 
+# Old-data nodes that are inside Silvermoon's portal room (the room's own portals, and where its incoming portals
+# arrive). The street's other portals (Harandar, Voidstorm, Coiled Isle, Magisters', the Arcantina) stay outside.
+NODE_CONTAINERS = {
+    "SILVERMOON_STORMWIND_PORTAL": "ek_overworld.map2393.interior",
+    "SILVERMOON_ORGRIMMAR_PORTAL": "ek_overworld.map2393.interior",
+    "SILVERMOON_PORTAL_ROOM": "ek_overworld.map2393.interior",
+}
+
 # Old-data nodes replaced by a NODES entry of the same id.
-DROP_NODES = ["BIZMOS_BRAWLPUB"]
+DROP_NODES = ["BIZMOS_BRAWLPUB", "BRAWLGAR_ARENA"]
 
 # The Lycaneum's own map: its portal room is an interior reached on foot from the entrance above,
 # not a point you can fly to.
-INDOOR = ["ek_overworld.map2649", "deeprun_tram"]        # the tram and Bizmo's Brawlpub are both under it
+INDOOR = ["ek_overworld.map2649", "deeprun_tram", "ek_overworld.map2393.interior", "brawlgar_arena"]        # the tram and Bizmo's Brawlpub are both under it
 
 EDGES = [
     # Running from the entrance to the portal inside, and back out: an explicit edge, since an interior
@@ -83,6 +108,11 @@ EDGES = [
     # client can't measure, so each is an explicit walk (a few seconds through the door). The walks inside each map
     # are costed from distance as usual. No loading screen between Bizmo's and the tram; one between the tram and
     # Stormwind (confirmed in game 2026-09-24).
+    # Silvermoon's portal room: in and out by the one door (costed from distance, on the same map).
+    {"from": "SILVERMOON_PORTAL_ROOM_ENTRANCE", "to": "SILVERMOON_PORTAL_ROOM_EXIT", "method": "walk"},
+    # Brawl'gar Arena <-> Orgrimmar: the one door between two maps, so an explicit walk through it. One loading
+    # screen is a guess (the arena is a map of its own, like the Deeprun Tram): correct it if the door doesn't load.
+    {"from": "BRAWLGAR_TO_ORGRIMMAR", "to": "ORGRIMMAR_TO_BRAWLGAR", "method": "walk", "cost": 2, "loadingScreens": 1},
     {"from": "BIZMOS_TO_TRAM", "to": "TRAM_TO_BIZMOS", "method": "walk", "cost": 2, "loadingScreens": 0},
     {"from": "DEEPRUN_TRAM_TO_STORMWIND", "to": "STORMWIND_TO_DEEPRUN_TRAM", "method": "walk", "cost": 2,
      "loadingScreens": 1},
