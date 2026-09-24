@@ -20,6 +20,7 @@ addon:RegisterLocale("enUS", {
     STEP_EQUIP_ITEM  = "Equip %s",
     STEP_HEARTHSTONE = "Use your Hearthstone to go to %s",
     STEP_OTHER       = "Go to %s",
+    STEP_PHASESWITCH = "Talk to Zidormi: %s in the other time",
 
     -- Times.
     TIME_SECONDS = "%ds",

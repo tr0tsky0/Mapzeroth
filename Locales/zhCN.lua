@@ -38,6 +38,7 @@ addon:RegisterLocale("zhCN", {
     STEP_TELEPORT    = "传送至%s",
     STEP_HEARTHSTONE = "使用炉石返回%s",
     STEP_OTHER       = "前往%s",
+    STEP_PHASESWITCH = "与希多尔米对话：另一个时代的%s",
     TIME_SECONDS = "%d秒",
     TIME_MINUTES = "%d分%02d秒",
     TIME_HOURS   = "%d小时%02d分",

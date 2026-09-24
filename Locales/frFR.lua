@@ -39,6 +39,7 @@ addon:RegisterLocale("frFR", {
     STEP_TELEPORT    = "Téléportez-vous vers %s",
     STEP_HEARTHSTONE = "Utilisez votre pierre de foyer pour rejoindre %s",
     STEP_OTHER       = "Rendez-vous à %s",
+    STEP_PHASESWITCH = "Parlez à Zidormi : %s à l'autre époque",
     TIME_SECONDS = "%d s",
     TIME_MINUTES = "%d min %02d s",
     TIME_HOURS   = "%d h %02d min",

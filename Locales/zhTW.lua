@@ -38,6 +38,7 @@ addon:RegisterLocale("zhTW", {
     STEP_TELEPORT    = "傳送至%s",
     STEP_HEARTHSTONE = "使用爐石返回%s",
     STEP_OTHER       = "前往%s",
+    STEP_PHASESWITCH = "與希朵爾米對話：另一個時代的%s",
     TIME_SECONDS = "%d秒",
     TIME_MINUTES = "%d分%02d秒",
     TIME_HOURS   = "%d小時%02d分",

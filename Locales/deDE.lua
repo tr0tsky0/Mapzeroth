@@ -40,6 +40,7 @@ addon:RegisterLocale("deDE", {
     STEP_TELEPORT    = "Teleportiert Euch nach: %s",
     STEP_HEARTHSTONE = "Benutzt Euren Ruhestein nach: %s",
     STEP_OTHER       = "Reist nach: %s",
+    STEP_PHASESWITCH = "Sprecht mit Zidormi: %s in der anderen Zeit",
     TIME_SECONDS = "%d s",
     TIME_MINUTES = "%d min %02d s",
     TIME_HOURS   = "%d h %02d min",

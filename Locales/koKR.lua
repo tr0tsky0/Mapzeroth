@@ -39,6 +39,7 @@ addon:RegisterLocale("koKR", {
     STEP_TELEPORT    = "순간이동: %s",
     STEP_HEARTHSTONE = "귀환석 사용: %s",
     STEP_OTHER       = "이동: %s",
+    STEP_PHASESWITCH = "지도르미와 대화: 다른 시대의 %s",
     TIME_SECONDS = "%d초",
     TIME_MINUTES = "%d분 %02d초",
     TIME_HOURS   = "%d시간 %02d분",

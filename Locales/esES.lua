@@ -39,6 +39,7 @@ local strings = {
     STEP_TELEPORT    = "Teletranspórtate a %s",
     STEP_HEARTHSTONE = "Usa tu piedra de hogar para ir a %s",
     STEP_OTHER       = "Ve a %s",
+    STEP_PHASESWITCH = "Habla con Zidormi: %s en la otra época",
     TIME_SECONDS = "%d s",
     TIME_MINUTES = "%d min %02d s",
     TIME_HOURS   = "%d h %02d min",

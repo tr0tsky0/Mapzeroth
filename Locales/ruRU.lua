@@ -40,6 +40,7 @@ addon:RegisterLocale("ruRU", {
     STEP_TELEPORT    = "Телепортация: %s",
     STEP_HEARTHSTONE = "Камень возвращения: %s",
     STEP_OTHER       = "Путь: %s",
+    STEP_PHASESWITCH = "Поговорите с Зидорми: %s в другом времени",
     TIME_SECONDS = "%d с",
     TIME_MINUTES = "%d мин %02d с",
     TIME_HOURS   = "%d ч %02d мин",
