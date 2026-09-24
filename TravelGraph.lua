@@ -259,6 +259,71 @@ function TravelGraph:BuildFreshGeometry()
     return buildStaticGeometry()
 end
 
+-- The static geometry as finished edge tables, per (World.generation, outdoor ground speed, indoor ground
+-- speed): { [from] = { edge, ... } }. Ground speed depends on nothing in a context but whether the container is
+-- indoors, so a context has two speeds at most and a session a handful of distinct keys (riding skill, forms).
+-- Kept to a few entries, oldest evicted. Edges from this cache are SHARED by every graph built with the key and
+-- are read-only: the search copies a step before changing it and nothing else touches one.
+local MAX_EDGE_CACHES = 4
+local edgeCaches, edgeCacheKeys = {}, {}
+TravelGraph.materialiseCount = 0    -- for tests: how many times a geometry was turned into edge tables (cache misses)
+
+-- What is true of a World generation whatever the context: the authored-edge set, and an outdoor and an
+-- indoor container (nil where there is none) to ask ground speed of.
+local worldFacts, worldFactsGeneration
+
+local function factsForWorld()
+    if worldFacts and worldFactsGeneration == addon.World.generation then return worldFacts end
+    local World = addon.World
+    local authored = {}
+    for _, edge in ipairs(addon.Edges or {}) do
+        authored[edge.from .. "|" .. edge.to .. "|" .. edge.method] = true
+    end
+    local outdoor, indoor
+    World:ForEachContainer(function(container)
+        if World:GetFlag(container, "indoor") then
+            indoor = indoor or container
+        else
+            outdoor = outdoor or container
+        end
+    end)
+    worldFacts = { authored = authored, outdoor = outdoor, indoor = indoor }
+    worldFactsGeneration = addon.World.generation
+    return worldFacts
+end
+
+-- The cached edge tables for this context's ground speeds, made on first use from the static geometry.
+local function edgesFor(outdoorSpeed, indoorSpeed)
+    local key = ("%d|%.6f|%.6f"):format(addon.World.generation, outdoorSpeed, indoorSpeed or 0)
+    local cached = edgeCaches[key]
+    if cached then return cached end
+
+    TravelGraph.materialiseCount = TravelGraph.materialiseCount + 1
+    local World = addon.World
+    cached = {}
+    for from, list in pairs(staticGeometryFor()) do
+        local edges = {}
+        local speed
+        for _, e in ipairs(list) do
+            local to, dtf, kind = e[1], e[2], e[3]
+            if kind == "fly" then
+                edges[#edges + 1] = { from = from, to = to, cost = dtf, method = "fly" }
+            elseif kind == "gate" then
+                edges[#edges + 1] = { from = from, to = to, cost = 0, method = "walk" }
+            else
+                speed = speed or (World:GetFlag(World:GetNodeContainer(from), "indoor") and indoorSpeed or outdoorSpeed)
+                edges[#edges + 1] = { from = from, to = to, cost = dtf / speed, method = "walk" }
+            end
+        end
+        cached[from] = edges
+    end
+
+    edgeCaches[key] = cached
+    edgeCacheKeys[#edgeCacheKeys + 1] = key
+    if #edgeCacheKeys > MAX_EDGE_CACHES then edgeCaches[table.remove(edgeCacheKeys, 1)] = nil end
+    return cached
+end
+
 function TravelGraph:Build(ctx)
     local World = addon.World
     local adjacency = {}
@@ -297,10 +362,8 @@ function TravelGraph:Build(ctx)
     -- and phase override, unless the reverse is authored itself: flight times differ by
     -- direction (Lakeshire -> Ironforge is 357 s, Ironforge -> Lakeshire 201 s), and generating
     -- a reverse next to an authored one would let the search take the cheaper of the two.
-    local authored = {}
-    for _, edge in ipairs(addon.Edges or {}) do
-        authored[edge.from .. "|" .. edge.to .. "|" .. edge.method] = true
-    end
+    local facts = factsForWorld()
+    local authored = facts.authored
     for _, edge in ipairs(addon.Edges or {}) do
         if addon:MeetsRequirements(edge.requirements, ctx) and not hostile(edge) then
             local a, b = World:GetNode(edge.from), World:GetNode(edge.to)
@@ -325,27 +388,18 @@ function TravelGraph:Build(ctx)
         end
     end
 
-    -- Walking, city gates and flying: the cached geometry pass, with ground speed (the only
-    -- ctx-dependent piece a walk edge has) divided in per container -- cheap, since it's one
-    -- GetGroundSpeed call reused for every edge in that container, not redone per edge.
-    local speedByContainer = {}
-    for from, list in pairs(staticGeometryFor()) do
-        for _, e in ipairs(list) do
-            local to, dtf, kind = e[1], e[2], e[3]
-            if kind == "fly" then
-                link(from, to, dtf, "fly")
-            elseif kind == "gate" then
-                link(from, to, 0, "walk")
-            else
-                local container = World:GetNodeContainer(from)
-                local speed = speedByContainer[container]
-                if not speed then
-                    speed = addon:GetGroundSpeed(container, ctx)
-                    speedByContainer[container] = speed
-                end
-                link(from, to, dtf / speed, "walk")
-            end
+    -- Walking, city gates and flying: the cached geometry, as edge tables already finished for this context's
+    -- ground speeds (the outdoor one and, if any container is indoors, the indoor one) and shared between
+    -- graphs: appended by reference, never copied or changed.
+    local outdoorSpeed = addon:GetGroundSpeed(facts.outdoor, ctx)
+    local indoorSpeed = facts.indoor and addon:GetGroundSpeed(facts.indoor, ctx) or nil
+    for from, edges in pairs(edgesFor(outdoorSpeed, indoorSpeed)) do
+        local list = adjacency[from]
+        if not list then
+            list = {}
+            adjacency[from] = list
         end
+        for i = 1, #edges do list[#list + 1] = edges[i] end
     end
 
     -- Teleports and the like: available from wherever the player stands.

@@ -107,3 +107,76 @@ for _, e in ipairs(kept.adjacency["TAXI_2"] or {}) do
 end
 check(unmeasured == addon.UNMEASURED_WALK_SECONDS, "a walk edge that can't be measured keeps a default cost: " .. tostring(unmeasured))
 addon.Edges = savedEdges
+
+-- Finding 4a: the geometry as finished edge tables is materialised once per (world generation, ground speeds)
+-- and shared, by reference, between the graphs built from it -- the flight hint's second graph included.
+do
+    local TG = addon.TravelGraph
+    useTestDistances()
+    addon.Geometry, addon.GeometryMeta = nil, nil
+    addon.World:Build()
+
+    -- A node with a geometry walk edge (no `source`: authored edges carry theirs).
+    local function geometryWalk(graph)
+        for from, list in pairs(graph.adjacency) do
+            for i, e in ipairs(list) do
+                if e.method == "walk" and e.source == nil and e.cost > 0 then return from, i end
+            end
+        end
+    end
+    local function walkCost(graph, from, to)
+        for _, e in ipairs(graph.adjacency[from]) do
+            if e.to == to and e.method == "walk" and e.source == nil then return e.cost end
+        end
+    end
+
+    local plain = makeCtx({})
+    local g1 = TG:Build(plain)
+    local materialised = TG.materialiseCount
+    local statics = TG.staticBuildCount
+    local g2 = TG:Build(makeCtx({ class = "WARRIOR" }))
+    check(TG.materialiseCount == materialised, "an equal-speed context materialises nothing")
+    local x, i = geometryWalk(g1)
+    check(x, "there is a geometry walk edge to look at")
+    check(g1.adjacency[x][i] == g2.adjacency[x][i], "two builds share the edge table for a geometry edge")
+    check(g1.adjacency ~= g2.adjacency and g1.adjacency[x] ~= g2.adjacency[x], "but each build has its own adjacency lists")
+
+    -- Same routes over the shared edges (the values the pathfinder tests expect).
+    local r1 = addon.Pathfinder:FindPath(g1, "TAXI_2", "TAXI_6")
+    local r2 = addon.Pathfinder:FindPath(g2, "TAXI_2", "TAXI_6")
+    check(r1 and r2 and r1.cost == r2.cost and methods(r1) == methods(r2), "the same route over the shared edges")
+    check(math.abs(r1.cost - 259) < 1 and methods(r1) == "taxi", "Stormwind -> Ironforge is still the 259 s flight: " .. r1.cost)
+    local h1 = addon.Pathfinder:FindPath(g1, "TAXI_2", "TAXI_19")
+    local h2 = addon.Pathfinder:FindPath(g2, "TAXI_2", "TAXI_19")
+    check(h1 and h2 and h1.cost == h2.cost and methods(h1) == methods(h2), "and Stormwind -> Booty Bay")
+
+    -- Another riding skill is another speed: other walk costs, one more materialisation, no new geometry pass.
+    local riding = TG:Build(makeCtx({ spells = { 33388 } }))
+    check(TG.materialiseCount == materialised + 1, "a different riding skill materialises once more")
+    check(TG.staticBuildCount == statics, "and the geometry pass is not run again")
+    local to = g1.adjacency[x][i].to
+    check(walkCost(riding, x, to) < walkCost(g1, x, to), "outdoors the mounted walk is cheaper")
+    check(riding.adjacency[x][i] ~= g1.adjacency[x][i], "and it is a different edge table")
+    TG:Build(makeCtx({ spells = { 33388 } }))
+    check(TG.materialiseCount == materialised + 1, "the second build with that skill is a cache hit")
+
+    -- New world data drops the cache.
+    addon.World:Build()
+    local g3 = TG:Build(plain)
+    check(TG.materialiseCount == materialised + 2, "a World:Build() invalidates the materialised edges")
+    check(g3.adjacency[x][i] ~= g1.adjacency[x][i], "no edge table survives it")
+
+    -- Only a handful of speeds are kept: a fifth different speed pushes the oldest out.
+    local walkSpeed = addon.WALK_SPEED
+    local before = TG.materialiseCount
+    for n = 1, 5 do
+        addon.WALK_SPEED = walkSpeed + n
+        TG:Build(plain)
+    end
+    check(TG.materialiseCount == before + 5, "five new speeds, five materialisations")
+    addon.WALK_SPEED = walkSpeed
+    TG:Build(plain)
+    check(TG.materialiseCount == before + 6, "the oldest entry was evicted, so the original speed is made again")
+    addon.WALK_SPEED = walkSpeed
+    print(("materialiseCount %d, staticBuildCount %d after the finding 4a checks"):format(TG.materialiseCount, TG.staticBuildCount))
+end

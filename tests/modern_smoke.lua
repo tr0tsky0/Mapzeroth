@@ -376,3 +376,25 @@ do
     addon.Geometry, addon.GeometryMeta = shipped, shippedMeta
     addon.World:Build()
 end
+
+-- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build
+-- gave (the flight hint builds a second graph for every click).
+do
+    local TG = addon.TravelGraph
+    local plan = makeCtx({ faction = "Alliance" })
+    local function portalRoomToIronforge(graph)
+        local r = addon.Pathfinder:FindPath(graph, "STORMWIND_PORTAL_ROOM_LOWER", "IRONFORGE")
+        check(r, "Stormwind's portal room reaches Ironforge")
+        local out = {}
+        for _, step in ipairs(r.steps) do out[#out + 1] = step.method .. ">" .. tostring(step.to) end
+        return r.cost, table.concat(out, ",")
+    end
+    local first = TG:Build(plan)
+    local costBefore, stepsBefore = portalRoomToIronforge(first)
+    local materialised = TG.materialiseCount
+    local second = TG:Build(plan)
+    check(TG.materialiseCount == materialised, "the second build materialised nothing")
+    local costAfter, stepsAfter = portalRoomToIronforge(second)
+    check(costBefore == costAfter and stepsBefore == stepsAfter,
+        "Stormwind portal room -> Ironforge is identical on the second build: " .. stepsBefore .. " vs " .. stepsAfter)
+end
