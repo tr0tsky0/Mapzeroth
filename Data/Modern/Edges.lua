@@ -23,7 +23,6 @@ addon.Edges = {
     { from = "STORMWIND_CAVERNS_OF_TIME_PORTAL", to = "CAVERNS_OF_TIME", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "STORMWIND_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_BL", method = "portal", cost = 0, oneway = true, requirements = { mapArtID = { 17, 628 }, faction = "Alliance" } },
     { from = "STORMWIND_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_OUTLANDS", method = "portal", cost = 0, oneway = true, requirements = { mapArtID = { 17, 18 }, faction = "Alliance" } },
-    { from = "STORMWIND_EXODAR_PORTAL", to = "EXODAR", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "EXODAR", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "STORMWIND_BELAMETH_PORTAL", to = "BELAMETH", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "STORMWIND_FOUNDERS_POINT_PORTAL", to = "FOUNDERS_POINT", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },

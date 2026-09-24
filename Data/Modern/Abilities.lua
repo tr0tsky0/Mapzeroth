@@ -143,7 +143,7 @@ addon.Abilities.Items = {
     { itemID = 128353, to = "LUNARFALL_SHIPYARD", cost = 5, cooldown = 1200, faction = "Alliance" },
     { itemID = 112059, toList = { "FROSTFIRE_RIDGE_WORMHOLE", "SHADOWMOON_VALLEY_WORMHOLE", "GORGROND_WORMHOLE", "NAGRAND_DRAENOR_WORMHOLE", "TALADOR_WORMHOLE", "SPIRES_OF_ARAK_WORMHOLE" }, cost = 5, cooldown = 600, toy = true },
     { itemID = 167075, to = "MECHAGON", cost = 10, cooldown = 60 },
-    { itemID = 110560, to = "LUNARFALL", cost = 10, cooldown = 1200, toy = true },
+    { itemID = 110560, to = "LUNARFALL", cost = 10, cooldown = 1200, faction = "Alliance", toy = true },
     { itemID = 252607, to = "LOAKNIT_DEN_ZUL_AMAN", cost = 8 },
     { itemID = 184504, to = "ORIBOS", cost = 5, cooldown = 300 },
     { itemID = 184501, to = "REVENDRETH_POCKET_PORTAL", cost = 5, cooldown = 300 },
@@ -162,6 +162,6 @@ addon.Abilities.Items = {
     { itemID = 63379, to = "TOL_BARAD_ALLIANCE", cost = 10, cooldown = 14400 },
     { itemID = 63206, to = "STORMWIND_PORTAL_ROOM_LOWER", cost = 10, cooldown = 14400 },
     { itemID = 65360, to = "STORMWIND_PORTAL_ROOM_LOWER", cost = 10, cooldown = 7200 },
-    { itemID = 110560, to = "FROSTWALL", cost = 10, cooldown = 1200, toy = true },
+    { itemID = 110560, to = "FROSTWALL", cost = 10, cooldown = 1200, faction = "Horde", toy = true },
     { itemID = 140192, to = "DALARAN_BROKEN_ISLES", cost = 10, cooldown = 1200, toy = true },
 }

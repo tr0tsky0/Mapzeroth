@@ -131,6 +131,13 @@ EQUIP_COOLDOWNS = {
     32757: 30,      # Blessed Medallion of Karabor: on cooldown for 30 s once equipped (its cast time is 10 s)
 }
 
+# Faction for an item-based teleport whose old data doesn't say, by (itemID, destination node): the two Garrison
+# Hearthstones share an item and go to each faction's own garrison, so each player is offered only theirs.
+ABILITY_FACTIONS = {
+    (110560, "LUNARFALL"): "Alliance",
+    (110560, "FROSTWALL"): "Horde",
+}
+
 # Item costs (seconds to cast) where the old data's is wrong now that equipping is a step of its own: the old
 # Medallion cost of 40 was its 10 s cast plus the 30 s equip wait.
 ITEM_COSTS = {

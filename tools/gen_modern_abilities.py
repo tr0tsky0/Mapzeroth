@@ -124,6 +124,7 @@ def main():
         if to not in node_ids:
             dangling.append((ability_id, a["destination"]))
             continue
+        faction = manual.ABILITY_FACTIONS.get((int(item_id), to), faction)      # tools/modern_manual.py
         items.append({"itemID": item_id, "to": to, "cost": cost, "cooldown": cooldown, "faction": faction,
                       "toy": a["type"] == "toy"})
 

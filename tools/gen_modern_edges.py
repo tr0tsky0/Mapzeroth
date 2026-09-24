@@ -154,6 +154,8 @@ def main():
     unknown_reqs = {}       # key -> count, for anything not in KNOWN_REQUIREMENTS/INERT
     stray_fields = {}       # field name -> count, for anything not in the schema at all
     phase_gated = 0
+    seen_edges = set()      # (from, to, method, requirements) already written
+    duplicates = []         # (from, to, method) dropped as an exact repeat of an earlier edge
     cost_filled = {}        # method -> count of edges that got a fallback cost written in
     total = 0
 
@@ -174,6 +176,14 @@ def main():
             cost = FALLBACK_COST[method]
             cost_filled[method] = cost_filled.get(method, 0) + 1
         reqs, unknown = lua_requirements(e["requirements"])
+        # An exact repeat (same ends, method and requirements) adds nothing but a second edge for the search
+        # to weigh; the first is kept. (Two edges that differ only in requirements, one per faction, are not repeats.)
+        edge_key = (from_id, to_id, method,
+                    tuple(sorted((k, format_value(v)) for k, v in (reqs or {}).items())))
+        if edge_key in seen_edges:
+            duplicates.append((from_id, to_id, method))
+            continue
+        seen_edges.add(edge_key)
         for key in unknown:
             unknown_reqs[key] = unknown_reqs.get(key, 0) + 1
         if reqs and "mapArtID" in reqs:
@@ -237,6 +247,11 @@ def main():
             notes.append(f"  - `{f}` -> `{t}`")
     else:
         notes.append("- No dangling `from`/`to`: every edge resolved to a node from the conversion pass.")
+    if duplicates:
+        notes.append(f"- {len(duplicates)} exact duplicate edge(s) dropped (same `from`, `to`, method and "
+                     "requirements as an earlier edge; the first is kept):")
+        for f, t, m in duplicates:
+            notes.append(f"  - `{f}` -> `{t}` ({m})")
     if unknown_reqs:
         notes.append(f"- Unrecognized requirement key(s), dropped from their edge (not carried through,")
         notes.append("  unlike `mapArtID` -- these aren't a known concept in either engine, worth a look):")
@@ -254,6 +269,7 @@ def main():
                                    "## Edge conversion (tools/gen_modern_edges.py)", notes)
 
     print(f"wrote {total} edges to {OUT / 'Edges.lua'}")
+    print(f"{len(duplicates)} duplicate(s) dropped")
     print(f"{len(dangling)} dangling, {phase_gated} phase-gated (inert), "
           f"{sum(unknown_reqs.values())} unrecognized requirement(s), {sum(stray_fields.values())} stray field(s)")
 
