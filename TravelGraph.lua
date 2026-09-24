@@ -343,9 +343,8 @@ function TravelGraph:Build(ctx)
         }
     end
 
-    -- You can't fly to a flight point you haven't found, and until a flight master's
-    -- window has told us, we don't know: better to leave a flight out than to promise
-    -- one that can't be taken. (A context with no flightNodeFound applies no such rule.)
+    -- You can't fly to a flight point you haven't found: ctx.flightUsable says which ones they can (see
+    -- FlightKnowledge.Usable for the rule, and what "not known either way" counts as).
     -- A flight into or out of a hostile faction's flight master can't be taken, whatever else the edge says
     -- (placeholders and hand-written edges may have no faction of their own).
     local function hostile(edge)
@@ -355,9 +354,7 @@ function TravelGraph:Build(ctx)
     end
 
     local function unfound(edge, toID)
-        if edge.method ~= "taxi" then return false end
-        if ctx.flightUsable then return not ctx.flightUsable(toID) end
-        return ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
+        return edge.method == "taxi" and not ctx.flightUsable(toID)
     end
 
     -- Authored edges. The reverse direction is generated here, carrying the same requirements

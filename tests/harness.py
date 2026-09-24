@@ -48,7 +48,7 @@ function makeCtx(overrides)
     local equippable, equipped = {}, {}
     for _, id in ipairs(overrides.equippable or {}) do equippable[id] = true end
     for _, id in ipairs(overrides.equipped or {}) do equipped[id] = true end
-    return {
+    local ctx = {
         faction = overrides.faction or "Alliance",
         class = overrides.class or "MAGE",
         race = overrides.race or "Human",
@@ -65,6 +65,22 @@ function makeCtx(overrides)
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,
     }
+    setFlights(ctx, overrides.flights or "all", overrides.assumeFlights)
+    return ctx
+end
+
+-- Which flight points a test character can fly to, as the game's context has them (both predicates, always):
+-- "all" (the default) is every flight, no rule; a function id -> true / false / nil is the raw found fact,
+-- used by FlightKnowledge.Usable's rule with `assume` standing for the assumeFlightsFound setting.
+function setFlights(ctx, found, assume)
+    local FK = addon.FlightKnowledge
+    if found == "all" then
+        ctx.flightNodeFound = function() return true end
+        ctx.flightUsable = FK.AnyFlight
+    else
+        ctx.flightNodeFound = found
+        ctx.flightUsable = function(id) return FK.Usable(found(id), assume) end
+    end
 end
 
 -- Rough yards between nodes: no client here, so zone maps are treated as

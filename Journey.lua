@@ -184,10 +184,11 @@ end
 -- The route with no rule about found flight points (the flights we can't use allowed), or nil.
 local function freeRoute(session, goalID)
     local ctx = session.ctx
-    if not ctx.flightNodeFound then return nil end
+    local anyFlight = addon.FlightKnowledge.AnyFlight
+    if ctx.flightUsable == anyFlight then return nil end     -- already the free route
     local free = {}
     for k, v in pairs(ctx) do free[k] = v end
-    free.flightNodeFound, free.flightUsable = nil, nil
+    free.flightUsable = anyFlight
     session.free = session.free or Journey:Build(free, session.start, session.extras)
     if not session.free then return nil end
     return addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
@@ -195,14 +196,9 @@ end
 
 -- The first flight on a route that this player isn't known to be able to take: { nodeID, name, known }
 -- (known: a flight master's window said it isn't found; otherwise we just haven't looked), or nil.
-local function canFly(ctx, nodeID)
-    if ctx.flightUsable then return ctx.flightUsable(nodeID) end
-    return ctx.flightNodeFound(nodeID) == true
-end
-
 local function unusableFlight(ctx, result)
     for _, step in ipairs(result.steps) do
-        if step.method == "taxi" and not canFly(ctx, step.to) then
+        if step.method == "taxi" and not ctx.flightUsable(step.to) then
             return { nodeID = step.to, name = addon:GetNodeName(step.to), known = ctx.flightNodeFound(step.to) == false }
         end
     end
@@ -253,7 +249,7 @@ function Journey:Plan(session, goalID)
     -- Flights taken on the strength of the "assume found" setting: no flight master's window has said either way.
     local ctx = session.ctx
     for _, step in ipairs(plan.raw) do
-        if step.method == "taxi" and ctx.flightUsable and ctx.flightNodeFound and ctx.flightNodeFound(step.to) == nil then
+        if step.method == "taxi" and ctx.flightNodeFound(step.to) == nil then
             plan.assumed = plan.assumed or {}
             table.insert(plan.assumed, addon:GetNodeName(step.to))
         end

@@ -60,7 +60,7 @@ FK:Record({
     { nodeID = 8, state = 2 },                                -- Thelsamar: Unreachable, so not found
 }, ali)
 local limited = makeCtx({ faction = "Alliance" })
-limited.flightNodeFound = function(id) return FK:IsFound(id) end
+setFlights(limited, function(id) return FK:IsFound(id) end)
 local limitedSession = J:Build(limited, start)
 local toThelsamar = J:Plan(limitedSession, "TAXI_8")
 check(toThelsamar and toThelsamar.hint, "flying to Thelsamar isn't allowed, and a hint says so")
@@ -222,4 +222,12 @@ do
     C_Spell.GetSpellInfo = function() return nil end     -- the client has no name yet: say where it goes instead
     local unnamed = J:Plan(J:Build(ctx, from), "ZZTEST_SPELL")
     check(unnamed and unnamed.steps[1].text == "Teleport to Stormwind City", "with no name to give, it says where it goes: " .. tostring(unnamed and unnamed.steps[1].text))
+end
+
+-- Finding 10: a context that already allows every flight builds no second, "free" graph for the flight hint.
+do
+    local free = makeCtx({ faction = "Alliance" })
+    local session = J:Build(free, start)
+    local plan = J:Plan(session, "TAXI_8")
+    check(plan and plan.hint == nil and session.free == nil, "no free-route graph and no hint with no flight rule")
 end

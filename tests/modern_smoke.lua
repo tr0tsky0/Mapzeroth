@@ -195,12 +195,12 @@ check(plaguefall and viaPad, "Plaguefall from Oribos goes up by the pad, then th
 
 -- No route because of a flight we can't be sure the player has found: the panel says which, not just "no route".
 local unsure = makeCtx({ faction = "Alliance" })
-unsure.flightNodeFound = function() return nil end
+setFlights(unsure, function() return nil end)
 local session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
 local plan, why = addon.Journey:Plan(session, "INSTANCE_1190")
 check(plan == nil and why and why.nodeID and not why.known, "no route, with the flight in the way named: " .. tostring(why and why.nodeID))
 check(addon.Journey:HintText(why):find("flight"), "and a sentence for it: " .. tostring(addon.Journey:HintText(why)))
-unsure.flightNodeFound = function(id) if id == "TAXI_2514" then return false end return true end
+setFlights(unsure, function(id) if id == "TAXI_2514" then return false end return true end)
 session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
 local _, known = addon.Journey:Plan(session, "INSTANCE_1190")
 check(known and known.known and known.nodeID == "TAXI_2514", "a flight a window said isn't found is named as such")
@@ -208,8 +208,7 @@ check(known and known.known and known.nodeID == "TAXI_2514", "a flight a window 
 -- "Assume flight points are found" (ctx.flightUsable): a flight point no window has said anything about is used, and
 -- the route says so; one a window reported as not found never is.
 local assuming = makeCtx({ faction = "Alliance" })
-assuming.flightNodeFound = function(id) if id == "TAXI_2519" then return false end return nil end
-assuming.flightUsable = function(id) if id == "TAXI_2519" then return false end return true end
+setFlights(assuming, function(id) if id == "TAXI_2519" then return false end return nil end, true)
 local start = { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 }
 local assumedPlan = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1190")
 check(assumedPlan and assumedPlan.assumed and #assumedPlan.assumed >= 1, "an unconfirmed flight is used, and the plan says which")

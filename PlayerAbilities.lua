@@ -112,13 +112,11 @@ function addon:GetPlayerContext()
         holidayActive = isHolidayActive,
         isEquippable = function(itemID) return IsEquippableItem ~= nil and IsEquippableItem(itemID) and true or false end,
         isEquipped = function(itemID) return IsEquippedItem ~= nil and IsEquippedItem(itemID) and true or false end,
+        -- Every context carries both. flightUsable (can they fly to this point? FlightKnowledge.Usable) is the one
+        -- routing predicate; flightNodeFound (true, false, or nil: no window has said) is the raw fact, for hints.
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
-        -- Can they fly to this point? Found (true), or not yet known either way and the setting says to assume so;
-        -- never one a flight master's window said isn't found. Routing uses this; flightNodeFound is the raw fact.
         flightUsable = function(nodeID)
-            local found = addon.FlightKnowledge:IsFound(nodeID)
-            if found == nil then return addon.Options:Get("assumeFlightsFound") == true end
-            return found
+            return addon.FlightKnowledge.Usable(addon.FlightKnowledge:IsFound(nodeID), addon.Options:Get("assumeFlightsFound"))
         end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost

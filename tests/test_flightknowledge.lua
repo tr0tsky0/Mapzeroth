@@ -65,7 +65,7 @@ check(FK:IsFound("TAXI_22") == nil, "an Alliance player has no such flight, so n
 -- Routing only flies into points known to be found. Unknown is not enough.
 FK:Reset()
 local withKnowledge = makeCtx({ faction = "Alliance" })
-withKnowledge.flightNodeFound = function(id) return FK:IsFound(id) end
+setFlights(withKnowledge, function(id) return FK:IsFound(id) end)
 
 local function flights(result)
     local n = 0
@@ -97,7 +97,7 @@ check(flights(toDarkshire) == 0 or flownInto(toDarkshire, "TAXI_4"), "the only f
 
 -- A continent the flight map hasn't been read for stays unusable (the capture was Eastern Kingdoms).
 local horde = makeCtx({ faction = "Horde" })
-horde.flightNodeFound = function(id) return FK:IsFound(id) end
+setFlights(horde, function(id) return FK:IsFound(id) end)
 local orgToTB = route(horde, "TAXI_23", "TAXI_22")
 check(orgToTB and not flownInto(orgToTB, "TAXI_22"), "Thunder Bluff is unknown, so no flight into it")
 
@@ -222,3 +222,14 @@ check(FK:FareFactor() == 1, "a standing change forgets the learned factor")
 check(MapzerothRebuildDB.fareFactors["Tester-Realm"].typical == nil, "and persists the forgetting immediately")
 TaxiNodeCost = nil
 GetTaxiMapID = nil
+
+-- Finding 10: one routing predicate. Every context carries both flightUsable and flightNodeFound; the rule is
+-- FlightKnowledge.Usable, and "every flight" is the one shared AnyFlight function.
+do
+    check(FK.Usable(true, false) == true and FK.Usable(false, true) == false, "found flies, reported not found never does")
+    check(FK.Usable(nil, true) == true and FK.Usable(nil, false) == false, "unknown flies only when assumed")
+    local live = addon:GetPlayerContext()
+    check(type(live.flightUsable) == "function" and type(live.flightNodeFound) == "function", "the game's context carries both")
+    local free = makeCtx({})
+    check(free.flightUsable == FK.AnyFlight and free.flightNodeFound("TAXI_22") == true, "a test context defaults to every flight")
+end

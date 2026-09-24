@@ -42,6 +42,17 @@ function FlightKnowledge:IsFound(nodeID)
     return found[nodeID]
 end
 
+-- The routing rule, from the raw fact for a point (IsFound: true, false or nil) and the assumeFlightsFound
+-- setting: found is usable, reported not found never is, unknown is usable only when assumed.
+function FlightKnowledge.Usable(isFound, assume)
+    if isFound == nil then return assume == true end
+    return isFound
+end
+
+-- A flightUsable that allows every flight: the route with no rule about found points (the flight hints compare
+-- against it; /mzr route allflights and tests use it too). One function, so a context can be recognised as free.
+function FlightKnowledge.AnyFlight() return true end
+
 -- Tests only.
 function FlightKnowledge:Reset()
     found = {}

@@ -101,7 +101,7 @@ local checked, wrong = 0, 0
 for _, block in ipairs(blocks) do
     local found = {}
     for _, id in ipairs(block.found) do found[id] = true end
-    ali.flightNodeFound = function(id) return found[id] == true end
+    setFlights(ali, function(id) return found[id] == true end)
     local graph = addon.TravelGraph:Build(ali)
     local flightsOnly = { adjacency = {}, anywhere = {} }              -- the game's routes are flights
     for id, steps in pairs(graph.adjacency) do
