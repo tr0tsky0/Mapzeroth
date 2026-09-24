@@ -10,7 +10,7 @@ local addonName, addon = ...
 --              "instance", or a place kind ("inn", "bank", "trainer", "leyline", ...)
 --   relevant   false for things this player has little use for by default (other classes'
 --              trainers and the like); they are still found by searching
---   expansion  Modern only, for a city, dungeon or raid: its expansion (by major version, Classic 1 ...
+--   expansion  for a city, dungeon or raid whose data says (Modern's): its expansion (by major version, Classic 1 ...
 --   raid       Modern instances: true for a raid, nil for a dungeon
 --   details    optional, what a place offers that a search can hit and the list shows: for a
 --              weapon master, { { text = "One-Handed Swords", alias = "..." }, ... } (the weapon skills
@@ -72,17 +72,25 @@ local function groupOf(node)
     return "other"
 end
 
--- The nodes that count as arriving at a settlement.
-local function arrivalNodes(key, field)
+-- The nodes that count as arriving at a settlement: a walled city's entrances (Forever: no flying, so a city is
+-- entered through its gates), otherwise its centre node (CITY_<KEY> / TOWN_<KEY>). `entrances` is from entrancesByCity.
+local function arrivalNodes(key, field, entrances)
     local centre = field:upper() .. "_" .. key:upper()
-    if field == "city" then
-        local entrances = {}
-        for _, node in ipairs(addon.Nodes and addon.Nodes.Pois or {}) do
-            if node.kind == "entrance" and node.city == key then entrances[#entrances + 1] = node.id end
-        end
-        if #entrances > 0 then return entrances end
-    end
+    if field == "city" and entrances[key] then return entrances[key] end
     if addon.World:GetNode(centre) then return { centre } end
+end
+
+-- city key -> { entrance node ids }, from every node of kind "entrance".
+local function entrancesByCity()
+    local byCity = {}
+    addon.World:ForEachNode(function(node)
+        if node.kind == "entrance" and node.city then
+            byCity[node.city] = byCity[node.city] or {}
+            table.insert(byCity[node.city], node.id)
+        end
+    end)
+    for _, list in pairs(byCity) do table.sort(list) end
+    return byCity
 end
 
 -- The name of the continent a map is on, for telling two cities of one name apart.
@@ -90,41 +98,6 @@ local function continentName(mapID)
     local continent = addon:GetContinentMapID(mapID)
     local info = continent and C_Map.GetMapInfo(continent)
     return info and info.name
-end
-
--- Modern's cities (addon.CityPlaces): a city is every node on its maps. Two cities the client gives the
--- same name (both Dalarans) are told apart by their continent.
-local function addCityPlaces(entries, ctx)
-    local byMap = {}
-    for index, place in ipairs(addon.CityPlaces or {}) do
-        for _, mapID in ipairs(place.maps) do byMap[mapID] = index end
-    end
-    local nodes = {}
-    addon.World:ForEachNode(function(node)
-        local index = byMap[node.mapID]
-        if index then
-            nodes[index] = nodes[index] or {}
-            table.insert(nodes[index], node.id)
-        end
-    end)
-    local made, names = {}, {}
-    for index, place in ipairs(addon.CityPlaces or {}) do
-        local info = nodes[index] and C_Map and C_Map.GetMapInfo and C_Map.GetMapInfo(place.maps[1])
-        if info and info.name then
-            table.sort(nodes[index])
-            made[#made + 1] = {
-                nodeID = nodes[index][1], nodeIDs = nodes[index], name = info.name, group = "place", kind = "city",
-                zone = continentName(place.maps[1]), expansion = place.expansion, hub = place.hub,
-                faction = place.faction,
-                relevant = place.faction == "Both" or ctx.faction == nil or place.faction == ctx.faction,
-            }
-            names[info.name] = (names[info.name] or 0) + 1
-        end
-    end
-    for _, entry in ipairs(made) do
-        if names[entry.name] > 1 and entry.zone then entry.name = entry.name .. " (" .. entry.zone .. ")" end
-        entries[#entries + 1] = entry
-    end
 end
 
 -- Builds the list for this player (ctx from addon:GetPlayerContext()), prepared for Search.
@@ -172,21 +145,30 @@ function Destinations:Build(ctx)
         return settlement.faction == nil or settlement.faction == "Both" or ctx.faction == nil or settlement.faction == ctx.faction
     end
 
+    -- Two settlements the client gives the same name (Modern's two Dalarans) are told apart by their continent.
+    local entrances, made, names = entrancesByCity(), {}, {}
     local function addSettlements(list, getName, field, label)
         for key, settlement in pairs(list or {}) do
             local name = getName(addon, key)
-            local nodeIDs = name and arrivalNodes(key, field)
+            local nodeIDs = name and arrivalNodes(key, field, entrances)
             if nodeIDs then
-                entries[#entries + 1] = {
+                made[#made + 1] = {
                     nodeID = nodeIDs[1], nodeIDs = nodeIDs, name = name, group = "place", kind = label,
                     zone = addon:GetZoneName(settlement.mapID), relevant = ours(settlement), faction = settlement.faction,
+                    expansion = settlement.expansion, hub = settlement.hub, mapID = settlement.mapID,
                 }
+                names[name] = (names[name] or 0) + 1
             end
         end
     end
     addSettlements(addon.Cities, addon.GetCityName, "city", "city")
     addSettlements(addon.Towns, addon.GetTownName, "town", "town")
-    addCityPlaces(entries, ctx)
+    for _, entry in ipairs(made) do
+        local continent = names[entry.name] > 1 and continentName(entry.mapID)
+        if continent then entry.name = entry.name .. " (" .. continent .. ")" end
+        entry.mapID = nil
+        entries[#entries + 1] = entry
+    end
 
     table.sort(entries, function(a, b)
         if a.name ~= b.name then return a.name < b.name end

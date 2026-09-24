@@ -43,32 +43,4 @@ addon.InstanceNodeAliases = {
     NYALOTHA_THE_WAKING_CITY_RAID_PANDARIA = 1180,    -- whichever is nearer
 }
 
--- The cities. `maps` are the uiMapIDs that make up the city (arriving on any node in them counts as arriving in
--- the city, and the client names it); a city none of whose maps hold a node is left out. `hub` cities are
--- also listed on the main page whatever their expansion, for the places people travel to every day.
-addon.CityPlaces = {
-    { maps = { 84 },   expansion = 1,  faction = "Alliance", hub = true },   -- Stormwind City
-    { maps = { 87 },   expansion = 1,  faction = "Alliance" },               -- Ironforge
-    { maps = { 89 },   expansion = 1,  faction = "Alliance" },               -- Darnassus
-    { maps = { 85 },   expansion = 1,  faction = "Horde",    hub = true },   -- Orgrimmar
-    { maps = { 88 },   expansion = 1,  faction = "Horde" },                  -- Thunder Bluff
-    { maps = { 90 },   expansion = 1,  faction = "Horde" },                  -- Undercity
-    { maps = { 103 },  expansion = 2,  faction = "Alliance" },               -- The Exodar
-    { maps = { 110 },  expansion = 2,  faction = "Horde" },                  -- Silvermoon City (BC)
-    { maps = { 111 },  expansion = 2,  faction = "Both" },                   -- Shattrath City
-    { maps = { 125 },  expansion = 3,  faction = "Both",     hub = true },   -- Dalaran (Northrend)
-    { maps = { 393 },  expansion = 5,  faction = "Alliance" },               -- Shrine of Seven Stars
-    { maps = { 390 },  expansion = 5,  faction = "Horde" },                  -- Shrine of Two Moons
-    { maps = { 582 },  expansion = 6,  faction = "Alliance" },               -- Lunarfall
-    { maps = { 590 },  expansion = 6,  faction = "Horde" },                  -- Frostwall
-    { maps = { 622 },  expansion = 6,  faction = "Alliance" },               -- Stormshield
-    { maps = { 624 },  expansion = 6,  faction = "Horde" },                  -- Warspear
-    { maps = { 627 },  expansion = 7,  faction = "Both",     hub = true },   -- Dalaran (Broken Isles)
-    { maps = { 1161 }, expansion = 8,  faction = "Alliance" },               -- Boralus
-    { maps = { 1165 }, expansion = 8,  faction = "Horde" },                  -- Dazar'alor
-    { maps = { 1670, 1671 }, expansion = 9, faction = "Both", hub = true },  -- Oribos
-    { maps = { 2112 }, expansion = 10, faction = "Both",     hub = true },   -- Valdrakken
-    { maps = { 2339 }, expansion = 11, faction = "Both",     hub = true },   -- Dornogal
-    { maps = { 2346 }, expansion = 11, faction = "Both" },                   -- Undermine
-    { maps = { 2393 }, expansion = 12, faction = "Both",     hub = true },  -- Silvermoon City
-}
+-- The cities are in Settlements.lua, generated from tools/modern_manual.py's CITIES (Forever's addon.Cities shape).

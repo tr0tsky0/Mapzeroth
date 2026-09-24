@@ -74,12 +74,13 @@ local function cityWalls()
     if walls then return walls end
     walls = {}
     local gates = {}
-    for _, node in ipairs(addon.Nodes and addon.Nodes.Pois or {}) do
+    addon.World:ForEachNode(function(node)
         if node.kind == "entrance" and node.city then
             gates[node.city] = gates[node.city] or {}
             table.insert(gates[node.city], node)
         end
-    end
+    end)
+    for _, list in pairs(gates) do table.sort(list, function(a, b) return a.id < b.id end) end
     for key, city in pairs(addon.Cities or {}) do
         local inner, outer = {}, {}
         for _, node in ipairs(gates[key] or {}) do table.insert(node.mapID == city.mapID and inner or outer, node) end

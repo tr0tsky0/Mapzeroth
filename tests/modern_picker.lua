@@ -30,21 +30,21 @@ EXPANSION_NAME0, EXPANSION_NAME3, EXPANSION_NAME10 = "Classic", "Cataclysm", "Th
 addon.GetZoneName = function(_, mapID) return "Zone " .. tostring(mapID) end
 
 check(addon.CURRENT_EXPANSION == 12, "the current expansion is set in Data/Modern/Places.lua")
--- The season and the expansion are edited by hand each time: pin them (and the city list) here so the test does not follow them.
+-- The season and the expansion are edited by hand each time: pin them (and which cities are hubs) here so the test
+-- does not follow them. Modern's cities are addon.Cities (Data/Modern/Settlements.lua), Forever's shape; a city whose
+-- map the client can't name (none of the maps above) has no name, so it isn't offered here.
 addon.CURRENT_EXPANSION = 12
 addon.SEASONAL_DUNGEONS = { 1201, 945, 476 }
-addon.CityPlaces = {
-    { maps = { 84 },   expansion = 1,  faction = "Alliance", hub = true },
-    { maps = { 87 },   expansion = 1,  faction = "Alliance" },
-    { maps = { 85 },   expansion = 1,  faction = "Horde",    hub = true },
-    { maps = { 125 },  expansion = 3,  faction = "Both" },
-    { maps = { 627 },  expansion = 7,  faction = "Both",     hub = true },
-    { maps = { 1161 }, expansion = 8,  faction = "Alliance" },
-    { maps = { 2112 }, expansion = 10, faction = "Both",     hub = true },
-    { maps = { 2339 }, expansion = 11, faction = "Both",     hub = true },
-    { maps = { 2393 }, expansion = 12, faction = "Both",     hub = true },
-    { maps = { 590 },  expansion = 6,  faction = "Horde" },
+check(addon.Cities.stormwind and addon.World:GetNode("CITY_STORMWIND"), "Modern's cities are addon.Cities, each with a centre node")
+local pinned = {
+    stormwind = { 1, true }, ironforge = { 1 }, orgrimmar = { 1, true }, dalaran_northrend = { 3 },
+    dalaran_broken_isles = { 7, true }, boralus = { 8 }, valdrakken = { 10, true }, dornogal = { 11, true },
+    silvermoon = { 12, true },
 }
+for key, city in pairs(addon.Cities) do
+    local pin = pinned[key]
+    if pin then city.expansion, city.hub = pin[1], pin[2] end
+end
 addon.Instances = {
     [1299] = { 12 }, [1201] = { 10 }, [476] = { 6 }, [67] = { 4 }, [1307] = { 12, true },
     [1273] = { 11, true }, [742] = { 1, true }, [63] = { 1 },
@@ -134,8 +134,8 @@ check(#entryFor(entriesFor("Alliance"), 249) == 1, "and the old one under its ow
 check(addon.World:GetNode("INSTANCE_236") and addon.World:GetNode("INSTANCE_1292") and addon.World:GetNode("INSTANCE_237")
     and addon.World:GetNode("INSTANCE_749") and addon.World:GetNode("INSTANCE_230") and addon.World:GetNode("INSTANCE_1305") and addon.World:GetNode("INSTANCE_1317"), "the hand-added dungeon and raid entrances exist")
 
--- A city with no node on its maps isn't offered; an instance with no expansion isn't filed.
-check(not cities["Frostwall"], "no nodes, no city")
+-- A city the client can't name isn't offered; an instance with no expansion isn't filed.
+check(not cities["Frostwall"], "no name, no city")
 addon.Instances = {}
 check(not find(build("Alliance"), "dungeons"), "with no instance data there are no dungeon or raid sections")
 

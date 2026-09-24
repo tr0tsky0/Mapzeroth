@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1233, "every converted node made it into the tree (1213 converted + 20 hand-added): " .. total)
+check(total == 1257, "every node made it into the tree (1213 converted + 20 hand-added + 24 city centres): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -462,3 +462,22 @@ end
 -- Finding 7: Modern declares the expansion page and a flat mount bonus with no riding data.
 check(addon.PICKER_LAYOUT == "expansions" and addon.CURRENT_EXPANSION, "Modern declares the expansion page")
 check(addon.RidingSkills == nil and addon.DEFAULT_MOUNT_BONUS == 1.0, "Modern has a flat mount bonus, no riding data")
+
+-- Finding 6: Modern's cities are Forever's shape. Each has a centre node in an outdoor container of its own map (Darnassus's
+-- on Darkshore's past side), is routed to by that centre (no entrances: Modern flies), and can be reached.
+do
+    local World = addon.World
+    for key, city in pairs(addon.Cities) do
+        local centre = World:GetNode("CITY_" .. key:upper())
+        check(centre and centre.kind == "settlement" and centre.city == key and centre.mapID == city.mapID,
+            "city " .. key .. " has its centre node")
+        check(not World:GetFlag(World:GetNodeContainer(centre.id), "indoor"), "and it is outdoors: " .. key)
+    end
+    check(World:GetPhase(World:GetNodeContainer("CITY_DARNASSUS")) == "darkshore", "Darnassus's centre is on Darkshore's past side")
+    local ctx = makeCtx({ faction = "Alliance" })
+    local session = addon.Journey:Build(ctx, { id = "YOU_city", mapID = 84, x = 0.5, y = 0.6 })
+    local costs = addon.Pathfinder:FindCosts(session.graph, "YOU_city", session.graph.phase, {})
+    for _, key in ipairs({ "ironforge", "exodar", "dalaran_broken_isles", "valdrakken", "dornogal", "boralus", "oribos" }) do
+        check(costs["CITY_" .. key:upper()], "an Alliance player in Stormwind can reach " .. key)
+    end
+end

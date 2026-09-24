@@ -108,7 +108,8 @@ end
 -- The name of a city or town, in the client's language. A settlement has no
 -- name of its own in the data; it takes one from, in order: the client's name
 -- for its area, the client's name for its flight master (minus the ", Zone"
--- suffix), or a locale string CITY_<KEY> / TOWN_<KEY>.
+-- suffix), a locale string CITY_<KEY> / TOWN_<KEY>, or the client's name for its map
+-- (a city that is a map of its own: most of Modern's).
 local function settlementName(settlements, key, stringPrefix)
     local settlement = settlements and settlements[key]
     if not settlement then return nil end
@@ -125,6 +126,7 @@ local function settlementName(settlements, key, stringPrefix)
     if addon:HasString(stringKey) then
         return L[stringKey]
     end
+    return zoneName(settlement.mapID)
 end
 
 function addon:GetTownName(key) return settlementName(addon.Towns, key, "TOWN_") end

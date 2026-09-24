@@ -19,6 +19,12 @@ DROP_NODES  old-data nodes to leave out, by id (usually because a NODES entry of
          the right place).
 DROP_EDGES  old-data edges to leave out (usually because a hand-added route replaces them):
          { "from", "to", "method" }.
+CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
+         uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
+         the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
+         when the default -- every outdoor node on its first map -- would be wrong: a city that is part of a zone's
+         map), optional "taxi" (its flight master, which names it when its map's name isn't its own) }.
+         gen_modern_nodes.py writes them to Data/Modern/Settlements.lua with a CITY_<KEY> centre node each.
 """
 
 NODES = [
@@ -142,4 +148,36 @@ ABILITY_FACTIONS = {
 # Medallion cost of 40 was its 10 s cast plus the 30 s equip wait.
 ITEM_COSTS = {
     32757: 10,
+}
+
+# The cities (see the docstring). Moved here from Data/Modern/Places.lua's CityPlaces (2026-09-24), so Modern's cities
+# are the same addon.Cities shape as Forever's.
+CITIES = {
+    "stormwind":            {"maps": [84],   "expansion": 1,  "faction": "Alliance", "hub": True},
+    "ironforge":            {"maps": [87],   "expansion": 1,  "faction": "Alliance"},
+    "darnassus":            {"maps": [89],   "expansion": 1,  "faction": "Alliance"},
+    "orgrimmar":            {"maps": [85],   "expansion": 1,  "faction": "Horde", "hub": True},
+    "thunder_bluff":        {"maps": [88],   "expansion": 1,  "faction": "Horde"},
+    "undercity":            {"maps": [90],   "expansion": 1,  "faction": "Horde"},
+    "exodar":               {"maps": [103],  "expansion": 2,  "faction": "Alliance"},
+    "silvermoon_bc":        {"maps": [110],  "expansion": 2,  "faction": "Horde"},
+    "shattrath":            {"maps": [111],  "expansion": 2,  "faction": "Both"},
+    "dalaran_northrend":    {"maps": [125],  "expansion": 3,  "faction": "Both", "hub": True},
+    # Both shrines are part of the Vale of Eternal Blossoms' map (390); map 393 holds no node.
+    "shrine_of_seven_stars": {"maps": [390], "expansion": 5,  "faction": "Alliance",
+                              "nodes": ["SHRINE_OF_SEVEN_STARS", "TAXI_1057"], "taxi": "TAXI_1057"},
+    "shrine_of_two_moons":  {"maps": [390],  "expansion": 5,  "faction": "Horde",
+                             "nodes": ["SHRINE_OF_TWO_MOONS", "TAXI_1058"], "taxi": "TAXI_1058"},
+    "lunarfall":            {"maps": [582],  "expansion": 6,  "faction": "Alliance"},
+    "frostwall":            {"maps": [590],  "expansion": 6,  "faction": "Horde"},
+    "stormshield":          {"maps": [622],  "expansion": 6,  "faction": "Alliance"},
+    "warspear":             {"maps": [624],  "expansion": 6,  "faction": "Horde"},
+    "dalaran_broken_isles": {"maps": [627],  "expansion": 7,  "faction": "Both", "hub": True},
+    "boralus":              {"maps": [1161], "expansion": 8,  "faction": "Alliance"},
+    "dazaralor":            {"maps": [1165], "expansion": 8,  "faction": "Horde"},
+    "oribos":               {"maps": [1670, 1671], "expansion": 9, "faction": "Both", "hub": True},
+    "valdrakken":           {"maps": [2112], "expansion": 10, "faction": "Both", "hub": True},
+    "dornogal":             {"maps": [2339], "expansion": 11, "faction": "Both", "hub": True},
+    "undermine":            {"maps": [2346], "expansion": 11, "faction": "Both"},
+    "silvermoon":           {"maps": [2393], "expansion": 12, "faction": "Both", "hub": True},
 }
