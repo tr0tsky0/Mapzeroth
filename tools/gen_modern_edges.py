@@ -30,6 +30,7 @@ these were already worked out on the original addon's wip/timephased-routing bra
 worth reusing rather than re-deriving.
 """
 import pathlib
+import re
 import sys
 from lupa.lua51 import LuaRuntime
 
@@ -95,6 +96,22 @@ def known_node_ids():
     return ids
 
 
+# The keys of addon.HOLIDAYS (Constants.lua): what an edge's `holiday` requirement must say.
+HOLIDAY_KEYS = {"love_is_in_the_air", "darkmoon_faire", "feast_of_winters_veil"}
+
+
+def holiday_key(name):
+    """The old data names a holiday as the calendar does ("Darkmoon Faire"); the engine's table is keyed
+    darkmoon_faire. Lower case, apostrophes dropped, other runs of non-letters to one underscore
+    ("Feast of Winter's Veil" -> feast_of_winters_veil). Anything that isn't a known key is an error here,
+    not a silently dead edge in the game."""
+    key = re.sub(r"[^a-z0-9]+", "_", str(name).lower().replace("'", "")).strip("_")
+    if key not in HOLIDAY_KEYS:
+        raise SystemExit(f"holiday '{name}' -> '{key}' is not an addon.HOLIDAYS key {sorted(HOLIDAY_KEYS)}; "
+                         "add it to Constants.lua and HOLIDAY_KEYS in this script, or fix the source data")
+    return key
+
+
 def lua_requirements(reqs):
     if reqs is None:
         return None, []
@@ -103,7 +120,7 @@ def lua_requirements(reqs):
     for key, value in reqs.items():
         key = RENAME_REQUIREMENT.get(key, key)
         if key in KNOWN_REQUIREMENTS or key in KNOWN_INERT_REQUIREMENTS:
-            out[key] = value
+            out[key] = holiday_key(value) if key == "holiday" else value
         else:
             unknown.append(key)
     return out, unknown

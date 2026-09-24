@@ -66,8 +66,16 @@ end
 -- Is a seasonal event (addon.HOLIDAYS key) live right now, cached per key for the session
 -- (a snapshot is a snapshot; a holiday doesn't start or end mid-search). No holidays are
 -- gated on in Forever's own data yet, so this only does real work for Modern.
+-- The client's calendar has nothing to say until it has been opened and has answered (CALENDAR_UPDATE_EVENT_LIST,
+-- Core.lua): until then nothing is live, and that is not cached, so the first real answer is the one kept.
 local holidayCache = {}
+
+function addon:ResetHolidayCache()
+    holidayCache = {}
+end
+
 local function isHolidayActive(key)
+    if not addon.calendarReady then return false end
     if holidayCache[key] ~= nil then return holidayCache[key] end
     local icons = addon.HOLIDAYS and addon.HOLIDAYS[key]
     local active = false
