@@ -8,7 +8,7 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.BfA = {
-    { id = "FLIGHT_TRANQUILLIEN_BC", container = "quelthalas.map95", mapID = 95, x = 0.4592, y = 0.3054 }, -- Tranquillien
+    { id = "TAXI_83", container = "quelthalas.map95", mapID = 95, x = 0.4592, y = 0.3054 }, -- Tranquillien
     { id = "TAXI_205", container = "quelthalas.map95", mapID = 95, x = 0.7350, y = 0.6710 }, -- Zul'Aman
     { id = "SILVERMOON", container = "quelthalas.map110", mapID = 110, x = 0.5826, y = 0.1924, city = "silvermoon_bc" }, -- Orgrimmar Portal
     { id = "TAXI_631", container = "quelthalas.map110", mapID = 110, x = 0.3014, y = 0.7963, city = "silvermoon_bc" }, -- Falconwing Square

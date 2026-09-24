@@ -140,7 +140,7 @@ addon.Nodes.EK = {
     { id = "TAXI_665", container = "ek_overworld.map241", mapID = 241, x = 0.4740, y = 0.2960 }, -- Thundermar
     { id = "TAXI_632", container = "ek_overworld.map15", mapID = 15, x = 0.5216, y = 0.5254 }, -- Bloodwatcher Point
     { id = "DOCK_GILNEAS", container = "ek_overworld.map217", mapID = 217, x = 0.6360, y = 0.9560 }, -- Dock
-    { id = "TAXI_83", container = "ek_overworld.map2395", mapID = 2395, x = 0.4784, y = 0.6715 }, -- Tranquillien Flightmaster
+    { id = "TAXI_3134", container = "ek_overworld.map2395", mapID = 2395, x = 0.4784, y = 0.6715 }, -- Tranquillien Flightmaster
     { id = "TAXI_660", container = "ek_overworld.map1275", mapID = 1275, x = 0.7488, y = 0.1758 }, -- The Krazzworks
     { id = "SILVERMOON_PORTAL_ROOM", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5274, y = 0.6535, city = "silvermoon" }, -- Portal Room
     { id = "TAXI_615", container = "ek_overworld.map49", mapID = 49, x = 0.5380, y = 0.5510 }, -- Camp Everstill

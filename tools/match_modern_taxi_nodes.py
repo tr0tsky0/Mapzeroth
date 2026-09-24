@@ -13,9 +13,11 @@ Nodes whose id carries _FLIGHT anywhere are matched (EVERLOOK_FLIGHT_HORDE as we
 first; an id that says its faction (`..._ALLIANCE` / `..._HORDE`) keeps only the rows of that faction (the TaxiNodes
 Flags bit: 1 Alliance, 2 Horde). What the name leaves open (no match, or several) is settled by in-game captures:
 `/mzdump nodes <mapID>` (MapzerothDataTools) lists every flight master the client has under a map with its real id and
-map position; paste the output into tools/modern_source/taxi_captures/<name>.txt. The node takes the captured flight
+map position; paste the output into tools/modern_source/taxi_captures/<name>_<mapID>.txt. The node takes the captured flight
 master at its map position (same map, within CAPTURE_RADIUS), of its faction; a faction twin of the same name that the
-capture didn't list (one hidden behind a condition) is found through the name.
+capture didn't list (one hidden behind a condition) is found through the name. And of several candidates, the one a
+capture puts on the node's own continent is taken when it is the only one (a captured flight master is on the
+continent of the map it was reported on: the Eastern Kingdoms dump lists Midnight's Quel'Thalas ones on Quel'Thalas).
 """
 import csv
 import math
@@ -70,15 +72,33 @@ def faction_of(node_id):
     return None
 
 
-def load_captures():
-    """[(taxi id, mapID, x, y)] from every pasted /mzdump nodes output."""
-    found = []
+def load_captures(continent_of):
+    """[(taxi id, mapID, x, y)] from every pasted /mzdump nodes output, and { continent uiMapID: {taxi ids} } by the
+    continent of the map each was reported on."""
+    found, by_continent = [], {}
     for path in sorted(CAPTURES.glob("*.txt")) if CAPTURES.exists() else []:
         for line in path.read_text(encoding="utf-8").splitlines():
             m = re.search(r'id = "TAXI_(\d+)".*?mapID = (\d+), x = ([\d.]+), y = ([\d.]+)', line)
             if m:
                 found.append((m.group(1), int(m.group(2)), float(m.group(3)), float(m.group(4))))
-    return found
+                by_continent.setdefault(continent_of(int(m.group(2))), set()).add(m.group(1))
+    return found, by_continent
+
+
+def continent_finder():
+    """uiMapID -> its continent's uiMapID (UiMap type 2), from tools/modern_source/uimap_retail.csv."""
+    with open(ROOT / "tools" / "modern_source" / "uimap_retail.csv", encoding="utf-8") as f:
+        maps = {int(r["ID"]): (int(r["ParentUiMapID"] or 0), int(r["Type"])) for r in csv.DictReader(f)}
+
+    def find(map_id):
+        seen = set()
+        while map_id in maps and map_id not in seen:
+            seen.add(map_id)
+            if maps[map_id][1] == 2:
+                return map_id
+            map_id = maps[map_id][0]
+        return None
+    return find
 
 
 # A handful of old names the general rules above can't reconstruct the real name from --
@@ -119,7 +139,8 @@ NOT_REAL_TAXI = {
 def main():
     taxi_by_base = {}
     flags_of, name_of = {}, {}
-    captures = load_captures()
+    continent_of = continent_finder()
+    captures, captured_on = load_captures(continent_of)
     taxi_by_full = {}      # full name, comma and all -- for a MANUAL_FIXES value that keeps
                             # the zone qualifier on purpose to pick one of several same-base-name rows
     placed_by_base = {}    # same as taxi_by_base, but rows sitting at world (0,0,0) -- unplaced/dead data -- left out
@@ -195,6 +216,14 @@ def main():
                         pool = [tid for tid in pool if flags_of.get(tid, 0) & faction]
                     if pool:
                         candidates, by = pool[:1], "capture"
+                if len(candidates) > 1:
+                    # A capture that lists exactly one of the candidates, wherever it put it (the client gives some
+                    # flight masters continent coordinates -- Northrend's Dalaran -- so no position can match them),
+                    # says which one is real.
+                    captured_ids = captured_on.get(continent_of(map_id), set())
+                    seen = [tid for tid in candidates if tid in captured_ids]
+                    if len(seen) == 1:
+                        candidates, by = seen, "capture"
                 if len(candidates) == 1:
                     verdict = "one"
                 elif not candidates:

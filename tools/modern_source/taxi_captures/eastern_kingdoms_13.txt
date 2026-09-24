@@ -1,0 +1,119 @@
+-- /mzdump nodes 13 (Eastern Kingdoms), retail, captured 2026-09-24.
+{ id = "TAXI_2", container = "TODO", mapID = 84, x = 0.9488, y = 0.4860 }, -- Stormwind, Elwynn
+{ id = "TAXI_4", container = "TODO", mapID = 52, x = 0.5664, y = 0.4937 }, -- Sentinel Hill, Westfall
+{ id = "TAXI_5", container = "TODO", mapID = 49, x = 0.2928, y = 0.5340 }, -- Lakeshire, Redridge
+{ id = "TAXI_6", container = "TODO", mapID = 87, x = 0.5589, y = 0.4787 }, -- Ironforge, Dun Morogh
+{ id = "TAXI_7", container = "TODO", mapID = 56, x = 0.0737, y = 0.5748 }, -- Menethil Harbor, Wetlands
+{ id = "TAXI_8", container = "TODO", mapID = 48, x = 0.3394, y = 0.5079 }, -- Thelsamar, Loch Modan
+{ id = "TAXI_10", container = "TODO", mapID = 21, x = 0.4556, y = 0.4242 }, -- The Sepulcher, Silverpine Forest
+{ id = "TAXI_11", container = "TODO", mapID = 13, x = 0.4489, y = 0.3895 }, -- Undercity, Tirisfal
+{ id = "TAXI_12", container = "TODO", mapID = 47, x = 0.7759, y = 0.4438 }, -- Darkshire, Duskwood
+{ id = "TAXI_13", container = "TODO", mapID = 25, x = 0.5602, y = 0.4367 }, -- Tarren Mill, Hillsbrad
+{ id = "TAXI_16", container = "TODO", mapID = 14, x = 0.3992, y = 0.4739 }, -- Refuge Pointe, Arathi
+{ id = "TAXI_17", container = "TODO", mapID = 14, x = 0.7653, y = 0.4178 }, -- Hammerfall, Arathi
+{ id = "TAXI_18", container = "TODO", mapID = 224, x = 0.3766, y = 0.7965 }, -- Booty Bay, Stranglethorn
+{ id = "TAXI_19", container = "TODO", mapID = 224, x = 0.3835, y = 0.8031 }, -- Booty Bay, Stranglethorn
+{ id = "TAXI_20", container = "TODO", mapID = 224, x = 0.4320, y = 0.3318 }, -- Grom'gol, Stranglethorn
+{ id = "TAXI_21", container = "TODO", mapID = 15, x = 0.2001, y = 0.5377 }, -- New Kargath, Badlands
+{ id = "TAXI_43", container = "TODO", mapID = 26, x = 0.1111, y = 0.5690 }, -- Aerie Peak, The Hinterlands
+{ id = "TAXI_56", container = "TODO", mapID = 51, x = 0.3449, y = 0.5509 }, -- Stonard, Swamp of Sorrows
+{ id = "TAXI_66", container = "TODO", mapID = 22, x = 0.3617, y = 0.7044 }, -- Chillwind Camp, Western Plaguelands
+{ id = "TAXI_67", container = "TODO", mapID = 23, x = 0.7574, y = 0.5332 }, -- Light's Hope Chapel, Eastern Plaguelands
+{ id = "TAXI_68", container = "TODO", mapID = 23, x = 0.6754, y = 0.5852 }, -- Light's Hope Chapel, Eastern Plaguelands
+{ id = "TAXI_70", container = "TODO", mapID = 36, x = 0.7446, y = 0.2470 }, -- Flame Crest, Burning Steppes
+{ id = "TAXI_71", container = "TODO", mapID = 36, x = 0.7214, y = 0.6568 }, -- Morgan's Vigil, Burning Steppes
+{ id = "TAXI_74", container = "TODO", mapID = 27, x = 0.6409, y = 0.5703 }, -- Thorium Point, Searing Gorge
+{ id = "TAXI_75", container = "TODO", mapID = 27, x = 0.8904, y = 0.5710 }, -- Thorium Point, Searing Gorge
+{ id = "TAXI_76", container = "TODO", mapID = 26, x = 0.7414, y = 0.7433 }, -- Revantusk Village, The Hinterlands
+{ id = "TAXI_84", container = "TODO", mapID = 2537, x = 0.1679, y = 0.9650 }, -- Plaguewood Tower, Eastern Plaguelands
+{ id = "TAXI_85", container = "TODO", mapID = 2537, x = 0.2535, y = 0.9082 }, -- Northpass Tower, Eastern Plaguelands
+{ id = "TAXI_86", container = "TODO", mapID = 2537, x = 0.3182, y = 0.9405 }, -- Eastwall Tower, Eastern Plaguelands
+{ id = "TAXI_87", container = "TODO", mapID = 23, x = 0.5242, y = 0.8040 }, -- Crown Guard Tower, Eastern Plaguelands
+{ id = "TAXI_195", container = "TODO", mapID = 47, x = 0.4660, y = 0.9041 }, -- Rebel Camp, Stranglethorn Vale
+{ id = "TAXI_315", container = "TODO", mapID = 2537, x = 0.3925, y = 0.7550 }, -- Acherus: The Ebon Hold
+{ id = "TAXI_383", container = "TODO", mapID = 23, x = 0.1835, y = 0.5754 }, -- Thondroril River, Eastern Plaguelands
+{ id = "TAXI_384", container = "TODO", mapID = 18, x = 0.7892, y = 0.6823 }, -- The Bulwark, Tirisfal
+{ id = "TAXI_460", container = "TODO", mapID = 18, x = 0.5889, y = 0.5655 }, -- Brill, Tirisfal Glades
+{ id = "TAXI_521", container = "TODO", mapID = 203, x = 0.6993, y = 0.4269 }, -- Smuggler's Scar, Vashj'ir
+{ id = "TAXI_522", container = "TODO", mapID = 203, x = 0.6434, y = 0.4251 }, -- Silver Tide Hollow, Vashj'ir
+{ id = "TAXI_523", container = "TODO", mapID = 203, x = 0.6521, y = 0.6372 }, -- Tranquil Wash, Vashj'ir
+{ id = "TAXI_524", container = "TODO", mapID = 13, x = 0.3325, y = 0.7498 }, -- Darkbreak Cove, Vashj'ir
+{ id = "TAXI_525", container = "TODO", mapID = 203, x = 0.6138, y = 0.8458 }, -- Legion's Rest, Vashj'ir
+{ id = "TAXI_526", container = "TODO", mapID = 203, x = 0.8170, y = 0.4521 }, -- Tenebrous Cavern, Vashj'ir
+{ id = "TAXI_551", container = "TODO", mapID = 56, x = 0.5479, y = 0.3900 }, -- Whelgar's Retreat, Wetlands
+{ id = "TAXI_552", container = "TODO", mapID = 56, x = 0.5028, y = 0.4204 }, -- Greenwarden's Grove, Wetlands
+{ id = "TAXI_553", container = "TODO", mapID = 56, x = 0.5017, y = 0.1845 }, -- Dun Modr, Wetlands
+{ id = "TAXI_554", container = "TODO", mapID = 56, x = 0.6693, y = 0.7635 }, -- Slabchisel's Survey, Wetlands
+{ id = "TAXI_555", container = "TODO", mapID = 241, x = 0.5024, y = 0.9598 }, -- Farstrider Lodge, Loch Modan
+{ id = "TAXI_582", container = "TODO", mapID = 37, x = 0.4778, y = 0.7655 }, -- Goldshire, Elwynn
+{ id = "TAXI_583", container = "TODO", mapID = 52, x = 0.4211, y = 0.6330 }, -- Moonbrook, Westfall
+{ id = "TAXI_584", container = "TODO", mapID = 52, x = 0.6168, y = 0.1879 }, -- Furlbrow's Pumpkin Farm, Westfall
+{ id = "TAXI_589", container = "TODO", mapID = 37, x = 0.8788, y = 0.5798 }, -- Eastvale Logging Camp, Elwynn
+{ id = "TAXI_590", container = "TODO", mapID = 224, x = 0.5175, y = 0.4077 }, -- Fort Livingston, Stranglethorn
+{ id = "TAXI_591", container = "TODO", mapID = 224, x = 0.5309, y = 0.6987 }, -- Explorers' League Digsite, Stranglethorn
+{ id = "TAXI_592", container = "TODO", mapID = 224, x = 0.3886, y = 0.5319 }, -- Hardwrench Hideaway, Stranglethorn
+{ id = "TAXI_593", container = "TODO", mapID = 224, x = 0.5342, y = 0.2581 }, -- Bambala, Stranglethorn
+{ id = "TAXI_596", container = "TODO", mapID = 49, x = 0.7787, y = 0.4962 }, -- Shalewind Canyon, Redridge
+{ id = "TAXI_598", container = "TODO", mapID = 49, x = 0.9177, y = 0.5331 }, -- Marshtide Watch, Swamp of Sorrows
+{ id = "TAXI_599", container = "TODO", mapID = 49, x = 0.8254, y = 0.7949 }, -- Bogpaddle, Swamp of Sorrows
+{ id = "TAXI_600", container = "TODO", mapID = 49, x = 0.3726, y = 0.6937 }, -- The Harborage, Swamp of Sorrows
+{ id = "TAXI_605", container = "TODO", mapID = 203, x = 0.6951, y = 0.7533 }, -- Voldrin's Hold, Vashj'ir
+{ id = "TAXI_606", container = "TODO", mapID = 203, x = 0.6968, y = 0.3433 }, -- Sandy Beach, Vashj'ir
+{ id = "TAXI_607", container = "TODO", mapID = 203, x = 0.6988, y = 0.3339 }, -- Sandy Beach, Vashj'ir
+{ id = "TAXI_608", container = "TODO", mapID = 203, x = 0.7248, y = 0.4211 }, -- Sandy Beach, Vashj'ir
+{ id = "TAXI_609", container = "TODO", mapID = 203, x = 0.7260, y = 0.4207 }, -- Sandy Beach, Vashj'ir
+{ id = "TAXI_610", container = "TODO", mapID = 13, x = 0.3933, y = 0.6940 }, -- Stygian Bounty, Vashj'ir
+{ id = "TAXI_611", container = "TODO", mapID = 203, x = 0.6971, y = 0.7510 }, -- Voldrin's Hold, Vashj'ir
+{ id = "TAXI_612", container = "TODO", mapID = 13, x = 0.4025, y = 0.6940 }, -- Stygian Bounty, Vashj'ir
+{ id = "TAXI_615", container = "TODO", mapID = 49, x = 0.6906, y = 0.6739 }, -- Camp Everstill, Redridge
+{ id = "TAXI_617", container = "TODO", mapID = 26, x = 0.3238, y = 0.4950 }, -- Hiri'watha Research Station, The Hinterlands
+{ id = "TAXI_618", container = "TODO", mapID = 26, x = 0.7329, y = 0.4173 }, -- Stormfeather Outpost, The Hinterlands
+{ id = "TAXI_619", container = "TODO", mapID = 27, x = 0.5969, y = 0.5266 }, -- Kharanos, Dun Morogh
+{ id = "TAXI_620", container = "TODO", mapID = 27, x = 0.8607, y = 0.4750 }, -- Gol'Bolar Quarry, Dun Morogh
+{ id = "TAXI_622", container = "TODO", mapID = 47, x = 0.2097, y = 0.7059 }, -- Raven Hill, Duskwood
+{ id = "TAXI_630", container = "TODO", mapID = 23, x = 0.6817, y = 0.5366 }, -- Light's Shield Tower, Eastern Plaguelands
+{ id = "TAXI_632", container = "TODO", mapID = 15, x = 0.5249, y = 0.7137 }, -- Bloodwatcher Point, Badlands
+{ id = "TAXI_633", container = "TODO", mapID = 15, x = 0.4882, y = 0.3617 }, -- Dustwind Dig, Badlands
+{ id = "TAXI_634", container = "TODO", mapID = 15, x = 0.3126, y = 0.6990 }, -- Dragon's Mouth, Badlands
+{ id = "TAXI_635", container = "TODO", mapID = 15, x = 0.7374, y = 0.3523 }, -- Fuselight, Badlands
+{ id = "TAXI_645", container = "TODO", mapID = 21, x = 0.5790, y = 0.2363 }, -- Forsaken High Command, Silverpine Forest
+{ id = "TAXI_646", container = "TODO", mapID = 217, x = 0.5725, y = 0.1796 }, -- Forsaken Forward Command, Gilneas
+{ id = "TAXI_649", container = "TODO", mapID = 22, x = 0.5047, y = 0.6470 }, -- Andorhal, Western Plaguelands
+{ id = "TAXI_650", container = "TODO", mapID = 22, x = 0.3950, y = 0.6950 }, -- Andorhal, Western Plaguelands
+{ id = "TAXI_651", container = "TODO", mapID = 22, x = 0.6020, y = 0.5918 }, -- The Menders' Stead, Western Plaguelands
+{ id = "TAXI_654", container = "TODO", mapID = 21, x = 0.4297, y = 0.6360 }, -- The Forsaken Front, Silverpine Forest
+{ id = "TAXI_656", container = "TODO", mapID = 241, x = 0.4575, y = 0.7613 }, -- Crushblow, Twilight Highlands
+{ id = "TAXI_657", container = "TODO", mapID = 241, x = 0.5027, y = 0.3848 }, -- The Gullet, Twilight Highlands
+{ id = "TAXI_658", container = "TODO", mapID = 241, x = 0.3879, y = 0.3125 }, -- Vermillion Redoubt, Twilight Highlands
+{ id = "TAXI_659", container = "TODO", mapID = 241, x = 0.6198, y = 0.4767 }, -- Bloodgulch, Twilight Highlands
+{ id = "TAXI_660", container = "TODO", mapID = 241, x = 0.7535, y = 0.1775 }, -- The Krazzworks, Twilight Highlands
+{ id = "TAXI_661", container = "TODO", mapID = 241, x = 0.7384, y = 0.5281 }, -- Dragonmaw Port, Twilight Highlands
+{ id = "TAXI_662", container = "TODO", mapID = 241, x = 0.8164, y = 0.7702 }, -- Highbank, Twilight Highlands
+{ id = "TAXI_663", container = "TODO", mapID = 241, x = 0.4385, y = 0.5731 }, -- Victor's Point, Twilight Highlands
+{ id = "TAXI_664", container = "TODO", mapID = 241, x = 0.6038, y = 0.6401 }, -- Firebeard's Patrol, Twilight Highlands
+{ id = "TAXI_665", container = "TODO", mapID = 241, x = 0.4298, y = 0.4003 }, -- Thundermar, Twilight Highlands
+{ id = "TAXI_666", container = "TODO", mapID = 241, x = 0.6857, y = 0.2149 }, -- Kirthaven, Twilight Highlands
+{ id = "TAXI_667", container = "TODO", mapID = 25, x = 0.4908, y = 0.5841 }, -- Ruins of Southshore, Hillsbrad
+{ id = "TAXI_668", container = "TODO", mapID = 21, x = 0.6583, y = 0.8114 }, -- Southpoint Gate, Hillsbrad
+{ id = "TAXI_669", container = "TODO", mapID = 25, x = 0.5966, y = 0.6917 }, -- Eastpoint Tower, Hillsbrad
+{ id = "TAXI_670", container = "TODO", mapID = 22, x = 0.4118, y = 0.7636 }, -- Strahnbrad, Alterac Mountains
+{ id = "TAXI_672", container = "TODO", mapID = 2537, x = 0.0686, y = 0.8559 }, -- Hearthglen, Western Plaguelands
+{ id = "TAXI_673", container = "TODO", mapID = 32, x = 0.4095, y = 0.7810 }, -- Iron Summit, Searing Gorge
+{ id = "TAXI_675", container = "TODO", mapID = 37, x = 0.5941, y = 0.0660 }, -- Flamestar Post, Burning Steppes
+{ id = "TAXI_676", container = "TODO", mapID = 36, x = 0.4616, y = 0.6174 }, -- Chiselgrip, Burning Steppes
+{ id = "TAXI_681", container = "TODO", mapID = 21, x = 0.4598, y = 0.2181 }, -- Forsaken Rear Guard, Silverpine Forest
+{ id = "TAXI_3106", container = "TODO", mapID = 2537, x = 0.4816, y = 0.5538 }, -- Camp Stonewash, Zul'Aman
+{ id = "TAXI_3125", container = "TODO", mapID = 2537, x = 0.2812, y = 0.1199 }, -- Terrace of the Sun, Isle of Quel'Danas
+{ id = "TAXI_3126", container = "TODO", mapID = 2537, x = 0.4036, y = 0.8609 }, -- Torntusk Overlook, Zul'Aman
+{ id = "TAXI_3127", container = "TODO", mapID = 2537, x = 0.4674, y = 0.7860 }, -- Amani'Zar Village, Zul'Aman
+{ id = "TAXI_3128", container = "TODO", mapID = 2537, x = 0.3909, y = 0.7158 }, -- Atal'Aman, Zul'Aman
+{ id = "TAXI_3129", container = "TODO", mapID = 2537, x = 0.4625, y = 0.6018 }, -- Shadebasin Watch, Zul'Aman
+{ id = "TAXI_3130", container = "TODO", mapID = 2537, x = 0.4323, y = 0.5406 }, -- Witherbark Bluffs, Zul'Aman
+{ id = "TAXI_3131", container = "TODO", mapID = 2537, x = 0.2802, y = 0.3921 }, -- Sanctum of Light, Silvermoon City
+{ id = "TAXI_3132", container = "TODO", mapID = 2537, x = 0.3136, y = 0.3786 }, -- The Royal Exchange, Silvermoon City
+{ id = "TAXI_3133", container = "TODO", mapID = 2537, x = 0.2345, y = 0.4996 }, -- Fairbreeze Village, Eversong Woods
+{ id = "TAXI_3134", container = "TODO", mapID = 2537, x = 0.2539, y = 0.6350 }, -- Tranquillien, Eversong Woods
+{ id = "TAXI_3168", container = "TODO", mapID = 2537, x = 0.7519, y = 0.6201 }, -- Tokka's Landing, The Coiled Isle
+{ id = "TAXI_3190", container = "TODO", mapID = 2537, x = 0.1515, y = 0.7743 }, -- Silverglade Refuge, Eversong Woods
+{ id = "TAXI_1537", container = "TODO", mapID = 17, x = 0.7300, y = 0.4865 }, -- Shattered Landing, Blasted Lands
+{ id = "TAXI_1538", container = "TODO", mapID = 17, x = 0.6752, y = 0.2747 }, -- Shattered Beachhead, Blasted Lands

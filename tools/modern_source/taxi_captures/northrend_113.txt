@@ -1,0 +1,53 @@
+-- /mzdump nodes 113 (Northrend), retail, captured 2026-09-24.
+{ id = "TAXI_183", container = "TODO", mapID = 117, x = 0.5976, y = 0.6324 }, -- Valgarde Port, Howling Fjord
+{ id = "TAXI_184", container = "TODO", mapID = 117, x = 0.6319, y = 0.1919 }, -- Fort Wildervar, Howling Fjord
+{ id = "TAXI_185", container = "TODO", mapID = 117, x = 0.3438, y = 0.4556 }, -- Westguard Keep, Howling Fjord
+{ id = "TAXI_190", container = "TODO", mapID = 117, x = 0.4893, y = 0.7515 }, -- New Agamand, Howling Fjord
+{ id = "TAXI_191", container = "TODO", mapID = 117, x = 0.7903, y = 0.2972 }, -- Vengeance Landing, Howling Fjord
+{ id = "TAXI_192", container = "TODO", mapID = 117, x = 0.5234, y = 0.0839 }, -- Camp Winterhoof, Howling Fjord
+{ id = "TAXI_226", container = "TODO", mapID = 114, x = 0.3116, y = 0.3441 }, -- Transitus Shield, Coldarra
+{ id = "TAXI_244", container = "TODO", mapID = 115, x = 0.7706, y = 0.4981 }, -- Wintergarde Keep, Dragonblight
+{ id = "TAXI_245", container = "TODO", mapID = 114, x = 0.6449, y = 0.6381 }, -- Valiance Keep, Borean Tundra
+{ id = "TAXI_246", container = "TODO", mapID = 114, x = 0.5651, y = 0.2234 }, -- Fizzcrank Airstrip, Borean Tundra
+{ id = "TAXI_247", container = "TODO", mapID = 115, x = 0.3218, y = 0.5403 }, -- Stars' Rest, Dragonblight
+{ id = "TAXI_248", container = "TODO", mapID = 117, x = 0.2601, y = 0.2502 }, -- Apothecary Camp, Howling Fjord
+{ id = "TAXI_249", container = "TODO", mapID = 116, x = 0.7105, y = 0.4687 }, -- Camp Oneqwah, Grizzly Hills
+{ id = "TAXI_250", container = "TODO", mapID = 116, x = 0.2841, y = 0.6702 }, -- Conquest Hold, Grizzly Hills
+{ id = "TAXI_251", container = "TODO", mapID = 115, x = 0.3623, y = 0.2575 }, -- Fordragon Hold, Dragonblight
+{ id = "TAXI_252", container = "TODO", mapID = 115, x = 0.6026, y = 0.4803 }, -- Wyrmrest Temple, Dragonblight
+{ id = "TAXI_253", container = "TODO", mapID = 116, x = 0.3131, y = 0.6633 }, -- Amberpine Lodge, Grizzly Hills
+{ id = "TAXI_254", container = "TODO", mapID = 115, x = 0.7319, y = 0.6236 }, -- Venomspite, Dragonblight
+{ id = "TAXI_255", container = "TODO", mapID = 116, x = 0.5881, y = 0.2662 }, -- Westfall Brigade, Grizzly Hills
+{ id = "TAXI_256", container = "TODO", mapID = 115, x = 0.4083, y = 0.4906 }, -- Agmar's Hammer, Dragonblight
+{ id = "TAXI_257", container = "TODO", mapID = 114, x = 0.3810, y = 0.5145 }, -- Warsong Hold, Borean Tundra
+{ id = "TAXI_258", container = "TODO", mapID = 114, x = 0.7774, y = 0.4422 }, -- Taunka'le Village, Borean Tundra
+{ id = "TAXI_259", container = "TODO", mapID = 114, x = 0.5188, y = 0.1754 }, -- Bor'gorok Outpost, Borean Tundra
+{ id = "TAXI_260", container = "TODO", mapID = 115, x = 0.4388, y = 0.1915 }, -- Kor'kron Vanguard, Dragonblight
+{ id = "TAXI_289", container = "TODO", mapID = 114, x = 0.4506, y = 0.3408 }, -- Amber Ledge, Borean Tundra
+{ id = "TAXI_294", container = "TODO", mapID = 115, x = 0.4511, y = 0.7273 }, -- Moa'ki, Dragonblight
+{ id = "TAXI_295", container = "TODO", mapID = 117, x = 0.2620, y = 0.6406 }, -- Kamagua, Howling Fjord
+{ id = "TAXI_296", container = "TODO", mapID = 114, x = 0.7620, y = 0.4494 }, -- Unu'pe, Borean Tundra
+{ id = "TAXI_303", container = "TODO", mapID = 123, x = 0.7205, y = 0.3105 }, -- Valiance Landing Camp, Wintergrasp
+{ id = "TAXI_304", container = "TODO", mapID = 121, x = 0.4527, y = 0.7959 }, -- The Argent Stand, Zul'Drak
+{ id = "TAXI_305", container = "TODO", mapID = 121, x = 0.1972, y = 0.7736 }, -- Ebon Watch, Zul'Drak
+{ id = "TAXI_306", container = "TODO", mapID = 121, x = 0.3745, y = 0.7445 }, -- Light's Breach, Zul'Drak
+{ id = "TAXI_307", container = "TODO", mapID = 121, x = 0.6450, y = 0.6058 }, -- Zim'Torga, Zul'Drak
+{ id = "TAXI_308", container = "TODO", mapID = 119, x = 0.5007, y = 0.6133 }, -- River's Heart, Sholazar Basin
+{ id = "TAXI_309", container = "TODO", mapID = 119, x = 0.2536, y = 0.5824 }, -- Nesingwary Base Camp, Sholazar Basin
+{ id = "TAXI_310", container = "TODO", mapID = 113, x = 0.4944, y = 0.4214 }, -- Dalaran (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_320", container = "TODO", mapID = 120, x = 0.4441, y = 0.8459 }, -- K3, The Storm Peaks
+{ id = "TAXI_321", container = "TODO", mapID = 120, x = 0.2656, y = 0.7987 }, -- Frosthold, The Storm Peaks
+{ id = "TAXI_322", container = "TODO", mapID = 120, x = 0.6256, y = 0.6280 }, -- Dun Niffelem, The Storm Peaks
+{ id = "TAXI_323", container = "TODO", mapID = 120, x = 0.3787, y = 0.5871 }, -- Grom'arsh Crash-Site, The Storm Peaks
+{ id = "TAXI_324", container = "TODO", mapID = 120, x = 0.7441, y = 0.4885 }, -- Camp Tunka'lo, The Storm Peaks
+{ id = "TAXI_325", container = "TODO", mapID = 118, x = 0.1945, y = 0.4783 }, -- Death's Rise, Icecrown
+{ id = "TAXI_326", container = "TODO", mapID = 120, x = 0.4849, y = 0.1752 }, -- Ulduar, The Storm Peaks
+{ id = "TAXI_327", container = "TODO", mapID = 120, x = 0.3008, y = 0.4399 }, -- Bouldercrag's Refuge, The Storm Peaks
+{ id = "TAXI_331", container = "TODO", mapID = 120, x = 0.8379, y = 0.6960 }, -- Gundrak, Zul'Drak
+{ id = "TAXI_332", container = "TODO", mapID = 123, x = 0.2163, y = 0.3487 }, -- Warsong Camp, Wintergrasp
+{ id = "TAXI_333", container = "TODO", mapID = 118, x = 0.4371, y = 0.3248 }, -- The Shadow Vault, Icecrown
+{ id = "TAXI_334", container = "TODO", mapID = 118, x = 0.8779, y = 0.7262 }, -- The Argent Vanguard, Icecrown
+{ id = "TAXI_335", container = "TODO", mapID = 118, x = 0.7935, y = 0.7235 }, -- Crusaders' Pinnacle, Icecrown
+{ id = "TAXI_336", container = "TODO", mapID = 127, x = 0.7904, y = 0.8081 }, -- Windrunner's Overlook, Crystalsong Forest
+{ id = "TAXI_337", container = "TODO", mapID = 120, x = 0.3432, y = 0.9187 }, -- Sunreaver's Command, Crystalsong Forest
+{ id = "TAXI_340", container = "TODO", mapID = 118, x = 0.7260, y = 0.2275 }, -- Argent Tournament Grounds, Icecrown

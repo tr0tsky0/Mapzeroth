@@ -71,7 +71,7 @@ addon.Nodes.Northrend = {
     { id = "INSTANCE_ICECROWN_CITADEL", container = "northrend.map118", mapID = 118, x = 0.5300, y = 0.8600, kind = "instance", journal = 758 }, -- Icecrown Citadel
     { id = "INSTANCE_DRAKTHARON_KEEP", container = "northrend.map121", mapID = 121, x = 0.2800, y = 0.8700, kind = "instance", journal = 273 }, -- Drak'Tharon Keep
     { id = "BOREAN_TUNDRA_WORMHOLE", container = "northrend.map114", mapID = 114, x = 0.5300, y = 0.1500, area = 3537 }, -- Borean Tundra (Wormhole)
-    { id = "TAXI_221", container = "northrend.map114", mapID = 114, x = 0.4490, y = 0.3370 }, -- Amber Ledge
+    { id = "TAXI_289", container = "northrend.map114", mapID = 114, x = 0.4490, y = 0.3370 }, -- Amber Ledge
     { id = "TAXI_296", container = "northrend.map114", mapID = 114, x = 0.7750, y = 0.4940 }, -- Unu'pe
     { id = "TAXI_250", container = "northrend.map116", mapID = 116, x = 0.2343, y = 0.6498 }, -- Conquest Hold
     { id = "INSTANCE_ULDUAR", container = "northrend.map120", mapID = 120, x = 0.4100, y = 0.1800, kind = "instance", journal = 759 }, -- Ulduar
