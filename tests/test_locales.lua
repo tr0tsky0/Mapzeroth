@@ -28,6 +28,20 @@ for _, locale in ipairs(LOCALES) do
     end
 end
 
+-- Completeness: every interface string English has, each locale has too, bar the brand name (kept in
+-- English) and the search aliases (language-specific: a copied English alias would be wrong).
+local NOT_TRANSLATED = { PANEL_TITLE = true, OPT_TITLE = true }
+local uiKeys = addon:GetUIStringKeys()
+check(next(uiKeys), "the interface strings are known")
+for _, locale in ipairs(LOCALES) do
+    local strings = addon:GetLocaleStrings(locale)
+    for key in pairs(uiKeys) do
+        if not NOT_TRANSLATED[key] and not key:find("^SKILL_ALIAS_") then
+            check(strings[key] ~= nil, locale .. " lacks " .. key)
+        end
+    end
+end
+
 -- The client's locale picks the table, and a key it lacks still falls back to English.
 local realGetLocale = GetLocale
 GetLocale = function() return "deDE" end

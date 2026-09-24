@@ -10,7 +10,11 @@ local addonName, addon = ...
 
 local strings = {}
 
-function addon:RegisterLocale(locale, tbl)
+local uiKeys = {}
+
+-- uiStrings marks the addon's own interface text (Locales.lua, Locales_UI.lua), as against the
+-- place-name data files that also register enUS: the tests expect every locale to cover these.
+function addon:RegisterLocale(locale, tbl, uiStrings)
     local target = strings[locale]
     if not target then
         target = {}
@@ -18,7 +22,13 @@ function addon:RegisterLocale(locale, tbl)
     end
     for key, value in pairs(tbl) do
         target[key] = value
+        if uiStrings then uiKeys[key] = true end
     end
+end
+
+-- The keys registered as interface text, as a set. For the tests.
+function addon:GetUIStringKeys()
+    return uiKeys
 end
 
 local function lookup(key)
@@ -78,4 +88,4 @@ addon:RegisterLocale("enUS", {
     TRAINER_RIDING     = "Riding",
     TRAINER_PET        = "Pet",
     TRAINER_DEMON      = "Demon",
-})
+}, true)

@@ -135,4 +135,4 @@ addon:RegisterLocale("enUS", {
     GROUP_entrance    = "City entrance",
     GROUP_leyline     = "Ley line",
     GROUP_other       = "Place",
-})
+}, true)
