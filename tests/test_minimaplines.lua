@@ -176,3 +176,18 @@ C_Map.GetPlayerMapPosition = function() error("no position") end
 local ok = pcall(function() MinimapLines:Update() end)
 check(ok and #visible() == 0 and MinimapLines.state.error, "an error is caught and leaves it undrawn: " .. tostring(MinimapLines.state.error))
 MinimapLines:Follow(nil)
+
+-- Finding 5: a map's scale is measured once; asking again (MinimapLines does, every 0.1 s) costs no distance at all.
+do
+    local provider = addon.TravelGraph.DistanceProvider
+    local calls = 0
+    addon.TravelGraph.DistanceProvider = function(a, b) calls = calls + 1; return provider(a, b) end
+    local x1, y1 = addon.Navigation.YardsPerUnit(1453)
+    local first = calls
+    local x2, y2 = addon.Navigation.YardsPerUnit(1453)
+    check(x1 and y1 and x1 == x2 and y1 == y2, "the same scale on two calls: " .. tostring(x1) .. ", " .. tostring(y1))
+    check(first == 2 and calls == first, "the first call measures (2 distances), the second makes none: " .. first .. " then " .. calls)
+    local x3 = addon.Navigation.YardsPerUnit(1454)
+    check(x3 and calls == first + 2, "another map is measured on its own")
+    addon.TravelGraph.DistanceProvider = provider
+end

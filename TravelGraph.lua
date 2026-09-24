@@ -23,6 +23,8 @@ end
 
 local function worldPos(node)
     if not node.mapID then return nil end     -- a synthetic point built from an unplaceable sample
+    local world = node.world                  -- the player's spot, already projected this tick (Navigation)
+    if world then return world.x, world.y, world.continent end
     local nocache = uncached(node)
     local cached = not nocache and worldPosCache[node.id]
     if cached then return cached[1], cached[2], cached[3] end

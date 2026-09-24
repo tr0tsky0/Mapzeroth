@@ -58,11 +58,26 @@ local function nodeOf(id)
     return id and (addon.World:GetNode(id) or (active and active.extra and active.extra[id]))
 end
 
+-- The player's spot as a node, reused for every distance (a tick would otherwise allocate one per call); `jumpTo`
+-- is a second one, because the jump check compares two samples (the last against the current one). While an
+-- Update runs, the current sample is projected to world coordinates once and carried on `world` of whichever
+-- scratch node stands for it (TravelGraph's DistanceProvider reads it instead of projecting again); the last
+-- known spot keeps its own, so the jump check doesn't project it a second time.
+local you = { id = "YOU_NOW", nocache = true }
+local jumpTo = { id = "JUMP", nocache = true }
+local nowSample, nowWorld           -- the sample being updated, and its { x, y, continent } (nil: not projected)
+local worldOfNow, worldOfLast = {}, {}
+
+local function place(node, sample)
+    node.mapID, node.x, node.y = sample.mapID, sample.x, sample.y
+    if sample == nowSample then node.world = nowWorld else node.world = sample.world end
+    return node
+end
+
 -- Yards from the sample to a node, or nil if we can't say.
 local function distance(sample, node)
     if not (sample and sample.mapID and node and node.mapID) then return nil end
-    return addon.TravelGraph.DistanceProvider(
-        { id = "YOU_NOW", nocache = true, mapID = sample.mapID, x = sample.x, y = sample.y }, node)
+    return addon.TravelGraph.DistanceProvider(place(you, sample), node)
 end
 
 -- Where a node is on the map the player is on, as x, y (0 to 1), or nil. Same map: as it is;
@@ -78,14 +93,23 @@ end
 
 -- Yards for a step of 1 in x and in y on a map, measured with the same distance the rest of the
 -- addon uses (a map isn't square, so a unit in x and a unit in y differ).
+-- A map's scale never changes, so it is measured once per map (per provider: tests swap it). A map that
+-- can't be measured yet is asked again next time.
+local scales, scalesProvider = {}, nil
 local function yardsPerUnit(mapID)
+    local provider = addon.TravelGraph.DistanceProvider
+    if scalesProvider ~= provider then scales, scalesProvider = {}, provider end
+    local known = scales[mapID]
+    if known then return known[1], known[2] end
     local here = { id = "SCALE_A", nocache = true, mapID = mapID, x = 0.5, y = 0.5 }
     local east = { id = "SCALE_B", nocache = true, mapID = mapID, x = 0.51, y = 0.5 }
     local south = { id = "SCALE_C", nocache = true, mapID = mapID, x = 0.5, y = 0.51 }
-    local dx = addon.TravelGraph.DistanceProvider(here, east)
-    local dy = addon.TravelGraph.DistanceProvider(here, south)
+    local dx = provider(here, east)
+    local dy = provider(here, south)
     if not (dx and dy) then return nil end
-    return dx / 0.01, dy / 0.01
+    known = { dx / 0.01, dy / 0.01 }
+    scales[mapID] = known
+    return known[1], known[2]
 end
 
 -- Yards for a step of 1 in x and in y on a map (the minimap route needs it too).
@@ -207,12 +231,13 @@ local function buildModel(sample)
         finished = false, index = active.index, total = #steps, step = step, kind = kind,
         destination = active.entry and active.entry.name,
     }
+    local node = nodeOf(step.nodeID)
     local left = step.seconds
     if state.seconds then left = state.seconds end        -- a flight that covers several steps
 
     if kind == "walk" then
-        model.distance = distance(sample, nodeOf(step.nodeID))
-        model.heading = Navigation:Heading(sample, nodeOf(step.nodeID))
+        model.distance = distance(sample, node)
+        model.heading = Navigation:Heading(sample, node)
         if model.distance and state.startDistance and state.startDistance > 0 then
             left = step.seconds * clamp(model.distance / state.startDistance, 0, 1)
         end
@@ -230,7 +255,7 @@ local function buildModel(sample)
     elseif kind == "transport" then
         if state.underway then
             model.phase = "underway"
-            local d = distance(sample, nodeOf(step.nodeID))
+            local d = distance(sample, node)
             if d and state.routeLength and state.routeLength > 0 then
                 model.progress = clamp(1 - d / state.routeLength, 0, 0.99)
             else
@@ -311,9 +336,42 @@ function Navigation:Model()
     return active and active.model
 end
 
+-- The player's last known spot, kept in one table for the whole trip.
+local function remember(sample)
+    if not sample.mapID then return end
+    local last = active.last
+    if not last then last = {}; active.last = last end
+    last.mapID, last.x, last.y = sample.mapID, sample.x, sample.y
+    if nowWorld then
+        worldOfLast.x, worldOfLast.y, worldOfLast.continent = nowWorld.x, nowWorld.y, nowWorld.continent
+        last.world = worldOfLast
+    else
+        last.world = nil
+    end
+end
+
+local update
+
 -- Feed a sample of the player. Returns the model (nil when no trip).
 function Navigation:Update(sample)
     if not active then return nil end
+    -- Project the sample once, for every distance this update measures from it (a client without the
+    -- projection, or a sample it can't place, just leaves `world` nil and each distance projects for itself).
+    nowSample, nowWorld = sample, nil
+    if sample.mapID and C_Map and C_Map.GetWorldPosFromMapPos then
+        local ok, continent, pos = pcall(C_Map.GetWorldPosFromMapPos, sample.mapID, CreateVector2D(sample.x, sample.y))
+        if ok and pos then
+            local x, y = pos:GetXY()
+            worldOfNow.x, worldOfNow.y, worldOfNow.continent = x, y, continent
+            nowWorld = worldOfNow
+        end
+    end
+    local result = update(sample)
+    nowSample, nowWorld = nil, nil          -- the sample may be changed before the next update
+    return result
+end
+
+update = function(sample)
     if not active.finished then
         if not active.state then beginStep(sample) end
 
@@ -332,7 +390,7 @@ function Navigation:Update(sample)
                 active = nil
                 return { replan = true, entry = entry }
             end
-            active.last = sample.mapID and { mapID = sample.mapID, x = sample.x, y = sample.y } or active.last
+            remember(sample)
             active.model = buildModel(sample)
             active.model.offRoute, active.model.flyingTo = true, active.offRoute.destination
             return active.model
@@ -351,7 +409,7 @@ function Navigation:Update(sample)
             end
         end
         -- Did the player just appear somewhere far from where they were a moment ago?
-        local jump = active.last and distance(active.last, { id = "JUMP", nocache = true, mapID = sample.mapID, x = sample.x, y = sample.y })
+        local jump = active.last and distance(active.last, place(jumpTo, sample))
         active.jumped = jump ~= nil and jump > JUMP
         -- No distance can be read between two maps the client won't put on one plane (a teleport into an interior:
         -- Bizmo's Brawlpub is its own map), but the map itself changing in one update is as good as a jump.
@@ -363,16 +421,19 @@ function Navigation:Update(sample)
             active.jumped = false           -- one jump ends one step
         end
     end
-    active.last = sample.mapID and { mapID = sample.mapID, x = sample.x, y = sample.y } or active.last
+    remember(sample)
     active.model = buildModel(sample)
     return active.model
+end
+
+local function equipped(itemID)
+    return IsEquippedItem ~= nil and IsEquippedItem(itemID) and true or false
 end
 
 -- Where the player is right now, as a sample (needs the client).
 function Navigation:Sample()
     local sample = { now = GetTime(), onTaxi = UnitOnTaxi and UnitOnTaxi("player") or false,
-                     facing = GetPlayerFacing and GetPlayerFacing() or nil,
-                     equipped = function(itemID) return IsEquippedItem ~= nil and IsEquippedItem(itemID) and true or false end }
+                     facing = GetPlayerFacing and GetPlayerFacing() or nil, equipped = equipped }
     local mapID = C_Map.GetBestMapForUnit("player")
     local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
     if pos then

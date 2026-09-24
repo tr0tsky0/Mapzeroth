@@ -31,6 +31,36 @@ check(addon.TravelGraph.DistanceProvider(noMapID, b) == nil, "either side")
 local unplaceable = { id = "C", mapID = 99999, x = 0.5, y = 0.5 }     -- a real mapID the client just can't place
 check(addon.TravelGraph.DistanceProvider(a, unplaceable) == nil, "a mapID the client can't project also gives no distance")
 
+-- Finding 5: a node carrying `world` (the player's spot, projected once per navigation update) is used as it is,
+-- with no projection of its own; the answer is the same as projecting it.
+do
+    local projections = 0
+    local project = C_Map.GetWorldPosFromMapPos
+    C_Map.GetWorldPosFromMapPos = function(mapID, pos) projections = projections + 1; return project(mapID, pos) end
+    local you = { id = "YOU_NOW", nocache = true, mapID = 1453, x = 0.5, y = 0.5 }
+    local projected = addon.TravelGraph.DistanceProvider(you, b)
+    local made = projections
+    you.world = { x = 1000, y = 2000, continent = 1453 }
+    local before = projections
+    check(addon.TravelGraph.DistanceProvider(you, b) == projected, "a node's own world position gives the same distance")
+    check(projections == before, "and is not projected again: " .. (projections - before) .. " projections")
+    check(made >= 1, "(without it the node is projected)")
+
+    -- A whole navigation update projects the player once, however many distances it measures.
+    local N = addon.Navigation
+    local dest = { id = "TEST_DEST", mapID = 1453, x = 0.6, y = 0.5 }
+    local plan = { steps = { { method = "walk", fromID = "YOU", nodeID = "TEST_DEST", seconds = 60, text = "walk" } } }
+    N:Start({ name = "x", dest = dest }, plan)
+    N:Update({ mapID = 1453, x = 0.5, y = 0.5, now = 0, onTaxi = false })
+    projections = 0
+    local m = N:Update({ mapID = 1453, x = 0.6, y = 0.5, now = 1, onTaxi = false })
+    print(("projections in one navigation update: %d"):format(projections))
+    check(projections == 1, "one update, one projection of the player: " .. projections)
+    check(m.finished, "and the trip still ends at the destination")
+    N:Stop()
+    C_Map.GetWorldPosFromMapPos = project
+end
+
 -- The expensive geometry pass (walk/gate/fly edges: everything that doesn't depend on ctx) is
 -- cached across Build() calls, not redone for every route -- that's what "script ran too long"
 -- turned out to be (2026-09-23): the picker prices its sections with one Build(), then plans

@@ -229,3 +229,29 @@ check(N:Update(at("TAXI_2", 0, 0, { now = 120 })).notice == nil, "and gone after
 
 N:Stop()
 check(not N:IsActive() and N:Model() == nil, "stopping clears the trip")
+
+-- Finding 5: an update makes at most one distance call per later step (the skip loop), one for the jump check,
+-- one for the current step's arrival and one for the model -- steps + 2 at most, whatever the number of steps.
+do
+    local six = { steps = {
+        step("walk", "YOU", "TAXI_2", 60), step("taxi", "TAXI_2", "TAXI_6", 200), step("walk", "TAXI_6", "TAXI_4", 30),
+        step("walk", "TAXI_4", "TAXI_8", 30), step("walk", "TAXI_8", "TAXI_6", 30), step("walk", "TAXI_6", "TAXI_2", 30),
+    } }
+    local provider = addon.TravelGraph.DistanceProvider
+    local calls = 0
+    addon.TravelGraph.DistanceProvider = function(a, b) calls = calls + 1; return provider(a, b) end
+    N:Start(entry, six)
+    N:Update(at("TAXI_2", 0.08, 0))              -- the first update also begins the step
+    calls = 0
+    m = N:Update(at("TAXI_2", 0.06, 0, { now = 1 }))
+    print(("provider calls in one update over %d steps: %d"):format(#six.steps, calls))
+    check(calls <= #six.steps + 2, "one update, " .. #six.steps .. " steps: at most steps + 2 distance calls, got " .. calls)
+    check(m.index == 1 and m.kind == "walk" and math.abs(m.distance - 150) < 1, "the model's distance is as before: " .. tostring(m.distance))
+    check(m.heading == nil and math.abs(m.remaining - (60 * 150 / 200 + 200 + 30 * 4)) < 1e-6,
+        "and so is the time left: " .. tostring(m.remaining))
+    -- The scratch nodes leave nothing behind: a later update from elsewhere is measured from there.
+    m = N:Update(at("TAXI_2", 0.02, 0, { now = 2 }))
+    check(math.abs(m.distance - 50) < 1, "the next update measures from the new spot: " .. tostring(m.distance))
+    addon.TravelGraph.DistanceProvider = provider
+    N:Stop()
+end
