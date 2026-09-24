@@ -15,26 +15,27 @@ addon.TravelGraph = TravelGraph
 
 local worldPosCache = {}
 
+-- The player's own spots (start, map waypoint) are one-off ids: caching them would only grow the cache.
+local function uncached(node)
+    local id = node.id
+    return node.nocache or (type(id) == "string" and (id:find("^YOU_") or id:find("^WAYPOINT_")))
+end
+
+local function worldPos(node)
+    if not node.mapID then return nil end     -- a synthetic point built from an unplaceable sample
+    local nocache = uncached(node)
+    local cached = not nocache and worldPosCache[node.id]
+    if cached then return cached[1], cached[2], cached[3] end
+    local continent, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
+    if not pos then return nil end
+    local x, y = pos:GetXY()
+    if not nocache then worldPosCache[node.id] = { x, y, continent } end   -- the player moves: never cache
+    return x, y, continent
+end
+
 -- Yards between two nodes. Uses the client's world-space projection, so nodes
 -- on different maps compare correctly. Replaceable for tests.
 function TravelGraph.DistanceProvider(a, b)
-    -- The player's own spots (start, map waypoint) are one-off ids: caching them would only grow the cache.
-    local function uncached(node)
-        local id = node.id
-        return node.nocache or (type(id) == "string" and (id:find("^YOU_") or id:find("^WAYPOINT_")))
-    end
-    local function worldPos(node)
-        if not node.mapID then return nil end     -- a synthetic point built from an unplaceable sample
-        local nocache = uncached(node)
-        local cached = not nocache and worldPosCache[node.id]
-        if cached then return cached[1], cached[2], cached[3] end
-        local continent, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
-        if not pos then return nil end
-        local x, y = pos:GetXY()
-        if not nocache then worldPosCache[node.id] = { x, y, continent } end   -- the player moves: never cache
-        return x, y, continent
-    end
-
     local ax, ay, ac = worldPos(a)
     local bx, by, bc = worldPos(b)
     if not (ax and bx) then return nil end

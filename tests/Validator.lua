@@ -68,9 +68,18 @@ function addon:ValidateData()
 
     -- An edge repeated with the same requirements is a duplicate (a pair that differs only in its
     -- requirements, one per faction, is not).
+    -- A requirement value can be a table ({ 17, 628 } for mapArtID, lists for anyQuest/anyOf): serialise it
+    -- by content, so two edges with the same gate compare equal.
+    local function serialise(value)
+        if type(value) ~= "table" then return tostring(value) end
+        local parts = {}
+        for key, item in pairs(value) do parts[#parts + 1] = tostring(key) .. "=" .. serialise(item) end
+        table.sort(parts)
+        return "{" .. table.concat(parts, ",") .. "}"
+    end
     local function requirementsKey(requirements)
         local parts = {}
-        for key, value in pairs(requirements or {}) do parts[#parts + 1] = key .. "=" .. tostring(value) end
+        for key, value in pairs(requirements or {}) do parts[#parts + 1] = key .. "=" .. serialise(value) end
         table.sort(parts)
         return table.concat(parts, ",")
     end

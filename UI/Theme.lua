@@ -121,11 +121,6 @@ skin.bar = function(bar)
     bar.bg:SetColorTexture(Theme:Color("editBg"))
 end
 
--- A flat coloured strip (the header, a divider).
-skin.strip = function(texture, opts)
-    texture:SetColorTexture(Theme:Color(opts.color))
-end
-
 skin.text = function(fs, opts)
     local style = opts.style
     local font = (style == "title" and current.fonts.title) or (style == "small" and current.fonts.small)
