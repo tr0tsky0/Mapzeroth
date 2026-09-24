@@ -186,6 +186,26 @@ local function borderPartner(nodeID)
     return borderPartners[nodeID]
 end
 
+-- The kind of place an id names, from the id alone: Forever's ids lead with it (DOCK_STORMWIND, TAXI_2), Modern's
+-- end with it (BORALUS_DOCK), sometimes with a faction, level or phase after it (DALARAN_PALADIN_PORTAL_HORDE,
+-- WAKING_SHORES_ORGRIMMAR_ZEP). nil when it names none of ID_KINDS (DARK_PORTAL_SHADOWMOON_VALLEY is a place).
+local ID_KINDS = { TAXI = true, BORDER = true, INSTANCE = true, DOCK = true, ZEPPELIN = true, TRAM = true,
+                   PORTAL = true, TELEPORT = true }
+local SUFFIX_ALIASES = { ZEP = "ZEPPELIN" }
+local QUALIFIERS = { ALLIANCE = true, HORDE = true, UPPER = true, LOWER = true, PAST = true, PRESENT = true }
+
+function addon:NodeKindFromID(nodeID)
+    local prefix = nodeID:match("^(%u+)_")
+    if prefix and ID_KINDS[prefix] then return prefix end
+    local tokens = {}
+    for token in nodeID:gmatch("[^_]+") do tokens[#tokens + 1] = token end
+    local i = #tokens
+    while i > 1 and QUALIFIERS[tokens[i]] do i = i - 1 end
+    local last = SUFFIX_ALIASES[tokens[i]] or tokens[i]
+    if i > 1 and ID_KINDS[last] then return last end
+    return nil
+end
+
 local function resolve(nodeID)
     if nodeID:find("^WAYPOINT_") then return L["WAYPOINT_NAME"] end       -- the player's map waypoint
     local key = "NODE_" .. nodeID
@@ -241,6 +261,10 @@ local function resolve(nodeID)
     end
 
     local kind = nodeID:match("^(%u+)_")
+    if not (kind == "BORDER" or (kind and addon:HasString("NODE_KIND_" .. kind))) then
+        kind = addon:NodeKindFromID(nodeID)
+        if kind == "PORTAL" then kind = nil end     -- a portal is named by where it leads (portalName, below)
+    end
     if kind == "BORDER" then
         local partner = addon.World:GetNode(borderPartner(nodeID) or "")
         local here, there = zoneName(node.mapID), partner and zoneName(partner.mapID)

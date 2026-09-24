@@ -194,3 +194,11 @@ do
     maps[1411].name = "Durotar"
     addon:ClearNodeNameCache()
 end
+
+-- Finding 6 (suffix fallback): the kind an id names, whether it leads (Forever) or ends (Modern) the id.
+check(addon:NodeKindFromID("DOCK_STORMWIND") == "DOCK" and addon:NodeKindFromID("TAXI_2") == "TAXI", "a Forever id leads with its kind")
+check(addon:NodeKindFromID("BORALUS_DOCK") == "DOCK", "a Modern id ends with it")
+check(addon:NodeKindFromID("DALARAN_PALADIN_PORTAL_HORDE") == "PORTAL", "a faction after the kind is skipped")
+check(addon:NodeKindFromID("WAKING_SHORES_ORGRIMMAR_ZEP") == "ZEPPELIN", "ZEP is a zeppelin")
+check(addon:NodeKindFromID("DARK_PORTAL_SHADOWMOON_VALLEY") == nil, "a place named for a portal is not a portal")
+check(addon:NodeKindFromID("STORMWIND_PORTAL_ROOM_LOWER") == nil, "nor is a portal room")

@@ -64,11 +64,11 @@ local function groupOf(node)
     -- destinations of their own: they are offered through the city or town's entry.
     if node.kind == "settlement" or node.kind == "entrance" then return nil end
     if node.kind then return node.kind end
-    local prefix = node.id:match("^(%u+)_")
-    if prefix == "TAXI" then return "flight" end
-    if prefix == "BORDER" then return nil end
-    if prefix == "INSTANCE" or (addon.InstanceNodeAliases and addon.InstanceNodeAliases[node.id]) then return "instance" end
-    if TRANSPORT[prefix] then return "transport" end
+    local kind = addon:NodeKindFromID(node.id)       -- DOCK_STORMWIND (Forever) and BORALUS_DOCK (Modern) alike
+    if kind == "TAXI" then return "flight" end
+    if kind == "BORDER" then return nil end
+    if kind == "INSTANCE" or (addon.InstanceNodeAliases and addon.InstanceNodeAliases[node.id]) then return "instance" end
+    if TRANSPORT[kind] then return "transport" end
     return "other"
 end
 

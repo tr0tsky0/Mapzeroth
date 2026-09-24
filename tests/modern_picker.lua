@@ -138,3 +138,15 @@ check(addon.World:GetNode("INSTANCE_236") and addon.World:GetNode("INSTANCE_1292
 check(not cities["Frostwall"], "no nodes, no city")
 addon.Instances = {}
 check(not find(build("Alliance"), "dungeons"), "with no instance data there are no dungeon or raid sections")
+
+-- Finding 6 (suffix fallback): Modern's docks and portals are transport, not "other".
+do
+    local ctx = makeCtx({ faction = "Alliance" })
+    local byID = {}
+    for _, entry in ipairs(addon.Destinations:Build(ctx)) do byID[entry.nodeID] = entry end
+    check(byID.BORALUS_DOCK == nil or byID.BORALUS_DOCK.group == "transport",
+        "Boralus's dock is transport: " .. tostring(byID.BORALUS_DOCK and byID.BORALUS_DOCK.group))
+    local transport = 0
+    for _, entry in pairs(byID) do if entry.group == "transport" then transport = transport + 1 end end
+    check(transport > 0, "Modern has transport destinations: " .. transport)
+end
