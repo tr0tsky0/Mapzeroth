@@ -10,6 +10,8 @@ local addonName, addon = ...
 --              "instance", or a place kind ("inn", "bank", "trainer", "leyline", ...)
 --   relevant   false for things this player has little use for by default (other classes'
 --              trainers and the like); they are still found by searching
+--   expansion  Modern only, for a city, dungeon or raid: its expansion (by major version, Classic 1 ...
+--   raid       Modern instances: true for a raid, nil for a dungeon
 --   details    optional, what a place offers that a search can hit and the list shows: for a
 --              weapon master, { { text = "One-Handed Swords", alias = "..." }, ... } (the weapon skills
 --              its trainers teach, in the client's names)
@@ -65,6 +67,7 @@ local function groupOf(node)
     local prefix = node.id:match("^(%u+)_")
     if prefix == "TAXI" then return "flight" end
     if prefix == "BORDER" then return nil end
+    if prefix == "INSTANCE" or (addon.InstanceNodeAliases and addon.InstanceNodeAliases[node.id]) then return "instance" end
     if TRANSPORT[prefix] then return "transport" end
     return "other"
 end
@@ -82,11 +85,58 @@ local function arrivalNodes(key, field)
     if addon.World:GetNode(centre) then return { centre } end
 end
 
+-- The name of the continent a map is on, for telling two cities of one name apart.
+local function continentName(mapID)
+    local guard = 0
+    while mapID and mapID ~= 0 and guard < 10 do
+        local info = C_Map and C_Map.GetMapInfo and C_Map.GetMapInfo(mapID)
+        if not info then return nil end
+        if Enum and Enum.UIMapType and info.mapType == Enum.UIMapType.Continent then return info.name end
+        mapID, guard = info.parentMapID, guard + 1
+    end
+end
+
+-- Modern's cities (addon.CityPlaces): a city is every node on its maps. Two cities the client gives the
+-- same name (both Dalarans) are told apart by their continent.
+local function addCityPlaces(entries, ctx)
+    local byMap = {}
+    for index, place in ipairs(addon.CityPlaces or {}) do
+        for _, mapID in ipairs(place.maps) do byMap[mapID] = index end
+    end
+    local nodes = {}
+    addon.World:ForEachNode(function(node)
+        local index = byMap[node.mapID]
+        if index then
+            nodes[index] = nodes[index] or {}
+            table.insert(nodes[index], node.id)
+        end
+    end)
+    local made, names = {}, {}
+    for index, place in ipairs(addon.CityPlaces or {}) do
+        local info = nodes[index] and C_Map and C_Map.GetMapInfo and C_Map.GetMapInfo(place.maps[1])
+        if info and info.name then
+            table.sort(nodes[index])
+            made[#made + 1] = {
+                nodeID = nodes[index][1], nodeIDs = nodes[index], name = info.name, group = "place", kind = "city",
+                zone = continentName(place.maps[1]), expansion = place.expansion, hub = place.hub,
+                faction = place.faction,
+                relevant = place.faction == "Both" or ctx.faction == nil or place.faction == ctx.faction,
+            }
+            names[info.name] = (names[info.name] or 0) + 1
+        end
+    end
+    for _, entry in ipairs(made) do
+        if names[entry.name] > 1 and entry.zone then entry.name = entry.name .. " (" .. entry.zone .. ")" end
+        entries[#entries + 1] = entry
+    end
+end
+
 -- Builds the list for this player (ctx from addon:GetPlayerContext()), prepared for Search.
 function Destinations:Build(ctx)
     local World = addon.World
     local entries = {}
     local skills = weaponSkills()
+    local byInstance = {}                       -- journal instance id -> its entry
 
     World:ForEachNode(function(node)
         local group = groupOf(node)
@@ -98,13 +148,26 @@ function Destinations:Build(ctx)
         end
         local name = addon:GetNodeName(node.id)
         if not name or name == node.id then return end   -- no name yet: leave it out
+        local instanceID, instanceFaction = nil, nil
+        if group == "instance" then instanceID, instanceFaction = addon:GetInstanceRef(node.id) end
+        -- An entrance only one faction can use isn't offered to the other; two entrances to one instance
+        -- (a faction's each, or a rotating pair) are one destination, reached by whichever is cheaper.
+        if instanceFaction and ctx.faction and instanceFaction ~= ctx.faction then return end
+        local shared = instanceID and byInstance[instanceID]
+        if shared then
+            table.insert(shared.nodeIDs, node.id)
+            return
+        end
+        local instance = instanceID and addon.Instances and addon.Instances[instanceID]
         entries[#entries + 1] = {
+            instanceID = instanceID, expansion = instance and instance[1], raid = instance and instance[2] or nil,
             nodeID = node.id, nodeIDs = { node.id }, name = name, group = group, kind = node.kind,
             zone = addon:GetZoneName(node.mapID),
             relevant = addon.Relevance:IsRelevant(node, ctx),
             details = node.kind == "trainer" and node.trainer == "WEAPON" and weaponDetails(node, skills) or nil,
             trainer = node.trainer,
         }
+        if instanceID then byInstance[instanceID] = entries[#entries] end
     end)
 
     -- Whose a place is: its faction's, or both's (or nobody's on record). The other faction's are still
@@ -127,6 +190,7 @@ function Destinations:Build(ctx)
     end
     addSettlements(addon.Cities, addon.GetCityName, "city", "city")
     addSettlements(addon.Towns, addon.GetTownName, "town", "town")
+    addCityPlaces(entries, ctx)
 
     table.sort(entries, function(a, b)
         if a.name ~= b.name then return a.name < b.name end

@@ -195,4 +195,5 @@ addon.Nodes.Kalimdor = {
     { id = "THUNDER_BLUFF", container = "kalimdor_overworld.map88", mapID = 88, x = 0.2221, y = 0.1687 }, -- Entrance
     { id = "ORGRIMMAR_CAVERNS_OF_TIME_PORTAL", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5640, y = 0.9228 }, -- Portal to Caverns of Time
     { id = "ORGRIMMAR_RAZORWIND_SHORES_PORTAL", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5877, y = 0.8953 }, -- Portal to Razorwind Shores
+    { id = "INSTANCE_230", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5960, y = 0.4050 }, -- Dire Maul (Feralas): one entrance for all three wings, listed under Capital Gardens (hand-added: tools/modern_manual.py)
 }

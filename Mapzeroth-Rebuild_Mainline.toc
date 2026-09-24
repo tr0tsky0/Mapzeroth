@@ -59,6 +59,8 @@ Data\Modern\Nodes_IsolatedMaps.lua
 Data\Modern\Edges.lua
 Data\Modern\Abilities.lua
 Data\Modern\Geometry.lua
+Data\Modern\Instances.lua
+Data\Modern\Places.lua
 
 # Engine
 World.lua

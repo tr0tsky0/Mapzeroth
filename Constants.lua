@@ -37,17 +37,6 @@ addon.CLASS_TOKENS = {
 -- within this many yards of each other, continent-wide.
 addon.MAX_AUTO_EDGE_DISTANCE = 3000
 
--- A safety valve on that generation: it's an O(n^2) pairwise check per continent, fine for a
--- handful of nodes (Forever has none flagged fly=true at all) but not for Modern's real scale --
--- Eastern Kingdoms alone has ~200 outdoor nodes, and a real character hit "script ran too long"
--- from it (2026-09-23). A continent whose flyable node count exceeds this is skipped rather than
--- generated slowly; authored edges still work there, just no auto fly mesh. Not a real answer to
--- "which zones actually allow free flying" (old-world Eastern Kingdoms/Kalimdor generally don't
--- without Pathfinder, for instance) -- that's a proper per-zone data pass, or a spatial index to
--- make the generation itself cheap regardless of size, either of which is real work for later
--- (see docs/DESIGN.md open questions and the mapzeroth-modern-port memory).
-addon.MAX_FLY_BUCKET = 90
-
 -- Loading screens an edge incurs when it doesn't say (edge.loadingScreens
 -- overrides). Anything not listed defaults to 0.
 addon.DEFAULT_LOADING_SCREENS = { portal = 1, teleport = 1, hearthstone = 1, tram = 2 }

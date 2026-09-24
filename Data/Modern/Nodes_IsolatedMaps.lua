@@ -72,4 +72,5 @@ addon.Nodes.IsolatedMaps = {
     { id = "TAXI_2407", container = "nazjatar.map1355", mapID = 1355, x = 0.6140, y = 0.3660 }, -- Utama's Stand
     { id = "NAZJATAR_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.4719, y = 0.6263 }, -- Newhome
     { id = "SHADOWFORGE_CITY_MOLE", container = "dark_iron_city.map1186", mapID = 1186, x = 0.6140, y = 0.2440 }, -- Shadowforge City
+    { id = "INSTANCE_1305", container = "harandar.map2413", mapID = 2413, x = 0.7360, y = 0.6650 }, -- Sporefall (Harandar): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
 }

@@ -222,9 +222,9 @@ local function resolve(nodeID)
 
     -- A dungeon or raid entrance, named from the client's own Dungeon Journal (Modern only
     -- so far: tools/match_modern_instance_nodes.py renamed it INSTANCE_<journalInstanceID>).
-    local instanceID = nodeID:match("^INSTANCE_(%d+)$")
+    local instanceID = addon:GetInstanceRef(nodeID)
     if instanceID and EJ_GetInstanceInfo then
-        local name = EJ_GetInstanceInfo(tonumber(instanceID))
+        local name = EJ_GetInstanceInfo(instanceID)
         if name and name ~= "" then return name end
     end
 
@@ -272,4 +272,16 @@ end
 -- Forget resolved names, e.g. after a locale change or in tests.
 function addon:ClearNodeNameCache()
     nameCache, taxiNames, borderPartners, taxiSettlements = {}, nil, nil, nil
+end
+
+-- The journal instance a dungeon or raid node stands for, and the faction that can use it (nil: either).
+-- Hand-listed in Data/Modern/Places.lua (addon.InstanceNodeAliases: [nodeID] = journalInstanceID, or
+-- { journalInstanceID, faction = "Alliance" }) for entrances whose node id doesn't say, and first, so a
+-- node can be pointed at a different instance than its id names; else INSTANCE_<id> carries it.
+function addon:GetInstanceRef(nodeID)
+    local alias = addon.InstanceNodeAliases and addon.InstanceNodeAliases[nodeID]
+    if type(alias) == "table" then return alias[1], alias.faction end
+    if alias then return alias end
+    local id = nodeID:match("^INSTANCE_(%d+)$")
+    return id and tonumber(id) or nil
 end

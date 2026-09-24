@@ -235,4 +235,8 @@ addon.Nodes.EK = {
     { id = "BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700 }, -- Baradin Hold
     { id = "FOUNDERS_POINT", container = "founders_point.map2352", mapID = 2352, x = 0.5740, y = 0.2680 }, -- Entrance Portal
     { id = "LYCANEUM_ENTRANCE", container = "ek_overworld.map2424", mapID = 2424, x = 0.6409, y = 0.2895, area = 16754 }, -- Entrance to the Lycaneum (Court of the Phoenix) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_236", container = "ek_overworld.map23", mapID = 23, x = 0.2660, y = 0.1180 }, -- Stratholme - Main Gate (Eastern Plaguelands) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_1292", container = "ek_overworld.map23", mapID = 23, x = 0.4330, y = 0.1900 }, -- Stratholme - Service Entrance (the back door) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_237", container = "ek_overworld.map51", mapID = 51, x = 0.7010, y = 0.5430 }, -- The Temple of Atal'hakkar (Swamp of Sorrows) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_1317", container = "ek_overworld.map2509", mapID = 2509, x = 0.6000, y = 0.6640 }, -- The Tidebound Grotto (Coiled Isle): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
 }

@@ -380,6 +380,25 @@ check(addon.Panel.Subtitle(asResult):find("^City %- ") or addon.Panel.Subtitle(a
 addon.Panel:Choose(cities)
 check(not state.open.cities, "choosing the heading again closes it")
 
+-- A section can hold sections (Modern's "Older content"): opening it shows its inner headings, a step in,
+-- and opening one of those shows its places, a step further.
+local function place(name) return { name = name, nodeID = "N_" .. name, nodeIDs = { "N_" .. name }, group = "place", kind = "city", zone = "Z" } end
+local savedSections, savedOpen = state.sections, state.open
+state.sections = { { id = "older", title = "Older", items = {}, children = {
+    { id = "expansion5", title = "Pandaria", items = { place("Shrine") } },
+    { id = "expansion4", title = "Cataclysm", items = {} },
+} } }
+state.open = {}
+addon.Panel:Query("")
+check(#state.results == 1 and state.results[1].count == 1, "a closed parent is one heading counting the places inside")
+addon.Panel:Choose(1)
+check(#state.results == 3 and state.results[2].header and state.results[2].depth == 1, "opened, its inner headings show, a step in")
+addon.Panel:Choose(2)
+check(#state.results == 4 and state.results[3].inSection and state.results[3].depth == 2 and state.results[3].name == "Shrine",
+    "and opening one shows its places a step further in")
+state.sections, state.open = savedSections, savedOpen
+addon.Panel:Query("")
+
 -- A character who can't read ley lines has no such pick; a Skyborne does.
 local relevant = headerIndex("relevant")
 check(relevant, "there is a Personally relevant section")

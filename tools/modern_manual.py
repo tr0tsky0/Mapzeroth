@@ -17,6 +17,22 @@ NODES = [
     {"id": "LYCANEUM_ENTRANCE", "out": "Nodes_EK.lua", "container": "ek_overworld.map2424",
      "mapID": 2424, "x": 0.6409, "y": 0.2895, "area": 16754,
      "note": "Entrance to the Lycaneum (Court of the Phoenix)"},
+    # Dungeon and raid entrances the old data lacked. Named INSTANCE_<journalInstanceID>, so the client's own
+    # Dungeon Journal names them; the coordinates are the entrances' map positions as given by the player.
+    {"id": "INSTANCE_236", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
+     "x": 0.266, "y": 0.118, "note": "Stratholme - Main Gate (Eastern Plaguelands)"},
+    {"id": "INSTANCE_1292", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
+     "x": 0.433, "y": 0.190, "note": "Stratholme - Service Entrance (the back door)"},
+    {"id": "INSTANCE_237", "out": "Nodes_EK.lua", "container": "ek_overworld.map51", "mapID": 51,
+     "x": 0.701, "y": 0.543, "note": "The Temple of Atal'hakkar (Swamp of Sorrows)"},
+    {"id": "INSTANCE_230", "out": "Nodes_Kalimdor.lua", "container": "kalimdor_overworld.map69", "mapID": 69,
+     "x": 0.596, "y": 0.405, "note": "Dire Maul (Feralas): one entrance for all three wings, listed under Capital Gardens"},
+    {"id": "INSTANCE_1317", "out": "Nodes_EK.lua", "container": "ek_overworld.map2509", "mapID": 2509,
+     "x": 0.600, "y": 0.664, "note": "The Tidebound Grotto (Coiled Isle): a single-boss raid, entered from the open world"},
+    {"id": "INSTANCE_1305", "out": "Nodes_IsolatedMaps.lua", "container": "harandar.map2413", "mapID": 2413,
+     "x": 0.736, "y": 0.665, "note": "Sporefall (Harandar): a single-boss raid, entered from the open world"},
+    {"id": "INSTANCE_749", "out": "Nodes_Outlands.lua", "container": "outlands.map109", "mapID": 109,
+     "x": 0.737, "y": 0.642, "note": "The Eye, Tempest Keep (Netherstorm)"},
 ]
 
 # The Lycaneum's own map: its portal room is an interior reached on foot from the entrance above,

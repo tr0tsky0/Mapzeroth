@@ -64,4 +64,5 @@ addon.Nodes.Outlands = {
     { id = "TAXI_141", container = "outlands.map100", mapID = 100, x = 0.6134, y = 0.8140 }, -- Spinebreaker Ridge
     { id = "TAXI_160", container = "outlands.map105", mapID = 105, x = 0.6140, y = 0.3930 }, -- Evergrove
     { id = "INSTANCE_252", container = "outlands.map108", mapID = 108, x = 0.4200, y = 0.6500 }, -- Sethekk Halls
+    { id = "INSTANCE_749", container = "outlands.map109", mapID = 109, x = 0.7370, y = 0.6420 }, -- The Eye, Tempest Keep (Netherstorm) (hand-added: tools/modern_manual.py)
 }

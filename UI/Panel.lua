@@ -195,7 +195,15 @@ local function subtitle(entry)
     if entry.pick then
         return entry.where or (entry.eta == nil and state.priced and L["PICK_NO_ROUTE"]) or ""
     end
-    if entry.inSection then return entry.zone or "" end
+    if entry.inSection then
+        -- Older content mixes cities, dungeons and raids in one list: say which this is.
+        local kind = entry.expansion and (entry.raid and "KIND_raid" or entry.group == "instance" and "KIND_dungeon"
+            or entry.kind and "KIND_" .. entry.kind)
+        if kind and addon:HasString(kind) then
+            return entry.zone and (L[kind] .. " - " .. entry.zone) or L[kind]
+        end
+        return entry.zone or ""
+    end
     local text = L["GROUP_" .. entry.group]
     if entry.group == "place" and entry.kind and addon:HasString("KIND_" .. entry.kind) then
         text = L["KIND_" .. entry.kind]                     -- "City" or "Town", not "Town or city"
@@ -227,7 +235,8 @@ function Panel:Render()
         if entry then
             row.index = state.offset + i
             -- An item of a section sits in from its heading: the marker, the name and the line under it together.
-            local indent = (entry.pick or entry.inSection) and INDENT or 0
+            local indent = entry.header and INDENT * (entry.depth or 0)
+                or (entry.pick or entry.inSection) and INDENT * (entry.depth or 1) or 0
             row.marker:ClearAllPoints()
             row.marker:SetPoint("LEFT", 4 + indent, 0)
             row.name:ClearAllPoints()
@@ -262,21 +271,29 @@ local function setStatus(text)
     ui.status:SetShown(text ~= nil and text ~= "")
 end
 
+-- A section's heading and, when it is open, the sections inside it and its items, each a step further in.
+-- An item is a copy of its entry (taken once the section is priced), so the same place can sit in two
+-- sections at different depths.
+local function addSectionRows(rows, section, depth)
+    local open = state.open[section.id] == true
+    rows[#rows + 1] = { header = true, id = section.id, name = section.title, open = open,
+        count = addon.Sections:Count(section), depth = depth }
+    if not open then return end
+    for _, child in ipairs(section.children or {}) do addSectionRows(rows, child, depth + 1) end
+    for _, item in ipairs(section.items) do
+        local row = {}
+        for k, v in pairs(item) do row[k] = v end
+        row.inSection, row.depth = true, depth + 1
+        rows[#rows + 1] = row
+    end
+end
+
 -- What to offer before anything is typed: the accordion (Sections.lua). There is no "Home": the
 -- hearthstone is one step of a route, and anyone can click it themselves. Nothing is priced until
 -- a section is opened.
 function Panel:ShowMenu(selectID)
     local rows = {}
-    for _, section in ipairs(state.sections or {}) do
-        local open = state.open[section.id] == true
-        rows[#rows + 1] = { header = true, id = section.id, name = section.title, open = open, count = #section.items }
-        if open then
-            for _, item in ipairs(section.items) do
-                item.inSection = true
-                rows[#rows + 1] = item
-            end
-        end
-    end
+    for _, section in ipairs(state.sections or {}) do addSectionRows(rows, section, 0) end
     state.results = rows
     state.selected = #rows > 0 and 1 or 0
     for i, row in ipairs(rows) do

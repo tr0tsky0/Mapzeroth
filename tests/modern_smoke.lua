@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1216, "every converted node made it into the tree (1215 converted + 1 hand-added): " .. total)
+check(total == 1223, "every converted node made it into the tree (1215 converted + 8 hand-added): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -155,3 +155,18 @@ local keyRoute = addon.Pathfinder:FindPath(withKey, "IRONFORGE", "ARCANTINA_ENTR
 check(keyRoute and keyRoute.steps[1].method == "teleport" and keyRoute.steps[1].source.itemID == 253629,
     "a character who owns the toy can use it from anywhere: " .. tostring(keyRoute and keyRoute.steps[1].method))
 -- (An unlearned toy still in the bags is an ordinary usable item, so the bag count still counts too.)
+
+-- The live geometry pass (used whenever the shipped Geometry.lua is stale) must still link a continent with
+-- hundreds of flyable nodes: it once skipped any continent over a cap, so a stale file left Silvermoon with no
+-- way to fly to Eversong or Zul'Aman ("no route" to Windrunner Spire, Den of Nalorakk, Maisara Caverns).
+addon.Geometry, addon.GeometryMeta = nil, nil
+addon.World:Build()
+local live = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+local function flies(from, to)
+    for _, e in ipairs(live.adjacency[from] or {}) do
+        if e.to == to and e.method == "fly" then return true end
+    end
+    return false
+end
+check(flies("SILVERMOON_ARCANTINA_PORTAL", "INSTANCE_1299") or flies("SILVERMOON_ARCANTINA_PORTAL", "EVERSONG_HARANDAR_PORTAL"),
+    "the live pass gives Eastern Kingdoms its fly edges, however many flyable nodes it has")

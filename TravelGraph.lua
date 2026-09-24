@@ -136,11 +136,7 @@ local staticGeometry, staticGeneration
 
 TravelGraph.staticBuildCount = 0    -- for tests: how many times the expensive geometry pass actually ran
 
--- ignoreCap: skip addon.MAX_FLY_BUCKET (see its own comment below). Only /mzr dumpgeometry
--- passes true: it's a one-time, deliberate, isolated call (no Dijkstra search sharing the same
--- synchronous execution, no gameplay impact if it's slow) -- unlike the live fallback, which
--- can land unpredictably mid-session, so that path keeps the cap as a safety net.
-local function buildStaticGeometry(ignoreCap)
+local function buildStaticGeometry()
     TravelGraph.staticBuildCount = TravelGraph.staticBuildCount + 1
     local World = addon.World
     local geometry = {}
@@ -198,21 +194,17 @@ local function buildStaticGeometry(ignoreCap)
         end
     end
     for _, nodes in pairs(flyable) do
-        -- See addon.MAX_FLY_BUCKET's own comment: this check is O(n^2) per continent, so on the
-        -- live fallback path a continent with too many flyable nodes is skipped rather than run
-        -- (unconfirmed to actually be necessary there once it's only the first route of the
-        -- session paying for it, rather than every one -- kept as a safety net regardless, since
-        -- a live route landing mid-session, alongside whatever else the client is doing, is a
-        -- worse place to find out than a deliberate /mzr dumpgeometry run is).
-        if ignoreCap or #nodes <= (addon.MAX_FLY_BUCKET or math.huge) then
-            for i = 1, #nodes - 1 do
-                for j = i + 1, #nodes do
-                    local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
-                    if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
-                        local cost = dist / (addon.FLY_SPEED or 50)
-                        link(nodes[i].id, nodes[j].id, cost, "fly")
-                        link(nodes[j].id, nodes[i].id, cost, "fly")
-                    end
+        -- Every pair, however many nodes: the pass is cheap (positions are cached per node, so a pair is
+        -- plain arithmetic; about 0.05 s for Modern's whole node set). It was once capped per continent
+        -- (2026-09-23), but a continent over the cap got no fly edges at all, so a stale Geometry.lua
+        -- made whole regions unreachable ("no route") to save time that was never being spent.
+        for i = 1, #nodes - 1 do
+            for j = i + 1, #nodes do
+                local dist = TravelGraph.DistanceProvider(nodes[i], nodes[j])
+                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
+                    local cost = dist / (addon.FLY_SPEED or 50)
+                    link(nodes[i].id, nodes[j].id, cost, "fly")
+                    link(nodes[j].id, nodes[i].id, cost, "fly")
                 end
             end
         end
@@ -242,11 +234,9 @@ local function staticGeometryFor()
 end
 
 -- For /mzr dumpgeometry: always computes fresh (never the shipped file, even if one is loaded),
--- since the whole point of that command is to regenerate it -- and without MAX_FLY_BUCKET's
--- cap, since a one-time, isolated dump can afford to actually find out whether the full pass
--- fits the script-execution budget, rather than guess defensively the way the live fallback does.
+-- since the whole point of that command is to regenerate it.
 function TravelGraph:BuildFreshGeometry()
-    return buildStaticGeometry(true)
+    return buildStaticGeometry()
 end
 
 function TravelGraph:Build(ctx)
