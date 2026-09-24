@@ -49,17 +49,19 @@ frame:SetScript("OnEvent", function(_, event, ...)
         end
         return
     end
-    addon.World:Build()
-    addon.FlightKnowledge:Load()
-    addon.Theme:Init(addon.Options:Default("theme"))
-    addon.OptionsPanel:Register()
-    addon.Panel:Init()
-    -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
-    if type(TakeTaxiNode) == "function" and not addon.takeTaxiHooked then
-        addon.takeTaxiHooked = true
-        hooksecurefunc("TakeTaxiNode", function(slot)
-            addon.Navigation:OnTakeTaxi(addon.FlightKnowledge:StopsForSlot(slot), GetTime())
-        end)
+    if event == "PLAYER_LOGIN" then
+        addon.World:Build()
+        addon.FlightKnowledge:Load()
+        addon.Theme:Init(addon.Options:Default("theme"))
+        addon.OptionsPanel:Register()
+        addon.Panel:Init()
+        -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
+        if type(TakeTaxiNode) == "function" and not addon.takeTaxiHooked then
+            addon.takeTaxiHooked = true
+            hooksecurefunc("TakeTaxiNode", function(slot)
+                addon.Navigation:OnTakeTaxi(addon.FlightKnowledge:StopsForSlot(slot), GetTime())
+            end)
+        end
     end
 end)
 

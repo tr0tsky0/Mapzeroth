@@ -86,6 +86,17 @@ function MinimapLines:YardsAcross()
     return yardsAcross(), state.indoors
 end
 
+-- The zoom and zone events only matter while a trip is drawn: listen for them then, and not the rest of the session.
+local function watchIndoors(on)
+    local frame = state.frame
+    if not frame or state.watching == on then return end
+    state.watching = on
+    local method = on and frame.RegisterEvent or frame.UnregisterEvent
+    if not method then return end
+    pcall(method, frame, "MINIMAP_UPDATE_ZOOM")
+    pcall(method, frame, "ZONE_CHANGED_NEW_AREA")
+end
+
 local function ensureFrame()
     if state.frame then return state.frame end
     local frame = CreateFrame("Frame", nil, Minimap)
@@ -98,10 +109,9 @@ local function ensureFrame()
             MinimapLines:Update()
         end
     end)
-    pcall(frame.RegisterEvent, frame, "MINIMAP_UPDATE_ZOOM")
-    pcall(frame.RegisterEvent, frame, "ZONE_CHANGED_NEW_AREA")
     frame:SetScript("OnEvent", function() refreshIndoors() end)
     state.frame = frame
+    watchIndoors(state.plan ~= nil)
     refreshIndoors()
     return frame
 end
@@ -215,6 +225,7 @@ function MinimapLines:Follow(plan, current)
     end
     state.plan = plan
     state.built = nil
+    watchIndoors(plan ~= nil)
     if not plan then
         hideAll()
         if state.frame then state.frame:Hide() end
