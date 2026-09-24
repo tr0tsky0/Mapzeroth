@@ -56,3 +56,5 @@ check(O:Set("showRouteOnMinimap", nil) == false and O:Get("showRouteOnMinimap") 
 check(O:Set("showRouteOnMap", "yes") == true and O:Get("showRouteOnMap") == true, "and anything else on")
 O:Reset()
 check(O:Get("showRouteOnMap") == true and O:Get("showRouteOnMinimap") == true, "Reset turns both back on")
+
+check(O:Get("assumeFlightsFound") == true, "flight points are assumed found until a flight master's window says otherwise, by default")

@@ -16,6 +16,7 @@ local definitions = {
     theme = { default = "moderndark" },
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
+    assumeFlightsFound = { default = true, boolean = true },              -- a flight point Mapzeroth hasn't seen a flight master's window about counts as found (FlightKnowledge.lua)
     docked = { default = true, boolean = true },                          -- the panel: docked beside the map, or free-floating (UI/Panel.lua)
 }
 

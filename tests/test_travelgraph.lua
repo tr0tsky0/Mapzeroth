@@ -92,3 +92,18 @@ end
 local sameSpotElsewhere = { id = "ELSEWHERE", mapID = 2, x = 0.5, y = 0.5 }     -- same x/y as A, another continent
 check(addon.TravelGraph.DistanceProvider(a, sameSpotElsewhere) == nil, "the same coordinates on another continent are not close")
 check(addon.TravelGraph.DistanceProvider(a, b) ~= nil, "and two places on one continent still measure")
+
+-- An authored walk edge with no cost, between two places the client can't measure a distance for (Oribos and
+-- its Ring), is kept at a default price, not silently dropped: dropping it cut off the flight master, and the
+-- four zones' flights with it.
+addon.TravelGraph.DistanceProvider = function() return nil end
+local savedEdges = addon.Edges
+addon.Edges = { { from = "TAXI_2", to = "TAXI_6", method = "walk" } }
+addon.World:Build()
+local kept = addon.TravelGraph:Build(ctx1)
+local unmeasured
+for _, e in ipairs(kept.adjacency["TAXI_2"] or {}) do
+    if e.to == "TAXI_6" and e.method == "walk" then unmeasured = e.cost end
+end
+check(unmeasured == addon.UNMEASURED_WALK_SECONDS, "a walk edge that can't be measured keeps a default cost: " .. tostring(unmeasured))
+addon.Edges = savedEdges

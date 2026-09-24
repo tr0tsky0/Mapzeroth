@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1223, "every converted node made it into the tree (1215 converted + 8 hand-added): " .. total)
+check(total == 1225, "every converted node made it into the tree (1215 converted + 10 hand-added): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -170,3 +170,49 @@ local function flies(from, to)
 end
 check(flies("SILVERMOON_ARCANTINA_PORTAL", "INSTANCE_1299") or flies("SILVERMOON_ARCANTINA_PORTAL", "EVERSONG_HARANDAR_PORTAL"),
     "the live pass gives Eastern Kingdoms its fly edges, however many flyable nodes it has")
+
+-- Oribos: the flight master is on the Ring, a floor (map) of its own, reached by the pad on the main floor. The old
+-- data's one "walk" between the two maps couldn't be measured and was dropped; the pad route replaces it, so the
+-- flights out of Oribos (to Maldraxxus, Bastion, Ardenweald, Revendreth) are reachable.
+addon.World:Build()
+useTestDistances()
+local oribos = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+local direct, padCost = false, nil
+for _, e in ipairs(oribos.adjacency["ORIBOS"] or {}) do
+    if e.to == "TAXI_2395" then direct = true end
+end
+for _, e in ipairs(oribos.adjacency["ORIBOS_TRANSFERENCE_PAD"] or {}) do
+    if e.to == "ORIBOS_TRANSFERENCE_RING" and e.method == "portal" then padCost = e.cost end
+end
+check(not direct, "no one-hop walk from the Oribos entrance to the flight master any more")
+check(padCost == 3, "the pad is a short hop with no loading screen: " .. tostring(padCost))
+local plaguefall = addon.Pathfinder:FindPath(oribos, "ORIBOS", "INSTANCE_1183")
+local viaPad = false
+for _, step in ipairs(plaguefall and plaguefall.steps or {}) do
+    if step.to == "ORIBOS_TRANSFERENCE_RING" then viaPad = true end
+end
+check(plaguefall and viaPad, "Plaguefall from Oribos goes up by the pad, then the flight master")
+
+-- No route because of a flight we can't be sure the player has found: the panel says which, not just "no route".
+local unsure = makeCtx({ faction = "Alliance" })
+unsure.flightNodeFound = function() return nil end
+local session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
+local plan, why = addon.Journey:Plan(session, "INSTANCE_1190")
+check(plan == nil and why and why.nodeID and not why.known, "no route, with the flight in the way named: " .. tostring(why and why.nodeID))
+check(addon.Journey:HintText(why):find("flight"), "and a sentence for it: " .. tostring(addon.Journey:HintText(why)))
+unsure.flightNodeFound = function(id) if id == "TAXI_2514" then return false end return true end
+session = addon.Journey:Build(unsure, { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 })
+local _, known = addon.Journey:Plan(session, "INSTANCE_1190")
+check(known and known.known and known.nodeID == "TAXI_2514", "a flight a window said isn't found is named as such")
+
+-- "Assume flight points are found" (ctx.flightUsable): a flight point no window has said anything about is used, and
+-- the route says so; one a window reported as not found never is.
+local assuming = makeCtx({ faction = "Alliance" })
+assuming.flightNodeFound = function(id) if id == "TAXI_2519" then return false end return nil end
+assuming.flightUsable = function(id) if id == "TAXI_2519" then return false end return true end
+local start = { id = "ORIBOS", mapID = 1670, x = 0.203, y = 0.503 }
+local assumedPlan = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1190")
+check(assumedPlan and assumedPlan.assumed and #assumedPlan.assumed >= 1, "an unconfirmed flight is used, and the plan says which")
+check(addon.Journey:AssumedText(assumedPlan):find("flight master"), "with a line telling the player how to confirm it")
+local blocked = addon.Journey:Plan(addon.Journey:Build(assuming, start), "INSTANCE_1186")      -- Spires of Ascension: only via TAXI_2519
+check(blocked == nil, "but a flight a window said isn't found is never taken, however the setting reads")

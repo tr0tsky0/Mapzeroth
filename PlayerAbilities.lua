@@ -98,6 +98,13 @@ function addon:GetPlayerContext()
         questCompleted = isQuestCompleted,
         holidayActive = isHolidayActive,
         flightNodeFound = function(nodeID) return addon.FlightKnowledge:IsFound(nodeID) end,
+        -- Can they fly to this point? Found (true), or not yet known either way and the setting says to assume so;
+        -- never one a flight master's window said isn't found. Routing uses this; flightNodeFound is the raw fact.
+        flightUsable = function(nodeID)
+            local found = addon.FlightKnowledge:IsFound(nodeID)
+            if found == nil then return addon.Options:Get("assumeFlightsFound") == true end
+            return found
+        end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
         fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master

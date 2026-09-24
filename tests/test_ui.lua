@@ -354,6 +354,10 @@ local function pickNamed(name)
     for _, row in ipairs(state.results) do if row.pick and row.name == name then return row end end
 end
 check(#state.results >= 2, "the empty window shows the accordion's sections")
+-- The list fills the panel down to its bottom margin (no big empty area under it while scrolling), without spilling out.
+local rowCount = #addon.Panel.widgets.rows
+local listBottom = 86 + rowCount * 38
+check(listBottom <= 500 - 16 and 500 - 16 - listBottom < 38, "the list fills the panel: " .. rowCount .. " rows end at " .. listBottom)
 for _, row in ipairs(state.results) do check(row.header and not row.open, "and they start closed: " .. tostring(row.name)) end
 check(not state.priced, "nothing is priced just for opening the window")
 
@@ -533,6 +537,10 @@ addon.OptionsPanel:Sync()
 check(pw.tax.slider._value == 10 and pw.tax.value._text == "10 s", "it shows the loading screen time: " .. tostring(pw.tax.value._text))
 check(pw.scale.slider._value == 1 and pw.scale.value._text == "100%", "and the scale: " .. tostring(pw.scale.value._text))
 check(pw.theme.button.label._text:find("Modern Dark", 1, true), "and the theme: " .. tostring(pw.theme.button.label._text))
+check(pw.assumeFlights.button.label._text:find("On", 1, true), "flight points are assumed found by default: " .. tostring(pw.assumeFlights.button.label._text))
+pw.assumeFlights:Select(false)
+check(Options:Get("assumeFlightsFound") == false and pw.assumeFlights.button.label._text:find("Off", 1, true), "and the dropdown turns it off")
+pw.assumeFlights:Select(true)
 
 pw.tax.slider._scripts.OnValueChanged(pw.tax.slider, 15, true)
 check(Options:Get("loadingScreenTax") == 15 and pw.tax.value._text == "15 s", "moving the loading screen slider changes the setting")

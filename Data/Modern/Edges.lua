@@ -111,7 +111,6 @@ addon.Edges = {
     { from = "MONK_DALARAN_PORTAL", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },
     { from = "DALARAN_PALADIN_PORTAL_HORDE", to = "SANCTUM_OF_LIGHT", method = "portal", cost = 0, requirements = { faction = "Horde", class = "PALADIN" } },
     { from = "DALARAN_PALADIN_PORTAL_ALLIANCE", to = "SANCTUM_OF_LIGHT", method = "portal", cost = 0, requirements = { faction = "Alliance", class = "PALADIN" } },
-    { from = "ORIBOS", to = "TAXI_2395", method = "walk" },
     { from = "ORIBOS", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "ORIBOS", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "TAXI_2395", to = "TAXI_2564", method = "taxi", cost = 120 },
@@ -276,4 +275,5 @@ addon.Edges = {
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10 },
     { from = "LYCANEUM_ENTRANCE", to = "MAGISTERS_SILVERMOON_PORTAL", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "MAGISTERS_SILVERMOON_PORTAL", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
+    { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py
 }

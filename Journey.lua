@@ -168,27 +168,48 @@ local function readableSteps(result, session)
     return steps
 end
 
--- With no rule about found flight points, would a flight we can't use get there faster?
--- Then say which point would help, and by how much.
-local function flightHint(session, goalID, plan)
+-- The route with no rule about found flight points (the flights we can't use allowed), or nil.
+local function freeRoute(session, goalID)
     local ctx = session.ctx
     if not ctx.flightNodeFound then return nil end
     local free = {}
     for k, v in pairs(ctx) do free[k] = v end
-    free.flightNodeFound = nil
+    free.flightNodeFound, free.flightUsable = nil, nil
     session.free = session.free or Journey:Build(free, session.start, session.extras)
     if not session.free then return nil end
-    local result = addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
-    if not result or result.cost + 1 >= plan.cost then return nil end
+    return addon.Pathfinder:FindPath(session.free.graph, session.start.id, goalID)
+end
+
+-- The first flight on a route that this player isn't known to be able to take: { nodeID, name, known }
+-- (known: a flight master's window said it isn't found; otherwise we just haven't looked), or nil.
+local function canFly(ctx, nodeID)
+    if ctx.flightUsable then return ctx.flightUsable(nodeID) end
+    return ctx.flightNodeFound(nodeID) == true
+end
+
+local function unusableFlight(ctx, result)
     for _, step in ipairs(result.steps) do
-        if step.method == "taxi" and ctx.flightNodeFound(step.to) ~= true then
-            return {
-                nodeID = step.to, name = addon:GetNodeName(step.to), saves = plan.cost - result.cost,
-                -- known: a flight master's window said it isn't found; otherwise we just haven't looked
-                known = ctx.flightNodeFound(step.to) == false,
-            }
+        if step.method == "taxi" and not canFly(ctx, step.to) then
+            return { nodeID = step.to, name = addon:GetNodeName(step.to), known = ctx.flightNodeFound(step.to) == false }
         end
     end
+end
+
+-- With no rule about found flight points, would a flight we can't use get there faster?
+-- Then say which point would help, and by how much.
+local function flightHint(session, goalID, plan)
+    local result = freeRoute(session, goalID)
+    if not result or result.cost + 1 >= plan.cost then return nil end
+    local hint = unusableFlight(session.ctx, result)
+    if hint then hint.saves = plan.cost - result.cost end
+    return hint
+end
+
+-- No route at all: is it only because of a flight we can't be sure this player can take? Then say so,
+-- rather than a bare "no route" ({ nodeID, name, known }, no `saves`: there is no route to save time on).
+local function missingFlightHint(session, goalID)
+    local result = freeRoute(session, goalID)
+    return result and unusableFlight(session.ctx, result) or nil
 end
 
 -- The route to goalID (a node id, or a list of them for the nearest): { cost, goal (the
@@ -196,11 +217,12 @@ end
 -- approx}}, hint = {nodeID, name, saves, known} or nil }. With the player's money known, it is the
 -- quickest route they can pay for: `quickest` = { fare, saves } if a dearer route would be quicker,
 -- and `unaffordable` if no route is within their means (then it is the cheapest there is).
--- Returns nil if there is no way there.
+-- Returns nil if there is no way there (and, second, a hint like `hint` when a flight this player may not
+-- have found is all that stands in the way).
 function Journey:Plan(session, goalID)
     local money = session.ctx.money
     local fastest = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, nil))
-    if not fastest then return nil end
+    if not fastest then return nil, missingFlightHint(session, goalID) end
     local chosen = fastest
     if money and fastest.fare > money then
         chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, money))
@@ -214,11 +236,19 @@ function Journey:Plan(session, goalID)
         plan.quickest = { fare = fastest.fare, saves = chosen.cost - fastest.cost }
     end
     plan.hint = flightHint(session, goalID, plan)
+    -- Flights taken on the strength of the "assume found" setting: no flight master's window has said either way.
+    local ctx = session.ctx
+    for _, step in ipairs(plan.raw) do
+        if step.method == "taxi" and ctx.flightUsable and ctx.flightNodeFound and ctx.flightNodeFound(step.to) == nil then
+            plan.assumed = plan.assumed or {}
+            table.insert(plan.assumed, addon:GetNodeName(step.to))
+        end
+    end
     return plan
 end
 
 function Journey:PlanEntry(session, entry)
-    return self:Plan(session, goalsOf(entry))
+    return self:Plan(session, goalsOf(entry))       -- the plan, or nil and a hint about a missing flight
 end
 
 -- "1g 20s 5c" for an amount in copper.
@@ -251,9 +281,19 @@ function Journey:PlanFromHere(entry)
     return session and self:PlanEntry(session, entry) or nil
 end
 
+-- A line for a route that flies to points nobody has confirmed the player found, or nil.
+function Journey:AssumedText(plan)
+    if not (plan and plan.assumed and #plan.assumed > 0) then return nil end
+    return L["HINT_ASSUMED"]:format(table.concat(plan.assumed, ", "))
+end
+
 -- The sentence for a hint, in our own words around the client's names.
 function Journey:HintText(hint)
     if not hint then return nil end
+    if not hint.saves then                          -- no route at all without it
+        if hint.known then return L["HINT_ONLY_FLIGHT_UNFOUND"]:format(hint.name) end
+        return L["HINT_ONLY_FLIGHT_UNKNOWN"]
+    end
     if hint.known then
         return L["HINT_UNFOUND"]:format(hint.name, self:FormatTime(hint.saves))
     end

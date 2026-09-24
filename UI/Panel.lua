@@ -19,7 +19,8 @@ local Journey = addon.Journey
 local WIDTH, HEIGHT, PAD = 330, 500, 16
 local INNER = WIDTH - 2 * PAD
 local LIST_TOP = 86
-local ROW_H, ROWS = 38, 8
+local ROW_H = 38
+local ROWS = math.floor((HEIGHT - PAD - LIST_TOP) / ROW_H)   -- as many result rows as the panel has room for
 local INDENT = 14                         -- how far an item of an accordion section sits in from its heading
 local STEP_H, STEPS = 30, 8
 
@@ -389,12 +390,14 @@ function Panel:ShowRoute(entry)
         setStatus(L["NOWHERE"])
         return
     end
-    local plan = Journey:PlanEntry(session, entry)
+    local plan, why = Journey:PlanEntry(session, entry)
     state.plan = plan
     ui.status:ClearAllPoints()
     ui.status:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 74))
     if not plan then
-        setStatus(L["ROUTE_NONE"])
+        -- No route: say so, and when only a flight this character may not have found is in the way, which.
+        local reason = Journey:HintText(why)
+        setStatus(reason and (L["ROUTE_NONE"] .. "\n\n" .. reason) or L["ROUTE_NONE"])
         return
     end
 
@@ -412,7 +415,7 @@ function Panel:DisplayPlan(entry, plan)
     if plan.fare and plan.fare > 0 then total = total .. " - " .. L["ROUTE_FARES"]:format(Journey:FormatMoney(plan.fare)) end
     ui.routeTotal:SetText(total)
     local hints = {}
-    for _, text in ipairs({ Journey:FareText(plan), Journey:HintText(plan.hint) }) do
+    for _, text in ipairs({ Journey:FareText(plan), Journey:HintText(plan.hint), Journey:AssumedText(plan) }) do
         if text then hints[#hints + 1] = text end
     end
     ui.routeHint:SetText(table.concat(hints, "\n"))

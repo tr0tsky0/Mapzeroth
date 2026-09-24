@@ -268,7 +268,9 @@ function TravelGraph:Build(ctx)
     end
 
     local function unfound(edge, toID)
-        return edge.method == "taxi" and ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
+        if edge.method ~= "taxi" then return false end
+        if ctx.flightUsable then return not ctx.flightUsable(toID) end
+        return ctx.flightNodeFound and ctx.flightNodeFound(toID) ~= true
     end
 
     -- Authored edges. The reverse direction is generated here, carrying the same requirements
@@ -286,7 +288,7 @@ function TravelGraph:Build(ctx)
             if cost == nil and a and b then
                 local dist = TravelGraph.DistanceProvider(a, b)
                 local speed = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
-                cost = dist and (dist * pathFactor(a, b) / speed)
+                cost = dist and (dist * pathFactor(a, b) / speed) or (edge.method == "walk" and addon.UNMEASURED_WALK_SECONDS or nil)
             elseif cost and edge.method == "taxi" then
                 cost = cost / addon:GetFlightSpeedMultiplier(ctx)
             end

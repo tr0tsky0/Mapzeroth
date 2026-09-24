@@ -162,6 +162,9 @@ def main():
             stray_fields[stray] = stray_fields.get(stray, 0) + 1
         from_id, to_id, method = resolve_id(e["from"]), resolve_id(e["to"]), e["method"]
         method = METHOD_RENAME.get(method, method)
+        if any(d["from"] == from_id and d["to"] == to_id and d["method"] == method
+               for d in getattr(manual, "DROP_EDGES", [])):
+            continue            # replaced by a hand-added route (tools/modern_manual.py)
         if from_id not in node_ids or to_id not in node_ids:
             dangling.append((from_id, to_id))
             continue
@@ -195,6 +198,8 @@ def main():
             parts.append(f'cost = {me["cost"]}')
         if me.get("oneway"):
             parts.append("oneway = true")
+        if me.get("loadingScreens") is not None:
+            parts.append(f'loadingScreens = {me["loadingScreens"]}')
         lines.append(f"    {{ {', '.join(parts)} }}, -- hand-added: tools/modern_manual.py")
         total += 1
 

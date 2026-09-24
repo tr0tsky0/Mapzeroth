@@ -77,4 +77,6 @@ addon.Nodes.Shadowlands = {
     { id = "TAXI_2514", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7030, y = 0.8110 }, -- Pridefall Hamlet
     { id = "TAXI_2517", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5423, y = 0.2562 }, -- Menagerie of the Master
     { id = "TAXI_2513", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6089, y = 0.3871 }, -- Old Gate
+    { id = "ORIBOS_TRANSFERENCE_PAD", container = "sl_oribos.map1670", mapID = 1670, x = 0.4860, y = 0.5060 }, -- The pad up to the Ring of Transference (main floor) (hand-added: tools/modern_manual.py)
+    { id = "ORIBOS_TRANSFERENCE_RING", container = "sl_oribos.map1671", mapID = 1671, x = 0.4860, y = 0.5060 }, -- Where the pad lands on the Ring (flight master floor) (hand-added: tools/modern_manual.py)
 }

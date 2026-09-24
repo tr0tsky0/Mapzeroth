@@ -16,19 +16,28 @@ local Options = addon.Options
 local PAD = 20
 local widgets = {}
 
--- A label, a description and an On / Off choice for one on/off setting, in a column at x.
-local function toggleColumn(parent, x, top, key, label, description)
+-- One option per row: its label and description on the left, at whatever width the page has, and its control
+-- (a dropdown) at the right-hand edge, level with the label.
+local TEXT_WIDTH = 470
+
+local function optionRow(parent, top, label, description)
     local title = Theme:Text(parent, "body")
-    title:SetPoint("TOPLEFT", x, -top)
+    title:SetPoint("TOPLEFT", PAD, -top)
     title:SetText(label)
     local hint = Theme:Text(parent, "dim")
-    hint:SetPoint("TOPLEFT", x, -(top + 20))
-    hint:SetWidth(250)
+    hint:SetPoint("TOPLEFT", PAD, -(top + 20))
+    hint:SetWidth(TEXT_WIDTH)
     hint:SetWordWrap(true)
     hint:SetText(description)
+    return title, hint
+end
+
+-- An on/off setting.
+local function toggleRow(parent, top, key, label, description)
+    local _, hint = optionRow(parent, top, label, description)
     local choices = { { id = true, label = L["OPT_ON"] }, { id = false, label = L["OPT_OFF"] } }
     local dropdown = Theme:Dropdown(parent, 120, choices, function(id) Options:Set(key, id) end)
-    dropdown.button:SetPoint("TOPLEFT", x, -(top + 84))
+    dropdown.button:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -PAD, -(top + 2))
     dropdown.hint = hint
     dropdown.key = key
     return dropdown
@@ -79,26 +88,19 @@ function OptionsPanel:Build()
     widgets.scale = sliderRow(box, 168, "scale", L["OPT_SCALE"], L["OPT_SCALE_DESC"],
         function(v) return L["OPT_PERCENT"]:format(math.floor(v * 100 + 0.5)) end)
 
-    local themeTitle = Theme:Text(box, "body")
-    themeTitle:SetPoint("TOPLEFT", PAD, -272)
-    themeTitle:SetText(L["OPT_THEME"])
-    local themeHint = Theme:Text(box, "dim")
-    themeHint:SetPoint("TOPLEFT", PAD, -292)
-    themeHint:SetWidth(520)
-    themeHint:SetWordWrap(true)
-    themeHint:SetText(L["OPT_THEME_DESC"])
-
+    optionRow(box, 272, L["OPT_THEME"], L["OPT_THEME_DESC"])
     local choices = {}
     for _, id in ipairs(Theme:List()) do choices[#choices + 1] = { id = id, label = Theme:Label(id) } end
     widgets.theme = Theme:Dropdown(box, 220, choices, function(id) Options:Set("theme", id) end)
-    widgets.theme.button:SetPoint("TOPLEFT", PAD, -326)
+    widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -274)
 
-    widgets.routeMap = toggleColumn(box, PAD, 390, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
-    widgets.routeMinimap = toggleColumn(box, PAD + 290, 390, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
+    widgets.routeMap = toggleRow(box, 352, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
+    widgets.routeMinimap = toggleRow(box, 432, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
     if not (addon.MinimapLines and addon.MinimapLines:IsAvailable()) then
         widgets.routeMinimap.hint:SetText(L["OPT_MINIMAP_UNAVAILABLE"])       -- it can't be done here: say so
         widgets.routeMinimap.button:Disable()
     end
+    widgets.assumeFlights = toggleRow(box, 512, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
 
     -- Hooks the game's Settings window calls on a canvas page.
     frame.OnCommit = function() end
@@ -123,6 +125,7 @@ function OptionsPanel:Sync()
     widgets.theme:SetValue(Options:Get("theme"))
     widgets.routeMap:SetValue(Options:Get("showRouteOnMap"))
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
+    widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
 end
 
 -- Add the page to the game's Settings window (once).

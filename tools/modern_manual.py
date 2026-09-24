@@ -6,9 +6,12 @@ NODES    places the old data lacks, usually captured in game with /mzdump here. 
          { "id", "out" (which Nodes_*.lua it goes in), "container", "mapID", "x", "y",
          optional "area" (the client's area id: gives the node a localized name), "note" }.
 INDOOR   containers the old data didn't flag `interior` but are: no flying to or from them.
-EDGES    connections the old data lacks: { "from", "to", "method", optional "cost", optional "oneway" }.
+EDGES    connections the old data lacks: { "from", "to", "method", optional "cost", optional "oneway",
+         optional "loadingScreens" }.
          Leave `cost` out for a walk and the engine works it out from distance and the default path
          factor, like any other walk.
+DROP_EDGES  old-data edges to leave out (usually because a hand-added route replaces them):
+         { "from", "to", "method" }.
 """
 
 NODES = [
@@ -33,6 +36,12 @@ NODES = [
      "x": 0.736, "y": 0.665, "note": "Sporefall (Harandar): a single-boss raid, entered from the open world"},
     {"id": "INSTANCE_749", "out": "Nodes_Outlands.lua", "container": "outlands.map109", "mapID": 109,
      "x": 0.737, "y": 0.642, "note": "The Eye, Tempest Keep (Netherstorm)"},
+    # Oribos: the flight master is on the Ring, a floor of its own (a separate map), reached from the pad on the
+    # main floor. Same coordinates on both floors (given by the player).
+    {"id": "ORIBOS_TRANSFERENCE_PAD", "out": "Nodes_Shadowlands.lua", "container": "sl_oribos.map1670",
+     "mapID": 1670, "x": 0.486, "y": 0.506, "note": "The pad up to the Ring of Transference (main floor)"},
+    {"id": "ORIBOS_TRANSFERENCE_RING", "out": "Nodes_Shadowlands.lua", "container": "sl_oribos.map1671",
+     "mapID": 1671, "x": 0.486, "y": 0.506, "note": "Where the pad lands on the Ring (flight master floor)"},
 ]
 
 # The Lycaneum's own map: its portal room is an interior reached on foot from the entrance above,
@@ -44,4 +53,15 @@ EDGES = [
     # never auto-connects to the outdoors, but costed like any walk (distance and the default path factor).
     {"from": "LYCANEUM_ENTRANCE", "to": "MAGISTERS_SILVERMOON_PORTAL", "method": "walk"},
     {"from": "MAGISTERS_SILVERMOON_PORTAL", "to": "LYCANEUM_ENTRANCE", "method": "walk"},
+    # Oribos: up to the Ring and back down by the pad, a few seconds and no loading screen (a guess: correct
+    # `loadingScreens` if it does load). From the pad to the flight master, and from the Oribos entrance to
+    # the pad, are ordinary walks the engine works out from distance within each floor.
+    {"from": "ORIBOS_TRANSFERENCE_PAD", "to": "ORIBOS_TRANSFERENCE_RING", "method": "portal", "cost": 3,
+     "loadingScreens": 0},
+]
+
+# The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
+# replaces it (left in, it would undercut the real route).
+DROP_EDGES = [
+    {"from": "ORIBOS", "to": "TAXI_2395", "method": "walk"},
 ]

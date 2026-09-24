@@ -37,6 +37,11 @@ addon.CLASS_TOKENS = {
 -- within this many yards of each other, continent-wide.
 addon.MAX_AUTO_EDGE_DISTANCE = 3000
 
+-- What an authored walk edge with no cost of its own takes when the distance between its ends can't be
+-- measured (two maps the client won't project onto one another: Oribos and its Ring). The edge says the
+-- walk exists, so it is kept at a plausible price, not dropped and the places beyond it cut off.
+addon.UNMEASURED_WALK_SECONDS = 20
+
 -- Loading screens an edge incurs when it doesn't say (edge.loadingScreens
 -- overrides). Anything not listed defaults to 0.
 addon.DEFAULT_LOADING_SCREENS = { portal = 1, teleport = 1, hearthstone = 1, tram = 2 }
