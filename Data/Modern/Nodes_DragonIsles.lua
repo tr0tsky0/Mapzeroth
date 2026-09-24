@@ -21,7 +21,7 @@ addon.Nodes.DragonIsles = {
     { id = "FORBIDDEN_REACH", container = "dragon_isles.map2151", mapID = 2151, x = 0.3495, y = 0.6095 }, -- Morqut Village Entrance
     { id = "ZARALEK_CAVERN_MOLE", container = "dragon_isles.map2133", mapID = 2133, x = 0.5270, y = 0.2770, area = 14655 }, -- Zaralek Cavern (Obsidian Rest)
     { id = "BELAMETH", container = "dragon_isles.map2239", mapID = 2239, x = 0.5493, y = 0.6388, area = 15115 }, -- Bel'ameth
-    { id = "TAXI_2810", container = "dragon_isles.map2112", mapID = 2112, x = 0.4436, y = 0.6798 }, -- Flightmaster
+    { id = "TAXI_2810", container = "dragon_isles.map2112", mapID = 2112, x = 0.4436, y = 0.6798, city = "valdrakken" }, -- Flightmaster
     { id = "INSTANCE_RUBY_LIFE_POOLS", container = "dragon_isles.map2022", mapID = 2022, x = 0.6000, y = 0.7500, kind = "instance", journal = 1202 }, -- Ruby Life Pools
     { id = "TAXI_2773", container = "dragon_isles.map2024", mapID = 2024, x = 0.3702, y = 0.6082 }, -- Azure Archives
     { id = "TAXI_2804", container = "dragon_isles.map2022", mapID = 2022, x = 0.5412, y = 0.3716 }, -- Uktulut Backwater
@@ -41,7 +41,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2863", container = "dragon_isles.map2133", mapID = 2133, x = 0.4023, y = 0.6753 }, -- Loamm
     { id = "TAXI_2816", container = "dragon_isles.map2025", mapID = 2025, x = 0.5733, y = 0.7907 }, -- Shifting Sands
     { id = "TAXI_2786", container = "dragon_isles.map2024", mapID = 2024, x = 0.6594, y = 0.2545 }, -- Rhonin's Shield
-    { id = "PORTAL_VALDRAKKEN_BADLANDS", container = "dragon_isles.map2112", mapID = 2112, x = 0.2597, y = 0.4078 }, -- Badlands Portal
+    { id = "PORTAL_VALDRAKKEN_BADLANDS", container = "dragon_isles.map2112", mapID = 2112, x = 0.2597, y = 0.4078, city = "valdrakken" }, -- Badlands Portal
     { id = "BELANAAR", container = "dragon_isles.map2239", mapID = 2239, x = 0.5140, y = 0.1580, area = 15121 }, -- Belanaar
     { id = "TAXI_2789", container = "dragon_isles.map2024", mapID = 2024, x = 0.1923, y = 0.2373 }, -- Three-Falls Lookout
     { id = "AZURE_SPAN_MOLE", container = "dragon_isles.map2024", mapID = 2024, x = 0.8010, y = 0.3900, area = 14017 }, -- The Azure Span (Vakthros Summit)
@@ -49,7 +49,7 @@ addon.Nodes.DragonIsles = {
     { id = "INSTANCE_VAULT_OF_THE_INCARNATES", container = "dragon_isles.map2025", mapID = 2025, x = 0.7300, y = 0.5500, kind = "instance", journal = 1200 }, -- Vault of the Incarnates
     { id = "TAXI_2809", container = "dragon_isles.map2022", mapID = 2022, x = 0.4772, y = 0.8337 }, -- Dragonscale Basecamp
     { id = "TAXI_2864", container = "dragon_isles.map2133", mapID = 2133, x = 0.5102, y = 0.2587 }, -- Obsidian Rest
-    { id = "VALDRAKKEN", container = "dragon_isles.map2112", mapID = 2112, x = 0.5960, y = 0.4140 }, -- Portal Room
+    { id = "VALDRAKKEN", container = "dragon_isles.map2112", mapID = 2112, x = 0.5960, y = 0.4140, city = "valdrakken" }, -- Portal Room
     { id = "TAXI_2915", container = "dragon_isles.map2239", mapID = 2239, x = 0.5010, y = 0.5582 }, -- Bel'ameth Flightmaster
     { id = "TAXI_2774", container = "dragon_isles.map2024", mapID = 2024, x = 0.4654, y = 0.3981 }, -- Camp Antonidas
     { id = "INSTANCE_ABERRUS_THE_SHADOWED_CRUCIBLE", container = "dragon_isles.map2133", mapID = 2133, x = 0.4800, y = 0.1100, kind = "instance", journal = 1208 }, -- Aberrus, the Shadowed Crucible

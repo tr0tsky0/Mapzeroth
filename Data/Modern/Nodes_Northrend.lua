@@ -31,8 +31,8 @@ addon.Nodes.Northrend = {
     { id = "INSTANCE_UTGARDE_KEEP", container = "northrend.map117", mapID = 117, x = 0.5800, y = 0.5000, kind = "instance", journal = 285 }, -- Utgarde Keep
     { id = "TAXI_322", container = "northrend.map120", mapID = 120, x = 0.6250, y = 0.6130 }, -- Dun Niffelem
     { id = "ARGENT_TOURNAMENT_GROUNDS_MOLE", container = "northrend.map118", mapID = 118, x = 0.7700, y = 0.1860, area = 4658 }, -- Argent Tournament Grounds (Icecrown)
-    { id = "DALARAN_NORTHREND", container = "northrend.map125", mapID = 125, x = 0.5592, y = 0.4678, area = 4395 }, -- Dalaran (Northrend)
-    { id = "PORTAL_DALARAN_NORTHREND_ORGRIMMAR", container = "northrend.map125", mapID = 125, x = 0.5757, y = 0.1942 }, -- Portal to Orgrimmar
+    { id = "DALARAN_NORTHREND", container = "northrend.map125", mapID = 125, x = 0.5592, y = 0.4678, area = 4395, city = "dalaran_northrend" }, -- Dalaran (Northrend)
+    { id = "PORTAL_DALARAN_NORTHREND_ORGRIMMAR", container = "northrend.map125", mapID = 125, x = 0.5757, y = 0.1942, city = "dalaran_northrend" }, -- Portal to Orgrimmar
     { id = "INSTANCE_HALLS_OF_STONE", container = "northrend.map120", mapID = 120, x = 0.4000, y = 0.2700, kind = "instance", journal = 277 }, -- Halls of Stone
     { id = "TAXI_336", container = "northrend.map127", mapID = 127, x = 0.7260, y = 0.8090 }, -- Windrunner's Overlook
     { id = "TAXI_190", container = "northrend.map117", mapID = 117, x = 0.5074, y = 0.6967 }, -- New Agamand
@@ -66,7 +66,7 @@ addon.Nodes.Northrend = {
     { id = "INSTANCE_TRIAL_OF_THE_CHAMPION", container = "northrend.map118", mapID = 118, x = 0.7400, y = 0.2000, kind = "instance", journal = 284 }, -- Trial of the Champion
     { id = "INSTANCE_HALLS_OF_LIGHTNING", container = "northrend.map120", mapID = 120, x = 0.4200, y = 0.2100, kind = "instance", journal = 275 }, -- Halls of Lightning
     { id = "INSTANCE_PIT_OF_SARON", container = "northrend.map118", mapID = 118, x = 0.5200, y = 0.8900, kind = "instance", journal = 278 }, -- Pit of Saron
-    { id = "INSTANCE_THE_VIOLET_HOLD", container = "northrend.map125", mapID = 125, x = 0.6600, y = 0.6800, kind = "instance", journal = 283 }, -- The Violet Hold
+    { id = "INSTANCE_THE_VIOLET_HOLD", container = "northrend.map125", mapID = 125, x = 0.6600, y = 0.6800, city = "dalaran_northrend", kind = "instance", journal = 283 }, -- The Violet Hold
     { id = "TAXI_295", container = "northrend.map117", mapID = 117, x = 0.2500, y = 0.5970 }, -- Kamagua
     { id = "INSTANCE_ICECROWN_CITADEL", container = "northrend.map118", mapID = 118, x = 0.5300, y = 0.8600, kind = "instance", journal = 758 }, -- Icecrown Citadel
     { id = "INSTANCE_DRAKTHARON_KEEP", container = "northrend.map121", mapID = 121, x = 0.2800, y = 0.8700, kind = "instance", journal = 273 }, -- Drak'Tharon Keep
@@ -95,7 +95,7 @@ addon.Nodes.Northrend = {
     { id = "TAXI_308", container = "northrend.map119", mapID = 119, x = 0.4990, y = 0.6110 }, -- River's Heart
     { id = "TAXI_323", container = "northrend.map120", mapID = 120, x = 0.3685, y = 0.4990 }, -- Grom'arsh Crash-Site
     { id = "TAXI_326", container = "northrend.map120", mapID = 120, x = 0.4600, y = 0.2410 }, -- Ulduar
-    { id = "PORTAL_DALARAN_NORTHREND_STORMWIND", container = "northrend.map125", mapID = 125, x = 0.3998, y = 0.6265 }, -- Portal to Stormwind
+    { id = "PORTAL_DALARAN_NORTHREND_STORMWIND", container = "northrend.map125", mapID = 125, x = 0.3998, y = 0.6265, city = "dalaran_northrend" }, -- Portal to Stormwind
     { id = "TAXI_320", container = "northrend.map120", mapID = 120, x = 0.4200, y = 0.8450 }, -- K3
     { id = "TAXI_327", container = "northrend.map120", mapID = 120, x = 0.3050, y = 0.3580 }, -- Bouldercrag's Refuge
     { id = "TAXI_244", container = "northrend.map115", mapID = 115, x = 0.7680, y = 0.4990 }, -- Wintergarde Keep

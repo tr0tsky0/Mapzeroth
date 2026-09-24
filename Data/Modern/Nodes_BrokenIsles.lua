@@ -16,11 +16,11 @@ addon.Nodes.BrokenIsles = {
     { id = "PORTAL_EMERALD_DREAMWAY_DUSKWOOD", container = "broken_isles.map715.interior", mapID = 715, x = 0.3981, y = 0.6892 }, -- Portal to Moonglade
     { id = "EMERALD_DREAMWAY", container = "broken_isles.map715.interior", mapID = 715, x = 0.3533, y = 0.5315, area = 7979 }, -- Emerald Dreamway
     { id = "TAXI_1885", container = "broken_isles.map641", mapID = 641, x = 0.2600, y = 0.6626 }, -- Gloaming Reef
-    { id = "PORTAL_DALARAN_PALADIN_HORDE", container = "broken_isles.map627", mapID = 627, x = 0.3285, y = 0.6952 }, -- Sanctum of Light Portal
+    { id = "PORTAL_DALARAN_PALADIN_HORDE", container = "broken_isles.map627", mapID = 627, x = 0.3285, y = 0.6952, city = "dalaran_broken_isles" }, -- Sanctum of Light Portal
     { id = "PORTAL_EMERALD_DREAMWAY_AMIRDRASSIL", container = "broken_isles.map715.interior", mapID = 715, x = 0.1998, y = 0.5910 }, -- Portal to Amirdrassil
     { id = "TAXI_1754", container = "broken_isles.map650", mapID = 650, x = 0.3828, y = 0.3888 }, -- The Witchwood
     { id = "TAXI_1742", container = "broken_isles.map634", mapID = 634, x = 0.6032, y = 0.5083 }, -- Valdisdall
-    { id = "PORTAL_DALARAN_BROKEN_ISLES_HORDE", container = "broken_isles.map627", mapID = 627, x = 0.6173, y = 0.1400 }, -- Dalaran (Broken Isles) Portal
+    { id = "PORTAL_DALARAN_BROKEN_ISLES_HORDE", container = "broken_isles.map627", mapID = 627, x = 0.6173, y = 0.1400, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Portal
     { id = "VALSHARAH", container = "broken_isles.map641", mapID = 641, x = 0.5480, y = 0.7300 }, -- Lorlathil Portal
     { id = "TAXI_1880", container = "broken_isles.map680", mapID = 680, x = 0.2542, y = 0.3182 }, -- Irongrove Retreat
     { id = "TAXI_1941", container = "broken_isles.map646", mapID = 646, x = 0.4494, y = 0.6392 }, -- Deliverance Point
@@ -43,11 +43,11 @@ addon.Nodes.BrokenIsles = {
     { id = "AZSUNA", container = "broken_isles.map630", mapID = 630, x = 0.4682, y = 0.4136, area = 7349 }, -- Faronaar
     { id = "PORTAL_NIGHTHOLD_SHALARAN", container = "broken_isles.map680", mapID = 680, x = 0.5803, y = 0.8660 }, -- Portal to Shal'Aran
     { id = "PORTAL_EMERALD_DREAMWAY_GRIZZLY_HILLS", container = "broken_isles.map715.interior", mapID = 715, x = 0.3189, y = 0.2692 }, -- Portal to Grizzly Hills
-    { id = "PORTAL_DALARAN_PALADIN_ALLIANCE", container = "broken_isles.map627", mapID = 627, x = 0.3285, y = 0.6952 }, -- Sanctum of Light Portal
+    { id = "PORTAL_DALARAN_PALADIN_ALLIANCE", container = "broken_isles.map627", mapID = 627, x = 0.3285, y = 0.6952, city = "dalaran_broken_isles" }, -- Sanctum of Light Portal
     { id = "PORTAL_VALSHARAH_DRUID_DALARAN", container = "broken_isles.map747", mapID = 747, x = 0.5710, y = 0.4350 }, -- Portal to Dalaran (Broken Isles)
     { id = "PORTAL_EMERALD_DREAMWAY_HINTERLANDS", container = "broken_isles.map715.interior", mapID = 715, x = 0.5029, y = 0.6520 }, -- Portal to Moonglade
     { id = "TAXI_1753", container = "broken_isles.map650", mapID = 650, x = 0.5251, y = 0.4508 }, -- Skyhorn
-    { id = "DALARAN_BROKEN_ISLES_PET", container = "broken_isles.map627", mapID = 627, x = 0.5835, y = 0.3960 }, -- Dalaran Pet Shop
+    { id = "DALARAN_BROKEN_ISLES_PET", container = "broken_isles.map627", mapID = 627, x = 0.5835, y = 0.3960, city = "dalaran_broken_isles" }, -- Dalaran Pet Shop
     { id = "TAXI_1767", container = "broken_isles.map650", mapID = 650, x = 0.4034, y = 0.5231 }, -- Nesingwary's Retreat
     { id = "PORTAL_EMERALD_DREAMWAY_HYJAL", container = "broken_isles.map715.interior", mapID = 715, x = 0.5284, y = 0.5256 }, -- Portal to Mount Hyjal
     { id = "TAXI_1761", container = "broken_isles.map650", mapID = 650, x = 0.5779, y = 0.2838 }, -- Prepfoot
@@ -74,8 +74,8 @@ addon.Nodes.BrokenIsles = {
     { id = "INSTANCE_THE_ARCWAY", container = "broken_isles.map680", mapID = 680, x = 0.5100, y = 0.6500, kind = "instance", journal = 726 }, -- The Arcway
     { id = "TAXI_1713", container = "broken_isles.map641", mapID = 641, x = 0.4230, y = 0.5851 }, -- Bradensbrook
     { id = "TAXI_1758", container = "broken_isles.map650", mapID = 650, x = 0.4735, y = 0.8451 }, -- Obsidian Overlook
-    { id = "FLIGHT_DALARAN_BROKEN_ISLES", container = "broken_isles.map627", mapID = 627, x = 0.6985, y = 0.5108 }, -- Dalaran (Broken Isles) Flightmaster
-    { id = "PORTAL_DALARAN_BROKEN_ISLES_ALLIANCE", container = "broken_isles.map627", mapID = 627, x = 0.3908, y = 0.6280 }, -- Dalaran (Broken Isles) Portal
+    { id = "FLIGHT_DALARAN_BROKEN_ISLES", container = "broken_isles.map627", mapID = 627, x = 0.6985, y = 0.5108, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Flightmaster
+    { id = "PORTAL_DALARAN_BROKEN_ISLES_ALLIANCE", container = "broken_isles.map627", mapID = 627, x = 0.3908, y = 0.6280, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Portal
     { id = "TAXI_1879", container = "broken_isles.map680", mapID = 680, x = 0.6410, y = 0.4181 }, -- Crimson Thicket
     { id = "TAXI_1755", container = "broken_isles.map650", mapID = 650, x = 0.2967, y = 0.3923 }, -- Felbane Camp
     { id = "TAXI_1744", container = "broken_isles.map634", mapID = 634, x = 0.7200, y = 0.5980 }, -- Greywatch
@@ -83,7 +83,7 @@ addon.Nodes.BrokenIsles = {
     { id = "TAXI_1858", container = "broken_isles.map680", mapID = 680, x = 0.3403, y = 0.4956 }, -- Meredil
     { id = "PORTAL_NIGHTHOLD_ORGRIMMAR", container = "broken_isles.map680", mapID = 680, x = 0.5821, y = 0.8729 }, -- Portal to Orgrimmar
     { id = "TAXI_1778", container = "broken_isles.map650", mapID = 650, x = 0.5917, y = 0.6505 }, -- Stonehoof Watch
-    { id = "DALARAN_BROKEN_ISLES", container = "broken_isles.map627", mapID = 627, x = 0.6092, y = 0.4472, area = 7502 }, -- Dalaran (Broken Isles)
+    { id = "DALARAN_BROKEN_ISLES", container = "broken_isles.map627", mapID = 627, x = 0.6092, y = 0.4472, area = 7502, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles)
     { id = "TAXI_1859", container = "broken_isles.map630", mapID = 630, x = 0.6364, y = 0.2845 }, -- Felblaze Ingress
     { id = "TAXI_1622", container = "broken_isles.map630", mapID = 630, x = 0.4448, y = 0.4377 }, -- Illidari Stand
     { id = "TAXI_1855", container = "broken_isles.map634", mapID = 634, x = 0.8958, y = 0.1037 }, -- Shield's Rest
@@ -92,7 +92,7 @@ addon.Nodes.BrokenIsles = {
     { id = "TAXI_1759", container = "broken_isles.map650", mapID = 650, x = 0.5664, y = 0.8399 }, -- Ironhorn Enclave
     { id = "THE_NIGHTHOLD", container = "broken_isles.map680", mapID = 680, x = 0.5957, y = 0.8526, area = 9502 }, -- The Nighthold
     { id = "TAXI_1777", container = "broken_isles.map650", mapID = 650, x = 0.3587, y = 0.6574 }, -- Sylvan Falls
-    { id = "INSTANCE_ASSAULT_ON_VIOLET_HOLD", container = "broken_isles.map627", mapID = 627, x = 0.6600, y = 0.6800, kind = "instance", journal = 777 }, -- Assault on Violet Hold
+    { id = "INSTANCE_ASSAULT_ON_VIOLET_HOLD", container = "broken_isles.map627", mapID = 627, x = 0.6600, y = 0.6800, city = "dalaran_broken_isles", kind = "instance", journal = 777 }, -- Assault on Violet Hold
     { id = "THE_BROKEN_SHORE", container = "broken_isles.map646", mapID = 646, x = 0.7170, y = 0.4800, area = 8648 }, -- Aalgen Point
     { id = "PORTAL_EMERALD_DREAMWAY_MOONGLADE", container = "broken_isles.map715.interior", mapID = 715, x = 0.2651, y = 0.7818 }, -- Portal to Moonglade
 }

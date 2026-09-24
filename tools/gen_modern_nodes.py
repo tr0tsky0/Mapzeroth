@@ -240,13 +240,30 @@ def main():
                     area_of[source] = int(found.split(",")[0])
     area_of.update(getattr(manual, "AREA_OVERRIDES", {}))
 
-    def node_fields(source_id):
-        """The new id, and the fields to write after the position: an area that names it, and the instance fields
-        (kind, journal, faction)."""
+    # Which city a node is part of (Forever tags its city POIs the same way): every node on a city's maps, or only the
+    # nodes CITIES lists for a city that is part of a zone's map.
+    city_of_map, city_of_node = {}, {}
+    for key, city in manual.CITIES.items():
+        if city.get("nodes"):
+            for node_id in city["nodes"]:
+                city_of_node[node_id] = key
+        else:
+            for map_id in city["maps"]:
+                city_of_map[map_id] = key
+
+    def node_fields(source_id, map_id):
+        """The new id, and the fields to write after the position: an area that names it, the city it is part of,
+        and the instance fields (kind, journal, faction)."""
         new_id, journal, faction = id_plan[source_id]
         extra = ""
         if source_id in area_of and journal is None:
             extra = f", area = {area_of[source_id]}"
+        city = city_of_node.get(new_id) or city_of_map.get(map_id)
+        if city:
+            extra += f', city = "{city}"'
+        kind = getattr(manual, "NODE_KINDS", {}).get(source_id)
+        if kind:
+            extra += f', kind = "{kind}"'
         if journal is not None:
             extra += f', kind = "instance", journal = {journal}' + (f', faction = "{faction}"' if faction else "")
         return new_id, extra
@@ -275,7 +292,7 @@ def main():
                 if node["mapArtID"] is not None:
                     phase_nodes.append((node_id, group_name, int(node["mapID"]), int(node["mapArtID"])))
                 name = node["name"] or ""
-                out_id, extra = node_fields(node_id)
+                out_id, extra = node_fields(node_id, int(node["mapID"]))
                 lines.append(
                     f'    {{ id = "{out_id}", container = "{container}", '
                     f'mapID = {int(node["mapID"])}, x = {x:.4f}, y = {y:.4f}{extra} }}, -- {name}'
@@ -291,7 +308,7 @@ def main():
                 raise SystemExit(f"manual node {mn['id']} collides with an id already converted")
             seen_ids[mn["id"]] = (out_name, "manual")
             area = f', area = {mn["area"]}' if mn.get("area") else ""
-            out_id, extra = node_fields(mn["id"])
+            out_id, extra = node_fields(mn["id"], mn["mapID"])
             if area:
                 extra = extra.replace(f", area = {area_of.get(mn['id'])}", "")      # its own area wins
             lines.append(

@@ -24,6 +24,8 @@ INSTANCE_JOURNALS  { source node id: journalInstanceID, or (journalInstanceID, "
          entrance only one faction has. Two entrances to one instance become one destination.
 AREA_OVERRIDES  { source node id: areaID }: the area that names a node, where tools/match_modern_area_nodes.py found
          none or the wrong one (area_node_matches.tsv). Capture one in game with /mzdump at the spot.
+NODE_KINDS  { source node id: kind }: a place of a kind Forever's POIs have ("inn", "bank", ...), for the few Modern
+         nodes that are one. Named by the kind's pattern unless the node has an area (NodeNames.lua).
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -207,4 +209,9 @@ INSTANCE_JOURNALS = {
 
 # Area ids by hand (see the docstring): none yet.
 AREA_OVERRIDES = {
+}
+
+# Places of a POI kind (see the docstring). Silvermoon's inn: the hearthstone can resolve to it.
+NODE_KINDS = {
+    "SILVERMOON_INN": "inn",
 }

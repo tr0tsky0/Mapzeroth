@@ -493,3 +493,24 @@ do
     C_Map.GetAreaInfo = realAreaInfo
     addon:ClearNodeNameCache()
 end
+
+-- Spots inside a city (where a teleport lands, a portal room) are tagged with it, as Forever's city POIs are, and
+-- offered through the city instead of listed again. Silvermoon's inn is an inn: the hearthstone can go there.
+do
+    local World = addon.World
+    check(World:GetNode("STORMWIND_PORTAL_ROOM_LOWER").city == "stormwind" and World:GetNode("BORALUS").city == "boralus",
+        "spots inside a city carry its key")
+    check(World:GetNode("SHRINE_OF_TWO_MOONS").city == "shrine_of_two_moons" and World:GetNode("TAXI_2544").city == nil,
+        "a city on a zone's map takes only its own nodes, not the rest of the Vale")
+    local listed = {}
+    for _, entry in ipairs(addon.Destinations:Build(makeCtx({ faction = "Alliance" }))) do listed[entry.nodeID] = true end
+    check(not listed.STORMWIND_PORTAL_ROOM_LOWER and not listed.BORALUS, "and they aren't listed on their own")
+    local inn = World:GetNode("SILVERMOON_INN")
+    check(inn.kind == "inn" and inn.city == "silvermoon", "Silvermoon's inn is an inn of the city")
+    local realGetMapInfo = C_Map.GetMapInfo
+    C_Map.GetMapInfo = function(id) if id == 2393 then return { name = "Silvermoon City" } end return realGetMapInfo(id) end
+    addon:ClearNodeNameCache()
+    check(addon:FindHearthNode({ name = "Silvermoon City" }) == "SILVERMOON_INN", "a hearthstone bound in Silvermoon goes to its inn")
+    C_Map.GetMapInfo = realGetMapInfo
+    addon:ClearNodeNameCache()
+end

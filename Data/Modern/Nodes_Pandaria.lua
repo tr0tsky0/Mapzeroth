@@ -54,7 +54,7 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_1052", container = "pandaria.map376", mapID = 376, x = 0.7060, y = 0.2400 }, -- Grassy Cline
     { id = "VALE_ZIDORMI_PRESENT", container = "pandaria.map1530_art1342", mapID = 1530, x = 0.8101, y = 0.2945 }, -- Zidormi (Present Vale of Eternal Blossoms)
     { id = "TAXI_966", container = "pandaria.map371", mapID = 371, x = 0.4690, y = 0.8610 }, -- Paw'Don Village
-    { id = "SHRINE_OF_TWO_MOONS", container = "pandaria.map390", mapID = 390, x = 0.6250, y = 0.2182, area = 6141 }, -- Shrine of Two Moons
+    { id = "SHRINE_OF_TWO_MOONS", container = "pandaria.map390", mapID = 390, x = 0.6250, y = 0.2182, area = 6141, city = "shrine_of_two_moons" }, -- Shrine of Two Moons
     { id = "TAXI_1055", container = "pandaria.map388", mapID = 388, x = 0.5400, y = 0.7880 }, -- Rensai's Watchpost
     { id = "INSTANCE_TEMPLE_OF_THE_JADE_SERPENT", container = "pandaria.map371", mapID = 371, x = 0.5600, y = 0.5800, kind = "instance", journal = 313 }, -- Temple of the Jade Serpent
     { id = "INSTANCE_SIEGE_OF_NIUZAO_TEMPLE", container = "pandaria.map388", mapID = 388, x = 0.3500, y = 0.8200, kind = "instance", journal = 324 }, -- Siege of Niuzao Temple
@@ -64,7 +64,7 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_1195", container = "pandaria.map418", mapID = 418, x = 0.0943, y = 0.5244 }, -- Domination Point
     { id = "TAXI_990", container = "pandaria.map418", mapID = 418, x = 0.2850, y = 0.5050 }, -- Dawnchaser Retreat
     { id = "TAXI_1190", container = "pandaria.map418", mapID = 418, x = 0.8800, y = 0.3440 }, -- Lion's Landing
-    { id = "TAXI_1058", container = "pandaria.map390", mapID = 390, x = 0.6281, y = 0.2181 }, -- Shrine of Two Moons
+    { id = "TAXI_1058", container = "pandaria.map390", mapID = 390, x = 0.6281, y = 0.2181, city = "shrine_of_two_moons" }, -- Shrine of Two Moons
     { id = "TAXI_894", container = "pandaria.map371", mapID = 371, x = 0.2838, y = 0.4891 }, -- Grookin Hill
     { id = "INSTANCE_SIEGE_OF_ORGRIMMAR", container = "pandaria.map390", mapID = 390, x = 0.7400, y = 0.4200, kind = "instance", journal = 369 }, -- Siege of Orgrimmar
     { id = "TAXI_1054", container = "pandaria.map388", mapID = 388, x = 0.7420, y = 0.8110 }, -- Gao-Ran Battlefront
@@ -76,8 +76,8 @@ addon.Nodes.Pandaria = {
     { id = "FLIGHT_SERPENTS_SPINE_HORDE", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
     { id = "TAXI_973", container = "pandaria.map371", mapID = 371, x = 0.2744, y = 0.1571 }, -- Honeydew Village
     { id = "TAXI_1025", container = "pandaria.map379", mapID = 379, x = 0.3450, y = 0.5900 }, -- Winter's Blossom
-    { id = "TAXI_1057", container = "pandaria.map390", mapID = 390, x = 0.8500, y = 0.6010 }, -- Shrine of Seven Stars
-    { id = "SHRINE_OF_SEVEN_STARS", container = "pandaria.map390", mapID = 390, x = 0.8630, y = 0.6110, area = 6142 }, -- Shrine of Seven Stars
+    { id = "TAXI_1057", container = "pandaria.map390", mapID = 390, x = 0.8500, y = 0.6010, city = "shrine_of_seven_stars" }, -- Shrine of Seven Stars
+    { id = "SHRINE_OF_SEVEN_STARS", container = "pandaria.map390", mapID = 390, x = 0.8630, y = 0.6110, area = 6142, city = "shrine_of_seven_stars" }, -- Shrine of Seven Stars
     { id = "TAXI_988", container = "pandaria.map418", mapID = 418, x = 0.6760, y = 0.3220 }, -- The Incursion
     { id = "HONEYDEW_VILLAGE", container = "pandaria.map371", mapID = 371, x = 0.2826, y = 0.1359, area = 6521 }, -- Honeydew Village
 }

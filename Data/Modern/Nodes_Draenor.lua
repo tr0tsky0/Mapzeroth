@@ -24,13 +24,13 @@ addon.Nodes.Draenor = {
     { id = "FLIGHT_THE_IRON_FRONT_HORDE", container = "draenor.map534", mapID = 534, x = 0.0919, y = 0.5590 }, -- The Iron Front
     { id = "LUNARFALL_SHIPYARD", container = "draenor.map539", mapID = 539, x = 0.2790, y = 0.1120, area = 7706 }, -- Lunarfall Shipyard
     { id = "TAXI_1382", container = "draenor.map539", mapID = 539, x = 0.4020, y = 0.5540 }, -- Twilight Glade
-    { id = "LUNARFALL", container = "draenor.map582", mapID = 582, x = 0.2990, y = 0.3390, area = 6790 }, -- Lunarfall
+    { id = "LUNARFALL", container = "draenor.map582", mapID = 582, x = 0.2990, y = 0.3390, area = 6790, city = "lunarfall" }, -- Lunarfall
     { id = "INSTANCE_SHADOWMOON_BURIAL_GROUNDS", container = "draenor.map539", mapID = 539, x = 0.3200, y = 0.4200, kind = "instance", journal = 537 }, -- Shadowmoon Burial Grounds
     { id = "INSTANCE_AUCHINDOUN", container = "draenor.map535", mapID = 535, x = 0.4600, y = 0.7400, kind = "instance", journal = 547 }, -- Auchindoun
     { id = "TAXI_1462", container = "draenor.map535", mapID = 535, x = 0.7030, y = 0.5703 }, -- Terokkar Refuge
     { id = "TAXI_1504", container = "draenor.map550", mapID = 550, x = 0.8288, y = 0.4442 }, -- Wor'var
     { id = "TAXI_1539", container = "draenor.map534", mapID = 534, x = 0.3930, y = 0.3664 }, -- Skysea Ridge
-    { id = "WARSPEAR_ASHRAN", container = "draenor.map624", mapID = 624, x = 0.5884, y = 0.5135, area = 7333 }, -- Warspear
+    { id = "WARSPEAR_ASHRAN", container = "draenor.map624", mapID = 624, x = 0.5884, y = 0.5135, area = 7333, city = "warspear" }, -- Warspear
     { id = "TAXI_1523", container = "draenor.map543", mapID = 543, x = 0.4604, y = 0.7656 }, -- Deeproot
     { id = "INSTANCE_HELLFIRE_CITADEL", container = "draenor.map534", mapID = 534, x = 0.4700, y = 0.5300, kind = "instance", journal = 669 }, -- Hellfire Citadel
     { id = "INSTANCE_BLACKROCK_FOUNDRY", container = "draenor.map543", mapID = 543, x = 0.5100, y = 0.2900, kind = "instance", journal = 457 }, -- Blackrock Foundry
@@ -42,13 +42,13 @@ addon.Nodes.Draenor = {
     { id = "TAXI_1646", container = "draenor.map534", mapID = 534, x = 0.4643, y = 0.7022 }, -- Vault of the Earth
     { id = "INSTANCE_IRON_DOCKS", container = "draenor.map543", mapID = 543, x = 0.4500, y = 0.1300, kind = "instance", journal = 558 }, -- Iron Docks
     { id = "TAXI_1475", container = "draenor.map539", mapID = 539, x = 0.4390, y = 0.7727 }, -- Socrethar's Rise
-    { id = "DARK_PORTAL_STORMSHIELD", container = "draenor.map622", mapID = 622, x = 0.3171, y = 0.5248 }, -- The Dark Portal
+    { id = "DARK_PORTAL_STORMSHIELD", container = "draenor.map622", mapID = 622, x = 0.3171, y = 0.5248, city = "stormshield" }, -- The Dark Portal
     { id = "TAXI_1513", container = "draenor.map542", mapID = 542, x = 0.3679, y = 0.2459 }, -- Apexis Excavation
     { id = "FLIGHT_EXARCHS_REFUGE_HORDE", container = "draenor.map535", mapID = 535, x = 0.5428, y = 0.6755 }, -- Exarch's Refuge
     { id = "INSTANCE_BLOODMAUL_SLAG_MINES", container = "draenor.map525", mapID = 525, x = 0.4900, y = 0.2500, kind = "instance", journal = 385 }, -- Bloodmaul Slag Mines
     { id = "TAXI_1529", container = "draenor.map539", mapID = 539, x = 0.5974, y = 0.8123 }, -- Darktide Roost
     { id = "TAXI_1395", container = "draenor.map525", mapID = 525, x = 0.8347, y = 0.6084 }, -- Thunder Pass
-    { id = "STORMSHIELD_ASHRAN", container = "draenor.map622", mapID = 622, x = 0.6150, y = 0.3990, area = 7332 }, -- Stormshield
+    { id = "STORMSHIELD_ASHRAN", container = "draenor.map622", mapID = 622, x = 0.6150, y = 0.3990, area = 7332, city = "stormshield" }, -- Stormshield
     { id = "TAXI_1487", container = "draenor.map542", mapID = 542, x = 0.3921, y = 0.4283 }, -- Axefall
     { id = "TAXI_1519", container = "draenor.map543", mapID = 543, x = 0.5230, y = 0.5920 }, -- Highpass
     { id = "INSTANCE_THE_EVERBLOOM", container = "draenor.map543", mapID = 543, x = 0.5900, y = 0.4500, kind = "instance", journal = 556 }, -- The Everbloom
@@ -78,7 +78,7 @@ addon.Nodes.Draenor = {
     { id = "FLIGHT_THE_IRON_FRONT_ALLIANCE", container = "draenor.map534", mapID = 534, x = 0.0950, y = 0.5280 }, -- The Iron Front
     { id = "TAXI_1508", container = "draenor.map542", mapID = 542, x = 0.4585, y = 0.4370 }, -- Veil Terokk
     { id = "TAXI_1383", container = "draenor.map539", mapID = 539, x = 0.5940, y = 0.4580 }, -- Path of the Light
-    { id = "TAXI_1476", container = "draenor.map582", mapID = 582, x = 0.4770, y = 0.4944 }, -- Lunarfall Flightmaster
+    { id = "TAXI_1476", container = "draenor.map582", mapID = 582, x = 0.4770, y = 0.4944, city = "lunarfall" }, -- Lunarfall Flightmaster
     { id = "TAXI_1493", container = "draenor.map542", mapID = 542, x = 0.3890, y = 0.6180 }, -- Southport
     { id = "TAXI_1510", container = "draenor.map542", mapID = 542, x = 0.6100, y = 0.7297 }, -- Pinchwhistle Gearworks
     { id = "TAXI_1452", container = "draenor.map535", mapID = 535, x = 0.4207, y = 0.7648 }, -- Retribution Point
@@ -88,11 +88,11 @@ addon.Nodes.Draenor = {
     { id = "TAXI_1447", container = "draenor.map535", mapID = 535, x = 0.6950, y = 0.2150 }, -- Fort Wrynn (Alliance)
     { id = "TAXI_1528", container = "draenor.map525", mapID = 525, x = 0.8710, y = 0.6230 }, -- Iron Siegeworks
     { id = "TAXI_1448", container = "draenor.map535", mapID = 535, x = 0.6310, y = 0.2580 }, -- Redemption Rise
-    { id = "TAXI_1432", container = "draenor.map590", mapID = 590, x = 0.4572, y = 0.5039 }, -- Frostwall Garrison
+    { id = "TAXI_1432", container = "draenor.map590", mapID = 590, x = 0.4572, y = 0.5039, city = "frostwall" }, -- Frostwall Garrison
     { id = "SHADOWMOON_VALLEY_WORMHOLE", container = "draenor.map539", mapID = 539, x = 0.5000, y = 0.5000, area = 6719 }, -- Shadowmoon Valley (Shadows...)
-    { id = "TAXI_1420", container = "draenor.map622", mapID = 622, x = 0.3076, y = 0.4862 }, -- Stormshield Flightmaster
+    { id = "TAXI_1420", container = "draenor.map622", mapID = 622, x = 0.3076, y = 0.4862, city = "stormshield" }, -- Stormshield Flightmaster
     { id = "TAXI_1381", container = "draenor.map539", mapID = 539, x = 0.4530, y = 0.3890 }, -- Embaari Village
-    { id = "TAXI_1408", container = "draenor.map624", mapID = 624, x = 0.4420, y = 0.3419 }, -- Warspear Flightmaster
+    { id = "TAXI_1408", container = "draenor.map624", mapID = 624, x = 0.4420, y = 0.3419, city = "warspear" }, -- Warspear Flightmaster
     { id = "FLIGHT_LUNARFALL_ALLIANCE", container = "draenor.map539", mapID = 539, x = 0.3040, y = 0.1770 }, -- Lunarfall (Alliance)
     { id = "TAXI_1647", container = "draenor.map534", mapID = 534, x = 0.4356, y = 0.4215 }, -- Malo's Lookout
     { id = "TAXI_1503", container = "draenor.map550", mapID = 550, x = 0.7363, y = 0.2621 }, -- Throne of the Elements

@@ -70,6 +70,9 @@ local function groupOf(node)
     if kind == "BORDER" then return nil end
     if kind == "INSTANCE" then return "instance" end
     if TRANSPORT[kind] then return "transport" end
+    -- A spot inside a city or town with no kind of its own (where a teleport lands, a portal room) is part of the
+    -- settlement, offered through the settlement's entry rather than listed again under its own name.
+    if node.city or node.town then return nil end
     return "other"
 end
 

@@ -37,9 +37,9 @@ addon.Nodes.Shadowlands = {
     { id = "THE_MAW_WORMHOLE", container = "sl_the_maw.map1543", mapID = 1543, x = 0.2246, y = 0.2816 }, -- Wasteland of the Damned
     { id = "KORTHIA_WORMHOLE", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6241, y = 0.2458, area = 13570 }, -- Korthia (Wormhole)
     { id = "KORTHIA", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6440, y = 0.2410 }, -- Entrance Portal
-    { id = "TAXI_2395", container = "sl_oribos.map1671", mapID = 1671, x = 0.6070, y = 0.6840 }, -- Flightmaster, Oribos
-    { id = "ORIBOS_WORMHOLE", container = "sl_oribos.map1670", mapID = 1670, x = 0.5208, y = 0.2613, area = 10565 }, -- Oribos, The Eternal City
-    { id = "ORIBOS", container = "sl_oribos.map1670", mapID = 1670, x = 0.2030, y = 0.5030 }, -- Entrance, Oribos
+    { id = "TAXI_2395", container = "sl_oribos.map1671", mapID = 1671, x = 0.6070, y = 0.6840, city = "oribos" }, -- Flightmaster, Oribos
+    { id = "ORIBOS_WORMHOLE", container = "sl_oribos.map1670", mapID = 1670, x = 0.5208, y = 0.2613, area = 10565, city = "oribos" }, -- Oribos, The Eternal City
+    { id = "ORIBOS", container = "sl_oribos.map1670", mapID = 1670, x = 0.2030, y = 0.5030, city = "oribos" }, -- Entrance, Oribos
     { id = "TAXI_2558", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.3897, y = 0.5524 }, -- The Spearhead
     { id = "MALDRAXXUS_WORMHOLE", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.4244, y = 0.4399 }, -- Citadel of the Necrolords
     { id = "TAXI_2564", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5000, y = 0.5320 }, -- Theater of Pain
@@ -77,6 +77,6 @@ addon.Nodes.Shadowlands = {
     { id = "TAXI_2514", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7030, y = 0.8110 }, -- Pridefall Hamlet
     { id = "TAXI_2517", container = "sl_revendreth.map1525", mapID = 1525, x = 0.5423, y = 0.2562 }, -- Menagerie of the Master
     { id = "TAXI_2513", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6089, y = 0.3871 }, -- Old Gate
-    { id = "ORIBOS_TRANSFERENCE_PAD", container = "sl_oribos.map1670", mapID = 1670, x = 0.4860, y = 0.5060 }, -- The pad up to the Ring of Transference (main floor) (hand-added: tools/modern_manual.py)
-    { id = "ORIBOS_TRANSFERENCE_RING", container = "sl_oribos.map1671", mapID = 1671, x = 0.4860, y = 0.5060 }, -- Where the pad lands on the Ring (flight master floor) (hand-added: tools/modern_manual.py)
+    { id = "ORIBOS_TRANSFERENCE_PAD", container = "sl_oribos.map1670", mapID = 1670, x = 0.4860, y = 0.5060, city = "oribos" }, -- The pad up to the Ring of Transference (main floor) (hand-added: tools/modern_manual.py)
+    { id = "ORIBOS_TRANSFERENCE_RING", container = "sl_oribos.map1671", mapID = 1671, x = 0.4860, y = 0.5060, city = "oribos" }, -- Where the pad lands on the Ring (flight master floor) (hand-added: tools/modern_manual.py)
 }

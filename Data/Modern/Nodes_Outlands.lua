@@ -32,7 +32,7 @@ addon.Nodes.Outlands = {
     { id = "INSTANCE_AUCHENAI_CRYPTS", container = "outlands.map108", mapID = 108, x = 0.3700, y = 0.6500, kind = "instance", journal = 247 }, -- Auchenai Crypts
     { id = "TAXI_118", container = "outlands.map102", mapID = 102, x = 0.3238, y = 0.5095 }, -- Zabra'jin
     { id = "INSTANCE_SHADOW_LABYRINTH", container = "outlands.map108", mapID = 108, x = 0.3900, y = 0.7100, kind = "instance", journal = 253 }, -- Shadow Labyrinth
-    { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160, area = 8606 }, -- World's End Tavern
+    { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160, area = 8606, city = "shattrath" }, -- World's End Tavern
     { id = "INSTANCE_THE_ARCATRAZ", container = "outlands.map109", mapID = 109, x = 0.7400, y = 0.5700, kind = "instance", journal = 254 }, -- The Arcatraz
     { id = "TAXI_148", container = "outlands.map100", mapID = 100, x = 0.7820, y = 0.3490 }, -- Shatter Point
     { id = "FLIGHT_HELLFIRE_PENINSULA_HORDE", container = "outlands.map100", mapID = 100, x = 0.8747, y = 0.4908 }, -- Dark Portal Flightmaster
@@ -46,14 +46,14 @@ addon.Nodes.Outlands = {
     { id = "INSTANCE_THE_UNDERBOG", container = "outlands.map102", mapID = 102, x = 0.5200, y = 0.3400, kind = "instance", journal = 262 }, -- The Underbog
     { id = "INSTANCE_THE_STEAMVAULT", container = "outlands.map102", mapID = 102, x = 0.5000, y = 0.4000, kind = "instance", journal = 261 }, -- The Steamvault
     { id = "TAXI_126", container = "outlands.map105", mapID = 105, x = 0.5157, y = 0.5360 }, -- Thunderlord Stronghold
-    { id = "TAXI_128", container = "outlands.map111", mapID = 111, x = 0.6390, y = 0.4160 }, -- Shattrath (Outland)
+    { id = "TAXI_128", container = "outlands.map111", mapID = 111, x = 0.6390, y = 0.4160, city = "shattrath" }, -- Shattrath (Outland)
     { id = "INSTANCE_THE_BLOOD_FURNACE", container = "outlands.map100", mapID = 100, x = 0.4600, y = 0.5100, kind = "instance", journal = 256 }, -- The Blood Furnace
     { id = "INSTANCE_HELLFIRE_RAMPARTS", container = "outlands.map100", mapID = 100, x = 0.4800, y = 0.5500, kind = "instance", journal = 248 }, -- Hellfire Ramparts
     { id = "TAXI_127", container = "outlands.map108", mapID = 108, x = 0.4886, y = 0.4319 }, -- Stonebreaker Hold
     { id = "TAXI_120", container = "outlands.map107", mapID = 107, x = 0.5793, y = 0.3584 }, -- Garadar
     { id = "AREA_52_RIPPER", container = "outlands.map109", mapID = 109, x = 0.3200, y = 0.6400, area = 3712 }, -- Area 52
     { id = "INSTANCE_THE_SLAVE_PENS", container = "outlands.map102", mapID = 102, x = 0.4900, y = 0.3500, kind = "instance", journal = 260 }, -- The Slave Pens
-    { id = "SHATTRATH_OUTLANDS", container = "outlands.map111", mapID = 111, x = 0.5497, y = 0.4023 }, -- Shattrath
+    { id = "SHATTRATH_OUTLANDS", container = "outlands.map111", mapID = 111, x = 0.5497, y = 0.4023, city = "shattrath" }, -- Shattrath
     { id = "TAXI_140", container = "outlands.map104", mapID = 104, x = 0.6280, y = 0.3020 }, -- Altar of Sha'tar
     { id = "TAXI_119", container = "outlands.map107", mapID = 107, x = 0.5400, y = 0.7280 }, -- Telaar
     { id = "INSTANCE_MAGTHERIDONS_LAIR", container = "outlands.map100", mapID = 100, x = 0.4600, y = 0.5300, kind = "instance", journal = 747 }, -- Magtheridon's Lair
