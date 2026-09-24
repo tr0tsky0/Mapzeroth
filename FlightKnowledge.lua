@@ -229,27 +229,23 @@ end
 
 -- SavedVariables, per character. (They are wiped on reload on the Forever beta at
 -- the moment, so for now this only lasts a session.)
-local function characterKey()
-    return (UnitName("player") or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
-end
-
 function FlightKnowledge:Save()
     MapzerothRebuildDB = MapzerothRebuildDB or {}
     MapzerothRebuildDB.flights = MapzerothRebuildDB.flights or {}
     local copy = {}
     for id, value in pairs(found) do copy[id] = value end
-    MapzerothRebuildDB.flights[characterKey()] = copy
+    MapzerothRebuildDB.flights[addon:CharacterKey()] = copy
     MapzerothRebuildDB.fareFactors = MapzerothRebuildDB.fareFactors or {}
     local origins = {}
     for id, factor in pairs(originFactors) do origins[id] = factor end
-    MapzerothRebuildDB.fareFactors[characterKey()] = { typical = fareFactor, origins = origins }
+    MapzerothRebuildDB.fareFactors[addon:CharacterKey()] = { typical = fareFactor, origins = origins }
 end
 
 function FlightKnowledge:Load()
-    local saved = MapzerothRebuildDB and MapzerothRebuildDB.flights and MapzerothRebuildDB.flights[characterKey()]
+    local saved = MapzerothRebuildDB and MapzerothRebuildDB.flights and MapzerothRebuildDB.flights[addon:CharacterKey()]
     found = {}
     for id, value in pairs(saved or {}) do found[id] = value end
-    local factors = MapzerothRebuildDB and MapzerothRebuildDB.fareFactors and MapzerothRebuildDB.fareFactors[characterKey()]
+    local factors = MapzerothRebuildDB and MapzerothRebuildDB.fareFactors and MapzerothRebuildDB.fareFactors[addon:CharacterKey()]
     fareFactor, originFactors = factors and factors.typical or nil, {}
     for id, factor in pairs(factors and factors.origins or {}) do originFactors[id] = factor end
 end

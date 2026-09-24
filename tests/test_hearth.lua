@@ -36,3 +36,28 @@ check(firstMethod(makeCtx({ faction = "Horde", hearthNode = "INN_295" })) ~= "he
 check(firstMethod(makeCtx({ faction = "Horde", items = { 6948 }, hearthNode = "INN_295", cooldowns = { [8690] = 900 } })) ~= "hearthstone",
     "on cooldown, no hearthstone")
 check(firstMethod(makeCtx({ faction = "Horde", items = { 6948 } })) ~= "hearthstone", "no bind, no hearthstone")
+
+-- 5. The bind is per character: each one keeps their own, and the old account-wide one is only a fallback.
+local realName = "Realm"
+UnitName = function() return "Alice" end
+GetRealmName = function() return realName end
+MapzerothRebuildDB = nil
+check(addon:GetBind() == nil, "no saved bind at all")
+
+MapzerothRebuildDB = { hearthstone = { mapID = 1429, x = 0.5, y = 0.5, name = "Legacy" } }
+check(addon:GetBind().name == "Legacy", "a character that hasn't bound since gets the legacy bind")
+check(MapzerothRebuildDB.hearthstones == nil, "and the legacy bind is not copied into their own")
+
+addon:SaveBind(1429, 0.1, 0.2, "Goldshire")
+check(MapzerothRebuildDB.hearthstone == nil, "a bind removes the legacy account-wide key")
+check(addon:GetBind().name == "Goldshire", "Alice has her own bind")
+
+UnitName = function() return "Bob" end
+check(addon:GetBind() == nil, "Bob does not inherit Alice's bind")
+addon:SaveBind(1429, 0.3, 0.4, "Lakeshire")
+check(addon:GetBind().name == "Lakeshire", "Bob has his own bind")
+UnitName = function() return "Alice" end
+check(addon:GetBind().name == "Goldshire", "and Alice's is untouched")
+check(MapzerothRebuildDB.hearthstones["Alice-Realm"].name == "Goldshire" and MapzerothRebuildDB.hearthstones["Bob-Realm"].name == "Lakeshire",
+    "both are saved under their characters")
+MapzerothRebuildDB = nil

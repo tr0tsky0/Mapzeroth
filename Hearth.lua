@@ -9,13 +9,26 @@ local addonName, addon = ...
 -- How close (in map units, 0-1) the saved bind has to be to an inn node to count as it.
 local SNAP_RADIUS = 0.06
 
+-- Who is playing, for the things saved per character (the bind here, found flights in FlightKnowledge.lua).
+function addon:CharacterKey()
+    return (UnitName("player") or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
+end
+
+-- The bind is per character (MapzerothRebuildDB.hearthstones). Before that it was one account-wide
+-- `hearthstone`, whatever character bound last: it is still the best guess for a character that hasn't
+-- bound since (not copied: it may be another character's), and the next bind of any character removes it.
 function addon:GetBind()
-    return MapzerothRebuildDB and MapzerothRebuildDB.hearthstone
+    local db = MapzerothRebuildDB
+    if not db then return nil end
+    local own = db.hearthstones and db.hearthstones[addon:CharacterKey()]
+    return own or db.hearthstone
 end
 
 function addon:SaveBind(mapID, x, y, name)
     MapzerothRebuildDB = MapzerothRebuildDB or {}
-    MapzerothRebuildDB.hearthstone = { mapID = mapID, x = x, y = y, name = name }
+    MapzerothRebuildDB.hearthstones = MapzerothRebuildDB.hearthstones or {}
+    MapzerothRebuildDB.hearthstones[addon:CharacterKey()] = { mapID = mapID, x = x, y = y, name = name }
+    MapzerothRebuildDB.hearthstone = nil
 end
 
 -- The first inn node belonging to a city or town.
