@@ -43,12 +43,10 @@ function addon:ValidateData()
                 local key = node.city or node.town
                 if key then
                     local settlement = (isCity and addon.Cities or addon.Towns or {})[key]
+                    -- (A settlement always has a name: failing its area, flight master and a locale string, the
+                    -- client's name for its map. NodeNames.lua's settlementName.)
                     if not settlement then
                         add("error", ("node %s: unknown %s '%s'"):format(id, isCity and "city" or "town", tostring(key)))
-                    elseif not (settlement.taxi or settlement.area
-                            or addon:HasString((isCity and "CITY_" or "TOWN_") .. key:upper())) then
-                        add("warn", ("%s '%s' has no name source (flight master, area or locale string)"):format(
-                            isCity and "city" or "town", key))
                     end
                 end
                 if node.kind == "trainer" and not (addon.CLASS_TOKENS[node.trainer]
