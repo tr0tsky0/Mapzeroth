@@ -1,0 +1,9 @@
+-- /mzdump nodes 2472 (K'aresh), retail, captured 2026-09-24. The client gave continent-relative coordinates (some
+-- negative), so these match by id (the one live candidate on K'aresh), not by position.
+{ id = "TAXI_3029", container = "TODO", mapID = 2472, x = 0.3500, y = 0.0944 }, -- Tazavesh, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3030", container = "TODO", mapID = 2472, x = 0.6630, y = -0.3042 }, -- Eco-Dome: Rhovan, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3031", container = "TODO", mapID = 2472, x = 0.9528, y = -1.4800 }, -- The Oasis, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3032", container = "TODO", mapID = 2472, x = 0.2260, y = -1.7429 }, -- Shan'dorah, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3033", container = "TODO", mapID = 2472, x = -0.6019, y = -2.0340 }, -- Shadow Point, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3034", container = "TODO", mapID = 2472, x = -0.3488, y = -1.3735 }, -- Overlook Zo'Shuul, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)
+{ id = "TAXI_3035", container = "TODO", mapID = 2472, x = -0.0626, y = -0.2186 }, -- Hosaas Rest, K'aresh (COULD NOT RESOLVE TO A ZONE -- coords are continent-relative, verify by hand)

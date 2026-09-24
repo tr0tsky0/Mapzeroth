@@ -78,7 +78,7 @@ def load_captures(continent_of):
     found, by_continent = [], {}
     for path in sorted(CAPTURES.glob("*.txt")) if CAPTURES.exists() else []:
         for line in path.read_text(encoding="utf-8").splitlines():
-            m = re.search(r'id = "TAXI_(\d+)".*?mapID = (\d+), x = ([\d.]+), y = ([\d.]+)', line)
+            m = re.search(r'id = "TAXI_(\d+)".*?mapID = (\d+), x = (-?[\d.]+), y = (-?[\d.]+)', line)
             if m:
                 found.append((m.group(1), int(m.group(2)), float(m.group(3)), float(m.group(4))))
                 by_continent.setdefault(continent_of(int(m.group(2))), set()).add(m.group(1))

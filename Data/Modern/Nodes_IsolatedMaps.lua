@@ -38,7 +38,7 @@ addon.Nodes.IsolatedMaps = {
     { id = "TAXI_3030", container = "karesh.map2472", mapID = 2472, x = 0.7022, y = 0.6083 }, -- Eco-Dome: Rhovan
     { id = "TAXI_3034", container = "karesh.map2472", mapID = 2472, x = 0.4773, y = 0.3709 }, -- Overlook Zo'Shuul
     { id = "INSTANCE_MANAFORGE_OMEGA", container = "karesh.map2472", mapID = 2472, x = 0.4100, y = 0.2100, kind = "instance", journal = 1302 }, -- Manaforge Omega
-    { id = "TAXI_2703", container = "karesh.map2472", mapID = 2472, x = 0.6330, y = 0.6843 }, -- Tazavesh Flightmaster
+    { id = "TAXI_3029", container = "karesh.map2472", mapID = 2472, x = 0.6330, y = 0.6843 }, -- Tazavesh Flightmaster
     { id = "INSTANCE_ECO_DOME_ALDANI", container = "karesh.map2472", mapID = 2472, x = 0.4380, y = 0.0447, kind = "instance", journal = 1303 }, -- Eco-Dome Al'dani
     { id = "INSTANCE_TAZAVESH_THE_VEILED_MARKET", container = "karesh.map2472", mapID = 2472, x = 0.3619, y = 0.1245, kind = "instance", journal = 1194 }, -- Tazavesh, the Veiled Market
     { id = "TAXI_3033", container = "karesh.map2472", mapID = 2472, x = 0.4244, y = 0.2304 }, -- Shadow Point
