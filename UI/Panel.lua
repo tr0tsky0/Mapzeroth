@@ -174,10 +174,8 @@ end
 -- ---------------------------------------------------------------------------------------
 -- Showing things
 
-local function showList(show)
-    for _, row in ipairs(ui.rows) do
-        if not show then row:Hide() end
-    end
+local function hideList()
+    for _, row in ipairs(ui.rows) do row:Hide() end
 end
 
 local function showRouteWidgets(show)
@@ -311,6 +309,7 @@ end
 function Panel:PriceSections()
     if state.priced then return end
     local start = addon:GetPlayerStart()
+    state.ctx = addon:GetPlayerContext()         -- fresh, as a route's is: money and cooldowns move on
     local session = start and Journey:Build(state.ctx, start, state.waypoint and { state.waypoint } or nil)
     if session then
         addon.Sections:Price(state.sections, session)
@@ -370,7 +369,7 @@ end
 -- The route to a destination, worked out now, from where the player is now.
 function Panel:ShowRoute(entry)
     state.view, state.entry, state.plan = "route", entry, nil
-    showList(false)
+    hideList()
     showRouteWidgets(true)
     setStatus(nil)
     ui.routeTitle:SetText(entry.name)
@@ -407,7 +406,7 @@ end
 -- Draw a plan's route: the total, the hint, and its steps (the one being followed is marked).
 function Panel:DisplayPlan(entry, plan)
     state.view, state.entry, state.plan, state.stepOffset = "route", entry, plan, 0
-    showList(false)
+    hideList()
     showRouteWidgets(true)
     setStatus(nil)
     ui.routeTitle:SetText(entry.name)

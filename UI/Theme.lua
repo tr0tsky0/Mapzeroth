@@ -136,18 +136,19 @@ skin.text = function(fs, opts)
     fs:SetTextColor(Theme:Color(color))
 end
 
+local BUTTON_SLOTS = {
+    { "SetNormalTexture", "GetNormalTexture", "Up" },
+    { "SetPushedTexture", "GetPushedTexture", "Down" },
+    { "SetHighlightTexture", "GetHighlightTexture", "Highlight" },
+}
+
 skin.button = function(button, opts)
     local state = button.mzState or "normal"
     -- The client won't clear a button texture (it wants an asset), so a flat button just hides
     -- whichever of the three exist, and a Blizzard one sets them and shows them.
-    local slots = {
-        { "SetNormalTexture", "GetNormalTexture", "Up" },
-        { "SetPushedTexture", "GetPushedTexture", "Down" },
-        { "SetHighlightTexture", "GetHighlightTexture", "Highlight" },
-    }
     if current.button == "blizzard" then
         button:SetBackdrop(nil)
-        for _, slot in ipairs(slots) do
+        for _, slot in ipairs(BUTTON_SLOTS) do
             button[slot[1]](button, BLIZZARD_BUTTON .. slot[3])
             local texture = button[slot[2]](button)
             if texture then
@@ -157,7 +158,7 @@ skin.button = function(button, opts)
         end
         skin.text(button.label, { style = "button" })
     else
-        for _, slot in ipairs(slots) do
+        for _, slot in ipairs(BUTTON_SLOTS) do
             local texture = button[slot[2]](button)
             if texture then texture:SetAlpha(0) end
         end

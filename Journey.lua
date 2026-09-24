@@ -241,9 +241,10 @@ function Journey:Plan(session, goalID)
     if money and fastest.fare > money then
         chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, nil, searchOptions(session, money))
     end
-    local plan = { cost = (chosen or fastest).cost, steps = readableSteps(chosen or fastest, session), goal = (chosen or fastest).goal,
-                   raw = (chosen or fastest).steps,           -- the search's own steps, before merging: for diagnostics
-                   fare = (chosen or fastest).fare, money = money }
+    local result = chosen or fastest
+    local plan = { cost = result.cost, steps = readableSteps(result, session), goal = result.goal,
+                   raw = result.steps,                        -- the search's own steps, before merging: for diagnostics
+                   fare = result.fare, money = money }
     if not chosen then
         plan.unaffordable = true                           -- no way there within their means: show the quickest anyway
     elseif chosen ~= fastest and fastest.cost + 1 < chosen.cost then
