@@ -1,0 +1,84 @@
+-- /mzdump nodes 12 (Kalimdor), retail, captured 2026-09-24.
+{ id = "TAXI_22", container = "TODO", mapID = 88, x = 0.4665, y = 0.4990 }, -- Thunder Bluff, Mulgore
+{ id = "TAXI_23", container = "TODO", mapID = 12, x = 0.6073, y = 0.4241 }, -- Orgrimmar, Durotar
+{ id = "TAXI_25", container = "TODO", mapID = 10, x = 0.5126, y = 0.6530 }, -- The Crossroads, Northern Barrens
+{ id = "TAXI_28", container = "TODO", mapID = 63, x = 0.3960, y = 0.4802 }, -- Astranaar, Ashenvale
+{ id = "TAXI_29", container = "TODO", mapID = 65, x = 0.6160, y = 0.5885 }, -- Sun Rock Retreat, Stonetalon Mountains
+{ id = "TAXI_30", container = "TODO", mapID = 64, x = 0.1122, y = 0.1173 }, -- Westreach Summit, Thousand Needles
+{ id = "TAXI_31", container = "TODO", mapID = 69, x = 0.7723, y = 0.5677 }, -- Shadebough, Feralas
+{ id = "TAXI_32", container = "TODO", mapID = 70, x = 0.6746, y = 0.4559 }, -- Theramore, Dustwallow Marsh
+{ id = "TAXI_33", container = "TODO", mapID = 65, x = 0.2947, y = 0.3196 }, -- Thal'darah Overlook, Stonetalon Mountains
+{ id = "TAXI_37", container = "TODO", mapID = 66, x = 0.7040, y = 0.1044 }, -- Nijel's Point, Desolace
+{ id = "TAXI_38", container = "TODO", mapID = 66, x = 0.2156, y = 0.7404 }, -- Shadowprey Village, Desolace
+{ id = "TAXI_39", container = "TODO", mapID = 71, x = 0.5138, y = 0.2943 }, -- Gadgetzan, Tanaris
+{ id = "TAXI_40", container = "TODO", mapID = 71, x = 0.5201, y = 0.2752 }, -- Gadgetzan, Tanaris
+{ id = "TAXI_41", container = "TODO", mapID = 69, x = 0.4681, y = 0.5063 }, -- Feathermoon, Feralas
+{ id = "TAXI_42", container = "TODO", mapID = 69, x = 0.7331, y = 0.4431 }, -- Camp Mojache, Feralas
+{ id = "TAXI_44", container = "TODO", mapID = 76, x = 0.5298, y = 0.4988 }, -- Bilgewater Harbor, Azshara
+{ id = "TAXI_49", container = "TODO", mapID = 80, x = 0.4791, y = 0.6711 }, -- Moonglade
+{ id = "TAXI_52", container = "TODO", mapID = 83, x = 0.6099, y = 0.5469 }, -- Everlook, Winterspring
+{ id = "TAXI_53", container = "TODO", mapID = 83, x = 0.5885, y = 0.5369 }, -- Everlook, Winterspring
+{ id = "TAXI_55", container = "TODO", mapID = 199, x = 0.5366, y = 0.6782 }, -- Brackenwall Village, Dustwallow Marsh
+{ id = "TAXI_58", container = "TODO", mapID = 63, x = 0.0613, y = 0.4011 }, -- Zoram'gar Outpost, Ashenvale
+{ id = "TAXI_61", container = "TODO", mapID = 63, x = 0.7326, y = 0.6933 }, -- Splintertree Post, Ashenvale
+{ id = "TAXI_63", container = "TODO", mapID = 80, x = 0.4431, y = 0.4572 }, -- Nighthaven, Moonglade
+{ id = "TAXI_65", container = "TODO", mapID = 77, x = 0.6300, y = 0.2532 }, -- Talonbranch Glade, Felwood
+{ id = "TAXI_69", container = "TODO", mapID = 80, x = 0.3215, y = 0.6633 }, -- Moonglade
+{ id = "TAXI_77", container = "TODO", mapID = 199, x = 0.5149, y = 0.4769 }, -- Vendetta Point, Southern Barrens
+{ id = "TAXI_79", container = "TODO", mapID = 78, x = 0.5308, y = 0.5416 }, -- Marshal's Stand, Un'Goro Crater
+{ id = "TAXI_80", container = "TODO", mapID = 10, x = 0.6535, y = 0.7991 }, -- Ratchet, Northern Barrens
+{ id = "TAXI_166", container = "TODO", mapID = 77, x = 0.5150, y = 0.8078 }, -- Emerald Sanctuary, Felwood
+{ id = "TAXI_167", container = "TODO", mapID = 63, x = 0.8501, y = 0.5245 }, -- Forest Song, Ashenvale
+{ id = "TAXI_179", container = "TODO", mapID = 64, x = 0.5762, y = 0.3717 }, -- Mudsprocket, Dustwallow Marsh
+{ id = "TAXI_338", container = "TODO", mapID = 63, x = 0.1814, y = 0.2062 }, -- Blackfathom Camp, Ashenvale
+{ id = "TAXI_350", container = "TODO", mapID = 63, x = 0.3366, y = 0.4225 }, -- Hellscream's Watch, Ashenvale
+{ id = "TAXI_351", container = "TODO", mapID = 63, x = 0.4144, y = 0.6563 }, -- Stardust Spire, Ashenvale
+{ id = "TAXI_354", container = "TODO", mapID = 10, x = 0.4196, y = 0.1577 }, -- The Mor'Shan Ramparts, Ashenvale
+{ id = "TAXI_356", container = "TODO", mapID = 63, x = 0.4932, y = 0.7177 }, -- Silverwind Refuge, Ashenvale
+{ id = "TAXI_360", container = "TODO", mapID = 65, x = 0.5133, y = 0.4028 }, -- Cliffwalker Post, Stonetalon Mountains
+{ id = "TAXI_361", container = "TODO", mapID = 65, x = 0.5880, y = 0.5430 }, -- Windshear Hold, Stonetalon Mountains
+{ id = "TAXI_362", container = "TODO", mapID = 65, x = 0.7585, y = 0.6285 }, -- Krom'gar Fortress, Stonetalon Mountains
+{ id = "TAXI_363", container = "TODO", mapID = 65, x = 0.7055, y = 0.8939 }, -- Malaka'jin, Stonetalon Mountains
+{ id = "TAXI_364", container = "TODO", mapID = 65, x = 0.7091, y = 0.8050 }, -- Northwatch Expedition Base Camp, Stonetalon Mountains
+{ id = "TAXI_365", container = "TODO", mapID = 65, x = 0.4137, y = 0.5680 }, -- Farwatcher's Glen, Stonetalon Mountains
+{ id = "TAXI_366", container = "TODO", mapID = 66, x = 0.3855, y = 0.2973 }, -- Furien's Post, Desolace
+{ id = "TAXI_367", container = "TODO", mapID = 66, x = 0.4174, y = 0.7160 }, -- Thargad's Camp, Desolace
+{ id = "TAXI_368", container = "TODO", mapID = 66, x = 0.5200, y = 0.8000 }, -- Karnum's Glade, Desolace
+{ id = "TAXI_369", container = "TODO", mapID = 66, x = 0.7475, y = 0.3289 }, -- Thunk's Abode, Desolace
+{ id = "TAXI_370", container = "TODO", mapID = 66, x = 0.4557, y = 0.3679 }, -- Ethel Rethor, Desolace
+{ id = "TAXI_386", container = "TODO", mapID = 78, x = 0.4799, y = 0.5214 }, -- Mossy Pile, Un'Goro Crater
+{ id = "TAXI_387", container = "TODO", mapID = 10, x = 0.3083, y = 0.4856 }, -- Honor's Stand, Southern Barrens
+{ id = "TAXI_388", container = "TODO", mapID = 199, x = 0.6635, y = 0.4712 }, -- Northwatch Hold, Southern Barrens
+{ id = "TAXI_389", container = "TODO", mapID = 199, x = 0.4914, y = 0.6788 }, -- Fort Triumph, Southern Barrens
+{ id = "TAXI_390", container = "TODO", mapID = 199, x = 0.4471, y = 0.2174 }, -- Hunter's Hill, Southern Barrens
+{ id = "TAXI_391", container = "TODO", mapID = 199, x = 0.5113, y = 0.7069 }, -- Desolation Hold, Southern Barrens
+{ id = "TAXI_402", container = "TODO", mapID = 7, x = 0.5077, y = 0.5865 }, -- Bloodhoof Village, Mulgore
+{ id = "TAXI_458", container = "TODO", mapID = 10, x = 0.6557, y = 0.1996 }, -- Nozzlepot's Outpost, Northern Barrens
+{ id = "TAXI_513", container = "TODO", mapID = 64, x = 0.9415, y = 0.6352 }, -- Fizzle & Pozzik's Speedbarge, Thousand Needles
+{ id = "TAXI_531", container = "TODO", mapID = 71, x = 0.3334, y = 0.7730 }, -- Dawnrise Expedition, Tanaris
+{ id = "TAXI_532", container = "TODO", mapID = 71, x = 0.4009, y = 0.7742 }, -- Gunstan's Dig, Tanaris
+{ id = "TAXI_536", container = "TODO", mapID = 1, x = 0.5189, y = 0.7344 }, -- Sen'jin Village, Durotar
+{ id = "TAXI_537", container = "TODO", mapID = 1, x = 0.5304, y = 0.3808 }, -- Razor Hill, Durotar
+{ id = "TAXI_539", container = "TODO", mapID = 71, x = 0.6092, y = 0.5342 }, -- Bootlegger Outpost, Tanaris
+{ id = "TAXI_540", container = "TODO", mapID = 65, x = 0.6005, y = 0.4012 }, -- The Sludgewerks, Stonetalon Mountains
+{ id = "TAXI_541", container = "TODO", mapID = 65, x = 0.5546, y = 0.5148 }, -- Mirkfallon Post, Stonetalon Mountains
+{ id = "TAXI_557", container = "TODO", mapID = 198, x = 0.4115, y = 0.4267 }, -- Shrine of Aviana, Hyjal
+{ id = "TAXI_558", container = "TODO", mapID = 198, x = 0.2825, y = 0.4946 }, -- Grove of Aessina, Hyjal
+{ id = "TAXI_559", container = "TODO", mapID = 198, x = 0.6219, y = 0.2161 }, -- Nordrassil, Hyjal
+{ id = "TAXI_565", container = "TODO", mapID = 69, x = 0.5551, y = 0.2191 }, -- Dreamer's Rest, Feralas
+{ id = "TAXI_567", container = "TODO", mapID = 69, x = 0.5703, y = 0.5389 }, -- Tower of Estulan, Feralas
+{ id = "TAXI_568", container = "TODO", mapID = 69, x = 0.3775, y = 0.1543 }, -- Camp Ataya, Feralas
+{ id = "TAXI_569", container = "TODO", mapID = 69, x = 0.5099, y = 0.4834 }, -- Stonemaul Hold, Feralas
+{ id = "TAXI_594", container = "TODO", mapID = 77, x = 0.4359, y = 0.4324 }, -- Whisperwind Grove, Felwood
+{ id = "TAXI_595", container = "TODO", mapID = 77, x = 0.4423, y = 0.6194 }, -- Wildheart Point, Felwood
+{ id = "TAXI_597", container = "TODO", mapID = 77, x = 0.5638, y = 0.1339 }, -- Irontree Clearing, Felwood
+{ id = "TAXI_613", container = "TODO", mapID = 76, x = 0.5420, y = 0.7434 }, -- Southern Rocketway, Azshara
+{ id = "TAXI_614", container = "TODO", mapID = 76, x = 0.7120, y = 0.2094 }, -- Northern Rocketway, Azshara
+{ id = "TAXI_616", container = "TODO", mapID = 198, x = 0.8194, y = 0.8412 }, -- Gates of Sothann, Hyjal
+{ id = "TAXI_652", container = "TODO", mapID = 12, x = 0.4921, y = 0.8855 }, -- Ramkahen, Uldum
+{ id = "TAXI_653", container = "TODO", mapID = 12, x = 0.4423, y = 0.8431 }, -- Oasis of Vir'sar, Uldum
+{ id = "TAXI_683", container = "TODO", mapID = 76, x = 0.1430, y = 0.7175 }, -- Valormok, Azshara
+{ id = "TAXI_781", container = "TODO", mapID = 198, x = 0.2775, y = 0.6351 }, -- Sanctuary of Malorne, Hyjal
+{ id = "TAXI_93", container = "TODO", mapID = 106, x = 0.5761, y = 0.5402 }, -- Blood Watch, Bloodmyst Isle
+{ id = "TAXI_94", container = "TODO", mapID = 97, x = 0.2803, y = 0.3956 }, -- The Exodar
+{ id = "TAXI_624", container = "TODO", mapID = 97, x = 0.5867, y = 0.5827 }, -- Azure Watch, Azuremyst Isle

@@ -37,7 +37,7 @@ addon.Nodes.Zandalar = {
     { id = "TAXI_2120", container = "zandalar.map864", mapID = 864, x = 0.6169, y = 0.2139 }, -- Tortaka Refuge
     { id = "TAXI_2080", container = "zandalar.map863", mapID = 863, x = 0.3390, y = 0.6320 }, -- Grimwatt's Crash
     { id = "INSTANCE_ATALDAZAR", container = "zandalar.map862", mapID = 862, x = 0.4400, y = 0.3900, kind = "instance", journal = 968 }, -- Atal'Dazar
-    { id = "FLIGHT_XIBALA_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4090, y = 0.7140 }, -- Xibala
+    { id = "TAXI_2012", container = "zandalar.map862", mapID = 862, x = 0.4090, y = 0.7140 }, -- Xibala
     { id = "DAZARALOR_PET", container = "zandalar.map1165", mapID = 1165, x = 0.5633, y = 0.3097, city = "dazaralor" }, -- Pet Shop
     { id = "TAXI_1955", container = "zandalar.map863", mapID = 863, x = 0.6675, y = 0.4319 }, -- Gloom Hollow
     { id = "TAXI_1965", container = "zandalar.map862", mapID = 862, x = 0.6628, y = 0.1760 }, -- Nesingwary's Gameland
@@ -56,7 +56,7 @@ addon.Nodes.Zandalar = {
     { id = "NAZMIR_MOLE", container = "zandalar.map863", mapID = 863, x = 0.3440, y = 0.4520 }, -- Zalamar Invasion
     { id = "TAXI_2143", container = "zandalar.map864", mapID = 864, x = 0.4368, y = 0.7557 }, -- Scorched Sands Outpost
     { id = "INSTANCE_KINGS_REST", container = "zandalar.map862", mapID = 862, x = 0.3800, y = 0.3900, kind = "instance", journal = 1041 }, -- Kings' Rest
-    { id = "FLIGHT_XIBALA_HORDE", container = "zandalar.map862", mapID = 862, x = 0.4451, y = 0.7222 }, -- Xibala
+    { id = "TAXI_1974", container = "zandalar.map862", mapID = 862, x = 0.4451, y = 0.7222 }, -- Xibala
     { id = "KAJACOAST_ROCKET", container = "zandalar.map862", mapID = 862, x = 0.2234, y = 0.5415 }, -- Kaja'Coast Rocket
     { id = "TAXI_2381", container = "zandalar.map862", mapID = 862, x = 0.5310, y = 0.5643 }, -- The Mugambala
     { id = "TAXI_2153", container = "zandalar.map862", mapID = 862, x = 0.6420, y = 0.4750 }, -- Mistvine Ledge

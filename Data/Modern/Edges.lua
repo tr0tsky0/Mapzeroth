@@ -131,7 +131,7 @@ addon.Edges = {
     { from = "DARK_PORTAL_BL", to = "DARK_PORTAL_STORMSHIELD", method = "portal", cost = 0, oneway = true, inPhase = { "blasted_lands", 628 }, requirements = { quest = 34586, faction = "Alliance" } },
     { from = "DARK_PORTAL_OUTLANDS", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "DARNASSUS", to = "DARK_PORTAL_OUTLANDS", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
-    { from = "FLIGHT_LORDANEL_PAST", to = "TAXI_27", method = "taxi", cost = 60, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
+    { from = "TAXI_26", to = "TAXI_27", method = "taxi", cost = 60, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
     { from = "TAXI_27", to = "TAXI_457", method = "taxi", cost = 115, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
     { from = "PORTAL_RUTTHERAN_EXODAR", to = "DOCK_AZUREMYST_ISLE", method = "portal", cost = 0, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
     { from = "VALDRAKKEN", to = "AMIRDRASSIL", method = "portal", cost = 0, oneway = true },

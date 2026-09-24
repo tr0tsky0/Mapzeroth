@@ -8,13 +8,25 @@ write any renamed data itself, just tools/modern_source/flight_node_matches.tsv 
 tools/gen_modern_nodes.py then reads for the ids marked with a single confident match.
 
     python tools/match_modern_taxi_nodes.py
+
+Nodes whose id carries _FLIGHT anywhere are matched (EVERLOOK_FLIGHT_HORDE as well as IRONFORGE_FLIGHT). By name
+first; an id that says its faction (`..._ALLIANCE` / `..._HORDE`) keeps only the rows of that faction (the TaxiNodes
+Flags bit: 1 Alliance, 2 Horde). What the name leaves open (no match, or several) is settled by in-game captures:
+`/mzdump nodes <mapID>` (MapzerothDataTools) lists every flight master the client has under a map with its real id and
+map position; paste the output into tools/modern_source/taxi_captures/<name>.txt. The node takes the captured flight
+master at its map position (same map, within CAPTURE_RADIUS), of its faction; a faction twin of the same name that the
+capture didn't list (one hidden behind a condition) is found through the name.
 """
 import csv
+import math
 import pathlib
 import re
 from lupa.lua51 import LuaRuntime
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+CAPTURES = ROOT / "tools" / "modern_source" / "taxi_captures"
+CAPTURE_RADIUS = 0.06       # map units: the old data's positions are rough (Everlook is 0.045 off)
+FACTION_BITS = {"ALLIANCE": 1, "HORDE": 2}
 SRC = pathlib.Path(r"C:\Users\shaun\Documents\Claude\Mapzeroth\Mapzeroth\Data")
 TAXI_CSV = ROOT / "tools" / "modern_source" / "taxi_nodes_retail.csv"
 OUT = ROOT / "tools" / "modern_source" / "flight_node_matches.tsv"
@@ -47,7 +59,26 @@ def norm(name):
 def id_derived_name(node_id):
     """IRONFORGE_FLIGHT -> "ironforge": a fallback for old names that are just the generic
     word "Flightmaster" (every faction capital's own flight master, it turns out)."""
-    return node_id[: -len("_FLIGHT")].replace("_", " ").lower()
+    return node_id.split("_FLIGHT")[0].replace("_", " ").lower()
+
+
+def faction_of(node_id):
+    """The TaxiNodes Flags bit an id's trailing ALLIANCE / HORDE asks for, or None."""
+    for word, bit in FACTION_BITS.items():
+        if re.search(rf"_{word}(_|$)", node_id):
+            return bit
+    return None
+
+
+def load_captures():
+    """[(taxi id, mapID, x, y)] from every pasted /mzdump nodes output."""
+    found = []
+    for path in sorted(CAPTURES.glob("*.txt")) if CAPTURES.exists() else []:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.search(r'id = "TAXI_(\d+)".*?mapID = (\d+), x = ([\d.]+), y = ([\d.]+)', line)
+            if m:
+                found.append((m.group(1), int(m.group(2)), float(m.group(3)), float(m.group(4))))
+    return found
 
 
 # A handful of old names the general rules above can't reconstruct the real name from --
@@ -87,6 +118,8 @@ NOT_REAL_TAXI = {
 
 def main():
     taxi_by_base = {}
+    flags_of, name_of = {}, {}
+    captures = load_captures()
     taxi_by_full = {}      # full name, comma and all -- for a MANUAL_FIXES value that keeps
                             # the zone qualifier on purpose to pick one of several same-base-name rows
     placed_by_base = {}    # same as taxi_by_base, but rows sitting at world (0,0,0) -- unplaced/dead data -- left out
@@ -94,6 +127,8 @@ def main():
         for row in csv.DictReader(f):
             key = norm(row["Name_lang"])
             taxi_by_base.setdefault(key, []).append(row["ID"])
+            flags_of[row["ID"]] = int(row["Flags"] or 0)
+            name_of[row["ID"]] = row["Name_lang"].strip().lower()
             taxi_by_full.setdefault(row["Name_lang"].strip().lower(), []).append(row["ID"])
             if (row["Pos_0"], row["Pos_1"], row["Pos_2"]) != ("0", "0", "0"):
                 placed_by_base.setdefault(key, []).append(row["ID"])
@@ -112,7 +147,7 @@ def main():
         chunk("Mapzeroth", ns)
         for group_name, group in ns.Nodes.items():
             for node_id, node in group.items():
-                if not node_id.endswith("_FLIGHT"):
+                if "_FLIGHT" not in node_id:
                     continue
                 if node_id in NOT_REAL_TAXI:
                     counts["skip"] = counts.get("skip", 0) + 1
@@ -120,6 +155,11 @@ def main():
                     continue
                 name = node["name"] or ""
                 key = norm(name)
+                faction = faction_of(node_id)
+                # A capture at the node's map position: the flight masters there, and their same-named faction twins.
+                x, y, map_id = float(node["x"]), float(node["y"]), int(node["mapID"])
+                near = sorted((math.hypot(x - cx, y - cy), tid) for tid, cm, cx, cy in captures
+                              if cm == map_id and math.hypot(x - cx, y - cy) <= CAPTURE_RADIUS)
                 candidates = taxi_by_base.get(key, [])
                 by = "name"
                 if not candidates:
@@ -144,6 +184,17 @@ def main():
                     placed = placed_by_base.get(key, [])
                     if placed:
                         candidates = placed
+                if faction and len(candidates) > 1:
+                    candidates = [tid for tid in candidates if flags_of.get(tid, 0) & faction] or candidates
+                if len(candidates) != 1 and near:
+                    # What the name leaves open, a capture at the node's position settles.
+                    names = {name_of.get(tid) for _d, tid in near}
+                    pool = [tid for _d, tid in near] + [tid for tid, n in name_of.items()
+                                                        if n in names and tid not in {t for _d, t in near}]
+                    if faction:
+                        pool = [tid for tid in pool if flags_of.get(tid, 0) & faction]
+                    if pool:
+                        candidates, by = pool[:1], "capture"
                 if len(candidates) == 1:
                     verdict = "one"
                 elif not candidates:

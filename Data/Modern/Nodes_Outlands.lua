@@ -22,7 +22,7 @@ addon.Nodes.Outlands = {
     { id = "TAXI_122", container = "outlands.map109", mapID = 109, x = 0.3100, y = 0.6590 }, -- Area 52
     { id = "TAXI_159", container = "outlands.map104", mapID = 104, x = 0.5770, y = 0.5790 }, -- Sanctum of the Stars
     { id = "TOSHLEYS_STATION_TRANSPORTER", container = "outlands.map105", mapID = 105, x = 0.6000, y = 0.6800, area = 3918 }, -- Toshley's Station
-    { id = "FLIGHT_HELLFIRE_PENINSULA_ALLIANCE", container = "outlands.map100", mapID = 100, x = 0.8740, y = 0.4940 }, -- Dark Portal Flightmaster
+    { id = "TAXI_129", container = "outlands.map100", mapID = 100, x = 0.8740, y = 0.4940 }, -- Dark Portal Flightmaster
     { id = "TAXI_156", container = "outlands.map105", mapID = 105, x = 0.6070, y = 0.7040 }, -- Toshley's Station Flightmaster
     { id = "INSTANCE_THE_MECHANAR", container = "outlands.map109", mapID = 109, x = 0.7000, y = 0.6900, kind = "instance", journal = 258 }, -- The Mechanar
     { id = "TAXI_101", container = "outlands.map100", mapID = 100, x = 0.2510, y = 0.3920 }, -- Temple of Telhamat
@@ -35,7 +35,7 @@ addon.Nodes.Outlands = {
     { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160, area = 8606, city = "shattrath" }, -- World's End Tavern
     { id = "INSTANCE_THE_ARCATRAZ", container = "outlands.map109", mapID = 109, x = 0.7400, y = 0.5700, kind = "instance", journal = 254 }, -- The Arcatraz
     { id = "TAXI_148", container = "outlands.map100", mapID = 100, x = 0.7820, y = 0.3490 }, -- Shatter Point
-    { id = "FLIGHT_HELLFIRE_PENINSULA_HORDE", container = "outlands.map100", mapID = 100, x = 0.8747, y = 0.4908 }, -- Dark Portal Flightmaster
+    { id = "TAXI_130", container = "outlands.map100", mapID = 100, x = 0.8747, y = 0.4908 }, -- Dark Portal Flightmaster
     { id = "TAXI_164", container = "outlands.map102", mapID = 102, x = 0.4070, y = 0.2790 }, -- Orebor Harborage
     { id = "DARK_PORTAL_OUTLANDS", container = "outlands.map100", mapID = 100, x = 0.8923, y = 0.5093 }, -- The Dark Portal
     { id = "INSTANCE_MANATOMBS", container = "outlands.map108", mapID = 108, x = 0.3900, y = 0.6100, kind = "instance", journal = 250 }, -- Mana-Tombs

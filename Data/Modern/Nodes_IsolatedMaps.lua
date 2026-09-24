@@ -56,19 +56,19 @@ addon.Nodes.IsolatedMaps = {
     { id = "INSTANCE_VOIDSPIRE", container = "voidstorm.map2405", mapID = 2405, x = 0.4520, y = 0.6494, kind = "instance", journal = 1307 }, -- Voidspire
     { id = "TAXI_3120", container = "voidstorm.map2405", mapID = 2405, x = 0.4223, y = 0.7368 }, -- Locus Point Flightmaster
     { id = "TAXI_2406", container = "nazjatar.map1355", mapID = 1355, x = 0.7360, y = 0.3990 }, -- Orise's Vigil
-    { id = "FLIGHT_ASHEN_STRAND_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.3426, y = 0.3690 }, -- Ashen Strand
+    { id = "TAXI_2411", container = "nazjatar.map1355", mapID = 1355, x = 0.3426, y = 0.3690 }, -- Ashen Strand
     { id = "TAXI_2412", container = "nazjatar.map1355", mapID = 1355, x = 0.3568, y = 0.8263 }, -- Wreck of the Hungry Riverbeast
     { id = "TAXI_2404", container = "nazjatar.map1355", mapID = 1355, x = 0.4721, y = 0.6314 }, -- Newhome
     { id = "TAXI_2405", container = "nazjatar.map1355", mapID = 1355, x = 0.7912, y = 0.3806 }, -- Zin'Azshari
-    { id = "FLIGHT_ASHEN_STRAND_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.3160, y = 0.3820 }, -- Ashen Strand
+    { id = "TAXI_2410", container = "nazjatar.map1355", mapID = 1355, x = 0.3160, y = 0.3820 }, -- Ashen Strand
     { id = "TAXI_2437", container = "nazjatar.map1355", mapID = 1355, x = 0.6358, y = 0.5166 }, -- Ekka's Hideaway
     { id = "TAXI_2403", container = "nazjatar.map1355", mapID = 1355, x = 0.7397, y = 0.2466 }, -- Kelya's Grave
     { id = "TAXI_2409", container = "nazjatar.map1355", mapID = 1355, x = 0.4410, y = 0.8570 }, -- Wreck of the Old Blanchy
     { id = "NAZJATAR_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.3996, y = 0.5884, area = 10334 }, -- Mezzamere
     { id = "TAXI_2408", container = "nazjatar.map1355", mapID = 1355, x = 0.3990, y = 0.5420 }, -- Mezzamere
     { id = "INSTANCE_THE_ETERNAL_PALACE", container = "nazjatar.map1355", mapID = 1355, x = 0.5000, y = 0.1200, kind = "instance", journal = 1179 }, -- The Eternal Palace
-    { id = "FLIGHT_THE_TIDAL_CONFLUX_ALLIANCE", container = "nazjatar.map1355", mapID = 1355, x = 0.4960, y = 0.2360 }, -- The Tidal Conflux
-    { id = "FLIGHT_THE_TIDAL_CONFLUX_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.5086, y = 0.2376 }, -- The Tidal Conflux
+    { id = "TAXI_2483", container = "nazjatar.map1355", mapID = 1355, x = 0.4960, y = 0.2360 }, -- The Tidal Conflux
+    { id = "TAXI_2482", container = "nazjatar.map1355", mapID = 1355, x = 0.5086, y = 0.2376 }, -- The Tidal Conflux
     { id = "TAXI_2407", container = "nazjatar.map1355", mapID = 1355, x = 0.6140, y = 0.3660 }, -- Utama's Stand
     { id = "NAZJATAR_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.4719, y = 0.6263, area = 10333 }, -- Newhome
     { id = "SHADOWFORGE_CITY_MOLE", container = "dark_iron_city.map1186", mapID = 1186, x = 0.6140, y = 0.2440 }, -- Shadowforge City

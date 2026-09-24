@@ -13,9 +13,9 @@ addon.Nodes.BfA = {
     { id = "SILVERMOON", container = "quelthalas.map110", mapID = 110, x = 0.5826, y = 0.1924, city = "silvermoon_bc" }, -- Orgrimmar Portal
     { id = "TAXI_631", container = "quelthalas.map110", mapID = 110, x = 0.3014, y = 0.7963, city = "silvermoon_bc" }, -- Falconwing Square
     { id = "INSTANCE_ZULAMAN", container = "quelthalas.map95", mapID = 95, x = 0.8200, y = 0.6400, kind = "instance", journal = 77 }, -- Zul'Aman
-    { id = "FLIGHT_TOL_DAGOR_ALLIANCE", container = "tol_dagor.map974", mapID = 974, x = 0.3744, y = 0.9210 }, -- Tol Dagor Flightmaster
+    { id = "TAXI_2096", container = "tol_dagor.map974", mapID = 974, x = 0.3744, y = 0.9210 }, -- Tol Dagor Flightmaster
     { id = "INSTANCE_TOL_DAGOR", container = "tol_dagor.map974", mapID = 974, x = 0.3900, y = 0.7000, kind = "instance", journal = 1002 }, -- Tol Dagor
-    { id = "FLIGHT_TOL_DAGOR_HORDE", container = "tol_dagor.map974", mapID = 974, x = 0.2296, y = 0.4654 }, -- Tol Dagor Flightmaster
+    { id = "TAXI_2276", container = "tol_dagor.map974", mapID = 974, x = 0.2296, y = 0.4654 }, -- Tol Dagor Flightmaster
     { id = "TAXI_2441", container = "mechagon.map1462", mapID = 1462, x = 0.7335, y = 0.2542 }, -- Prospectus Bay
     { id = "TAXI_2442", container = "mechagon.map1462", mapID = 1462, x = 0.7750, y = 0.4100 }, -- Overspark Expedition Camp
     { id = "MECHAGON", container = "mechagon.map1462", mapID = 1462, x = 0.7390, y = 0.3650, area = 10418 }, -- Rustbolt
@@ -43,7 +43,7 @@ addon.Nodes.BfA = {
     { id = "INSTANCE_BATTLE_OF_DAZARALOR_ALLIANCE", container = "kul_tiras.map1161", mapID = 1161, x = 0.7000, y = 0.3500, city = "boralus", kind = "instance", journal = 1176, faction = "Alliance" }, -- Battle of Dazar'alor
     { id = "INSTANCE_SIEGE_OF_BORALUS_ALLIANCE", container = "kul_tiras.map895", mapID = 895, x = 0.7200, y = 0.2300, kind = "instance", journal = 1023, faction = "Alliance" }, -- Siege of Boralus
     { id = "INSTANCE_FREEHOLD", container = "kul_tiras.map895", mapID = 895, x = 0.8500, y = 0.7900, kind = "instance", journal = 1001 }, -- Freehold
-    { id = "FLIGHT_SHRINE_OF_THE_STORM_HORDE", container = "kul_tiras.map942", mapID = 942, x = 0.7759, y = 0.2383 }, -- Shrine of the Storm
+    { id = "TAXI_2095", container = "kul_tiras.map942", mapID = 942, x = 0.7759, y = 0.2383 }, -- Shrine of the Storm
     { id = "BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.7060, y = 0.1700, city = "boralus" }, -- Portal Room
     { id = "TAXI_2086", container = "kul_tiras.map942", mapID = 942, x = 0.5940, y = 0.7020 }, -- Brennadam
     { id = "DOCK_BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.6805, y = 0.2651, city = "boralus" }, -- Dock
@@ -63,7 +63,7 @@ addon.Nodes.BfA = {
     { id = "DOCK_WARFANG_HOLD", container = "kul_tiras.map942", mapID = 942, x = 0.5193, y = 0.2434 }, -- Warfang Hold Dock
     { id = "TAXI_2083", container = "kul_tiras.map1161", mapID = 1161, x = 0.6670, y = 0.1510, city = "boralus" }, -- Tradewinds Market
     { id = "TAXI_2273", container = "kul_tiras.map895", mapID = 895, x = 0.3933, y = 0.1836 }, -- Waning Glacier
-    { id = "FLIGHT_SHRINE_OF_THE_STORM_ALLIANCE", container = "kul_tiras.map942", mapID = 942, x = 0.7790, y = 0.2910 }, -- Shrine of the Storm
+    { id = "TAXI_2133", container = "kul_tiras.map942", mapID = 942, x = 0.7790, y = 0.2910 }, -- Shrine of the Storm
     { id = "TAXI_2277", container = "kul_tiras.map1161", mapID = 1161, x = 0.4750, y = 0.6490, city = "boralus" }, -- Proudmoore Keep
     { id = "TAXI_2139", container = "kul_tiras.map942", mapID = 942, x = 0.6052, y = 0.2736 }, -- Windfall Cavern
     { id = "TAXI_2085", container = "kul_tiras.map942", mapID = 942, x = 0.6540, y = 0.4780 }, -- Tidecross

@@ -59,7 +59,7 @@ addon.Nodes.Kalimdor = {
     { id = "TAXI_614", container = "kalimdor_overworld.map76", mapID = 76, x = 0.6711, y = 0.2094 }, -- Northern Rocketway
     { id = "GADGETZAN_TRANSPORTER", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5200, y = 0.2700, area = 976 }, -- Gadgetzan
     { id = "PORTAL_ORGRIMMAR_ORIBOS", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5822, y = 0.8803, city = "orgrimmar" }, -- Portal to Oribos
-    { id = "FLIGHT_EVERLOOK_HORDE", container = "kalimdor_overworld.map83", mapID = 83, x = 0.5828, y = 0.4884 }, -- Everlook
+    { id = "TAXI_53", container = "kalimdor_overworld.map83", mapID = 83, x = 0.5828, y = 0.4884 }, -- Everlook
     { id = "ORGRIMMAR_DARK_PORTAL_BL_NPC", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5704, y = 0.9062, city = "orgrimmar" }, -- Thrallmar Mage
     { id = "PORTAL_ORGRIMMAR_UNDERCITY", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5081, y = 0.5547, city = "orgrimmar" }, -- Portal to Undercity
     { id = "PORTAL_ORGRIMMAR_NIGHTHOLD", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3813, y = 0.7536, city = "orgrimmar" }, -- Portal to The Nighthold
@@ -88,7 +88,7 @@ addon.Nodes.Kalimdor = {
     { id = "INSTANCE_THRONE_OF_THE_FOUR_WINDS", container = "kalimdor_overworld.map249", mapID = 249, x = 0.3800, y = 0.8000, kind = "instance", journal = 74 }, -- Throne of the Four Winds
     { id = "TAXI_360", container = "kalimdor_overworld.map65", mapID = 65, x = 0.4604, y = 0.3224 }, -- Cliffwalker Post
     { id = "TAXI_367", container = "kalimdor_overworld.map66", mapID = 66, x = 0.3710, y = 0.7180 }, -- Thargad's Camp
-    { id = "FLIGHT_GROVE_OF_THE_ANCIENTS_PRESENT", container = "kalimdor_overworld.map62_art1176", mapID = 62, x = 0.4360, y = 0.7540 }, -- Grove of the Ancients
+    { id = "TAXI_339", container = "kalimdor_overworld.map62_art1176", mapID = 62, x = 0.4360, y = 0.7540 }, -- Grove of the Ancients
     { id = "DOCK_THERAMORE", container = "kalimdor_overworld.map70", mapID = 70, x = 0.7123, y = 0.5590 }, -- Theramore Dock
     { id = "PORTAL_ORGRIMMAR_AZSUNA", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5716, y = 0.8836, city = "orgrimmar" }, -- Portal to Azsuna
     { id = "TAXI_29", container = "kalimdor_overworld.map65", mapID = 65, x = 0.5016, y = 0.6120 }, -- Sun Rock Retreat
@@ -100,7 +100,7 @@ addon.Nodes.Kalimdor = {
     { id = "INSTANCE_RUINS_OF_AHNQIRAJ", container = "kalimdor_overworld.map327", mapID = 327, x = 0.5800, y = 0.1400, kind = "instance", journal = 743 }, -- Ruins of Ahn'Qiraj
     { id = "ZEPPELIN_ORGRIMMAR_WAKING_SHORES", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5599, y = 0.1310 }, -- Zeppelin to the Waking Shores
     { id = "TAXI_338", container = "kalimdor_overworld.map63", mapID = 63, x = 0.1780, y = 0.2050 }, -- Blackfathom Camp
-    { id = "FLIGHT_NIGHTHAVEN_HORDE", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4403, y = 0.4538 }, -- Nighthaven Flightmaster
+    { id = "TAXI_63", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4403, y = 0.4538 }, -- Nighthaven Flightmaster
     { id = "TAXI_80", container = "kalimdor_overworld.map10", mapID = 10, x = 0.6810, y = 0.7180 }, -- Ratchet
     { id = "TAXI_565", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5090, y = 0.1750 }, -- Dreamer's Rest
     { id = "TAXI_559", container = "kalimdor_overworld.map198", mapID = 198, x = 0.6220, y = 0.2130 }, -- Nordrassil
@@ -110,7 +110,7 @@ addon.Nodes.Kalimdor = {
     { id = "TAXI_531", container = "kalimdor_overworld.map71", mapID = 71, x = 0.3285, y = 0.7727 }, -- Dawnrise Expedition
     { id = "FERALAS_DRUID", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5120, y = 0.1103, area = 1111 }, -- Dream Bough
     { id = "SILITHUS_ZIDORMI_PAST", container = "kalimdor_overworld.map81_art86", mapID = 81, x = 0.7892, y = 0.2203 }, -- Zidormi (Past Silithus)
-    { id = "FLIGHT_LORDANEL_PAST", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.5172, y = 0.1771 }, -- Lor'danel Flightmaster
+    { id = "TAXI_26", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.5172, y = 0.1771 }, -- Lor'danel Flightmaster
     { id = "TAXI_356", container = "kalimdor_overworld.map63", mapID = 63, x = 0.4910, y = 0.6614 }, -- Silverwind Refuge
     { id = "ZEPPELIN_ORGRIMMAR_GROMGOL", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5236, y = 0.5334, city = "orgrimmar" }, -- Zeppelin to Grom'gol
     { id = "PORTAL_ORGRIMMAR_DALARAN_NORTHREND", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5634, y = 0.9148, city = "orgrimmar" }, -- Portal to Northrend Dalaran
@@ -124,7 +124,7 @@ addon.Nodes.Kalimdor = {
     { id = "INSTANCE_ONYXIAS_LAIR", container = "kalimdor_overworld.map70", mapID = 70, x = 0.5600, y = 0.7100, kind = "instance", journal = 760 }, -- Onyxia's Lair
     { id = "INSTANCE_RAZORFEN_KRAUL", container = "kalimdor_overworld.map199", mapID = 199, x = 0.4200, y = 0.9400, kind = "instance", journal = 234 }, -- Razorfen Kraul
     { id = "TAXI_22", container = "kalimdor_overworld.map88", mapID = 88, x = 0.4627, y = 0.4961, city = "thunder_bluff" }, -- Flightmaster
-    { id = "FLIGHT_EVERLOOK_ALLIANCE", container = "kalimdor_overworld.map83", mapID = 83, x = 0.6080, y = 0.4960 }, -- Everlook
+    { id = "TAXI_52", container = "kalimdor_overworld.map83", mapID = 83, x = 0.6080, y = 0.4960 }, -- Everlook
     { id = "DUSTWALLOW_ZIDORMI_PRESENT", container = "kalimdor_overworld.map70_art498", mapID = 70, x = 0.5590, y = 0.4956 }, -- Zidormi (Present Dustwallow)
     { id = "DARKSHORE_ZIDORMI_PAST", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.4888, y = 0.2447 }, -- Zidormi (Past Darkshore)
     { id = "TAXI_537", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5263, y = 0.4266 }, -- Razor Hill
@@ -155,7 +155,7 @@ addon.Nodes.Kalimdor = {
     { id = "INSTANCE_THE_BATTLE_FOR_MOUNT_HYJAL", container = "kalimdor_overworld.map75", mapID = 75, x = 0.3592, y = 0.1585, kind = "instance", journal = 750 }, -- The Battle for Mount Hyjal
     { id = "TAXI_38", container = "kalimdor_overworld.map66", mapID = 66, x = 0.2108, y = 0.7426 }, -- Shadowprey Village
     { id = "TAXI_513", container = "kalimdor_overworld.map64", mapID = 64, x = 0.8065, y = 0.7091 }, -- Fizzle & Pozzik's Speedbarge
-    { id = "FLIGHT_GADGETZAN_ALLIANCE", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5110, y = 0.2940 }, -- Gadgetzan
+    { id = "TAXI_39", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5110, y = 0.2940 }, -- Gadgetzan
     { id = "TAXI_391", container = "kalimdor_overworld.map199", mapID = 199, x = 0.4286, y = 0.7038 }, -- Desolation Hold
     { id = "TAXI_77", container = "kalimdor_overworld.map199", mapID = 199, x = 0.4333, y = 0.4760 }, -- Vendetta Point
     { id = "TAXI_652", container = "kalimdor_overworld.map249", mapID = 249, x = 0.5610, y = 0.3340 }, -- Ramkahen Flightmaster
@@ -167,14 +167,14 @@ addon.Nodes.Kalimdor = {
     { id = "ULDUM_ZIDORMI_PRESENT", container = "kalimdor_overworld.map1527_art260", mapID = 1527, x = 0.5600, y = 0.3514 }, -- Zidormi (Present Uldum)
     { id = "ORGRIMMAR_PORTAL_ROOM_STAIRS", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5484, y = 0.9017, city = "orgrimmar" }, -- Portal Room (Stairs)
     { id = "SILITHUS_ZIDORMI_PRESENT", container = "kalimdor_overworld.map81_art962", mapID = 81, x = 0.7892, y = 0.2203 }, -- Zidormi (Present Silithus)
-    { id = "FLIGHT_GADGETZAN_HORDE", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5180, y = 0.2729 }, -- Gadgetzan
+    { id = "TAXI_40", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5180, y = 0.2729 }, -- Gadgetzan
     { id = "SILITHUS", container = "kalimdor_overworld.map81", mapID = 81, x = 0.4150, y = 0.4490 }, -- Magni's Camp
     { id = "EVERLOOK_RIPPER", container = "kalimdor_overworld.map83", mapID = 83, x = 0.6100, y = 0.3900, area = 2255 }, -- Everlook
     { id = "TAXI_363", container = "kalimdor_overworld.map65", mapID = 65, x = 0.7040, y = 0.8945 }, -- Malaka'jin
     { id = "TAXI_31", container = "kalimdor_overworld.map69", mapID = 69, x = 0.7680, y = 0.5660 }, -- Shadebough
     { id = "TAXI_567", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5660, y = 0.5390 }, -- Tower of Estulan
     { id = "TAXI_41", container = "kalimdor_overworld.map69", mapID = 69, x = 0.4640, y = 0.4630 }, -- Feathermoon
-    { id = "FLIGHT_MOONGLADE_HORDE", container = "kalimdor_overworld.map80", mapID = 80, x = 0.3179, y = 0.6639 }, -- Lake Elune'ara
+    { id = "TAXI_69", container = "kalimdor_overworld.map80", mapID = 80, x = 0.3179, y = 0.6639 }, -- Lake Elune'ara
     { id = "TAXI_179", container = "kalimdor_overworld.map70", mapID = 70, x = 0.4200, y = 0.7420 }, -- Mudsprocket
     { id = "TAXI_37", container = "kalimdor_overworld.map66", mapID = 66, x = 0.6510, y = 0.1010 }, -- Nijel's Point
     { id = "TAXI_368", container = "kalimdor_overworld.map66", mapID = 66, x = 0.5690, y = 0.5320 }, -- Karnum's Glade
@@ -185,10 +185,10 @@ addon.Nodes.Kalimdor = {
     { id = "TAXI_28", container = "kalimdor_overworld.map63", mapID = 63, x = 0.3440, y = 0.4800 }, -- Astranaar
     { id = "PORTAL_DARKSHORE_BELAMETH_PAST", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.5362, y = 0.1877 }, -- Portal to Bel'ameth
     { id = "ORGRIMMAR_PORTAL_ROOM_LOWER", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5625, y = 0.9031, city = "orgrimmar" }, -- Portal Room (Lower)
-    { id = "FLIGHT_MOONGLADE_ALLIANCE", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4760, y = 0.6690 }, -- Lake Elune'ara
+    { id = "TAXI_49", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4760, y = 0.6690 }, -- Lake Elune'ara
     { id = "TAXI_595", container = "kalimdor_overworld.map77", mapID = 77, x = 0.4410, y = 0.6200 }, -- Wildheart Point
     { id = "WESTERN_EARTHSHRINE_OG", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5007, y = 0.3779, city = "orgrimmar" }, -- Western Earthshrine
-    { id = "FLIGHT_NIGHTHAVEN_ALLIANCE", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4400, y = 0.4520 }, -- Nighthaven Flightmaster
+    { id = "TAXI_62", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4400, y = 0.4520 }, -- Nighthaven Flightmaster
     { id = "FLIGHT_GROVE_OF_THE_ANCIENTS_PAST", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.4360, y = 0.7540 }, -- Grove of the Ancients
     { id = "TAXI_616", container = "kalimdor_overworld.map198", mapID = 198, x = 0.7260, y = 0.7620 }, -- Gates of Sothann
     { id = "THUNDER_BLUFF", container = "kalimdor_overworld.map88", mapID = 88, x = 0.2221, y = 0.1687, city = "thunder_bluff" }, -- Entrance

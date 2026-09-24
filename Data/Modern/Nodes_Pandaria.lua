@@ -71,7 +71,7 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_1029", container = "pandaria.map433", mapID = 433, x = 0.5660, y = 0.7540 }, -- Tavern in the Mists
     { id = "TAXI_1018", container = "pandaria.map379", mapID = 379, x = 0.6620, y = 0.5060 }, -- Temple of the White Tiger
     { id = "TAXI_993", container = "pandaria.map418", mapID = 418, x = 0.5240, y = 0.7660 }, -- Marista
-    { id = "FLIGHT_SERPENTS_SPINE_ALLIANCE", container = "pandaria.map390", mapID = 390, x = 0.1360, y = 0.7720 }, -- Serpent's Spine
+    { id = "TAXI_1073", container = "pandaria.map390", mapID = 390, x = 0.1360, y = 0.7720 }, -- Serpent's Spine
     { id = "TAXI_1019", container = "pandaria.map379", mapID = 379, x = 0.6205, y = 0.8062 }, -- Eastwind Rest
     { id = "FLIGHT_SERPENTS_SPINE_HORDE", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
     { id = "TAXI_973", container = "pandaria.map371", mapID = 371, x = 0.2744, y = 0.1571 }, -- Honeydew Village
