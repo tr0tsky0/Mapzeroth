@@ -74,7 +74,7 @@ addon.Nodes.BrokenIsles = {
     { id = "INSTANCE_THE_ARCWAY", container = "broken_isles.map680", mapID = 680, x = 0.5100, y = 0.6500, kind = "instance", journal = 726 }, -- The Arcway
     { id = "TAXI_1713", container = "broken_isles.map641", mapID = 641, x = 0.4230, y = 0.5851 }, -- Bradensbrook
     { id = "TAXI_1758", container = "broken_isles.map650", mapID = 650, x = 0.4735, y = 0.8451 }, -- Obsidian Overlook
-    { id = "FLIGHT_DALARAN_BROKEN_ISLES", container = "broken_isles.map627", mapID = 627, x = 0.6985, y = 0.5108, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Flightmaster
+    { id = "TAXI_1774", container = "broken_isles.map627", mapID = 627, x = 0.6985, y = 0.5108, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Flightmaster
     { id = "PORTAL_DALARAN_BROKEN_ISLES_ALLIANCE", container = "broken_isles.map627", mapID = 627, x = 0.3908, y = 0.6280, city = "dalaran_broken_isles" }, -- Dalaran (Broken Isles) Portal
     { id = "TAXI_1879", container = "broken_isles.map680", mapID = 680, x = 0.6410, y = 0.4181 }, -- Crimson Thicket
     { id = "TAXI_1755", container = "broken_isles.map650", mapID = 650, x = 0.2967, y = 0.3923 }, -- Felbane Camp

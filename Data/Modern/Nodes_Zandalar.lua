@@ -14,7 +14,7 @@ addon.Nodes.Zandalar = {
     { id = "DAZARALOR_PORTAL_ROOM", container = "zandalar.map1165", mapID = 1165, x = 0.6572, y = 0.7433, city = "dazaralor" }, -- Portal Room
     { id = "TAXI_2117", container = "zandalar.map864", mapID = 864, x = 0.5663, y = 0.4919 }, -- Vulpera Hideaway
     { id = "TAXI_1954", container = "zandalar.map863", mapID = 863, x = 0.4003, y = 0.4301 }, -- Zo'bal Ruins
-    { id = "TAXI_2066", container = "zandalar.map862", mapID = 862, x = 0.7994, y = 0.4119 }, -- Atal'Gral
+    { id = "TAXI_2076", container = "zandalar.map862", mapID = 862, x = 0.7994, y = 0.4119 }, -- Atal'Gral
     { id = "TAXI_2165", container = "zandalar.map862", mapID = 862, x = 0.5875, y = 0.7779 }, -- Tusk Isle
     { id = "TAXI_2061", container = "zandalar.map1165", mapID = 1165, x = 0.5286, y = 0.1907, city = "dazaralor" }, -- The Sliver
     { id = "TAXI_1959", container = "zandalar.map1165", mapID = 1165, x = 0.5145, y = 0.4096, city = "dazaralor" }, -- The Great Seal

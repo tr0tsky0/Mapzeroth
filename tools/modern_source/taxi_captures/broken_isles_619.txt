@@ -1,0 +1,44 @@
+-- /mzdump nodes 619 (Broken Isles), retail, captured 2026-09-24.
+{ id = "TAXI_1613", container = "TODO", mapID = 630, x = 0.4837, y = 0.2799 }, -- Azurewing Repose, Azsuna
+{ id = "TAXI_1615", container = "TODO", mapID = 630, x = 0.4083, y = 0.0911 }, -- Challiane's Terrace, Azsuna
+{ id = "TAXI_1622", container = "TODO", mapID = 630, x = 0.4462, y = 0.4379 }, -- Illidari Stand, Azsuna
+{ id = "TAXI_1633", container = "TODO", mapID = 630, x = 0.5617, y = 0.5896 }, -- Shackle's Den, Azsuna
+{ id = "TAXI_1673", container = "TODO", mapID = 641, x = 0.5496, y = 0.7255 }, -- Lorlathil, Val'sharah
+{ id = "TAXI_1713", container = "TODO", mapID = 641, x = 0.4229, y = 0.5854 }, -- Bradensbrook, Val'sharah
+{ id = "TAXI_1719", container = "TODO", mapID = 650, x = 0.4688, y = 0.5954 }, -- Thunder Totem, Highmountain
+{ id = "TAXI_1738", container = "TODO", mapID = 634, x = 0.4500, y = 0.5923 }, -- Cullen's Post, Stormheim
+{ id = "TAXI_1739", container = "TODO", mapID = 634, x = 0.5452, y = 0.7293 }, -- Dreadwake's Landing, Stormheim
+{ id = "TAXI_1741", container = "TODO", mapID = 634, x = 0.3652, y = 0.3075 }, -- Forsaken Foothold, Stormheim
+{ id = "TAXI_1742", container = "TODO", mapID = 634, x = 0.6063, y = 0.5096 }, -- Valdisdall, Stormheim
+{ id = "TAXI_1744", container = "TODO", mapID = 634, x = 0.7211, y = 0.5979 }, -- Greywatch, Stormheim
+{ id = "TAXI_1745", container = "TODO", mapID = 634, x = 0.3745, y = 0.6391 }, -- Lorna's Watch, Stormheim
+{ id = "TAXI_1747", container = "TODO", mapID = 634, x = 0.3367, y = 0.5065 }, -- Skyfire Triage Camp, Stormheim
+{ id = "TAXI_1753", container = "TODO", mapID = 650, x = 0.5264, y = 0.4517 }, -- Skyhorn, Highmountain
+{ id = "TAXI_1754", container = "TODO", mapID = 650, x = 0.3829, y = 0.3918 }, -- The Witchwood, Highmountain
+{ id = "TAXI_1755", container = "TODO", mapID = 650, x = 0.2997, y = 0.3935 }, -- Felbane Camp, Highmountain
+{ id = "TAXI_1756", container = "TODO", mapID = 619, x = 0.4444, y = 0.0633 }, -- Shipwreck Cove, Highmountain
+{ id = "TAXI_1758", container = "TODO", mapID = 650, x = 0.4732, y = 0.8469 }, -- Obsidian Overlook, Highmountain
+{ id = "TAXI_1759", container = "TODO", mapID = 650, x = 0.5687, y = 0.8396 }, -- Ironhorn Enclave, Highmountain
+{ id = "TAXI_1761", container = "TODO", mapID = 650, x = 0.5805, y = 0.2863 }, -- Prepfoot, Highmountain
+{ id = "TAXI_1764", container = "TODO", mapID = 641, x = 0.6894, y = 0.5093 }, -- Starsong Refuge, Val'sharah
+{ id = "TAXI_1766", container = "TODO", mapID = 641, x = 0.5669, y = 0.5780 }, -- Garden of the Moon, Val'sharah
+{ id = "TAXI_1767", container = "TODO", mapID = 650, x = 0.4025, y = 0.5261 }, -- Nesingwary's Retreat, Highmountain
+{ id = "TAXI_1774", container = "TODO", mapID = 627, x = 0.7013, y = 0.5058 }, -- Dalaran
+{ id = "TAXI_1777", container = "TODO", mapID = 650, x = 0.3591, y = 0.6597 }, -- Sylvan Falls, Highmountain
+{ id = "TAXI_1778", container = "TODO", mapID = 650, x = 0.5925, y = 0.6516 }, -- Stonehoof Watch, Highmountain
+{ id = "TAXI_1837", container = "TODO", mapID = 630, x = 0.4817, y = 0.7306 }, -- Wardens' Redoubt, Azsuna
+{ id = "TAXI_1855", container = "TODO", mapID = 619, x = 0.7053, y = 0.1989 }, -- Shield's Rest, Stormheim (continent-relative)
+{ id = "TAXI_1856", container = "TODO", mapID = 619, x = 0.5361, y = 0.6217 }, -- Vengeance Point, Broken Shore (continent-relative)
+{ id = "TAXI_1857", container = "TODO", mapID = 634, x = 0.5200, y = 0.3467 }, -- Stormtorn Foothills, Stormheim
+{ id = "TAXI_1858", container = "TODO", mapID = 680, x = 0.3423, y = 0.4944 }, -- Meredil, Suramar
+{ id = "TAXI_1859", container = "TODO", mapID = 630, x = 0.6377, y = 0.2850 }, -- Felblaze Ingress, Azsuna
+{ id = "TAXI_1860", container = "TODO", mapID = 630, x = 0.5180, y = 0.8218 }, -- Watchers' Aerie, Azsuna
+{ id = "TAXI_1861", container = "TODO", mapID = 630, x = 0.3183, y = 0.4631 }, -- Illidari Perch, Azsuna
+{ id = "TAXI_1862", container = "TODO", mapID = 619, x = 0.6337, y = 0.6927 }, -- Acherus: The Ebon Hold (continent-relative)
+{ id = "TAXI_1863", container = "TODO", mapID = 634, x = 0.5544, y = 0.8736 }, -- Hafr Fjall, Stormheim
+{ id = "TAXI_1870", container = "TODO", mapID = 790, x = 0.3825, y = 0.4592 }, -- Eye of Azshara, Azsuna
+{ id = "TAXI_1879", container = "TODO", mapID = 680, x = 0.6422, y = 0.4194 }, -- Crimson Thicket, Suramar
+{ id = "TAXI_1880", container = "TODO", mapID = 680, x = 0.2552, y = 0.3179 }, -- Irongrove Retreat, Suramar
+{ id = "TAXI_1885", container = "TODO", mapID = 641, x = 0.2598, y = 0.6645 }, -- Gloaming Reef, Val'sharah
+{ id = "TAXI_1941", container = "TODO", mapID = 619, x = 0.5267, y = 0.7094 }, -- Deliverance Point, Broken Shore (continent-relative)
+{ id = "TAXI_1942", container = "TODO", mapID = 619, x = 0.5789, y = 0.6758 }, -- Aalgen Point, Broken Shore (continent-relative)

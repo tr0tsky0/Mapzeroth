@@ -71,13 +71,11 @@
   | EK_OVERWORLD | 84 | 17 |
   | KALIMDOR_OVERWORLD | 85 | 17 |
 
-- **Ids** follow Forever's `<KIND>_<PLACE>` convention (tools/modern_ids.py has the rules; the whole map is tools/modern_source/id_map.tsv): 691 flight masters are `TAXI_<realID>`, 204 dungeon and raid entrances are `INSTANCE_<NAME>` nodes with `kind = "instance"` and their `journal` id, and 129 transports had their kind moved to the front (`BORALUS_DOCK` -> `DOCK_BORALUS`).
-  - 6 rename collision(s) (two old nodes would get the same id -- the first keeps it, the other takes the next rule, see tools/modern_ids.py):
+- **Ids** follow Forever's `<KIND>_<PLACE>` convention (tools/modern_ids.py has the rules; the whole map is tools/modern_source/id_map.tsv): 693 flight masters are `TAXI_<realID>`, 204 dungeon and raid entrances are `INSTANCE_<NAME>` nodes with `kind = "instance"` and their `journal` id, and 127 transports had their kind moved to the front (`BORALUS_DOCK` -> `DOCK_BORALUS`).
+  - 4 rename collision(s) (two old nodes would get the same id -- the first keeps it, the other takes the next rule, see tools/modern_ids.py):
     - `AMANI_FOOTHOLD_FLIGHT_2` -> TAXI_3288, already claimed by `AMANI_FOOTHOLD_FLIGHT`
     - `LORDANEL_FLIGHT_PRESENT` -> TAXI_26, already claimed by `LORDANEL_FLIGHT_PAST`
     - `GROVE_OF_THE_ANCIENTS_FLIGHT_PAST` -> TAXI_339, already claimed by `GROVE_OF_THE_ANCIENTS_FLIGHT_PRESENT`
-    - `SERPENTS_SPINE_FLIGHT_HORDE` -> TAXI_1073, already claimed by `SERPENTS_SPINE_FLIGHT_ALLIANCE`
-    - `DALARAN_BROKEN_ISLES_FLIGHT` -> TAXI_310, already claimed by `DALARAN_NORTHREND_FLIGHT`
     - `LUNARFALL_ALLIANCE_FLIGHT` -> TAXI_1476, already claimed by `LUNARFALL_GARRISON_FLIGHT`
 
 ## Resolved during this pass

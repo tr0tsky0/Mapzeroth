@@ -1,0 +1,42 @@
+-- /mzdump nodes 875 (Zandalar), retail, captured 2026-09-24.
+{ id = "TAXI_1953", container = "TODO", mapID = 863, x = 0.3894, y = 0.7806 }, -- Zul'jan, Nazmir
+{ id = "TAXI_1954", container = "TODO", mapID = 863, x = 0.4016, y = 0.4287 }, -- Zo'bal Ruins, Nazmir
+{ id = "TAXI_1955", container = "TODO", mapID = 863, x = 0.6713, y = 0.4339 }, -- Gloom Hollow, Nazmir
+{ id = "TAXI_1957", container = "TODO", mapID = 862, x = 0.5867, y = 0.5902 }, -- Port of Zandalar, Zuldazar
+{ id = "TAXI_1959", container = "TODO", mapID = 862, x = 0.5852, y = 0.4281 }, -- The Great Seal
+{ id = "TAXI_1965", container = "TODO", mapID = 862, x = 0.6623, y = 0.1767 }, -- Nesingwary's Gameland, Zuldazar
+{ id = "TAXI_1966", container = "TODO", mapID = 862, x = 0.6724, y = 0.4299 }, -- Warbeast Kraal, Zuldazar
+{ id = "TAXI_1974", container = "TODO", mapID = 862, x = 0.4484, y = 0.7218 }, -- Xibala, Zuldazar
+{ id = "TAXI_1975", container = "TODO", mapID = 862, x = 0.7733, y = 0.1536 }, -- Zeb'ahari, Zuldazar
+{ id = "TAXI_2009", container = "TODO", mapID = 862, x = 0.4822, y = 0.6030 }, -- Warport Rastari, Zuldazar
+{ id = "TAXI_2012", container = "TODO", mapID = 862, x = 0.4062, y = 0.7147 }, -- Xibala, Zuldazar
+{ id = "TAXI_2027", container = "TODO", mapID = 862, x = 0.4975, y = 0.4452 }, -- Temple of the Prophet, Zuldazar
+{ id = "TAXI_2045", container = "TODO", mapID = 862, x = 0.4971, y = 0.2629 }, -- Garden of the Loa, Zuldazar
+{ id = "TAXI_2046", container = "TODO", mapID = 862, x = 0.4613, y = 0.3578 }, -- Atal'Dazar, Zuldazar
+{ id = "TAXI_2061", container = "TODO", mapID = 862, x = 0.5901, y = 0.3552 }, -- The Sliver, Zuldazar
+{ id = "TAXI_2066", container = "TODO", mapID = 862, x = 0.8004, y = 0.4149 }, -- Atal'Gral, Zuldazar
+{ id = "TAXI_2071", container = "TODO", mapID = 862, x = 0.8004, y = 0.4149 }, -- Dreadpearl, Zuldazar
+{ id = "TAXI_2075", container = "TODO", mapID = 862, x = 0.7045, y = 0.6527 }, -- Seeker's Outpost, Zuldazar
+{ id = "TAXI_2076", container = "TODO", mapID = 862, x = 0.7997, y = 0.4146 }, -- Atal'Gral, Zuldazar
+{ id = "TAXI_2078", container = "TODO", mapID = 863, x = 0.6225, y = 0.4134 }, -- Fort Victory, Nazmir
+{ id = "TAXI_2080", container = "TODO", mapID = 863, x = 0.3424, y = 0.6330 }, -- Grimwatt's Crash, Nazmir
+{ id = "TAXI_2110", container = "TODO", mapID = 864, x = 0.3674, y = 0.3433 }, -- Shatterstone Harbor, Vol'dun
+{ id = "TAXI_2111", container = "TODO", mapID = 864, x = 0.4726, y = 0.3517 }, -- Vorrik's Sanctum, Vol'dun
+{ id = "TAXI_2112", container = "TODO", mapID = 864, x = 0.5360, y = 0.3774 }, -- Vulture's Nest, Vol'dun
+{ id = "TAXI_2114", container = "TODO", mapID = 864, x = 0.3973, y = 0.8386 }, -- Deadwood Cove, Vol'dun
+{ id = "TAXI_2117", container = "TODO", mapID = 864, x = 0.5697, y = 0.4938 }, -- Vulpera Hideaway, Vol'dun
+{ id = "TAXI_2118", container = "TODO", mapID = 864, x = 0.5372, y = 0.8925 }, -- Temple of Akunda, Vol'dun
+{ id = "TAXI_2119", container = "TODO", mapID = 864, x = 0.2764, y = 0.5041 }, -- Sanctuary of the Devoted, Vol'dun
+{ id = "TAXI_2120", container = "TODO", mapID = 864, x = 0.6185, y = 0.2167 }, -- Tortaka Refuge, Vol'dun
+{ id = "TAXI_2126", container = "TODO", mapID = 862, x = 0.7078, y = 0.2960 }, -- Scaletrader Post, Zuldazar
+{ id = "TAXI_2143", container = "TODO", mapID = 864, x = 0.4390, y = 0.7602 }, -- Scorched Sands Outpost, Vol'dun
+{ id = "TAXI_2145", container = "TODO", mapID = 862, x = 0.5565, y = 0.2480 }, -- Verdant Hollow, Zuldazar
+{ id = "TAXI_2147", container = "TODO", mapID = 862, x = 0.7765, y = 0.5453 }, -- Castaway Encampment, Zuldazar
+{ id = "TAXI_2148", container = "TODO", mapID = 862, x = 0.4487, y = 0.2711 }, -- Mugamba Overlook, Zuldazar
+{ id = "TAXI_2153", container = "TODO", mapID = 862, x = 0.6440, y = 0.4738 }, -- Mistvine Ledge, Zuldazar
+{ id = "TAXI_2157", container = "TODO", mapID = 862, x = 0.4451, y = 0.3680 }, -- Veiled Grotto, Zuldazar
+{ id = "TAXI_2161", container = "TODO", mapID = 863, x = 0.5087, y = 0.2078 }, -- Redfield's Watch, Nazmir
+{ id = "TAXI_2162", container = "TODO", mapID = 864, x = 0.2764, y = 0.5041 }, -- Devoted Sanctuary, Vol'dun
+{ id = "TAXI_2164", container = "TODO", mapID = 862, x = 0.5443, y = 0.8701 }, -- Isle of Fangs, Zuldazar
+{ id = "TAXI_2165", container = "TODO", mapID = 862, x = 0.5935, y = 0.7795 }, -- Tusk Isle, Zuldazar
+{ id = "TAXI_2381", container = "TODO", mapID = 862, x = 0.5334, y = 0.5723 }, -- The Mugambala, Zuldazar

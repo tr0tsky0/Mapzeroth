@@ -34,7 +34,7 @@ addon.Nodes.Outlands = {
     { id = "INSTANCE_SHADOW_LABYRINTH", container = "outlands.map108", mapID = 108, x = 0.3900, y = 0.7100, kind = "instance", journal = 253 }, -- Shadow Labyrinth
     { id = "WORLDS_END_TAVERN", container = "outlands.map111", mapID = 111, x = 0.7480, y = 0.3160, area = 8606, city = "shattrath" }, -- World's End Tavern
     { id = "INSTANCE_THE_ARCATRAZ", container = "outlands.map109", mapID = 109, x = 0.7400, y = 0.5700, kind = "instance", journal = 254 }, -- The Arcatraz
-    { id = "TAXI_148", container = "outlands.map100", mapID = 100, x = 0.7820, y = 0.3490 }, -- Shatter Point
+    { id = "TAXI_149", container = "outlands.map100", mapID = 100, x = 0.7820, y = 0.3490 }, -- Shatter Point
     { id = "TAXI_130", container = "outlands.map100", mapID = 100, x = 0.8747, y = 0.4908 }, -- Dark Portal Flightmaster
     { id = "TAXI_164", container = "outlands.map102", mapID = 102, x = 0.4070, y = 0.2790 }, -- Orebor Harborage
     { id = "DARK_PORTAL_OUTLANDS", container = "outlands.map100", mapID = 100, x = 0.8923, y = 0.5093 }, -- The Dark Portal

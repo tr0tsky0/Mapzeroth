@@ -73,7 +73,7 @@ addon.Nodes.Pandaria = {
     { id = "TAXI_993", container = "pandaria.map418", mapID = 418, x = 0.5240, y = 0.7660 }, -- Marista
     { id = "TAXI_1073", container = "pandaria.map390", mapID = 390, x = 0.1360, y = 0.7720 }, -- Serpent's Spine
     { id = "TAXI_1019", container = "pandaria.map379", mapID = 379, x = 0.6205, y = 0.8062 }, -- Eastwind Rest
-    { id = "FLIGHT_SERPENTS_SPINE_HORDE", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
+    { id = "TAXI_1117", container = "pandaria.map379", mapID = 379, x = 0.3577, y = 0.8358 }, -- Serpent's Spine
     { id = "TAXI_973", container = "pandaria.map371", mapID = 371, x = 0.2744, y = 0.1571 }, -- Honeydew Village
     { id = "TAXI_1025", container = "pandaria.map379", mapID = 379, x = 0.3450, y = 0.5900 }, -- Winter's Blossom
     { id = "TAXI_1057", container = "pandaria.map390", mapID = 390, x = 0.8500, y = 0.6010, city = "shrine_of_seven_stars" }, -- Shrine of Seven Stars

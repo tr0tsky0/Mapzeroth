@@ -1,0 +1,30 @@
+-- /mzdump nodes 101 (Outland), retail, captured 2026-09-24.
+{ id = "TAXI_99", container = "TODO", mapID = 100, x = 0.6066, y = 0.3942 }, -- Thrallmar, Hellfire Peninsula
+{ id = "TAXI_100", container = "TODO", mapID = 100, x = 0.5871, y = 0.5919 }, -- Honor Hold, Hellfire Peninsula
+{ id = "TAXI_101", container = "TODO", mapID = 100, x = 0.2513, y = 0.4399 }, -- Temple of Telhamat, Hellfire Peninsula
+{ id = "TAXI_102", container = "TODO", mapID = 100, x = 0.2853, y = 0.6345 }, -- Falcon Watch, Hellfire Peninsula
+{ id = "TAXI_117", container = "TODO", mapID = 102, x = 0.6786, y = 0.5136 }, -- Telredor, Zangarmarsh
+{ id = "TAXI_118", container = "TODO", mapID = 102, x = 0.3300, y = 0.5119 }, -- Zabra'jin, Zangarmarsh
+{ id = "TAXI_119", container = "TODO", mapID = 107, x = 0.5476, y = 0.6764 }, -- Telaar, Nagrand
+{ id = "TAXI_120", container = "TODO", mapID = 107, x = 0.6040, y = 0.3758 }, -- Garadar, Nagrand
+{ id = "TAXI_121", container = "TODO", mapID = 108, x = 0.5945, y = 0.5520 }, -- Allerian Stronghold, Terokkar Forest
+{ id = "TAXI_122", container = "TODO", mapID = 109, x = 0.2539, y = 0.7108 }, -- Area 52, Netherstorm
+{ id = "TAXI_123", container = "TODO", mapID = 104, x = 0.3350, y = 0.2920 }, -- Shadowmoon Village, Shadowmoon Valley
+{ id = "TAXI_124", container = "TODO", mapID = 104, x = 0.3761, y = 0.5548 }, -- Wildhammer Stronghold, Shadowmoon Valley
+{ id = "TAXI_125", container = "TODO", mapID = 105, x = 0.3781, y = 0.6151 }, -- Sylvanaar, Blade's Edge Mountains
+{ id = "TAXI_126", container = "TODO", mapID = 105, x = 0.5207, y = 0.5296 }, -- Thunderlord Stronghold, Blade's Edge Mountains
+{ id = "TAXI_127", container = "TODO", mapID = 108, x = 0.4925, y = 0.4354 }, -- Stonebreaker Hold, Terokkar Forest
+{ id = "TAXI_128", container = "TODO", mapID = 111, x = 0.6380, y = 0.4172 }, -- Shattrath, Terokkar Forest
+{ id = "TAXI_129", container = "TODO", mapID = 100, x = 0.8818, y = 0.4238 }, -- Hellfire Peninsula, The Dark Portal
+{ id = "TAXI_130", container = "TODO", mapID = 100, x = 0.8873, y = 0.5089 }, -- Hellfire Peninsula, The Dark Portal
+{ id = "TAXI_139", container = "TODO", mapID = 109, x = 0.4370, y = 0.4058 }, -- The Stormspire, Netherstorm
+{ id = "TAXI_140", container = "TODO", mapID = 104, x = 0.6319, y = 0.3048 }, -- Altar of Sha'tar, Shadowmoon Valley
+{ id = "TAXI_141", container = "TODO", mapID = 100, x = 0.6159, y = 0.8125 }, -- Spinebreaker Ridge, Hellfire Peninsula
+{ id = "TAXI_149", container = "TODO", mapID = 100, x = 0.7847, y = 0.3499 }, -- Shatter Point, Hellfire Peninsula
+{ id = "TAXI_150", container = "TODO", mapID = 109, x = 0.6520, y = 0.6363 }, -- Cosmowrench, Netherstorm
+{ id = "TAXI_151", container = "TODO", mapID = 102, x = 0.9065, y = 0.4945 }, -- Swamprat Post, Zangarmarsh
+{ id = "TAXI_156", container = "TODO", mapID = 105, x = 0.6109, y = 0.7053 }, -- Toshley's Station, Blade's Edge Mountains
+{ id = "TAXI_159", container = "TODO", mapID = 104, x = 0.6083, y = 0.5796 }, -- Sanctum of the Stars, Shadowmoon Valley
+{ id = "TAXI_160", container = "TODO", mapID = 105, x = 0.6165, y = 0.3960 }, -- Evergrove, Blade's Edge Mountains
+{ id = "TAXI_163", container = "TODO", mapID = 105, x = 0.7632, y = 0.6579 }, -- Mok'Nathal Village, Blade's Edge Mountains
+{ id = "TAXI_164", container = "TODO", mapID = 105, x = 0.2667, y = 0.9194 }, -- Orebor Harborage, Zangarmarsh

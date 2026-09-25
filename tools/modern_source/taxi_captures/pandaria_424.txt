@@ -1,0 +1,53 @@
+-- /mzdump nodes 424 (Pandaria), retail, captured 2026-09-24.
+{ id = "TAXI_894", container = "TODO", mapID = 371, x = 0.3000, y = 0.5021 }, -- Grookin Hill, Jade Forest
+{ id = "TAXI_895", container = "TODO", mapID = 371, x = 0.4925, y = 0.4838 }, -- Dawn's Blossom, Jade Forest
+{ id = "TAXI_966", container = "TODO", mapID = 371, x = 0.4826, y = 0.8729 }, -- Paw'Don Village, Jade Forest
+{ id = "TAXI_967", container = "TODO", mapID = 371, x = 0.5925, y = 0.4630 }, -- The Arboretum, Jade Forest
+{ id = "TAXI_968", container = "TODO", mapID = 371, x = 0.5680, y = 0.6408 }, -- Jade Temple Grounds, Jade Forest
+{ id = "TAXI_969", container = "TODO", mapID = 371, x = 0.5765, y = 0.2589 }, -- Sri-La Village, Jade Forest
+{ id = "TAXI_970", container = "TODO", mapID = 371, x = 0.5308, y = 0.2911 }, -- Emperor's Omen, Jade Forest
+{ id = "TAXI_971", container = "TODO", mapID = 371, x = 0.4580, y = 0.2685 }, -- Tian Monastery, Jade Forest
+{ id = "TAXI_972", container = "TODO", mapID = 371, x = 0.6017, y = 0.8469 }, -- Pearlfin Village, Jade Forest
+{ id = "TAXI_973", container = "TODO", mapID = 371, x = 0.2808, y = 0.1558 }, -- Honeydew Village, Jade Forest
+{ id = "TAXI_984", container = "TODO", mapID = 433, x = 0.8085, y = 0.9580 }, -- Pang's Stead, Valley of the Four Winds
+{ id = "TAXI_985", container = "TODO", mapID = 376, x = 0.5642, y = 0.5034 }, -- Halfhill, Valley of the Four Winds
+{ id = "TAXI_986", container = "TODO", mapID = 418, x = 0.7671, y = 0.0849 }, -- Zhu's Watch, Krasarang Wilds
+{ id = "TAXI_987", container = "TODO", mapID = 376, x = 0.6389, y = 0.7544 }, -- Thunder Cleft, Krasarang Wilds
+{ id = "TAXI_988", container = "TODO", mapID = 418, x = 0.6775, y = 0.3248 }, -- The Incursion, Krasarang Wilds
+{ id = "TAXI_989", container = "TODO", mapID = 376, x = 0.2019, y = 0.5856 }, -- Stoneplow, Valley of the Four Winds
+{ id = "TAXI_990", container = "TODO", mapID = 418, x = 0.2896, y = 0.5041 }, -- Dawnchaser Retreat, Krasarang Wilds
+{ id = "TAXI_991", container = "TODO", mapID = 376, x = 0.2315, y = 0.8608 }, -- Sentinel Basecamp, Krasarang Wilds
+{ id = "TAXI_992", container = "TODO", mapID = 418, x = 0.3124, y = 0.6310 }, -- Cradle of Chi-Ji, Krasarang Wilds
+{ id = "TAXI_993", container = "TODO", mapID = 418, x = 0.5240, y = 0.7660 }, -- Marista, Krasarang Wilds
+{ id = "TAXI_1017", container = "TODO", mapID = 379, x = 0.7247, y = 0.9415 }, -- Binan Village, Kun-Lai Summit
+{ id = "TAXI_1018", container = "TODO", mapID = 379, x = 0.6629, y = 0.5068 }, -- Temple of the White Tiger, Kun-Lai Summit
+{ id = "TAXI_1019", container = "TODO", mapID = 379, x = 0.6244, y = 0.8071 }, -- Eastwind Rest, Kun-Lai Summit
+{ id = "TAXI_1020", container = "TODO", mapID = 379, x = 0.5394, y = 0.8424 }, -- Westwind Rest, Kun-Lai Summit
+{ id = "TAXI_1021", container = "TODO", mapID = 379, x = 0.6244, y = 0.3009 }, -- Zouchin Village, Kun-Lai Summit
+{ id = "TAXI_1022", container = "TODO", mapID = 379, x = 0.5777, y = 0.5977 }, -- One Keg, Kun-Lai Summit
+{ id = "TAXI_1023", container = "TODO", mapID = 379, x = 0.4276, y = 0.6955 }, -- Kota Basecamp, Kun-Lai Summit
+{ id = "TAXI_1024", container = "TODO", mapID = 379, x = 0.4396, y = 0.8958 }, -- Shado-Pan Fallback, Kun-Lai Summit
+{ id = "TAXI_1025", container = "TODO", mapID = 379, x = 0.3454, y = 0.5912 }, -- Winter's Blossom, Kun-Lai Summit
+{ id = "TAXI_1029", container = "TODO", mapID = 433, x = 0.5665, y = 0.7565 }, -- Tavern in the Mists, The Veiled Stair
+{ id = "TAXI_1052", container = "TODO", mapID = 376, x = 0.7082, y = 0.2428 }, -- Grassy Cline, Valley of the Four Winds
+{ id = "TAXI_1053", container = "TODO", mapID = 388, x = 0.7112, y = 0.5733 }, -- Longying Outpost, Townlong Steppes
+{ id = "TAXI_1054", container = "TODO", mapID = 388, x = 0.7442, y = 0.8142 }, -- Gao-Ran Battlefront, Townlong Steppes
+{ id = "TAXI_1055", container = "TODO", mapID = 388, x = 0.5424, y = 0.7904 }, -- Rensai's Watchpost, Townlong Steppes
+{ id = "TAXI_1056", container = "TODO", mapID = 388, x = 0.5005, y = 0.7195 }, -- Shado-Pan Garrison, Townlong Steppes
+{ id = "TAXI_1057", container = "TODO", mapID = 424, x = 0.5426, y = 0.5591 }, -- Shrine of Seven Stars, Vale of Eternal Blossoms
+{ id = "TAXI_1058", container = "TODO", mapID = 424, x = 0.5065, y = 0.4930 }, -- Shrine of Two Moons, Vale of Eternal Blossoms
+{ id = "TAXI_1070", container = "TODO", mapID = 422, x = 0.5582, y = 0.3486 }, -- Klaxxi'vess, Dread Wastes
+{ id = "TAXI_1071", container = "TODO", mapID = 422, x = 0.5612, y = 0.7013 }, -- Soggy's Gamble, Dread Wastes
+{ id = "TAXI_1072", container = "TODO", mapID = 422, x = 0.5022, y = 0.1216 }, -- The Sunset Brewgarden, Dread Wastes
+{ id = "TAXI_1073", container = "TODO", mapID = 424, x = 0.4272, y = 0.5866 }, -- Serpent's Spine, Vale of Eternal Blossoms
+{ id = "TAXI_1080", container = "TODO", mapID = 371, x = 0.4311, y = 0.6846 }, -- Serpent's Overlook, Jade Forest
+{ id = "TAXI_1090", container = "TODO", mapID = 422, x = 0.4260, y = 0.5568 }, -- The Briny Muck, Dread Wastes
+{ id = "TAXI_1115", container = "TODO", mapID = 422, x = 0.7365, y = 0.3313 }, -- The Lion's Redoubt, Dread Wastes
+{ id = "TAXI_1117", container = "TODO", mapID = 379, x = 0.3603, y = 0.8377 }, -- Serpent's Spine, Kun-Lai Summit
+{ id = "TAXI_1190", container = "TODO", mapID = 418, x = 0.8835, y = 0.3466 }, -- Lion's Landing, Krasarang Wilds
+{ id = "TAXI_1195", container = "TODO", mapID = 418, x = 0.0973, y = 0.5254 }, -- Domination Point, Krasarang Wilds
+{ id = "TAXI_1221", container = "TODO", mapID = 507, x = 0.4188, y = 0.7923 }, -- Beeble's Wreck, Isle Of Giants
+{ id = "TAXI_1222", container = "TODO", mapID = 507, x = 0.5167, y = 0.7538 }, -- Bozzle's Wreck, Isle Of Giants
+{ id = "TAXI_1293", container = "TODO", mapID = 554, x = 0.2316, y = 0.7092 }, -- Tushui Landing, Timeless Isle
+{ id = "TAXI_1294", container = "TODO", mapID = 554, x = 0.2188, y = 0.3989 }, -- Huojin Landing, Timeless Isle
+{ id = "TAXI_2544", container = "TODO", mapID = 424, x = 0.4679, y = 0.5794 }, -- Mistfall Village, Vale of Eternal Blossoms
