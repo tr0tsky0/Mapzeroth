@@ -78,6 +78,7 @@ end
 
 -- Flavour-specific tables (classes, holidays, perks) live in Data/<flavour>/Game.lua, not here.
 
+-- INTERIM until Forever's release gives it a .toc suffix of its own (docs/DESIGN.md section 1, then remove this).
 -- Which game this client is: "forever" or "modern". One .toc loads both datasets and each data file skips itself
 -- unless it is this game's (the first line after its header: `if addon.RULESET ~= "forever" then return end`).
 -- One .toc because the client can't be told apart by .toc name: Forever reports WOW_PROJECT_ID ==
