@@ -24,6 +24,10 @@ import math
 import pathlib
 import re
 from lupa.lua51 import LuaRuntime
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import modern_manual as manual
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CAPTURES = ROOT / "tools" / "modern_source" / "taxi_captures"
@@ -159,6 +163,7 @@ def main():
 
     rows = []
     counts = {"one": 0, "zero": 0, "many": 0}
+    seen_ids = set()
     for filename in FILES:
         ns = lua.eval("{}")
         src = (SRC / filename).read_text(encoding="utf-8-sig")
@@ -168,7 +173,17 @@ def main():
         chunk("Mapzeroth", ns)
         for group_name, group in ns.Nodes.items():
             for node_id, node in group.items():
+                if node_id in seen_ids and node_id in manual.SECOND_COPY_IDS:
+                    node_id = manual.SECOND_COPY_IDS[node_id]      # the same rename gen_modern_nodes.py makes
+                seen_ids.add(node_id)
                 if "_FLIGHT" not in node_id:
+                    continue
+                if node_id in manual.CONFIRMED_TAXI_IDS:
+                    # Settled by hand from a capture the rules can't read (continent-relative coordinates).
+                    confirmed = manual.CONFIRMED_TAXI_IDS[node_id]
+                    verdict = "one" if confirmed else "zero"
+                    counts[verdict] += 1
+                    rows.append((node_id, verdict, confirmed or "", f"{node['name'] or ''} [confirmed]"))
                     continue
                 if node_id in NOT_REAL_TAXI:
                     counts["skip"] = counts.get("skip", 0) + 1

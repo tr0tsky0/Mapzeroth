@@ -272,6 +272,8 @@ addon.Edges = {
     { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "blasted_lands" } },
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
+    { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "SILVERMOON", method = "portal", cost = 0 }, -- hand-added: tools/modern_manual.py
     { from = "LYCANEUM_ENTRANCE", to = "PORTAL_MAGISTERS_SILVERMOON", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_MAGISTERS_SILVERMOON", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py

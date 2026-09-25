@@ -26,6 +26,12 @@ AREA_OVERRIDES  { source node id: areaID }: the area that names a node, where to
          none or the wrong one (area_node_matches.tsv). Capture one in game with /mzdump at the spot.
 NODE_KINDS  { source node id: kind }: a place of a kind Forever's POIs have ("inn", "bank", ...), for the few Modern
          nodes that are one. Named by the kind's pattern unless the node has an area (NodeNames.lua).
+SECOND_COPY_IDS  { old id: id of its second copy }: the old data authored some ids twice for two real places (the
+         Burning Crusade and the Midnight Silvermoon flight masters); the second copy in file order gets this id.
+NODE_PLACES  { source id: { "container", "mapID", "x", "y" } }: where a node really is, when the old data had it wrong
+         (captured in game).
+CONFIRMED_TAXI_IDS  { source id: "taxiNodeID" or None }: a flight master's id settled by hand from a capture the
+         matcher can't read (continent-relative coordinates); None keeps it unmatched until someone captures it.
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -35,6 +41,14 @@ CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/
 """
 
 NODES = [
+    # The Burning Crusade Quel'Thalas, entered by portal (captured with /mzdump here, 2026-09-24). EPL's Zidormi and
+    # old Ghostlands' Zidormi take you to the same spots as the portals beside them, so the portals stand for both.
+    {"id": "PORTAL_EPL_GHOSTLANDS", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
+     "x": 0.5406, "y": 0.0846, "area": 2276, "note": "Eastern Plaguelands: the portal to the old Ghostlands (Quel'Lithien Lodge)"},
+    {"id": "PORTAL_GHOSTLANDS_EPL", "out": "Nodes_BfA.lua", "container": "quelthalas.map95", "mapID": 95,
+     "x": 0.5208, "y": 0.9783, "area": 3493, "note": "Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun)"},
+    {"id": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "out": "Nodes_EK.lua", "container": "ek_overworld.map2070_art1136",
+     "mapID": 2070, "x": 0.5946, "y": 0.6745, "note": "Ruins of Lordaeron: the portal to the old Silvermoon"},
     # The outside door of the Lycaneum, the Silvermoon-side portal room on the Isle of Quel'Danas
     # (the Omnium Folio portal). Captured with /mzdump here.
     {"id": "LYCANEUM_ENTRANCE", "out": "Nodes_EK.lua", "container": "ek_overworld.map2424",
@@ -108,6 +122,12 @@ DROP_NODES = ["BIZMOS_BRAWLPUB", "BRAWLGAR_ARENA"]
 INDOOR = ["ek_overworld.map2649", "deeprun_tram", "ek_overworld.map2393.interior", "brawlgar_arena"]        # the tram and Bizmo's Brawlpub are both under it
 
 EDGES = [
+    # EPL <-> the old Ghostlands, each landing by the other side's portal. The Ruins of Lordaeron <-> the old Silvermoon,
+    # both ways (confirmed in game 2026-09-24); its Silvermoon end is taken as the Orgrimmar portal's spot (the city's
+    # arrival point) until the portal's own spot there is captured. Whether the way back lands in the present or the
+    # past Tirisfal is not known yet: the Ruins end is on the present side (Tirisfal's phase is never known, so open).
+    {"from": "PORTAL_EPL_GHOSTLANDS", "to": "PORTAL_GHOSTLANDS_EPL", "method": "portal", "cost": 0},
+    {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "SILVERMOON", "method": "portal", "cost": 0},
     # Running from the entrance to the portal inside, and back out: an explicit edge, since an interior
     # never auto-connects to the outdoors, but costed like any walk (distance and the default path factor).
     {"from": "LYCANEUM_ENTRANCE", "to": "MAGISTERS_SILVERMOON_PORTAL", "method": "walk"},
@@ -215,3 +235,23 @@ AREA_OVERRIDES = {
 NODE_KINDS = {
     "SILVERMOON_INN": "inn",
 }
+
+# The Burning Crusade Quel'Thalas (maps 94, 95, 110) is still live beside Midnight's: a region of its own, entered by
+# portal (Orgrimmar, the Ruins of Lordaeron, EPL; confirmed in game 2026-09-24). The old data authored its flight masters
+# under the same ids as Midnight's; these give them their own.
+SECOND_COPY_IDS = {
+    "SILVERMOON_CITY_FLIGHT": "SILVERMOON_CITY_BC_FLIGHT",
+    "FAIRBREEZE_VILLAGE_FLIGHT": "FAIRBREEZE_VILLAGE_BC_FLIGHT",
+}
+
+NODE_PLACES = {
+    # /mzdump nodes 110: Falconwing Square is in old Eversong, not in old Silvermoon.
+    "FALCONWING_SQUARE_FLIGHT": {"container": "quelthalas.map94", "mapID": 94, "x": 0.4629, "y": 0.4665},
+}
+
+CONFIRMED_TAXI_IDS = {
+    "SILVERMOON_CITY_BC_FLIGHT": "82",          # /mzdump nodes 110: "Silvermoon City" on old Eversong's map
+    "FAIRBREEZE_VILLAGE_BC_FLIGHT": "625",      # old Fairbreeze Village
+    "SILVERMOON_CITY_FLIGHT": None,             # Midnight's Silvermoon: 3131 or 3132, not yet told apart
+}
+

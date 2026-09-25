@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1257, "every node made it into the tree (1213 converted + 20 hand-added + 24 city centres): " .. total)
+check(total == 1262, "every node made it into the tree (1215 converted + 23 hand-added + 24 city centres): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -513,4 +513,27 @@ do
     check(addon:FindHearthNode({ name = "Silvermoon City" }) == "SILVERMOON_INN", "a hearthstone bound in Silvermoon goes to its inn")
     C_Map.GetMapInfo = realGetMapInfo
     addon:ClearNodeNameCache()
+end
+
+-- The Burning Crusade Quel'Thalas (maps 94, 95, 110) is a region of its own beside Midnight's, entered by portal: EPL's
+-- to the old Ghostlands (both ways), the Ruins of Lordaeron's to the old Silvermoon (both ways), Orgrimmar's. Its flight
+-- masters are their own nodes, not Midnight's under the same id.
+do
+    local World = addon.World
+    check(World:GetNode("TAXI_82").mapID == 110 and World:GetNode("FLIGHT_SILVERMOON_CITY").mapID == 2393,
+        "old Silvermoon's flight master is 82; Midnight's is its own node")
+    check(World:GetNode("TAXI_625").mapID == 94 and World:GetNode("TAXI_3133").mapID == 2395, "old and new Fairbreeze are two nodes")
+    check(World:GetNode("TAXI_631").mapID == 94, "Falconwing Square is in old Eversong")
+    local function reaches(start, goal)
+        local session = addon.Journey:Build(makeCtx({ faction = "Horde" }), start)
+        return addon.Pathfinder:FindPath(session.graph, start.id, goal, session.graph.phase)
+    end
+    local fromEPL = reaches({ id = "YOU_epl", mapID = 23, x = 0.54, y = 0.10 }, "TAXI_83")
+    local byPortal = false
+    for _, step in ipairs(fromEPL and fromEPL.steps or {}) do
+        if step.from == "PORTAL_EPL_GHOSTLANDS" and step.to == "PORTAL_GHOSTLANDS_EPL" then byPortal = true end
+    end
+    check(byPortal, "from EPL, old Tranquillien is through the Quel'Lithien Lodge portal")
+    check(reaches({ id = "YOU_bcsm", mapID = 110, x = 0.58, y = 0.20 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"),
+        "the Ruins of Lordaeron portal goes both ways")
 end

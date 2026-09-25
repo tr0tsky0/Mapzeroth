@@ -8,10 +8,12 @@ local addonName, addon = ...
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.BfA = {
+    { id = "TAXI_625", container = "quelthalas.map94", mapID = 94, x = 0.4309, y = 0.6985 }, -- Fairbreeze Village
     { id = "TAXI_83", container = "quelthalas.map95", mapID = 95, x = 0.4592, y = 0.3054 }, -- Tranquillien
     { id = "TAXI_205", container = "quelthalas.map95", mapID = 95, x = 0.7350, y = 0.6710 }, -- Zul'Aman
     { id = "SILVERMOON", container = "quelthalas.map110", mapID = 110, x = 0.5826, y = 0.1924, city = "silvermoon_bc" }, -- Orgrimmar Portal
-    { id = "TAXI_631", container = "quelthalas.map110", mapID = 110, x = 0.3014, y = 0.7963, city = "silvermoon_bc" }, -- Falconwing Square
+    { id = "TAXI_631", container = "quelthalas.map94", mapID = 94, x = 0.4629, y = 0.4665 }, -- Falconwing Square
+    { id = "TAXI_82", container = "quelthalas.map110", mapID = 110, x = 0.6275, y = 0.9658, city = "silvermoon_bc" }, -- Flightmaster
     { id = "INSTANCE_ZULAMAN", container = "quelthalas.map95", mapID = 95, x = 0.8200, y = 0.6400, kind = "instance", journal = 77 }, -- Zul'Aman
     { id = "TAXI_2096", container = "tol_dagor.map974", mapID = 974, x = 0.3744, y = 0.9210 }, -- Tol Dagor Flightmaster
     { id = "INSTANCE_TOL_DAGOR", container = "tol_dagor.map974", mapID = 974, x = 0.3900, y = 0.7000, kind = "instance", journal = 1002 }, -- Tol Dagor
@@ -81,4 +83,5 @@ addon.Nodes.BfA = {
     { id = "INSTANCE_CRUCIBLE_OF_STORMS", container = "kul_tiras.map942", mapID = 942, x = 0.8400, y = 0.4700, kind = "instance", journal = 1177 }, -- Crucible of Storms
     { id = "TAXI_2033", container = "kul_tiras.map896", mapID = 896, x = 0.5490, y = 0.3480 }, -- Fallhaven
     { id = "TAXI_2093", container = "kul_tiras.map942", mapID = 942, x = 0.7570, y = 0.6392 }, -- Ironmaul Overlook
+    { id = "PORTAL_GHOSTLANDS_EPL", container = "quelthalas.map95", mapID = 95, x = 0.5208, y = 0.9783, area = 3493 }, -- Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun) (hand-added: tools/modern_manual.py)
 }
