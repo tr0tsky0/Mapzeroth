@@ -40,7 +40,7 @@ addon.Abilities.Teleports = {
     { spellID = 18960, to = "TELEPORT_MOONGLADE", cost = 10, cooldown = 0 },
 
     -- Mage: the six Classic city teleports (10 s cast, no cooldown, a Rune of Teleportation each). Spell ids are
-    -- Classic's, UNCONFIRMED on Forever (check with /mzdump spells 3561 3562 3563 3565 3566 3567). PROVISIONAL landing:
+    -- Classic's, confirmed on Forever (/mzdump spells, 2026-09-24). PROVISIONAL landing:
     -- each city's centre node until the real arrival spot is captured in game (Stormwind's map was redrawn, so
     -- Classic's spots can't be trusted). Only a mage knows these, so knowing the spell is the check.
     { spellID = 3561, to = "CITY_STORMWIND", cost = 10, cooldown = 0 },     -- Teleport: Stormwind
@@ -57,7 +57,7 @@ addon.Abilities.Teleports = {
 -- value and UNVERIFIED for Forever (the live cooldown is what routing actually reads).
 addon.Abilities.Hearthstones = {
     { itemID = 6948, spellID = 8690, bind = true, cost = 10, cooldown = 3600, method = "hearthstone" },
-    -- Shaman: Astral Recall, the same bound inn on its own cooldown (10 s cast, 15 min: Classic's values, UNCONFIRMED
-    -- on Forever). A spell, so no itemID: knowing it is the check.
+    -- Shaman: Astral Recall (spell 556, confirmed on Forever), the same bound inn on its own cooldown (10 s cast, 15 min:
+    -- Classic's values; routing reads the live cooldown anyway). A spell, so no itemID: knowing it is the check.
     { spellID = 556, cost = 10, cooldown = 900, method = "hearthstone" },
 }
