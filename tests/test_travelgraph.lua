@@ -65,6 +65,9 @@ end
 -- cached across Build() calls, not redone for every route -- that's what "script ran too long"
 -- turned out to be (2026-09-23): the picker prices its sections with one Build(), then plans
 -- the chosen route with another, and the O(n^2) fly-edge check used to run fresh both times.
+-- (Counted on the live pass: a shipped Geometry.lua would be served with no pass at all; see below for that.)
+addon.Geometry, addon.GeometryMeta = nil, nil
+addon.World:Build()
 local ctx1 = makeCtx({})
 local ctx2 = makeCtx({ class = "WARRIOR" })
 local before = addon.TravelGraph.staticBuildCount

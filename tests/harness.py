@@ -94,6 +94,9 @@ function useTestDistances()
         end
         return 3000
     end
+    -- The shipped Geometry.lua was measured with the client's real distances: a test measuring with these instead
+    -- computes its geometry with them too, or its walks and flights would mix the two.
+    addon.Geometry, addon.GeometryMeta = nil, nil
 end
 
 -- Route from startID to goalID as this player; returns the result or nil.
