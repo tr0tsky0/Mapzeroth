@@ -64,5 +64,6 @@ addon.Nodes.Outlands = {
     { id = "TAXI_141", container = "outlands.map100", mapID = 100, x = 0.6134, y = 0.8140 }, -- Spinebreaker Ridge
     { id = "TAXI_160", container = "outlands.map105", mapID = 105, x = 0.6140, y = 0.3930 }, -- Evergrove
     { id = "INSTANCE_SETHEKK_HALLS", container = "outlands.map108", mapID = 108, x = 0.4200, y = 0.6500, kind = "instance", journal = 252 }, -- Sethekk Halls
+    { id = "PORTAL_SHATTRATH_QUELDANAS", container = "outlands.map111", mapID = 111, x = 0.4876, y = 0.4210, city = "shattrath" }, -- Shattrath: the portal to the Isle of Quel'Danas (captured in game 2026-09-24) (hand-added: tools/modern_manual.py)
     { id = "INSTANCE_THE_EYE", container = "outlands.map109", mapID = 109, x = 0.7370, y = 0.6420, kind = "instance", journal = 749 }, -- The Eye, Tempest Keep (Netherstorm) (hand-added: tools/modern_manual.py)
 }

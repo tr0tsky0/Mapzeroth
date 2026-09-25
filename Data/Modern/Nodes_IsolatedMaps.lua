@@ -10,7 +10,7 @@ addon.Nodes = addon.Nodes or {}
 addon.Nodes.IsolatedMaps = {
     { id = "VINDICAAR_AZEROTH", container = "vindicaar_azeroth.map940", mapID = 940, x = 0.7500, y = 0.7500, area = 9359 }, -- The Vindicaar (Azeroth)
     { id = "INSTANCE_SUNWELL_PLATEAU", container = "queldanas.map122", mapID = 122, x = 0.4800, y = 0.4200, kind = "instance", journal = 752 }, -- Sunwell Plateau
-    { id = "QUELDANAS", container = "queldanas.map122", mapID = 122, x = 0.5000, y = 0.3660 }, -- Entrance Portal
+    { id = "QUELDANAS", container = "queldanas.map122", mapID = 122, x = 0.4825, y = 0.3448 }, -- Entrance Portal
     { id = "INSTANCE_MAGISTERS_TERRACE_BC", container = "queldanas.map122", mapID = 122, x = 0.6100, y = 0.3100, kind = "instance", journal = 249 }, -- Magisters' Terrace
     { id = "TAXI_213", container = "queldanas.map122", mapID = 122, x = 0.4740, y = 0.2510 }, -- Shattered Sun Staging Area
     { id = "TAXI_1294", container = "timeless_isle.map554", mapID = 554, x = 0.2250, y = 0.3810 }, -- Huojin Landing

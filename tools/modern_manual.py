@@ -42,6 +42,8 @@ CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/
 """
 
 NODES = [
+    {"id": "PORTAL_SHATTRATH_QUELDANAS", "out": "Nodes_Outlands.lua", "container": "outlands.map111", "mapID": 111,
+     "x": 0.4876, "y": 0.4210, "note": "Shattrath: the portal to the Isle of Quel'Danas (captured in game 2026-09-24)"},
     # Midnight's Silvermoon has two flight masters; the old data had only the Sanctum of Light one. The Royal Exchange
     # one is Horde only (captured in game 2026-09-24).
     {"id": "TAXI_3132", "out": "Nodes_EK.lua", "container": "ek_overworld.map2393", "mapID": 2393,
@@ -136,6 +138,7 @@ EDGES = [
     # game 2026-09-24): present Tirisfal's Ruins of Lordaeron and past Tirisfal's Balnir Farmstead each have a portal in,
     # and the old Silvermoon's one portal back goes to whichever Tirisfal the player is in (Zidormi's tirisfal group).
     {"from": "PORTAL_EPL_GHOSTLANDS", "to": "PORTAL_GHOSTLANDS_EPL", "method": "portal", "cost": 0},
+    {"from": "PORTAL_SHATTRATH_QUELDANAS", "to": "QUELDANAS", "method": "portal", "cost": 0, "oneway": True},
     {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
      "cost": 0, "oneway": True},
     {"from": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
@@ -171,6 +174,13 @@ EDGES = [
 # replaces it (left in, it would undercut the real route).
 DROP_EDGES = [
     {"from": "ORIBOS", "to": "TAXI_2395", "method": "walk"},
+    # The Burning Crusade Quel'Thalas is shut off from the rest of the world since Midnight (checked in game
+    # 2026-09-24): these pre-Midnight flights into it no longer exist. Its ways in are EPL's portal, Orgrimmar's and
+    # Tirisfal's portals (Horde), and Shattrath's portal to the Isle of Quel'Danas (one way).
+    {"from": "TAXI_85", "to": "TAXI_205", "method": "taxi"},
+    {"from": "TAXI_213", "to": "LIGHTS_HOPE_CHAPEL", "method": "taxi"},
+    # Shattrath's portal to the Isle of Quel'Danas leaves from the portal itself (PORTAL_SHATTRATH_QUELDANAS, below).
+    {"from": "SHATTRATH_OUTLANDS", "to": "QUELDANAS", "method": "portal"},
 ]
 
 # Seconds an equip step takes, per item (see above). The rest of the equippable teleport items can be used at once
@@ -261,6 +271,8 @@ SECOND_COPY_IDS = {
 }
 
 NODE_PLACES = {
+    # Where Shattrath's portal lands on the Isle of Quel'Danas (captured in game 2026-09-24).
+    "QUELDANAS": {"container": "queldanas.map122", "mapID": 122, "x": 0.4825, "y": 0.3448},
     # /mzdump nodes 110: Falconwing Square is in old Eversong, not in old Silvermoon.
     "FALCONWING_SQUARE_FLIGHT": {"container": "quelthalas.map94", "mapID": 94, "x": 0.4629, "y": 0.4665},
 }

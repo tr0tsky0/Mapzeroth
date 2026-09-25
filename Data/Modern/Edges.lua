@@ -121,7 +121,6 @@ addon.Edges = {
     { from = "ORIBOS", to = "THE_MAW", method = "portal", cost = 0 },
     { from = "STORMSHIELD_ASHRAN", to = "DARK_PORTAL_BL", method = "portal", cost = 0, requirements = { faction = "Alliance" } },
     { from = "STORMSHIELD_ASHRAN", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
-    { from = "SHATTRATH_OUTLANDS", to = "QUELDANAS", method = "portal", cost = 0, oneway = true },
     { from = "SHATTRATH_OUTLANDS", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "SHATTRATH_OUTLANDS", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "DARK_PORTAL_BL", to = "DARK_PORTAL_OUTLANDS", method = "portal", cost = 0, inPhase = { "blasted_lands", 18 } },
@@ -146,7 +145,6 @@ addon.Edges = {
     { from = "BELANAAR", to = "FERALAS", method = "portal", cost = 0, requirements = { faction = "Alliance" } },
     { from = "TAXI_1293", to = "TAXI_972", method = "taxi", cost = 81, requirements = { faction = "Alliance" } },
     { from = "TAXI_1294", to = "TAXI_968", method = "taxi", cost = 120, requirements = { faction = "Horde" } },
-    { from = "TAXI_213", to = "LIGHTS_HOPE_CHAPEL", method = "taxi", cost = 180 },
     { from = "DORNOGAL_PORTAL_ROOM", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { minLevel = 68, faction = "Alliance" } },
     { from = "PORTAL_DORNOGAL_UNDERMINE", to = "UNDERMINE", method = "portal", cost = 0, requirements = { minLevel = 68, quest = 86535 } },
     { from = "PORTAL_DORNOGAL_AZJKAHET", to = "AZJKAHET", method = "portal", cost = 0, requirements = { minLevel = 68 } },
@@ -218,7 +216,6 @@ addon.Edges = {
     { from = "VINDICAAR_ARGUS", to = "TAXI_1944", method = "portal", cost = 0 },
     { from = "PORTAL_SHADOPAN_ISLE_OF_THUNDER_HORDE", to = "SUNREAVER_BASE", method = "portal", cost = 0, requirements = { quest = 32680, faction = "Horde" } },
     { from = "PORTAL_SHADOPAN_ISLE_OF_THUNDER_ALLIANCE", to = "KIRIN_TOR_BASE", method = "portal", cost = 0, requirements = { quest = 32681, faction = "Alliance" } },
-    { from = "TAXI_85", to = "TAXI_205", method = "taxi", cost = 60 },
     { from = "GRIM_CAMPFIRE_PANDARIA", to = "GRIM_CAMPFIRE_GORGROND", method = "portal", cost = 0 },
     { from = "DARKMOON_FAIRE_ENTRANCE_ELWYNN", to = "DARKMOON_ENTRANCE", method = "portal", cost = 0, requirements = { holiday = "darkmoon_faire", faction = "Alliance" } },
     { from = "DARKMOON_FAIRE_ENTRANCE_ELWYNN", to = "DARKMOON_ENTRANCE", method = "portal", cost = 0, oneway = true, requirements = { holiday = "darkmoon_faire", faction = "Horde" } },
@@ -273,6 +270,7 @@ addon.Edges = {
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
     { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_SHATTRATH_QUELDANAS", to = "QUELDANAS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 1136 } }, -- hand-added: tools/modern_manual.py
