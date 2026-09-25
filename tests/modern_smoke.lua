@@ -586,3 +586,26 @@ do
     local r = addon.Pathfinder:FindPath(session.graph, start.id, "SILVERMOON_PORTAL_ROOM", session.graph.phase)
     check(r and r.steps[1].method == "teleport", "a mage who knows it teleports to Midnight's Silvermoon")
 end
+
+-- The shipped Geometry.lua (dumped in retail with /mzr dumpgeometry) is the one in use: its node count matches, and
+-- its fly edges never join two sides of a phase group but do reach phased places.
+do
+    local World = addon.World
+    World:Build()
+    local n = 0
+    World:ForEachNode(function() n = n + 1 end)
+    check(addon.GeometryMeta.nodeCount == n, "the shipped geometry is for this node set: " .. addon.GeometryMeta.nodeCount .. " vs " .. n)
+    local function phaseOf(id) return World:GetPhase(World:GetNodeContainer(id)) end
+    local across, reach = 0, 0
+    for from, list in pairs(addon.Geometry) do
+        for _, e in ipairs(list) do
+            if e[3] == "fly" then
+                local ga, sa = phaseOf(from)
+                local gb, sb = phaseOf(e[1])
+                if gb then reach = reach + 1 end
+                if ga and ga == gb and sa ~= sb then across = across + 1 end
+            end
+        end
+    end
+    check(across == 0 and reach > 0, "shipped fly edges keep phase sides apart and reach phased places: " .. across .. ", " .. reach)
+end
