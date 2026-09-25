@@ -37,7 +37,7 @@ local function pick(name, group, nodeIDs)
 end
 
 local function expansionName(rev)
-    return _G["EXPANSION_NAME" .. (rev - 1)] or L["SECTION_EXPANSION"]:format(rev)
+    return addon:GetExpansionName(rev)
 end
 
 local function find(sections, id)

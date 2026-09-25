@@ -97,7 +97,12 @@ local function entrancesByCity()
     return byCity
 end
 
--- The name of the continent a map is on, for telling two cities of one name apart.
+-- The client's name for an expansion by major version (Classic 1 ... Midnight 12), or "Expansion N" when it has none.
+function addon:GetExpansionName(rev)
+    return _G["EXPANSION_NAME" .. (rev - 1)] or L["SECTION_EXPANSION"]:format(rev)
+end
+
+-- The name of the continent a map is on, for telling two cities of one name apart when they carry no expansion.
 local function continentName(mapID)
     local continent = addon:GetContinentMapID(mapID)
     local info = continent and C_Map.GetMapInfo(continent)
@@ -149,7 +154,9 @@ function Destinations:Build(ctx)
         return settlement.faction == nil or settlement.faction == "Both" or ctx.faction == nil or settlement.faction == ctx.faction
     end
 
-    -- Two settlements the client gives the same name (Modern's two Dalarans) are told apart by their continent.
+    -- Two settlements the client gives the same name (Modern's two Dalarans, the Burning Crusade and the Midnight
+    -- Silvermoon) are told apart by their expansion ("Silvermoon City (Midnight)"), or by their continent when the data
+    -- gives no expansion.
     local entrances, made, names = entrancesByCity(), {}, {}
     local function addSettlements(list, getName, field, label)
         for key, settlement in pairs(list or {}) do
@@ -168,8 +175,10 @@ function Destinations:Build(ctx)
     addSettlements(addon.Cities, addon.GetCityName, "city", "city")
     addSettlements(addon.Towns, addon.GetTownName, "town", "town")
     for _, entry in ipairs(made) do
-        local continent = names[entry.name] > 1 and continentName(entry.mapID)
-        if continent then entry.name = entry.name .. " (" .. continent .. ")" end
+        if names[entry.name] > 1 then
+            local which = entry.expansion and addon:GetExpansionName(entry.expansion) or continentName(entry.mapID)
+            if which then entry.name = entry.name .. " (" .. which .. ")" end
+        end
         entry.mapID = nil
         entries[#entries + 1] = entry
     end

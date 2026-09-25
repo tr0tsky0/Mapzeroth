@@ -27,6 +27,7 @@ Enum = { UIMapType = { Continent = 2 } }
 C_TaxiMap = { GetTaxiNodesForMap = function() return {} end }
 EJ_GetInstanceInfo = function(id) return "Instance " .. id end
 EXPANSION_NAME0, EXPANSION_NAME3, EXPANSION_NAME10 = "Classic", "Cataclysm", "The War Within"
+EXPANSION_NAME2, EXPANSION_NAME6 = "Wrath of the Lich King", "Legion"
 addon.GetZoneName = function(_, mapID) return "Zone " .. tostring(mapID) end
 
 check(addon.CURRENT_EXPANSION == 12, "the current expansion is set in Data/Modern/Places.lua")
@@ -69,7 +70,8 @@ check(table.concat(order, ",") == "cities,dungeons,raids,older", "cities, dungeo
 local cities = names(find(sections, "cities"))
 check(cities["Stormwind City"] and cities["Dornogal"] and cities["Valdrakken"] and cities["Silvermoon City"],
     "the hub cities and the current expansion's, whatever their expansion")
-check(cities["Dalaran (Broken Isles)"] and not cities["Dalaran (Northrend)"], "the hub Dalaran, told apart from the other by its continent")
+check(cities["Dalaran (Legion)"] and not cities["Dalaran (Wrath of the Lich King)"],
+    "the hub Dalaran, told apart from the other by its expansion")
 check(not cities["Ironforge"] and not cities["Boralus"], "other cities wait under older content")
 check(not cities["Orgrimmar"], "the other faction's city isn't listed")
 check(names(find(build("Horde"), "cities"))["Orgrimmar"], "but is for a Horde character")
@@ -149,4 +151,18 @@ do
     local transport = 0
     for _, entry in pairs(byID) do if entry.group == "transport" then transport = transport + 1 end end
     check(transport > 0, "Modern has transport destinations: " .. transport)
+end
+
+-- Two cities of one name are told apart by expansion: the Burning Crusade Silvermoon (map 110) and Midnight's (2393).
+do
+    maps[110] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
+    EXPANSION_NAME1, EXPANSION_NAME11 = "The Burning Crusade", "Midnight"
+    addon:ClearNodeNameCache()
+    local seen = {}
+    for _, entry in ipairs(addon.Destinations:Build(makeCtx({ faction = "Horde" }))) do
+        if entry.group == "place" then seen[entry.name] = entry.nodeID end
+    end
+    check(seen["Silvermoon City (Midnight)"] == "CITY_SILVERMOON", "Midnight's Silvermoon says so: " .. tostring(seen["Silvermoon City (Midnight)"]))
+    check(seen["Silvermoon City (The Burning Crusade)"] == "CITY_SILVERMOON_BC", "and the old one: " .. tostring(seen["Silvermoon City (The Burning Crusade)"]))
+    check(not seen["Silvermoon City"], "neither is left bare")
 end
