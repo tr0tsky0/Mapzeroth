@@ -152,7 +152,7 @@ addon.Nodes.EK = {
     { id = "SILVERMOON_INN", container = "ek_overworld.map2393", mapID = 2393, x = 0.5628, y = 0.7037, area = 16645, city = "silvermoon", kind = "inn" }, -- Wayfarer's Rest
     { id = "TAXI_525", container = "ek_overworld.map205", mapID = 205, x = 0.5027, y = 0.6639 }, -- Legion's Rest
     { id = "PORTAL_DARKBREAK_COVE", container = "ek_overworld.map204", mapID = 204, x = 0.5570, y = 0.7280 }, -- Darkbreak Cove Portal
-    { id = "FLIGHT_SILVERMOON_CITY", container = "ek_overworld.map2393", mapID = 2393, x = 0.5107, y = 0.7108, city = "silvermoon" }, -- Silvermoon City Flightmaster
+    { id = "TAXI_3131", container = "ek_overworld.map2393", mapID = 2393, x = 0.5107, y = 0.7108, city = "silvermoon" }, -- Silvermoon City Flightmaster
     { id = "BLACKROCK_QUARRY_EXTERIOR", container = "ek_overworld.map35", mapID = 35, x = 0.5513, y = 0.8454 }, -- Blackrock Quarry Interior
     { id = "TAXI_17", container = "ek_overworld.map14", mapID = 14, x = 0.6864, y = 0.3400 }, -- Hammerfall
     { id = "INSTANCE_GRIM_BATOL", container = "ek_overworld.map241", mapID = 241, x = 0.1900, y = 0.5400, kind = "instance", journal = 71 }, -- Grim Batol
@@ -233,6 +233,7 @@ addon.Nodes.EK = {
     { id = "TOL_BARAD_HORDE", container = "tol_barad.map245", mapID = 245, x = 0.5310, y = 0.7600 }, -- Tol Barad Camp
     { id = "INSTANCE_BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700, kind = "instance", journal = 75 }, -- Baradin Hold
     { id = "FOUNDERS_POINT", container = "founders_point.map2352", mapID = 2352, x = 0.5740, y = 0.2680 }, -- Entrance Portal
+    { id = "TAXI_3132", container = "ek_overworld.map2393", mapID = 2393, x = 0.6944, y = 0.6341, faction = "Horde", city = "silvermoon" }, -- Silvermoon City: the Royal Exchange flight master (Horde) (hand-added: tools/modern_manual.py)
     { id = "PORTAL_EPL_GHOSTLANDS", container = "ek_overworld.map23", mapID = 23, x = 0.5406, y = 0.0846, area = 2276 }, -- Eastern Plaguelands: the portal to the old Ghostlands (Quel'Lithien Lodge) (hand-added: tools/modern_manual.py)
     { id = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", container = "ek_overworld.map2070_art1136", mapID = 2070, x = 0.5946, y = 0.6745 }, -- Ruins of Lordaeron (present Tirisfal): the portal to the old Silvermoon (hand-added: tools/modern_manual.py)
     { id = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", container = "ek_overworld.map18_art19", mapID = 18, x = 0.5947, y = 0.6743, area = 165 }, -- Past Tirisfal (Balnir Farmstead): the portal to the old Silvermoon, and where its way back lands (hand-added: tools/modern_manual.py)

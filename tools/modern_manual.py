@@ -4,7 +4,8 @@ tools/gen_modern_nodes.py and tools/gen_modern_edges.py so a regeneration keeps 
 
 NODES    places the old data lacks, usually captured in game with /mzdump here. Each is
          { "id", "out" (which Nodes_*.lua it goes in), "container", "mapID", "x", "y",
-         optional "area" (the client's area id: gives the node a localized name), "note" }.
+         optional "area" (the client's area id: gives the node a localized name), optional "faction" (a place only
+         one faction can use: a one-faction flight master), "note" }.
 INDOOR   containers the old data didn't flag `interior` but are: no flying to or from them.
 EDGES    connections the old data lacks: { "from", "to", "method", optional "cost", optional "oneway",
          optional "loadingScreens", optional "inPhase" = (group, side): only on that side of a phase group }.
@@ -41,6 +42,10 @@ CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/
 """
 
 NODES = [
+    # Midnight's Silvermoon has two flight masters; the old data had only the Sanctum of Light one. The Royal Exchange
+    # one is Horde only (captured in game 2026-09-24).
+    {"id": "TAXI_3132", "out": "Nodes_EK.lua", "container": "ek_overworld.map2393", "mapID": 2393,
+     "x": 0.6944, "y": 0.6341, "faction": "Horde", "note": "Silvermoon City: the Royal Exchange flight master (Horde)"},
     # The Burning Crusade Quel'Thalas, entered by portal (captured with /mzdump here, 2026-09-24). EPL's Zidormi and
     # old Ghostlands' Zidormi take you to the same spots as the portals beside them, so the portals stand for both.
     {"id": "PORTAL_EPL_GHOSTLANDS", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
@@ -263,6 +268,6 @@ NODE_PLACES = {
 CONFIRMED_TAXI_IDS = {
     "SILVERMOON_CITY_BC_FLIGHT": "82",          # /mzdump nodes 110: "Silvermoon City" on old Eversong's map
     "FAIRBREEZE_VILLAGE_BC_FLIGHT": "625",      # old Fairbreeze Village
-    "SILVERMOON_CITY_FLIGHT": None,             # Midnight's Silvermoon: 3131 or 3132, not yet told apart
+    "SILVERMOON_CITY_FLIGHT": "3131",           # Midnight's Silvermoon: Sanctum of Light (captured in game)
 }
 

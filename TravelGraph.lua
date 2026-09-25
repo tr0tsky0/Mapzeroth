@@ -100,6 +100,8 @@ end
 -- faction is hostile and can't be spoken to, so no flight into or out of it is ever used.
 local flightOwners
 function addon:GetFlightOwner(nodeID)
+    local node = addon.World:GetNode(nodeID)
+    if node and node.faction then return node.faction end   -- said by the data (a one-faction flight master)
     if not flightOwners then
         local seen = {}
         for _, edge in ipairs(addon.Edges or {}) do

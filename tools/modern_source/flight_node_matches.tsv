@@ -468,6 +468,7 @@ SHRINE_OF_THE_STORM_FLIGHT_HORDE	one	2095	Shrine of the Storm [name]
 SHRINE_OF_TWO_MOONS_FLIGHT	one	1058	Shrine of Two Moons [name]
 SILVERGLADE_REFUGE_FLIGHT	one	3190	Silverglade Refuge Flightmaster [name]
 SILVERMOON_CITY_BC_FLIGHT	one	82	Flightmaster [confirmed]
+SILVERMOON_CITY_FLIGHT	one	3131	Silvermoon City Flightmaster [confirmed]
 SILVERWIND_REFUGE_FLIGHT	one	356	Silverwind Refuge [name]
 SILVER_TIDE_HOLLOW_FLIGHT	one	522	Silver Tide Hollow [name]
 SINFALL_FLIGHT	one	2548	Sinfall [name]
@@ -704,7 +705,6 @@ ELYSIAN_HOLD_FLIGHT	many	2528,2625	Elysian Hold [name]
 NORTHERN_AMANI_BULWARK_FLIGHT	skip		Vaults of Atal'Utek's own flight network, not the real taxi system
 SANDY_BEACH_FLIGHT_ALLIANCE	many	606,607	Sandy Beach [name]
 SANDY_BEACH_FLIGHT_HORDE	many	608,609	Sandy Beach [name]
-SILVERMOON_CITY_FLIGHT	zero		Silvermoon City Flightmaster [confirmed]
 STYGIAN_BOUNTY_FLIGHT	many	610,612	Stygian Bounty [name]
 THE_UNDERBELLY_FLIGHT	skip		Vaults of Atal'Utek's own flight network, not the real taxi system
 THE_VENOMOUS_ABYSS_FLIGHT	skip		Vaults of Atal'Utek's own flight network, not the real taxi system

@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1264, "every node made it into the tree (1215 converted + 25 hand-added + 24 city centres): " .. total)
+check(total == 1265, "every node made it into the tree (1215 converted + 26 hand-added + 24 city centres): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -520,7 +520,7 @@ end
 -- masters are their own nodes, not Midnight's under the same id.
 do
     local World = addon.World
-    check(World:GetNode("TAXI_82").mapID == 110 and World:GetNode("FLIGHT_SILVERMOON_CITY").mapID == 2393,
+    check(World:GetNode("TAXI_82").mapID == 110 and World:GetNode("TAXI_3131").mapID == 2393,
         "old Silvermoon's flight master is 82; Midnight's is its own node")
     check(World:GetNode("TAXI_625").mapID == 94 and World:GetNode("TAXI_3133").mapID == 2395, "old and new Fairbreeze are two nodes")
     check(World:GetNode("TAXI_631").mapID == 94, "Falconwing Square is in old Eversong")
@@ -550,4 +550,24 @@ do
         and not direct({ tirisfal = 1136 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON"), "present Tirisfal: back to the Ruins only")
     check(direct({ tirisfal = 19 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON")
         and not direct({ tirisfal = 19 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"), "past Tirisfal: back to Balnir Farmstead only")
+end
+
+-- Midnight's Silvermoon has two flight masters: the Sanctum of Light (3131) for both, the Royal Exchange (3132) Horde
+-- only, said by the node's own faction (no one-faction flight goes into it to say so).
+do
+    check(addon.World:GetNode("TAXI_3131") and addon:GetFlightOwner("TAXI_3131") == nil, "the Sanctum of Light is for both factions")
+    check(addon:GetFlightOwner("TAXI_3132") == "Horde", "the Royal Exchange is the Horde's")
+    local realMap = C_Map.GetMapInfo
+    C_Map.GetMapInfo = function(id) if id == 2393 then return { name = "Silvermoon City" } end return realMap(id) end
+    local function listed(faction)
+        for _, entry in ipairs(addon.Destinations:Build(makeCtx({ faction = faction }))) do
+            if entry.nodeID == "TAXI_3132" then return true end
+        end
+        return false
+    end
+    C_TaxiMap = C_TaxiMap or { GetTaxiNodesForMap = function() return {} end }
+    addon:ClearNodeNameCache()
+    check(listed("Horde") and not listed("Alliance"), "a Horde character is offered the Royal Exchange, an Alliance one isn't")
+    C_Map.GetMapInfo = realMap
+    addon:ClearNodeNameCache()
 end

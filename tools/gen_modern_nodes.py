@@ -312,6 +312,8 @@ def main():
                 raise SystemExit(f"manual node {mn['id']} collides with an id already converted")
             seen_ids[mn["id"]] = (out_name, "manual")
             area = f', area = {mn["area"]}' if mn.get("area") else ""
+            if mn.get("faction"):
+                area += f', faction = "{mn["faction"]}"'
             out_id, extra = node_fields(mn["id"], mn["mapID"])
             if area:
                 extra = extra.replace(f", area = {area_of.get(mn['id'])}", "")      # its own area wins
