@@ -7,6 +7,7 @@ local addonName, addon = ...
 addon.Abilities = addon.Abilities or {}
 
 addon.Abilities.Teleports = {
+    { spellID = 1259190, to = "CITY_SILVERMOON", cost = 10 },
     { spellID = 126892, to = "PEAK_OF_SERENITY", cost = 10, cooldown = 60 },
     { spellID = 49359, to = "THERAMORE", cost = 10 },
     { spellID = 344587, to = "ORIBOS", cost = 10 },

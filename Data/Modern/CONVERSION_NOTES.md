@@ -107,7 +107,7 @@
 
 ## Ability conversion (tools/gen_modern_abilities.py)
 
-110 Teleports, 2 Hearthstones, 39 Items written.
+111 Teleports, 2 Hearthstones, 39 Items written.
 
 - 2 item(s) skipped: the old data itself flags them `isRandom` (the client sends you to one of several unlisted spots at random -- not a promise a deterministic search can make, unlike a real `destinations` list the player picks from):
   - `WORMHOLE_PANDARIA` (Wormhole Generator: Pandaria)

@@ -60,7 +60,8 @@ def load_renames():
 
 def known_node_ids():
     ids = set()
-    for path in sorted((ROOT / "Data" / "Modern").glob("Nodes_*.lua")):
+    paths = sorted((ROOT / "Data" / "Modern").glob("Nodes_*.lua")) + [ROOT / "Data" / "Modern" / "Settlements.lua"]
+    for path in paths:
         for line in path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line.startswith('{ id = "'):
@@ -91,6 +92,13 @@ def main():
     dangling = []       # (ability id, destination) that never resolved to a real node
     skipped_random = []
     skipped_phase = []
+
+    # Teleports the old data lacks (tools/modern_manual.py).
+    for t in manual.TELEPORTS:
+        if t["to"] not in node_ids:
+            raise SystemExit(f"manual teleport {t['spellID']} lands on {t['to']}, which is no node")
+        teleports.append({"spellID": t["spellID"], "to": t["to"], "cost": t.get("cost", 10),
+                          "cooldown": t.get("cooldown"), "faction": t.get("faction")})
 
     # TravelItems: hearthstone-style (no destination), fixed-destination items, or skipped.
     for ability_id, a in ns["TravelItems"].items():

@@ -33,6 +33,8 @@ NODE_PLACES  { source id: { "container", "mapID", "x", "y" } }: where a node rea
          (captured in game).
 CONFIRMED_TAXI_IDS  { source id: "taxiNodeID" or None }: a flight master's id settled by hand from a capture the
          matcher can't read (continent-relative coordinates); None keeps it unmatched until someone captures it.
+TELEPORTS  spells the old data lacks: { "spellID", "to" (the node it lands on), optional "cost" (cast seconds, 10),
+         optional "faction" }.
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -283,3 +285,10 @@ CONFIRMED_TAXI_IDS = {
     "SILVERMOON_CITY_FLIGHT": "3131",           # Midnight's Silvermoon: Sanctum of Light (captured in game)
 }
 
+# Teleports the old data lacks (see the docstring). Midnight split the mage's Silvermoon teleport (checked in game
+# 2026-09-24): 32272 is now "Teleport: Silvermoon (Burning Crusade)" and still lands in the old Silvermoon (the old
+# data has it); 1259190 "Teleport: Silvermoon City" is new and goes to Midnight's. Where in the city it lands isn't
+# captured yet: its centre stands in until someone does.
+TELEPORTS = [
+    {"spellID": 1259190, "to": "CITY_SILVERMOON"},
+]
