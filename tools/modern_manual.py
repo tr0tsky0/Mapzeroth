@@ -8,7 +8,8 @@ NODES    places the old data lacks, usually captured in game with /mzdump here. 
          one faction can use: a one-faction flight master), "note" }.
 INDOOR   containers the old data didn't flag `interior` but are: no flying to or from them.
 EDGES    connections the old data lacks: { "from", "to", "method", optional "cost", optional "oneway",
-         optional "loadingScreens", optional "inPhase" = (group, side): only on that side of a phase group }.
+         optional "loadingScreens", optional "inPhase" = (group, side): only on that side of a phase group,
+         optional "requirements" = { key: value } as the engine's EdgeRequirements has them (faction = "Horde") }.
          Leave `cost` out for a walk and the engine works it out from distance and the default path
          factor, like any other walk.
 EQUIP_COOLDOWNS  { itemID: seconds }: how long an equippable teleport item is on cooldown after it is put on, which
@@ -53,13 +54,13 @@ NODES = [
     # The Burning Crusade Quel'Thalas, entered by portal (captured with /mzdump here, 2026-09-24). EPL's Zidormi and
     # old Ghostlands' Zidormi take you to the same spots as the portals beside them, so the portals stand for both.
     {"id": "PORTAL_EPL_GHOSTLANDS", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
-     "x": 0.5406, "y": 0.0846, "area": 2276, "note": "Eastern Plaguelands: the portal to the old Ghostlands (Quel'Lithien Lodge)"},
+     "x": 0.5406, "y": 0.0846, "note": "Eastern Plaguelands: the portal to the old Ghostlands (Quel'Lithien Lodge)"},
     {"id": "PORTAL_GHOSTLANDS_EPL", "out": "Nodes_BfA.lua", "container": "quelthalas.map95", "mapID": 95,
-     "x": 0.5208, "y": 0.9783, "area": 3493, "note": "Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun)"},
+     "x": 0.5208, "y": 0.9783, "note": "Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun)"},
     {"id": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "out": "Nodes_EK.lua", "container": "ek_overworld.map2070_art1136",
      "mapID": 2070, "x": 0.5946, "y": 0.6745, "note": "Ruins of Lordaeron (present Tirisfal): the portal to the old Silvermoon"},
     {"id": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "out": "Nodes_EK.lua", "container": "ek_overworld.map18_art19",
-     "mapID": 18, "x": 0.5947, "y": 0.6743, "area": 165,
+     "mapID": 18, "x": 0.5947, "y": 0.6743,
      "note": "Past Tirisfal (Balnir Farmstead): the portal to the old Silvermoon, and where its way back lands"},
     {"id": "PORTAL_BC_SILVERMOON_TIRISFAL", "out": "Nodes_BfA.lua", "container": "quelthalas.map110", "mapID": 110,
      "x": 0.5068, "y": 0.1643, "note": "Old Silvermoon: the portal to Tirisfal, and where the ways in from Tirisfal land"},
@@ -139,16 +140,17 @@ EDGES = [
     # EPL <-> the old Ghostlands, each landing by the other side's portal. Tirisfal <-> the old Silvermoon (confirmed in
     # game 2026-09-24): present Tirisfal's Ruins of Lordaeron and past Tirisfal's Balnir Farmstead each have a portal in,
     # and the old Silvermoon's one portal back goes to whichever Tirisfal the player is in (Zidormi's tirisfal group).
+    # All four are the Horde's (the Undercity's old orb).
     {"from": "PORTAL_EPL_GHOSTLANDS", "to": "PORTAL_GHOSTLANDS_EPL", "method": "portal", "cost": 0},
     {"from": "PORTAL_SHATTRATH_QUELDANAS", "to": "QUELDANAS", "method": "portal", "cost": 0, "oneway": True},
     {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
-     "cost": 0, "oneway": True},
+     "cost": 0, "oneway": True, "requirements": {"faction": "Horde"}},
     {"from": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
-     "cost": 0, "oneway": True},
+     "cost": 0, "oneway": True, "requirements": {"faction": "Horde"}},
     {"from": "PORTAL_BC_SILVERMOON_TIRISFAL", "to": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "method": "portal",
-     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 1136)},
+     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 1136), "requirements": {"faction": "Horde"}},
     {"from": "PORTAL_BC_SILVERMOON_TIRISFAL", "to": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "method": "portal",
-     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 19)},
+     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 19), "requirements": {"faction": "Horde"}},
     # Running from the entrance to the portal inside, and back out: an explicit edge, since an interior
     # never auto-connects to the outdoors, but costed like any walk (distance and the default path factor).
     {"from": "LYCANEUM_ENTRANCE", "to": "MAGISTERS_SILVERMOON_PORTAL", "method": "walk"},

@@ -271,10 +271,10 @@ addon.Edges = {
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
     { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_SHATTRATH_QUELDANAS", to = "QUELDANAS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
-    { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
-    { from = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
-    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 1136 } }, -- hand-added: tools/modern_manual.py
-    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 19 } }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 1136 }, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 19 }, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py
     { from = "LYCANEUM_ENTRANCE", to = "PORTAL_MAGISTERS_SILVERMOON", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_MAGISTERS_SILVERMOON", to = "LYCANEUM_ENTRANCE", method = "walk" }, -- hand-added: tools/modern_manual.py
     { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py

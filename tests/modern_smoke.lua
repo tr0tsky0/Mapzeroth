@@ -552,6 +552,16 @@ do
         and not direct({ tirisfal = 1136 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON"), "present Tirisfal: back to the Ruins only")
     check(direct({ tirisfal = 19 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON")
         and not direct({ tirisfal = 19 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"), "past Tirisfal: back to Balnir Farmstead only")
+    -- The Tirisfal portals are the Horde's. (An Alliance character's way in is EPL's portal to the old Ghostlands, but
+    -- nothing joins the old Ghostlands, Eversong and Silvermoon to each other yet: their borders and Silvermoon's gate
+    -- aren't captured. So this only checks the Tirisfal portals are never offered.)
+    local ali = addon.Journey:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ali", mapID = 2393, x = 0.5, y = 0.6 })
+    local r = addon.Pathfinder:FindPath(ali.graph, "YOU_ali", "SILVERMOON", ali.graph.phase)
+    local tirisfal = false
+    for _, step in ipairs(r and r.steps or {}) do
+        if step.to == "PORTAL_BC_SILVERMOON_TIRISFAL" or step.from == "PORTAL_BC_SILVERMOON_TIRISFAL" then tirisfal = true end
+    end
+    check(not tirisfal, "an Alliance character never takes the Tirisfal portals to the old Silvermoon")
 end
 
 -- Midnight's Silvermoon has two flight masters: the Sanctum of Light (3131) for both, the Royal Exchange (3132) Horde
