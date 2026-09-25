@@ -1,8 +1,10 @@
 # NPC id, name, why. Wowhead listings we don't use because the game shows something else: the generator
-# leaves these out (a place captured in person with /mzdump poi stands instead).
-2455	Olivia Burnside	banker: Stormwind's bank is at 63.8, 80.8 (captured), not the 57, 72 Wowhead lists
+# leaves these out (a place captured in person with /mzdump poi stands instead). "1300:MAGE" leaves out only the NPC's
+# listing as that trainer type.
+2455	Olivia Burnside	banker: Stormwind's bank is at 63.8, 80.8 (captured). Wowhead's 57, 72 is Classic's map, which map_frames.tsv now converts to the same spot; the capture stands
 2456	Newton Burnside	banker: same
 2457	John Burnside	banker: same
-5504	Sheldras Moontree	druid trainer: Stormwind's is at 36.19, 64.28 (captured), not the ~21, 55 Wowhead lists (that's Stormwind Harbor)
+5504	Sheldras Moontree	druid trainer: Stormwind's is at 36.19, 64.28 (captured). Wowhead's ~21, 55 is Classic's map (not Stormwind Harbor, as first thought: map_frames.tsv); the capture stands
 5505	Theridran	druid trainer: same
 5506	Maldryn	druid trainer: same
+1300:MAGE	Lawrence Schneider	Wowhead's world map marks him a mage trainer; he is Stormwind's tailoring trainer (his tailor listing stays)

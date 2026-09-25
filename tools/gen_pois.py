@@ -27,6 +27,7 @@ import collections
 import json
 import pathlib
 import re
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "tools" / "poi_source"
@@ -192,6 +193,50 @@ def dist(a, b):
     return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 
 
+def load_frames():
+    """{ mapID: (ax, bx, ay, by) }: Forever = a * Classic + b per axis, least squares over map_frames.tsv's pairs."""
+    pairs = collections.defaultdict(list)
+    path = SRC / "map_frames.tsv"
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip() and not line.startswith("#"):
+                map_id, cx, cy, fx, fy = line.split("\t")[:5]
+                pairs[int(map_id)].append((float(cx), float(cy), float(fx), float(fy)))
+
+    def fit(xs, ys):
+        n = len(xs)
+        mx, my = sum(xs) / n, sum(ys) / n
+        sxx = sum((x - mx) ** 2 for x in xs)
+        a = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
+        return a, my - a * mx
+
+    frames = {}
+    for map_id, ps in pairs.items():
+        if len(ps) < 2:
+            sys.exit(f"map_frames.tsv: map {map_id} needs two or more pairs to fit a conversion")
+        ax, bx = fit([p[0] for p in ps], [p[2] for p in ps])
+        ay, by = fit([p[1] for p in ps], [p[3] for p in ps])
+        worst = max(max(abs(ax * p[0] + bx - p[2]), abs(ay * p[1] + by - p[3])) for p in ps)
+        print(f"map {map_id}: Forever = {ax:.3f}x + {bx:.2f}, {ay:.3f}y + {by:.2f} (worst pair off by {worst:.2f})")
+        frames[map_id] = (ax, bx, ay, by)
+    return frames
+
+
+FRAMES = None
+
+
+def to_forever(map_id, pos):
+    """A Wowhead (Classic) position on a map, in Forever's coordinates (map_frames.tsv)."""
+    global FRAMES
+    if FRAMES is None:
+        FRAMES = load_frames()
+    frame = FRAMES.get(map_id)
+    if not frame:
+        return pos
+    ax, bx, ay, by = frame
+    return (ax * pos[0] + bx, ay * pos[1] + by)
+
+
 def load_maps():
     """mapID -> container path, via the continent grid."""
     result = {}
@@ -212,7 +257,7 @@ def load_npcs():
                 continue
             npc_id, name, _tag, map_id, _map_name, coords = line.split("\t")
             pts = [tuple(float(v) for v in c.split(",")) for c in coords.split()]
-            pos = (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
+            pos = to_forever(int(map_id), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
             npcs.append({"kind": kind, "trainer": None, "id": int(npc_id), "label": npc_id,
                          "captured": False, "map": int(map_id), "pos": pos, "teaches": []})
     return npcs
@@ -231,7 +276,7 @@ def load_trainers():
                 skipped[tag] += 1
                 continue
             pts = [tuple(float(v) for v in c.split(",")) for c in coords.split()]
-            pos = (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
+            pos = to_forever(int(map_id), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
             teaches = teaches_ids(kind, cols[6]) if len(cols) > 6 else []
             specialty = kind in PROFESSION_TOKENS and any(w in tag.lower() for w in SPECIALTY_WORDS)
             trainers.append({"kind": "trainer", "trainer": kind, "id": int(npc_id), "label": npc_id,
@@ -250,7 +295,8 @@ def load_instances():
         if not line.strip() or line.startswith("#"):
             continue
         key, category, map_id, x, y, name, area, _level, container = (line.split("\t") + [""] * 9)[:9]
-        instances.append({"key": key, "category": category, "map": int(map_id), "x": float(x), "y": float(y),
+        fx, fy = to_forever(int(map_id), (float(x), float(y)))
+        instances.append({"key": key, "category": category, "map": int(map_id), "x": fx, "y": fy,
                           "name": name, "area": int(area) if area else None, "container": container or None})
     return instances
 
@@ -262,7 +308,7 @@ def load_settlements():
             continue
         cols = line.split("\t")
         key, map_id, x, y, name, kind = cols[:6]
-        settlements[key] = {"map": int(map_id), "pos": (float(x), float(y)), "name": name, "type": kind,
+        settlements[key] = {"map": int(map_id), "pos": to_forever(int(map_id), (float(x), float(y))), "name": name, "type": kind,
                             "area": int(cols[6]) if len(cols) > 6 and cols[6] else None}
     return settlements
 
@@ -321,7 +367,8 @@ def load_flight_masters():
 
 
 def load_ignored():
-    """NPC ids from tools/poi_source/ignored_npcs.tsv: Wowhead listings the game has shown to be wrong."""
+    """NPC ids from tools/poi_source/ignored_npcs.tsv: Wowhead listings the game has shown to be wrong. An id with a
+    trainer type after a colon (1300:MAGE) leaves out only that listing of the NPC."""
     path = SRC / "ignored_npcs.tsv"
     ids = set()
     if path.exists():
@@ -407,7 +454,8 @@ def main():
     npcs += load_captured(settlements)
     ignored = load_ignored()
     before = len(npcs)
-    npcs = [n for n in npcs if n.get("captured") or str(n["id"]) not in ignored]
+    npcs = [n for n in npcs if n.get("captured") or not (str(n["id"]) in ignored
+                                                         or f'{n["id"]}:{n["trainer"]}' in ignored)]
     if before != len(npcs):
         print(f"  left out {before - len(npcs)} Wowhead NPC(s) listed in ignored_npcs.tsv")
 

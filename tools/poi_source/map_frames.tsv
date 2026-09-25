@@ -1,0 +1,9 @@
+# Maps where Forever's map coordinates are not Classic's (Wowhead's Forever NPC positions are Classic's).
+# Forever redrew Stormwind's map the way retail did (it takes in the harbour): the same places sit elsewhere in
+# 0-100 map coordinates. Each line pairs one place's Wowhead (Classic) position with where it is in Forever,
+# captured in game; tools/gen_pois.py fits a straight-line conversion per axis for each map from its pairs (two or
+# more, spread out) and applies it to every Wowhead position on that map. Captured positions are left as they are.
+# mapID	classic x	classic y	forever x	forever y	what
+1453	52.6	65.6	60.4	75.2	Innkeeper Allison (the Gilded Rose): /mzdump poi, 2026-09-24
+1453	53.4	60.0	61.01	71.24	Auction house: /mzdump here, 2026-09-24
+1453	57.0	72.6	63.74	80.73	Bank (the Burnside bankers): /mzdump here, 2026-09-24
