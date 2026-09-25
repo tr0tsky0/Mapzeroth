@@ -158,6 +158,26 @@ check(state.view == "route" and state.plan, "choosing it plans the trip")
 check(#state.plan.steps >= 2 and state.plan.steps[#state.plan.steps].method == "taxi", "walk to the flight master, then fly")
 check(state.plan.cost > 0, "with a time")
 
+-- A flight hint shows on a route with no fare note: from Sentinel Hill (found) to Booty Bay (not found), walking,
+-- "you haven't found Booty Bay's flight master" (the hints were read with ipairs, which stopped at the missing fare
+-- note and dropped the rest).
+do
+    local FK = addon.FlightKnowledge
+    local realMap, realPos = C_Map.GetBestMapForUnit, C_Map.GetPlayerMapPosition
+    FK:Reset()
+    FK:Record({ { nodeID = 4, state = 0 }, { nodeID = 2, state = 1 }, { nodeID = 19, state = 2 } }, addon:GetPlayerContext())
+    local assume = addon.Options:Get("assumeFlightsFound")
+    addon.Options:Set("assumeFlightsFound", false)
+    C_Map.GetBestMapForUnit = function() return 1436 end
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.565, 0.526 end } end
+    addon.Panel:ShowRoute({ name = "Booty Bay", nodeID = "TOWN_BOOTY_BAY", nodeIDs = { "TOWN_BOOTY_BAY" }, group = "place" })
+    check(state.plan and state.plan.hint and state.plan.fare == 0, "a walking route with an unfound-flight hint and no fare")
+    check(box.routeHint._text and box.routeHint._text:find("Unlock it", 1, true), "the panel shows the hint: " .. tostring(box.routeHint._text))
+    addon.Options:Set("assumeFlightsFound", assume)
+    FK:Reset()
+    C_Map.GetBestMapForUnit, C_Map.GetPlayerMapPosition = realMap, realPos
+end
+
 -- A route with more steps than fit scrolls into view instead of losing the rest (previously
 -- there was no way to see past the "+N" hint: reported after a real 8-step route), and the panel
 -- says how many are out of sight, above as well as below (a scrolled-away first step was missed).

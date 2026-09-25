@@ -413,10 +413,13 @@ function Panel:DisplayPlan(entry, plan)
     local total = plan.cost < 20 and L["ROUTE_ALREADY"] or L["ROUTE_TOTAL"]:format(Journey:FormatTime(plan.cost))
     if plan.fare and plan.fare > 0 then total = total .. " - " .. L["ROUTE_FARES"]:format(Journey:FormatMoney(plan.fare)) end
     ui.routeTotal:SetText(total)
+    -- Each may be nil, so not ipairs over one table (it would stop at the first nil: a route with no fare note lost
+    -- its flight hint that way).
     local hints = {}
-    for _, text in ipairs({ Journey:FareText(plan), Journey:HintText(plan.hint), Journey:AssumedText(plan) }) do
-        if text then hints[#hints + 1] = text end
-    end
+    local function add(text) if text then hints[#hints + 1] = text end end
+    add(Journey:FareText(plan))
+    add(Journey:HintText(plan.hint))
+    add(Journey:AssumedText(plan))
     ui.routeHint:SetText(table.concat(hints, "\n"))
     ui.start:SetShown(#plan.steps > 0 and not state.pinned and not plan.unaffordable)
     self:RenderSteps()
