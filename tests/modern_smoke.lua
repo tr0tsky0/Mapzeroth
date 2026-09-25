@@ -579,9 +579,10 @@ do
         for _, t in ipairs(addon.Abilities.Teleports) do if t.spellID == spellID then return t.to end end
     end
     check(landing(32272) == "SILVERMOON" and addon.World:GetNode("SILVERMOON").mapID == 110, "32272 lands in the old Silvermoon")
-    check(landing(1259190) == "CITY_SILVERMOON" and addon.World:GetNode("CITY_SILVERMOON").mapID == 2393, "1259190 in Midnight's")
+    check(landing(1259190) == "SILVERMOON_PORTAL_ROOM" and addon.World:GetNode("SILVERMOON_PORTAL_ROOM").mapID == 2393,
+        "1259190 in Midnight's, in its portal room")
     local start = { id = "YOU_mage", mapID = 84, x = 0.5, y = 0.6 }
     local session = addon.Journey:Build(makeCtx({ faction = "Horde", class = "MAGE", spells = { 1259190 } }), start)
-    local r = addon.Pathfinder:FindPath(session.graph, start.id, "CITY_SILVERMOON", session.graph.phase)
+    local r = addon.Pathfinder:FindPath(session.graph, start.id, "SILVERMOON_PORTAL_ROOM", session.graph.phase)
     check(r and r.steps[1].method == "teleport", "a mage who knows it teleports to Midnight's Silvermoon")
 end

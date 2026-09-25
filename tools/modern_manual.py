@@ -287,8 +287,7 @@ CONFIRMED_TAXI_IDS = {
 
 # Teleports the old data lacks (see the docstring). Midnight split the mage's Silvermoon teleport (checked in game
 # 2026-09-24): 32272 is now "Teleport: Silvermoon (Burning Crusade)" and still lands in the old Silvermoon (the old
-# data has it); 1259190 "Teleport: Silvermoon City" is new and goes to Midnight's. Where in the city it lands isn't
-# captured yet: its centre stands in until someone does.
+# data has it); 1259190 "Teleport: Silvermoon City" is new and lands in Midnight Silvermoon's portal room.
 TELEPORTS = [
-    {"spellID": 1259190, "to": "CITY_SILVERMOON"},
+    {"spellID": 1259190, "to": "SILVERMOON_PORTAL_ROOM"},
 ]
