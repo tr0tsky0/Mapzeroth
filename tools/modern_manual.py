@@ -7,7 +7,7 @@ NODES    places the old data lacks, usually captured in game with /mzdump here. 
          optional "area" (the client's area id: gives the node a localized name), "note" }.
 INDOOR   containers the old data didn't flag `interior` but are: no flying to or from them.
 EDGES    connections the old data lacks: { "from", "to", "method", optional "cost", optional "oneway",
-         optional "loadingScreens" }.
+         optional "loadingScreens", optional "inPhase" = (group, side): only on that side of a phase group }.
          Leave `cost` out for a walk and the engine works it out from distance and the default path
          factor, like any other walk.
 EQUIP_COOLDOWNS  { itemID: seconds }: how long an equippable teleport item is on cooldown after it is put on, which
@@ -48,7 +48,12 @@ NODES = [
     {"id": "PORTAL_GHOSTLANDS_EPL", "out": "Nodes_BfA.lua", "container": "quelthalas.map95", "mapID": 95,
      "x": 0.5208, "y": 0.9783, "area": 3493, "note": "Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun)"},
     {"id": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "out": "Nodes_EK.lua", "container": "ek_overworld.map2070_art1136",
-     "mapID": 2070, "x": 0.5946, "y": 0.6745, "note": "Ruins of Lordaeron: the portal to the old Silvermoon"},
+     "mapID": 2070, "x": 0.5946, "y": 0.6745, "note": "Ruins of Lordaeron (present Tirisfal): the portal to the old Silvermoon"},
+    {"id": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "out": "Nodes_EK.lua", "container": "ek_overworld.map18_art19",
+     "mapID": 18, "x": 0.5947, "y": 0.6743, "area": 165,
+     "note": "Past Tirisfal (Balnir Farmstead): the portal to the old Silvermoon, and where its way back lands"},
+    {"id": "PORTAL_BC_SILVERMOON_TIRISFAL", "out": "Nodes_BfA.lua", "container": "quelthalas.map110", "mapID": 110,
+     "x": 0.5068, "y": 0.1643, "note": "Old Silvermoon: the portal to Tirisfal, and where the ways in from Tirisfal land"},
     # The outside door of the Lycaneum, the Silvermoon-side portal room on the Isle of Quel'Danas
     # (the Omnium Folio portal). Captured with /mzdump here.
     {"id": "LYCANEUM_ENTRANCE", "out": "Nodes_EK.lua", "container": "ek_overworld.map2424",
@@ -122,12 +127,18 @@ DROP_NODES = ["BIZMOS_BRAWLPUB", "BRAWLGAR_ARENA"]
 INDOOR = ["ek_overworld.map2649", "deeprun_tram", "ek_overworld.map2393.interior", "brawlgar_arena"]        # the tram and Bizmo's Brawlpub are both under it
 
 EDGES = [
-    # EPL <-> the old Ghostlands, each landing by the other side's portal. The Ruins of Lordaeron <-> the old Silvermoon,
-    # both ways (confirmed in game 2026-09-24); its Silvermoon end is taken as the Orgrimmar portal's spot (the city's
-    # arrival point) until the portal's own spot there is captured. Whether the way back lands in the present or the
-    # past Tirisfal is not known yet: the Ruins end is on the present side (Tirisfal's phase is never known, so open).
+    # EPL <-> the old Ghostlands, each landing by the other side's portal. Tirisfal <-> the old Silvermoon (confirmed in
+    # game 2026-09-24): present Tirisfal's Ruins of Lordaeron and past Tirisfal's Balnir Farmstead each have a portal in,
+    # and the old Silvermoon's one portal back goes to whichever Tirisfal the player is in (Zidormi's tirisfal group).
     {"from": "PORTAL_EPL_GHOSTLANDS", "to": "PORTAL_GHOSTLANDS_EPL", "method": "portal", "cost": 0},
-    {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "SILVERMOON", "method": "portal", "cost": 0},
+    {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
+     "cost": 0, "oneway": True},
+    {"from": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
+     "cost": 0, "oneway": True},
+    {"from": "PORTAL_BC_SILVERMOON_TIRISFAL", "to": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "method": "portal",
+     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 1136)},
+    {"from": "PORTAL_BC_SILVERMOON_TIRISFAL", "to": "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", "method": "portal",
+     "cost": 0, "oneway": True, "inPhase": ("tirisfal", 19)},
     # Running from the entrance to the portal inside, and back out: an explicit edge, since an interior
     # never auto-connects to the outdoors, but costed like any walk (distance and the default path factor).
     {"from": "LYCANEUM_ENTRANCE", "to": "MAGISTERS_SILVERMOON_PORTAL", "method": "walk"},

@@ -286,6 +286,8 @@ def main():
             parts.append(f'cost = {me["cost"]}')
         if me.get("oneway"):
             parts.append("oneway = true")
+        if me.get("inPhase"):
+            parts.append(f'inPhase = {{ "{me["inPhase"][0]}", {me["inPhase"][1]} }}')
         if me.get("loadingScreens") is not None:
             parts.append(f'loadingScreens = {me["loadingScreens"]}')
         lines.append(f"    {{ {', '.join(parts)} }}, -- hand-added: tools/modern_manual.py")

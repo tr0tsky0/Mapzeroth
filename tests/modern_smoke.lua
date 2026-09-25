@@ -42,7 +42,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1262, "every node made it into the tree (1215 converted + 23 hand-added + 24 city centres): " .. total)
+check(total == 1264, "every node made it into the tree (1215 converted + 25 hand-added + 24 city centres): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -107,7 +107,7 @@ do
         check(not (edge.requirements and edge.requirements.mapArtID), "no edge keeps a mapArtID requirement")
         if edge.inPhase then gated = gated + 1 end
     end
-    check(gated == 18, "18 edges are gated on a phase: " .. gated)
+    check(gated == 20, "20 edges are gated on a phase (18 from the old data, the old Silvermoon portal's two ways back): " .. gated)
 end
 
 -- Abilities (tools/gen_modern_abilities.py): a real converted Mage teleport seeds the
@@ -536,4 +536,18 @@ do
     check(byPortal, "from EPL, old Tranquillien is through the Quel'Lithien Lodge portal")
     check(reaches({ id = "YOU_bcsm", mapID = 110, x = 0.58, y = 0.20 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"),
         "the Ruins of Lordaeron portal goes both ways")
+    -- Old Silvermoon's portal back goes to whichever Tirisfal the player is in.
+    local start = { id = "YOU_bcsm2", mapID = 110, x = 0.51, y = 0.17 }
+    local session = addon.Journey:Build(makeCtx({ faction = "Horde" }), start)
+    local function direct(phase, goal)
+        local r = addon.Pathfinder:FindPath(session.graph, start.id, goal, phase)
+        for _, step in ipairs(r and r.steps or {}) do
+            if step.from == "PORTAL_BC_SILVERMOON_TIRISFAL" and step.to == goal then return true end
+        end
+        return false
+    end
+    check(direct({ tirisfal = 1136 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON")
+        and not direct({ tirisfal = 1136 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON"), "present Tirisfal: back to the Ruins only")
+    check(direct({ tirisfal = 19 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON")
+        and not direct({ tirisfal = 19 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"), "past Tirisfal: back to Balnir Farmstead only")
 end
