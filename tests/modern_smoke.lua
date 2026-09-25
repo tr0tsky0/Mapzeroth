@@ -4,6 +4,8 @@
 -- into the real engine without falling over, and does grouping/routing/naming look sane."
 -- Run against the Modern TOC, not the default one:
 --   python tests/harness.py --toc Mapzeroth-Rebuild_Mainline.toc modern_smoke
+-- The shipped Geometry.lua, as loaded: a test below clears it to exercise the live pass.
+local SHIPPED_GEOMETRY, SHIPPED_META = addon.Geometry, addon.GeometryMeta
 
 useTestDistances()
 addon.World:Build()
@@ -594,10 +596,10 @@ do
     World:Build()
     local n = 0
     World:ForEachNode(function() n = n + 1 end)
-    check(addon.GeometryMeta.nodeCount == n, "the shipped geometry is for this node set: " .. addon.GeometryMeta.nodeCount .. " vs " .. n)
+    check(SHIPPED_META.nodeCount == n, "the shipped geometry is for this node set: " .. SHIPPED_META.nodeCount .. " vs " .. n)
     local function phaseOf(id) return World:GetPhase(World:GetNodeContainer(id)) end
     local across, reach = 0, 0
-    for from, list in pairs(addon.Geometry) do
+    for from, list in pairs(SHIPPED_GEOMETRY) do
         for _, e in ipairs(list) do
             if e[3] == "fly" then
                 local ga, sa = phaseOf(from)
