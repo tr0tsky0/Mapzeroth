@@ -270,6 +270,8 @@ addon.Edges = {
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
     { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_GHOSTLANDS_EVERSONG_BC", to = "BORDER_EVERSONG_GHOSTLANDS_BC", method = "walk", cost = 3 }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_EVERSONG_SILVERMOON_BC", to = "BORDER_SILVERMOON_EVERSONG_BC", method = "walk", cost = 3 }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_SHATTRATH_QUELDANAS", to = "QUELDANAS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } }, -- hand-added: tools/modern_manual.py

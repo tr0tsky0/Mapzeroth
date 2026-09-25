@@ -45,6 +45,18 @@ CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/
 """
 
 NODES = [
+    # The Burning Crusade Quel'Thalas is no-fly (the old Ghostlands, Eversong, Silvermoon and the Isle of Quel'Danas;
+    # checked in game 2026-09-24), so its zones are joined on foot, Forever-style: a border node on each side of the
+    # zone line, and the same for old Silvermoon's gate (a border, not a city entrance: portals land inside the city,
+    # and a city with entrances is routed to its gates). Captured with /mzdump here.
+    {"id": "BORDER_GHOSTLANDS_EVERSONG_BC", "out": "Nodes_BfA.lua", "container": "quelthalas.map95", "mapID": 95,
+     "x": 0.4843, "y": 0.1068, "note": "Old Ghostlands: the road north into old Eversong"},
+    {"id": "BORDER_EVERSONG_GHOSTLANDS_BC", "out": "Nodes_BfA.lua", "container": "quelthalas.map94", "mapID": 94,
+     "x": 0.4862, "y": 0.9147, "note": "Old Eversong: the road south into the old Ghostlands"},
+    {"id": "BORDER_EVERSONG_SILVERMOON_BC", "out": "Nodes_BfA.lua", "container": "quelthalas.map94", "mapID": 94,
+     "x": 0.5621, "y": 0.4917, "note": "Old Eversong: outside old Silvermoon's gate"},
+    {"id": "BORDER_SILVERMOON_EVERSONG_BC", "out": "Nodes_BfA.lua", "container": "quelthalas.map110", "mapID": 110,
+     "x": 0.7054, "y": 0.8903, "note": "Old Silvermoon: inside its gate"},
     {"id": "PORTAL_SHATTRATH_QUELDANAS", "out": "Nodes_Outlands.lua", "container": "outlands.map111", "mapID": 111,
      "x": 0.4876, "y": 0.4210, "note": "Shattrath: the portal to the Isle of Quel'Danas (captured in game 2026-09-24)"},
     # Midnight's Silvermoon has two flight masters; the old data had only the Sanctum of Light one. The Royal Exchange
@@ -142,6 +154,10 @@ EDGES = [
     # and the old Silvermoon's one portal back goes to whichever Tirisfal the player is in (Zidormi's tirisfal group).
     # All four are the Horde's (the Undercity's old orb).
     {"from": "PORTAL_EPL_GHOSTLANDS", "to": "PORTAL_GHOSTLANDS_EPL", "method": "portal", "cost": 0},
+    # Across the old Quel'Thalas zone lines and through old Silvermoon's gate (the two points of each are a step apart,
+    # on two maps whose distance the client may not give, so a few seconds each).
+    {"from": "BORDER_GHOSTLANDS_EVERSONG_BC", "to": "BORDER_EVERSONG_GHOSTLANDS_BC", "method": "walk", "cost": 3},
+    {"from": "BORDER_EVERSONG_SILVERMOON_BC", "to": "BORDER_SILVERMOON_EVERSONG_BC", "method": "walk", "cost": 3},
     {"from": "PORTAL_SHATTRATH_QUELDANAS", "to": "QUELDANAS", "method": "portal", "cost": 0, "oneway": True},
     {"from": "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", "to": "PORTAL_BC_SILVERMOON_TIRISFAL", "method": "portal",
      "cost": 0, "oneway": True, "requirements": {"faction": "Horde"}},

@@ -83,6 +83,10 @@ addon.Nodes.BfA = {
     { id = "INSTANCE_CRUCIBLE_OF_STORMS", container = "kul_tiras.map942", mapID = 942, x = 0.8400, y = 0.4700, kind = "instance", journal = 1177 }, -- Crucible of Storms
     { id = "TAXI_2033", container = "kul_tiras.map896", mapID = 896, x = 0.5490, y = 0.3480 }, -- Fallhaven
     { id = "TAXI_2093", container = "kul_tiras.map942", mapID = 942, x = 0.7570, y = 0.6392 }, -- Ironmaul Overlook
+    { id = "BORDER_GHOSTLANDS_EVERSONG_BC", container = "quelthalas.map95", mapID = 95, x = 0.4843, y = 0.1068 }, -- Old Ghostlands: the road north into old Eversong (hand-added: tools/modern_manual.py)
+    { id = "BORDER_EVERSONG_GHOSTLANDS_BC", container = "quelthalas.map94", mapID = 94, x = 0.4862, y = 0.9147 }, -- Old Eversong: the road south into the old Ghostlands (hand-added: tools/modern_manual.py)
+    { id = "BORDER_EVERSONG_SILVERMOON_BC", container = "quelthalas.map94", mapID = 94, x = 0.5621, y = 0.4917 }, -- Old Eversong: outside old Silvermoon's gate (hand-added: tools/modern_manual.py)
+    { id = "BORDER_SILVERMOON_EVERSONG_BC", container = "quelthalas.map110", mapID = 110, x = 0.7054, y = 0.8903, city = "silvermoon_bc" }, -- Old Silvermoon: inside its gate (hand-added: tools/modern_manual.py)
     { id = "PORTAL_GHOSTLANDS_EPL", container = "quelthalas.map95", mapID = 95, x = 0.5208, y = 0.9783 }, -- Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun) (hand-added: tools/modern_manual.py)
     { id = "PORTAL_BC_SILVERMOON_TIRISFAL", container = "quelthalas.map110", mapID = 110, x = 0.5068, y = 0.1643, city = "silvermoon_bc" }, -- Old Silvermoon: the portal to Tirisfal, and where the ways in from Tirisfal land (hand-added: tools/modern_manual.py)
 }
