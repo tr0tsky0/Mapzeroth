@@ -313,3 +313,18 @@ do
     addon.FLIGHT_CHAIN_SAVING = saved
     check(ok2 and result2 == nil, "a saving larger than the leg still can't make a loop cheaper every lap: " .. tostring(result2))
 end
+
+-- Mage city teleports: a mage who knows Teleport: Orgrimmar gets there from Stormwind by the spell; one who doesn't,
+-- doesn't. And a shaman's Astral Recall goes to the bound inn like the hearthstone.
+do
+    local mage = makeCtx({ faction = "Horde", class = "MAGE", spells = { 3567 } })
+    local r = route(mage, "TAXI_2", "CITY_ORGRIMMAR")
+    check(r and r.steps[1].method == "teleport" and r.steps[1].to == "CITY_ORGRIMMAR",
+        "a mage teleports to Orgrimmar: " .. (r and methods(r) or "nil"))
+    local plain = makeCtx({ faction = "Horde", class = "MAGE" })
+    local p = route(plain, "TAXI_2", "CITY_ORGRIMMAR")
+    check(not p or p.steps[1].method ~= "teleport", "not without the spell")
+    local shaman = makeCtx({ faction = "Horde", class = "SHAMAN", spells = { 556 }, hearthNode = "CITY_ORGRIMMAR" })
+    local recall = route(shaman, "TAXI_2", "CITY_ORGRIMMAR")
+    check(recall and recall.steps[1].method == "hearthstone", "Astral Recall goes to the bound inn: " .. (recall and methods(recall) or "nil"))
+end
