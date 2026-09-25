@@ -11,8 +11,9 @@ rewritten for the release:
 - every `Data\\Modern\\` line dropped (those files would skip themselves on Forever anyway, see Constants.lua's
   addon.RULESET, but they don't need to ship).
 
-`## SavedVariables` is kept as the dev .toc has it (MapzerothRebuildDB): it's where this code keeps its settings,
-found flight points and hearth binds, and whatever ships becomes players' data -- rename it only on purpose.
+`## SavedVariables` is kept as the dev .toc has it: MapzerothRebuildDB, decided 2026-09-24 for the releases and the
+joint version alike (the old addon's MapzerothDB holds little worth carrying over, so players start fresh). It holds
+settings, found flight points and hearth binds: renaming it would wipe them.
 
 Checks before writing: every listed file exists, none is under Data/Modern, and each Forever data file starts with its
 guard. The zip goes to dist/ (ignored by git) as Mapzeroth-<version>-forever.zip.
