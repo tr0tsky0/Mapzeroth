@@ -4,6 +4,7 @@
 -- edges and containers-flag overrides are separate, later passes.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.Nodes = addon.Nodes or {}
 

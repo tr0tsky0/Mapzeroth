@@ -5,6 +5,7 @@
 -- (Modern has no inn data).
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.Cities = {
     boralus = { mapID = 1161, x = 0.6417, y = 0.3973, faction = "Alliance", maps = { 1161 }, expansion = 8 },

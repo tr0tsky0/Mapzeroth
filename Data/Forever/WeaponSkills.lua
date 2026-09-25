@@ -13,6 +13,7 @@
 -- Check by opening a weapon master's window on each class.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.ClassWeapons = {
     WARRIOR = { 196, 197, 198, 199, 200, 201, 202, 227, 264, 266, 1180, 2567, 5011, 15590 },

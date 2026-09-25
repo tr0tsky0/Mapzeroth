@@ -2,6 +2,7 @@
 -- travel: the classes it has and its seasonal events.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 -- The classes a trainer can be for; their names come from the client.
 addon.CLASS_TOKENS = {

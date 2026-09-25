@@ -629,3 +629,7 @@ do
         check(across == 0 and reach > 0, "shipped fly edges keep phase sides apart and reach phased places: " .. across .. ", " .. reach)
     end
 end
+
+-- One .toc for both games: a retail client loads Modern's data and none of Forever's.
+check(addon.RULESET == "modern", "the smoke test plays a retail client")
+check(addon.RidingSkills == nil and addon.Nodes.Pois == nil and addon.Nodes.EasternKingdoms == nil, "none of Forever's data is loaded")

@@ -136,7 +136,7 @@ local checked, wrong = 0, 0
 for _, block in ipairs(blocks) do
     local found = {}
     for _, id in ipairs(block.found) do found[id] = true end
-    ali.flightNodeFound = function(id) return found[id] == true end
+    setFlights(ali, function(id) return found[id] == true end)
     local graph = addon.TravelGraph:Build(ali)
     local flightsOnly = { adjacency = {}, anywhere = {} }              -- the game's routes are flights
     for id, steps in pairs(graph.adjacency) do
@@ -273,6 +273,7 @@ def main():
 -- Directions are separate: they differ. A ticket costs the sum of its legs' fares.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.Edges = addon.Edges or {}
 

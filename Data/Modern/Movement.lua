@@ -8,5 +8,6 @@
 -- (and the spell ids it would need) is not worth it.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.DEFAULT_MOUNT_BONUS = 1.0

@@ -126,6 +126,7 @@
 --   ENGINEERING trainer on map 2521 at (54.0, 38.9)
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.Nodes = addon.Nodes or {}
 

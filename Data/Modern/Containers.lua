@@ -6,6 +6,7 @@
 -- in CONVERSION_NOTES.md about per-mapID, not per-room, grouping).
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.Containers = addon.Containers or {}
 addon.Containers[""] = { fly = true, indoor = false }   -- Modern has flying broadly, unlike Forever

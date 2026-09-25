@@ -12,6 +12,7 @@
 -- engine, not stored here.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.Abilities = addon.Abilities or {}
 

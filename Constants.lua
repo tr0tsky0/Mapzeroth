@@ -78,11 +78,12 @@ end
 
 -- Flavour-specific tables (classes, holidays, perks) live in Data/<flavour>/Game.lua, not here.
 
--- Tool-facing API (MapzerothDataTools' /mzr world calls GetRuleset); the addon itself doesn't use
--- either: each toc loads its own dataset.
--- Forever reports WOW_PROJECT_ID == WOW_PROJECT_MAINLINE, so the interface
--- version is the only reliable discriminator: 16001 for Forever vs a six-digit
--- number for Modern.
+-- Which game this client is: "forever" or "modern". One .toc loads both datasets and each data file skips itself
+-- unless it is this game's (the first line after its header: `if addon.RULESET ~= "forever" then return end`).
+-- One .toc because the client can't be told apart by .toc name: Forever reports WOW_PROJECT_ID ==
+-- WOW_PROJECT_MAINLINE and so loads a _Mainline .toc too, and has no suffix of its own (a _Forever .toc is ignored;
+-- both checked in game 2026-09-24). The interface version is the only reliable discriminator: 16001 for Forever vs a
+-- six-digit number for Modern.
 addon.RULESET_INTERFACE_THRESHOLD = 20000
 
 -- override is "forever" | "modern" | nil (auto-detect).
@@ -93,3 +94,5 @@ function addon:GetRuleset(override)
     local _, _, _, interfaceVersion = GetBuildInfo()
     return (interfaceVersion < addon.RULESET_INTERFACE_THRESHOLD) and "forever" or "modern"
 end
+
+addon.RULESET = addon:GetRuleset()

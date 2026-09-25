@@ -528,7 +528,7 @@ def main():
             lines.append(f"--   {what} on map {p['map']} at ({p['pos'][0]:.1f}, {p['pos'][1]:.1f})")
     if skipped_tags:
         lines += ["--", "-- Trainer roles not modeled yet: " + ", ".join(f"{t} ({n})" for t, n in sorted(skipped_tags.items()))]
-    lines += ["", "local addonName, addon = ...", "", "addon.Nodes = addon.Nodes or {}", ""]
+    lines += ["", "local addonName, addon = ...", "if addon.RULESET ~= \"forever\" then return end   -- one addon for both games: this data is Forever's (Constants.lua)", "", "addon.Nodes = addon.Nodes or {}", ""]
     lines += lua_table("Cities", cities, taxi) + [""]
     lines += lua_table("Towns", towns, taxi) + [""]
     lines += ["addon.Nodes.Pois = {", *out_nodes, "}", ""]
@@ -541,6 +541,7 @@ def main():
         "-- Move one out of here by giving it an `area` id whose client name matches.",
         "",
         "local addonName, addon = ...",
+        "if addon.RULESET ~= \"forever\" then return end   -- one addon for both games: this data is Forever's (Constants.lua)",
         "",
         'addon:RegisterLocale("enUS", {',
     ]
@@ -560,6 +561,7 @@ def main():
         "-- name it instead (and this string goes away).",
         "",
         "local addonName, addon = ...",
+        "if addon.RULESET ~= \"forever\" then return end   -- one addon for both games: this data is Forever's (Constants.lua)",
         "",
         'addon:RegisterLocale("enUS", {',
     ]

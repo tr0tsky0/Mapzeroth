@@ -177,7 +177,8 @@ def write_settlements(emitted, indoor):
         "-- centre node for each, at the average of the city's outdoor nodes on its own map (or of the nodes CITIES\n"
         "-- names). No entrances: Modern flies, so a city is arrived at by its centre, not through gates. No towns yet\n"
         "-- (Modern has no inn data).\n\n"
-        "local addonName, addon = ...\n\n"
+        "local addonName, addon = ...\n"
+        "if addon.RULESET ~= \"modern\" then return end   -- one addon for both games: this data is Modern's (Constants.lua)\n\n"
         "addon.Cities = {\n" + "\n".join(city_lines) + "\n}\n\n"
         "addon.Towns = {}\n\n"
         "addon.Nodes = addon.Nodes or {}\n"
@@ -330,7 +331,8 @@ def main():
             f"-- addon's {filename}, do not hand-edit. Geometry only (see the script's own\n"
             f"-- docstring for the conversion rules and known simplifications); names, factions,\n"
             f"-- edges and containers-flag overrides are separate, later passes.\n\n"
-            "local addonName, addon = ...\n\n"
+            "local addonName, addon = ...\n"
+            "if addon.RULESET ~= \"modern\" then return end   -- one addon for both games: this data is Modern's (Constants.lua)\n\n"
             "addon.Nodes = addon.Nodes or {}\n\n"
             + "\n".join(lines) + "\n",
             encoding="utf-8",
@@ -363,6 +365,7 @@ def main():
         "-- in CONVERSION_NOTES.md about per-mapID, not per-room, grouping).",
         "",
         "local addonName, addon = ...",
+        "if addon.RULESET ~= \"modern\" then return end   -- one addon for both games: this data is Modern's (Constants.lua)",
         "",
         "addon.Containers = addon.Containers or {}",
         'addon.Containers[""] = { fly = true, indoor = false }   -- Modern has flying broadly, unlike Forever',

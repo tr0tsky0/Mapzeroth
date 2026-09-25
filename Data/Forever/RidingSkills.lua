@@ -10,6 +10,7 @@
 -- as known, since nothing tested so far is high enough level.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 -- Riding data decides mounted speed when a dataset has it: a character is mounted only as fast as the skills
 -- they know. So Forever has no flat mount bonus (Modern's Data/Modern/Movement.lua sets one instead of skills).

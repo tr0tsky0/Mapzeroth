@@ -12,3 +12,4 @@
 -- touches node or container data.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)

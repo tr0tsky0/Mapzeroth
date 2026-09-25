@@ -15,6 +15,7 @@
 -- Directions are separate: they differ. A ticket costs the sum of its legs' fares.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.Edges = addon.Edges or {}
 

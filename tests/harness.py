@@ -3,11 +3,12 @@ runtime (lupa) with just enough WoW API stubbed, then runs Lua test files.
 
     python tests/harness.py                     # run every tests/test_*.lua (Forever)
     python tests/harness.py test_world           # run one
+    python tests/harness.py --modern t1 t2      # as a retail client: the one TOC loads Modern's data
+                                                  # (modern_smoke and modern_picker aren't named test_*.lua,
+                                                  # so the default run above never picks them up:
+                                                  # python tests/harness.py --modern modern_smoke modern_picker).
+                                                  # `--toc Mapzeroth-Rebuild_Mainline.toc` still means --modern.
     python tests/harness.py --toc <name>.toc t1 t2   # run named files against a different TOC
-                                                       # (e.g. the Modern data-conversion smoke
-                                                       # test, which isn't named test_*.lua so
-                                                       # the default run above never picks it up:
-                                                       # python tests/harness.py --toc Mapzeroth-Rebuild_Mainline.toc modern_smoke)
 """
 import pathlib
 import sys
@@ -19,7 +20,7 @@ TOC = ROOT / "Mapzeroth-Rebuild.toc"
 
 STUBS = r"""
 function GetLocale() return "enUS" end
-function GetBuildInfo() return "1.60.1", "16001", "Sep 1 2026", 16001 end
+function GetBuildInfo() return "1.60.1", "16001", "Sep 1 2026", 16001 end   -- Forever; --modern swaps it
 function CreateFrame() return { RegisterEvent = function() end, SetScript = function() end } end
 function CreateVector2D(x, y) return { x = x, y = y, GetXY = function(self) return self.x, self.y end } end
 SlashCmdList = {}
@@ -128,9 +129,17 @@ def compile_chunk(loadstring, source, name):
     return result
 
 
-def new_runtime(toc=None):
+# A retail client, for --modern: the one .toc then loads Modern's data (Constants.lua's addon.RULESET).
+MODERN_STUBS = r'''
+function GetBuildInfo() return "12.1.0", "63000", "Sep 1 2026", 120100 end
+'''
+
+
+def new_runtime(toc=None, modern=False):
     lua = LuaRuntime(unpack_returned_tuples=True)
     lua.execute(STUBS)
+    if modern:
+        lua.execute(MODERN_STUBS)
     addon = lua.eval("{}")
     loadstring = lua.eval("loadstring")
     for name in toc_files(toc):
@@ -141,11 +150,12 @@ def new_runtime(toc=None):
     support = ROOT / "tests" / "Validator.lua"
     compile_chunk(loadstring, support.read_text(encoding="utf-8"), support.name)("MapzerothRebuild", addon)
     lua.globals().addon = addon
+    lua.globals().ADDON_ROOT = str(ROOT)          # for tests that read the addon's own files (test_rulesets)
     return lua
 
 
-def run_test(name, toc=None):
-    lua = new_runtime(toc)
+def run_test(name, toc=None, modern=False):
+    lua = new_runtime(toc, modern)
     path = ROOT / "tests" / f"{name}.lua"
     lua.execute(PRELUDE)
     chunk = compile_chunk(lua.eval("loadstring"), path.read_text(encoding="utf-8"), path.name)
@@ -158,12 +168,18 @@ def run_test(name, toc=None):
 
 def main():
     args = sys.argv[1:]
-    toc = None
-    if args[:1] == ["--toc"]:
-        toc = ROOT / args[1]
+    toc, modern = None, False
+    if args[:1] == ["--modern"]:
+        modern, args = True, args[1:]
+    elif args[:1] == ["--toc"]:
+        # The old way to run Modern: there is one .toc now, and a retail client makes it load Modern's data.
+        if args[1] == "Mapzeroth-Rebuild_Mainline.toc":
+            modern = True
+        else:
+            toc = ROOT / args[1]
         args = args[2:]
     names = args or sorted(p.stem for p in (ROOT / "tests").glob("test_*.lua"))
-    results = [run_test(n, toc) for n in names]
+    results = [run_test(n, toc, modern) for n in names]
     raise SystemExit(0 if all(results) else 1)
 
 

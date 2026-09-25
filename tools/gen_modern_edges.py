@@ -303,7 +303,8 @@ def main():
         "-- for the conversion rules (cost fallbacks, requirement renames, phase gates as inPhase,\n"
         "-- Zidormi's overridesPhase) and Data/Modern/CONVERSION_NOTES.md for\n"
         "-- what's still open.\n\n"
-        "local addonName, addon = ...\n\n"
+        "local addonName, addon = ...\n"
+        "if addon.RULESET ~= \"modern\" then return end   -- one addon for both games: this data is Modern's (Constants.lua)\n\n"
         + "\n".join(lines) + "\n",
         encoding="utf-8",
     )

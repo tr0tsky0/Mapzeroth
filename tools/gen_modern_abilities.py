@@ -191,6 +191,7 @@ def main():
         "-- category mapping and what's skipped (and why) rather than silently dropped.",
         "",
         "local addonName, addon = ...",
+        'if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern\'s (Constants.lua)',
         "",
         "addon.Abilities = addon.Abilities or {}",
         "",

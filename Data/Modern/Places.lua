@@ -3,6 +3,7 @@
 -- Crusade 2, ... The War Within 11, Midnight 12.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 -- The picker's main page is laid out by expansion (Sections.lua), not as Forever's cities and towns.
 addon.PICKER_LAYOUT = "expansions"

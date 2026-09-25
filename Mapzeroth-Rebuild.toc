@@ -1,6 +1,6 @@
-## Interface: 16001
+## Interface: 16001, 120100
 ## Title: Mapzeroth (Rebuild)
-## Notes: Rebuilt Mapzeroth engine, Forever dataset (development build)
+## Notes: Rebuilt Mapzeroth engine, Forever and Modern datasets (development build)
 ## Author: tr0tsky
 ## Version: 2.0.0-dev
 ## SavedVariables: MapzerothRebuildDB
@@ -42,6 +42,31 @@ Data\Forever\NodeNames_enUS.lua
 Data\Forever\TownNames_enUS.lua
 Data\Forever\InstanceNames_enUS.lua
 Data\Forever\Geometry.lua
+
+# Modern's data: each file skips itself unless this client is Modern (addon.RULESET, Constants.lua); Forever's above do the same.
+Data\Modern\Containers.lua
+Data\Modern\Nodes_EK.lua
+Data\Modern\Nodes_Kalimdor.lua
+Data\Modern\Nodes_Outlands.lua
+Data\Modern\Nodes_Northrend.lua
+Data\Modern\Nodes_Pandaria.lua
+Data\Modern\Nodes_BrokenIsles.lua
+Data\Modern\Nodes_Draenor.lua
+Data\Modern\Nodes_DragonIsles.lua
+Data\Modern\Nodes_KhazAlgar.lua
+Data\Modern\Nodes_Shadowlands.lua
+Data\Modern\Nodes_Zandalar.lua
+Data\Modern\Nodes_Argus.lua
+Data\Modern\Nodes_BfA.lua
+Data\Modern\Nodes_IsolatedMaps.lua
+Data\Modern\Edges.lua
+Data\Modern\Abilities.lua
+Data\Modern\Geometry.lua
+Data\Modern\Instances.lua
+Data\Modern\Places.lua
+Data\Modern\Settlements.lua
+Data\Modern\Movement.lua
+Data\Modern\Game.lua
 
 # Engine
 World.lua

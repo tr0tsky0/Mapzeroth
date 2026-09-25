@@ -10,6 +10,7 @@
 -- original ticket times are kept in tools/flight_source/inflight_tickets.lua.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.Edges = addon.Edges or {}
 

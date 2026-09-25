@@ -8,6 +8,7 @@
 -- and add the printed mapID and factor here.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.PathFactors = {
     [1453] = 1.7, -- Stormwind City: 210s walked vs 123s predicted straight-line (flight master to harbor)

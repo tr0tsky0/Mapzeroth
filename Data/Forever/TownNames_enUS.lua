@@ -4,6 +4,7 @@
 -- Move one out of here by giving it an `area` id whose client name matches.
 
 local addonName, addon = ...
+if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon:RegisterLocale("enUS", {
     TOWN_BLOODHOOF_VILLAGE = "Bloodhoof Village",

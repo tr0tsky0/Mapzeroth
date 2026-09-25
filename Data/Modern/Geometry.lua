@@ -6,6 +6,7 @@
 -- file exists for is then lost until it's regenerated.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.GeometryMeta = { nodeCount = 1270 }
 addon.Geometry = {

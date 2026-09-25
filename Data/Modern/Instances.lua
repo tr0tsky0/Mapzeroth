@@ -3,6 +3,7 @@
 -- Regenerate when a patch adds a dungeon or raid.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.Instances = {
     [63] = { 1 }, -- Deadmines

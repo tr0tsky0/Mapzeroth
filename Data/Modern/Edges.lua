@@ -5,6 +5,7 @@
 -- what's still open.
 
 local addonName, addon = ...
+if addon.RULESET ~= "modern" then return end   -- one addon for both games: this data is Modern's (Constants.lua)
 
 addon.Edges = {
     { from = "PORTAL_STORMWIND_BORALUS", to = "BORALUS", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
