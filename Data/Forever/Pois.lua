@@ -629,7 +629,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_DEMON_6382", container = "easternkingdoms.dun_morogh", mapID = 1455, x = 0.5307, y = 0.0673, kind = "trainer", trainer = "DEMON", city = "ironforge", npcs = { { id = 6382 } } },
     { id = "TRAINER_ENGINEERING_7944", container = "easternkingdoms.dun_morogh", mapID = 1455, x = 0.6977, y = 0.5051, kind = "trainer", trainer = "ENGINEERING", city = "ironforge", npcs = { { id = 7944, specialty = true } } },
     { id = "AUCTION_8674", container = "kalimdor.mulgore", mapID = 1456, x = 0.3962, y = 0.5157, kind = "auction", city = "thunder_bluff", npcs = { { id = 8674 }, { id = 8722 } } },
-    { id = "BANK_2996", container = "kalimdor.mulgore", mapID = 1456, x = 0.4691, y = 0.5862, kind = "bank", city = "thunder_bluff", npcs = { { id = 2996 }, { id = 8356 }, { id = 8357 } } },
+    { id = "BANK_C1456_474_586", container = "kalimdor.mulgore", mapID = 1456, x = 0.4740, y = 0.5860, kind = "bank", city = "thunder_bluff", npcs = { { id = 2996 }, { id = 8356 }, { id = 8357 } } },
     { id = "BATTLEMASTER_14990_1456", container = "kalimdor.mulgore", mapID = 1456, x = 0.4400, y = 0.5727, kind = "battlemaster", city = "thunder_bluff", npcs = { { id = 14990 }, { id = 15105 }, { id = 15106 } } },
     { id = "BATTLEMASTER_7427", container = "kalimdor.mulgore", mapID = 1456, x = 0.5770, y = 0.7690, kind = "battlemaster", city = "thunder_bluff", npcs = { { id = 7427 }, { id = 10360 } } },
     { id = "INN_6746", container = "kalimdor.mulgore", mapID = 1456, x = 0.4560, y = 0.6388, kind = "inn", city = "thunder_bluff", npcs = { { id = 6746 } } },
