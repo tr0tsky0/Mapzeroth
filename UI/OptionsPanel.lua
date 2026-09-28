@@ -2,7 +2,7 @@ local addonName, addon = ...
 
 -- The settings page, in the game's own Settings window (Game Menu > Options > AddOns >
 -- Mapzeroth, or /mapzeroth settings): how long a loading screen counts for in a route, the size of
--- our windows, the theme, and whether the route is drawn on the map and on the minimap. The page is built from our own themed widgets and handed to the
+-- our windows, the theme, whether the route is drawn on the map and on the minimap, and icons or colour bars beside route steps. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.
 
@@ -14,7 +14,9 @@ local Theme = addon.Theme
 local Options = addon.Options
 
 local PAD = 20
+local CONTENT_HEIGHT = 680      -- how tall the settings are laid out; the page scrolls when the window is shorter
 local widgets = {}
+local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
 -- One option per row: its label and description on the left, at whatever width the page has, and its control
 -- (a dropdown) at the right-hand edge, level with the label.
@@ -36,7 +38,7 @@ end
 local function toggleRow(parent, top, key, label, description)
     local _, hint = optionRow(parent, top, label, description)
     local choices = { { id = true, label = L["OPT_ON"] }, { id = false, label = L["OPT_OFF"] } }
-    local dropdown = Theme:Dropdown(parent, 120, choices, function(id) Options:Set(key, id) end)
+    local dropdown = Theme:Dropdown(parent, 120, choices, function(id) Options:Set(key, id) end, menuHost)
     dropdown.button:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -PAD, -(top + 2))
     dropdown.hint = hint
     dropdown.key = key
@@ -75,12 +77,44 @@ function OptionsPanel:Build()
     frame.name = L["OPT_TITLE"]
     self.frame = frame
 
-    local box = Theme:Panel(frame, nil)
-    box:SetPoint("TOPLEFT", 8, -8)
-    box:SetPoint("BOTTOMRIGHT", -8, 8)
+    local panel = Theme:Panel(frame, nil)
+    panel:SetPoint("TOPLEFT", 8, -8)
+    panel:SetPoint("BOTTOMRIGHT", -8, 8)
+    menuHost = panel
+
+    -- The settings sit on a page that scrolls inside the panel, with a scroll bar at its right when they don't fit.
+    local scroll = CreateFrame("ScrollFrame", nil, panel)
+    scroll:SetPoint("TOPLEFT", 12, -12)             -- inside Classic's frame border as well as Modern Dark's line
+    scroll:SetPoint("BOTTOMRIGHT", -32, 12)
+    local box = CreateFrame("Frame", nil, scroll)
+    box:SetSize(600, CONTENT_HEIGHT)
+    scroll:SetScrollChild(box)
+
+    local bar = Theme:Slider(panel, 100, true)
+    bar:SetPoint("TOPRIGHT", -16, -16)
+    bar:SetPoint("BOTTOMRIGHT", -16, 16)
+    bar:SetValueStep(1)
+    bar:SetScript("OnValueChanged", function(_, value)
+        scroll:SetVerticalScroll(value)
+        for _, w in pairs(widgets) do if w.menu then w.menu:Hide() end end     -- a list open under a moved button
+    end)
+    local function fit()
+        local width = scroll:GetWidth()
+        if width and width > 0 then box:SetWidth(width) end
+        local range = math.max(0, CONTENT_HEIGHT - (scroll:GetHeight() or CONTENT_HEIGHT))
+        bar:SetMinMaxValues(0, range)
+        bar:SetShown(range > 0)
+        if (bar:GetValue() or 0) > range then bar:SetValue(range) end
+    end
+    scroll:SetScript("OnSizeChanged", fit)
+    scroll:EnableMouseWheel(true)
+    scroll:SetScript("OnMouseWheel", function(_, delta)
+        bar:SetValue((bar:GetValue() or 0) - delta * 40)
+    end)
+    widgets.scroll = { frame = scroll, bar = bar, fit = fit }
 
     local title = Theme:Text(box, "title")
-    title:SetPoint("TOPLEFT", PAD, -PAD)
+    title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
     title:SetText(L["OPT_TITLE"])
 
     widgets.tax = sliderRow(box, 64, "loadingScreenTax", L["OPT_TAX"], L["OPT_TAX_DESC"],
@@ -91,7 +125,7 @@ function OptionsPanel:Build()
     optionRow(box, 272, L["OPT_THEME"], L["OPT_THEME_DESC"])
     local choices = {}
     for _, id in ipairs(Theme:List()) do choices[#choices + 1] = { id = id, label = Theme:Label(id) } end
-    widgets.theme = Theme:Dropdown(box, 220, choices, function(id) Options:Set("theme", id) end)
+    widgets.theme = Theme:Dropdown(box, 220, choices, function(id) Options:Set("theme", id) end, menuHost)
     widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -274)
 
     widgets.routeMap = toggleRow(box, 352, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
@@ -102,6 +136,12 @@ function OptionsPanel:Build()
     end
     widgets.assumeFlights = toggleRow(box, 512, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
 
+    optionRow(box, 592, L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"])
+    widgets.stepMarkers = Theme:Dropdown(box, 160,
+        { { id = "icon", label = L["OPT_MARKERS_ICON"] }, { id = "chip", label = L["OPT_MARKERS_CHIP"] } },
+        function(id) Options:Set("stepMarkers", id) end, menuHost)
+    widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -594)
+
     -- Hooks the game's Settings window calls on a canvas page.
     frame.OnCommit = function() end
     frame.OnDefault = function()
@@ -109,7 +149,10 @@ function OptionsPanel:Build()
         OptionsPanel:Sync()
     end
     frame.OnRefresh = function() OptionsPanel:Sync() end
-    frame:SetScript("OnShow", function() OptionsPanel:Sync() end)
+    frame:SetScript("OnShow", function()
+        fit()
+        OptionsPanel:Sync()
+    end)
 
     self.widgets = widgets
     return frame
@@ -126,6 +169,7 @@ function OptionsPanel:Sync()
     widgets.routeMap:SetValue(Options:Get("showRouteOnMap"))
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
+    widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
 end
 
 -- Add the page to the game's Settings window (once).

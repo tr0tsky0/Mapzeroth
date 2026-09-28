@@ -15,10 +15,10 @@ local Theme = addon.Theme
 local Journey = addon.Journey
 local Navigation = addon.Navigation
 
-local WIDTH, HEIGHT, PAD = 330, 124, 14
+local WIDTH, HEIGHT, PAD = 330, 134, 14
 local INNER = WIDTH - 2 * PAD
 local INTERVAL = 0.5            -- seconds between updates
-local ARROW = 44                -- the direction arrow, in pixels
+local ARROW = 54                -- the direction arrow, in pixels
 local LINGER = 5                -- seconds "arrived" stays up before the window closes itself
 
 local ui
@@ -267,10 +267,10 @@ function Navigator:Render(model)
     if heading then ui.arrow:SetRotation(heading) end
     local indent = heading and (ARROW + 8) or 0
     ui.status:ClearAllPoints()
-    ui.status:SetPoint("TOPLEFT", PAD + indent, heading and -78 or -74)
+    ui.status:SetPoint("TOPLEFT", PAD + indent, heading and -88 or -74)     -- level with the arrow's middle
     ui.status:SetWidth(INNER - 90 - indent)
     ui.left:ClearAllPoints()
-    ui.left:SetPoint("TOPRIGHT", -PAD, heading and -78 or -74)
+    ui.left:SetPoint("TOPRIGHT", -PAD, heading and -88 or -74)
 
     ui.bar:SetShown(showBar)
     if showBar then ui.bar:SetValue(model.progress or 0) end

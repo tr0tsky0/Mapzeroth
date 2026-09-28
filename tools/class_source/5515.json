@@ -1,0 +1,949 @@
+[
+ {
+  "id": 136,
+  "name": "Mend Pet",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 4
+ },
+ {
+  "id": 781,
+  "name": "Disengage",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 1002,
+  "name": "Eyes of the Beast",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 4
+ },
+ {
+  "id": 1130,
+  "name": "Hunter's Mark",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 4
+ },
+ {
+  "id": 1462,
+  "name": "Beast Lore",
+  "level": 24,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 1494,
+  "name": "Track Beasts",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 4
+ },
+ {
+  "id": 1495,
+  "name": "Mongoose Bite",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 4
+ },
+ {
+  "id": 1499,
+  "name": "Freezing Trap",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 1510,
+  "name": "Volley",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 1513,
+  "name": "Scare Beast",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 4
+ },
+ {
+  "id": 1543,
+  "name": "Flare",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 4
+ },
+ {
+  "id": 1978,
+  "name": "Serpent Sting",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 4
+ },
+ {
+  "id": 2643,
+  "name": "Multi-Shot",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 4
+ },
+ {
+  "id": 2974,
+  "name": "Wing Clip",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 4
+ },
+ {
+  "id": 3034,
+  "name": "Viper Sting",
+  "rank": "Rank 1",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 4
+ },
+ {
+  "id": 3043,
+  "name": "Scorpid Sting",
+  "level": 22,
+  "trainingcost": 6000,
+  "reqclass": 4
+ },
+ {
+  "id": 3044,
+  "name": "Arcane Shot",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 4
+ },
+ {
+  "id": 3045,
+  "name": "Rapid Fire",
+  "level": 26,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 3111,
+  "name": "Mend Pet",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 3661,
+  "name": "Mend Pet",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 3662,
+  "name": "Mend Pet",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 4
+ },
+ {
+  "id": 5116,
+  "name": "Concussive Shot",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 4
+ },
+ {
+  "id": 5118,
+  "name": "Aspect of the Cheetah",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 5384,
+  "name": "Feign Death",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 6197,
+  "name": "Eagle Eye",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 4
+ },
+ {
+  "id": 13159,
+  "name": "Aspect of the Pack",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 13161,
+  "name": "Aspect of the Beast",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 13163,
+  "name": "Aspect of the Monkey",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 4
+ },
+ {
+  "id": 13165,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 4
+ },
+ {
+  "id": 13542,
+  "name": "Mend Pet",
+  "rank": "Rank 5",
+  "level": 44,
+  "trainingcost": 26000,
+  "reqclass": 4
+ },
+ {
+  "id": 13543,
+  "name": "Mend Pet",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 40000,
+  "reqclass": 4
+ },
+ {
+  "id": 13544,
+  "name": "Mend Pet",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 50000,
+  "reqclass": 4
+ },
+ {
+  "id": 13549,
+  "name": "Serpent Sting",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 4
+ },
+ {
+  "id": 13550,
+  "name": "Serpent Sting",
+  "rank": "Rank 3",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 4
+ },
+ {
+  "id": 13551,
+  "name": "Serpent Sting",
+  "rank": "Rank 4",
+  "level": 26,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 13552,
+  "name": "Serpent Sting",
+  "rank": "Rank 5",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 4
+ },
+ {
+  "id": 13553,
+  "name": "Serpent Sting",
+  "rank": "Rank 6",
+  "level": 42,
+  "trainingcost": 24000,
+  "reqclass": 4
+ },
+ {
+  "id": 13554,
+  "name": "Serpent Sting",
+  "rank": "Rank 7",
+  "level": 50,
+  "trainingcost": 36000,
+  "reqclass": 4
+ },
+ {
+  "id": 13555,
+  "name": "Serpent Sting",
+  "rank": "Rank 8",
+  "level": 58,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 13795,
+  "name": "Immolation Trap",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 4
+ },
+ {
+  "id": 13809,
+  "name": "Frost Trap",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 13813,
+  "name": "Explosive Trap",
+  "rank": "Rank 1",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 4
+ },
+ {
+  "id": 14260,
+  "name": "Raptor Strike",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 4
+ },
+ {
+  "id": 14261,
+  "name": "Raptor Strike",
+  "rank": "Rank 3",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 4
+ },
+ {
+  "id": 14262,
+  "name": "Raptor Strike",
+  "rank": "Rank 4",
+  "level": 24,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 14263,
+  "name": "Raptor Strike",
+  "rank": "Rank 5",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 4
+ },
+ {
+  "id": 14264,
+  "name": "Raptor Strike",
+  "rank": "Rank 6",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 14265,
+  "name": "Raptor Strike",
+  "rank": "Rank 7",
+  "level": 48,
+  "trainingcost": 32000,
+  "reqclass": 4
+ },
+ {
+  "id": 14266,
+  "name": "Raptor Strike",
+  "rank": "Rank 8",
+  "level": 56,
+  "trainingcost": 46000,
+  "reqclass": 4
+ },
+ {
+  "id": 14267,
+  "name": "Wing Clip",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 4
+ },
+ {
+  "id": 14268,
+  "name": "Wing Clip",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 50000,
+  "reqclass": 4
+ },
+ {
+  "id": 14269,
+  "name": "Mongoose Bite",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 14270,
+  "name": "Mongoose Bite",
+  "rank": "Rank 3",
+  "level": 44,
+  "trainingcost": 26000,
+  "reqclass": 4
+ },
+ {
+  "id": 14271,
+  "name": "Mongoose Bite",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 14272,
+  "name": "Disengage",
+  "rank": "Rank 2",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 4
+ },
+ {
+  "id": 14273,
+  "name": "Disengage",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 32000,
+  "reqclass": 4
+ },
+ {
+  "id": 14274,
+  "name": "Distracting Shot",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 14279,
+  "name": "Viper Sting",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 28000,
+  "reqclass": 4
+ },
+ {
+  "id": 14280,
+  "name": "Viper Sting",
+  "rank": "Rank 3",
+  "level": 56,
+  "trainingcost": 46000,
+  "reqclass": 4
+ },
+ {
+  "id": 14281,
+  "name": "Arcane Shot",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 4
+ },
+ {
+  "id": 14282,
+  "name": "Arcane Shot",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 4
+ },
+ {
+  "id": 14283,
+  "name": "Arcane Shot",
+  "rank": "Rank 4",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 14284,
+  "name": "Arcane Shot",
+  "rank": "Rank 5",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 4
+ },
+ {
+  "id": 14285,
+  "name": "Arcane Shot",
+  "rank": "Rank 6",
+  "level": 44,
+  "trainingcost": 26000,
+  "reqclass": 4
+ },
+ {
+  "id": 14286,
+  "name": "Arcane Shot",
+  "rank": "Rank 7",
+  "level": 52,
+  "trainingcost": 40000,
+  "reqclass": 4
+ },
+ {
+  "id": 14287,
+  "name": "Arcane Shot",
+  "rank": "Rank 8",
+  "level": 60,
+  "trainingcost": 50000,
+  "reqclass": 4
+ },
+ {
+  "id": 14294,
+  "name": "Volley",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 36000,
+  "reqclass": 4
+ },
+ {
+  "id": 14295,
+  "name": "Volley",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 14302,
+  "name": "Immolation Trap",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 14303,
+  "name": "Immolation Trap",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 4
+ },
+ {
+  "id": 14304,
+  "name": "Immolation Trap",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 28000,
+  "reqclass": 4
+ },
+ {
+  "id": 14305,
+  "name": "Immolation Trap",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 46000,
+  "reqclass": 4
+ },
+ {
+  "id": 14310,
+  "name": "Freezing Trap",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 14311,
+  "name": "Freezing Trap",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 50000,
+  "reqclass": 4
+ },
+ {
+  "id": 14316,
+  "name": "Explosive Trap",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 26000,
+  "reqclass": 4
+ },
+ {
+  "id": 14317,
+  "name": "Explosive Trap",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 42000,
+  "reqclass": 4
+ },
+ {
+  "id": 14318,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 4
+ },
+ {
+  "id": 14319,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 14320,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 4
+ },
+ {
+  "id": 14321,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 32000,
+  "reqclass": 4
+ },
+ {
+  "id": 14322,
+  "name": "Aspect of the Hawk",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 14323,
+  "name": "Hunter's Mark",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 6000,
+  "reqclass": 4
+ },
+ {
+  "id": 14324,
+  "name": "Hunter's Mark",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 14325,
+  "name": "Hunter's Mark",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 14326,
+  "name": "Scare Beast",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 14327,
+  "name": "Scare Beast",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 28000,
+  "reqclass": 4
+ },
+ {
+  "id": 15629,
+  "name": "Distracting Shot",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 4
+ },
+ {
+  "id": 15630,
+  "name": "Distracting Shot",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 15631,
+  "name": "Distracting Shot",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 36000,
+  "reqclass": 4
+ },
+ {
+  "id": 15632,
+  "name": "Distracting Shot",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 50000,
+  "reqclass": 4
+ },
+ {
+  "id": 19434,
+  "name": "Aimed Shot",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2100,
+  "reqclass": 4
+ },
+ {
+  "id": 19506,
+  "name": "Trueshot Aura",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 16000,
+  "reqclass": 4
+ },
+ {
+  "id": 19878,
+  "name": "Track Demons",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 4
+ },
+ {
+  "id": 19879,
+  "name": "Track Dragonkin",
+  "level": 50,
+  "trainingcost": 36000,
+  "reqclass": 4
+ },
+ {
+  "id": 19880,
+  "name": "Track Elementals",
+  "level": 26,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 19882,
+  "name": "Track Giants",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 4
+ },
+ {
+  "id": 19883,
+  "name": "Track Humanoids",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 4
+ },
+ {
+  "id": 19884,
+  "name": "Track Undead",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 4
+ },
+ {
+  "id": 19885,
+  "name": "Track Hidden",
+  "level": 24,
+  "trainingcost": 7000,
+  "reqclass": 4
+ },
+ {
+  "id": 20043,
+  "name": "Aspect of the Wild",
+  "rank": "Rank 1",
+  "level": 46,
+  "trainingcost": 28000,
+  "reqclass": 4
+ },
+ {
+  "id": 20190,
+  "name": "Aspect of the Wild",
+  "rank": "Rank 2",
+  "level": 56,
+  "trainingcost": 46000,
+  "reqclass": 4
+ },
+ {
+  "id": 20736,
+  "name": "Distracting Shot",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 4
+ },
+ {
+  "id": 20900,
+  "name": "Aimed Shot",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 400,
+  "reqclass": 4
+ },
+ {
+  "id": 20901,
+  "name": "Aimed Shot",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 700,
+  "reqclass": 4
+ },
+ {
+  "id": 20902,
+  "name": "Aimed Shot",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 1300,
+  "reqclass": 4
+ },
+ {
+  "id": 20903,
+  "name": "Aimed Shot",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 2000,
+  "reqclass": 4
+ },
+ {
+  "id": 20904,
+  "name": "Aimed Shot",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 2500,
+  "reqclass": 4
+ },
+ {
+  "id": 20905,
+  "name": "Trueshot Aura",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 1800,
+  "reqclass": 4
+ },
+ {
+  "id": 20906,
+  "name": "Trueshot Aura",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 2500,
+  "reqclass": 4
+ },
+ {
+  "id": 20909,
+  "name": "Counterattack",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 1200,
+  "reqclass": 4
+ },
+ {
+  "id": 20910,
+  "name": "Counterattack",
+  "rank": "Rank 4",
+  "level": 54,
+  "trainingcost": 2100,
+  "reqclass": 4
+ },
+ {
+  "id": 1242634,
+  "name": "Counterattack",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 7600,
+  "reqclass": 4
+ },
+ {
+  "id": 1293525,
+  "name": "Summon Hawk",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 13000,
+  "reqclass": 4
+ },
+ {
+  "id": 1293526,
+  "name": "Summon Hawk",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 29000,
+  "reqclass": 4
+ },
+ {
+  "id": 1293527,
+  "name": "Summon Hawk",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 4
+ },
+ {
+  "id": 1299348,
+  "name": "Trueshot Aura",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 4
+ },
+ {
+  "id": 1299445,
+  "name": "Aspect of the Beast",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 16000,
+  "reqclass": 4
+ },
+ {
+  "id": 1299446,
+  "name": "Aspect of the Beast",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 36000,
+  "reqclass": 4
+ },
+ {
+  "id": 1299447,
+  "name": "Aspect of the Beast",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 48000,
+  "reqclass": 4
+ },
+ {
+  "id": 1310785,
+  "name": "Sniper Shot",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 14000,
+  "reqclass": 4
+ },
+ {
+  "id": 1310786,
+  "name": "Sniper Shot",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 4
+ }
+]

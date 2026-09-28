@@ -158,6 +158,37 @@ check(state.view == "route" and state.plan, "choosing it plans the trip")
 check(#state.plan.steps >= 2 and state.plan.steps[#state.plan.steps].method == "taxi", "walk to the flight master, then fly")
 check(state.plan.cost > 0, "with a time")
 
+-- Each step shows an icon of how it travels by default, or the colour chip if the player prefers it.
+do
+    local last = box.steps[#state.plan.steps]
+    check(last.iconShown and last.icon._shown and not last.marker._shown, "a step shows an icon, not a chip, by default")
+    check(tostring(last.icon._texture):find("Tracking\FlightMaster", 1, true), "a flight's is the flight master's boot: " .. tostring(last.icon._texture))
+    check(tostring(box.steps[1].icon._texture):find("Sprint", 1, true), "walking's is Sprint: " .. tostring(box.steps[1].icon._texture))
+    addon.Options:Set("stepMarkers", "chip")
+    check(not last.iconShown and not last.icon._shown and last.marker._shown, "the setting brings the chips back, live")
+    addon.Options:Set("stepMarkers", "icon")
+    check(last.icon._shown, "and the icons again")
+    local realLookup = GetFileIDFromPath
+    GetFileIDFromPath = function(path) if path:find("FlightMaster", 1, true) then return nil end return 1 end
+    Theme:Set("classic")                             -- a theme not yet asked about, so the lookup runs again
+    addon.Panel:RenderSteps()
+    check(tostring(last.icon._texture):find("RavenForm", 1, true), "a client without an icon gets the next candidate: " .. tostring(last.icon._texture))
+    GetFileIDFromPath = function() return nil end
+    check(Theme:StepIcon("tram") == nil, "and none at all when the client has none of them")
+    GetFileIDFromPath = realLookup
+    local realItem = C_Item
+    C_Item = { GetItemIconByID = function(id) return id == 6948 and 134414 or nil end }
+    check(Theme:StepIcon("hearthstone", { itemID = 6948 }) == 134414, "a step using an item shows that item's own icon")
+    C_Item = realItem
+    Theme:Set("moderndark")
+    local realFaction = UnitFactionGroup
+    UnitFactionGroup = function() return "Horde" end
+    check(tostring(Theme:StepIcon("fly")):find("Wyvern", 1, true), "the Horde flies wyverns: " .. tostring(Theme:StepIcon("fly")))
+    check(tostring(Theme:StepIcon("taxi")):find("FlightMaster", 1, true), "but takes the same flight master's boot")
+    UnitFactionGroup = realFaction
+    check(tostring(Theme:StepIcon("fly")):find("Gryphon", 1, true), "the Alliance's gryphons: " .. tostring(Theme:StepIcon("fly")))
+end
+
 -- A flight hint shows on a route with no fare note: from Sentinel Hill (found) to Booty Bay (not found), walking,
 -- "you haven't found Booty Bay's flight master" (the hints were read with ipairs, which stopped at the missing fare
 -- note and dropped the rest).
@@ -205,6 +236,29 @@ addon.Panel:MarkCurrentStep()
 check(box.steps[LAST].name._text == "Step 10" and box.steps[LAST].sel._shown, "the current step scrolls into view and is marked: " .. box.steps[LAST].name._text)
 addon.Navigation.Model = realModel
 state.pinned = false
+
+-- A long hint (several wrapped lines) pushes the steps down instead of printing over them, and fewer rows show;
+-- the rest are scrolled to as usual.
+for _, row in ipairs(box.steps) do
+    row.SetPoint = function(self, _, _, y) self._top = -y end
+end
+addon.Panel:DisplayPlan({ name = "Somewhere far" }, { steps = longSteps, cost = 90 })
+check(state.stepRows == LAST, "no hint: every row")
+local plainTop = box.steps[1]._top
+local realFareText = addon.Journey.FareText
+addon.Journey.FareText = function() return "a hint long enough to wrap onto several lines" end
+box.routeHint.GetStringHeight = function() return 80 end
+addon.Panel:DisplayPlan({ name = "Somewhere far" }, { steps = longSteps, cost = 90 })
+local top = box.steps[1]._top
+check(top >= 86 + 74 + 80, "the steps start under the hint: " .. tostring(top))
+check(top > plainTop and state.stepRows < LAST, "lower than usual, with fewer rows: " .. state.stepRows)
+check(box.steps[state.stepRows]._top + 30 <= 500 - 16 - 28, "and still above Start")
+check(not box.steps[state.stepRows + 1]._shown, "the rows that don't fit are hidden")
+check(box.more._text == ("%d more below"):format(10 - state.stepRows), "and counted: " .. tostring(box.more._text))
+addon.Panel:Scroll(1000)
+check(box.steps[state.stepRows].name._text == "Step 10", "scrolling reaches the last step with fewer rows")
+box.routeHint.GetStringHeight = nil
+addon.Journey.FareText = realFareText
 
 -- Escape goes back, then clears, then leaves the box.
 addon.Panel:Escape()
@@ -431,6 +485,16 @@ local listBottom = 86 + rowCount * 38
 check(listBottom <= 500 - 16 and 500 - 16 - listBottom < 38, "the list fills the panel: " .. rowCount .. " rows end at " .. listBottom)
 for _, row in ipairs(state.results) do check(row.header and not row.open, "and they start closed: " .. tostring(row.name)) end
 check(not state.priced, "nothing is priced just for opening the window")
+-- Hovering a row shows a tooltip for a trainer (Panel.TooltipLines, tests/test_trainer_tooltip.lua); a heading has none.
+local tipLines
+GameTooltip = { SetOwner = function() end, AddLine = function(_, text) tipLines = (tipLines or 0) + 1 end,
+    Show = function() end, Hide = function() end, IsOwned = function() return true end }
+local firstRow = addon.Panel.widgets.rows[1]
+check(firstRow._hooks.OnEnter and firstRow._hooks.OnLeave, "rows show a tooltip on hover")
+firstRow._hooks.OnEnter(firstRow)
+firstRow._hooks.OnLeave(firstRow)
+check(tipLines == nil, "a section heading has no tooltip")
+GameTooltip = nil
 
 -- Opening a section prices it, from where the player stands, and lists its items with their times.
 local cities = headerIndex("cities")
@@ -612,6 +676,21 @@ check(pw.assumeFlights.button.label._text:find("On", 1, true), "flight points ar
 pw.assumeFlights:Select(false)
 check(Options:Get("assumeFlightsFound") == false and pw.assumeFlights.button.label._text:find("Off", 1, true), "and the dropdown turns it off")
 pw.assumeFlights:Select(true)
+
+-- The page scrolls when the Settings window is shorter than the settings, and doesn't when they fit.
+do
+    local sc = pw.scroll
+    sc.frame.GetHeight = function() return 500 end
+    sc.frame.GetWidth = function() return 700 end
+    local lo, hi
+    sc.bar.SetMinMaxValues = function(_, a, b) lo, hi = a, b end
+    sc.fit()
+    check(lo == 0 and hi and hi > 0 and sc.bar._shown, "a short window gets a scroll bar: " .. tostring(hi))
+    sc.frame.GetHeight = function() return 2000 end
+    sc.fit()
+    check(hi == 0 and not sc.bar._shown, "a tall one doesn't")
+    check(pw.stepMarkers.menu._shown == false, "and the dropdown lists start closed")
+end
 
 pw.tax.slider._scripts.OnValueChanged(pw.tax.slider, 15, true)
 check(Options:Get("loadingScreenTax") == 15 and pw.tax.value._text == "15 s", "moving the loading screen slider changes the setting")

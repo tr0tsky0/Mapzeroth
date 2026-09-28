@@ -22,7 +22,9 @@ local LIST_TOP = 86
 local ROW_H = 38
 local ROWS = math.floor((HEIGHT - PAD - LIST_TOP) / ROW_H)   -- as many result rows as the panel has room for
 local INDENT = 14                         -- how far an item of an accordion section sits in from its heading
-local STEP_H, STEPS = 30, 8
+local STEP_H, STEPS = 30, 8               -- STEPS rows at most; fewer show when the route's notes take room (layoutSteps)
+local STEPS_TOP = LIST_TOP + 118          -- where the steps start, or lower if the notes above run longer
+local STEPS_BOTTOM = HEIGHT - PAD - 28    -- and where they must end: above Start and the "more" note
 
 local ui                                  -- the widgets, once built
 local state = {
@@ -31,6 +33,7 @@ local state = {
     sections = {}, open = {}, priced = false, session = nil, waypoint = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
     stepOffset = 0,       -- how many of the route's steps are scrolled past, when it has more than fit
+    stepRows = STEPS,     -- how many step rows fit under the route's notes (layoutSteps)
     docked = true,         -- beside the map (Reanchor), or free-floating where the player dragged it
 }
 
@@ -127,6 +130,8 @@ local function build(parent)
         row.sub:SetWidth(INNER - 14 - 8)
         row.sub:SetWordWrap(false)
         row:SetScript("OnClick", function(self) Panel:Choose(self.index) end)
+        row:HookScript("OnEnter", function(self) Panel:ShowRowTooltip(self) end)
+        row:HookScript("OnLeave", function(self) Theme:HideTooltip(self) end)
         ui.rows[i] = row
     end
 
@@ -149,9 +154,8 @@ local function build(parent)
     ui.routeHint:SetWordWrap(true)
 
     ui.steps = {}
-    local stepsTop = LIST_TOP + 118
     for i = 1, STEPS do
-        local row = makeRow(frame, stepsTop, i, STEP_H, true)
+        local row = makeRow(frame, STEPS_TOP, i, STEP_H, true)
         row:EnableMouse(false)
         row.name:ClearAllPoints()
         row.name:SetPoint("LEFT", 14, 0)
@@ -255,7 +259,7 @@ function Panel:Render()
                 row.eta:SetText(Panel.EtaText(entry))
                 row.markerGroup = entry.group
             end
-            row.markerMethod = nil
+            row.markerMethod, row.markerSource = nil, nil
             Theme:Restyle(row)
             row:SetSelected(row.index == state.selected)
             row:Show()
@@ -263,6 +267,110 @@ function Panel:Render()
             row:Hide()
         end
     end
+end
+
+-- ---------------------------------------------------------------------------------------
+-- The tooltip on a trainer (what it can do for this player)
+
+local MAX_ABILITIES = 10               -- a class trainer's abilities listed by name; the rest are counted
+
+local function professionLines(info, lines)
+    if info.has then
+        lines[#lines + 1] = { L["TIP_PROF_YOUR_RANK"]:format(info.rank > 0 and L["PROF_RANK_" .. info.rank] or "-"), "body" }
+    else
+        lines[#lines + 1] = { L["TIP_PROF_NOT_KNOWN"], "dim" }
+    end
+    local any = false
+    for _, npc in ipairs(info.npcs) do
+        local text
+        if npc.specialty then
+            text = L["TIP_PROF_SPECIALTY"]
+        elseif npc.top then
+            text = L["TIP_PROF_TRAINER"]:format(L["PROF_RANK_" .. npc.top], 75 * npc.top)
+        else
+            text = L["TIP_PROF_UNKNOWN"]
+        end
+        any = any or npc.useful
+        lines[#lines + 1] = { text, (info.has and npc.useful and not npc.specialty) and "good" or "dim" }
+    end
+    if info.has and not any then lines[#lines + 1] = { L["TIP_NOTHING_NEW"], "warn" } end
+end
+
+local function weaponLines(info, lines)
+    if #info.learnable == 0 then
+        lines[#lines + 1] = { L["TIP_NOTHING_NEW"], "warn" }
+        return
+    end
+    lines[#lines + 1] = { L["TIP_WEAPON_LEARN"], "body" }
+    for _, spellID in ipairs(info.learnable) do
+        lines[#lines + 1] = { "  " .. (addon:GetSkillName(spellID) or ("#" .. spellID)), "good" }
+    end
+end
+
+-- Money as the client writes it (with coin icons), else "1g 24s", leaving out the units that are zero.
+local function money(copper)
+    local format = (C_CurrencyInfo and C_CurrencyInfo.GetCoinTextureString) or GetCoinTextureString or GetMoneyString
+    if format then return format(copper) end
+    local parts = {}
+    for _, unit in ipairs({ { 10000, "g" }, { 100, "s" }, { 1, "c" } }) do
+        local n = math.floor(copper / unit[1])
+        if unit[1] < 10000 then n = n % 100 end
+        if n > 0 then parts[#parts + 1] = n .. unit[2] end
+    end
+    return #parts > 0 and table.concat(parts, " ") or "0c"
+end
+
+local function classLines(status, lines)
+    local learnable = status.learnable
+    if #learnable == 0 then
+        lines[#lines + 1] = { L["TIP_NOTHING_NEW"], "warn" }
+    else
+        lines[#lines + 1] = { L["TIP_CLASS_LEARN"]:format(#learnable), "body" }
+        for i = 1, math.min(#learnable, MAX_ABILITIES) do
+            local spell = learnable[i]
+            lines[#lines + 1] = { "  " .. (addon.ClassTraining:Label(spell[1]) or ("#" .. spell[1])), "good" }
+        end
+        if #learnable > MAX_ABILITIES then
+            lines[#lines + 1] = { "  " .. L["TIP_MORE"]:format(#learnable - MAX_ABILITIES), "dim" }
+        end
+        if status.cost > 0 then lines[#lines + 1] = { L["TIP_CLASS_COST"]:format(money(status.cost)), "body" } end
+    end
+    if status.nextLevel then lines[#lines + 1] = { L["TIP_CLASS_NEXT"]:format(status.nextLevel), "dim" } end
+end
+
+-- The tooltip's lines for a row of the picker, or nil (only trainers have one). A "Nearest ..." pick describes the
+-- place it would go to; every class trainer of yours teaches the same, so that pick needs no route to say it.
+function Panel.TooltipLines(entry, ctx)
+    if not entry or entry.header or entry.group ~= "trainer" then return nil end
+    local nodeID = entry.pick and entry.nearest or entry.nodeID
+    local node = nodeID and addon.World:GetNode(nodeID)
+    if not node and entry.pick and entry.nodeIDs then node = addon.World:GetNode(entry.nodeIDs[1]) end
+    local info = node and addon.Trainers:Describe(node, ctx)
+    if not info or (entry.pick and not entry.nearest and info.kind ~= "class") then return nil end
+    if info.kind == "class" and not info.own then return nil end      -- another class's
+    local lines = { { entry.pick and entry.where or entry.name, "title" } }
+    if info.otherFaction then
+        -- The client's name for the faction ("Horde"), where it has one.
+        local faction = _G["FACTION_" .. info.otherFaction:upper()] or info.otherFaction
+        lines[#lines + 1] = { L["TIP_OTHER_FACTION"]:format(faction), "warn" }
+        return lines
+    end
+    local status = info.kind == "class" and addon.ClassTraining:Status(ctx)
+    if info.kind == "class" and not status then return nil end       -- no data (Modern)
+    if info.kind == "profession" then
+        professionLines(info, lines)
+    elseif info.kind == "weapon" then
+        weaponLines(info, lines)
+    else
+        classLines(status, lines)
+    end
+    return lines
+end
+
+function Panel:ShowRowTooltip(row)
+    local entry = row.index and state.results[row.index]
+    local lines = Panel.TooltipLines(entry, addon:GetPlayerContext())      -- fresh: what they know may have changed
+    if lines then Theme:ShowTooltip(row, lines) end
 end
 
 local function setStatus(text)
@@ -355,7 +463,7 @@ end
 
 function Panel:Scroll(delta)
     if state.view == "route" and state.plan then
-        local max = math.max(0, #state.plan.steps - STEPS)
+        local max = math.max(0, #state.plan.steps - state.stepRows)
         state.stepOffset = math.max(0, math.min(max, state.stepOffset + delta))
         self:RenderSteps()
         return
@@ -404,6 +512,19 @@ function Panel:ShowRoute(entry)
 end
 
 -- Draw a plan's route: the total, the hint, and its steps (the one being followed is marked).
+-- The steps start under the route's notes (the hints can wrap to several lines), and as many rows show as fit
+-- between there and the bottom; the rest are scrolled to.
+local function layoutSteps()
+    local hint = ui.routeHint:GetText()
+    local height = (hint and hint ~= "" and ui.routeHint:GetStringHeight()) or 0
+    local top = math.max(STEPS_TOP, LIST_TOP + 74 + math.ceil(height) + 10)
+    state.stepRows = math.max(1, math.min(STEPS, math.floor((STEPS_BOTTOM - top) / STEP_H)))
+    for i, row in ipairs(ui.steps) do
+        row:ClearAllPoints()
+        row:SetPoint("TOPLEFT", PAD, -(top + (i - 1) * STEP_H))
+    end
+end
+
 function Panel:DisplayPlan(entry, plan)
     state.view, state.entry, state.plan, state.stepOffset = "route", entry, plan, 0
     hideList()
@@ -421,6 +542,7 @@ function Panel:DisplayPlan(entry, plan)
     add(Journey:HintText(plan.hint))
     add(Journey:AssumedText(plan))
     ui.routeHint:SetText(table.concat(hints, "\n"))
+    layoutSteps()
     ui.start:SetShown(#plan.steps > 0 and not state.pinned and not plan.unaffordable)
     self:RenderSteps()
 end
@@ -430,14 +552,19 @@ end
 function Panel:RenderSteps()
     local plan = state.plan
     for i = 1, STEPS do
-        local row, step = ui.steps[i], plan.steps[state.stepOffset + i]
+        local row, step = ui.steps[i], i <= state.stepRows and plan.steps[state.stepOffset + i]
         if step then
             local time = Journey:FormatTime(step.seconds)
             row.name:SetText(step.text)
             row.eta:SetText(step.approx and L["TIME_ABOUT"]:format(time) or time)
-            row.markerMethod = step.method
+            row.markerMethod, row.markerSource = step.method, step.source
             row.markerGroup = nil
             Theme:Restyle(row)
+            -- An icon is wider than the chip: the text moves over for it.
+            local left = row.iconShown and 28 or 14
+            row.name:ClearAllPoints()
+            row.name:SetPoint("LEFT", left, 0)
+            row.name:SetWidth(INNER - left - 60)
             row:Show()
         else
             row:Hide()
@@ -445,7 +572,7 @@ function Panel:RenderSteps()
     end
     -- Say when steps are out of sight, above or below: a route can be longer than the list, and the
     -- first step scrolled away was easy to miss.
-    local above, below = state.stepOffset, #plan.steps - state.stepOffset - STEPS
+    local above, below = state.stepOffset, #plan.steps - state.stepOffset - state.stepRows
     local notes = {}
     if above > 0 then notes[#notes + 1] = L["ROUTE_MORE_ABOVE"]:format(above) end
     if below > 0 then notes[#notes + 1] = L["ROUTE_MORE_BELOW"]:format(below) end
@@ -459,8 +586,8 @@ function Panel:MarkCurrentStep()
     if not ui then return end
     local model = state.pinned and addon.Navigation:Model()
     local current = model and not model.finished and model.index
-    if current and (current <= state.stepOffset or current > state.stepOffset + STEPS) then
-        state.stepOffset = math.max(0, math.min(#state.plan.steps - STEPS, current - 1))
+    if current and (current <= state.stepOffset or current > state.stepOffset + state.stepRows) then
+        state.stepOffset = math.max(0, math.min(#state.plan.steps - state.stepRows, current - 1))
         self:RenderSteps()
         return
     end
@@ -640,7 +767,13 @@ function Panel:Init()
     if self.inited then return true end
     if not WorldMapFrame then return false end
     self.inited = true
-    addon.Options:OnChange(function(key) if key == "scale" then Panel:ApplyScale() end end)
+    addon.Options:OnChange(function(key)
+        if key == "scale" then Panel:ApplyScale() end
+        -- Icons or chips beside the steps (and a theme's icons) change how the steps are laid out.
+        if (key == "stepMarkers" or key == "theme") and ui and state.view == "route" and state.plan then
+            Panel:RenderSteps()
+        end
+    end)
     WorldMapFrame:HookScript("OnShow", function() Panel:OnMapShown() end)
     addon.RouteLines:Init()
     WorldMapFrame:HookScript("OnSizeChanged", function()

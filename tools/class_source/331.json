@@ -1,0 +1,1249 @@
+[
+ {
+  "id": 10,
+  "name": "Blizzard",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 116,
+  "name": "Frostbolt",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 128
+ },
+ {
+  "id": 118,
+  "name": "Polymorph",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 128
+ },
+ {
+  "id": 120,
+  "name": "Cone of Cold",
+  "rank": "Rank 1",
+  "level": 26,
+  "trainingcost": 5000,
+  "reqclass": 128
+ },
+ {
+  "id": 122,
+  "name": "Frost Nova",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 128
+ },
+ {
+  "id": 130,
+  "name": "Slow Fall",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 128
+ },
+ {
+  "id": 143,
+  "name": "Fireball",
+  "rank": "Rank 2",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 128
+ },
+ {
+  "id": 145,
+  "name": "Fireball",
+  "rank": "Rank 3",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 128
+ },
+ {
+  "id": 205,
+  "name": "Frostbolt",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 128
+ },
+ {
+  "id": 475,
+  "name": "Remove Lesser Curse",
+  "level": 18,
+  "trainingcost": 1800,
+  "reqclass": 128
+ },
+ {
+  "id": 543,
+  "name": "Fire Ward",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 587,
+  "name": "Conjure Food",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 128
+ },
+ {
+  "id": 597,
+  "name": "Conjure Food",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 128
+ },
+ {
+  "id": 604,
+  "name": "Dampen Magic",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 128
+ },
+ {
+  "id": 759,
+  "name": "Conjure Mana Agate",
+  "level": 28,
+  "trainingcost": 7000,
+  "reqclass": 128
+ },
+ {
+  "id": 837,
+  "name": "Frostbolt",
+  "rank": "Rank 3",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 128
+ },
+ {
+  "id": 865,
+  "name": "Frost Nova",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 5000,
+  "reqclass": 128
+ },
+ {
+  "id": 990,
+  "name": "Conjure Food",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 1008,
+  "name": "Amplify Magic",
+  "rank": "Rank 1",
+  "level": 18,
+  "trainingcost": 1800,
+  "reqclass": 128
+ },
+ {
+  "id": 1449,
+  "name": "Arcane Explosion",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 128
+ },
+ {
+  "id": 1459,
+  "name": "Arcane Intellect",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 128
+ },
+ {
+  "id": 1460,
+  "name": "Arcane Intellect",
+  "rank": "Rank 2",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 128
+ },
+ {
+  "id": 1461,
+  "name": "Arcane Intellect",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 7000,
+  "reqclass": 128
+ },
+ {
+  "id": 1463,
+  "name": "Mana Shield",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 1953,
+  "name": "Blink",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 2120,
+  "name": "Flamestrike",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 1500,
+  "reqclass": 128
+ },
+ {
+  "id": 2121,
+  "name": "Flamestrike",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 4000,
+  "reqclass": 128
+ },
+ {
+  "id": 2136,
+  "name": "Fire Blast",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 128
+ },
+ {
+  "id": 2137,
+  "name": "Fire Blast",
+  "rank": "Rank 2",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 128
+ },
+ {
+  "id": 2138,
+  "name": "Fire Blast",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 2139,
+  "name": "Counterspell",
+  "level": 24,
+  "trainingcost": 4000,
+  "reqclass": 128
+ },
+ {
+  "id": 2948,
+  "name": "Scorch",
+  "rank": "Rank 1",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 3140,
+  "name": "Fireball",
+  "rank": "Rank 4",
+  "level": 18,
+  "trainingcost": 1800,
+  "reqclass": 128
+ },
+ {
+  "id": 3552,
+  "name": "Conjure Mana Jade",
+  "level": 38,
+  "trainingcost": 14000,
+  "reqclass": 128
+ },
+ {
+  "id": 5143,
+  "name": "Arcane Missiles",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 128
+ },
+ {
+  "id": 5144,
+  "name": "Arcane Missiles",
+  "rank": "Rank 2",
+  "level": 16,
+  "trainingcost": 1500,
+  "reqclass": 128
+ },
+ {
+  "id": 5145,
+  "name": "Arcane Missiles",
+  "rank": "Rank 3",
+  "level": 24,
+  "trainingcost": 4000,
+  "reqclass": 128
+ },
+ {
+  "id": 5504,
+  "name": "Conjure Water",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 128
+ },
+ {
+  "id": 5505,
+  "name": "Conjure Water",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 128
+ },
+ {
+  "id": 5506,
+  "name": "Conjure Water",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 6117,
+  "name": "Mage Armor",
+  "rank": "Rank 1",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 128
+ },
+ {
+  "id": 6127,
+  "name": "Conjure Water",
+  "rank": "Rank 4",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 6129,
+  "name": "Conjure Food",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 128
+ },
+ {
+  "id": 6131,
+  "name": "Frost Nova",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 6141,
+  "name": "Blizzard",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 7000,
+  "reqclass": 128
+ },
+ {
+  "id": 6143,
+  "name": "Frost Ward",
+  "rank": "Rank 1",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 7300,
+  "name": "Frost Armor",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 128
+ },
+ {
+  "id": 7301,
+  "name": "Frost Armor",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 7302,
+  "name": "Ice Armor",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 7320,
+  "name": "Ice Armor",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 7322,
+  "name": "Frostbolt",
+  "rank": "Rank 4",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 8400,
+  "name": "Fireball",
+  "rank": "Rank 5",
+  "level": 24,
+  "trainingcost": 4000,
+  "reqclass": 128
+ },
+ {
+  "id": 8401,
+  "name": "Fireball",
+  "rank": "Rank 6",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 8402,
+  "name": "Fireball",
+  "rank": "Rank 7",
+  "level": 36,
+  "trainingcost": 13000,
+  "reqclass": 128
+ },
+ {
+  "id": 8406,
+  "name": "Frostbolt",
+  "rank": "Rank 5",
+  "level": 26,
+  "trainingcost": 5000,
+  "reqclass": 128
+ },
+ {
+  "id": 8407,
+  "name": "Frostbolt",
+  "rank": "Rank 6",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 128
+ },
+ {
+  "id": 8408,
+  "name": "Frostbolt",
+  "rank": "Rank 7",
+  "level": 38,
+  "trainingcost": 14000,
+  "reqclass": 128
+ },
+ {
+  "id": 8412,
+  "name": "Fire Blast",
+  "rank": "Rank 4",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 8413,
+  "name": "Fire Blast",
+  "rank": "Rank 5",
+  "level": 38,
+  "trainingcost": 14000,
+  "reqclass": 128
+ },
+ {
+  "id": 8416,
+  "name": "Arcane Missiles",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 128
+ },
+ {
+  "id": 8417,
+  "name": "Arcane Missiles",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 8422,
+  "name": "Flamestrike",
+  "rank": "Rank 3",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 128
+ },
+ {
+  "id": 8423,
+  "name": "Flamestrike",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 8427,
+  "name": "Blizzard",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 13000,
+  "reqclass": 128
+ },
+ {
+  "id": 8437,
+  "name": "Arcane Explosion",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 8438,
+  "name": "Arcane Explosion",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 8439,
+  "name": "Arcane Explosion",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 14000,
+  "reqclass": 128
+ },
+ {
+  "id": 8444,
+  "name": "Scorch",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 7000,
+  "reqclass": 128
+ },
+ {
+  "id": 8445,
+  "name": "Scorch",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 128
+ },
+ {
+  "id": 8446,
+  "name": "Scorch",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 8450,
+  "name": "Dampen Magic",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 4000,
+  "reqclass": 128
+ },
+ {
+  "id": 8451,
+  "name": "Dampen Magic",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 13000,
+  "reqclass": 128
+ },
+ {
+  "id": 8455,
+  "name": "Amplify Magic",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 8457,
+  "name": "Fire Ward",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 8458,
+  "name": "Fire Ward",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 8461,
+  "name": "Frost Ward",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 10000,
+  "reqclass": 128
+ },
+ {
+  "id": 8462,
+  "name": "Frost Ward",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 8492,
+  "name": "Cone of Cold",
+  "rank": "Rank 2",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 128
+ },
+ {
+  "id": 8494,
+  "name": "Mana Shield",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 7000,
+  "reqclass": 128
+ },
+ {
+  "id": 8495,
+  "name": "Mana Shield",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 13000,
+  "reqclass": 128
+ },
+ {
+  "id": 10053,
+  "name": "Conjure Mana Citrine",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 10054,
+  "name": "Conjure Mana Ruby",
+  "level": 58,
+  "trainingcost": 40000,
+  "reqclass": 128
+ },
+ {
+  "id": 10138,
+  "name": "Conjure Water",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 10139,
+  "name": "Conjure Water",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 10144,
+  "name": "Conjure Food",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 10145,
+  "name": "Conjure Food",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 35000,
+  "reqclass": 128
+ },
+ {
+  "id": 10148,
+  "name": "Fireball",
+  "rank": "Rank 8",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 10149,
+  "name": "Fireball",
+  "rank": "Rank 9",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 10150,
+  "name": "Fireball",
+  "rank": "Rank 10",
+  "level": 54,
+  "trainingcost": 36000,
+  "reqclass": 128
+ },
+ {
+  "id": 10151,
+  "name": "Fireball",
+  "rank": "Rank 11",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10156,
+  "name": "Arcane Intellect",
+  "rank": "Rank 4",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 10157,
+  "name": "Arcane Intellect",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 38000,
+  "reqclass": 128
+ },
+ {
+  "id": 10159,
+  "name": "Cone of Cold",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 10160,
+  "name": "Cone of Cold",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 10161,
+  "name": "Cone of Cold",
+  "rank": "Rank 5",
+  "level": 58,
+  "trainingcost": 40000,
+  "reqclass": 128
+ },
+ {
+  "id": 10169,
+  "name": "Amplify Magic",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 10170,
+  "name": "Amplify Magic",
+  "rank": "Rank 4",
+  "level": 54,
+  "trainingcost": 36000,
+  "reqclass": 128
+ },
+ {
+  "id": 10173,
+  "name": "Dampen Magic",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 10174,
+  "name": "Dampen Magic",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10177,
+  "name": "Frost Ward",
+  "rank": "Rank 4",
+  "level": 52,
+  "trainingcost": 35000,
+  "reqclass": 128
+ },
+ {
+  "id": 10179,
+  "name": "Frostbolt",
+  "rank": "Rank 8",
+  "level": 44,
+  "trainingcost": 23000,
+  "reqclass": 128
+ },
+ {
+  "id": 10180,
+  "name": "Frostbolt",
+  "rank": "Rank 9",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 10181,
+  "name": "Frostbolt",
+  "rank": "Rank 10",
+  "level": 56,
+  "trainingcost": 38000,
+  "reqclass": 128
+ },
+ {
+  "id": 10185,
+  "name": "Blizzard",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 23000,
+  "reqclass": 128
+ },
+ {
+  "id": 10186,
+  "name": "Blizzard",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 35000,
+  "reqclass": 128
+ },
+ {
+  "id": 10187,
+  "name": "Blizzard",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10191,
+  "name": "Mana Shield",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 23000,
+  "reqclass": 128
+ },
+ {
+  "id": 10192,
+  "name": "Mana Shield",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 35000,
+  "reqclass": 128
+ },
+ {
+  "id": 10193,
+  "name": "Mana Shield",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10197,
+  "name": "Fire Blast",
+  "rank": "Rank 6",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 128
+ },
+ {
+  "id": 10199,
+  "name": "Fire Blast",
+  "rank": "Rank 7",
+  "level": 54,
+  "trainingcost": 36000,
+  "reqclass": 128
+ },
+ {
+  "id": 10201,
+  "name": "Arcane Explosion",
+  "rank": "Rank 5",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 128
+ },
+ {
+  "id": 10202,
+  "name": "Arcane Explosion",
+  "rank": "Rank 6",
+  "level": 54,
+  "trainingcost": 36000,
+  "reqclass": 128
+ },
+ {
+  "id": 10205,
+  "name": "Scorch",
+  "rank": "Rank 5",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 128
+ },
+ {
+  "id": 10206,
+  "name": "Scorch",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 35000,
+  "reqclass": 128
+ },
+ {
+  "id": 10207,
+  "name": "Scorch",
+  "rank": "Rank 7",
+  "level": 58,
+  "trainingcost": 40000,
+  "reqclass": 128
+ },
+ {
+  "id": 10211,
+  "name": "Arcane Missiles",
+  "rank": "Rank 6",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 10212,
+  "name": "Arcane Missiles",
+  "rank": "Rank 7",
+  "level": 56,
+  "trainingcost": 38000,
+  "reqclass": 128
+ },
+ {
+  "id": 10215,
+  "name": "Flamestrike",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 10216,
+  "name": "Flamestrike",
+  "rank": "Rank 6",
+  "level": 56,
+  "trainingcost": 38000,
+  "reqclass": 128
+ },
+ {
+  "id": 10219,
+  "name": "Ice Armor",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 10220,
+  "name": "Ice Armor",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10223,
+  "name": "Fire Ward",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 10225,
+  "name": "Fire Ward",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 10230,
+  "name": "Frost Nova",
+  "rank": "Rank 4",
+  "level": 54,
+  "trainingcost": 36000,
+  "reqclass": 128
+ },
+ {
+  "id": 12051,
+  "name": "Evocation",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 12505,
+  "name": "Pyroblast",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 200,
+  "reqclass": 128
+ },
+ {
+  "id": 12522,
+  "name": "Pyroblast",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 400,
+  "reqclass": 128
+ },
+ {
+  "id": 12523,
+  "name": "Pyroblast",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 650,
+  "reqclass": 128
+ },
+ {
+  "id": 12524,
+  "name": "Pyroblast",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 900,
+  "reqclass": 128
+ },
+ {
+  "id": 12525,
+  "name": "Pyroblast",
+  "rank": "Rank 6",
+  "level": 48,
+  "trainingcost": 1400,
+  "reqclass": 128
+ },
+ {
+  "id": 12526,
+  "name": "Pyroblast",
+  "rank": "Rank 7",
+  "level": 54,
+  "trainingcost": 1800,
+  "reqclass": 128
+ },
+ {
+  "id": 12824,
+  "name": "Polymorph",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 12825,
+  "name": "Polymorph",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 12826,
+  "name": "Polymorph",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 13018,
+  "name": "Blast Wave",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 650,
+  "reqclass": 128
+ },
+ {
+  "id": 13019,
+  "name": "Blast Wave",
+  "rank": "Rank 3",
+  "level": 44,
+  "trainingcost": 1150,
+  "reqclass": 128
+ },
+ {
+  "id": 13020,
+  "name": "Blast Wave",
+  "rank": "Rank 4",
+  "level": 52,
+  "trainingcost": 1750,
+  "reqclass": 128
+ },
+ {
+  "id": 13021,
+  "name": "Blast Wave",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 2100,
+  "reqclass": 128
+ },
+ {
+  "id": 13031,
+  "name": "Ice Barrier",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 1300,
+  "reqclass": 128
+ },
+ {
+  "id": 13032,
+  "name": "Ice Barrier",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 1750,
+  "reqclass": 128
+ },
+ {
+  "id": 13033,
+  "name": "Ice Barrier",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 2000,
+  "reqclass": 128
+ },
+ {
+  "id": 18809,
+  "name": "Pyroblast",
+  "rank": "Rank 8",
+  "level": 60,
+  "trainingcost": 2100,
+  "reqclass": 128
+ },
+ {
+  "id": 22782,
+  "name": "Mage Armor",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 28000,
+  "reqclass": 128
+ },
+ {
+  "id": 22783,
+  "name": "Mage Armor",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 40000,
+  "reqclass": 128
+ },
+ {
+  "id": 400640,
+  "name": "Ice Lance",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 3000,
+  "reqclass": 128
+ },
+ {
+  "id": 401502,
+  "name": "Frostfire Bolt",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 1237312,
+  "name": "Frostfire Bolt",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 1237313,
+  "name": "Frostfire Bolt",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 1239696,
+  "name": "Arcane Blast",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 8000,
+  "reqclass": 128
+ },
+ {
+  "id": 1239697,
+  "name": "Arcane Blast",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 15000,
+  "reqclass": 128
+ },
+ {
+  "id": 1239699,
+  "name": "Arcane Blast",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 1239700,
+  "name": "Arcane Blast",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 42000,
+  "reqclass": 128
+ },
+ {
+  "id": 1240044,
+  "name": "Ice Lance",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 14500,
+  "reqclass": 128
+ },
+ {
+  "id": 1240045,
+  "name": "Ice Lance",
+  "rank": "Rank 4",
+  "level": 42,
+  "trainingcost": 18000,
+  "reqclass": 128
+ },
+ {
+  "id": 1240046,
+  "name": "Ice Lance",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 32000,
+  "reqclass": 128
+ },
+ {
+  "id": 1240047,
+  "name": "Ice Lance",
+  "rank": "Rank 6",
+  "level": 56,
+  "trainingcost": 40000,
+  "reqclass": 128
+ }
+]

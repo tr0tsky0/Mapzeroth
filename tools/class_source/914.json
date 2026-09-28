@@ -1,0 +1,774 @@
+[
+ {
+  "id": 72,
+  "name": "Shield Bash",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 1
+ },
+ {
+  "id": 100,
+  "name": "Charge",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 1
+ },
+ {
+  "id": 284,
+  "name": "Heroic Strike",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 1
+ },
+ {
+  "id": 285,
+  "name": "Heroic Strike",
+  "rank": "Rank 3",
+  "level": 16,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 676,
+  "name": "Disarm",
+  "level": 18,
+  "trainingcost": 3000,
+  "reqclass": 1
+ },
+ {
+  "id": 694,
+  "name": "Mocking Blow",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 772,
+  "name": "Rend",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 1
+ },
+ {
+  "id": 845,
+  "name": "Cleave",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 1
+ },
+ {
+  "id": 871,
+  "name": "Shield Wall",
+  "level": 28,
+  "trainingcost": 11000,
+  "reqclass": 1
+ },
+ {
+  "id": 1160,
+  "name": "Demoralizing Shout",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 1500,
+  "reqclass": 1
+ },
+ {
+  "id": 1161,
+  "name": "Challenging Shout",
+  "level": 26,
+  "trainingcost": 10000,
+  "reqclass": 1
+ },
+ {
+  "id": 1464,
+  "name": "Slam",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 12000,
+  "reqclass": 1
+ },
+ {
+  "id": 1608,
+  "name": "Heroic Strike",
+  "rank": "Rank 4",
+  "level": 24,
+  "trainingcost": 8000,
+  "reqclass": 1
+ },
+ {
+  "id": 1671,
+  "name": "Shield Bash",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 1672,
+  "name": "Shield Bash",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 54000,
+  "reqclass": 1
+ },
+ {
+  "id": 1680,
+  "name": "Whirlwind",
+  "level": 36,
+  "trainingcost": 18000,
+  "reqclass": 1
+ },
+ {
+  "id": 1715,
+  "name": "Hamstring",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 1
+ },
+ {
+  "id": 1719,
+  "name": "Recklessness",
+  "level": 50,
+  "trainingcost": 42000,
+  "reqclass": 1
+ },
+ {
+  "id": 2565,
+  "name": "Shield Block",
+  "level": 16,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 2687,
+  "name": "Bloodrage",
+  "level": 10,
+  "trainingcost": 600,
+  "reqclass": 1
+ },
+ {
+  "id": 5242,
+  "name": "Battle Shout",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 1
+ },
+ {
+  "id": 5246,
+  "name": "Intimidating Shout",
+  "level": 22,
+  "trainingcost": 6000,
+  "reqclass": 1
+ },
+ {
+  "id": 5308,
+  "name": "Execute",
+  "rank": "Rank 1",
+  "level": 24,
+  "trainingcost": 8000,
+  "reqclass": 1
+ },
+ {
+  "id": 6178,
+  "name": "Charge",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 10000,
+  "reqclass": 1
+ },
+ {
+  "id": 6190,
+  "name": "Demoralizing Shout",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 8000,
+  "reqclass": 1
+ },
+ {
+  "id": 6192,
+  "name": "Battle Shout",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 6000,
+  "reqclass": 1
+ },
+ {
+  "id": 6343,
+  "name": "Thunder Clap",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 1
+ },
+ {
+  "id": 6546,
+  "name": "Rend",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 600,
+  "reqclass": 1
+ },
+ {
+  "id": 6547,
+  "name": "Rend",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 1
+ },
+ {
+  "id": 6548,
+  "name": "Rend",
+  "rank": "Rank 4",
+  "level": 30,
+  "trainingcost": 12000,
+  "reqclass": 1
+ },
+ {
+  "id": 6552,
+  "name": "Pummel",
+  "rank": "Rank 1",
+  "level": 38,
+  "trainingcost": 20000,
+  "reqclass": 1
+ },
+ {
+  "id": 6554,
+  "name": "Pummel",
+  "rank": "Rank 2",
+  "level": 58,
+  "trainingcost": 60000,
+  "reqclass": 1
+ },
+ {
+  "id": 6572,
+  "name": "Revenge",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 1500,
+  "reqclass": 1
+ },
+ {
+  "id": 6574,
+  "name": "Revenge",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 8000,
+  "reqclass": 1
+ },
+ {
+  "id": 6673,
+  "name": "Battle Shout",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 1
+ },
+ {
+  "id": 7369,
+  "name": "Cleave",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 12000,
+  "reqclass": 1
+ },
+ {
+  "id": 7372,
+  "name": "Hamstring",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 7373,
+  "name": "Hamstring",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 56000,
+  "reqclass": 1
+ },
+ {
+  "id": 7379,
+  "name": "Revenge",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 16000,
+  "reqclass": 1
+ },
+ {
+  "id": 7384,
+  "name": "Overpower",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 1
+ },
+ {
+  "id": 7400,
+  "name": "Mocking Blow",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 10000,
+  "reqclass": 1
+ },
+ {
+  "id": 7402,
+  "name": "Mocking Blow",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 18000,
+  "reqclass": 1
+ },
+ {
+  "id": 7405,
+  "name": "Sunder Armor",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 6000,
+  "reqclass": 1
+ },
+ {
+  "id": 7887,
+  "name": "Overpower",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 11000,
+  "reqclass": 1
+ },
+ {
+  "id": 8198,
+  "name": "Thunder Clap",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 3000,
+  "reqclass": 1
+ },
+ {
+  "id": 8204,
+  "name": "Thunder Clap",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 11000,
+  "reqclass": 1
+ },
+ {
+  "id": 8205,
+  "name": "Thunder Clap",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 20000,
+  "reqclass": 1
+ },
+ {
+  "id": 8380,
+  "name": "Sunder Armor",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 16000,
+  "reqclass": 1
+ },
+ {
+  "id": 8820,
+  "name": "Slam",
+  "rank": "Rank 3",
+  "level": 38,
+  "trainingcost": 20000,
+  "reqclass": 1
+ },
+ {
+  "id": 11549,
+  "name": "Battle Shout",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 11550,
+  "name": "Battle Shout",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 32000,
+  "reqclass": 1
+ },
+ {
+  "id": 11551,
+  "name": "Battle Shout",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 54000,
+  "reqclass": 1
+ },
+ {
+  "id": 11554,
+  "name": "Demoralizing Shout",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 16000,
+  "reqclass": 1
+ },
+ {
+  "id": 11555,
+  "name": "Demoralizing Shout",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 34000,
+  "reqclass": 1
+ },
+ {
+  "id": 11556,
+  "name": "Demoralizing Shout",
+  "rank": "Rank 5",
+  "level": 54,
+  "trainingcost": 56000,
+  "reqclass": 1
+ },
+ {
+  "id": 11564,
+  "name": "Heroic Strike",
+  "rank": "Rank 5",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 11565,
+  "name": "Heroic Strike",
+  "rank": "Rank 6",
+  "level": 40,
+  "trainingcost": 22000,
+  "reqclass": 1
+ },
+ {
+  "id": 11566,
+  "name": "Heroic Strike",
+  "rank": "Rank 7",
+  "level": 48,
+  "trainingcost": 40000,
+  "reqclass": 1
+ },
+ {
+  "id": 11567,
+  "name": "Heroic Strike",
+  "rank": "Rank 8",
+  "level": 56,
+  "trainingcost": 58000,
+  "reqclass": 1
+ },
+ {
+  "id": 11572,
+  "name": "Rend",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 22000,
+  "reqclass": 1
+ },
+ {
+  "id": 11573,
+  "name": "Rend",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 42000,
+  "reqclass": 1
+ },
+ {
+  "id": 11574,
+  "name": "Rend",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 62000,
+  "reqclass": 1
+ },
+ {
+  "id": 11578,
+  "name": "Charge",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 36000,
+  "reqclass": 1
+ },
+ {
+  "id": 11580,
+  "name": "Thunder Clap",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 40000,
+  "reqclass": 1
+ },
+ {
+  "id": 11581,
+  "name": "Thunder Clap",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 60000,
+  "reqclass": 1
+ },
+ {
+  "id": 11584,
+  "name": "Overpower",
+  "rank": "Rank 3",
+  "level": 44,
+  "trainingcost": 34000,
+  "reqclass": 1
+ },
+ {
+  "id": 11585,
+  "name": "Overpower",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 62000,
+  "reqclass": 1
+ },
+ {
+  "id": 11596,
+  "name": "Sunder Armor",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 36000,
+  "reqclass": 1
+ },
+ {
+  "id": 11597,
+  "name": "Sunder Armor",
+  "rank": "Rank 5",
+  "level": 58,
+  "trainingcost": 60000,
+  "reqclass": 1
+ },
+ {
+  "id": 11600,
+  "name": "Revenge",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 34000,
+  "reqclass": 1
+ },
+ {
+  "id": 11601,
+  "name": "Revenge",
+  "rank": "Rank 5",
+  "level": 54,
+  "trainingcost": 56000,
+  "reqclass": 1
+ },
+ {
+  "id": 11604,
+  "name": "Slam",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 36000,
+  "reqclass": 1
+ },
+ {
+  "id": 11605,
+  "name": "Slam",
+  "rank": "Rank 5",
+  "level": 54,
+  "trainingcost": 56000,
+  "reqclass": 1
+ },
+ {
+  "id": 11608,
+  "name": "Cleave",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 22000,
+  "reqclass": 1
+ },
+ {
+  "id": 11609,
+  "name": "Cleave",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 42000,
+  "reqclass": 1
+ },
+ {
+  "id": 18499,
+  "name": "Berserker Rage",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 20230,
+  "name": "Retaliation",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 1
+ },
+ {
+  "id": 20559,
+  "name": "Mocking Blow",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 36000,
+  "reqclass": 1
+ },
+ {
+  "id": 20560,
+  "name": "Mocking Blow",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 58000,
+  "reqclass": 1
+ },
+ {
+  "id": 20569,
+  "name": "Cleave",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 62000,
+  "reqclass": 1
+ },
+ {
+  "id": 20616,
+  "name": "Intercept",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 32000,
+  "reqclass": 1
+ },
+ {
+  "id": 20617,
+  "name": "Intercept",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 54000,
+  "reqclass": 1
+ },
+ {
+  "id": 20658,
+  "name": "Execute",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 14000,
+  "reqclass": 1
+ },
+ {
+  "id": 20660,
+  "name": "Execute",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 22000,
+  "reqclass": 1
+ },
+ {
+  "id": 20661,
+  "name": "Execute",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 40000,
+  "reqclass": 1
+ },
+ {
+  "id": 20662,
+  "name": "Execute",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 58000,
+  "reqclass": 1
+ },
+ {
+  "id": 21551,
+  "name": "Mortal Strike",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 21552,
+  "name": "Mortal Strike",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 2800,
+  "reqclass": 1
+ },
+ {
+  "id": 21553,
+  "name": "Mortal Strike",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 3100,
+  "reqclass": 1
+ },
+ {
+  "id": 23892,
+  "name": "Bloodthirst",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 23893,
+  "name": "Bloodthirst",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 2800,
+  "reqclass": 1
+ },
+ {
+  "id": 23894,
+  "name": "Bloodthirst",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 3100,
+  "reqclass": 1
+ },
+ {
+  "id": 23923,
+  "name": "Shield Slam",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 2000,
+  "reqclass": 1
+ },
+ {
+  "id": 23924,
+  "name": "Shield Slam",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 2800,
+  "reqclass": 1
+ },
+ {
+  "id": 23925,
+  "name": "Shield Slam",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 3100,
+  "reqclass": 1
+ },
+ {
+  "id": 402927,
+  "name": "Victory Rush",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 1
+ },
+ {
+  "id": 1240193,
+  "name": "Slam",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 1
+ },
+ {
+  "id": 1310185,
+  "name": "Tactical Mastery",
+  "level": 14,
+  "trainingcost": 1500,
+  "reqclass": 1
+ }
+]

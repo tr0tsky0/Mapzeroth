@@ -96,11 +96,12 @@ end
 
 function addon:GetPlayerContext()
     local _, classToken = UnitClass("player")
-    local _, raceToken = UnitRace("player")
+    local _, raceToken, raceID = UnitRace("player")
     return {
         faction = UnitFactionGroup("player"),
         class = classToken,
         race = raceToken,
+        raceID = raceID,          -- for abilities only some races learn (ClassSpells' race masks)
         level = UnitLevel("player"),
         knowsSpell = isSpellKnown,
         hasItem = hasItem,

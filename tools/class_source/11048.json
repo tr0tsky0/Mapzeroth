@@ -1,0 +1,1196 @@
+[
+ {
+  "id": 17,
+  "name": "Power Word: Shield",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 16
+ },
+ {
+  "id": 139,
+  "name": "Renew",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 16
+ },
+ {
+  "id": 453,
+  "name": "Mind Soothe",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 527,
+  "name": "Dispel Magic",
+  "rank": "Rank 1",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 16
+ },
+ {
+  "id": 528,
+  "name": "Cure Disease",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 552,
+  "name": "Abolish Disease",
+  "level": 32,
+  "trainingcost": 11000,
+  "reqclass": 16
+ },
+ {
+  "id": 586,
+  "name": "Fade",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 16
+ },
+ {
+  "id": 588,
+  "name": "Inner Fire",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 16
+ },
+ {
+  "id": 589,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 16
+ },
+ {
+  "id": 591,
+  "name": "Smite",
+  "rank": "Rank 2",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 16
+ },
+ {
+  "id": 592,
+  "name": "Power Word: Shield",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 16
+ },
+ {
+  "id": 594,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 16
+ },
+ {
+  "id": 596,
+  "name": "Prayer of Healing",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 598,
+  "name": "Smite",
+  "rank": "Rank 3",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 600,
+  "name": "Power Word: Shield",
+  "rank": "Rank 3",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 16
+ },
+ {
+  "id": 602,
+  "name": "Inner Fire",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 605,
+  "name": "Mind Control",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 970,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 3",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 16
+ },
+ {
+  "id": 976,
+  "name": "Shadow Protection",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 984,
+  "name": "Smite",
+  "rank": "Rank 4",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 16
+ },
+ {
+  "id": 988,
+  "name": "Dispel Magic",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 16
+ },
+ {
+  "id": 992,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 4",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 16
+ },
+ {
+  "id": 996,
+  "name": "Prayer of Healing",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 1004,
+  "name": "Smite",
+  "rank": "Rank 5",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 1006,
+  "name": "Inner Fire",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 1243,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 16
+ },
+ {
+  "id": 1244,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 16
+ },
+ {
+  "id": 1245,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 3",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 16
+ },
+ {
+  "id": 1706,
+  "name": "Levitate",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 16
+ },
+ {
+  "id": 2006,
+  "name": "Resurrection",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 16
+ },
+ {
+  "id": 2010,
+  "name": "Resurrection",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 16
+ },
+ {
+  "id": 2052,
+  "name": "Lesser Heal",
+  "rank": "Rank 2",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 16
+ },
+ {
+  "id": 2053,
+  "name": "Lesser Heal",
+  "rank": "Rank 3",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 16
+ },
+ {
+  "id": 2054,
+  "name": "Heal",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 1600,
+  "reqclass": 16
+ },
+ {
+  "id": 2055,
+  "name": "Heal",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 16
+ },
+ {
+  "id": 2060,
+  "name": "Greater Heal",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 2061,
+  "name": "Flash Heal",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 2096,
+  "name": "Mind Vision",
+  "rank": "Rank 1",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 16
+ },
+ {
+  "id": 2767,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 5",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 16
+ },
+ {
+  "id": 2791,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 16
+ },
+ {
+  "id": 3747,
+  "name": "Power Word: Shield",
+  "rank": "Rank 4",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 16
+ },
+ {
+  "id": 6060,
+  "name": "Smite",
+  "rank": "Rank 6",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 16
+ },
+ {
+  "id": 6063,
+  "name": "Heal",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 16
+ },
+ {
+  "id": 6064,
+  "name": "Heal",
+  "rank": "Rank 4",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 16
+ },
+ {
+  "id": 6065,
+  "name": "Power Word: Shield",
+  "rank": "Rank 5",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 6066,
+  "name": "Power Word: Shield",
+  "rank": "Rank 6",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 16
+ },
+ {
+  "id": 6074,
+  "name": "Renew",
+  "rank": "Rank 2",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 6075,
+  "name": "Renew",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 6076,
+  "name": "Renew",
+  "rank": "Rank 4",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 16
+ },
+ {
+  "id": 6077,
+  "name": "Renew",
+  "rank": "Rank 5",
+  "level": 32,
+  "trainingcost": 11000,
+  "reqclass": 16
+ },
+ {
+  "id": 6078,
+  "name": "Renew",
+  "rank": "Rank 6",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 16
+ },
+ {
+  "id": 7128,
+  "name": "Inner Fire",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 8092,
+  "name": "Mind Blast",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 16
+ },
+ {
+  "id": 8102,
+  "name": "Mind Blast",
+  "rank": "Rank 2",
+  "level": 16,
+  "trainingcost": 1600,
+  "reqclass": 16
+ },
+ {
+  "id": 8103,
+  "name": "Mind Blast",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 16
+ },
+ {
+  "id": 8104,
+  "name": "Mind Blast",
+  "rank": "Rank 4",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 16
+ },
+ {
+  "id": 8105,
+  "name": "Mind Blast",
+  "rank": "Rank 5",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 16
+ },
+ {
+  "id": 8106,
+  "name": "Mind Blast",
+  "rank": "Rank 6",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 8122,
+  "name": "Psychic Scream",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 8124,
+  "name": "Psychic Scream",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 8000,
+  "reqclass": 16
+ },
+ {
+  "id": 8129,
+  "name": "Mana Burn",
+  "rank": "Rank 1",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 16
+ },
+ {
+  "id": 8131,
+  "name": "Mana Burn",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 11000,
+  "reqclass": 16
+ },
+ {
+  "id": 8192,
+  "name": "Mind Soothe",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 16
+ },
+ {
+  "id": 9472,
+  "name": "Flash Heal",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 16
+ },
+ {
+  "id": 9473,
+  "name": "Flash Heal",
+  "rank": "Rank 3",
+  "level": 32,
+  "trainingcost": 11000,
+  "reqclass": 16
+ },
+ {
+  "id": 9474,
+  "name": "Flash Heal",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 16
+ },
+ {
+  "id": 9484,
+  "name": "Shackle Undead",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 9485,
+  "name": "Shackle Undead",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 9578,
+  "name": "Fade",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 9579,
+  "name": "Fade",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 9592,
+  "name": "Fade",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 10874,
+  "name": "Mana Burn",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 18000,
+  "reqclass": 16
+ },
+ {
+  "id": 10875,
+  "name": "Mana Burn",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 16
+ },
+ {
+  "id": 10876,
+  "name": "Mana Burn",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 16
+ },
+ {
+  "id": 10880,
+  "name": "Resurrection",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 12000,
+  "reqclass": 16
+ },
+ {
+  "id": 10881,
+  "name": "Resurrection",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 16
+ },
+ {
+  "id": 10888,
+  "name": "Psychic Scream",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 22000,
+  "reqclass": 16
+ },
+ {
+  "id": 10890,
+  "name": "Psychic Scream",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 16
+ },
+ {
+  "id": 10892,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 6",
+  "level": 42,
+  "trainingcost": 22000,
+  "reqclass": 16
+ },
+ {
+  "id": 10893,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 7",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10894,
+  "name": "Shadow Word: Pain",
+  "rank": "Rank 8",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 16
+ },
+ {
+  "id": 10898,
+  "name": "Power Word: Shield",
+  "rank": "Rank 7",
+  "level": 42,
+  "trainingcost": 22000,
+  "reqclass": 16
+ },
+ {
+  "id": 10899,
+  "name": "Power Word: Shield",
+  "rank": "Rank 8",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 16
+ },
+ {
+  "id": 10900,
+  "name": "Power Word: Shield",
+  "rank": "Rank 9",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 16
+ },
+ {
+  "id": 10901,
+  "name": "Power Word: Shield",
+  "rank": "Rank 10",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10909,
+  "name": "Mind Vision",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 24000,
+  "reqclass": 16
+ },
+ {
+  "id": 10911,
+  "name": "Mind Control",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 24000,
+  "reqclass": 16
+ },
+ {
+  "id": 10912,
+  "name": "Mind Control",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 16
+ },
+ {
+  "id": 10915,
+  "name": "Flash Heal",
+  "rank": "Rank 5",
+  "level": 44,
+  "trainingcost": 24000,
+  "reqclass": 16
+ },
+ {
+  "id": 10916,
+  "name": "Flash Heal",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10917,
+  "name": "Flash Heal",
+  "rank": "Rank 7",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 16
+ },
+ {
+  "id": 10927,
+  "name": "Renew",
+  "rank": "Rank 7",
+  "level": 44,
+  "trainingcost": 24000,
+  "reqclass": 16
+ },
+ {
+  "id": 10928,
+  "name": "Renew",
+  "rank": "Rank 8",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10929,
+  "name": "Renew",
+  "rank": "Rank 9",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 16
+ },
+ {
+  "id": 10933,
+  "name": "Smite",
+  "rank": "Rank 7",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 16
+ },
+ {
+  "id": 10934,
+  "name": "Smite",
+  "rank": "Rank 8",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 16
+ },
+ {
+  "id": 10937,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 16
+ },
+ {
+  "id": 10938,
+  "name": "Power Word: Fortitude",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10941,
+  "name": "Fade",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10942,
+  "name": "Fade",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10945,
+  "name": "Mind Blast",
+  "rank": "Rank 7",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 16
+ },
+ {
+  "id": 10946,
+  "name": "Mind Blast",
+  "rank": "Rank 8",
+  "level": 52,
+  "trainingcost": 38000,
+  "reqclass": 16
+ },
+ {
+  "id": 10947,
+  "name": "Mind Blast",
+  "rank": "Rank 9",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 16
+ },
+ {
+  "id": 10951,
+  "name": "Inner Fire",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10952,
+  "name": "Inner Fire",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10953,
+  "name": "Mind Soothe",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 38000,
+  "reqclass": 16
+ },
+ {
+  "id": 10955,
+  "name": "Shackle Undead",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10957,
+  "name": "Shadow Protection",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 22000,
+  "reqclass": 16
+ },
+ {
+  "id": 10958,
+  "name": "Shadow Protection",
+  "rank": "Rank 3",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 16
+ },
+ {
+  "id": 10960,
+  "name": "Prayer of Healing",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 30000,
+  "reqclass": 16
+ },
+ {
+  "id": 10961,
+  "name": "Prayer of Healing",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 10963,
+  "name": "Greater Heal",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 26000,
+  "reqclass": 16
+ },
+ {
+  "id": 10964,
+  "name": "Greater Heal",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 38000,
+  "reqclass": 16
+ },
+ {
+  "id": 10965,
+  "name": "Greater Heal",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 16
+ },
+ {
+  "id": 14818,
+  "name": "Divine Spirit",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 900,
+  "reqclass": 16
+ },
+ {
+  "id": 14819,
+  "name": "Divine Spirit",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 1500,
+  "reqclass": 16
+ },
+ {
+  "id": 14914,
+  "name": "Holy Fire",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 3000,
+  "reqclass": 16
+ },
+ {
+  "id": 15261,
+  "name": "Holy Fire",
+  "rank": "Rank 8",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 16
+ },
+ {
+  "id": 15262,
+  "name": "Holy Fire",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 16
+ },
+ {
+  "id": 15263,
+  "name": "Holy Fire",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 10000,
+  "reqclass": 16
+ },
+ {
+  "id": 15264,
+  "name": "Holy Fire",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 16
+ },
+ {
+  "id": 15265,
+  "name": "Holy Fire",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 22000,
+  "reqclass": 16
+ },
+ {
+  "id": 15266,
+  "name": "Holy Fire",
+  "rank": "Rank 6",
+  "level": 48,
+  "trainingcost": 28000,
+  "reqclass": 16
+ },
+ {
+  "id": 15267,
+  "name": "Holy Fire",
+  "rank": "Rank 7",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 16
+ },
+ {
+  "id": 15430,
+  "name": "Holy Nova",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 400,
+  "reqclass": 16
+ },
+ {
+  "id": 15431,
+  "name": "Holy Nova",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 700,
+  "reqclass": 16
+ },
+ {
+  "id": 17311,
+  "name": "Mind Flay",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 400,
+  "reqclass": 16
+ },
+ {
+  "id": 17312,
+  "name": "Mind Flay",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 700,
+  "reqclass": 16
+ },
+ {
+  "id": 17313,
+  "name": "Mind Flay",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 17314,
+  "name": "Mind Flay",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 1900,
+  "reqclass": 16
+ },
+ {
+  "id": 18807,
+  "name": "Mind Flay",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 16
+ },
+ {
+  "id": 19261,
+  "name": "Touch of Weakness",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 150,
+  "reqrace": 16,
+  "reqclass": 16
+ },
+ {
+  "id": 19262,
+  "name": "Touch of Weakness",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 500,
+  "reqrace": 16,
+  "reqclass": 16
+ },
+ {
+  "id": 19264,
+  "name": "Touch of Weakness",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 900,
+  "reqrace": 16,
+  "reqclass": 16
+ },
+ {
+  "id": 19265,
+  "name": "Touch of Weakness",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 1500,
+  "reqrace": 16,
+  "reqclass": 16
+ },
+ {
+  "id": 19266,
+  "name": "Touch of Weakness",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqrace": 16,
+  "reqclass": 16
+ },
+ {
+  "id": 19276,
+  "name": "Devouring Plague",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 400,
+  "reqclass": 16
+ },
+ {
+  "id": 19277,
+  "name": "Devouring Plague",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 700,
+  "reqclass": 16
+ },
+ {
+  "id": 19278,
+  "name": "Devouring Plague",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 19279,
+  "name": "Devouring Plague",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 1900,
+  "reqclass": 16
+ },
+ {
+  "id": 19280,
+  "name": "Devouring Plague",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 16
+ },
+ {
+  "id": 20770,
+  "name": "Resurrection",
+  "rank": "Rank 5",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 16
+ },
+ {
+  "id": 27681,
+  "name": "Prayer of Spirit",
+  "rank": "Rank 1",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 16
+ },
+ {
+  "id": 27799,
+  "name": "Holy Nova",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 27800,
+  "name": "Holy Nova",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 1900,
+  "reqclass": 16
+ },
+ {
+  "id": 27801,
+  "name": "Holy Nova",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 16
+ },
+ {
+  "id": 27841,
+  "name": "Divine Spirit",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 16
+ },
+ {
+  "id": 27870,
+  "name": "Lightwell",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 1200,
+  "reqclass": 16
+ },
+ {
+  "id": 27871,
+  "name": "Lightwell",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 1500,
+  "reqclass": 16
+ }
+]

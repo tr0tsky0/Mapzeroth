@@ -16,6 +16,9 @@ local addonName, addon = ...
 --   edit         { backdrop = <SetBackdrop table> }
 --   styles       colours by route style (foot, flight, boat, ability; addon.METHODS gives each method its style)
 --   markers      colours by kind of place (place, flight, transport, instance, ...)
+--   icons        (optional) pictures for route steps by method, each a list of texture paths, the first the client
+--                has winning; a method it leaves out uses STEP_ICONS below
+--   stepIcon     (optional) { size = pixels, crop = fraction trimmed off each edge (an icon's own frame) }
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
 local Theme = {}
@@ -29,6 +32,30 @@ local skin = {}                                       -- role -> function(widget
 local BLIZZARD_BUTTON = "Interface\\Buttons\\UI-Panel-Button-"
 local FLAT = "Interface\\Buttons\\WHITE8x8"
 local ARROW = "Interface\\Minimap\\ROTATING-MINIMAPARROW"      -- an arrow pointing up, in every client
+local ARROW_CROP = 0.15         -- that texture is mostly empty around the arrow: trim it so the arrow fills its box
+
+-- The picture beside a route step when the player shows icons instead of colour chips (the stepMarkers setting).
+-- Each is a list of candidates, the first the client has winning: the classic clients lack some later art, so the
+-- last of each list is an icon that has been in the game since launch. A step that uses a spell or an item
+-- (a hearthstone, a teleport) shows that spell's or item's own icon before any of these.
+local ICONS = "Interface\\Icons\\"
+local STEP_ICONS = {
+    walk        = { ICONS .. "Ability_Rogue_Sprint" },
+    taxi        = { "Interface\Minimap\Tracking\FlightMaster", ICONS .. "Spell_Nature_RavenForm" },   -- the flight master's winged boot
+    fly         = { ICONS .. "Ability_Mount_Gryphon_01", ICONS .. "Spell_Nature_RavenForm" },
+    ship        = { ICONS .. "INV_Misc_Anchor", ICONS .. "Spell_Frost_WindWalkOn" },
+    zeppelin    = { ICONS .. "INV_Misc_Zeppelin", ICONS .. "INV_Misc_Anchor", ICONS .. "Spell_Frost_WindWalkOn" },
+    tram        = { ICONS .. "INV_Gizmo_02", ICONS .. "INV_Misc_Gear_01" },
+    hearthstone = { ICONS .. "INV_Misc_Rune_01" },
+    teleport    = { ICONS .. "Spell_Arcane_TeleportStormWind" },
+    portal      = { ICONS .. "Spell_Arcane_PortalStormWind" },
+    equip       = { ICONS .. "INV_Misc_Bag_08", ICONS .. "Spell_Arcane_TeleportStormWind" },
+}
+STEP_ICONS.transition, STEP_ICONS.phaseswitch = STEP_ICONS.walk, STEP_ICONS.walk
+-- Flying yourself: the Horde flies wyverns, not gryphons.
+local HORDE_ICONS = {
+    fly = { ICONS .. "Ability_Mount_Wyvern_01", ICONS .. "Spell_Nature_RavenForm" },
+}
 
 function Theme:Register(id, def)
     def.id = id
@@ -61,6 +88,56 @@ function Theme:MarkerColor(group)
     local c = current and current.markers and (current.markers[group] or current.markers.default)
     if not c then return self:Color("accent") end
     return c[1], c[2], c[3], c[4] or 1
+end
+
+-- Whether the client has a texture file. An old client without the lookup: assume it does.
+local function hasFile(path)
+    if not GetFileIDFromPath then return true end
+    return GetFileIDFromPath(path) ~= nil
+end
+
+local resolved = {}         -- "theme:method" -> the first candidate the client has (false: none of them)
+
+-- The icon of the spell or item a step uses, if the client knows it.
+local function sourceIcon(source)
+    if type(source) ~= "table" then return nil end
+    if source.itemID then
+        local icon = C_Item and C_Item.GetItemIconByID and C_Item.GetItemIconByID(source.itemID)
+        if not icon and GetItemIcon then icon = GetItemIcon(source.itemID) end
+        if icon then return icon end
+    end
+    if source.spellID then
+        local icon = C_Spell and C_Spell.GetSpellTexture and C_Spell.GetSpellTexture(source.spellID)
+        if not icon and GetSpellTexture then icon = GetSpellTexture(source.spellID) end
+        if icon then return icon end
+    end
+end
+
+-- The picture for a route step: its spell's or item's own icon, else the theme's (or the default) for its method.
+-- Nil when the client has none of them; the row then keeps its colour chip.
+function Theme:StepIcon(method, source)
+    local icon = sourceIcon(source)
+    if icon then return icon end
+    method = method or "walk"
+    local horde = UnitFactionGroup and UnitFactionGroup("player") == "Horde"
+    local key = (current and current.id or "") .. ":" .. method .. (horde and ":horde" or "")
+    if resolved[key] == nil then
+        local list = current and current.icons and current.icons[method]
+            or horde and HORDE_ICONS[method] or STEP_ICONS[method] or STEP_ICONS.walk
+        resolved[key] = false
+        for _, path in ipairs(list) do
+            if hasFile(path) then
+                resolved[key] = path
+                break
+            end
+        end
+    end
+    return resolved[key] or nil
+end
+
+-- Whether route steps show icons (the stepMarkers setting) rather than colour chips.
+function Theme:StepIconsOn()
+    return addon.Options:Get("stepMarkers") == "icon"
 end
 
 local function fontObject(name)
@@ -112,6 +189,8 @@ end
 
 skin.arrow = function(arrow)
     arrow:SetTexture(current.arrow or ARROW)
+    local crop = current.arrow and (current.arrowCrop or 0) or ARROW_CROP
+    arrow:SetTexCoord(crop, 1 - crop, crop, 1 - crop)
     arrow:SetVertexColor(Theme:Color("accent"))
 end
 
@@ -125,14 +204,16 @@ skin.bar = function(bar)
     bar.bg:SetColorTexture(Theme:Color("editBg"))
 end
 
+-- The colour each text style is drawn in.
+local TEXT_COLORS = { title = "accent", body = "text", small = "dim", dim = "dim", accent = "accent",
+                      good = "good", warn = "warn", button = "buttonText", primary = "primaryText" }
+
 skin.text = function(fs, opts)
     local style = opts.style
     local font = (style == "title" and current.fonts.title) or (style == "small" and current.fonts.small)
         or current.fonts.body
     fs:SetFontObject(fontObject(font))
-    local color = ({ title = "accent", body = "text", small = "dim", dim = "dim", accent = "accent",
-                     good = "good", warn = "warn", button = "buttonText", primary = "primaryText" })[style] or "text"
-    fs:SetTextColor(Theme:Color(color))
+    fs:SetTextColor(Theme:Color(TEXT_COLORS[style] or "text"))
 end
 
 local BUTTON_SLOTS = {
@@ -185,6 +266,24 @@ skin.row = function(row)
     row.sel:SetColorTexture(Theme:Color("rowSelected"))
     if row.markerGroup then row.marker:SetColorTexture(Theme:MarkerColor(row.markerGroup)) end
     if row.markerMethod then row.marker:SetColorTexture(Theme:MethodColor(row.markerMethod)) end
+    -- A route step can show a picture of how it travels in place of the chip (row.iconShown tells the caller,
+    -- which moves the step's text over for it).
+    local icon = type(row.markerMethod) == "string" and Theme:StepIconsOn() and Theme:StepIcon(row.markerMethod, row.markerSource)
+    row.iconShown = icon and true or false
+    if icon then
+        local def = current.stepIcon or {}
+        local crop, size = def.crop or 0.08, def.size or 18
+        -- The minimap's own symbols (the flight master's boot) have no frame to trim: cropping would cut the art.
+        if type(icon) == "string" and icon:find("Minimap", 1, true) then crop = 0 end
+        row.icon:SetTexture(icon)
+        row.icon:SetTexCoord(crop, 1 - crop, crop, 1 - crop)
+        row.icon:SetSize(size, size)
+        row.icon:Show()
+        row.marker:Hide()
+    else
+        row.icon:Hide()
+        row.marker:Show()
+    end
 end
 
 local function register(widget, role, opts)
@@ -254,31 +353,42 @@ function Theme:Button(parent, text, width, height, primary, template)
     return register(button, "button", { primary = primary })
 end
 
--- A horizontal slider. Set its range with SetMinMaxValues/SetValueStep; read changes through the
--- OnValueChanged script (self, value, userInput).
-function Theme:Slider(parent, width)
+-- A slider, horizontal unless `vertical` (a scroll bar; `length` is then its height). Set its range with
+-- SetMinMaxValues/SetValueStep; read changes through the OnValueChanged script (self, value, userInput).
+function Theme:Slider(parent, length, vertical)
     local slider = CreateFrame("Slider", nil, parent)
-    slider:SetSize(width, 18)
-    slider:SetOrientation("HORIZONTAL")
     slider:SetObeyStepOnDrag(true)
     slider.track = slider:CreateTexture(nil, "BACKGROUND")
-    slider.track:SetPoint("LEFT", 0, 0)
-    slider.track:SetPoint("RIGHT", 0, 0)
-    slider.track:SetHeight(6)
     slider:SetThumbTexture(FLAT)
     slider.thumb = slider:GetThumbTexture()
-    slider.thumb:SetSize(10, 18)
+    if vertical then
+        slider:SetSize(10, length)
+        slider:SetOrientation("VERTICAL")
+        slider.track:SetPoint("TOP", 0, 0)
+        slider.track:SetPoint("BOTTOM", 0, 0)
+        slider.track:SetWidth(6)
+        slider.thumb:SetSize(10, 40)
+    else
+        slider:SetSize(length, 18)
+        slider:SetOrientation("HORIZONTAL")
+        slider.track:SetPoint("LEFT", 0, 0)
+        slider.track:SetPoint("RIGHT", 0, 0)
+        slider.track:SetHeight(6)
+        slider.thumb:SetSize(10, 18)
+    end
     return register(slider, "slider")
 end
 
 -- A dropdown: a button showing the chosen option that opens a list under it. `options` is
 -- { { id = ..., label = ... }, ... }; onSelect(id) runs when the player picks one. Returns a
 -- table with :SetValue(id) (shows an option without calling onSelect) and :Select(id) (as if
--- the player clicked it).
-function Theme:Dropdown(parent, width, options, onSelect)
+-- the player clicked it). The list is a child of the button, so it hides with it, unless `menuParent` is given:
+-- a button inside a scroll frame needs its list outside it, or the list is clipped to the scrolled view.
+function Theme:Dropdown(parent, width, options, onSelect, menuParent)
     local dropdown = { options = options, rows = {} }
     dropdown.button = Theme:Button(parent, "", width, 24)
-    dropdown.menu = Theme:Panel(dropdown.button, nil)     -- a child of the button, so it hides with it
+    dropdown.menu = Theme:Panel(menuParent or dropdown.button, nil)
+    if menuParent then dropdown.button:HookScript("OnHide", function() dropdown.menu:Hide() end) end
     dropdown.menu:SetFrameStrata("FULLSCREEN_DIALOG")
     dropdown.menu:SetSize(width, #options * 24 + 8)
     dropdown.menu:SetPoint("TOPLEFT", dropdown.button, "BOTTOMLEFT", 0, -2)
@@ -339,7 +449,8 @@ end
 
 -- A clickable list row: a marker bar on the left, highlight on hover, a selected state.
 -- The caller adds its own texts (Theme:Text) and sets row.markerGroup or row.markerMethod
--- and calls Theme:Restyle(row) to colour the marker.
+-- (and row.markerSource, a step's spell or item) and calls Theme:Restyle(row) to colour the marker.
+-- A step row may show an icon (row.icon) in place of the marker bar; see skin.row.
 function Theme:Row(parent, width, height)
     local row = CreateFrame("Button", nil, parent)
     row:SetSize(width, height)
@@ -352,12 +463,31 @@ function Theme:Row(parent, width, height)
     row.marker = row:CreateTexture(nil, "ARTWORK")
     row.marker:SetSize(3, height - 12)
     row.marker:SetPoint("LEFT", 4, 0)
+    row.icon = row:CreateTexture(nil, "ARTWORK")
+    row.icon:SetPoint("LEFT", 4, 0)
+    row.icon:Hide()
     row:SetScript("OnEnter", function(self) self.hl:Show() end)
     row:SetScript("OnLeave", function(self) self.hl:Hide() end)
     function row:SetSelected(selected)
         if selected then self.sel:Show() else self.sel:Hide() end
     end
     return register(row, "row")
+end
+
+-- A tooltip beside `owner`: lines = { { text, style }, ... } in the text styles above (the first is the heading).
+-- It is the game's own tooltip, with the words in the theme's colours.
+function Theme:ShowTooltip(owner, lines)
+    if not GameTooltip or not lines or #lines == 0 then return end
+    GameTooltip:SetOwner(owner, "ANCHOR_RIGHT")
+    for _, line in ipairs(lines) do
+        local r, g, b = self:Color(TEXT_COLORS[line[2] or "body"] or "text")
+        GameTooltip:AddLine(line[1], r, g, b, true)
+    end
+    GameTooltip:Show()
+end
+
+function Theme:HideTooltip(owner)
+    if GameTooltip and GameTooltip:IsOwned(owner) then GameTooltip:Hide() end
 end
 
 -- Re-skin one widget (after changing what it shows, such as a row's marker).

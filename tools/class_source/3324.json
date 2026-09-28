@@ -1,0 +1,1174 @@
+[
+ {
+  "id": 126,
+  "name": "Eye of Kilrogg",
+  "rank": "Summon",
+  "level": 22,
+  "trainingcost": 2500,
+  "reqclass": 256
+ },
+ {
+  "id": 132,
+  "name": "Detect Invisibility",
+  "rank": "Rank 1",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 256
+ },
+ {
+  "id": 172,
+  "name": "Corruption",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 256
+ },
+ {
+  "id": 348,
+  "name": "Immolate",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 256
+ },
+ {
+  "id": 603,
+  "name": "Bane of Doom",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 689,
+  "name": "Drain Life",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 256
+ },
+ {
+  "id": 693,
+  "name": "Create Soulstone",
+  "rank": "Rank 1",
+  "level": 18,
+  "trainingcost": 1500,
+  "reqclass": 256
+ },
+ {
+  "id": 695,
+  "name": "Shadow Bolt",
+  "rank": "Rank 2",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 256
+ },
+ {
+  "id": 696,
+  "name": "Demon Skin",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 256
+ },
+ {
+  "id": 698,
+  "name": "Ritual of Summoning",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 699,
+  "name": "Drain Life",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 2500,
+  "reqclass": 256
+ },
+ {
+  "id": 702,
+  "name": "Curse of Weakness",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 256
+ },
+ {
+  "id": 704,
+  "name": "Curse of Recklessness",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 256
+ },
+ {
+  "id": 705,
+  "name": "Shadow Bolt",
+  "rank": "Rank 3",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 256
+ },
+ {
+  "id": 706,
+  "name": "Demon Armor",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 707,
+  "name": "Immolate",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 256
+ },
+ {
+  "id": 709,
+  "name": "Drain Life",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 710,
+  "name": "Banish",
+  "rank": "Rank 1",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 755,
+  "name": "Health Funnel",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 256
+ },
+ {
+  "id": 980,
+  "name": "Bane of Agony",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 256
+ },
+ {
+  "id": 1014,
+  "name": "Bane of Agony",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 1500,
+  "reqclass": 256
+ },
+ {
+  "id": 1086,
+  "name": "Demon Armor",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 1088,
+  "name": "Shadow Bolt",
+  "rank": "Rank 4",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 1094,
+  "name": "Immolate",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 1098,
+  "name": "Subjugate Demon",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 1106,
+  "name": "Shadow Bolt",
+  "rank": "Rank 5",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 1108,
+  "name": "Curse of Weakness",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 600,
+  "reqclass": 256
+ },
+ {
+  "id": 1120,
+  "name": "Drain Soul",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 256
+ },
+ {
+  "id": 1454,
+  "name": "Life Tap",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 256
+ },
+ {
+  "id": 1455,
+  "name": "Life Tap",
+  "rank": "Rank 2",
+  "level": 16,
+  "trainingcost": 1200,
+  "reqclass": 256
+ },
+ {
+  "id": 1456,
+  "name": "Life Tap",
+  "rank": "Rank 3",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 256
+ },
+ {
+  "id": 1714,
+  "name": "Curse of Tongues",
+  "rank": "Rank 1",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 256
+ },
+ {
+  "id": 1949,
+  "name": "Hellfire",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 2362,
+  "name": "Create Spellstone",
+  "rank": "Rank 1",
+  "level": 36,
+  "trainingcost": 9000,
+  "reqclass": 256
+ },
+ {
+  "id": 2941,
+  "name": "Immolate",
+  "rank": "Rank 4",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 2970,
+  "name": "Detect Invisibility",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 10000,
+  "reqclass": 256
+ },
+ {
+  "id": 3698,
+  "name": "Health Funnel",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 3699,
+  "name": "Health Funnel",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 3700,
+  "name": "Health Funnel",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 9000,
+  "reqclass": 256
+ },
+ {
+  "id": 5138,
+  "name": "Drain Mana",
+  "rank": "Rank 1",
+  "level": 24,
+  "trainingcost": 3000,
+  "reqclass": 256
+ },
+ {
+  "id": 5484,
+  "name": "Howl of Terror",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 5500,
+  "name": "Sense Demons",
+  "level": 24,
+  "trainingcost": 3000,
+  "reqclass": 256
+ },
+ {
+  "id": 5676,
+  "name": "Searing Pain",
+  "rank": "Rank 1",
+  "level": 18,
+  "trainingcost": 1500,
+  "reqclass": 256
+ },
+ {
+  "id": 5697,
+  "name": "Unending Breath",
+  "level": 16,
+  "trainingcost": 1200,
+  "reqclass": 256
+ },
+ {
+  "id": 5699,
+  "name": "Create Healthstone",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 8000,
+  "reqclass": 256
+ },
+ {
+  "id": 5740,
+  "name": "Rain of Fire",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 5782,
+  "name": "Fear",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 200,
+  "reqclass": 256
+ },
+ {
+  "id": 6201,
+  "name": "Create Healthstone",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 256
+ },
+ {
+  "id": 6202,
+  "name": "Create Healthstone",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 2500,
+  "reqclass": 256
+ },
+ {
+  "id": 6205,
+  "name": "Curse of Weakness",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 2500,
+  "reqclass": 256
+ },
+ {
+  "id": 6213,
+  "name": "Fear",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 7000,
+  "reqclass": 256
+ },
+ {
+  "id": 6215,
+  "name": "Fear",
+  "rank": "Rank 3",
+  "level": 56,
+  "trainingcost": 22000,
+  "reqclass": 256
+ },
+ {
+  "id": 6217,
+  "name": "Bane of Agony",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 6219,
+  "name": "Rain of Fire",
+  "rank": "Rank 2",
+  "level": 34,
+  "trainingcost": 8000,
+  "reqclass": 256
+ },
+ {
+  "id": 6222,
+  "name": "Corruption",
+  "rank": "Rank 2",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 256
+ },
+ {
+  "id": 6223,
+  "name": "Corruption",
+  "rank": "Rank 3",
+  "level": 24,
+  "trainingcost": 3000,
+  "reqclass": 256
+ },
+ {
+  "id": 6226,
+  "name": "Drain Mana",
+  "rank": "Rank 2",
+  "level": 34,
+  "trainingcost": 8000,
+  "reqclass": 256
+ },
+ {
+  "id": 6229,
+  "name": "Shadow Ward",
+  "rank": "Rank 1",
+  "level": 32,
+  "trainingcost": 7000,
+  "reqclass": 256
+ },
+ {
+  "id": 6353,
+  "name": "Soul Fire",
+  "rank": "Rank 1",
+  "level": 48,
+  "trainingcost": 14000,
+  "reqclass": 256
+ },
+ {
+  "id": 6366,
+  "name": "Create Firestone",
+  "rank": "Rank 1",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 6789,
+  "name": "Death Coil",
+  "rank": "Rank 1",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 7641,
+  "name": "Shadow Bolt",
+  "rank": "Rank 6",
+  "level": 36,
+  "trainingcost": 9000,
+  "reqclass": 256
+ },
+ {
+  "id": 7646,
+  "name": "Curse of Weakness",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 7000,
+  "reqclass": 256
+ },
+ {
+  "id": 7648,
+  "name": "Corruption",
+  "rank": "Rank 4",
+  "level": 34,
+  "trainingcost": 8000,
+  "reqclass": 256
+ },
+ {
+  "id": 7651,
+  "name": "Drain Life",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 10000,
+  "reqclass": 256
+ },
+ {
+  "id": 7658,
+  "name": "Curse of Recklessness",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 5000,
+  "reqclass": 256
+ },
+ {
+  "id": 7659,
+  "name": "Curse of Recklessness",
+  "rank": "Rank 3",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 8288,
+  "name": "Drain Soul",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 3000,
+  "reqclass": 256
+ },
+ {
+  "id": 8289,
+  "name": "Drain Soul",
+  "rank": "Rank 3",
+  "level": 38,
+  "trainingcost": 10000,
+  "reqclass": 256
+ },
+ {
+  "id": 11659,
+  "name": "Shadow Bolt",
+  "rank": "Rank 7",
+  "level": 44,
+  "trainingcost": 12000,
+  "reqclass": 256
+ },
+ {
+  "id": 11660,
+  "name": "Shadow Bolt",
+  "rank": "Rank 8",
+  "level": 52,
+  "trainingcost": 18000,
+  "reqclass": 256
+ },
+ {
+  "id": 11661,
+  "name": "Shadow Bolt",
+  "rank": "Rank 9",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 11665,
+  "name": "Immolate",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 11667,
+  "name": "Immolate",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 11668,
+  "name": "Immolate",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 11671,
+  "name": "Corruption",
+  "rank": "Rank 5",
+  "level": 44,
+  "trainingcost": 12000,
+  "reqclass": 256
+ },
+ {
+  "id": 11672,
+  "name": "Corruption",
+  "rank": "Rank 6",
+  "level": 54,
+  "trainingcost": 20000,
+  "reqclass": 256
+ },
+ {
+  "id": 11675,
+  "name": "Drain Soul",
+  "rank": "Rank 4",
+  "level": 52,
+  "trainingcost": 18000,
+  "reqclass": 256
+ },
+ {
+  "id": 11677,
+  "name": "Rain of Fire",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 13000,
+  "reqclass": 256
+ },
+ {
+  "id": 11678,
+  "name": "Rain of Fire",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 11683,
+  "name": "Hellfire",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 11684,
+  "name": "Hellfire",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 20000,
+  "reqclass": 256
+ },
+ {
+  "id": 11687,
+  "name": "Life Tap",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 9000,
+  "reqclass": 256
+ },
+ {
+  "id": 11688,
+  "name": "Life Tap",
+  "rank": "Rank 5",
+  "level": 46,
+  "trainingcost": 13000,
+  "reqclass": 256
+ },
+ {
+  "id": 11689,
+  "name": "Life Tap",
+  "rank": "Rank 6",
+  "level": 56,
+  "trainingcost": 22000,
+  "reqclass": 256
+ },
+ {
+  "id": 11693,
+  "name": "Health Funnel",
+  "rank": "Rank 5",
+  "level": 44,
+  "trainingcost": 12000,
+  "reqclass": 256
+ },
+ {
+  "id": 11694,
+  "name": "Health Funnel",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 18000,
+  "reqclass": 256
+ },
+ {
+  "id": 11695,
+  "name": "Health Funnel",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 11699,
+  "name": "Drain Life",
+  "rank": "Rank 5",
+  "level": 46,
+  "trainingcost": 13000,
+  "reqclass": 256
+ },
+ {
+  "id": 11700,
+  "name": "Drain Life",
+  "rank": "Rank 6",
+  "level": 54,
+  "trainingcost": 20000,
+  "reqclass": 256
+ },
+ {
+  "id": 11703,
+  "name": "Drain Mana",
+  "rank": "Rank 3",
+  "level": 44,
+  "trainingcost": 12000,
+  "reqclass": 256
+ },
+ {
+  "id": 11704,
+  "name": "Drain Mana",
+  "rank": "Rank 4",
+  "level": 54,
+  "trainingcost": 20000,
+  "reqclass": 256
+ },
+ {
+  "id": 11707,
+  "name": "Curse of Weakness",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 11708,
+  "name": "Curse of Weakness",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 18000,
+  "reqclass": 256
+ },
+ {
+  "id": 11711,
+  "name": "Bane of Agony",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 10000,
+  "reqclass": 256
+ },
+ {
+  "id": 11712,
+  "name": "Bane of Agony",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 14000,
+  "reqclass": 256
+ },
+ {
+  "id": 11713,
+  "name": "Bane of Agony",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 11717,
+  "name": "Curse of Recklessness",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 22000,
+  "reqclass": 256
+ },
+ {
+  "id": 11719,
+  "name": "Curse of Tongues",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 11725,
+  "name": "Subjugate Demon",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 12000,
+  "reqclass": 256
+ },
+ {
+  "id": 11726,
+  "name": "Subjugate Demon",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 11729,
+  "name": "Create Healthstone",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 13000,
+  "reqclass": 256
+ },
+ {
+  "id": 11730,
+  "name": "Create Healthstone",
+  "rank": "Rank 5",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 11733,
+  "name": "Demon Armor",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 11734,
+  "name": "Demon Armor",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 11735,
+  "name": "Demon Armor",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 11739,
+  "name": "Shadow Ward",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 11740,
+  "name": "Shadow Ward",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 18000,
+  "reqclass": 256
+ },
+ {
+  "id": 11743,
+  "name": "Detect Invisibility",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 17727,
+  "name": "Create Spellstone",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 14000,
+  "reqclass": 256
+ },
+ {
+  "id": 17728,
+  "name": "Create Spellstone",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 17919,
+  "name": "Searing Pain",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 256
+ },
+ {
+  "id": 17920,
+  "name": "Searing Pain",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 8000,
+  "reqclass": 256
+ },
+ {
+  "id": 17921,
+  "name": "Searing Pain",
+  "rank": "Rank 4",
+  "level": 42,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 17922,
+  "name": "Searing Pain",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 17923,
+  "name": "Searing Pain",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 17924,
+  "name": "Soul Fire",
+  "rank": "Rank 2",
+  "level": 56,
+  "trainingcost": 22000,
+  "reqclass": 256
+ },
+ {
+  "id": 17925,
+  "name": "Death Coil",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 17926,
+  "name": "Death Coil",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 24000,
+  "reqclass": 256
+ },
+ {
+  "id": 17928,
+  "name": "Howl of Terror",
+  "rank": "Rank 2",
+  "level": 54,
+  "trainingcost": 20000,
+  "reqclass": 256
+ },
+ {
+  "id": 17951,
+  "name": "Create Firestone",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 9000,
+  "reqclass": 256
+ },
+ {
+  "id": 17952,
+  "name": "Create Firestone",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 13000,
+  "reqclass": 256
+ },
+ {
+  "id": 17953,
+  "name": "Create Firestone",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 22000,
+  "reqclass": 256
+ },
+ {
+  "id": 17962,
+  "name": "Conflagrate",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 500,
+  "reqclass": 256
+ },
+ {
+  "id": 18647,
+  "name": "Banish",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 14000,
+  "reqclass": 256
+ },
+ {
+  "id": 18867,
+  "name": "Shadowburn",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 150,
+  "reqclass": 256
+ },
+ {
+  "id": 18868,
+  "name": "Shadowburn",
+  "rank": "Rank 3",
+  "level": 32,
+  "trainingcost": 350,
+  "reqclass": 256
+ },
+ {
+  "id": 18869,
+  "name": "Shadowburn",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 550,
+  "reqclass": 256
+ },
+ {
+  "id": 18870,
+  "name": "Shadowburn",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 700,
+  "reqclass": 256
+ },
+ {
+  "id": 18871,
+  "name": "Shadowburn",
+  "rank": "Rank 6",
+  "level": 56,
+  "trainingcost": 1100,
+  "reqclass": 256
+ },
+ {
+  "id": 18879,
+  "name": "Siphon Life",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 500,
+  "reqclass": 256
+ },
+ {
+  "id": 18880,
+  "name": "Siphon Life",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 700,
+  "reqclass": 256
+ },
+ {
+  "id": 18881,
+  "name": "Siphon Life",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 1200,
+  "reqclass": 256
+ },
+ {
+  "id": 18930,
+  "name": "Conflagrate",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 700,
+  "reqclass": 256
+ },
+ {
+  "id": 18931,
+  "name": "Conflagrate",
+  "rank": "Rank 5",
+  "level": 54,
+  "trainingcost": 1000,
+  "reqclass": 256
+ },
+ {
+  "id": 18932,
+  "name": "Conflagrate",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 1300,
+  "reqclass": 256
+ },
+ {
+  "id": 20752,
+  "name": "Create Soulstone",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 20755,
+  "name": "Create Soulstone",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 20756,
+  "name": "Create Soulstone",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ },
+ {
+  "id": 20757,
+  "name": "Create Soulstone",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 26000,
+  "reqclass": 256
+ },
+ {
+  "id": 440892,
+  "name": "Curse of the Elements",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2000,
+  "reqclass": 256
+ },
+ {
+  "id": 1293812,
+  "name": "Incinerate",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 900,
+  "reqclass": 256
+ },
+ {
+  "id": 1293813,
+  "name": "Incinerate",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 1100,
+  "reqclass": 256
+ },
+ {
+  "id": 1293818,
+  "name": "Conflagrate",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 300,
+  "reqclass": 256
+ },
+ {
+  "id": 1311676,
+  "name": "Curse of the Elements",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 6000,
+  "reqclass": 256
+ },
+ {
+  "id": 1311677,
+  "name": "Curse of the Elements",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 11000,
+  "reqclass": 256
+ },
+ {
+  "id": 1311680,
+  "name": "Curse of the Elements",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 15000,
+  "reqclass": 256
+ }
+]

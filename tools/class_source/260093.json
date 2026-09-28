@@ -1,0 +1,1189 @@
+[
+ {
+  "id": 465,
+  "name": "Devotion Aura",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 2
+ },
+ {
+  "id": 498,
+  "name": "Divine Protection",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 633,
+  "name": "Lay on Hands",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 2
+ },
+ {
+  "id": 639,
+  "name": "Holy Light",
+  "rank": "Rank 2",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 642,
+  "name": "Divine Shield",
+  "rank": "Rank 1",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 2
+ },
+ {
+  "id": 643,
+  "name": "Devotion Aura",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 647,
+  "name": "Holy Light",
+  "rank": "Rank 3",
+  "level": 14,
+  "trainingcost": 2000,
+  "reqclass": 2
+ },
+ {
+  "id": 678,
+  "name": "Holy Strike",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 679,
+  "name": "Holy Strike",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 680,
+  "name": "Holy Strike",
+  "rank": "Rank 4",
+  "level": 28,
+  "trainingcost": 9000,
+  "reqclass": 2
+ },
+ {
+  "id": 853,
+  "name": "Hammer of Justice",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 879,
+  "name": "Exorcism",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 1020,
+  "name": "Divine Shield",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 1022,
+  "name": "Blessing of Protection",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 2
+ },
+ {
+  "id": 1026,
+  "name": "Holy Light",
+  "rank": "Rank 4",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 1032,
+  "name": "Devotion Aura",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 20000,
+  "reqclass": 2
+ },
+ {
+  "id": 1038,
+  "name": "Blessing of Salvation",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 2
+ },
+ {
+  "id": 1042,
+  "name": "Holy Light",
+  "rank": "Rank 5",
+  "level": 30,
+  "trainingcost": 11000,
+  "reqclass": 2
+ },
+ {
+  "id": 1044,
+  "name": "Blessing of Freedom",
+  "level": 18,
+  "trainingcost": 3500,
+  "reqclass": 2
+ },
+ {
+  "id": 1152,
+  "name": "Purify",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 1866,
+  "name": "Holy Strike",
+  "rank": "Rank 3",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 2495,
+  "name": "Holy Strike",
+  "rank": "Rank 5",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 2
+ },
+ {
+  "id": 2800,
+  "name": "Lay on Hands",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 11000,
+  "reqclass": 2
+ },
+ {
+  "id": 2812,
+  "name": "Holy Wrath",
+  "rank": "Rank 1",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 2878,
+  "name": "Turn Undead",
+  "rank": "Rank 1",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 2
+ },
+ {
+  "id": 3472,
+  "name": "Holy Light",
+  "rank": "Rank 6",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 2
+ },
+ {
+  "id": 4987,
+  "name": "Cleanse",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 5569,
+  "name": "Holy Strike",
+  "rank": "Rank 6",
+  "level": 44,
+  "trainingcost": 22000,
+  "reqclass": 2
+ },
+ {
+  "id": 5573,
+  "name": "Divine Protection",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 3500,
+  "reqclass": 2
+ },
+ {
+  "id": 5588,
+  "name": "Hammer of Justice",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 2
+ },
+ {
+  "id": 5589,
+  "name": "Hammer of Justice",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 20000,
+  "reqclass": 2
+ },
+ {
+  "id": 5599,
+  "name": "Blessing of Protection",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 2
+ },
+ {
+  "id": 5614,
+  "name": "Exorcism",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 9000,
+  "reqclass": 2
+ },
+ {
+  "id": 5615,
+  "name": "Exorcism",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 2
+ },
+ {
+  "id": 5627,
+  "name": "Turn Undead",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 2
+ },
+ {
+  "id": 6940,
+  "name": "Blessing of Sacrifice",
+  "rank": "Rank 1",
+  "level": 46,
+  "trainingcost": 24000,
+  "reqclass": 2
+ },
+ {
+  "id": 7294,
+  "name": "Retribution Aura",
+  "rank": "Rank 1",
+  "level": 16,
+  "trainingcost": 3000,
+  "reqclass": 2
+ },
+ {
+  "id": 10278,
+  "name": "Blessing of Protection",
+  "rank": "Rank 3",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 2
+ },
+ {
+  "id": 10290,
+  "name": "Devotion Aura",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 2
+ },
+ {
+  "id": 10291,
+  "name": "Devotion Aura",
+  "rank": "Rank 4",
+  "level": 30,
+  "trainingcost": 11000,
+  "reqclass": 2
+ },
+ {
+  "id": 10292,
+  "name": "Devotion Aura",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 10293,
+  "name": "Devotion Aura",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 10298,
+  "name": "Retribution Aura",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 2
+ },
+ {
+  "id": 10299,
+  "name": "Retribution Aura",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 2
+ },
+ {
+  "id": 10300,
+  "name": "Retribution Aura",
+  "rank": "Rank 4",
+  "level": 46,
+  "trainingcost": 24000,
+  "reqclass": 2
+ },
+ {
+  "id": 10301,
+  "name": "Retribution Aura",
+  "rank": "Rank 5",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 2
+ },
+ {
+  "id": 10308,
+  "name": "Hammer of Justice",
+  "rank": "Rank 4",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 2
+ },
+ {
+  "id": 10310,
+  "name": "Lay on Hands",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 10312,
+  "name": "Exorcism",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 22000,
+  "reqclass": 2
+ },
+ {
+  "id": 10313,
+  "name": "Exorcism",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 10314,
+  "name": "Exorcism",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 10318,
+  "name": "Holy Wrath",
+  "rank": "Rank 2",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 10322,
+  "name": "Redemption",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 2
+ },
+ {
+  "id": 10324,
+  "name": "Redemption",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 2
+ },
+ {
+  "id": 10326,
+  "name": "Turn Undead",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 10328,
+  "name": "Holy Light",
+  "rank": "Rank 7",
+  "level": 46,
+  "trainingcost": 24000,
+  "reqclass": 2
+ },
+ {
+  "id": 10329,
+  "name": "Holy Light",
+  "rank": "Rank 8",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 2
+ },
+ {
+  "id": 10332,
+  "name": "Holy Strike",
+  "rank": "Rank 7",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 10333,
+  "name": "Holy Strike",
+  "rank": "Rank 8",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 19740,
+  "name": "Blessing of Might",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 19742,
+  "name": "Blessing of Wisdom",
+  "rank": "Rank 1",
+  "level": 14,
+  "trainingcost": 2000,
+  "reqclass": 2
+ },
+ {
+  "id": 19746,
+  "name": "Concentration Aura",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 19750,
+  "name": "Flash of Light",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 19752,
+  "name": "Divine Intervention",
+  "level": 30,
+  "trainingcost": 11000,
+  "reqclass": 2
+ },
+ {
+  "id": 19834,
+  "name": "Blessing of Might",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 19835,
+  "name": "Blessing of Might",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 19836,
+  "name": "Blessing of Might",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 12000,
+  "reqclass": 2
+ },
+ {
+  "id": 19837,
+  "name": "Blessing of Might",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 19838,
+  "name": "Blessing of Might",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 19850,
+  "name": "Blessing of Wisdom",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 5000,
+  "reqclass": 2
+ },
+ {
+  "id": 19852,
+  "name": "Blessing of Wisdom",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 2
+ },
+ {
+  "id": 19853,
+  "name": "Blessing of Wisdom",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 22000,
+  "reqclass": 2
+ },
+ {
+  "id": 19854,
+  "name": "Blessing of Wisdom",
+  "rank": "Rank 5",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 2
+ },
+ {
+  "id": 19876,
+  "name": "Shadow Resistance Aura",
+  "rank": "Rank 1",
+  "level": 28,
+  "trainingcost": 9000,
+  "reqclass": 2
+ },
+ {
+  "id": 19888,
+  "name": "Frost Resistance Aura",
+  "rank": "Rank 1",
+  "level": 32,
+  "trainingcost": 12000,
+  "reqclass": 2
+ },
+ {
+  "id": 19891,
+  "name": "Fire Resistance Aura",
+  "rank": "Rank 1",
+  "level": 36,
+  "trainingcost": 14000,
+  "reqclass": 2
+ },
+ {
+  "id": 19895,
+  "name": "Shadow Resistance Aura",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 20000,
+  "reqclass": 2
+ },
+ {
+  "id": 19896,
+  "name": "Shadow Resistance Aura",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 19897,
+  "name": "Frost Resistance Aura",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 22000,
+  "reqclass": 2
+ },
+ {
+  "id": 19898,
+  "name": "Frost Resistance Aura",
+  "rank": "Rank 3",
+  "level": 56,
+  "trainingcost": 42000,
+  "reqclass": 2
+ },
+ {
+  "id": 19899,
+  "name": "Fire Resistance Aura",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 26000,
+  "reqclass": 2
+ },
+ {
+  "id": 19900,
+  "name": "Fire Resistance Aura",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 19939,
+  "name": "Flash of Light",
+  "rank": "Rank 2",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 2
+ },
+ {
+  "id": 19940,
+  "name": "Flash of Light",
+  "rank": "Rank 3",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 2
+ },
+ {
+  "id": 19941,
+  "name": "Flash of Light",
+  "rank": "Rank 4",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 19942,
+  "name": "Flash of Light",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 19943,
+  "name": "Flash of Light",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 2
+ },
+ {
+  "id": 19977,
+  "name": "Blessing of Light",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 20000,
+  "reqclass": 2
+ },
+ {
+  "id": 19978,
+  "name": "Blessing of Light",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 19979,
+  "name": "Blessing of Light",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 20116,
+  "name": "Consecration",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 200,
+  "reqclass": 2
+ },
+ {
+  "id": 20162,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 2",
+  "level": 12,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 20163,
+  "name": "Seal of Fury",
+  "rank": "Rank 3",
+  "level": 25,
+  "trainingcost": 6000,
+  "reqclass": 2
+ },
+ {
+  "id": 20164,
+  "name": "Seal of Justice",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 20165,
+  "name": "Seal of Light",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 11000,
+  "reqclass": 2
+ },
+ {
+  "id": 20166,
+  "name": "Seal of Wisdom",
+  "rank": "Rank 1",
+  "level": 38,
+  "trainingcost": 16000,
+  "reqclass": 2
+ },
+ {
+  "id": 20217,
+  "name": "Blessing of Kings",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 20271,
+  "name": "Judgement",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 20287,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 2",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 2
+ },
+ {
+  "id": 20288,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 3",
+  "level": 18,
+  "trainingcost": 3500,
+  "reqclass": 2
+ },
+ {
+  "id": 20289,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 4",
+  "level": 26,
+  "trainingcost": 6000,
+  "reqclass": 2
+ },
+ {
+  "id": 20290,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 5",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 2
+ },
+ {
+  "id": 20291,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 6",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 20292,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 7",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 20293,
+  "name": "Seal of Righteousness",
+  "rank": "Rank 8",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 2
+ },
+ {
+  "id": 20305,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 3",
+  "level": 22,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 20306,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 12000,
+  "reqclass": 2
+ },
+ {
+  "id": 20307,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 20308,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 6",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 20347,
+  "name": "Seal of Light",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 20000,
+  "reqclass": 2
+ },
+ {
+  "id": 20348,
+  "name": "Seal of Light",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 20349,
+  "name": "Seal of Light",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 20356,
+  "name": "Seal of Wisdom",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 26000,
+  "reqclass": 2
+ },
+ {
+  "id": 20357,
+  "name": "Seal of Wisdom",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 2
+ },
+ {
+  "id": 20419,
+  "name": "Seal of Fury",
+  "rank": "Rank 4",
+  "level": 34,
+  "trainingcost": 13000,
+  "reqclass": 2
+ },
+ {
+  "id": 20421,
+  "name": "Seal of Fury",
+  "rank": "Rank 5",
+  "level": 42,
+  "trainingcost": 21000,
+  "reqclass": 2
+ },
+ {
+  "id": 20422,
+  "name": "Seal of Fury",
+  "rank": "Rank 6",
+  "level": 50,
+  "trainingcost": 28000,
+  "reqclass": 2
+ },
+ {
+  "id": 20423,
+  "name": "Seal of Fury",
+  "rank": "Rank 7",
+  "level": 58,
+  "trainingcost": 44000,
+  "reqclass": 2
+ },
+ {
+  "id": 20473,
+  "name": "Holy Shock",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 20729,
+  "name": "Blessing of Sacrifice",
+  "rank": "Rank 2",
+  "level": 54,
+  "trainingcost": 40000,
+  "reqclass": 2
+ },
+ {
+  "id": 20772,
+  "name": "Redemption",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 26000,
+  "reqclass": 2
+ },
+ {
+  "id": 20773,
+  "name": "Redemption",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 20915,
+  "name": "Seal of Command",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 550,
+  "reqclass": 2
+ },
+ {
+  "id": 20918,
+  "name": "Seal of Command",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 20919,
+  "name": "Seal of Command",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 1400,
+  "reqclass": 2
+ },
+ {
+  "id": 20920,
+  "name": "Seal of Command",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 2
+ },
+ {
+  "id": 20922,
+  "name": "Consecration",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 1000,
+  "reqclass": 2
+ },
+ {
+  "id": 20923,
+  "name": "Consecration",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 1400,
+  "reqclass": 2
+ },
+ {
+  "id": 20924,
+  "name": "Consecration",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 2
+ },
+ {
+  "id": 20927,
+  "name": "Holy Shield",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 1400,
+  "reqclass": 2
+ },
+ {
+  "id": 20928,
+  "name": "Holy Shield",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 2
+ },
+ {
+  "id": 20929,
+  "name": "Holy Shock",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 1300,
+  "reqclass": 2
+ },
+ {
+  "id": 20930,
+  "name": "Holy Shock",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 2100,
+  "reqclass": 2
+ },
+ {
+  "id": 21082,
+  "name": "Seal of the Crusader",
+  "rank": "Rank 1",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 2
+ },
+ {
+  "id": 24239,
+  "name": "Hammer of Wrath",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 24274,
+  "name": "Hammer of Wrath",
+  "rank": "Rank 2",
+  "level": 52,
+  "trainingcost": 34000,
+  "reqclass": 2
+ },
+ {
+  "id": 24275,
+  "name": "Hammer of Wrath",
+  "rank": "Rank 1",
+  "level": 44,
+  "trainingcost": 22000,
+  "reqclass": 2
+ },
+ {
+  "id": 25780,
+  "name": "Righteous Fury",
+  "level": 16,
+  "trainingcost": 3000,
+  "reqclass": 2
+ },
+ {
+  "id": 25782,
+  "name": "Greater Blessing of Might",
+  "rank": "Rank 1",
+  "level": 52,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 25890,
+  "name": "Greater Blessing of Light",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 25894,
+  "name": "Greater Blessing of Wisdom",
+  "rank": "Rank 1",
+  "level": 54,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 25895,
+  "name": "Greater Blessing of Salvation",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 25898,
+  "name": "Greater Blessing of Kings",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 2
+ },
+ {
+  "id": 25916,
+  "name": "Greater Blessing of Might",
+  "rank": "Rank 2",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 25918,
+  "name": "Greater Blessing of Wisdom",
+  "rank": "Rank 2",
+  "level": 60,
+  "trainingcost": 46000,
+  "reqclass": 2
+ },
+ {
+  "id": 26573,
+  "name": "Consecration",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 4000,
+  "reqclass": 2
+ },
+ {
+  "id": 1311590,
+  "name": "Light's Vigil",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 1400,
+  "reqclass": 2
+ },
+ {
+  "id": 1311595,
+  "name": "Light's Vigil",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 2300,
+  "reqclass": 2
+ },
+ {
+  "id": 1311649,
+  "name": "Seal of Fury",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 300,
+  "reqclass": 2
+ },
+ {
+  "id": 1311656,
+  "name": "Seal of Fury",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 3500,
+  "reqclass": 2
+ }
+]

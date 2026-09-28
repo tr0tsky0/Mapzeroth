@@ -70,8 +70,8 @@ check(telathir and #telathirNPC.teaches == 1 and telathirNPC.teaches[1] == 2259,
 check(not relevantIDs(telathir, { class = "MAGE", spells = { 2366 } })[5500], "so a herbalist doesn't need him")
 check(not relevantIDs(telathir, { class = "MAGE", spells = { 2259 } })[5500], "and an alchemist has already learned all he teaches (Apprentice)")
 local marsh = findNPC(4609)   -- Doctor Marsh, Expert Alchemist: Apprentice and Journeyman
-check(relevantIDs(marsh, { class = "MAGE", spells = { 2259 } })[4609], "an Apprentice alchemist needs Journeyman from Doctor Marsh")
-check(not relevantIDs(marsh, { class = "MAGE", spells = { 2259, 3101 } })[4609], "a Journeyman has outgrown him")
+check(relevantIDs(marsh, { class = "MAGE", faction = "Horde", spells = { 2259 } })[4609], "an Apprentice alchemist needs Journeyman from Doctor Marsh")
+check(not relevantIDs(marsh, { class = "MAGE", faction = "Horde", spells = { 2259, 3101 } })[4609], "a Journeyman has outgrown him")
 
 -- Specialization trainers stay in the drill-down.
 local shadoweave = findNPC(9584)
@@ -81,15 +81,28 @@ check(shadoweave and not relevant(shadoweave, { class = "MAGE", spells = { 3908 
 local melynn = findNPC(4159)   -- Expert Tailor with no rank list from Wowhead
 check(melynn and relevant(melynn, { class = "MAGE", spells = { 3908, 3909, 3910 } }), "unknown teaching: shown to anyone with the profession")
 check(melynn and not relevant(melynn, { class = "MAGE" }), "but not to someone without it")
-check(relevant(find(function(n) return n.trainer == "RIDING" and n.city == "orgrimmar" end), { class = "MAGE" }),
+check(relevant(find(function(n) return n.trainer == "RIDING" and n.city == "orgrimmar" end), { class = "MAGE", faction = "Horde" }),
     "a riding instructor with no teach list is still shown")
+
+-- The other faction's trainers don't train you.
+local orgMage = find(function(n) return n.trainer == "MAGE" and n.city == "orgrimmar" end)
+check(orgMage.npcs[1].faction == "Horde", "Orgrimmar's mage trainers are Horde")
+check(relevant(orgMage, { class = "MAGE", faction = "Horde" }), "a Horde mage can train there")
+check(not relevant(orgMage, { class = "MAGE", faction = "Alliance" }), "an Alliance mage can't")
+local durotarMage = find(function(n) return n.trainer == "MAGE" and n.mapID == 1411 and not n.city end)
+check(durotarMage and not relevant(durotarMage, { class = "MAGE", faction = "Alliance" }), "nor in the Valley of Trials, outside any town")
+check(not relevant(find(function(n) return n.trainer == "WEAPON" and n.city == "orgrimmar" end), { class = "MAGE", faction = "Alliance" }),
+    "or at the Horde's weapon masters")
+local bootyRogue = find(function(n) return n.trainer == "ROGUE" and n.town == "booty_bay" end)
+check(bootyRogue and relevant(bootyRogue, { class = "ROGUE", faction = "Alliance" }) and relevant(bootyRogue, { class = "ROGUE", faction = "Horde" }),
+    "a neutral town's trainer trains both")
 
 -- 4. Riding and pets.
 local riding = find(function(n) return n.trainer == "RIDING" and n.mapID == 1426 end)
 check(relevant(riding, { class = "MAGE" }), "riding ranks you don't know are worth showing")
 check(relevant(riding, { class = "MAGE", spells = { 33388 } }), "Journeyman Riding still to learn")
 check(not relevant(riding, { class = "MAGE", spells = { 33388, 33391 } }), "both riding ranks known, nothing left")
-local pet = find(function(n) return n.trainer == "PET" end)
+local pet = find(function(n) return n.trainer == "PET" and n.city == "stormwind" end)
 check(pet and relevant(pet, { class = "HUNTER" }), "pet trainers are for hunters")
 check(pet and not relevant(pet, { class = "WARLOCK" }), "not warlocks")
 local demon = find(function(n) return n.trainer == "DEMON" and n.city == "stormwind" end)

@@ -428,6 +428,17 @@ def load_settlement_factions():
     return out
 
 
+def load_npc_factions():
+    """{npc id: "Alliance" | "Horde"} from tools/poi_source/npc_factions.tsv (tools/fetch_npc_factions.py)."""
+    out = {}
+    path = ROOT / "tools" / "poi_source" / "npc_factions.tsv"
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip() and not line.startswith("#"):
+            npc, faction = line.split("	")[:2]
+            out[int(npc)] = faction
+    return out
+
+
 def lua_table(name, entries, taxi):
     factions = load_settlement_factions()
     lines = [f"addon.{name} = {{"]
@@ -445,6 +456,7 @@ def lua_table(name, entries, taxi):
 
 
 def main():
+    npc_factions, settlement_factions = load_npc_factions(), load_settlement_factions()
     containers = load_maps()
     npcs = load_npcs()
     trainers, skipped_tags = load_trainers()
@@ -513,13 +525,20 @@ def main():
             where = f', {field} = "{key}"'
             counts[(key, p["kind"], p["trainer"])] += 1
         npc_entries = []
+        # Which faction a trainer serves: its own reaction (Wowhead), else its settlement's. Anyone's otherwise.
+        home = settlement_factions.get(key) if key else None
         for m in p["members"]:
             if m["captured"] and not m["teaches"]:
                 continue                       # nothing known about a captured NPC but where it is
             teaches = f"teaches = {{ {', '.join(str(t) for t in m['teaches'])} }}" if m["teaches"] else ""
             ident_part = "" if m["captured"] else f"id = {m['id']}"
             specialty = "specialty = true" if m.get("specialty") else ""
-            npc_entries.append("{ " + ", ".join(x for x in (ident_part, specialty, teaches) if x) + " }")
+            side = None
+            if p["kind"] == "trainer":
+                side = npc_factions.get(m["id"]) if not m["captured"] else None
+                side = side or (home if home in ("Alliance", "Horde") else None)
+            faction = f'faction = "{side}"' if side else ""
+            npc_entries.append("{ " + ", ".join(x for x in (ident_part, faction, specialty, teaches) if x) + " }")
         npc_field = f", npcs = {{ {', '.join(npc_entries)} }}" if npc_entries else ""
         area_field = ""
         if p["kind"] == "entrance":

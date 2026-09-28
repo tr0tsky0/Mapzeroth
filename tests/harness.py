@@ -53,6 +53,7 @@ function makeCtx(overrides)
         faction = overrides.faction or "Alliance",
         class = overrides.class or "MAGE",
         race = overrides.race or "Human",
+        raceID = overrides.raceID or 1,
         level = overrides.level or 20,
         knowsSpell = function(id) return known[id] or false end,
         hasItem = function(id) return items[id] or false end,

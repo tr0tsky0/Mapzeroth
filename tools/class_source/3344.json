@@ -1,0 +1,1304 @@
+[
+ {
+  "id": 131,
+  "name": "Water Breathing",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 64
+ },
+ {
+  "id": 324,
+  "name": "Lightning Shield",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 325,
+  "name": "Lightning Shield",
+  "rank": "Rank 2",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 64
+ },
+ {
+  "id": 332,
+  "name": "Healing Wave",
+  "rank": "Rank 2",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 370,
+  "name": "Purge",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 64
+ },
+ {
+  "id": 421,
+  "name": "Chain Lightning",
+  "rank": "Rank 1",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 526,
+  "name": "Cure Poison",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 64
+ },
+ {
+  "id": 529,
+  "name": "Lightning Bolt",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 546,
+  "name": "Water Walking",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 547,
+  "name": "Healing Wave",
+  "rank": "Rank 3",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 64
+ },
+ {
+  "id": 548,
+  "name": "Lightning Bolt",
+  "rank": "Rank 3",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 64
+ },
+ {
+  "id": 556,
+  "name": "Astral Recall",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 905,
+  "name": "Lightning Shield",
+  "rank": "Rank 3",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 913,
+  "name": "Healing Wave",
+  "rank": "Rank 4",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 64
+ },
+ {
+  "id": 915,
+  "name": "Lightning Bolt",
+  "rank": "Rank 4",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 930,
+  "name": "Chain Lightning",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 939,
+  "name": "Healing Wave",
+  "rank": "Rank 5",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 943,
+  "name": "Lightning Bolt",
+  "rank": "Rank 5",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 64
+ },
+ {
+  "id": 945,
+  "name": "Lightning Shield",
+  "rank": "Rank 4",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 959,
+  "name": "Healing Wave",
+  "rank": "Rank 6",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 1064,
+  "name": "Chain Heal",
+  "rank": "Rank 1",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 2008,
+  "name": "Ancestral Spirit",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 64
+ },
+ {
+  "id": 2484,
+  "name": "Earthbind Totem",
+  "level": 6,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 2645,
+  "name": "Ghost Wolf",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 2860,
+  "name": "Chain Lightning",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 2870,
+  "name": "Cure Disease",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 64
+ },
+ {
+  "id": 5675,
+  "name": "Mana Spring Totem",
+  "rank": "Rank 1",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 64
+ },
+ {
+  "id": 5730,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 1",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 6041,
+  "name": "Lightning Bolt",
+  "rank": "Rank 6",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 6196,
+  "name": "Far Sight",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 64
+ },
+ {
+  "id": 6363,
+  "name": "Searing Totem",
+  "rank": "Rank 2",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 6364,
+  "name": "Searing Totem",
+  "rank": "Rank 3",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 6365,
+  "name": "Searing Totem",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 6375,
+  "name": "Healing Stream Totem",
+  "rank": "Rank 2",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 6377,
+  "name": "Healing Stream Totem",
+  "rank": "Rank 3",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 6390,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 64
+ },
+ {
+  "id": 6391,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 6392,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 4",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 6495,
+  "name": "Sentry Totem",
+  "level": 34,
+  "trainingcost": 9000,
+  "reqclass": 64
+ },
+ {
+  "id": 8004,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 8005,
+  "name": "Healing Wave",
+  "rank": "Rank 7",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 8008,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 8010,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 8012,
+  "name": "Purge",
+  "rank": "Rank 2",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 8017,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 1",
+  "level": 1,
+  "trainingcost": 10,
+  "reqclass": 64
+ },
+ {
+  "id": 8018,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 8019,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 3",
+  "level": 16,
+  "trainingcost": 1800,
+  "reqclass": 64
+ },
+ {
+  "id": 8024,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 64
+ },
+ {
+  "id": 8027,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 64
+ },
+ {
+  "id": 8030,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 3",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 64
+ },
+ {
+  "id": 8033,
+  "name": "Frostbrand Weapon",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 8038,
+  "name": "Frostbrand Weapon",
+  "rank": "Rank 2",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 8042,
+  "name": "Earth Shock",
+  "rank": "Rank 1",
+  "level": 4,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 8044,
+  "name": "Earth Shock",
+  "rank": "Rank 2",
+  "level": 8,
+  "trainingcost": 100,
+  "reqclass": 64
+ },
+ {
+  "id": 8045,
+  "name": "Earth Shock",
+  "rank": "Rank 3",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 64
+ },
+ {
+  "id": 8046,
+  "name": "Earth Shock",
+  "rank": "Rank 4",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 8050,
+  "name": "Flame Shock",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 64
+ },
+ {
+  "id": 8052,
+  "name": "Flame Shock",
+  "rank": "Rank 2",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 64
+ },
+ {
+  "id": 8053,
+  "name": "Flame Shock",
+  "rank": "Rank 3",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 8056,
+  "name": "Frost Shock",
+  "rank": "Rank 1",
+  "level": 20,
+  "trainingcost": 2200,
+  "reqclass": 64
+ },
+ {
+  "id": 8058,
+  "name": "Frost Shock",
+  "rank": "Rank 2",
+  "level": 34,
+  "trainingcost": 9000,
+  "reqclass": 64
+ },
+ {
+  "id": 8075,
+  "name": "Strength of Earth Totem",
+  "rank": "Rank 1",
+  "level": 10,
+  "trainingcost": 400,
+  "reqclass": 64
+ },
+ {
+  "id": 8134,
+  "name": "Lightning Shield",
+  "rank": "Rank 5",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 8143,
+  "name": "Tremor Totem",
+  "level": 18,
+  "trainingcost": 2000,
+  "reqclass": 64
+ },
+ {
+  "id": 8154,
+  "name": "Stoneskin Totem",
+  "rank": "Rank 2",
+  "level": 14,
+  "trainingcost": 900,
+  "reqclass": 64
+ },
+ {
+  "id": 8155,
+  "name": "Stoneskin Totem",
+  "rank": "Rank 3",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 8160,
+  "name": "Strength of Earth Totem",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 8161,
+  "name": "Strength of Earth Totem",
+  "rank": "Rank 3",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 8166,
+  "name": "Poison Cleansing Totem",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 64
+ },
+ {
+  "id": 8170,
+  "name": "Disease Cleansing Totem",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 8177,
+  "name": "Grounding Totem",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 8181,
+  "name": "Frost Resistance Totem",
+  "rank": "Rank 1",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 8184,
+  "name": "Fire Resistance Totem",
+  "rank": "Rank 1",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 8190,
+  "name": "Magma Totem",
+  "rank": "Rank 1",
+  "level": 26,
+  "trainingcost": 4000,
+  "reqclass": 64
+ },
+ {
+  "id": 8227,
+  "name": "Flametongue Totem",
+  "rank": "Rank 1",
+  "level": 28,
+  "trainingcost": 6000,
+  "reqclass": 64
+ },
+ {
+  "id": 8232,
+  "name": "Windfury Weapon",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 8235,
+  "name": "Windfury Weapon",
+  "rank": "Rank 2",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 8249,
+  "name": "Flametongue Totem",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 8512,
+  "name": "Windfury Totem",
+  "rank": "Rank 1",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 8835,
+  "name": "Grace of Air Totem",
+  "rank": "Rank 1",
+  "level": 42,
+  "trainingcost": 16000,
+  "reqclass": 64
+ },
+ {
+  "id": 10391,
+  "name": "Lightning Bolt",
+  "rank": "Rank 7",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 10392,
+  "name": "Lightning Bolt",
+  "rank": "Rank 8",
+  "level": 44,
+  "trainingcost": 18000,
+  "reqclass": 64
+ },
+ {
+  "id": 10395,
+  "name": "Healing Wave",
+  "rank": "Rank 8",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 10396,
+  "name": "Healing Wave",
+  "rank": "Rank 9",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 10399,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 4",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 10406,
+  "name": "Stoneskin Totem",
+  "rank": "Rank 4",
+  "level": 34,
+  "trainingcost": 9000,
+  "reqclass": 64
+ },
+ {
+  "id": 10407,
+  "name": "Stoneskin Totem",
+  "rank": "Rank 5",
+  "level": 44,
+  "trainingcost": 18000,
+  "reqclass": 64
+ },
+ {
+  "id": 10408,
+  "name": "Stoneskin Totem",
+  "rank": "Rank 6",
+  "level": 54,
+  "trainingcost": 29000,
+  "reqclass": 64
+ },
+ {
+  "id": 10412,
+  "name": "Earth Shock",
+  "rank": "Rank 5",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 10413,
+  "name": "Earth Shock",
+  "rank": "Rank 6",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 10414,
+  "name": "Earth Shock",
+  "rank": "Rank 7",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 10427,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 5",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 10428,
+  "name": "Stoneclaw Totem",
+  "rank": "Rank 6",
+  "level": 58,
+  "trainingcost": 32000,
+  "reqclass": 64
+ },
+ {
+  "id": 10431,
+  "name": "Lightning Shield",
+  "rank": "Rank 6",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 10432,
+  "name": "Lightning Shield",
+  "rank": "Rank 7",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 10437,
+  "name": "Searing Totem",
+  "rank": "Rank 5",
+  "level": 50,
+  "trainingcost": 24000,
+  "reqclass": 64
+ },
+ {
+  "id": 10438,
+  "name": "Searing Totem",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 10442,
+  "name": "Strength of Earth Totem",
+  "rank": "Rank 4",
+  "level": 52,
+  "trainingcost": 27000,
+  "reqclass": 64
+ },
+ {
+  "id": 10447,
+  "name": "Flame Shock",
+  "rank": "Rank 4",
+  "level": 40,
+  "trainingcost": 12000,
+  "reqclass": 64
+ },
+ {
+  "id": 10448,
+  "name": "Flame Shock",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 27000,
+  "reqclass": 64
+ },
+ {
+  "id": 10456,
+  "name": "Frostbrand Weapon",
+  "rank": "Rank 3",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 10462,
+  "name": "Healing Stream Totem",
+  "rank": "Rank 4",
+  "level": 50,
+  "trainingcost": 24000,
+  "reqclass": 64
+ },
+ {
+  "id": 10463,
+  "name": "Healing Stream Totem",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 10466,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 4",
+  "level": 44,
+  "trainingcost": 18000,
+  "reqclass": 64
+ },
+ {
+  "id": 10467,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 27000,
+  "reqclass": 64
+ },
+ {
+  "id": 10468,
+  "name": "Lesser Healing Wave",
+  "rank": "Rank 6",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 10472,
+  "name": "Frost Shock",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 10473,
+  "name": "Frost Shock",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 32000,
+  "reqclass": 64
+ },
+ {
+  "id": 10478,
+  "name": "Frost Resistance Totem",
+  "rank": "Rank 2",
+  "level": 38,
+  "trainingcost": 11000,
+  "reqclass": 64
+ },
+ {
+  "id": 10479,
+  "name": "Frost Resistance Totem",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 29000,
+  "reqclass": 64
+ },
+ {
+  "id": 10486,
+  "name": "Windfury Weapon",
+  "rank": "Rank 3",
+  "level": 50,
+  "trainingcost": 24000,
+  "reqclass": 64
+ },
+ {
+  "id": 10495,
+  "name": "Mana Spring Totem",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 10496,
+  "name": "Mana Spring Totem",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 10497,
+  "name": "Mana Spring Totem",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 10526,
+  "name": "Flametongue Totem",
+  "rank": "Rank 3",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 10537,
+  "name": "Fire Resistance Totem",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 16000,
+  "reqclass": 64
+ },
+ {
+  "id": 10538,
+  "name": "Fire Resistance Totem",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 32000,
+  "reqclass": 64
+ },
+ {
+  "id": 10585,
+  "name": "Magma Totem",
+  "rank": "Rank 2",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 10586,
+  "name": "Magma Totem",
+  "rank": "Rank 3",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 10587,
+  "name": "Magma Totem",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 10595,
+  "name": "Nature Resistance Totem",
+  "rank": "Rank 1",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 10600,
+  "name": "Nature Resistance Totem",
+  "rank": "Rank 2",
+  "level": 44,
+  "trainingcost": 18000,
+  "reqclass": 64
+ },
+ {
+  "id": 10601,
+  "name": "Nature Resistance Totem",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 10605,
+  "name": "Chain Lightning",
+  "rank": "Rank 4",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 10613,
+  "name": "Windfury Totem",
+  "rank": "Rank 2",
+  "level": 42,
+  "trainingcost": 16000,
+  "reqclass": 64
+ },
+ {
+  "id": 10614,
+  "name": "Windfury Totem",
+  "rank": "Rank 3",
+  "level": 52,
+  "trainingcost": 27000,
+  "reqclass": 64
+ },
+ {
+  "id": 10622,
+  "name": "Chain Heal",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 10623,
+  "name": "Chain Heal",
+  "rank": "Rank 3",
+  "level": 54,
+  "trainingcost": 29000,
+  "reqclass": 64
+ },
+ {
+  "id": 10627,
+  "name": "Grace of Air Totem",
+  "rank": "Rank 2",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 15107,
+  "name": "Windwall Totem",
+  "rank": "Rank 1",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 15111,
+  "name": "Windwall Totem",
+  "rank": "Rank 2",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 15112,
+  "name": "Windwall Totem",
+  "rank": "Rank 3",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 15207,
+  "name": "Lightning Bolt",
+  "rank": "Rank 9",
+  "level": 50,
+  "trainingcost": 24000,
+  "reqclass": 64
+ },
+ {
+  "id": 15208,
+  "name": "Lightning Bolt",
+  "rank": "Rank 10",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 16314,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 5",
+  "level": 34,
+  "trainingcost": 9000,
+  "reqclass": 64
+ },
+ {
+  "id": 16315,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 6",
+  "level": 44,
+  "trainingcost": 18000,
+  "reqclass": 64
+ },
+ {
+  "id": 16316,
+  "name": "Rockbiter Weapon",
+  "rank": "Rank 7",
+  "level": 54,
+  "trainingcost": 29000,
+  "reqclass": 64
+ },
+ {
+  "id": 16339,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 4",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 16341,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 5",
+  "level": 46,
+  "trainingcost": 20000,
+  "reqclass": 64
+ },
+ {
+  "id": 16342,
+  "name": "Flametongue Weapon",
+  "rank": "Rank 6",
+  "level": 56,
+  "trainingcost": 30000,
+  "reqclass": 64
+ },
+ {
+  "id": 16355,
+  "name": "Frostbrand Weapon",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 16356,
+  "name": "Frostbrand Weapon",
+  "rank": "Rank 5",
+  "level": 58,
+  "trainingcost": 32000,
+  "reqclass": 64
+ },
+ {
+  "id": 16362,
+  "name": "Windfury Weapon",
+  "rank": "Rank 4",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 16387,
+  "name": "Flametongue Totem",
+  "rank": "Rank 4",
+  "level": 58,
+  "trainingcost": 32000,
+  "reqclass": 64
+ },
+ {
+  "id": 17354,
+  "name": "Mana Tide Totem",
+  "rank": "Rank 2",
+  "level": 48,
+  "trainingcost": 1100,
+  "reqclass": 64
+ },
+ {
+  "id": 17359,
+  "name": "Mana Tide Totem",
+  "rank": "Rank 3",
+  "level": 58,
+  "trainingcost": 1600,
+  "reqclass": 64
+ },
+ {
+  "id": 20608,
+  "name": "Reincarnation",
+  "rank": "Passive",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 20609,
+  "name": "Ancestral Spirit",
+  "rank": "Rank 2",
+  "level": 24,
+  "trainingcost": 3500,
+  "reqclass": 64
+ },
+ {
+  "id": 20610,
+  "name": "Ancestral Spirit",
+  "rank": "Rank 3",
+  "level": 36,
+  "trainingcost": 10000,
+  "reqclass": 64
+ },
+ {
+  "id": 20776,
+  "name": "Ancestral Spirit",
+  "rank": "Rank 4",
+  "level": 48,
+  "trainingcost": 22000,
+  "reqclass": 64
+ },
+ {
+  "id": 20777,
+  "name": "Ancestral Spirit",
+  "rank": "Rank 5",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 36936,
+  "name": "Totemic Recall",
+  "level": 20,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 66842,
+  "name": "Call of the Elements",
+  "level": 20,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 66843,
+  "name": "Call of the Ancestors",
+  "level": 30,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 66844,
+  "name": "Call of the Spirits",
+  "level": 40,
+  "trainingcost": 7000,
+  "reqclass": 64
+ },
+ {
+  "id": 408341,
+  "name": "Fire Nova",
+  "rank": "Rank 1",
+  "level": 12,
+  "trainingcost": 800,
+  "reqclass": 64
+ },
+ {
+  "id": 408342,
+  "name": "Fire Nova",
+  "rank": "Rank 2",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 64
+ },
+ {
+  "id": 408343,
+  "name": "Fire Nova",
+  "rank": "Rank 3",
+  "level": 32,
+  "trainingcost": 8000,
+  "reqclass": 64
+ },
+ {
+  "id": 408344,
+  "name": "Fire Nova",
+  "rank": "Rank 4",
+  "level": 42,
+  "trainingcost": 16000,
+  "reqclass": 64
+ },
+ {
+  "id": 408345,
+  "name": "Fire Nova",
+  "rank": "Rank 5",
+  "level": 52,
+  "trainingcost": 27000,
+  "reqclass": 64
+ },
+ {
+  "id": 437009,
+  "name": "Totemic Projection",
+  "level": 22,
+  "trainingcost": 3000,
+  "reqclass": 64
+ },
+ {
+  "id": 1238299,
+  "name": "Lava Burst",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 24000,
+  "reqclass": 64
+ },
+ {
+  "id": 1238300,
+  "name": "Lava Burst",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 34000,
+  "reqclass": 64
+ },
+ {
+  "id": 1239242,
+  "name": "Riptide",
+  "rank": "Rank 2",
+  "level": 50,
+  "trainingcost": 800,
+  "reqclass": 64
+ },
+ {
+  "id": 1239243,
+  "name": "Riptide",
+  "rank": "Rank 3",
+  "level": 60,
+  "trainingcost": 1600,
+  "reqclass": 64
+ }
+]

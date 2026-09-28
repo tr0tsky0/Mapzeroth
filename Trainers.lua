@@ -1,7 +1,9 @@
 local addonName, addon = ...
 
 -- Which trainers matter to this player right now. The destination picker shows the
--- relevant ones by default and puts every other trainer in a drill-down:
+-- relevant ones by default and puts every other trainer in a drill-down. A trainer only trains
+-- its own faction (an NPC's `faction`, from Wowhead's reactions or its town's; none: anyone's), so
+-- the other faction's never count. Beyond that:
 --   * class trainer: yours only;
 --   * weapon master: teaches a weapon your class can learn and you don't have;
 --   * profession trainer: for a profession you have, teaches the NEXT rank (the one above your
@@ -90,6 +92,22 @@ local function talksTo(npc, gate)
     return true
 end
 
+-- Does this NPC train the player's faction? An NPC with no faction on record trains anyone.
+local function serves(npc, ctx)
+    return not npc.faction or not ctx.faction or npc.faction == ctx.faction
+end
+
+-- The NPCs at a place that will train this player: those of their faction. `other` is the faction of the place's
+-- trainers when none of them will (every one belongs to the other faction), else nil.
+local function servingNPCs(node, ctx)
+    local npcs, other = {}, nil
+    for _, npc in ipairs(node.npcs or {}) do
+        if serves(npc, ctx) then npcs[#npcs + 1] = npc else other = npc.faction end
+    end
+    if #npcs > 0 then other = nil end
+    return npcs, other
+end
+
 -- The NPCs at a trainer place worth visiting, in data order. A place with no NPC
 -- records at all (a bare capture) counts as one NPC we know nothing about.
 function Trainers:RelevantNPCs(node, ctx)
@@ -99,12 +117,15 @@ function Trainers:RelevantNPCs(node, ctx)
     if not eligible then return result end
     if addon.CLASS_TOKENS[node.trainer] or PET_TRAINER_CLASS[node.trainer] then
         -- These teach their whole class/pet skill set; being the right class is enough.
-        for _, npc in ipairs(node.npcs or {}) do result[#result + 1] = npc end
+        local npcs, other = servingNPCs(node, ctx)
+        if other then return result end         -- the other faction's
+        for _, npc in ipairs(npcs) do result[#result + 1] = npc end
         if #result == 0 then result[1] = {} end
         return result
     end
-    local npcs = node.npcs
-    if not npcs or #npcs == 0 then npcs = { {} } end
+    local npcs, other = servingNPCs(node, ctx)
+    if other then return result end
+    if #npcs == 0 then npcs = { {} } end
     for _, npc in ipairs(npcs) do
         if not npc.specialty then
             if npc.teaches and #npc.teaches > 0 then
@@ -121,4 +142,60 @@ end
 function Trainers:IsRelevant(node, ctx)
     if node.kind ~= "trainer" then return true end
     return #self:RelevantNPCs(node, ctx) > 0
+end
+
+-- What the picker's tooltip says about a trainer place, as data (the UI words it). One of:
+--   { kind = "profession", rank = <the player's rank index, 0 for none>, has = <they have the profession>,
+--     npcs = { { top = <highest rank index it teaches, or nil if unknown>, specialty = true?, useful = bool }, ... } }
+--   { kind = "weapon", learnable = { spellID, ... } }   the weapons it teaches that the class can learn and doesn't know
+--   { kind = "class", own = <the player's class> }       what's left to learn comes from ClassTraining
+-- or nil for any other kind of trainer. Any of them carries `otherFaction` (and nothing else about what it teaches)
+-- when every trainer there belongs to the other faction: they won't train this player.
+function Trainers:Describe(node, ctx)
+    if not node or node.kind ~= "trainer" then return nil end
+    local token = node.trainer
+    local serving, other = servingNPCs(node, ctx)
+    if addon.CLASS_TOKENS[token] then
+        return { kind = "class", own = token == ctx.class, otherFaction = other }
+    end
+    if token == "WEAPON" then
+        if other then return { kind = "weapon", otherFaction = other } end
+        local wanted, learnable, seen = asSet(addon.ClassWeapons and addon.ClassWeapons[ctx.class]), {}, {}
+        for _, npc in ipairs(serving) do
+            for _, spellID in ipairs(npc.teaches or {}) do
+                if wanted[spellID] and not seen[spellID] and not ctx.knowsSpell(spellID) then
+                    seen[spellID] = true
+                    learnable[#learnable + 1] = spellID
+                end
+            end
+        end
+        table.sort(learnable)
+        return { kind = "weapon", learnable = learnable }
+    end
+    if addon.Professions and addon.Professions[token] then
+        local eligible, wanted, gate = needFor(node, ctx)
+        local info = { kind = "profession", rank = gate.known, has = eligible, npcs = {}, otherFaction = other }
+        if other then return info end
+        local useful, byKey = {}, {}
+        for _, npc in ipairs(self:RelevantNPCs(node, ctx)) do useful[npc] = true end
+        for _, npc in ipairs(serving) do
+            local teaches, top = asSet(npc.teaches), nil
+            for i, spellID in ipairs(gate.ranks) do
+                if teaches[spellID] then top = i end
+            end
+            -- Two trainers of one rank at a place are one line.
+            local key = npc.specialty and "specialty" or (top or "unknown")
+            local same = byKey[key]
+            if same then
+                same.useful = same.useful or useful[npc] == true
+            else
+                byKey[key] = { top = not npc.specialty and top or nil, specialty = npc.specialty, useful = useful[npc] == true }
+                info.npcs[#info.npcs + 1] = byKey[key]
+            end
+        end
+        -- Lowest rank first; specialization trainers and ones we know nothing about after.
+        table.sort(info.npcs, function(a, b) return (a.top or 99) < (b.top or 99) end)
+        return info
+    end
+    return nil
 end

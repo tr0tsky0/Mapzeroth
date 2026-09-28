@@ -32,6 +32,7 @@ addon.Theme:Register("moderndark", {
         foot = rgb("ece6d6"), flight = rgb("63b7a4"), boat = rgb("63b7a4"), ability = rgb("d4a64f"),
         default = rgb("a8a191"),
     },
+    stepIcon = { size = 18, crop = 0.1 },        -- trimmed of their frame: flat squares, like the rest
     markers = {
         place = rgb("d4a64f"), flight = rgb("63b7a4"), transport = rgb("63b7a4"), instance = rgb("c0554d"),
         leyline = rgb("8f7bd4"), waypoint = rgb("d4a64f"), default = rgb("a8a191"),
