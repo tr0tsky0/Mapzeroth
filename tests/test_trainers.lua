@@ -73,6 +73,13 @@ local marsh = findNPC(4609)   -- Doctor Marsh, Expert Alchemist: Apprentice and 
 check(relevantIDs(marsh, { class = "MAGE", faction = "Horde", spells = { 2259 } })[4609], "an Apprentice alchemist needs Journeyman from Doctor Marsh")
 check(not relevantIDs(marsh, { class = "MAGE", faction = "Horde", spells = { 2259, 3101 } })[4609], "a Journeyman has outgrown him")
 
+-- Gathering professions' trainers teach every rank to anyone: an Artisan skinning trainer still trains an Apprentice
+-- (reported in Shen'dar Village, where "Nearest Skinning Trainer" sent a Horde Apprentice to Shadowprey instead).
+local shendar = find(function(n) return n.trainer == "SKINNING" and n.town == "shendar_village" end)
+check(shendar and relevant(shendar, { class = "SHAMAN", faction = "Horde", spells = { 8613 } }),
+    "Shen'dar's Artisan skinning trainer is there for an Apprentice")
+check(not relevant(shendar, { class = "SHAMAN", faction = "Horde", spells = { 8613, 8617, 8618, 10768 } }), "but not for an Artisan")
+
 -- Specialization trainers stay in the drill-down.
 local shadoweave = findNPC(9584)
 check(shadoweave and not relevant(shadoweave, { class = "MAGE", spells = { 3908 } }), "Shadoweave tailoring isn't shown by default")

@@ -23,6 +23,10 @@ addon.Professions = {
     TAILORING      = 3908,
 }
 
+-- Gathering professions: every trainer of one teaches all its ranks, to anyone (a crafting trainer won't talk to a
+-- player too far below its top rank: Trainers.lua). tools/gen_pois.py reads this too.
+addon.GatheringProfessions = { HERBALISM = true, MINING = true, SKINNING = true }
+
 -- Every rank spell we've seen a trainer teach, lowest rank first (Apprentice, Journeyman,
 -- Expert, Artisan). A player "has" a profession if they know its first rank, and their
 -- rank is the highest of these they know. Only ranks some trainer teaches are listed:

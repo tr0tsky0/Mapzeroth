@@ -8,7 +8,8 @@ local addonName, addon = ...
 --   * weapon master: teaches a weapon your class can learn and you don't have;
 --   * profession trainer: for a profession you have, teaches the NEXT rank (the one above your
 --     highest) and talks to you, that is its top rank isn't too far above yours
---     (addon.PROFESSION_TRAINER_REACH): an Artisan trainer won't talk to an Apprentice. So it drops
+--     (addon.PROFESSION_TRAINER_REACH): an Artisan trainer won't talk to an Apprentice (gathering
+--     professions' trainers talk to anyone: addon.GatheringProfessions). So it drops
 --     out once you have outgrown it, and doesn't show until you are close enough;
 --   * riding instructor: teaches a riding rank you don't know;
 --   * pet trainer: hunters; demon trainer: warlocks.
@@ -73,16 +74,18 @@ local function needFor(node, ctx)
         end
         local wanted = {}
         if ranks[known + 1] then wanted[ranks[known + 1]] = true end
-        return ctx.knowsSpell(firstRank), wanted, { ranks = ranks, known = known }
+        return ctx.knowsSpell(firstRank), wanted,
+            { ranks = ranks, known = known, anyone = addon.GatheringProfessions and addon.GatheringProfessions[token] }
     end
     return true, nil
 end
 
 -- Will this profession trainer talk to the player? Its top rank (the highest rank it teaches) mustn't be
 -- more than PROFESSION_TRAINER_REACH above the player's own. A trainer whose ranks we don't know, or that
--- teaches none of this profession's rank spells, is given the benefit of the doubt.
+-- teaches none of this profession's rank spells, is given the benefit of the doubt. A gathering profession's
+-- trainers (herbalism, mining, skinning) teach every rank to anyone.
 local function talksTo(npc, gate)
-    if not gate then return true end
+    if not gate or gate.anyone then return true end
     local teaches = asSet(npc.teaches)
     for i = #gate.ranks, 1, -1 do
         if teaches[gate.ranks[i]] then
