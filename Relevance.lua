@@ -11,8 +11,11 @@ function Relevance:IsRelevant(node, ctx)
     if node.kind == "trainer" then
         return addon.Trainers:IsRelevant(node, ctx)
     elseif node.kind == "leyline" then
-        -- Only players who can Read Ley Line (all Skyborne, and only Skyborne, today).
-        return addon.LeyLineSpell ~= nil and ctx.knowsSpell(addon.LeyLineSpell)
+        -- Alliance Skyborne only: the ones who can Read Ley Line.
+        return ctx.faction == "Alliance" and addon.LeyLineSpell ~= nil and ctx.knowsSpell(addon.LeyLineSpell)
+    elseif node.kind == "convergence" then
+        -- Horde Skyborne only: the ones with Skysight.
+        return ctx.faction == "Horde" and addon.SkysightSpell ~= nil and ctx.knowsSpell(addon.SkysightSpell)
     end
     return true
 end

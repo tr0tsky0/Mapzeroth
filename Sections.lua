@@ -101,12 +101,15 @@ end
 -- `index` (by node id) is set on the result for Price.
 function Sections:Build(entries, ctx, waypoint)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
-    local leylines, cities, towns = {}, {}, {}
+    local leylines, convergences, cities, towns = {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
     for _, entry in ipairs(entries) do
         if entry.group == "leyline" and entry.relevant then
             leylines[#leylines + 1] = entry.nodeID
+            index[entry.nodeID] = entry
+        elseif entry.group == "convergence" and entry.relevant then
+            convergences[#convergences + 1] = entry.nodeID
             index[entry.nodeID] = entry
         elseif entry.group == "trainer" and entry.relevant and entry.trainer then
             if not trainers[entry.trainer] then
@@ -131,6 +134,7 @@ function Sections:Build(entries, ctx, waypoint)
         }
     end
     if #leylines > 0 then picks[#picks + 1] = pick(L["PICK_LEYLINE"], "leyline", leylines) end
+    if #convergences > 0 then picks[#picks + 1] = pick(L["PICK_CONVERGENCE"], "convergence", convergences) end
     if trainers[ctx.class] then picks[#picks + 1] = pick(L["PICK_CLASS"], "trainer", trainers[ctx.class]) end
     for token, key in pairs({ PET = "PICK_PET", DEMON = "PICK_DEMON" }) do
         if trainers[token] then picks[#picks + 1] = pick(L[key], "trainer", trainers[token]) end

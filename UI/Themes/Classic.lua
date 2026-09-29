@@ -54,6 +54,6 @@ addon.Theme:Register("classic", {
     stepIcon = { size = 18, crop = 0 },          -- the icons keep their own dark frame, as on the action bars
     markers = {
         place = c(1, 0.82, 0), flight = c(0.4, 0.75, 1), transport = c(0.4, 0.75, 1), instance = c(0.9, 0.3, 0.3),
-        leyline = c(0.7, 0.5, 1), waypoint = c(1, 0.82, 0), default = c(0.62, 0.62, 0.62),
+        leyline = c(0.7, 0.5, 1), convergence = c(1, 0.55, 0.3), waypoint = c(1, 0.82, 0), default = c(0.62, 0.62, 0.62),
     },
 })

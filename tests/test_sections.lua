@@ -53,6 +53,11 @@ check(not picks((sectionsFor({ class = "WARRIOR", faction = "Alliance" })))["Nea
 local skyborne = picks((sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })))
 check(skyborne["Nearest Ley Line"] and #skyborne["Nearest Ley Line"].nodeIDs >= 4, "a Skyborne has the nearest ley line, over all of them")
 
+-- Horde Skyborne get the nearest elemental convergence instead, and no ley line.
+local hordeSky = picks((sectionsFor({ class = "DRUID", faction = "Horde", spells = { 1259686 } })))
+check(hordeSky["Nearest Elemental Convergence"] and #hordeSky["Nearest Elemental Convergence"].nodeIDs >= 4, "a Horde Skyborne has the nearest convergence, over all of them")
+check(not hordeSky["Nearest Ley Line"] and not skyborne["Nearest Elemental Convergence"], "each faction gets only its own")
+
 -- Weapons already known aren't offered again: a character who knows all of a weapon master's skills gets no pick.
 local knowsAll = {}
 for _, class in pairs(addon.ClassWeapons) do for _, id in ipairs(class) do knowsAll[#knowsAll + 1] = id end end

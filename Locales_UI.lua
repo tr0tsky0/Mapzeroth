@@ -113,6 +113,7 @@ addon:RegisterLocale("enUS", {
     SECTION_EXPANSION = "Expansion %d",
     SECTION_COUNT     = "%d places",
     PICK_LEYLINE      = "Nearest Ley Line",
+    PICK_CONVERGENCE  = "Nearest Elemental Convergence",
     PICK_WAYPOINT     = "Your Waypoint",
     WAYPOINT_NAME     = "Your waypoint",
     PICK_CLASS        = "Nearest Class Trainer",
@@ -156,5 +157,6 @@ addon:RegisterLocale("enUS", {
     GROUP_trainer     = "Trainer",
     GROUP_entrance    = "City entrance",
     GROUP_leyline     = "Ley line",
+    GROUP_convergence = "Elemental convergence",
     GROUP_other       = "Place",
 }, true)

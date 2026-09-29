@@ -20,6 +20,9 @@ addon.Abilities = addon.Abilities or {}
 -- +100% for 15 min at a ley line, 15 s anywhere else. Only Skyborne have it, so knowing
 -- it is what makes ley line places relevant (Relevance.lua). It has no bearing on travel.
 addon.LeyLineSpell = 1259705
+-- The Horde Skyborne's counterpart, "Skysight": Horde Skyborne have Elemental Convergences where
+-- Alliance Skyborne have ley lines (Relevance.lua checks the faction as well as the spell).
+addon.SkysightSpell = 1259686
 
 -- Class forms that raise ground speed without a mount. `indoorCapable` says
 -- whether the bonus still applies indoors. Spell IDs are the Classic ones and

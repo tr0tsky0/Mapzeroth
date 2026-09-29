@@ -2,10 +2,21 @@
 -- have it); everyone else has them in the drill-down. No ley line is in the data yet, so
 -- a stand-in node is used.
 local leyline = { kind = "leyline", mapID = 2521, x = 0.5, y = 0.5 }
-local skyborne = makeCtx({ class = "MAGE", spells = { addon.LeyLineSpell } })
+local skyborne = makeCtx({ class = "MAGE", faction = "Alliance", spells = { addon.LeyLineSpell } })
 check(addon.LeyLineSpell == 1259705, "Read Ley Line is spell 1259705")
 check(addon.Relevance:IsRelevant(leyline, skyborne), "a player who knows Read Ley Line sees ley lines")
 check(not addon.Relevance:IsRelevant(leyline, makeCtx({ class = "MAGE" })), "anyone else doesn't")
+
+-- Horde Skyborne have Elemental Convergences (Skysight) instead, and the two never cross over.
+local convergence = { kind = "convergence", mapID = 2521, x = 0.5, y = 0.5 }
+local hordeSky = makeCtx({ class = "MAGE", faction = "Horde", spells = { addon.SkysightSpell } })
+check(addon.SkysightSpell == 1259686, "Skysight is spell 1259686")
+check(addon.Relevance:IsRelevant(convergence, hordeSky), "a Horde player who knows Skysight sees convergences")
+check(not addon.Relevance:IsRelevant(leyline, hordeSky), "and no ley lines")
+check(not addon.Relevance:IsRelevant(convergence, skyborne), "an Alliance Skyborne sees no convergences")
+check(not addon.Relevance:IsRelevant(convergence, makeCtx({ class = "MAGE", faction = "Horde" })), "a Horde player without Skysight doesn't")
+check(not addon.Relevance:IsRelevant(leyline, makeCtx({ class = "MAGE", faction = "Horde", spells = { addon.LeyLineSpell } })),
+    "Read Ley Line on a Horde character still isn't enough: ley lines are the Alliance's")
 
 -- Other kinds go through their own rules, or are always shown.
 local inn = { kind = "inn" }

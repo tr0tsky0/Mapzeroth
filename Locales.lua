@@ -76,6 +76,7 @@ addon:RegisterLocale("enUS", {
     NODE_KIND_STABLE   = "%s Stable Master",
     NODE_KIND_ENTRANCE = "%s Entrance",
     NODE_KIND_LEYLINE  = "%s Ley Line",
+    NODE_KIND_CONVERGENCE = "%s Elemental Convergence",
     -- A flight master, named for the city or town it stands in rather than the client's
     -- raw taxi-point name ("Stormwind, Elwynn"), which doesn't read as a destination.
     NODE_KIND_FLIGHTMASTER = "%s Flight Master",

@@ -50,11 +50,11 @@ TRAINER_FILES = ["class_trainers.tsv", "class_trainers_towns.tsv", "class_traine
                  "profession_trainers.tsv"]
 PREFIX = {"inn": "INN", "bank": "BANK", "auction": "AUCTION", "trainer": "TRAINER",
           "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE",
-          "leyline": "LEYLINE"}
+          "leyline": "LEYLINE", "convergence": "CONVERGENCE"}
 # Places that are out in the world and never join a settlement, whatever is nearby, so
-# they are named after their zone ("Zephras Isle Ley Line"). Ley lines are for the
-# Skyborne racial Find Ley Line.
-WORLD_KINDS = {"leyline"}
+# they are named after their zone ("Zephras Isle Ley Line"). Ley lines are for Alliance
+# Skyborne (Read Ley Line), elemental convergences their Horde counterpart (Skysight).
+WORLD_KINDS = {"leyline", "convergence"}
 
 CLASS_TOKENS = ["WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "SHAMAN", "MAGE", "WARLOCK", "DRUID"]
 # Wowhead's title for an NPC ("<Mage Trainer>") -> what it trains. Class trainers use
@@ -89,7 +89,14 @@ def load_rank_spells():
 
 
 RANK_SPELLS = load_rank_spells()
-GATHERING = {"HERBALISM", "MINING", "SKINNING"}
+def load_gathering():
+    """addon.GatheringProfessions in Data/Forever/Professions.lua."""
+    text = (ROOT / "Data" / "Forever" / "Professions.lua").read_text(encoding="utf-8")
+    body = re.search(r"addon\.GatheringProfessions\s*=\s*\{([^}]*)\}", text).group(1)
+    return set(re.findall(r"(\w+)\s*=\s*true", body))
+
+
+GATHERING = load_gathering()
 
 
 TIER_RANKS = {"journeyman": 2, "expert": 3, "artisan": 4}
@@ -109,7 +116,8 @@ def captured_teaches(trainer, tier=None):
 # repeats ("dalaran_2"). Returns settlementKey, tier or None, and a default town name.
 CAPTURE_KEY = re.compile(r"(.+?)(?:_including_(journeyman|expert|artisan))?(?:_(\d+))?")
 # `/mzdump poi` calls a stable master's kind stable_master.
-CAPTURE_KINDS = {"stable_master": "stable", "ley_line": "leyline"}
+CAPTURE_KINDS = {"stable_master": "stable", "ley_line": "leyline",
+                 "elemental_convergence": "convergence"}
 
 
 def parse_capture_key(raw):

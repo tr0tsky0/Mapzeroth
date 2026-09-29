@@ -14,8 +14,9 @@
 --   Riverglades: 1 bank NPC(s)
 --   a continent map (no exact position): 1 trainer NPC(s)
 --
--- 108 places outside any city or town (starter areas and the like);
+-- 131 places outside any city or town (starter areas and the like);
 -- they keep a zone-based name:
+--   convergence on map 1411 at (45.1, 15.7)
 --   DEMON trainer on map 1411 at (40.6, 68.4)
 --   WARRIOR trainer on map 1411 at (42.8, 69.4)
 --   HUNTER trainer on map 1411 at (42.8, 69.2)
@@ -72,6 +73,7 @@
 --   LEATHERWORKING trainer on map 1427 at (63.5, 75.7)
 --   leyline on map 1428 at (78.6, 61.8)
 --   battlemaster on map 1429 at (33.7, 11.0)
+--   leyline on map 1429 at (64.9, 67.3)
 --   stable on map 1429 at (25.2, 11.0)
 --   TAILORING trainer on map 1429 at (79.2, 69.0)
 --   ENCHANTING trainer on map 1429 at (64.8, 70.5)
@@ -93,6 +95,7 @@
 --   PET trainer on map 1432 at (82.2, 62.6)
 --   leyline on map 1433 at (12.6, 72.8)
 --   SKINNING trainer on map 1433 at (88.8, 71.0)
+--   leyline on map 1436 at (51.1, 67.5)
 --   leyline on map 1436 at (59.8, 31.5)
 --   stable on map 1438 at (25.4, 49.0)
 --   WARRIOR trainer on map 1438 at (59.5, 38.5)
@@ -104,6 +107,7 @@
 --   ENCHANTING trainer on map 1438 at (36.8, 34.2)
 --   FISHING trainer on map 1438 at (55.8, 93.5)
 --   SKINNING trainer on map 1438 at (42.0, 50.0)
+--   leyline on map 1439 at (57.6, 26.6)
 --   FISHING trainer on map 1440 at (10.8, 33.5)
 --   PET trainer on map 1440 at (18.0, 60.0)
 --   HUNTER trainer on map 1440 at (50.0, 67.8)
@@ -121,8 +125,27 @@
 --   stable on map 1450 at (56.2, 32.4)
 --   HERBALISM trainer on map 1450 at (45.5, 46.9)
 --   DRUID trainer on map 1450 at (52.5, 40.5)
+--   convergence on map 2521 at (34.1, 59.8)
+--   convergence on map 2521 at (35.9, 33.7)
+--   convergence on map 2521 at (46.6, 38.2)
+--   convergence on map 2521 at (47.6, 69.5)
+--   convergence on map 2521 at (48.4, 20.3)
+--   convergence on map 2521 at (48.5, 55.8)
+--   convergence on map 2521 at (52.9, 57.5)
+--   convergence on map 2521 at (59.1, 79.8)
+--   leyline on map 2521 at (33.8, 55.5)
+--   leyline on map 2521 at (35.3, 33.7)
+--   leyline on map 2521 at (38.4, 47.6)
+--   leyline on map 2521 at (45.5, 81.3)
+--   leyline on map 2521 at (46.0, 18.1)
+--   leyline on map 2521 at (48.0, 59.1)
+--   leyline on map 2521 at (50.3, 33.2)
+--   leyline on map 2521 at (53.8, 66.3)
+--   leyline on map 2521 at (55.0, 50.4)
 --   leyline on map 2521 at (58.8, 33.5)
+--   leyline on map 2521 at (63.7, 45.9)
 --   leyline on map 2521 at (63.9, 74.1)
+--   leyline on map 2521 at (68.8, 61.9)
 --   ENGINEERING trainer on map 2521 at (54.0, 38.9)
 
 local addonName, addon = ...
@@ -185,6 +208,7 @@ addon.Towns = {
 }
 
 addon.Nodes.Pois = {
+    { id = "CONVERGENCE_C1411_451_157", container = "kalimdor.durotar", mapID = 1411, x = 0.4512, y = 0.1570, kind = "convergence" },
     { id = "ENTRANCE_C1411_455_119", container = "kalimdor.durotar", mapID = 1411, x = 0.4550, y = 0.1190, kind = "entrance", city = "orgrimmar" },
     { id = "INN_6928", container = "kalimdor.durotar", mapID = 1411, x = 0.5150, y = 0.4160, kind = "inn", town = "razor_hill", npcs = { { id = 6928 } } },
     { id = "STABLE_9987", container = "kalimdor.durotar", mapID = 1411, x = 0.5200, y = 0.4180, kind = "stable", town = "razor_hill", npcs = { { id = 9987 } } },
@@ -359,6 +383,7 @@ addon.Nodes.Pois = {
     { id = "BATTLEMASTER_7410", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3373, y = 0.1103, kind = "battlemaster", npcs = { { id = 7410 }, { id = 14981 }, { id = 15008 } } },
     { id = "ENTRANCE_C1429_318_488", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.3180, y = 0.4877, kind = "entrance", city = "stormwind" },
     { id = "INN_295", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4380, y = 0.6580, kind = "inn", town = "goldshire", npcs = { { id = 295 } } },
+    { id = "LEYLINE_C1429_649_673", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.6493, y = 0.6732, kind = "leyline" },
     { id = "STABLE_11069", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.2520, y = 0.1100, kind = "stable", npcs = { { id = 11069 } } },
     { id = "STABLE_6749", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.4280, y = 0.6580, kind = "stable", town = "goldshire", npcs = { { id = 6749 } } },
     { id = "TRAINER_TAILORING_1103", container = "easternkingdoms.elwynn_forest", mapID = 1429, x = 0.7920, y = 0.6900, kind = "trainer", trainer = "TAILORING", npcs = { { id = 1103, faction = "Alliance", teaches = { 3908 } } } },
@@ -439,6 +464,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_HUNTER_987", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.4740, y = 0.5320, kind = "trainer", trainer = "HUNTER", town = "stonard", npcs = { { id = 987, faction = "Horde" } } },
     { id = "TRAINER_WARLOCK_988", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.4850, y = 0.5550, kind = "trainer", trainer = "WARLOCK", town = "stonard", npcs = { { id = 988, faction = "Horde" } } },
     { id = "INN_8931", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5280, y = 0.5350, kind = "inn", town = "sentinel_hill", npcs = { { id = 8931 } } },
+    { id = "LEYLINE_C1436_511_675", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5110, y = 0.6750, kind = "leyline" },
     { id = "LEYLINE_C1436_598_315", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5980, y = 0.3150, kind = "leyline" },
     { id = "STABLE_10045", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5300, y = 0.5300, kind = "stable", town = "sentinel_hill", npcs = { { id = 10045 } } },
     { id = "INN_1464", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.1060, y = 0.6080, kind = "inn", town = "menethil_harbor", npcs = { { id = 1464 } } },
@@ -470,6 +496,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_COOKING_6286", container = "kalimdor.teldrassil", mapID = 1438, x = 0.5700, y = 0.6120, kind = "trainer", trainer = "COOKING", town = "dolanaar", npcs = { { id = 6286, faction = "Alliance", teaches = { 2550, 3102 } } } },
     { id = "TRAINER_SKINNING_6287", container = "kalimdor.teldrassil", mapID = 1438, x = 0.4200, y = 0.5000, kind = "trainer", trainer = "SKINNING", npcs = { { id = 6287, faction = "Alliance", teaches = { 8613, 8617, 8618, 10768 } } } },
     { id = "INN_6737", container = "kalimdor.darkshore", mapID = 1439, x = 0.3700, y = 0.4400, kind = "inn", town = "auberdine", npcs = { { id = 6737 } } },
+    { id = "LEYLINE_C1439_576_266", container = "kalimdor.darkshore", mapID = 1439, x = 0.5758, y = 0.2662, kind = "leyline" },
     { id = "STABLE_10085", container = "kalimdor.darkshore", mapID = 1439, x = 0.3740, y = 0.4420, kind = "stable", town = "auberdine", npcs = { { id = 10085 } } },
     { id = "TRAINER_ENGINEERING_11037", container = "kalimdor.darkshore", mapID = 1439, x = 0.3820, y = 0.4100, kind = "trainer", trainer = "ENGINEERING", town = "auberdine", npcs = { { id = 11037, faction = "Alliance", teaches = { 4036 } } } },
     { id = "TRAINER_TAILORING_4193", container = "kalimdor.darkshore", mapID = 1439, x = 0.3820, y = 0.4050, kind = "trainer", trainer = "TAILORING", town = "auberdine", npcs = { { id = 4193, faction = "Alliance", teaches = { 3908 } } } },
@@ -715,10 +742,29 @@ addon.Nodes.Pois = {
     { id = "TRAINER_SKINNING_7087", container = "easternkingdoms.tirisfal_glades", mapID = 1458, x = 0.7060, y = 0.5940, kind = "trainer", trainer = "SKINNING", city = "undercity", npcs = { { id = 7087, faction = "Horde", teaches = { 8613, 8617, 8618, 10768 } } } },
     { id = "AUCTION_C2521_579_771", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5789, y = 0.7707, kind = "auction", town = "valanaar" },
     { id = "BANK_C2521_577_771", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5768, y = 0.7710, kind = "bank", town = "valanaar", npcs = { { id = 257036 } } },
+    { id = "CONVERGENCE_C2521_341_598", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3407, y = 0.5983, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_359_337", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3593, y = 0.3368, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_466_382", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4659, y = 0.3824, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_476_695", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4764, y = 0.6954, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_484_203", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4844, y = 0.2031, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_485_558", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4850, y = 0.5581, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_528_575", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5285, y = 0.5752, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_591_798", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5914, y = 0.7981, kind = "convergence" },
     { id = "INN_C2521_430_433", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4300, y = 0.4330, kind = "inn", town = "shendar_village" },
     { id = "INN_C2521_622_727", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6218, y = 0.7269, kind = "inn", town = "valanaar" },
+    { id = "LEYLINE_C2521_338_555", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3380, y = 0.5550, kind = "leyline" },
+    { id = "LEYLINE_C2521_353_337", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3528, y = 0.3368, kind = "leyline" },
+    { id = "LEYLINE_C2521_384_476", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3839, y = 0.4758, kind = "leyline" },
+    { id = "LEYLINE_C2521_455_813", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4550, y = 0.8131, kind = "leyline" },
+    { id = "LEYLINE_C2521_460_181", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4603, y = 0.1808, kind = "leyline" },
+    { id = "LEYLINE_C2521_480_591", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4799, y = 0.5910, kind = "leyline" },
+    { id = "LEYLINE_C2521_503_332", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5031, y = 0.3318, kind = "leyline" },
+    { id = "LEYLINE_C2521_538_663", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5380, y = 0.6630, kind = "leyline" },
+    { id = "LEYLINE_C2521_550_504", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5497, y = 0.5041, kind = "leyline" },
     { id = "LEYLINE_C2521_588_335", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5880, y = 0.3350, kind = "leyline" },
+    { id = "LEYLINE_C2521_637_459", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6373, y = 0.4594, kind = "leyline" },
     { id = "LEYLINE_C2521_639_741", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6390, y = 0.7410, kind = "leyline" },
+    { id = "LEYLINE_C2521_688_619", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6885, y = 0.6188, kind = "leyline" },
     { id = "TRAINER_HERBALISM_C2521_430_435", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4300, y = 0.4350, kind = "trainer", trainer = "HERBALISM", town = "shendar_village", npcs = { { teaches = { 2366, 2368, 3570, 11993 } } } },
     { id = "TRAINER_FIRSTAID_C2521_431_463", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4310, y = 0.4630, kind = "trainer", trainer = "FIRSTAID", town = "shendar_village", npcs = { { teaches = { 3273, 3274 } } } },
     { id = "TRAINER_ENCHANTING_C2521_432_432", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4320, y = 0.4320, kind = "trainer", trainer = "ENCHANTING", town = "shendar_village", npcs = { { teaches = { 7411, 7412 } } } },

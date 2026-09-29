@@ -91,3 +91,27 @@ bank	1456	47.4	58.6	thunder_bluff	Thunder Bluff
 inn	1454	54.1	68.4	orgrimmar	Orgrimmar
 bank	1454	49.6	69.3	orgrimmar	Orgrimmar
 auction	1454	55.7	62.9	orgrimmar	Orgrimmar
+# Ley lines from the Ley Line Marker addon's data (the user's own in-game gathering), 2026-09-28.
+leyline	1429	64.93	67.32	-	Elwynn Forest
+leyline	1436	51.10	67.50	-	Westfall
+leyline	1439	57.58	26.62	-	Darkshore
+leyline	2521	45.50	81.31	-	Zephras Isle
+leyline	2521	47.99	59.10	-	Zephras Isle
+leyline	2521	38.39	47.58	-	Zephras Isle
+leyline	2521	35.28	33.68	-	Zephras Isle
+leyline	2521	46.03	18.08	-	Zephras Isle
+leyline	2521	50.31	33.18	-	Zephras Isle
+leyline	2521	54.97	50.41	-	Zephras Isle
+leyline	2521	63.73	45.94	-	Zephras Isle
+leyline	2521	68.85	61.88	-	Zephras Isle
+leyline	2521	53.80	66.30	-	Zephras Isle
+leyline	2521	33.80	55.50	-	Zephras Isle
+convergence	1411	45.12	15.70	-	Durotar
+convergence	2521	48.44	20.31	-	Zephras Isle
+convergence	2521	35.93	33.68	-	Zephras Isle
+convergence	2521	46.59	38.24	-	Zephras Isle
+convergence	2521	34.07	59.83	-	Zephras Isle
+convergence	2521	48.50	55.81	-	Zephras Isle
+convergence	2521	52.85	57.52	-	Zephras Isle
+convergence	2521	47.64	69.54	-	Zephras Isle
+convergence	2521	59.14	79.81	-	Zephras Isle
