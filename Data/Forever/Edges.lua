@@ -113,7 +113,7 @@ for _, edge in ipairs({
     -- Menethil <-> Theramore shuttle: T = 155, D = 60 -> average 2T + D = 370. Crosses continents (one loading screen).
     { from = "DOCK_MENETHIL_THERAMORE", to = "DOCK_THERAMORE", method = "ship", cost = 370, loadingScreens = 1, requirements = { faction = "Alliance" } }, -- Classic
     { from = "DOCK_AUBERDINE_RUTTHERAN", to = "DOCK_RUTTHERAN", method = "ship", cost = 190, loadingScreens = 0, requirements = { faction = "Alliance" } }, -- Classic, Teldrassil ferry; T = 65, D = 60 -> 2T + D = 190, same continent so no loading screen
-    { from = "DOCK_BOOTYBAY", to = "DOCK_RATCHET", method = "ship", cost = 90, loadingScreens = 1 }, -- Classic, both factions, Steamwheedle Cartel; Eastern Kingdoms <-> Kalimdor so it has a loading screen (cost still a PLACEHOLDER)
+    { from = "DOCK_BOOTYBAY", to = "DOCK_RATCHET", method = "ship", cost = 250, loadingScreens = 1 }, -- Classic, both factions, Steamwheedle Cartel; Eastern Kingdoms <-> Kalimdor so it has a loading screen; MEASURED live Ratchet -> Booty Bay: T = 95, D = 60 -> 2T + D = 250 (taken as the same both ways)
     { from = "DOCK_FEATHERMOON", to = "DOCK_FORGOTTENCOAST", method = "ship", cost = 60, loadingScreens = 0, requirements = { faction = "Alliance" } }, -- Classic ferry to Sardor Isle; same continent, no loading screen (cost still a PLACEHOLDER)
 
     -- Skyborne starting-island ships. Shuttle-boat cost model (T = transit,

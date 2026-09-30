@@ -293,7 +293,73 @@ check(r == 1 and math.abs(g - 0.82) < 0.01 and b == 0, "Classic's accent is Bliz
 Theme:Set("moderndark")
 
 -- Toggling hides and shows.
-check(addon.Panel:Toggle() == false and addon.Panel:Toggle() == true, "the panel can be toggled off and on")
+-- /mz and the minimap button toggle the window: docked, that is the map (the panel goes with it).
+-- Our code never opens or closes the map (that taints it): docked, it shows or hides the panel beside the open map,
+-- or, with the map closed, stands the panel up on its own until the map opens.
+local mapWasShown = WorldMapFrame:IsShown()
+ToggleWorldMap = function() error("our code must not toggle the map") end
+check(not mapWasShown, "the map starts closed here")
+check(addon.Panel:Toggle() == true and state.detached and addon.Panel:GetFrame():IsShown(), "docked with the map closed, toggling stands the panel up by itself")
+check(not WorldMapFrame:IsShown(), "and the map stays closed")
+check(addon.Panel:Toggle() == false and not state.detached and not addon.Panel:GetFrame():IsShown(), "toggling again puts it away")
+addon.Panel:Toggle()
+WorldMapFrame._shown = true
+WorldMapFrame._hooks.OnShow()
+check(not state.detached and addon.Panel:GetFrame():IsShown(), "opening the map takes it back beside the map")
+check(addon.Panel:Toggle() == false and not addon.Panel:GetFrame():IsShown() and state.dockedHidden, "with the map open, toggling hides the panel")
+check(addon.Panel:Toggle() == true and addon.Panel:GetFrame():IsShown() and not state.dockedHidden, "and shows it again")
+-- Hidden beside the open map, then the map closed and the panel stood up by itself: opening the map docks it, and keeps it up.
+addon.Panel:Toggle()
+check(state.dockedHidden, "hidden beside the map")
+WorldMapFrame._shown = false
+check(addon.Panel:Toggle() == true and state.detached and not state.dockedHidden, "standing it up by itself clears the hidden flag")
+state.dockedHidden = true                                  -- as if it had been hidden again some other way
+WorldMapFrame._shown = true
+WorldMapFrame._hooks.OnShow()
+check(not state.detached and addon.Panel:GetFrame():IsShown(), "a panel that was up when the map opened docks and shows, whatever it was before")
+WorldMapFrame._shown = false
+-- Popped out, it is the panel alone: the map neither opens nor closes it.
+addon.Panel:SetDocked(false)
+local frame = addon.Panel:GetFrame()
+check(frame:IsShown() and state.floatShown, "popping out leaves the window up")
+check(addon.Panel:Toggle() == false and not frame:IsShown() and WorldMapFrame:IsShown() == mapWasShown, "popped out, toggling closes the panel and leaves the map be")
+WorldMapFrame._hooks.OnShow()
+check(not frame:IsShown(), "opening the map doesn't bring a popped-out panel back")
+check(addon.Panel:Toggle() == true and frame:IsShown(), "toggling opens it again")
+addon.Panel:SetDocked(true)
+check(frame:IsShown(), "docking it again shows it with the map")
+
+-- The minimap button.
+Minimap = mock()
+GetCursorPosition = function() return 0, 0 end
+check(addon.MinimapButton:Init() == true and addon.MinimapButton.button, "the minimap button is built")
+local mb = addon.MinimapButton
+check(mb:GetAngle() == 215, "it starts at the default angle")
+local x, y = mb.Offset(0, 70, 70, "ROUND")
+check(math.abs(x - 75) < 1e-9 and math.abs(y) < 1e-9, "at 0 degrees it sits on the right rim")
+x, y = mb.Offset(90, 70, 70, "ROUND")
+check(math.abs(x) < 1e-9 and math.abs(y - 75) < 1e-9, "and at 90 on the top")
+x, y = mb.Offset(45, 70, 70, "SQUARE")
+check(x <= 75 and y <= 75 and x > 60, "a square minimap keeps it within the box")
+mb:SetAngle(-90)
+check(mb:GetAngle() == 270 and MapzerothRebuildDB.minimapButton.angle == 270, "an angle is kept in the saved variables, 0 to 360")
+addon.Panel:SetDocked(false)
+addon.Panel:Toggle()                                    -- closed
+local open = frame:IsShown()
+mb.button._scripts.OnClick(mb.button, "LeftButton")
+check(frame:IsShown() ~= open, "left-click toggles the window")
+local opened = 0
+local realOpen = addon.OptionsPanel.Open
+addon.OptionsPanel.Open = function() opened = opened + 1 return true end
+mb.button._scripts.OnClick(mb.button, "RightButton")
+addon.OptionsPanel.Open = realOpen
+check(opened == 1, "right-click opens the settings")
+check(addon.Options:Get("hideMinimapButton") == false and mb.button:IsShown(), "the button shows by default")
+addon.Options:Set("hideMinimapButton", true)
+check(not mb.button:IsShown(), "the Hide Minimap Button setting hides it")
+addon.Options:Set("hideMinimapButton", false)
+check(mb.button:IsShown(), "and turning it off brings it back")
+addon.Panel:SetDocked(true)
 
 -- Route view: no waypoint, a Start button, and choosing does the pricing.
 addon.Panel:Query("ironforge flight")

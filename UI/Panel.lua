@@ -28,14 +28,22 @@ local STEPS_BOTTOM = HEIGHT - PAD - 28    -- and where they must end: above Star
 
 local ui                                  -- the widgets, once built
 local state = {
-    hidden = false, entries = {}, results = {}, offset = 0, selected = 0,
+    floatShown = false,   -- popped out: the window is open (it opens and closes on its own, not with the map)
+    entries = {}, results = {}, offset = 0, selected = 0,
     view = "list", entry = nil, plan = nil, ctx = nil,
     sections = {}, open = {}, priced = false, session = nil, waypoint = nil,     -- the accordion, and whether it has been priced
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
     stepOffset = 0,       -- how many of the route's steps are scrolled past, when it has more than fit
     stepRows = STEPS,     -- how many step rows fit under the route's notes (layoutSteps)
     docked = true,         -- beside the map (Reanchor), or free-floating where the player dragged it
+    dockedHidden = false,  -- docked, and the player hid the panel (the map opens without it)
+    detached = false,      -- docked, but the map is closed and the panel is up on its own (Toggle)
 }
+
+local function isDocked()
+    if ui then return state.docked end
+    return addon.Options:Get("docked")
+end
 
 -- ---------------------------------------------------------------------------------------
 -- Building
@@ -71,10 +79,10 @@ local function build(parent)
     frame:SetScript("OnMouseWheel", function(_, delta) Panel:Scroll(-delta) end)
     -- Only free-floating (state.docked == false) actually moves: docked, a drag on the title
     -- bar is a no-op rather than fighting Reanchor's next map-open/resize repositioning.
-    frame:SetScript("OnDragStart", function(self) if not state.docked then self:StartMoving() end end)
+    frame:SetScript("OnDragStart", function(self) if not state.docked or state.detached then self:StartMoving() end end)
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
-        if not state.docked then Panel:SavePosition() end
+        if not state.docked or state.detached then Panel:SavePosition() end
     end)
     ui.frame = frame
 
@@ -172,7 +180,7 @@ local function build(parent)
     ui.start:SetScript("OnClick", function() Panel:StartRoute() end)
 
     Panel:ApplyScale()
-    Panel:SetDocked(addon.Options:Get("docked"))
+    Panel:SetDocked(addon.Options:Get("docked"), true)
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -674,7 +682,7 @@ local function mapChromeOverhang(map)
 end
 
 function Panel:Reanchor()
-    if not state.docked then return end
+    if not state.docked or state.detached then return end
     local frame, map = ui.frame, WorldMapFrame
     frame:ClearAllPoints()
     local overhang = mapChromeOverhang(map)
@@ -698,7 +706,7 @@ end
 -- TOPLEFT anchored to UIParent's BOTTOMLEFT so saved x/y (from GetLeft/GetTop, screen-space
 -- already) land back exactly where they were, whatever the panel happened to be docked beside
 -- when it was popped out.
-function Panel:RestorePosition()
+function Panel:RestorePosition(current)
     local frame = ui.frame
     frame:ClearAllPoints()
     local saved = MapzerothRebuildDB and MapzerothRebuildDB.panelPos
@@ -706,22 +714,57 @@ function Panel:RestorePosition()
         frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", saved.x, saved.y)
         return
     end
-    -- First time popping out, nothing saved yet: stay exactly where it currently is (docked),
-    -- not a jump to some default spot.
-    local left, top = frame:GetLeft(), frame:GetTop()
-    frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left or 100, top or -100)
+    if not current then
+        frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)        -- never placed, and nowhere it was: the middle
+        return
+    end
+    -- First time popping out, nothing saved yet: stay exactly where it currently is (`current`,
+    -- in screen units), not a jump to some default spot.
+    local scale = frame:GetEffectiveScale() or 1
+    frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", current.x / scale, current.y / scale)
+end
+
+-- Hang the panel on the map: its child, in the map's strata, above the map's own frames.
+local function attachToMap()
+    local frame, map = ui.frame, WorldMapFrame
+    frame:SetParent(map)
+    frame:SetFrameStrata(map:GetFrameStrata() or "HIGH")
+    frame:SetFrameLevel((map:GetFrameLevel() or 1) + 20)
+end
+
+-- Stand it on the screen instead, off the map: popped out, or docked with the map closed.
+local function attachToScreen()
+    ui.frame:SetParent(UIParent)
+    ui.frame:SetFrameStrata("HIGH")
+    ui.frame:SetFrameLevel(20)
 end
 
 -- Toggle between docked (beside the map, Reanchor decides where) and free-floating (the player
 -- drags it; RestorePosition puts it back where they left it). The button in the corner calls
--- this; so does build(), to apply whatever was last saved.
-function Panel:SetDocked(docked)
+-- this; so does build() (`initial`), to apply whatever was last saved. Docked, the panel is the map's child and
+-- comes and goes with it; free-floating it belongs to the screen and is opened and closed on its own
+-- (Toggle: /mz and the minimap button).
+function Panel:SetDocked(docked, initial)
     docked = docked and true or false
     state.docked = docked
     addon.Options:Set("docked", docked)
     if not ui then return end
     ui.pop.label:SetText(docked and L["PANEL_POPOUT"] or L["PANEL_DOCK"])
-    if docked then self:Reanchor() else self:RestorePosition() end
+    local frame, map = ui.frame, WorldMapFrame
+    state.detached = false
+    if docked and map then
+        attachToMap()
+        frame:SetShown(not state.dockedHidden)       -- it shows when the map does
+        self:Reanchor()
+        if not initial and map:IsShown() and not state.dockedHidden then self:ShowContent() end
+    elseif not docked then
+        -- Where it is on screen now, worked out before it changes parent (and so scale).
+        local left, top, from = frame:GetLeft(), frame:GetTop(), frame:GetEffectiveScale()
+        attachToScreen()
+        if not initial then state.floatShown = true end               -- popped out just now: it stays up
+        self:RestorePosition(left and top and from and { x = left * from, y = top * from })
+        frame:SetShown(state.floatShown)
+    end
 end
 
 -- Re-read the player and the world when the map opens: who they are, and the places to offer.
@@ -741,12 +784,8 @@ function Panel:OnWaypointChanged()
     self:Query("")
 end
 
-function Panel:OnMapShown()
-    if not WorldMapFrame then return end
-    if not ui then build(WorldMapFrame) end
-    self:Reanchor()
-    ui.frame:SetShown(not state.hidden)
-    if state.hidden then return end
+-- What the window shows when it opens: fresh places, and the trip in progress if there is one, else the search page.
+function Panel:ShowContent()
     self:Refresh()
     if state.pinned and state.plan and addon.Navigation:IsActive() then
         self:DisplayPlan(state.entry, state.plan)       -- the trip in progress, not the search page
@@ -755,11 +794,55 @@ function Panel:OnMapShown()
     end
 end
 
+-- Docked, the panel opens with the map. Popped out it doesn't (the map opening is none of its business).
+function Panel:OnMapShown()
+    if not WorldMapFrame or not isDocked() then return end
+    if not ui then build(WorldMapFrame) end
+    if not state.docked then return end
+    if state.detached then
+        state.detached = false                        -- the map is open now: the panel goes back beside it, and stays up
+        state.dockedHidden = false
+        attachToMap()
+    end
+    self:Reanchor()
+    ui.frame:SetShown(not state.dockedHidden)
+    if not state.dockedHidden then self:ShowContent() end
+end
+
+-- The window's on/off: /mz and the minimap button. Our code never opens or closes the map: from addon code that
+-- taints it, and the game then blocks its own later calls (the map key in combat). So, docked with the map open,
+-- it shows or hides the panel beside the map; docked with the map closed, the panel stands on its own (at
+-- its popped-out position) until the map opens and it goes back beside it; popped out, it is the panel alone.
+-- Returns whether the panel is up now.
 function Panel:Toggle()
-    state.hidden = not state.hidden
-    if ui then ui.frame:SetShown(not state.hidden) end
-    if not state.hidden and WorldMapFrame and WorldMapFrame:IsShown() then self:OnMapShown() end
-    return not state.hidden
+    if isDocked() then
+        local map = WorldMapFrame
+        if map and map:IsShown() then
+            if not ui then self:OnMapShown() end
+            state.dockedHidden = not state.dockedHidden
+            ui.frame:SetShown(not state.dockedHidden)
+            if not state.dockedHidden then self:ShowContent() end
+            return not state.dockedHidden
+        end
+        if not ui then build(map or UIParent) end
+        if state.detached then
+            state.detached = false
+            ui.frame:Hide()
+            if map then attachToMap() end
+            return false
+        end
+        state.detached, state.dockedHidden = true, false       -- asked for, so it is not "hidden" any more
+        attachToScreen()
+        self:RestorePosition()
+        ui.frame:Show()
+        self:ShowContent()
+        return true
+    end
+    if not ui then build(UIParent) end
+    state.floatShown = not (ui.frame:IsShown() and state.floatShown)
+    ui.frame:SetShown(state.floatShown)
+    if state.floatShown then self:ShowContent() end
+    return state.floatShown
 end
 
 -- Hooks the panel to the map opening. Returns false if the map isn't loaded yet.

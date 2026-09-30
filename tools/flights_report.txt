@@ -1,0 +1,286 @@
+Written by gen_flights.py each run; not read by the addon.
+
+Data/Forever/Flights.lua: the classic flight network as SINGLE LEGS: one flight master to the next, with the leg's own time.
+The planner chains legs itself, over the flight points the player has found (FlightKnowledge), and
+takes addon.FLIGHT_CHAIN_SAVING (a fraction) off each extra leg flown through, since a through-ticket
+doesn't land and take off again. Consecutive flights are shown as one ticket.
+
+Why not whole tickets: a ticket flies through other flight points, and which ones depends on
+which points the flyer had found, so the same ticket takes a different route and time for a player
+with a different set. Leg times don't have that problem.
+
+Sources: which pairs are legs, and each leg's `fare` (copper, before any discount), is the game's own
+flight table (Classic Era TaxiPath, tools/flight_source/taxipath_classic_1.15.9.txt); the times are
+InFlight's per-direction ticket times for those pairs (tools/flight_source/inflight_tickets.lua).
+Directions are separate: they differ. A ticket costs the sum of its legs' fares.
+
+Every leg written:
+  TAXI_2 -> TAXI_4 (Alliance): Stormwind -> Sentinel Hill, 78s, 110c
+  TAXI_2 -> TAXI_5 (Alliance): Stormwind -> Lakeshire, 113s, 210c
+  TAXI_2 -> TAXI_6 (Alliance): Stormwind -> Ironforge, 259s, 50c
+  TAXI_2 -> TAXI_12 (Alliance): Stormwind -> Darkshire, 116s, 330c
+  TAXI_2 -> TAXI_19 (Alliance): Stormwind -> Booty Bay, 245s, 630c
+  TAXI_2 -> TAXI_45 (Alliance): Stormwind -> Nethergarde Keep, 176s, 830c
+  TAXI_2 -> TAXI_71 (Alliance): Stormwind -> Morgan's Vigil, 157s, 830c
+  TAXI_4 -> TAXI_2 (Alliance): Sentinel Hill -> Stormwind, 86s, 110c
+  TAXI_4 -> TAXI_5 (Alliance): Sentinel Hill -> Lakeshire, 130s, 210c
+  TAXI_4 -> TAXI_12 (Alliance): Sentinel Hill -> Darkshire, 97s, 330c
+  TAXI_4 -> TAXI_19 (Alliance): Sentinel Hill -> Booty Bay, 185s, 630c
+  TAXI_5 -> TAXI_2 (Alliance): Lakeshire -> Stormwind, 113s, 210c
+  TAXI_5 -> TAXI_4 (Alliance): Lakeshire -> Sentinel Hill, 133s, 110c
+  TAXI_5 -> TAXI_12 (Alliance): Lakeshire -> Darkshire, 60s, 330c
+  TAXI_5 -> TAXI_71 (Alliance): Lakeshire -> Morgan's Vigil, 61s, 830c
+  TAXI_6 -> TAXI_2 (Alliance): Ironforge -> Stormwind, 210s, 50c
+  TAXI_6 -> TAXI_7 (Alliance): Ironforge -> Menethil Harbor, 128s, 330c
+  TAXI_6 -> TAXI_8 (Alliance): Ironforge -> Thelsamar, 101s, 110c
+  TAXI_6 -> TAXI_14 (Alliance): Ironforge -> Southshore, 265s, 330c
+  TAXI_6 -> TAXI_16 (Alliance): Ironforge -> Refuge Pointe, 253s, 530c
+  TAXI_6 -> TAXI_43 (Alliance): Ironforge -> Aerie Peak, 298s, 730c
+  TAXI_6 -> TAXI_66 (Alliance): Ironforge -> Chillwind Camp, 294s, 1020c
+  TAXI_6 -> TAXI_67 (Alliance): Ironforge -> Light's Hope Chapel, 349s, 1020c
+  TAXI_6 -> TAXI_74 (Alliance): Ironforge -> Thorium Point, 87s, 830c
+  TAXI_7 -> TAXI_6 (Alliance): Menethil Harbor -> Ironforge, 89s, 330c
+  TAXI_7 -> TAXI_8 (Alliance): Menethil Harbor -> Thelsamar, 163s, 110c
+  TAXI_7 -> TAXI_14 (Alliance): Menethil Harbor -> Southshore, 107s, 330c
+  TAXI_7 -> TAXI_16 (Alliance): Menethil Harbor -> Refuge Pointe, 113s, 530c
+  TAXI_8 -> TAXI_6 (Alliance): Thelsamar -> Ironforge, 109s, 110c
+  TAXI_8 -> TAXI_7 (Alliance): Thelsamar -> Menethil Harbor, 153s, 330c
+  TAXI_8 -> TAXI_16 (Alliance): Thelsamar -> Refuge Pointe, 164s, 530c
+  TAXI_12 -> TAXI_2 (Alliance): Darkshire -> Stormwind, 88s, 330c
+  TAXI_12 -> TAXI_4 (Alliance): Darkshire -> Sentinel Hill, 93s, 110c
+  TAXI_12 -> TAXI_5 (Alliance): Darkshire -> Lakeshire, 60s, 210c
+  TAXI_12 -> TAXI_19 (Alliance): Darkshire -> Booty Bay, 171s, 630c
+  TAXI_12 -> TAXI_45 (Alliance): Darkshire -> Nethergarde Keep, 97s, 830c
+  TAXI_14 -> TAXI_6 (Alliance): Southshore -> Ironforge, 206s, 330c
+  TAXI_14 -> TAXI_7 (Alliance): Southshore -> Menethil Harbor, 110s, 330c
+  TAXI_14 -> TAXI_16 (Alliance): Southshore -> Refuge Pointe, 74s, 530c
+  TAXI_14 -> TAXI_43 (Alliance): Southshore -> Aerie Peak, 71s, 730c
+  TAXI_14 -> TAXI_66 (Alliance): Southshore -> Chillwind Camp, 81s, 830c
+  TAXI_16 -> TAXI_6 (Alliance): Refuge Pointe -> Ironforge, 271s, 530c
+  TAXI_16 -> TAXI_7 (Alliance): Refuge Pointe -> Menethil Harbor, 126s, 330c
+  TAXI_16 -> TAXI_8 (Alliance): Refuge Pointe -> Thelsamar, 171s, 110c
+  TAXI_16 -> TAXI_14 (Alliance): Refuge Pointe -> Southshore, 86s, 330c
+  TAXI_16 -> TAXI_43 (Alliance): Refuge Pointe -> Aerie Peak, 72s, 730c
+  TAXI_19 -> TAXI_2 (Alliance): Booty Bay -> Stormwind, 220s, 630c
+  TAXI_19 -> TAXI_4 (Alliance): Booty Bay -> Sentinel Hill, 181s, 530c
+  TAXI_19 -> TAXI_12 (Alliance): Booty Bay -> Darkshire, 175s, 330c
+  TAXI_26 -> TAXI_27 (Alliance): Auberdine -> Rut'theran Village, 84s, 0c
+  TAXI_26 -> TAXI_28 (Alliance): Auberdine -> Astranaar, 176s, 330c
+  TAXI_26 -> TAXI_32 (Alliance): Auberdine -> Theramore, 675s, 630c
+  TAXI_26 -> TAXI_33 (Alliance): Auberdine -> Stonetalon Peak, 181s, 330c
+  TAXI_26 -> TAXI_37 (Alliance): Auberdine -> Nijel's Point, 291s, 530c
+  TAXI_26 -> TAXI_41 (Alliance): Auberdine -> Feathermoon, 473s, 730c
+  TAXI_26 -> TAXI_49 (Alliance): Auberdine -> Moonglade, Alliance flight master, 151s, 830c
+  TAXI_26 -> TAXI_64 (Alliance): Auberdine -> Talrendis Point, 301s, 730c
+  TAXI_26 -> TAXI_65 (Alliance): Auberdine -> Talonbranch Glade, 190s, 730c
+  TAXI_27 -> TAXI_26 (Alliance): Rut'theran Village -> Auberdine, 86s, 0c
+  TAXI_28 -> TAXI_26 (Alliance): Astranaar -> Auberdine, 148s, 330c
+  TAXI_28 -> TAXI_33 (Alliance): Astranaar -> Stonetalon Peak, 153s, 330c
+  TAXI_28 -> TAXI_64 (Alliance): Astranaar -> Talrendis Point, 150s, 730c
+  TAXI_31 -> TAXI_32 (Alliance): Thalanaar -> Theramore, 159s, 730c
+  TAXI_31 -> TAXI_39 (Alliance): Thalanaar -> Gadgetzan, 171s, 730c
+  TAXI_31 -> TAXI_41 (Alliance): Thalanaar -> Feathermoon, 179s, 630c
+  TAXI_32 -> TAXI_26 (Alliance): Theramore -> Auberdine, 620s, 630c
+  TAXI_32 -> TAXI_31 (Alliance): Theramore -> Thalanaar, 162s, 430c
+  TAXI_32 -> TAXI_37 (Alliance): Theramore -> Nijel's Point, 334s, 530c
+  TAXI_32 -> TAXI_39 (Alliance): Theramore -> Gadgetzan, 157s, 730c
+  TAXI_32 -> TAXI_64 (Alliance): Theramore -> Talrendis Point, 235s, 730c
+  TAXI_32 -> TAXI_80 (Alliance): Theramore -> Ratchet, 115s, 110c
+  TAXI_33 -> TAXI_26 (Alliance): Stonetalon Peak -> Auberdine, 177s, 330c
+  TAXI_33 -> TAXI_28 (Alliance): Stonetalon Peak -> Astranaar, 154s, 330c
+  TAXI_33 -> TAXI_37 (Alliance): Stonetalon Peak -> Nijel's Point, 126s, 530c
+  TAXI_37 -> TAXI_26 (Alliance): Nijel's Point -> Auberdine, 282s, 530c
+  TAXI_37 -> TAXI_32 (Alliance): Nijel's Point -> Theramore, 308s, 530c
+  TAXI_37 -> TAXI_33 (Alliance): Nijel's Point -> Stonetalon Peak, 120s, 330c
+  TAXI_37 -> TAXI_41 (Alliance): Nijel's Point -> Feathermoon, 232s, 730c
+  TAXI_39 -> TAXI_31 (Alliance): Gadgetzan -> Thalanaar, 177s, 430c
+  TAXI_39 -> TAXI_32 (Alliance): Gadgetzan -> Theramore, 154s, 630c
+  TAXI_39 -> TAXI_73 (Alliance): Gadgetzan -> Cenarion Hold, 197s, 1020c
+  TAXI_39 -> TAXI_79 (Alliance): Gadgetzan -> Marshal's Refuge, 104s, 830c
+  TAXI_41 -> TAXI_26 (Alliance): Feathermoon -> Auberdine, 468s, 730c
+  TAXI_41 -> TAXI_31 (Alliance): Feathermoon -> Thalanaar, 155s, 430c
+  TAXI_41 -> TAXI_37 (Alliance): Feathermoon -> Nijel's Point, 227s, 730c
+  TAXI_41 -> TAXI_73 (Alliance): Feathermoon -> Cenarion Hold, 159s, 1030c
+  TAXI_43 -> TAXI_6 (Alliance): Aerie Peak -> Ironforge, 256s, 730c
+  TAXI_43 -> TAXI_14 (Alliance): Aerie Peak -> Southshore, 68s, 330c
+  TAXI_43 -> TAXI_16 (Alliance): Aerie Peak -> Refuge Pointe, 75s, 530c
+  TAXI_43 -> TAXI_66 (Alliance): Aerie Peak -> Chillwind Camp, 54s, 1020c
+  TAXI_43 -> TAXI_67 (Alliance): Aerie Peak -> Light's Hope Chapel, 164s, 1020c
+  TAXI_45 -> TAXI_2 (Alliance): Nethergarde Keep -> Stormwind, 189s, 830c
+  TAXI_45 -> TAXI_12 (Alliance): Nethergarde Keep -> Darkshire, 91s, 330c
+  TAXI_45 -> TAXI_71 (Alliance): Nethergarde Keep -> Morgan's Vigil, 207s, 830c
+  TAXI_49 -> TAXI_26 (Alliance): Moonglade, Alliance flight master -> Auberdine, 142s, 830c
+  TAXI_49 -> TAXI_52 (Alliance): Moonglade, Alliance flight master -> Everlook, 131s, 1020c
+  TAXI_49 -> TAXI_65 (Alliance): Moonglade, Alliance flight master -> Talonbranch Glade, 61s, 730c
+  TAXI_52 -> TAXI_49 (Alliance): Everlook -> Moonglade, Alliance flight master, 122s, 830c
+  TAXI_52 -> TAXI_64 (Alliance): Everlook -> Talrendis Point, 176s, 730c
+  TAXI_52 -> TAXI_65 (Alliance): Everlook -> Talonbranch Glade, 122s, 730c
+  TAXI_64 -> TAXI_26 (Alliance): Talrendis Point -> Auberdine, 301s, 730c
+  TAXI_64 -> TAXI_28 (Alliance): Talrendis Point -> Astranaar, 153s, 330c
+  TAXI_64 -> TAXI_32 (Alliance): Talrendis Point -> Theramore, 241s, 630c
+  TAXI_64 -> TAXI_52 (Alliance): Talrendis Point -> Everlook, 178s, 1030c
+  TAXI_64 -> TAXI_65 (Alliance): Talrendis Point -> Talonbranch Glade, 283s, 730c
+  TAXI_64 -> TAXI_80 (Alliance): Talrendis Point -> Ratchet, 135s, 110c
+  TAXI_65 -> TAXI_26 (Alliance): Talonbranch Glade -> Auberdine, 188s, 730c
+  TAXI_65 -> TAXI_49 (Alliance): Talonbranch Glade -> Moonglade, Alliance flight master, 67s, 1020c
+  TAXI_65 -> TAXI_52 (Alliance): Talonbranch Glade -> Everlook, 121s, 1020c
+  TAXI_65 -> TAXI_64 (Alliance): Talonbranch Glade -> Talrendis Point, 282s, 730c
+  TAXI_66 -> TAXI_6 (Alliance): Chillwind Camp -> Ironforge, 261s, 1020c
+  TAXI_66 -> TAXI_14 (Alliance): Chillwind Camp -> Southshore, 85s, 330c
+  TAXI_66 -> TAXI_43 (Alliance): Chillwind Camp -> Aerie Peak, 66s, 730c
+  TAXI_66 -> TAXI_67 (Alliance): Chillwind Camp -> Light's Hope Chapel, 147s, 1020c
+  TAXI_67 -> TAXI_6 (Alliance): Light's Hope Chapel -> Ironforge, 369s, 1020c
+  TAXI_67 -> TAXI_43 (Alliance): Light's Hope Chapel -> Aerie Peak, 163s, 730c
+  TAXI_67 -> TAXI_66 (Alliance): Light's Hope Chapel -> Chillwind Camp, 150s, 1020c
+  TAXI_71 -> TAXI_2 (Alliance): Morgan's Vigil -> Stormwind, 151s, 830c
+  TAXI_71 -> TAXI_5 (Alliance): Morgan's Vigil -> Lakeshire, 64s, 210c
+  TAXI_71 -> TAXI_45 (Alliance): Morgan's Vigil -> Nethergarde Keep, 210s, 830c
+  TAXI_71 -> TAXI_74 (Alliance): Morgan's Vigil -> Thorium Point, 104s, 830c
+  TAXI_73 -> TAXI_39 (Alliance): Cenarion Hold -> Gadgetzan, 189s, 730c
+  TAXI_73 -> TAXI_41 (Alliance): Cenarion Hold -> Feathermoon, 175s, 730c
+  TAXI_73 -> TAXI_79 (Alliance): Cenarion Hold -> Marshal's Refuge, 92s, 830c
+  TAXI_74 -> TAXI_6 (Alliance): Thorium Point -> Ironforge, 94s, 830c
+  TAXI_74 -> TAXI_71 (Alliance): Thorium Point -> Morgan's Vigil, 96s, 830c
+  TAXI_79 -> TAXI_39 (Alliance): Marshal's Refuge -> Gadgetzan, 104s, 730c
+  TAXI_79 -> TAXI_73 (Alliance): Marshal's Refuge -> Cenarion Hold, 94s, 1030c
+  TAXI_80 -> TAXI_32 (Alliance): Ratchet -> Theramore, 106s, 630c
+  TAXI_80 -> TAXI_64 (Alliance): Ratchet -> Talrendis Point, 132s, 730c
+  TAXI_10 -> TAXI_11 (Horde): The Sepulcher -> Undercity, 112s, 110c
+  TAXI_10 -> TAXI_13 (Horde): The Sepulcher -> Tarren Mill, 95s, 330c
+  TAXI_11 -> TAXI_10 (Horde): Undercity -> The Sepulcher, 106s, 110c
+  TAXI_11 -> TAXI_13 (Horde): Undercity -> Tarren Mill, 141s, 330c
+  TAXI_11 -> TAXI_17 (Horde): Undercity -> Hammerfall, 301s, 530c
+  TAXI_11 -> TAXI_21 (Horde): Undercity -> Kargath, 488s, 630c
+  TAXI_11 -> TAXI_68 (Horde): Undercity -> Light's Hope Chapel, 261s, 1020c
+  TAXI_11 -> TAXI_76 (Horde): Undercity -> Revantusk Village, 284s, 730c
+  TAXI_13 -> TAXI_10 (Horde): Tarren Mill -> The Sepulcher, 99s, 110c
+  TAXI_13 -> TAXI_11 (Horde): Tarren Mill -> Undercity, 139s, 330c
+  TAXI_13 -> TAXI_17 (Horde): Tarren Mill -> Hammerfall, 118s, 530c
+  TAXI_13 -> TAXI_76 (Horde): Tarren Mill -> Revantusk Village, 195s, 730c
+  TAXI_17 -> TAXI_11 (Horde): Hammerfall -> Undercity, 259s, 530c
+  TAXI_17 -> TAXI_13 (Horde): Hammerfall -> Tarren Mill, 117s, 330c
+  TAXI_17 -> TAXI_21 (Horde): Hammerfall -> Kargath, 259s, 630c
+  TAXI_17 -> TAXI_76 (Horde): Hammerfall -> Revantusk Village, 91s, 730c
+  TAXI_18 -> TAXI_20 (Horde): Booty Bay -> Grom'gol, 102s, 630c
+  TAXI_18 -> TAXI_21 (Horde): Booty Bay -> Kargath, 406s, 630c
+  TAXI_18 -> TAXI_56 (Horde): Booty Bay -> Stonard, 267s, 630c
+  TAXI_20 -> TAXI_18 (Horde): Grom'gol -> Booty Bay, 81s, 630c
+  TAXI_20 -> TAXI_21 (Horde): Grom'gol -> Kargath, 327s, 630c
+  TAXI_20 -> TAXI_56 (Horde): Grom'gol -> Stonard, 205s, 630c
+  TAXI_21 -> TAXI_11 (Horde): Kargath -> Undercity, 497s, 630c
+  TAXI_21 -> TAXI_17 (Horde): Kargath -> Hammerfall, 263s, 630c
+  TAXI_21 -> TAXI_18 (Horde): Kargath -> Booty Bay, 417s, 630c
+  TAXI_21 -> TAXI_20 (Horde): Kargath -> Grom'gol, 313s, 530c
+  TAXI_21 -> TAXI_56 (Horde): Kargath -> Stonard, 280s, 710c
+  TAXI_21 -> TAXI_70 (Horde): Kargath -> Flame Crest, 87s, 830c
+  TAXI_21 -> TAXI_75 (Horde): Kargath -> Thorium Point, 56s, 830c
+  TAXI_22 -> TAXI_23 (Horde): Thunder Bluff -> Orgrimmar, 207s, 50c
+  TAXI_22 -> TAXI_25 (Horde): Thunder Bluff -> Crossroads, 159s, 110c
+  TAXI_22 -> TAXI_29 (Horde): Thunder Bluff -> Sun Rock Retreat, 182s, 210c
+  TAXI_22 -> TAXI_30 (Horde): Thunder Bluff -> Freewind Post, 204s, 430c
+  TAXI_22 -> TAXI_38 (Horde): Thunder Bluff -> Shadowprey Village, 159s, 530c
+  TAXI_22 -> TAXI_40 (Horde): Thunder Bluff -> Gadgetzan, 290s, 730c
+  TAXI_22 -> TAXI_42 (Horde): Thunder Bluff -> Camp Mojache, 252s, 730c
+  TAXI_22 -> TAXI_44 (Horde): Thunder Bluff -> Valormok, 269s, 830c
+  TAXI_22 -> TAXI_55 (Horde): Thunder Bluff -> Brackenwall Village, 239s, 630c
+  TAXI_22 -> TAXI_77 (Horde): Thunder Bluff -> Camp Taurajo, 87s, 110c
+  TAXI_23 -> TAXI_22 (Horde): Orgrimmar -> Thunder Bluff, 224s, 50c
+  TAXI_23 -> TAXI_25 (Horde): Orgrimmar -> Crossroads, 110s, 110c
+  TAXI_23 -> TAXI_40 (Horde): Orgrimmar -> Gadgetzan, 417s, 730c
+  TAXI_23 -> TAXI_44 (Horde): Orgrimmar -> Valormok, 99s, 830c
+  TAXI_23 -> TAXI_48 (Horde): Orgrimmar -> Bloodvenom Post, 252s, 830c
+  TAXI_23 -> TAXI_53 (Horde): Orgrimmar -> Everlook, 319s, 1020c
+  TAXI_23 -> TAXI_55 (Horde): Orgrimmar -> Brackenwall Village, 229s, 630c
+  TAXI_23 -> TAXI_61 (Horde): Orgrimmar -> Splintertree Post, 89s, 530c
+  TAXI_25 -> TAXI_22 (Horde): Crossroads -> Thunder Bluff, 182s, 110c
+  TAXI_25 -> TAXI_23 (Horde): Crossroads -> Orgrimmar, 142s, 110c
+  TAXI_25 -> TAXI_29 (Horde): Crossroads -> Sun Rock Retreat, 150s, 210c
+  TAXI_25 -> TAXI_30 (Horde): Crossroads -> Freewind Post, 184s, 430c
+  TAXI_25 -> TAXI_40 (Horde): Crossroads -> Gadgetzan, 303s, 730c
+  TAXI_25 -> TAXI_42 (Horde): Crossroads -> Camp Mojache, 252s, 730c
+  TAXI_25 -> TAXI_44 (Horde): Crossroads -> Valormok, 168s, 830c
+  TAXI_25 -> TAXI_48 (Horde): Crossroads -> Bloodvenom Post, 253s, 930c
+  TAXI_25 -> TAXI_55 (Horde): Crossroads -> Brackenwall Village, 162s, 630c
+  TAXI_25 -> TAXI_58 (Horde): Crossroads -> Zoram'gar Outpost, 231s, 330c
+  TAXI_25 -> TAXI_61 (Horde): Crossroads -> Splintertree Post, 162s, 530c
+  TAXI_25 -> TAXI_77 (Horde): Crossroads -> Camp Taurajo, 90s, 110c
+  TAXI_25 -> TAXI_80 (Horde): Crossroads -> Ratchet, 52s, 110c
+  TAXI_29 -> TAXI_22 (Horde): Sun Rock Retreat -> Thunder Bluff, 175s, 210c
+  TAXI_29 -> TAXI_25 (Horde): Sun Rock Retreat -> Crossroads, 150s, 210c
+  TAXI_29 -> TAXI_38 (Horde): Sun Rock Retreat -> Shadowprey Village, 143s, 530c
+  TAXI_30 -> TAXI_22 (Horde): Freewind Post -> Thunder Bluff, 225s, 430c
+  TAXI_30 -> TAXI_25 (Horde): Freewind Post -> Crossroads, 194s, 430c
+  TAXI_30 -> TAXI_40 (Horde): Freewind Post -> Gadgetzan, 93s, 730c
+  TAXI_30 -> TAXI_42 (Horde): Freewind Post -> Camp Mojache, 124s, 730c
+  TAXI_30 -> TAXI_77 (Horde): Freewind Post -> Camp Taurajo, 137s, 430c
+  TAXI_38 -> TAXI_22 (Horde): Shadowprey Village -> Thunder Bluff, 178s, 530c
+  TAXI_38 -> TAXI_29 (Horde): Shadowprey Village -> Sun Rock Retreat, 199s, 210c
+  TAXI_38 -> TAXI_42 (Horde): Shadowprey Village -> Camp Mojache, 196s, 730c
+  TAXI_40 -> TAXI_22 (Horde): Gadgetzan -> Thunder Bluff, 304s, 730c
+  TAXI_40 -> TAXI_23 (Horde): Gadgetzan -> Orgrimmar, 350s, 730c
+  TAXI_40 -> TAXI_25 (Horde): Gadgetzan -> Crossroads, 301s, 730c
+  TAXI_40 -> TAXI_30 (Horde): Gadgetzan -> Freewind Post, 87s, 430c
+  TAXI_40 -> TAXI_42 (Horde): Gadgetzan -> Camp Mojache, 200s, 630c
+  TAXI_40 -> TAXI_55 (Horde): Gadgetzan -> Brackenwall Village, 222s, 630c
+  TAXI_40 -> TAXI_72 (Horde): Gadgetzan -> Cenarion Hold, 233s, 1020c
+  TAXI_40 -> TAXI_79 (Horde): Gadgetzan -> Marshal's Refuge, 108s, 830c
+  TAXI_42 -> TAXI_22 (Horde): Camp Mojache -> Thunder Bluff, 259s, 730c
+  TAXI_42 -> TAXI_25 (Horde): Camp Mojache -> Crossroads, 263s, 730c
+  TAXI_42 -> TAXI_30 (Horde): Camp Mojache -> Freewind Post, 107s, 430c
+  TAXI_42 -> TAXI_38 (Horde): Camp Mojache -> Shadowprey Village, 201s, 730c
+  TAXI_42 -> TAXI_40 (Horde): Camp Mojache -> Gadgetzan, 201s, 630c
+  TAXI_42 -> TAXI_72 (Horde): Camp Mojache -> Cenarion Hold, 132s, 1030c
+  TAXI_44 -> TAXI_22 (Horde): Valormok -> Thunder Bluff, 257s, 830c
+  TAXI_44 -> TAXI_23 (Horde): Valormok -> Orgrimmar, 121s, 830c
+  TAXI_44 -> TAXI_25 (Horde): Valormok -> Crossroads, 172s, 830c
+  TAXI_44 -> TAXI_48 (Horde): Valormok -> Bloodvenom Post, 232s, 930c
+  TAXI_44 -> TAXI_53 (Horde): Valormok -> Everlook, 131s, 1020c
+  TAXI_44 -> TAXI_61 (Horde): Valormok -> Splintertree Post, 94s, 530c
+  TAXI_48 -> TAXI_23 (Horde): Bloodvenom Post -> Orgrimmar, 259s, 930c
+  TAXI_48 -> TAXI_25 (Horde): Bloodvenom Post -> Crossroads, 241s, 930c
+  TAXI_48 -> TAXI_44 (Horde): Bloodvenom Post -> Valormok, 241s, 830c
+  TAXI_48 -> TAXI_53 (Horde): Bloodvenom Post -> Everlook, 190s, 1020c
+  TAXI_48 -> TAXI_69 (Horde): Bloodvenom Post -> Moonglade, Horde flight master, 166s, 830c
+  TAXI_53 -> TAXI_23 (Horde): Everlook -> Orgrimmar, 304s, 1020c
+  TAXI_53 -> TAXI_44 (Horde): Everlook -> Valormok, 135s, 830c
+  TAXI_53 -> TAXI_48 (Horde): Everlook -> Bloodvenom Post, 195s, 930c
+  TAXI_53 -> TAXI_69 (Horde): Everlook -> Moonglade, Horde flight master, 134s, 830c
+  TAXI_55 -> TAXI_22 (Horde): Brackenwall Village -> Thunder Bluff, 224s, 630c
+  TAXI_55 -> TAXI_23 (Horde): Brackenwall Village -> Orgrimmar, 217s, 630c
+  TAXI_55 -> TAXI_25 (Horde): Brackenwall Village -> Crossroads, 162s, 630c
+  TAXI_55 -> TAXI_40 (Horde): Brackenwall Village -> Gadgetzan, 222s, 730c
+  TAXI_56 -> TAXI_18 (Horde): Stonard -> Booty Bay, 260s, 630c
+  TAXI_56 -> TAXI_20 (Horde): Stonard -> Grom'gol, 189s, 630c
+  TAXI_56 -> TAXI_21 (Horde): Stonard -> Kargath, 285s, 630c
+  TAXI_56 -> TAXI_70 (Horde): Stonard -> Flame Crest, 197s, 830c
+  TAXI_58 -> TAXI_25 (Horde): Zoram'gar Outpost -> Crossroads, 228s, 110c
+  TAXI_58 -> TAXI_61 (Horde): Zoram'gar Outpost -> Splintertree Post, 167s, 530c
+  TAXI_61 -> TAXI_23 (Horde): Splintertree Post -> Orgrimmar, 96s, 530c
+  TAXI_61 -> TAXI_25 (Horde): Splintertree Post -> Crossroads, 160s, 530c
+  TAXI_61 -> TAXI_44 (Horde): Splintertree Post -> Valormok, 96s, 830c
+  TAXI_61 -> TAXI_58 (Horde): Splintertree Post -> Zoram'gar Outpost, 166s, 330c
+  TAXI_68 -> TAXI_11 (Horde): Light's Hope Chapel -> Undercity, 262s, 1020c
+  TAXI_68 -> TAXI_76 (Horde): Light's Hope Chapel -> Revantusk Village, 141s, 730c
+  TAXI_69 -> TAXI_48 (Horde): Moonglade, Horde flight master -> Bloodvenom Post, 157s, 930c
+  TAXI_69 -> TAXI_53 (Horde): Moonglade, Horde flight master -> Everlook, 142s, 1020c
+  TAXI_70 -> TAXI_21 (Horde): Flame Crest -> Kargath, 99s, 830c
+  TAXI_70 -> TAXI_56 (Horde): Flame Crest -> Stonard, 213s, 830c
+  TAXI_70 -> TAXI_75 (Horde): Flame Crest -> Thorium Point, 72s, 830c
+  TAXI_72 -> TAXI_40 (Horde): Cenarion Hold -> Gadgetzan, 241s, 730c
+  TAXI_72 -> TAXI_42 (Horde): Cenarion Hold -> Camp Mojache, 129s, 730c
+  TAXI_72 -> TAXI_79 (Horde): Cenarion Hold -> Marshal's Refuge, 97s, 830c
+  TAXI_75 -> TAXI_21 (Horde): Thorium Point -> Kargath, 70s, 630c
+  TAXI_75 -> TAXI_70 (Horde): Thorium Point -> Flame Crest, 77s, 830c
+  TAXI_76 -> TAXI_11 (Horde): Revantusk Village -> Undercity, 284s, 730c
+  TAXI_76 -> TAXI_13 (Horde): Revantusk Village -> Tarren Mill, 159s, 330c
+  TAXI_76 -> TAXI_17 (Horde): Revantusk Village -> Hammerfall, 93s, 530c
+  TAXI_76 -> TAXI_68 (Horde): Revantusk Village -> Light's Hope Chapel, 139s, 1030c
+  TAXI_77 -> TAXI_22 (Horde): Camp Taurajo -> Thunder Bluff, 114s, 110c
+  TAXI_77 -> TAXI_25 (Horde): Camp Taurajo -> Crossroads, 79s, 110c
+  TAXI_77 -> TAXI_30 (Horde): Camp Taurajo -> Freewind Post, 125s, 430c
+  TAXI_79 -> TAXI_40 (Horde): Marshal's Refuge -> Gadgetzan, 113s, 730c
+  TAXI_79 -> TAXI_72 (Horde): Marshal's Refuge -> Cenarion Hold, 100s, 1030c
+  TAXI_80 -> TAXI_25 (Horde): Ratchet -> Crossroads, 69s, 110c
+
+Alliance: 130 directed legs, 0 with an estimated time; rebuilt vs 422 InFlight tickets: within 5% 59%, 10% 89%, 20% 95%, median -1.1%, 0 unreachable
+Horde: 136 directed legs, 0 with an estimated time; rebuilt vs 459 InFlight tickets: within 5% 53%, 10% 96%, 20% 98%, median -4.7%, 0 unreachable

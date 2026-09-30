@@ -5,7 +5,7 @@ Each row is one guessed crossing point, seen from both sides.
 
 | Zone A | A x, y | Zone B | B x, y |
 |---|---|---|---|
-| Durotar | 34.9, 4.3 | The Barrens | 62.3, 18.7 |
+| Durotar | 34.9, 43.4 | The Barrens | 62.3, 18.7 |
 | Mulgore | 67.2, 62.1 | The Barrens | 41.8, 58.9 |
 | The Barrens | 36.2, 27.8 | Stonetalon Mountains | 87.6, 96.1 |
 | The Barrens | 48.2, 10.3 | Ashenvale | 68.0, 88.5 |
@@ -50,7 +50,7 @@ Each row is one guessed crossing point, seen from both sides.
 *** | Dun Morogh | 58.4, 17.2 | Wetlands | 16.5, 83.3 | Does Not Exist
 | Wetlands | 51.12, 8.04 | Arathi Highlands | 45.47, 92.91 | Thandol Span; captured on both sides [areaB=880]
 | Arathi Highlands | 19.90, 29.23 | Hillsbrad Foothills | 82.60, 57.63 | captured on both sides [areaA=334]
-| Arathi Highlands | 86.8, 28.7 | The Hinterlands | 5.7, 60.5 |
+| Hillsbrad Foothills | 86.8, 28.7 | The Hinterlands | 5.7, 60.5 |
 | Hillsbrad Foothills | 4.5, 42.0 | Silverpine Forest | 67.6, 80.7 |
 | Hillsbrad Foothills | 53.7, 8.1 | Alterac Mountains | 53.6, 93.3 |
 | Hinterlands | 23.6, 26.2 | Western Plaguelands | 67.6, 87.4 | 

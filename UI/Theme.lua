@@ -194,6 +194,12 @@ skin.arrow = function(arrow)
     arrow:SetVertexColor(Theme:Color("accent"))
 end
 
+-- The round button on the minimap: the game's own ring, tinted with the theme's accent, over a disc in the panel colour.
+skin.minimap = function(button)
+    button.disc:SetVertexColor(Theme:Color("panel"))
+    button.ring:SetVertexColor(Theme:Color("accent"))
+end
+
 skin.slider = function(slider)
     slider.track:SetColorTexture(Theme:Color("editBg"))
     slider.thumb:SetColorTexture(Theme:Color("accent"))
@@ -351,6 +357,29 @@ function Theme:Button(parent, text, width, height, primary, template)
     button:SetScript("OnMouseDown", function() state("pressed") end)
     button:SetScript("OnMouseUp", function() state("hover") end)
     return register(button, "button", { primary = primary })
+end
+
+-- A button for the minimap's rim, `icon` a texture in it. Placing it (round the rim) is the caller's; the ring and the
+-- disc behind the icon follow the theme.
+function Theme:MinimapButton(parent, name, icon)
+    local button = CreateFrame("Button", name, parent)
+    button:SetSize(31, 31)
+    button:SetFrameStrata("MEDIUM")
+    button:SetFrameLevel(8)
+    button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+    button.disc = button:CreateTexture(nil, "BACKGROUND")
+    button.disc:SetSize(24, 24)
+    button.disc:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+    button.disc:SetPoint("CENTER", 0, 1)
+    button.icon = button:CreateTexture(nil, "ARTWORK")
+    button.icon:SetSize(20, 20)
+    button.icon:SetTexture(icon)
+    button.icon:SetPoint("CENTER", 0, 1)
+    button.ring = button:CreateTexture(nil, "OVERLAY")
+    button.ring:SetSize(50, 50)
+    button.ring:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    button.ring:SetPoint("TOPLEFT")
+    return register(button, "minimap")
 end
 
 -- A slider, horizontal unless `vertical` (a scroll bar; `length` is then its height). Set its range with

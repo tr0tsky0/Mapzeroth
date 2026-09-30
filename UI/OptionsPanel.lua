@@ -14,7 +14,7 @@ local Theme = addon.Theme
 local Options = addon.Options
 
 local PAD = 20
-local CONTENT_HEIGHT = 680      -- how tall the settings are laid out; the page scrolls when the window is shorter
+local CONTENT_HEIGHT = 760      -- how tall the settings are laid out; the page scrolls when the window is shorter
 local widgets = {}
 local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
@@ -142,6 +142,8 @@ function OptionsPanel:Build()
         function(id) Options:Set("stepMarkers", id) end, menuHost)
     widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -594)
 
+    widgets.hideMinimap = toggleRow(box, 672, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
+
     -- Hooks the game's Settings window calls on a canvas page.
     frame.OnCommit = function() end
     frame.OnDefault = function()
@@ -170,6 +172,7 @@ function OptionsPanel:Sync()
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
     widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
+    widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
 end
 
 -- Add the page to the game's Settings window (once).

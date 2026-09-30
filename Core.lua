@@ -63,6 +63,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
         addon.Theme:Init(addon.Options:Default("theme"))
         addon.OptionsPanel:Register()
         addon.Panel:Init()
+        addon.MinimapButton:Init()
         -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
         if type(TakeTaxiNode) == "function" and not addon.takeTaxiHooked then
             addon.takeTaxiHooked = true
@@ -80,7 +81,7 @@ SlashCmdList["MAPZEROTH"] = function(msg)
     local cmd = msg:match("^(%S+)")
     if cmd == "settings" then
         if not addon.OptionsPanel:Open() then print(L["CMD_NO_SETTINGS"]) end
-    elseif cmd == "ui" then
+    elseif cmd == nil or cmd == "ui" then
         addon.Panel:Toggle()
     else
         print(L["CMD_HELP"])

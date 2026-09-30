@@ -29,6 +29,7 @@ DEV_TOC = ROOT / "Mapzeroth-Rebuild.toc"
 NAME = "Mapzeroth"
 INTERFACE = "16001"
 NOTES = "Plans the quickest way anywhere in WoW Forever: flights, boats, portals, hearthstones and your own spells."
+ASSETS = ["Media/Logo.tga"]            # shipped as they are: pictures the Lua names, which the .toc does not list
 GUARD = 'if addon.RULESET ~= "forever" then return end'
 
 
@@ -57,6 +58,7 @@ def main():
             problems.append(f"listed but missing: {f}")
         elif f.startswith("Data\\Forever\\") and GUARD not in path.read_text(encoding="utf-8"):
             problems.append(f"Forever data file without its guard: {f}")
+    problems += [f"asset missing: {a}" for a in ASSETS if not (ROOT / a).is_file()]
     if any(f.startswith("Data\\Modern\\") for f in shipped):
         problems.append("a Data\\Modern file would ship")
     if problems:
@@ -82,9 +84,11 @@ def main():
         z.writestr(f"{NAME}/{NAME}.toc", "\r\n".join(toc) + "\r\n")
         for f in shipped:
             z.write(ROOT / f.replace("\\", "/"), f"{NAME}/{f.replace(chr(92), '/')}")
+        for a in ASSETS:
+            z.write(ROOT / a, f"{NAME}/{a}")
 
     size = zip_path.stat().st_size
-    print(f"wrote {zip_path} ({len(shipped) + 1} files, {size / 1024:.0f} KB): {NAME} {version}, Interface {INTERFACE}")
+    print(f"wrote {zip_path} ({len(shipped) + 1 + len(ASSETS)} files, {size / 1024:.0f} KB): {NAME} {version}, Interface {INTERFACE}")
 
 
 if __name__ == "__main__":

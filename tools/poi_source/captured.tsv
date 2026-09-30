@@ -75,8 +75,18 @@ entrance	1457	73.9	40.0	darnassus	Darnassus
 entrance	1438	36.0	54.4	darnassus	Darnassus
 entrance	1411	45.5	11.9	orgrimmar	Orgrimmar
 entrance	1454	51.7	85.8	orgrimmar	Orgrimmar
+entrance	1411	35.50	4.57	orgrimmar	Orgrimmar
+entrance	1454	11.50	66.86	orgrimmar	Orgrimmar
 entrance	1420	61.9	64.6	undercity	Undercity
 entrance	1458	65.7	2.4	undercity	Undercity
+entrance	1412	35.94	36.42	thunder_bluff	Thunder Bluff	1638
+entrance	1456	24.28	54.67	thunder_bluff	Thunder Bluff
+entrance	1456	37.64	79.01	thunder_bluff	Thunder Bluff
+entrance	1412	38.31	40.66	thunder_bluff	Thunder Bluff	1638
+entrance	1412	39.52	29.20	thunder_bluff	Thunder Bluff	1638
+entrance	1456	45.36	12.31	thunder_bluff	Thunder Bluff
+entrance	1456	60.70	17.27	thunder_bluff	Thunder Bluff
+entrance	1412	42.22	30.03	thunder_bluff	Thunder Bluff	1638
 leyline	1428	78.6	61.8	-	Burning Steppes
 leyline	1426	56.6	45.6	-	Dun Morogh
 leyline	1426	63.8	50.7	-	Dun Morogh
@@ -115,3 +125,23 @@ convergence	2521	48.50	55.81	-	Zephras Isle
 convergence	2521	52.85	57.52	-	Zephras Isle
 convergence	2521	47.64	69.54	-	Zephras Isle
 convergence	2521	59.14	79.81	-	Zephras Isle
+convergence	1413	54.02	26.59	-	The Barrens
+convergence	1413	43.58	42.15	-	The Barrens
+convergence	1413	44.79	54.97	-	The Barrens
+convergence	1442	74.84	94.43	-	Stonetalon Mountains
+convergence	2521	61.59	51.53	-	Zephras Isle
+convergence	2521	68.36	66.04	-	Zephras Isle
+convergence	2521	64.85	38.02	-	Zephras Isle
+convergence	2521	67.51	50.54	-	Zephras Isle
+convergence	2521	48.39	80.64	-	Zephras Isle
+convergence	2521	67.89	74.94	-	Zephras Isle
+convergence	1413	49.67	34.58	-	The Barrens
+convergence	1411	53.17	16.15	-	Durotar
+convergence	1412	38.61	44.73	-	Mulgore
+convergence	1413	48.50	46.29	-	The Barrens
+convergence	1413	49.07	15.47	-	The Barrens
+convergence	1413	54.82	34.73	-	The Barrens
+convergence	1417	52.05	50.70	-	Arathi Highlands
+convergence	1437	60.20	56.98	-	Wetlands
+convergence	1441	42.19	49.47	-	Thousand Needles
+convergence	2521	70.04	61.41	-	Zephras Isle

@@ -6,1332 +6,1330 @@
 --   after   the rank before it, when a trainer teaches that too (it has to be learned first);
 --   owned   true when the rank before comes from somewhere else (a talent, a quest): only a player
 --           who already has the ability can learn this rank.
--- From Wowhead's Forever trainer pages: every class trainer in the six capitals, merged. Names come
--- from the client; the comments are only for reading this file.
 
 local addonName, addon = ...
 if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon.ClassSpells = {
     WARRIOR = {
-        { 6673, 1, 10 },   -- Battle Shout (Rank 1)
-        { 100, 4, 100 },   -- Charge (Rank 1)
-        { 772, 4, 100 },   -- Rend (Rank 1)
-        { 6343, 6, 100 },   -- Thunder Clap (Rank 1)
-        { 1715, 8, 200 },   -- Hamstring (Rank 1)
-        { 284, 8, 200, owned = true },   -- Heroic Strike (Rank 2)
-        { 2687, 10, 600 },   -- Bloodrage
-        { 6546, 10, 600, after = 772 },   -- Rend (Rank 2)
-        { 5242, 12, 1000, after = 6673 },   -- Battle Shout (Rank 2)
-        { 7384, 12, 1000 },   -- Overpower (Rank 1)
-        { 72, 12, 1000 },   -- Shield Bash (Rank 1)
-        { 1160, 14, 1500 },   -- Demoralizing Shout (Rank 1)
-        { 6572, 14, 1500 },   -- Revenge (Rank 1)
-        { 1310185, 14, 1500 },   -- Tactical Mastery
-        { 285, 16, 2000, after = 284 },   -- Heroic Strike (Rank 3)
-        { 694, 16, 2000 },   -- Mocking Blow (Rank 1)
-        { 2565, 16, 2000 },   -- Shield Block
-        { 676, 18, 3000 },   -- Disarm
-        { 8198, 18, 3000, after = 6343 },   -- Thunder Clap (Rank 2)
-        { 845, 20, 4000 },   -- Cleave (Rank 1)
-        { 6547, 20, 4000, after = 6546 },   -- Rend (Rank 3)
-        { 20230, 20, 4000 },   -- Retaliation
-        { 1240193, 20, 4000 },   -- Slam (Rank 1)
-        { 402927, 20, 4000 },   -- Victory Rush
-        { 6192, 22, 6000, after = 5242 },   -- Battle Shout (Rank 3)
-        { 5246, 22, 6000 },   -- Intimidating Shout
-        { 7405, 22, 6000, owned = true },   -- Sunder Armor (Rank 2)
-        { 6190, 24, 8000, after = 1160 },   -- Demoralizing Shout (Rank 2)
-        { 5308, 24, 8000 },   -- Execute (Rank 1)
-        { 1608, 24, 8000, after = 285 },   -- Heroic Strike (Rank 4)
-        { 6574, 24, 8000, after = 6572 },   -- Revenge (Rank 2)
-        { 1161, 26, 10000 },   -- Challenging Shout
-        { 6178, 26, 10000, after = 100 },   -- Charge (Rank 2)
-        { 7400, 26, 10000, after = 694 },   -- Mocking Blow (Rank 2)
-        { 7887, 28, 11000, after = 7384 },   -- Overpower (Rank 2)
-        { 871, 28, 11000 },   -- Shield Wall
-        { 8204, 28, 11000, after = 8198 },   -- Thunder Clap (Rank 3)
-        { 7369, 30, 12000, after = 845 },   -- Cleave (Rank 2)
-        { 6548, 30, 12000, after = 6547 },   -- Rend (Rank 4)
-        { 1464, 30, 12000, after = 1240193 },   -- Slam (Rank 2)
-        { 11549, 32, 14000, after = 6192 },   -- Battle Shout (Rank 4)
-        { 18499, 32, 14000 },   -- Berserker Rage
-        { 20658, 32, 14000, after = 5308 },   -- Execute (Rank 2)
-        { 7372, 32, 14000, after = 1715 },   -- Hamstring (Rank 2)
-        { 11564, 32, 14000, after = 1608 },   -- Heroic Strike (Rank 5)
-        { 1671, 32, 14000, after = 72 },   -- Shield Bash (Rank 2)
-        { 11554, 34, 16000, after = 6190 },   -- Demoralizing Shout (Rank 3)
-        { 7379, 34, 16000, after = 6574 },   -- Revenge (Rank 3)
-        { 8380, 34, 16000, after = 7405 },   -- Sunder Armor (Rank 3)
-        { 7402, 36, 18000, after = 7400 },   -- Mocking Blow (Rank 3)
-        { 1680, 36, 18000 },   -- Whirlwind
-        { 6552, 38, 20000 },   -- Pummel (Rank 1)
-        { 8820, 38, 20000, after = 1464 },   -- Slam (Rank 3)
-        { 8205, 38, 20000, after = 8204 },   -- Thunder Clap (Rank 4)
-        { 11608, 40, 22000, after = 7369 },   -- Cleave (Rank 3)
-        { 20660, 40, 22000, after = 20658 },   -- Execute (Rank 3)
-        { 11565, 40, 22000, after = 11564 },   -- Heroic Strike (Rank 6)
-        { 11572, 40, 22000, after = 6548 },   -- Rend (Rank 5)
-        { 11550, 42, 32000, after = 11549 },   -- Battle Shout (Rank 5)
-        { 20616, 42, 32000, owned = true },   -- Intercept (Rank 2)
-        { 11555, 44, 34000, after = 11554 },   -- Demoralizing Shout (Rank 4)
-        { 11584, 44, 34000, after = 7887 },   -- Overpower (Rank 3)
-        { 11600, 44, 34000, after = 7379 },   -- Revenge (Rank 4)
-        { 11578, 46, 36000, after = 6178 },   -- Charge (Rank 3)
-        { 20559, 46, 36000, after = 7402 },   -- Mocking Blow (Rank 4)
-        { 11604, 46, 36000, after = 8820 },   -- Slam (Rank 4)
-        { 11596, 46, 36000, after = 8380 },   -- Sunder Armor (Rank 4)
-        { 23892, 48, 2000, owned = true },   -- Bloodthirst (Rank 2)
-        { 20661, 48, 40000, after = 20660 },   -- Execute (Rank 4)
-        { 11566, 48, 40000, after = 11565 },   -- Heroic Strike (Rank 7)
-        { 21551, 48, 2000, owned = true },   -- Mortal Strike (Rank 2)
-        { 23923, 48, 2000, owned = true },   -- Shield Slam (Rank 2)
-        { 11580, 48, 40000, after = 8205 },   -- Thunder Clap (Rank 5)
-        { 11609, 50, 42000, after = 11608 },   -- Cleave (Rank 4)
-        { 1719, 50, 42000 },   -- Recklessness
-        { 11573, 50, 42000, after = 11572 },   -- Rend (Rank 6)
-        { 11551, 52, 54000, after = 11550 },   -- Battle Shout (Rank 6)
-        { 20617, 52, 54000, after = 20616 },   -- Intercept (Rank 3)
-        { 1672, 52, 54000, after = 1671 },   -- Shield Bash (Rank 3)
-        { 23893, 54, 2800, after = 23892 },   -- Bloodthirst (Rank 3)
-        { 11556, 54, 56000, after = 11555 },   -- Demoralizing Shout (Rank 5)
-        { 7373, 54, 56000, after = 7372 },   -- Hamstring (Rank 3)
-        { 21552, 54, 2800, after = 21551 },   -- Mortal Strike (Rank 3)
-        { 11601, 54, 56000, after = 11600 },   -- Revenge (Rank 5)
-        { 23924, 54, 2800, after = 23923 },   -- Shield Slam (Rank 3)
-        { 11605, 54, 56000, after = 11604 },   -- Slam (Rank 5)
-        { 20662, 56, 58000, after = 20661 },   -- Execute (Rank 5)
-        { 11567, 56, 58000, after = 11566 },   -- Heroic Strike (Rank 8)
-        { 20560, 56, 58000, after = 20559 },   -- Mocking Blow (Rank 5)
-        { 6554, 58, 60000, after = 6552 },   -- Pummel (Rank 2)
-        { 11597, 58, 60000, after = 11596 },   -- Sunder Armor (Rank 5)
-        { 11581, 58, 60000, after = 11580 },   -- Thunder Clap (Rank 6)
-        { 23894, 60, 3100, after = 23893 },   -- Bloodthirst (Rank 4)
-        { 20569, 60, 62000, after = 11609 },   -- Cleave (Rank 5)
-        { 21553, 60, 3100, after = 21552 },   -- Mortal Strike (Rank 4)
-        { 11585, 60, 62000, after = 11584 },   -- Overpower (Rank 4)
-        { 11574, 60, 62000, after = 11573 },   -- Rend (Rank 7)
-        { 23925, 60, 3100, after = 23924 },   -- Shield Slam (Rank 4)
+        { 6673, 1, 10 },
+        { 100, 4, 100 },
+        { 772, 4, 100 },
+        { 6343, 6, 100 },
+        { 1715, 8, 200 },
+        { 284, 8, 200, owned = true },
+        { 2687, 10, 600 },
+        { 6546, 10, 600, after = 772 },
+        { 5242, 12, 1000, after = 6673 },
+        { 7384, 12, 1000 },
+        { 72, 12, 1000 },
+        { 1160, 14, 1500 },
+        { 6572, 14, 1500 },
+        { 1310185, 14, 1500 },
+        { 285, 16, 2000, after = 284 },
+        { 694, 16, 2000 },
+        { 2565, 16, 2000 },
+        { 676, 18, 3000 },
+        { 8198, 18, 3000, after = 6343 },
+        { 845, 20, 4000 },
+        { 6547, 20, 4000, after = 6546 },
+        { 20230, 20, 4000 },
+        { 1240193, 20, 4000 },
+        { 402927, 20, 4000 },
+        { 6192, 22, 6000, after = 5242 },
+        { 5246, 22, 6000 },
+        { 7405, 22, 6000, owned = true },
+        { 6190, 24, 8000, after = 1160 },
+        { 5308, 24, 8000 },
+        { 1608, 24, 8000, after = 285 },
+        { 6574, 24, 8000, after = 6572 },
+        { 1161, 26, 10000 },
+        { 6178, 26, 10000, after = 100 },
+        { 7400, 26, 10000, after = 694 },
+        { 7887, 28, 11000, after = 7384 },
+        { 871, 28, 11000 },
+        { 8204, 28, 11000, after = 8198 },
+        { 7369, 30, 12000, after = 845 },
+        { 6548, 30, 12000, after = 6547 },
+        { 1464, 30, 12000, after = 1240193 },
+        { 11549, 32, 14000, after = 6192 },
+        { 18499, 32, 14000 },
+        { 20658, 32, 14000, after = 5308 },
+        { 7372, 32, 14000, after = 1715 },
+        { 11564, 32, 14000, after = 1608 },
+        { 1671, 32, 14000, after = 72 },
+        { 11554, 34, 16000, after = 6190 },
+        { 7379, 34, 16000, after = 6574 },
+        { 8380, 34, 16000, after = 7405 },
+        { 7402, 36, 18000, after = 7400 },
+        { 1680, 36, 18000 },
+        { 6552, 38, 20000 },
+        { 8820, 38, 20000, after = 1464 },
+        { 8205, 38, 20000, after = 8204 },
+        { 11608, 40, 22000, after = 7369 },
+        { 20660, 40, 22000, after = 20658 },
+        { 11565, 40, 22000, after = 11564 },
+        { 11572, 40, 22000, after = 6548 },
+        { 11550, 42, 32000, after = 11549 },
+        { 20616, 42, 32000, owned = true },
+        { 11555, 44, 34000, after = 11554 },
+        { 11584, 44, 34000, after = 7887 },
+        { 11600, 44, 34000, after = 7379 },
+        { 11578, 46, 36000, after = 6178 },
+        { 20559, 46, 36000, after = 7402 },
+        { 11604, 46, 36000, after = 8820 },
+        { 11596, 46, 36000, after = 8380 },
+        { 23892, 48, 2000, owned = true },
+        { 20661, 48, 40000, after = 20660 },
+        { 11566, 48, 40000, after = 11565 },
+        { 21551, 48, 2000, owned = true },
+        { 23923, 48, 2000, owned = true },
+        { 11580, 48, 40000, after = 8205 },
+        { 11609, 50, 42000, after = 11608 },
+        { 1719, 50, 42000 },
+        { 11573, 50, 42000, after = 11572 },
+        { 11551, 52, 54000, after = 11550 },
+        { 20617, 52, 54000, after = 20616 },
+        { 1672, 52, 54000, after = 1671 },
+        { 23893, 54, 2800, after = 23892 },
+        { 11556, 54, 56000, after = 11555 },
+        { 7373, 54, 56000, after = 7372 },
+        { 21552, 54, 2800, after = 21551 },
+        { 11601, 54, 56000, after = 11600 },
+        { 23924, 54, 2800, after = 23923 },
+        { 11605, 54, 56000, after = 11604 },
+        { 20662, 56, 58000, after = 20661 },
+        { 11567, 56, 58000, after = 11566 },
+        { 20560, 56, 58000, after = 20559 },
+        { 6554, 58, 60000, after = 6552 },
+        { 11597, 58, 60000, after = 11596 },
+        { 11581, 58, 60000, after = 11580 },
+        { 23894, 60, 3100, after = 23893 },
+        { 20569, 60, 62000, after = 11609 },
+        { 21553, 60, 3100, after = 21552 },
+        { 11585, 60, 62000, after = 11584 },
+        { 11574, 60, 62000, after = 11573 },
+        { 23925, 60, 3100, after = 23924 },
     },
     PALADIN = {
-        { 465, 1, 10 },   -- Devotion Aura (Rank 1)
-        { 19740, 4, 100 },   -- Blessing of Might (Rank 1)
-        { 20271, 4, 100 },   -- Judgement
-        { 498, 6, 100 },   -- Divine Protection (Rank 1)
-        { 639, 6, 100, owned = true },   -- Holy Light (Rank 2)
-        { 679, 6, 100 },   -- Holy Strike (Rank 1)
-        { 21082, 6, 100 },   -- Seal of the Crusader (Rank 1)
-        { 853, 8, 100 },   -- Hammer of Justice (Rank 1)
-        { 1152, 8, 100 },   -- Purify
-        { 1022, 10, 300 },   -- Blessing of Protection (Rank 1)
-        { 10290, 10, 300, after = 465 },   -- Devotion Aura (Rank 2)
-        { 633, 10, 300 },   -- Lay on Hands (Rank 1)
-        { 1311649, 10, 300 },   -- Seal of Fury (Rank 1)
-        { 20287, 10, 300, owned = true },   -- Seal of Righteousness (Rank 2)
-        { 19834, 12, 1000, after = 19740 },   -- Blessing of Might (Rank 2)
-        { 678, 12, 1000, after = 679 },   -- Holy Strike (Rank 2)
-        { 20162, 12, 1000, after = 21082 },   -- Seal of the Crusader (Rank 2)
-        { 19742, 14, 2000 },   -- Blessing of Wisdom (Rank 1)
-        { 647, 14, 2000, after = 639 },   -- Holy Light (Rank 3)
-        { 7294, 16, 3000 },   -- Retribution Aura (Rank 1)
-        { 25780, 16, 3000 },   -- Righteous Fury
-        { 1044, 18, 3500 },   -- Blessing of Freedom
-        { 5573, 18, 3500, after = 498 },   -- Divine Protection (Rank 2)
-        { 1311656, 18, 3500, after = 1311649 },   -- Seal of Fury (Rank 2)
-        { 20288, 18, 3500, after = 20287 },   -- Seal of Righteousness (Rank 3)
-        { 20217, 20, 4000 },   -- Blessing of Kings
-        { 26573, 20, 4000 },   -- Consecration (Rank 1)
-        { 643, 20, 4000, after = 10290 },   -- Devotion Aura (Rank 3)
-        { 879, 20, 4000 },   -- Exorcism (Rank 1)
-        { 19750, 20, 4000 },   -- Flash of Light (Rank 1)
-        { 1866, 20, 4000, after = 678 },   -- Holy Strike (Rank 3)
-        { 19835, 22, 4000, after = 19834 },   -- Blessing of Might (Rank 3)
-        { 19746, 22, 4000 },   -- Concentration Aura
-        { 1026, 22, 4000, after = 647 },   -- Holy Light (Rank 4)
-        { 20164, 22, 4000 },   -- Seal of Justice
-        { 20305, 22, 4000, after = 20162 },   -- Seal of the Crusader (Rank 3)
-        { 5599, 24, 5000, after = 1022 },   -- Blessing of Protection (Rank 2)
-        { 19850, 24, 5000, after = 19742 },   -- Blessing of Wisdom (Rank 2)
-        { 5588, 24, 5000, after = 853 },   -- Hammer of Justice (Rank 2)
-        { 10322, 24, 5000, owned = true },   -- Redemption (Rank 2)
-        { 2878, 24, 5000 },   -- Turn Undead (Rank 1)
-        { 20163, 25, 6000, after = 1311656 },   -- Seal of Fury (Rank 3)
-        { 1038, 26, 6000 },   -- Blessing of Salvation
-        { 19939, 26, 6000, after = 19750 },   -- Flash of Light (Rank 2)
-        { 10298, 26, 6000, after = 7294 },   -- Retribution Aura (Rank 2)
-        { 20289, 26, 6000, after = 20288 },   -- Seal of Righteousness (Rank 4)
-        { 5614, 28, 9000, after = 879 },   -- Exorcism (Rank 2)
-        { 680, 28, 9000, after = 1866 },   -- Holy Strike (Rank 4)
-        { 19876, 28, 9000 },   -- Shadow Resistance Aura (Rank 1)
-        { 20116, 30, 200, after = 26573 },   -- Consecration (Rank 2)
-        { 10291, 30, 11000, after = 643 },   -- Devotion Aura (Rank 4)
-        { 19752, 30, 11000 },   -- Divine Intervention
-        { 1042, 30, 11000, after = 1026 },   -- Holy Light (Rank 5)
-        { 2800, 30, 11000, after = 633 },   -- Lay on Hands (Rank 2)
-        { 20915, 30, 550, owned = true },   -- Seal of Command (Rank 2)
-        { 20165, 30, 11000 },   -- Seal of Light (Rank 1)
-        { 19836, 32, 12000, after = 19835 },   -- Blessing of Might (Rank 4)
-        { 19888, 32, 12000 },   -- Frost Resistance Aura (Rank 1)
-        { 20306, 32, 12000, after = 20305 },   -- Seal of the Crusader (Rank 4)
-        { 19852, 34, 13000, after = 19850 },   -- Blessing of Wisdom (Rank 3)
-        { 642, 34, 13000 },   -- Divine Shield (Rank 1)
-        { 19940, 34, 13000, after = 19939 },   -- Flash of Light (Rank 3)
-        { 20419, 34, 13000, after = 20163 },   -- Seal of Fury (Rank 4)
-        { 20290, 34, 13000, after = 20289 },   -- Seal of Righteousness (Rank 5)
-        { 5615, 36, 14000, after = 5614 },   -- Exorcism (Rank 3)
-        { 19891, 36, 14000 },   -- Fire Resistance Aura (Rank 1)
-        { 2495, 36, 14000, after = 680 },   -- Holy Strike (Rank 5)
-        { 10324, 36, 14000, after = 10322 },   -- Redemption (Rank 3)
-        { 10299, 36, 14000, after = 10298 },   -- Retribution Aura (Rank 3)
-        { 10278, 38, 16000, after = 5599 },   -- Blessing of Protection (Rank 3)
-        { 3472, 38, 16000, after = 1042 },   -- Holy Light (Rank 6)
-        { 20166, 38, 16000 },   -- Seal of Wisdom (Rank 1)
-        { 5627, 38, 16000, after = 2878 },   -- Turn Undead (Rank 2)
-        { 19977, 40, 20000 },   -- Blessing of Light (Rank 1)
-        { 20922, 40, 1000, after = 20116 },   -- Consecration (Rank 3)
-        { 1032, 40, 20000, after = 10291 },   -- Devotion Aura (Rank 5)
-        { 5589, 40, 20000, after = 5588 },   -- Hammer of Justice (Rank 3)
-        { 20473, 40, 1000, owned = true },   -- Holy Shock (Rank 2)
-        { 20918, 40, 1000, after = 20915 },   -- Seal of Command (Rank 3)
-        { 20347, 40, 20000, after = 20165 },   -- Seal of Light (Rank 2)
-        { 19895, 40, 20000, after = 19876 },   -- Shadow Resistance Aura (Rank 2)
-        { 19837, 42, 21000, after = 19836 },   -- Blessing of Might (Rank 5)
-        { 4987, 42, 21000 },   -- Cleanse
-        { 19941, 42, 21000, after = 19940 },   -- Flash of Light (Rank 4)
-        { 20421, 42, 21000, after = 20419 },   -- Seal of Fury (Rank 5)
-        { 20291, 42, 21000, after = 20290 },   -- Seal of Righteousness (Rank 6)
-        { 20307, 42, 21000, after = 20306 },   -- Seal of the Crusader (Rank 5)
-        { 19853, 44, 22000, after = 19852 },   -- Blessing of Wisdom (Rank 4)
-        { 10312, 44, 22000, after = 5615 },   -- Exorcism (Rank 4)
-        { 19897, 44, 22000, after = 19888 },   -- Frost Resistance Aura (Rank 2)
-        { 24275, 44, 22000 },   -- Hammer of Wrath (Rank 1)
-        { 5569, 44, 22000, after = 2495 },   -- Holy Strike (Rank 6)
-        { 6940, 46, 24000 },   -- Blessing of Sacrifice (Rank 1)
-        { 10328, 46, 24000, after = 3472 },   -- Holy Light (Rank 7)
-        { 10300, 46, 24000, after = 10299 },   -- Retribution Aura (Rank 4)
-        { 19899, 48, 26000, after = 19891 },   -- Fire Resistance Aura (Rank 2)
-        { 20929, 48, 1300, after = 20473 },   -- Holy Shock (Rank 3)
-        { 20772, 48, 26000, after = 10324 },   -- Redemption (Rank 4)
-        { 20356, 48, 26000, after = 20166 },   -- Seal of Wisdom (Rank 2)
-        { 19978, 50, 28000, after = 19977 },   -- Blessing of Light (Rank 2)
-        { 20923, 50, 1400, after = 20922 },   -- Consecration (Rank 4)
-        { 10292, 50, 28000, after = 1032 },   -- Devotion Aura (Rank 6)
-        { 1020, 50, 28000, after = 642 },   -- Divine Shield (Rank 2)
-        { 19942, 50, 28000, after = 19941 },   -- Flash of Light (Rank 5)
-        { 20927, 50, 1400, owned = true },   -- Holy Shield (Rank 2)
-        { 2812, 50, 28000 },   -- Holy Wrath (Rank 1)
-        { 10310, 50, 28000, after = 2800 },   -- Lay on Hands (Rank 3)
-        { 1311590, 50, 1400, owned = true },   -- Light's Vigil (Rank 2)
-        { 20919, 50, 1400, after = 20918 },   -- Seal of Command (Rank 4)
-        { 20422, 50, 28000, after = 20421 },   -- Seal of Fury (Rank 6)
-        { 20348, 50, 28000, after = 20347 },   -- Seal of Light (Rank 3)
-        { 20292, 50, 28000, after = 20291 },   -- Seal of Righteousness (Rank 7)
-        { 19838, 52, 34000, after = 19837 },   -- Blessing of Might (Rank 6)
-        { 10313, 52, 34000, after = 10312 },   -- Exorcism (Rank 5)
-        { 25782, 52, 46000 },   -- Greater Blessing of Might (Rank 1)
-        { 24274, 52, 34000, after = 24275 },   -- Hammer of Wrath (Rank 2)
-        { 10332, 52, 34000, after = 5569 },   -- Holy Strike (Rank 7)
-        { 20308, 52, 34000, after = 20307 },   -- Seal of the Crusader (Rank 6)
-        { 19896, 52, 34000, after = 19895 },   -- Shadow Resistance Aura (Rank 3)
-        { 10326, 52, 34000, after = 5627 },   -- Turn Undead (Rank 3)
-        { 20729, 54, 40000, after = 6940 },   -- Blessing of Sacrifice (Rank 2)
-        { 19854, 54, 40000, after = 19853 },   -- Blessing of Wisdom (Rank 5)
-        { 25894, 54, 46000 },   -- Greater Blessing of Wisdom (Rank 1)
-        { 10308, 54, 40000, after = 5589 },   -- Hammer of Justice (Rank 4)
-        { 10329, 54, 40000, after = 10328 },   -- Holy Light (Rank 8)
-        { 19898, 56, 42000, after = 19897 },   -- Frost Resistance Aura (Rank 3)
-        { 20930, 56, 2100, after = 20929 },   -- Holy Shock (Rank 4)
-        { 10301, 56, 42000, after = 10300 },   -- Retribution Aura (Rank 5)
-        { 19943, 58, 44000, after = 19942 },   -- Flash of Light (Rank 6)
-        { 20423, 58, 44000, after = 20422 },   -- Seal of Fury (Rank 7)
-        { 20293, 58, 44000, after = 20292 },   -- Seal of Righteousness (Rank 8)
-        { 20357, 58, 44000, after = 20356 },   -- Seal of Wisdom (Rank 3)
-        { 19979, 60, 46000, after = 19978 },   -- Blessing of Light (Rank 3)
-        { 20924, 60, 2300, after = 20923 },   -- Consecration (Rank 5)
-        { 10293, 60, 46000, after = 10292 },   -- Devotion Aura (Rank 7)
-        { 10314, 60, 46000, after = 10313 },   -- Exorcism (Rank 6)
-        { 19900, 60, 46000, after = 19899 },   -- Fire Resistance Aura (Rank 3)
-        { 25898, 60, 2300 },   -- Greater Blessing of Kings
-        { 25890, 60, 46000 },   -- Greater Blessing of Light
-        { 25916, 60, 46000, after = 25782 },   -- Greater Blessing of Might (Rank 2)
-        { 25895, 60, 46000 },   -- Greater Blessing of Salvation
-        { 25918, 60, 46000, after = 25894 },   -- Greater Blessing of Wisdom (Rank 2)
-        { 24239, 60, 46000, after = 24274 },   -- Hammer of Wrath (Rank 3)
-        { 20928, 60, 2300, after = 20927 },   -- Holy Shield (Rank 3)
-        { 10333, 60, 46000, after = 10332 },   -- Holy Strike (Rank 8)
-        { 10318, 60, 46000, after = 2812 },   -- Holy Wrath (Rank 2)
-        { 1311595, 60, 2300, after = 1311590 },   -- Light's Vigil (Rank 3)
-        { 20773, 60, 46000, after = 20772 },   -- Redemption (Rank 5)
-        { 20920, 60, 2300, after = 20919 },   -- Seal of Command (Rank 5)
-        { 20349, 60, 46000, after = 20348 },   -- Seal of Light (Rank 4)
+        { 465, 1, 10 },
+        { 19740, 4, 100 },
+        { 20271, 4, 100 },
+        { 498, 6, 100 },
+        { 639, 6, 100, owned = true },
+        { 679, 6, 100 },
+        { 21082, 6, 100 },
+        { 853, 8, 100 },
+        { 1152, 8, 100 },
+        { 1022, 10, 300 },
+        { 10290, 10, 300, after = 465 },
+        { 633, 10, 300 },
+        { 1311649, 10, 300 },
+        { 20287, 10, 300, owned = true },
+        { 19834, 12, 1000, after = 19740 },
+        { 678, 12, 1000, after = 679 },
+        { 20162, 12, 1000, after = 21082 },
+        { 19742, 14, 2000 },
+        { 647, 14, 2000, after = 639 },
+        { 7294, 16, 3000 },
+        { 25780, 16, 3000 },
+        { 1044, 18, 3500 },
+        { 5573, 18, 3500, after = 498 },
+        { 1311656, 18, 3500, after = 1311649 },
+        { 20288, 18, 3500, after = 20287 },
+        { 20217, 20, 4000 },
+        { 26573, 20, 4000 },
+        { 643, 20, 4000, after = 10290 },
+        { 879, 20, 4000 },
+        { 19750, 20, 4000 },
+        { 1866, 20, 4000, after = 678 },
+        { 19835, 22, 4000, after = 19834 },
+        { 19746, 22, 4000 },
+        { 1026, 22, 4000, after = 647 },
+        { 20164, 22, 4000 },
+        { 20305, 22, 4000, after = 20162 },
+        { 5599, 24, 5000, after = 1022 },
+        { 19850, 24, 5000, after = 19742 },
+        { 5588, 24, 5000, after = 853 },
+        { 10322, 24, 5000, owned = true },
+        { 2878, 24, 5000 },
+        { 20163, 25, 6000, after = 1311656 },
+        { 1038, 26, 6000 },
+        { 19939, 26, 6000, after = 19750 },
+        { 10298, 26, 6000, after = 7294 },
+        { 20289, 26, 6000, after = 20288 },
+        { 5614, 28, 9000, after = 879 },
+        { 680, 28, 9000, after = 1866 },
+        { 19876, 28, 9000 },
+        { 20116, 30, 200, after = 26573 },
+        { 10291, 30, 11000, after = 643 },
+        { 19752, 30, 11000 },
+        { 1042, 30, 11000, after = 1026 },
+        { 2800, 30, 11000, after = 633 },
+        { 20915, 30, 550, owned = true },
+        { 20165, 30, 11000 },
+        { 19836, 32, 12000, after = 19835 },
+        { 19888, 32, 12000 },
+        { 20306, 32, 12000, after = 20305 },
+        { 19852, 34, 13000, after = 19850 },
+        { 642, 34, 13000 },
+        { 19940, 34, 13000, after = 19939 },
+        { 20419, 34, 13000, after = 20163 },
+        { 20290, 34, 13000, after = 20289 },
+        { 5615, 36, 14000, after = 5614 },
+        { 19891, 36, 14000 },
+        { 2495, 36, 14000, after = 680 },
+        { 10324, 36, 14000, after = 10322 },
+        { 10299, 36, 14000, after = 10298 },
+        { 10278, 38, 16000, after = 5599 },
+        { 3472, 38, 16000, after = 1042 },
+        { 20166, 38, 16000 },
+        { 5627, 38, 16000, after = 2878 },
+        { 19977, 40, 20000 },
+        { 20922, 40, 1000, after = 20116 },
+        { 1032, 40, 20000, after = 10291 },
+        { 5589, 40, 20000, after = 5588 },
+        { 20473, 40, 1000, owned = true },
+        { 20918, 40, 1000, after = 20915 },
+        { 20347, 40, 20000, after = 20165 },
+        { 19895, 40, 20000, after = 19876 },
+        { 19837, 42, 21000, after = 19836 },
+        { 4987, 42, 21000 },
+        { 19941, 42, 21000, after = 19940 },
+        { 20421, 42, 21000, after = 20419 },
+        { 20291, 42, 21000, after = 20290 },
+        { 20307, 42, 21000, after = 20306 },
+        { 19853, 44, 22000, after = 19852 },
+        { 10312, 44, 22000, after = 5615 },
+        { 19897, 44, 22000, after = 19888 },
+        { 24275, 44, 22000 },
+        { 5569, 44, 22000, after = 2495 },
+        { 6940, 46, 24000 },
+        { 10328, 46, 24000, after = 3472 },
+        { 10300, 46, 24000, after = 10299 },
+        { 19899, 48, 26000, after = 19891 },
+        { 20929, 48, 1300, after = 20473 },
+        { 20772, 48, 26000, after = 10324 },
+        { 20356, 48, 26000, after = 20166 },
+        { 19978, 50, 28000, after = 19977 },
+        { 20923, 50, 1400, after = 20922 },
+        { 10292, 50, 28000, after = 1032 },
+        { 1020, 50, 28000, after = 642 },
+        { 19942, 50, 28000, after = 19941 },
+        { 20927, 50, 1400, owned = true },
+        { 2812, 50, 28000 },
+        { 10310, 50, 28000, after = 2800 },
+        { 1311590, 50, 1400, owned = true },
+        { 20919, 50, 1400, after = 20918 },
+        { 20422, 50, 28000, after = 20421 },
+        { 20348, 50, 28000, after = 20347 },
+        { 20292, 50, 28000, after = 20291 },
+        { 19838, 52, 34000, after = 19837 },
+        { 10313, 52, 34000, after = 10312 },
+        { 25782, 52, 46000 },
+        { 24274, 52, 34000, after = 24275 },
+        { 10332, 52, 34000, after = 5569 },
+        { 20308, 52, 34000, after = 20307 },
+        { 19896, 52, 34000, after = 19895 },
+        { 10326, 52, 34000, after = 5627 },
+        { 20729, 54, 40000, after = 6940 },
+        { 19854, 54, 40000, after = 19853 },
+        { 25894, 54, 46000 },
+        { 10308, 54, 40000, after = 5589 },
+        { 10329, 54, 40000, after = 10328 },
+        { 19898, 56, 42000, after = 19897 },
+        { 20930, 56, 2100, after = 20929 },
+        { 10301, 56, 42000, after = 10300 },
+        { 19943, 58, 44000, after = 19942 },
+        { 20423, 58, 44000, after = 20422 },
+        { 20293, 58, 44000, after = 20292 },
+        { 20357, 58, 44000, after = 20356 },
+        { 19979, 60, 46000, after = 19978 },
+        { 20924, 60, 2300, after = 20923 },
+        { 10293, 60, 46000, after = 10292 },
+        { 10314, 60, 46000, after = 10313 },
+        { 19900, 60, 46000, after = 19899 },
+        { 25898, 60, 2300 },
+        { 25890, 60, 46000 },
+        { 25916, 60, 46000, after = 25782 },
+        { 25895, 60, 46000 },
+        { 25918, 60, 46000, after = 25894 },
+        { 24239, 60, 46000, after = 24274 },
+        { 20928, 60, 2300, after = 20927 },
+        { 10333, 60, 46000, after = 10332 },
+        { 10318, 60, 46000, after = 2812 },
+        { 1311595, 60, 2300, after = 1311590 },
+        { 20773, 60, 46000, after = 20772 },
+        { 20920, 60, 2300, after = 20919 },
+        { 20349, 60, 46000, after = 20348 },
     },
     HUNTER = {
-        { 1494, 1, 10 },   -- Track Beasts
-        { 13163, 4, 100 },   -- Aspect of the Monkey
-        { 1978, 4, 100 },   -- Serpent Sting (Rank 1)
-        { 3044, 6, 100 },   -- Arcane Shot (Rank 1)
-        { 1130, 6, 100 },   -- Hunter's Mark (Rank 1)
-        { 5116, 8, 200 },   -- Concussive Shot
-        { 14260, 8, 200, owned = true },   -- Raptor Strike (Rank 2)
-        { 13165, 10, 400 },   -- Aspect of the Hawk (Rank 1)
-        { 13549, 10, 400, after = 1978 },   -- Serpent Sting (Rank 2)
-        { 19883, 10, 400 },   -- Track Humanoids
-        { 14281, 12, 600, after = 3044 },   -- Arcane Shot (Rank 2)
-        { 20736, 12, 600 },   -- Distracting Shot (Rank 1)
-        { 136, 12, 600 },   -- Mend Pet (Rank 1)
-        { 2974, 12, 600 },   -- Wing Clip (Rank 1)
-        { 6197, 14, 1200 },   -- Eagle Eye
-        { 1002, 14, 1200 },   -- Eyes of the Beast
-        { 1513, 14, 1200 },   -- Scare Beast (Rank 1)
-        { 13795, 16, 1800 },   -- Immolation Trap (Rank 1)
-        { 1495, 16, 1800 },   -- Mongoose Bite (Rank 1)
-        { 14261, 16, 1800, after = 14260 },   -- Raptor Strike (Rank 3)
-        { 14318, 18, 2000, after = 13165 },   -- Aspect of the Hawk (Rank 2)
-        { 2643, 18, 2000 },   -- Multi-Shot
-        { 13550, 18, 2000, after = 13549 },   -- Serpent Sting (Rank 3)
-        { 19884, 18, 2000 },   -- Track Undead
-        { 19434, 20, 2100 },   -- Aimed Shot (Rank 1)
-        { 14282, 20, 2200, after = 14281 },   -- Arcane Shot (Rank 3)
-        { 5118, 20, 2200 },   -- Aspect of the Cheetah
-        { 781, 20, 2200 },   -- Disengage (Rank 1)
-        { 14274, 20, 2200, after = 20736 },   -- Distracting Shot (Rank 2)
-        { 1499, 20, 2200 },   -- Freezing Trap (Rank 1)
-        { 3111, 20, 2200, after = 136 },   -- Mend Pet (Rank 2)
-        { 14323, 22, 6000, after = 1130 },   -- Hunter's Mark (Rank 2)
-        { 3043, 22, 6000 },   -- Scorpid Sting
-        { 1462, 24, 7000 },   -- Beast Lore
-        { 14262, 24, 7000, after = 14261 },   -- Raptor Strike (Rank 4)
-        { 19885, 24, 7000 },   -- Track Hidden
-        { 14302, 26, 7000, after = 13795 },   -- Immolation Trap (Rank 2)
-        { 3045, 26, 7000 },   -- Rapid Fire
-        { 13551, 26, 7000, after = 13550 },   -- Serpent Sting (Rank 4)
-        { 19880, 26, 7000 },   -- Track Elementals
-        { 20900, 28, 400, after = 19434 },   -- Aimed Shot (Rank 2)
-        { 14283, 28, 8000, after = 14282 },   -- Arcane Shot (Rank 4)
-        { 14319, 28, 8000, after = 14318 },   -- Aspect of the Hawk (Rank 3)
-        { 13809, 28, 8000 },   -- Frost Trap
-        { 3661, 28, 8000, after = 3111 },   -- Mend Pet (Rank 3)
-        { 13161, 30, 8000 },   -- Aspect of the Beast (Rank 1)
-        { 1242634, 30, 7600, owned = true },   -- Counterattack (Rank 2)
-        { 15629, 30, 8000, after = 14274 },   -- Distracting Shot (Rank 3)
-        { 5384, 30, 8000 },   -- Feign Death
-        { 14269, 30, 8000, after = 1495 },   -- Mongoose Bite (Rank 2)
-        { 14326, 30, 8000, after = 1513 },   -- Scare Beast (Rank 2)
-        { 1543, 32, 10000 },   -- Flare
-        { 14263, 32, 10000, after = 14262 },   -- Raptor Strike (Rank 5)
-        { 19878, 32, 10000 },   -- Track Demons
-        { 1299348, 32, 10000, owned = true },   -- Trueshot Aura (Rank 2)
-        { 14272, 34, 12000, after = 781 },   -- Disengage (Rank 2)
-        { 13813, 34, 12000 },   -- Explosive Trap (Rank 1)
-        { 13552, 34, 12000, after = 13551 },   -- Serpent Sting (Rank 5)
-        { 20901, 36, 700, after = 20900 },   -- Aimed Shot (Rank 3)
-        { 14284, 36, 14000, after = 14283 },   -- Arcane Shot (Rank 5)
-        { 14303, 36, 14000, after = 14302 },   -- Immolation Trap (Rank 3)
-        { 3662, 36, 14000, after = 3661 },   -- Mend Pet (Rank 4)
-        { 1293525, 36, 13000, owned = true },   -- Summon Hawk (Rank 2)
-        { 3034, 36, 14000 },   -- Viper Sting (Rank 1)
-        { 14320, 38, 16000, after = 14319 },   -- Aspect of the Hawk (Rank 4)
-        { 14267, 38, 16000, after = 2974 },   -- Wing Clip (Rank 2)
-        { 1299445, 40, 16000, after = 13161 },   -- Aspect of the Beast (Rank 2)
-        { 13159, 40, 18000 },   -- Aspect of the Pack
-        { 15630, 40, 18000, after = 15629 },   -- Distracting Shot (Rank 4)
-        { 14310, 40, 18000, after = 1499 },   -- Freezing Trap (Rank 2)
-        { 14324, 40, 18000, after = 14323 },   -- Hunter's Mark (Rank 3)
-        { 14264, 40, 18000, after = 14263 },   -- Raptor Strike (Rank 6)
-        { 19882, 40, 18000 },   -- Track Giants
-        { 19506, 40, 16000, after = 1299348 },   -- Trueshot Aura (Rank 3)
-        { 1510, 40, 18000 },   -- Volley (Rank 1)
-        { 20909, 42, 1200, after = 1242634 },   -- Counterattack (Rank 3)
-        { 13553, 42, 24000, after = 13552 },   -- Serpent Sting (Rank 6)
-        { 20902, 44, 1300, after = 20901 },   -- Aimed Shot (Rank 4)
-        { 14285, 44, 26000, after = 14284 },   -- Arcane Shot (Rank 6)
-        { 14316, 44, 26000, after = 13813 },   -- Explosive Trap (Rank 2)
-        { 13542, 44, 26000, after = 3662 },   -- Mend Pet (Rank 5)
-        { 14270, 44, 26000, after = 14269 },   -- Mongoose Bite (Rank 3)
-        { 20043, 46, 28000 },   -- Aspect of the Wild (Rank 1)
-        { 14304, 46, 28000, after = 14303 },   -- Immolation Trap (Rank 4)
-        { 14327, 46, 28000, after = 14326 },   -- Scare Beast (Rank 3)
-        { 14279, 46, 28000, after = 3034 },   -- Viper Sting (Rank 2)
-        { 14321, 48, 32000, after = 14320 },   -- Aspect of the Hawk (Rank 5)
-        { 14273, 48, 32000, after = 14272 },   -- Disengage (Rank 3)
-        { 14265, 48, 32000, after = 14264 },   -- Raptor Strike (Rank 7)
-        { 1310785, 48, 14000, owned = true },   -- Sniper Shot (Rank 2)
-        { 1293526, 48, 29000, after = 1293525 },   -- Summon Hawk (Rank 3)
-        { 1299446, 50, 36000, after = 1299445 },   -- Aspect of the Beast (Rank 3)
-        { 15631, 50, 36000, after = 15630 },   -- Distracting Shot (Rank 5)
-        { 13554, 50, 36000, after = 13553 },   -- Serpent Sting (Rank 7)
-        { 19879, 50, 36000 },   -- Track Dragonkin
-        { 20905, 50, 1800, after = 19506 },   -- Trueshot Aura (Rank 4)
-        { 14294, 50, 36000, after = 1510 },   -- Volley (Rank 2)
-        { 20903, 52, 2000, after = 20902 },   -- Aimed Shot (Rank 5)
-        { 14286, 52, 40000, after = 14285 },   -- Arcane Shot (Rank 7)
-        { 13543, 52, 40000, after = 13542 },   -- Mend Pet (Rank 6)
-        { 20910, 54, 2100, after = 20909 },   -- Counterattack (Rank 4)
-        { 14317, 54, 42000, after = 14316 },   -- Explosive Trap (Rank 3)
-        { 20190, 56, 46000, after = 20043 },   -- Aspect of the Wild (Rank 2)
-        { 14305, 56, 46000, after = 14304 },   -- Immolation Trap (Rank 5)
-        { 14266, 56, 46000, after = 14265 },   -- Raptor Strike (Rank 8)
-        { 14280, 56, 46000, after = 14279 },   -- Viper Sting (Rank 3)
-        { 14322, 58, 48000, after = 14321 },   -- Aspect of the Hawk (Rank 6)
-        { 14325, 58, 48000, after = 14324 },   -- Hunter's Mark (Rank 4)
-        { 14271, 58, 48000, after = 14270 },   -- Mongoose Bite (Rank 4)
-        { 13555, 58, 48000, after = 13554 },   -- Serpent Sting (Rank 8)
-        { 1310786, 58, 24000, after = 1310785 },   -- Sniper Shot (Rank 3)
-        { 14295, 58, 48000, after = 14294 },   -- Volley (Rank 3)
-        { 20904, 60, 2500, after = 20903 },   -- Aimed Shot (Rank 6)
-        { 14287, 60, 50000, after = 14286 },   -- Arcane Shot (Rank 8)
-        { 1299447, 60, 48000, after = 1299446 },   -- Aspect of the Beast (Rank 4)
-        { 15632, 60, 50000, after = 15631 },   -- Distracting Shot (Rank 6)
-        { 14311, 60, 50000, after = 14310 },   -- Freezing Trap (Rank 3)
-        { 13544, 60, 50000, after = 13543 },   -- Mend Pet (Rank 7)
-        { 1293527, 60, 42000, after = 1293526 },   -- Summon Hawk (Rank 4)
-        { 20906, 60, 2500, after = 20905 },   -- Trueshot Aura (Rank 5)
-        { 14268, 60, 50000, after = 14267 },   -- Wing Clip (Rank 3)
+        { 1494, 1, 10 },
+        { 13163, 4, 100 },
+        { 1978, 4, 100 },
+        { 3044, 6, 100 },
+        { 1130, 6, 100 },
+        { 5116, 8, 200 },
+        { 14260, 8, 200, owned = true },
+        { 13165, 10, 400 },
+        { 13549, 10, 400, after = 1978 },
+        { 19883, 10, 400 },
+        { 14281, 12, 600, after = 3044 },
+        { 20736, 12, 600 },
+        { 136, 12, 600 },
+        { 2974, 12, 600 },
+        { 6197, 14, 1200 },
+        { 1002, 14, 1200 },
+        { 1513, 14, 1200 },
+        { 13795, 16, 1800 },
+        { 1495, 16, 1800 },
+        { 14261, 16, 1800, after = 14260 },
+        { 14318, 18, 2000, after = 13165 },
+        { 2643, 18, 2000 },
+        { 13550, 18, 2000, after = 13549 },
+        { 19884, 18, 2000 },
+        { 19434, 20, 2100 },
+        { 14282, 20, 2200, after = 14281 },
+        { 5118, 20, 2200 },
+        { 781, 20, 2200 },
+        { 14274, 20, 2200, after = 20736 },
+        { 1499, 20, 2200 },
+        { 3111, 20, 2200, after = 136 },
+        { 14323, 22, 6000, after = 1130 },
+        { 3043, 22, 6000 },
+        { 1462, 24, 7000 },
+        { 14262, 24, 7000, after = 14261 },
+        { 19885, 24, 7000 },
+        { 14302, 26, 7000, after = 13795 },
+        { 3045, 26, 7000 },
+        { 13551, 26, 7000, after = 13550 },
+        { 19880, 26, 7000 },
+        { 20900, 28, 400, after = 19434 },
+        { 14283, 28, 8000, after = 14282 },
+        { 14319, 28, 8000, after = 14318 },
+        { 13809, 28, 8000 },
+        { 3661, 28, 8000, after = 3111 },
+        { 13161, 30, 8000 },
+        { 1242634, 30, 7600, owned = true },
+        { 15629, 30, 8000, after = 14274 },
+        { 5384, 30, 8000 },
+        { 14269, 30, 8000, after = 1495 },
+        { 14326, 30, 8000, after = 1513 },
+        { 1543, 32, 10000 },
+        { 14263, 32, 10000, after = 14262 },
+        { 19878, 32, 10000 },
+        { 1299348, 32, 10000, owned = true },
+        { 14272, 34, 12000, after = 781 },
+        { 13813, 34, 12000 },
+        { 13552, 34, 12000, after = 13551 },
+        { 20901, 36, 700, after = 20900 },
+        { 14284, 36, 14000, after = 14283 },
+        { 14303, 36, 14000, after = 14302 },
+        { 3662, 36, 14000, after = 3661 },
+        { 1293525, 36, 13000, owned = true },
+        { 3034, 36, 14000 },
+        { 14320, 38, 16000, after = 14319 },
+        { 14267, 38, 16000, after = 2974 },
+        { 1299445, 40, 16000, after = 13161 },
+        { 13159, 40, 18000 },
+        { 15630, 40, 18000, after = 15629 },
+        { 14310, 40, 18000, after = 1499 },
+        { 14324, 40, 18000, after = 14323 },
+        { 14264, 40, 18000, after = 14263 },
+        { 19882, 40, 18000 },
+        { 19506, 40, 16000, after = 1299348 },
+        { 1510, 40, 18000 },
+        { 20909, 42, 1200, after = 1242634 },
+        { 13553, 42, 24000, after = 13552 },
+        { 20902, 44, 1300, after = 20901 },
+        { 14285, 44, 26000, after = 14284 },
+        { 14316, 44, 26000, after = 13813 },
+        { 13542, 44, 26000, after = 3662 },
+        { 14270, 44, 26000, after = 14269 },
+        { 20043, 46, 28000 },
+        { 14304, 46, 28000, after = 14303 },
+        { 14327, 46, 28000, after = 14326 },
+        { 14279, 46, 28000, after = 3034 },
+        { 14321, 48, 32000, after = 14320 },
+        { 14273, 48, 32000, after = 14272 },
+        { 14265, 48, 32000, after = 14264 },
+        { 1310785, 48, 14000, owned = true },
+        { 1293526, 48, 29000, after = 1293525 },
+        { 1299446, 50, 36000, after = 1299445 },
+        { 15631, 50, 36000, after = 15630 },
+        { 13554, 50, 36000, after = 13553 },
+        { 19879, 50, 36000 },
+        { 20905, 50, 1800, after = 19506 },
+        { 14294, 50, 36000, after = 1510 },
+        { 20903, 52, 2000, after = 20902 },
+        { 14286, 52, 40000, after = 14285 },
+        { 13543, 52, 40000, after = 13542 },
+        { 20910, 54, 2100, after = 20909 },
+        { 14317, 54, 42000, after = 14316 },
+        { 20190, 56, 46000, after = 20043 },
+        { 14305, 56, 46000, after = 14304 },
+        { 14266, 56, 46000, after = 14265 },
+        { 14280, 56, 46000, after = 14279 },
+        { 14322, 58, 48000, after = 14321 },
+        { 14325, 58, 48000, after = 14324 },
+        { 14271, 58, 48000, after = 14270 },
+        { 13555, 58, 48000, after = 13554 },
+        { 1310786, 58, 24000, after = 1310785 },
+        { 14295, 58, 48000, after = 14294 },
+        { 20904, 60, 2500, after = 20903 },
+        { 14287, 60, 50000, after = 14286 },
+        { 1299447, 60, 48000, after = 1299446 },
+        { 15632, 60, 50000, after = 15631 },
+        { 14311, 60, 50000, after = 14310 },
+        { 13544, 60, 50000, after = 13543 },
+        { 1293527, 60, 42000, after = 1293526 },
+        { 20906, 60, 2500, after = 20905 },
+        { 14268, 60, 50000, after = 14267 },
     },
     ROGUE = {
-        { 1784, 1, 10 },   -- Stealth (Rank 1)
-        { 53, 4, 100 },   -- Backstab (Rank 1)
-        { 921, 4, 100 },   -- Pick Pocket
-        { 1776, 6, 100 },   -- Gouge (Rank 1)
-        { 1757, 6, 100, owned = true },   -- Sinister Strike (Rank 2)
-        { 5277, 8, 200 },   -- Evasion
-        { 6760, 8, 200, owned = true },   -- Eviscerate (Rank 2)
-        { 6770, 10, 300 },   -- Sap (Rank 1)
-        { 5171, 10, 300 },   -- Slice and Dice (Rank 1)
-        { 2983, 10, 300 },   -- Sprint (Rank 1)
-        { 2589, 12, 800, after = 53 },   -- Backstab (Rank 2)
-        { 1766, 12, 800 },   -- Kick (Rank 1)
-        { 8647, 14, 1200 },   -- Expose Armor (Rank 1)
-        { 703, 14, 1200 },   -- Garrote (Rank 1)
-        { 1758, 14, 1200, after = 1757 },   -- Sinister Strike (Rank 3)
-        { 6761, 16, 1800, after = 6760 },   -- Eviscerate (Rank 3)
-        { 1966, 16, 1800 },   -- Feint (Rank 1)
-        { 8676, 18, 2900 },   -- Ambush (Rank 1)
-        { 1777, 18, 2900, after = 1776 },   -- Gouge (Rank 2)
-        { 2590, 20, 3000, after = 2589 },   -- Backstab (Rank 3)
-        { 1943, 20, 3000 },   -- Rupture (Rank 1)
-        { 1785, 20, 3000, after = 1784 },   -- Stealth (Rank 2)
-        { 1725, 22, 4000 },   -- Distract
-        { 8631, 22, 4000, after = 703 },   -- Garrote (Rank 2)
-        { 1759, 22, 4000, after = 1758 },   -- Sinister Strike (Rank 4)
-        { 1856, 22, 4000 },   -- Vanish (Rank 1)
-        { 2836, 24, 5000 },   -- Detect Traps (Passive)
-        { 6762, 24, 5000, after = 6761 },   -- Eviscerate (Rank 4)
-        { 8724, 26, 6000, after = 8676 },   -- Ambush (Rank 2)
-        { 1833, 26, 6000 },   -- Cheap Shot
-        { 8649, 26, 6000, after = 8647 },   -- Expose Armor (Rank 2)
-        { 1767, 26, 6000, after = 1766 },   -- Kick (Rank 2)
-        { 2591, 28, 8000, after = 2590 },   -- Backstab (Rank 4)
-        { 6768, 28, 8000, after = 1966 },   -- Feint (Rank 2)
-        { 8639, 28, 8000, after = 1943 },   -- Rupture (Rank 2)
-        { 2070, 28, 8000, after = 6770 },   -- Sap (Rank 2)
-        { 1842, 30, 10000 },   -- Disarm Trap
-        { 8632, 30, 10000, after = 8631 },   -- Garrote (Rank 3)
-        { 408, 30, 10000 },   -- Kidney Shot (Rank 1)
-        { 1760, 30, 10000, after = 1759 },   -- Sinister Strike (Rank 5)
-        { 8623, 32, 12000, after = 6762 },   -- Eviscerate (Rank 5)
-        { 8629, 32, 12000, after = 1777 },   -- Gouge (Rank 3)
-        { 8725, 34, 14000, after = 8724 },   -- Ambush (Rank 3)
-        { 2094, 34, 14000 },   -- Blind
-        { 8696, 34, 14000, after = 2983 },   -- Sprint (Rank 2)
-        { 8721, 36, 16000, after = 2591 },   -- Backstab (Rank 5)
-        { 8650, 36, 16000, after = 8649 },   -- Expose Armor (Rank 3)
-        { 8640, 36, 16000, after = 8639 },   -- Rupture (Rank 3)
-        { 8633, 38, 18000, after = 8632 },   -- Garrote (Rank 4)
-        { 8621, 38, 18000, after = 1760 },   -- Sinister Strike (Rank 6)
-        { 8624, 40, 20000, after = 8623 },   -- Eviscerate (Rank 6)
-        { 8637, 40, 20000, after = 6768 },   -- Feint (Rank 3)
-        { 399956, 40, 10000, owned = true },   -- Mutilate (Rank 2)
-        { 1860, 40, 20000 },   -- Safe Fall (Passive)
-        { 1786, 40, 20000, after = 1785 },   -- Stealth (Rank 3)
-        { 11267, 42, 27000, after = 8725 },   -- Ambush (Rank 4)
-        { 1768, 42, 27000, after = 1767 },   -- Kick (Rank 3)
-        { 6774, 42, 27000, after = 5171 },   -- Slice and Dice (Rank 2)
-        { 1857, 42, 27000, after = 1856 },   -- Vanish (Rank 2)
-        { 11279, 44, 29000, after = 8721 },   -- Backstab (Rank 6)
-        { 11273, 44, 29000, after = 8640 },   -- Rupture (Rank 4)
-        { 11197, 46, 31000, after = 8650 },   -- Expose Armor (Rank 4)
-        { 11289, 46, 31000, after = 8633 },   -- Garrote (Rank 5)
-        { 11285, 46, 31000, after = 8629 },   -- Gouge (Rank 4)
-        { 11293, 46, 31000, after = 8621 },   -- Sinister Strike (Rank 7)
-        { 11299, 48, 33000, after = 8624 },   -- Eviscerate (Rank 7)
-        { 11297, 48, 33000, after = 2070 },   -- Sap (Rank 3)
-        { 11268, 50, 35000, after = 11267 },   -- Ambush (Rank 5)
-        { 8643, 50, 35000, after = 408 },   -- Kidney Shot (Rank 2)
-        { 1241582, 50, 35000, after = 399956 },   -- Mutilate (Rank 3)
-        { 11280, 52, 46000, after = 11279 },   -- Backstab (Rank 7)
-        { 11303, 52, 46000, after = 8637 },   -- Feint (Rank 4)
-        { 11274, 52, 46000, after = 11273 },   -- Rupture (Rank 5)
-        { 11290, 54, 48000, after = 11289 },   -- Garrote (Rank 6)
-        { 11294, 54, 48000, after = 11293 },   -- Sinister Strike (Rank 8)
-        { 11300, 56, 50000, after = 11299 },   -- Eviscerate (Rank 8)
-        { 11198, 56, 50000, after = 11197 },   -- Expose Armor (Rank 5)
-        { 11269, 58, 52000, after = 11268 },   -- Ambush (Rank 6)
-        { 1769, 58, 52000, after = 1768 },   -- Kick (Rank 4)
-        { 11305, 58, 52000, after = 8696 },   -- Sprint (Rank 3)
-        { 11281, 60, 54000, after = 11280 },   -- Backstab (Rank 8)
-        { 11286, 60, 54000, after = 11285 },   -- Gouge (Rank 5)
-        { 1241584, 60, 54000, after = 1241582 },   -- Mutilate (Rank 4)
-        { 11275, 60, 54000, after = 11274 },   -- Rupture (Rank 6)
-        { 1787, 60, 54000, after = 1786 },   -- Stealth (Rank 4)
+        { 1784, 1, 10 },
+        { 53, 4, 100 },
+        { 921, 4, 100 },
+        { 1776, 6, 100 },
+        { 1757, 6, 100, owned = true },
+        { 5277, 8, 200 },
+        { 6760, 8, 200, owned = true },
+        { 6770, 10, 300 },
+        { 5171, 10, 300 },
+        { 2983, 10, 300 },
+        { 2589, 12, 800, after = 53 },
+        { 1766, 12, 800 },
+        { 8647, 14, 1200 },
+        { 703, 14, 1200 },
+        { 1758, 14, 1200, after = 1757 },
+        { 6761, 16, 1800, after = 6760 },
+        { 1966, 16, 1800 },
+        { 8676, 18, 2900 },
+        { 1777, 18, 2900, after = 1776 },
+        { 2590, 20, 3000, after = 2589 },
+        { 1943, 20, 3000 },
+        { 1785, 20, 3000, after = 1784 },
+        { 1725, 22, 4000 },
+        { 8631, 22, 4000, after = 703 },
+        { 1759, 22, 4000, after = 1758 },
+        { 1856, 22, 4000 },
+        { 2836, 24, 5000 },
+        { 6762, 24, 5000, after = 6761 },
+        { 8724, 26, 6000, after = 8676 },
+        { 1833, 26, 6000 },
+        { 8649, 26, 6000, after = 8647 },
+        { 1767, 26, 6000, after = 1766 },
+        { 2591, 28, 8000, after = 2590 },
+        { 6768, 28, 8000, after = 1966 },
+        { 8639, 28, 8000, after = 1943 },
+        { 2070, 28, 8000, after = 6770 },
+        { 1842, 30, 10000 },
+        { 8632, 30, 10000, after = 8631 },
+        { 408, 30, 10000 },
+        { 1760, 30, 10000, after = 1759 },
+        { 8623, 32, 12000, after = 6762 },
+        { 8629, 32, 12000, after = 1777 },
+        { 8725, 34, 14000, after = 8724 },
+        { 2094, 34, 14000 },
+        { 8696, 34, 14000, after = 2983 },
+        { 8721, 36, 16000, after = 2591 },
+        { 8650, 36, 16000, after = 8649 },
+        { 8640, 36, 16000, after = 8639 },
+        { 8633, 38, 18000, after = 8632 },
+        { 8621, 38, 18000, after = 1760 },
+        { 8624, 40, 20000, after = 8623 },
+        { 8637, 40, 20000, after = 6768 },
+        { 399956, 40, 10000, owned = true },
+        { 1860, 40, 20000 },
+        { 1786, 40, 20000, after = 1785 },
+        { 11267, 42, 27000, after = 8725 },
+        { 1768, 42, 27000, after = 1767 },
+        { 6774, 42, 27000, after = 5171 },
+        { 1857, 42, 27000, after = 1856 },
+        { 11279, 44, 29000, after = 8721 },
+        { 11273, 44, 29000, after = 8640 },
+        { 11197, 46, 31000, after = 8650 },
+        { 11289, 46, 31000, after = 8633 },
+        { 11285, 46, 31000, after = 8629 },
+        { 11293, 46, 31000, after = 8621 },
+        { 11299, 48, 33000, after = 8624 },
+        { 11297, 48, 33000, after = 2070 },
+        { 11268, 50, 35000, after = 11267 },
+        { 8643, 50, 35000, after = 408 },
+        { 1241582, 50, 35000, after = 399956 },
+        { 11280, 52, 46000, after = 11279 },
+        { 11303, 52, 46000, after = 8637 },
+        { 11274, 52, 46000, after = 11273 },
+        { 11290, 54, 48000, after = 11289 },
+        { 11294, 54, 48000, after = 11293 },
+        { 11300, 56, 50000, after = 11299 },
+        { 11198, 56, 50000, after = 11197 },
+        { 11269, 58, 52000, after = 11268 },
+        { 1769, 58, 52000, after = 1768 },
+        { 11305, 58, 52000, after = 8696 },
+        { 11281, 60, 54000, after = 11280 },
+        { 11286, 60, 54000, after = 11285 },
+        { 1241584, 60, 54000, after = 1241582 },
+        { 11275, 60, 54000, after = 11274 },
+        { 1787, 60, 54000, after = 1786 },
     },
     PRIEST = {
-        { 1243, 1, 10 },   -- Power Word: Fortitude (Rank 1)
-        { 2052, 4, 100, owned = true },   -- Lesser Heal (Rank 2)
-        { 589, 4, 100 },   -- Shadow Word: Pain (Rank 1)
-        { 17, 6, 100 },   -- Power Word: Shield (Rank 1)
-        { 591, 6, 100, owned = true },   -- Smite (Rank 2)
-        { 586, 8, 200 },   -- Fade (Rank 1)
-        { 139, 8, 200 },   -- Renew (Rank 1)
-        { 2053, 10, 300, after = 2052 },   -- Lesser Heal (Rank 3)
-        { 8092, 10, 300 },   -- Mind Blast (Rank 1)
-        { 2006, 10, 300 },   -- Resurrection (Rank 1)
-        { 594, 10, 300, after = 589 },   -- Shadow Word: Pain (Rank 2)
-        { 588, 12, 800 },   -- Inner Fire (Rank 1)
-        { 1244, 12, 800, after = 1243 },   -- Power Word: Fortitude (Rank 2)
-        { 592, 12, 800, after = 17 },   -- Power Word: Shield (Rank 2)
-        { 528, 14, 1200 },   -- Cure Disease
-        { 8122, 14, 1200 },   -- Psychic Scream (Rank 1)
-        { 6074, 14, 1200, after = 139 },   -- Renew (Rank 2)
-        { 598, 14, 1200, after = 591 },   -- Smite (Rank 3)
-        { 2054, 16, 1600 },   -- Heal (Rank 1)
-        { 8102, 16, 1600, after = 8092 },   -- Mind Blast (Rank 2)
-        { 527, 18, 2000 },   -- Dispel Magic (Rank 1)
-        { 1277371, 18, 100, races = 1, owned = true },   -- Divine Grace (Rank 2)
-        { 600, 18, 2000, after = 592 },   -- Power Word: Shield (Rank 3)
-        { 970, 18, 2000, after = 594 },   -- Shadow Word: Pain (Rank 3)
-        { 19296, 18, 100, races = 8, owned = true },   -- Starshards (Rank 2)
-        { 2944, 20, 300 },   -- Devouring Plague (Rank 1)
-        { 9578, 20, 3000, after = 586 },   -- Fade (Rank 2)
-        { 6346, 20, 300 },   -- Fear Ward
-        { 2061, 20, 3000 },   -- Flash Heal (Rank 1)
-        { 19281, 20, 150, races = 128, owned = true },   -- Hex of Weakness (Rank 2)
-        { 14914, 20, 3000 },   -- Holy Fire (Rank 1)
-        { 7128, 20, 3000, after = 588 },   -- Inner Fire (Rank 2)
-        { 453, 20, 3000 },   -- Mind Soothe (Rank 1)
-        { 6075, 20, 3000, after = 6074 },   -- Renew (Rank 3)
-        { 9484, 20, 3000 },   -- Shackle Undead (Rank 1)
-        { 19261, 20, 150, races = 16, owned = true },   -- Touch of Weakness (Rank 2)
-        { 2055, 22, 4000, after = 2054 },   -- Heal (Rank 2)
-        { 8103, 22, 4000, after = 8102 },   -- Mind Blast (Rank 3)
-        { 2096, 22, 4000 },   -- Mind Vision (Rank 1)
-        { 2010, 22, 4000, after = 2006 },   -- Resurrection (Rank 2)
-        { 984, 22, 4000, after = 598 },   -- Smite (Rank 4)
-        { 15262, 24, 5000, after = 14914 },   -- Holy Fire (Rank 2)
-        { 8129, 24, 5000 },   -- Mana Burn (Rank 1)
-        { 1245, 24, 5000, after = 1244 },   -- Power Word: Fortitude (Rank 3)
-        { 3747, 24, 5000, after = 600 },   -- Power Word: Shield (Rank 4)
-        { 1277372, 26, 300, races = 1, after = 1277371 },   -- Divine Grace (Rank 3)
-        { 9472, 26, 6000, after = 2061 },   -- Flash Heal (Rank 2)
-        { 6076, 26, 6000, after = 6075 },   -- Renew (Rank 4)
-        { 992, 26, 6000, after = 970 },   -- Shadow Word: Pain (Rank 4)
-        { 19299, 26, 300, races = 8, after = 19296 },   -- Starshards (Rank 3)
-        { 19276, 28, 400, after = 2944 },   -- Devouring Plague (Rank 2)
-        { 6063, 28, 8000, after = 2055 },   -- Heal (Rank 3)
-        { 15430, 28, 400, owned = true },   -- Holy Nova (Rank 2)
-        { 8104, 28, 8000, after = 8103 },   -- Mind Blast (Rank 4)
-        { 17311, 28, 400, owned = true },   -- Mind Flay (Rank 2)
-        { 8124, 28, 8000, after = 8122 },   -- Psychic Scream (Rank 2)
-        { 19308, 28, 400, races = 128, owned = true },   -- Shadowguard (Rank 2)
-        { 1277634, 30, 150, races = 64, owned = true },   -- Contingency Plan (Rank 2)
-        { 14752, 30, 10000 },   -- Divine Spirit (Rank 1)
-        { 9579, 30, 10000, after = 9578 },   -- Fade (Rank 3)
-        { 19271, 30, 500, races = 1, owned = true },   -- Feedback (Rank 2)
-        { 19282, 30, 500, races = 128, after = 19281 },   -- Hex of Weakness (Rank 3)
-        { 15263, 30, 10000, after = 15262 },   -- Holy Fire (Rank 3)
-        { 602, 30, 10000, after = 7128 },   -- Inner Fire (Rank 3)
-        { 605, 30, 10000 },   -- Mind Control (Rank 1)
-        { 6065, 30, 10000, after = 3747 },   -- Power Word: Shield (Rank 5)
-        { 596, 30, 10000 },   -- Prayer of Healing (Rank 1)
-        { 976, 30, 10000 },   -- Shadow Protection (Rank 1)
-        { 1004, 30, 10000, after = 984 },   -- Smite (Rank 5)
-        { 19262, 30, 500, races = 16, after = 19261 },   -- Touch of Weakness (Rank 3)
-        { 552, 32, 11000 },   -- Abolish Disease
-        { 1240770, 32, 11000, owned = true },   -- Binding Heal (Rank 2)
-        { 9473, 32, 11000, after = 9472 },   -- Flash Heal (Rank 3)
-        { 8131, 32, 11000, after = 8129 },   -- Mana Burn (Rank 2)
-        { 6077, 32, 11000, after = 6076 },   -- Renew (Rank 5)
-        { 1309595, 32, 11000 },   -- Shadow Word: Death (Rank 1)
-        { 1277374, 34, 600, races = 1, after = 1277372 },   -- Divine Grace (Rank 4)
-        { 6064, 34, 12000, after = 6063 },   -- Heal (Rank 4)
-        { 1706, 34, 12000 },   -- Levitate
-        { 8105, 34, 12000, after = 8104 },   -- Mind Blast (Rank 5)
-        { 10880, 34, 12000, after = 2010 },   -- Resurrection (Rank 3)
-        { 2767, 34, 12000, after = 992 },   -- Shadow Word: Pain (Rank 5)
-        { 19302, 34, 600, races = 8, after = 19299 },   -- Starshards (Rank 4)
-        { 19277, 36, 700, after = 19276 },   -- Devouring Plague (Rank 3)
-        { 988, 36, 14000, after = 527 },   -- Dispel Magic (Rank 2)
-        { 15264, 36, 14000, after = 15263 },   -- Holy Fire (Rank 4)
-        { 15431, 36, 700, after = 15430 },   -- Holy Nova (Rank 3)
-        { 17312, 36, 700, after = 17311 },   -- Mind Flay (Rank 3)
-        { 8192, 36, 14000, after = 453 },   -- Mind Soothe (Rank 2)
-        { 2791, 36, 14000, after = 1245 },   -- Power Word: Fortitude (Rank 4)
-        { 6066, 36, 14000, after = 6065 },   -- Power Word: Shield (Rank 6)
-        { 19309, 36, 700, races = 128, after = 19308 },   -- Shadowguard (Rank 3)
-        { 1240771, 38, 16000, after = 1240770 },   -- Binding Heal (Rank 3)
-        { 9474, 38, 16000, after = 9473 },   -- Flash Heal (Rank 4)
-        { 6078, 38, 16000, after = 6077 },   -- Renew (Rank 6)
-        { 6060, 38, 16000, after = 1004 },   -- Smite (Rank 6)
-        { 1277638, 40, 500, races = 64, after = 1277634 },   -- Contingency Plan (Rank 3)
-        { 14818, 40, 900, after = 14752 },   -- Divine Spirit (Rank 2)
-        { 9592, 40, 18000, after = 9579 },   -- Fade (Rank 4)
-        { 19273, 40, 900, races = 1, after = 19271 },   -- Feedback (Rank 3)
-        { 2060, 40, 18000 },   -- Greater Heal (Rank 1)
-        { 19283, 40, 900, races = 128, after = 19282 },   -- Hex of Weakness (Rank 4)
-        { 1006, 40, 18000, after = 602 },   -- Inner Fire (Rank 4)
-        { 10874, 40, 18000, after = 8131 },   -- Mana Burn (Rank 3)
-        { 8106, 40, 18000, after = 8105 },   -- Mind Blast (Rank 6)
-        { 1240720, 40, 16000, owned = true },   -- Penance (Rank 2)
-        { 996, 40, 18000, after = 596 },   -- Prayer of Healing (Rank 2)
-        { 9485, 40, 18000, after = 9484 },   -- Shackle Undead (Rank 2)
-        { 1309633, 40, 18000, after = 1309595 },   -- Shadow Word: Death (Rank 2)
-        { 19264, 40, 900, races = 16, after = 19262 },   -- Touch of Weakness (Rank 4)
-        { 1277376, 42, 1100, races = 1, after = 1277374 },   -- Divine Grace (Rank 5)
-        { 15265, 42, 22000, after = 15264 },   -- Holy Fire (Rank 5)
-        { 10898, 42, 22000, after = 6066 },   -- Power Word: Shield (Rank 7)
-        { 10888, 42, 22000, after = 8124 },   -- Psychic Scream (Rank 3)
-        { 10957, 42, 22000, after = 976 },   -- Shadow Protection (Rank 2)
-        { 10892, 42, 22000, after = 2767 },   -- Shadow Word: Pain (Rank 6)
-        { 19303, 42, 1100, races = 8, after = 19302 },   -- Starshards (Rank 5)
-        { 1240772, 44, 24000, after = 1240771 },   -- Binding Heal (Rank 4)
-        { 19278, 44, 1200, after = 19277 },   -- Devouring Plague (Rank 4)
-        { 10915, 44, 24000, after = 9474 },   -- Flash Heal (Rank 5)
-        { 27799, 44, 1200, after = 15431 },   -- Holy Nova (Rank 4)
-        { 10911, 44, 24000, after = 605 },   -- Mind Control (Rank 2)
-        { 17313, 44, 1200, after = 17312 },   -- Mind Flay (Rank 4)
-        { 10909, 44, 24000, after = 2096 },   -- Mind Vision (Rank 2)
-        { 10927, 44, 24000, after = 6078 },   -- Renew (Rank 7)
-        { 19310, 44, 1200, races = 128, after = 19309 },   -- Shadowguard (Rank 4)
-        { 10963, 46, 26000, after = 2060 },   -- Greater Heal (Rank 2)
-        { 10945, 46, 26000, after = 8106 },   -- Mind Blast (Rank 7)
-        { 10881, 46, 26000, after = 10880 },   -- Resurrection (Rank 4)
-        { 10933, 46, 26000, after = 6060 },   -- Smite (Rank 7)
-        { 15266, 48, 28000, after = 15265 },   -- Holy Fire (Rank 6)
-        { 10875, 48, 28000, after = 10874 },   -- Mana Burn (Rank 4)
-        { 10937, 48, 28000, after = 2791 },   -- Power Word: Fortitude (Rank 5)
-        { 10899, 48, 28000, after = 10898 },   -- Power Word: Shield (Rank 8)
-        { 1309635, 48, 28000, after = 1309633 },   -- Shadow Word: Death (Rank 3)
-        { 1240773, 50, 30000, after = 1240772 },   -- Binding Heal (Rank 5)
-        { 1277639, 50, 900, races = 64, after = 1277638 },   -- Contingency Plan (Rank 4)
-        { 1277377, 50, 1500, races = 1, after = 1277376 },   -- Divine Grace (Rank 6)
-        { 14819, 50, 1500, after = 14818 },   -- Divine Spirit (Rank 3)
-        { 10941, 50, 30000, after = 9592 },   -- Fade (Rank 5)
-        { 19274, 50, 1500, races = 1, after = 19273 },   -- Feedback (Rank 4)
-        { 10916, 50, 30000, after = 10915 },   -- Flash Heal (Rank 6)
-        { 19284, 50, 1500, races = 128, after = 19283 },   -- Hex of Weakness (Rank 5)
-        { 10951, 50, 30000, after = 1006 },   -- Inner Fire (Rank 5)
-        { 27870, 50, 1200, owned = true },   -- Lightwell (Rank 2)
-        { 1240721, 50, 30000, after = 1240720 },   -- Penance (Rank 3)
-        { 10960, 50, 30000, after = 996 },   -- Prayer of Healing (Rank 3)
-        { 1240826, 50, 30000, owned = true },   -- Prayer of Mending (Rank 2)
-        { 10928, 50, 30000, after = 10927 },   -- Renew (Rank 8)
-        { 10893, 50, 30000, after = 10892 },   -- Shadow Word: Pain (Rank 7)
-        { 19304, 50, 1500, races = 8, after = 19303 },   -- Starshards (Rank 6)
-        { 19265, 50, 1500, races = 16, after = 19264 },   -- Touch of Weakness (Rank 5)
-        { 19279, 52, 1900, after = 19278 },   -- Devouring Plague (Rank 5)
-        { 10964, 52, 38000, after = 10963 },   -- Greater Heal (Rank 3)
-        { 27800, 52, 1900, after = 27799 },   -- Holy Nova (Rank 5)
-        { 10946, 52, 38000, after = 10945 },   -- Mind Blast (Rank 8)
-        { 17314, 52, 1900, after = 17313 },   -- Mind Flay (Rank 5)
-        { 10953, 52, 38000, after = 8192 },   -- Mind Soothe (Rank 3)
-        { 19311, 52, 1900, races = 128, after = 19310 },   -- Shadowguard (Rank 5)
-        { 15267, 54, 40000, after = 15266 },   -- Holy Fire (Rank 7)
-        { 10900, 54, 40000, after = 10899 },   -- Power Word: Shield (Rank 9)
-        { 10934, 54, 40000, after = 10933 },   -- Smite (Rank 8)
-        { 1240774, 56, 42000, after = 1240773 },   -- Binding Heal (Rank 6)
-        { 10917, 56, 42000, after = 10916 },   -- Flash Heal (Rank 7)
-        { 10876, 56, 42000, after = 10875 },   -- Mana Burn (Rank 5)
-        { 10890, 56, 42000, after = 10888 },   -- Psychic Scream (Rank 4)
-        { 10929, 56, 42000, after = 10928 },   -- Renew (Rank 9)
-        { 10958, 56, 42000, after = 10957 },   -- Shadow Protection (Rank 3)
-        { 1309636, 56, 42000, after = 1309635 },   -- Shadow Word: Death (Rank 4)
-        { 1277378, 58, 2200, races = 1, after = 1277377 },   -- Divine Grace (Rank 7)
-        { 10965, 58, 44000, after = 10964 },   -- Greater Heal (Rank 4)
-        { 10947, 58, 44000, after = 10946 },   -- Mind Blast (Rank 9)
-        { 10912, 58, 44000, after = 10911 },   -- Mind Control (Rank 3)
-        { 20770, 58, 44000, after = 10881 },   -- Resurrection (Rank 5)
-        { 10894, 58, 44000, after = 10893 },   -- Shadow Word: Pain (Rank 8)
-        { 19305, 58, 2200, races = 8, after = 19304 },   -- Starshards (Rank 7)
-        { 1277640, 60, 1500, races = 64, after = 1277639 },   -- Contingency Plan (Rank 5)
-        { 19280, 60, 2300, after = 19279 },   -- Devouring Plague (Rank 6)
-        { 27841, 60, 2300, after = 14819 },   -- Divine Spirit (Rank 4)
-        { 10942, 60, 46000, after = 10941 },   -- Fade (Rank 6)
-        { 19275, 60, 2300, races = 1, after = 19274 },   -- Feedback (Rank 5)
-        { 19285, 60, 2300, races = 128, after = 19284 },   -- Hex of Weakness (Rank 6)
-        { 15261, 60, 46000, after = 15267 },   -- Holy Fire (Rank 8)
-        { 27801, 60, 2300, after = 27800 },   -- Holy Nova (Rank 6)
-        { 10952, 60, 46000, after = 10951 },   -- Inner Fire (Rank 6)
-        { 27871, 60, 1500, after = 27870 },   -- Lightwell (Rank 3)
-        { 18807, 60, 2300, after = 17314 },   -- Mind Flay (Rank 6)
-        { 1316995, 60, 46000, after = 1240721 },   -- Penance (Rank 4)
-        { 10938, 60, 46000, after = 10937 },   -- Power Word: Fortitude (Rank 6)
-        { 10901, 60, 46000, after = 10900 },   -- Power Word: Shield (Rank 10)
-        { 10961, 60, 46000, after = 10960 },   -- Prayer of Healing (Rank 4)
-        { 1240827, 60, 46000, after = 1240826 },   -- Prayer of Mending (Rank 3)
-        { 27681, 60, 2300 },   -- Prayer of Spirit (Rank 1)
-        { 10955, 60, 46000, after = 9485 },   -- Shackle Undead (Rank 3)
-        { 19312, 60, 2300, races = 128, after = 19311 },   -- Shadowguard (Rank 6)
-        { 19266, 60, 2300, races = 16, after = 19265 },   -- Touch of Weakness (Rank 6)
+        { 1243, 1, 10 },
+        { 2052, 4, 100, owned = true },
+        { 589, 4, 100 },
+        { 17, 6, 100 },
+        { 591, 6, 100, owned = true },
+        { 586, 8, 200 },
+        { 139, 8, 200 },
+        { 2053, 10, 300, after = 2052 },
+        { 8092, 10, 300 },
+        { 2006, 10, 300 },
+        { 594, 10, 300, after = 589 },
+        { 588, 12, 800 },
+        { 1244, 12, 800, after = 1243 },
+        { 592, 12, 800, after = 17 },
+        { 528, 14, 1200 },
+        { 8122, 14, 1200 },
+        { 6074, 14, 1200, after = 139 },
+        { 598, 14, 1200, after = 591 },
+        { 2054, 16, 1600 },
+        { 8102, 16, 1600, after = 8092 },
+        { 527, 18, 2000 },
+        { 1277371, 18, 100, races = 1, owned = true },
+        { 600, 18, 2000, after = 592 },
+        { 970, 18, 2000, after = 594 },
+        { 19296, 18, 100, races = 8, owned = true },
+        { 2944, 20, 300 },
+        { 9578, 20, 3000, after = 586 },
+        { 6346, 20, 300 },
+        { 2061, 20, 3000 },
+        { 19281, 20, 150, races = 128, owned = true },
+        { 14914, 20, 3000 },
+        { 7128, 20, 3000, after = 588 },
+        { 453, 20, 3000 },
+        { 6075, 20, 3000, after = 6074 },
+        { 9484, 20, 3000 },
+        { 19261, 20, 150, races = 16, owned = true },
+        { 2055, 22, 4000, after = 2054 },
+        { 8103, 22, 4000, after = 8102 },
+        { 2096, 22, 4000 },
+        { 2010, 22, 4000, after = 2006 },
+        { 984, 22, 4000, after = 598 },
+        { 15262, 24, 5000, after = 14914 },
+        { 8129, 24, 5000 },
+        { 1245, 24, 5000, after = 1244 },
+        { 3747, 24, 5000, after = 600 },
+        { 1277372, 26, 300, races = 1, after = 1277371 },
+        { 9472, 26, 6000, after = 2061 },
+        { 6076, 26, 6000, after = 6075 },
+        { 992, 26, 6000, after = 970 },
+        { 19299, 26, 300, races = 8, after = 19296 },
+        { 19276, 28, 400, after = 2944 },
+        { 6063, 28, 8000, after = 2055 },
+        { 15430, 28, 400, owned = true },
+        { 8104, 28, 8000, after = 8103 },
+        { 17311, 28, 400, owned = true },
+        { 8124, 28, 8000, after = 8122 },
+        { 19308, 28, 400, races = 128, owned = true },
+        { 1277634, 30, 150, races = 64, owned = true },
+        { 14752, 30, 10000 },
+        { 9579, 30, 10000, after = 9578 },
+        { 19271, 30, 500, races = 1, owned = true },
+        { 19282, 30, 500, races = 128, after = 19281 },
+        { 15263, 30, 10000, after = 15262 },
+        { 602, 30, 10000, after = 7128 },
+        { 605, 30, 10000 },
+        { 6065, 30, 10000, after = 3747 },
+        { 596, 30, 10000 },
+        { 976, 30, 10000 },
+        { 1004, 30, 10000, after = 984 },
+        { 19262, 30, 500, races = 16, after = 19261 },
+        { 552, 32, 11000 },
+        { 1240770, 32, 11000, owned = true },
+        { 9473, 32, 11000, after = 9472 },
+        { 8131, 32, 11000, after = 8129 },
+        { 6077, 32, 11000, after = 6076 },
+        { 1309595, 32, 11000 },
+        { 1277374, 34, 600, races = 1, after = 1277372 },
+        { 6064, 34, 12000, after = 6063 },
+        { 1706, 34, 12000 },
+        { 8105, 34, 12000, after = 8104 },
+        { 10880, 34, 12000, after = 2010 },
+        { 2767, 34, 12000, after = 992 },
+        { 19302, 34, 600, races = 8, after = 19299 },
+        { 19277, 36, 700, after = 19276 },
+        { 988, 36, 14000, after = 527 },
+        { 15264, 36, 14000, after = 15263 },
+        { 15431, 36, 700, after = 15430 },
+        { 17312, 36, 700, after = 17311 },
+        { 8192, 36, 14000, after = 453 },
+        { 2791, 36, 14000, after = 1245 },
+        { 6066, 36, 14000, after = 6065 },
+        { 19309, 36, 700, races = 128, after = 19308 },
+        { 1240771, 38, 16000, after = 1240770 },
+        { 9474, 38, 16000, after = 9473 },
+        { 6078, 38, 16000, after = 6077 },
+        { 6060, 38, 16000, after = 1004 },
+        { 1277638, 40, 500, races = 64, after = 1277634 },
+        { 14818, 40, 900, after = 14752 },
+        { 9592, 40, 18000, after = 9579 },
+        { 19273, 40, 900, races = 1, after = 19271 },
+        { 2060, 40, 18000 },
+        { 19283, 40, 900, races = 128, after = 19282 },
+        { 1006, 40, 18000, after = 602 },
+        { 10874, 40, 18000, after = 8131 },
+        { 8106, 40, 18000, after = 8105 },
+        { 1240720, 40, 16000, owned = true },
+        { 996, 40, 18000, after = 596 },
+        { 9485, 40, 18000, after = 9484 },
+        { 1309633, 40, 18000, after = 1309595 },
+        { 19264, 40, 900, races = 16, after = 19262 },
+        { 1277376, 42, 1100, races = 1, after = 1277374 },
+        { 15265, 42, 22000, after = 15264 },
+        { 10898, 42, 22000, after = 6066 },
+        { 10888, 42, 22000, after = 8124 },
+        { 10957, 42, 22000, after = 976 },
+        { 10892, 42, 22000, after = 2767 },
+        { 19303, 42, 1100, races = 8, after = 19302 },
+        { 1240772, 44, 24000, after = 1240771 },
+        { 19278, 44, 1200, after = 19277 },
+        { 10915, 44, 24000, after = 9474 },
+        { 27799, 44, 1200, after = 15431 },
+        { 10911, 44, 24000, after = 605 },
+        { 17313, 44, 1200, after = 17312 },
+        { 10909, 44, 24000, after = 2096 },
+        { 10927, 44, 24000, after = 6078 },
+        { 19310, 44, 1200, races = 128, after = 19309 },
+        { 10963, 46, 26000, after = 2060 },
+        { 10945, 46, 26000, after = 8106 },
+        { 10881, 46, 26000, after = 10880 },
+        { 10933, 46, 26000, after = 6060 },
+        { 15266, 48, 28000, after = 15265 },
+        { 10875, 48, 28000, after = 10874 },
+        { 10937, 48, 28000, after = 2791 },
+        { 10899, 48, 28000, after = 10898 },
+        { 1309635, 48, 28000, after = 1309633 },
+        { 1240773, 50, 30000, after = 1240772 },
+        { 1277639, 50, 900, races = 64, after = 1277638 },
+        { 1277377, 50, 1500, races = 1, after = 1277376 },
+        { 14819, 50, 1500, after = 14818 },
+        { 10941, 50, 30000, after = 9592 },
+        { 19274, 50, 1500, races = 1, after = 19273 },
+        { 10916, 50, 30000, after = 10915 },
+        { 19284, 50, 1500, races = 128, after = 19283 },
+        { 10951, 50, 30000, after = 1006 },
+        { 27870, 50, 1200, owned = true },
+        { 1240721, 50, 30000, after = 1240720 },
+        { 10960, 50, 30000, after = 996 },
+        { 1240826, 50, 30000, owned = true },
+        { 10928, 50, 30000, after = 10927 },
+        { 10893, 50, 30000, after = 10892 },
+        { 19304, 50, 1500, races = 8, after = 19303 },
+        { 19265, 50, 1500, races = 16, after = 19264 },
+        { 19279, 52, 1900, after = 19278 },
+        { 10964, 52, 38000, after = 10963 },
+        { 27800, 52, 1900, after = 27799 },
+        { 10946, 52, 38000, after = 10945 },
+        { 17314, 52, 1900, after = 17313 },
+        { 10953, 52, 38000, after = 8192 },
+        { 19311, 52, 1900, races = 128, after = 19310 },
+        { 15267, 54, 40000, after = 15266 },
+        { 10900, 54, 40000, after = 10899 },
+        { 10934, 54, 40000, after = 10933 },
+        { 1240774, 56, 42000, after = 1240773 },
+        { 10917, 56, 42000, after = 10916 },
+        { 10876, 56, 42000, after = 10875 },
+        { 10890, 56, 42000, after = 10888 },
+        { 10929, 56, 42000, after = 10928 },
+        { 10958, 56, 42000, after = 10957 },
+        { 1309636, 56, 42000, after = 1309635 },
+        { 1277378, 58, 2200, races = 1, after = 1277377 },
+        { 10965, 58, 44000, after = 10964 },
+        { 10947, 58, 44000, after = 10946 },
+        { 10912, 58, 44000, after = 10911 },
+        { 20770, 58, 44000, after = 10881 },
+        { 10894, 58, 44000, after = 10893 },
+        { 19305, 58, 2200, races = 8, after = 19304 },
+        { 1277640, 60, 1500, races = 64, after = 1277639 },
+        { 19280, 60, 2300, after = 19279 },
+        { 27841, 60, 2300, after = 14819 },
+        { 10942, 60, 46000, after = 10941 },
+        { 19275, 60, 2300, races = 1, after = 19274 },
+        { 19285, 60, 2300, races = 128, after = 19284 },
+        { 15261, 60, 46000, after = 15267 },
+        { 27801, 60, 2300, after = 27800 },
+        { 10952, 60, 46000, after = 10951 },
+        { 27871, 60, 1500, after = 27870 },
+        { 18807, 60, 2300, after = 17314 },
+        { 1316995, 60, 46000, after = 1240721 },
+        { 10938, 60, 46000, after = 10937 },
+        { 10901, 60, 46000, after = 10900 },
+        { 10961, 60, 46000, after = 10960 },
+        { 1240827, 60, 46000, after = 1240826 },
+        { 27681, 60, 2300 },
+        { 10955, 60, 46000, after = 9485 },
+        { 19312, 60, 2300, races = 128, after = 19311 },
+        { 19266, 60, 2300, races = 16, after = 19265 },
     },
     SHAMAN = {
-        { 8017, 1, 10 },   -- Rockbiter Weapon (Rank 1)
-        { 8042, 4, 100 },   -- Earth Shock (Rank 1)
-        { 2484, 6, 100 },   -- Earthbind Totem
-        { 332, 6, 100, owned = true },   -- Healing Wave (Rank 2)
-        { 8044, 8, 100, after = 8042 },   -- Earth Shock (Rank 2)
-        { 529, 8, 100, owned = true },   -- Lightning Bolt (Rank 2)
-        { 324, 8, 100 },   -- Lightning Shield (Rank 1)
-        { 8018, 8, 100, after = 8017 },   -- Rockbiter Weapon (Rank 2)
-        { 5730, 8, 100 },   -- Stoneclaw Totem (Rank 1)
-        { 8050, 10, 400 },   -- Flame Shock (Rank 1)
-        { 8024, 10, 400 },   -- Flametongue Weapon (Rank 1)
-        { 8075, 10, 400 },   -- Strength of Earth Totem (Rank 1)
-        { 2008, 12, 800 },   -- Ancestral Spirit (Rank 1)
-        { 408341, 12, 800 },   -- Fire Nova (Rank 1)
-        { 547, 12, 800, after = 332 },   -- Healing Wave (Rank 3)
-        { 370, 12, 800 },   -- Purge (Rank 1)
-        { 8045, 14, 900, after = 8044 },   -- Earth Shock (Rank 3)
-        { 548, 14, 900, after = 529 },   -- Lightning Bolt (Rank 3)
-        { 8154, 14, 900, owned = true },   -- Stoneskin Totem (Rank 2)
-        { 526, 16, 1800 },   -- Cure Poison
-        { 325, 16, 1800, after = 324 },   -- Lightning Shield (Rank 2)
-        { 8019, 16, 1800, after = 8018 },   -- Rockbiter Weapon (Rank 3)
-        { 8052, 18, 2000, after = 8050 },   -- Flame Shock (Rank 2)
-        { 8027, 18, 2000, after = 8024 },   -- Flametongue Weapon (Rank 2)
-        { 913, 18, 2000, after = 547 },   -- Healing Wave (Rank 4)
-        { 6390, 18, 2000, after = 5730 },   -- Stoneclaw Totem (Rank 2)
-        { 8143, 18, 2000 },   -- Tremor Totem
-        { 66842, 20, 7000 },   -- Call of the Elements
-        { 8056, 20, 2200 },   -- Frost Shock (Rank 1)
-        { 8033, 20, 2200 },   -- Frostbrand Weapon (Rank 1)
-        { 2645, 20, 2200 },   -- Ghost Wolf
-        { 8004, 20, 2200 },   -- Lesser Healing Wave (Rank 1)
-        { 915, 20, 2200, after = 548 },   -- Lightning Bolt (Rank 4)
-        { 6363, 20, 2200, owned = true },   -- Searing Totem (Rank 2)
-        { 36936, 20, 7000 },   -- Totemic Recall
-        { 2870, 22, 3000 },   -- Cure Disease
-        { 408342, 22, 3000, after = 408341 },   -- Fire Nova (Rank 2)
-        { 8166, 22, 3000 },   -- Poison Cleansing Totem
-        { 437009, 22, 3000 },   -- Totemic Projection
-        { 131, 22, 3000 },   -- Water Breathing
-        { 20609, 24, 3500, after = 2008 },   -- Ancestral Spirit (Rank 2)
-        { 8046, 24, 3500, after = 8045 },   -- Earth Shock (Rank 4)
-        { 8181, 24, 3500 },   -- Frost Resistance Totem (Rank 1)
-        { 939, 24, 3500, after = 913 },   -- Healing Wave (Rank 5)
-        { 905, 24, 3500, after = 325 },   -- Lightning Shield (Rank 3)
-        { 10399, 24, 3500, after = 8019 },   -- Rockbiter Weapon (Rank 4)
-        { 8155, 24, 3500, after = 8154 },   -- Stoneskin Totem (Rank 3)
-        { 8160, 24, 3500, after = 8075 },   -- Strength of Earth Totem (Rank 2)
-        { 6196, 26, 4000 },   -- Far Sight
-        { 8030, 26, 4000, after = 8027 },   -- Flametongue Weapon (Rank 3)
-        { 943, 26, 4000, after = 915 },   -- Lightning Bolt (Rank 5)
-        { 8190, 26, 4000 },   -- Magma Totem (Rank 1)
-        { 5675, 26, 4000 },   -- Mana Spring Totem (Rank 1)
-        { 8184, 28, 6000 },   -- Fire Resistance Totem (Rank 1)
-        { 8053, 28, 6000, after = 8052 },   -- Flame Shock (Rank 3)
-        { 8227, 28, 6000 },   -- Flametongue Totem (Rank 1)
-        { 8038, 28, 6000, after = 8033 },   -- Frostbrand Weapon (Rank 2)
-        { 8008, 28, 6000, after = 8004 },   -- Lesser Healing Wave (Rank 2)
-        { 6391, 28, 6000, after = 6390 },   -- Stoneclaw Totem (Rank 3)
-        { 546, 28, 6000 },   -- Water Walking
-        { 556, 30, 7000 },   -- Astral Recall
-        { 66843, 30, 7000 },   -- Call of the Ancestors
-        { 8177, 30, 7000 },   -- Grounding Totem
-        { 6375, 30, 7000, owned = true },   -- Healing Stream Totem (Rank 2)
-        { 10595, 30, 7000 },   -- Nature Resistance Totem (Rank 1)
-        { 20608, 30, 7000 },   -- Reincarnation (Passive)
-        { 6364, 30, 7000, after = 6363 },   -- Searing Totem (Rank 3)
-        { 8232, 30, 7000 },   -- Windfury Weapon (Rank 1)
-        { 421, 32, 8000 },   -- Chain Lightning (Rank 1)
-        { 408343, 32, 8000, after = 408342 },   -- Fire Nova (Rank 3)
-        { 959, 32, 8000, after = 939 },   -- Healing Wave (Rank 6)
-        { 6041, 32, 8000, after = 943 },   -- Lightning Bolt (Rank 6)
-        { 945, 32, 8000, after = 905 },   -- Lightning Shield (Rank 4)
-        { 8012, 32, 8000, after = 370 },   -- Purge (Rank 2)
-        { 8512, 32, 8000 },   -- Windfury Totem (Rank 1)
-        { 8058, 34, 9000, after = 8056 },   -- Frost Shock (Rank 2)
-        { 16314, 34, 9000, after = 10399 },   -- Rockbiter Weapon (Rank 5)
-        { 6495, 34, 9000 },   -- Sentry Totem
-        { 10406, 34, 9000, after = 8155 },   -- Stoneskin Totem (Rank 4)
-        { 20610, 36, 10000, after = 20609 },   -- Ancestral Spirit (Rank 3)
-        { 10412, 36, 10000, after = 8046 },   -- Earth Shock (Rank 5)
-        { 16339, 36, 10000, after = 8030 },   -- Flametongue Weapon (Rank 4)
-        { 8010, 36, 10000, after = 8008 },   -- Lesser Healing Wave (Rank 3)
-        { 10585, 36, 10000, after = 8190 },   -- Magma Totem (Rank 2)
-        { 10495, 36, 10000, after = 5675 },   -- Mana Spring Totem (Rank 2)
-        { 15107, 36, 10000 },   -- Windwall Totem (Rank 1)
-        { 8170, 38, 11000 },   -- Disease Cleansing Totem
-        { 8249, 38, 11000, after = 8227 },   -- Flametongue Totem (Rank 2)
-        { 10478, 38, 11000, after = 8181 },   -- Frost Resistance Totem (Rank 2)
-        { 10456, 38, 11000, after = 8038 },   -- Frostbrand Weapon (Rank 3)
-        { 10391, 38, 11000, after = 6041 },   -- Lightning Bolt (Rank 7)
-        { 6392, 38, 11000, after = 6391 },   -- Stoneclaw Totem (Rank 4)
-        { 8161, 38, 11000, after = 8160 },   -- Strength of Earth Totem (Rank 3)
-        { 66844, 40, 7000 },   -- Call of the Spirits
-        { 1064, 40, 12000 },   -- Chain Heal (Rank 1)
-        { 930, 40, 12000, after = 421 },   -- Chain Lightning (Rank 2)
-        { 10447, 40, 12000, after = 8053 },   -- Flame Shock (Rank 4)
-        { 6377, 40, 12000, after = 6375 },   -- Healing Stream Totem (Rank 3)
-        { 8005, 40, 12000, after = 959 },   -- Healing Wave (Rank 7)
-        { 8134, 40, 12000, after = 945 },   -- Lightning Shield (Rank 5)
-        { 6365, 40, 12000, after = 6364 },   -- Searing Totem (Rank 4)
-        { 8235, 40, 12000, after = 8232 },   -- Windfury Weapon (Rank 2)
-        { 408344, 42, 16000, after = 408343 },   -- Fire Nova (Rank 4)
-        { 10537, 42, 16000, after = 8184 },   -- Fire Resistance Totem (Rank 2)
-        { 8835, 42, 16000 },   -- Grace of Air Totem (Rank 1)
-        { 10613, 42, 16000, after = 8512 },   -- Windfury Totem (Rank 2)
-        { 10466, 44, 18000, after = 8010 },   -- Lesser Healing Wave (Rank 4)
-        { 10392, 44, 18000, after = 10391 },   -- Lightning Bolt (Rank 8)
-        { 10600, 44, 18000, after = 10595 },   -- Nature Resistance Totem (Rank 2)
-        { 16315, 44, 18000, after = 16314 },   -- Rockbiter Weapon (Rank 6)
-        { 10407, 44, 18000, after = 10406 },   -- Stoneskin Totem (Rank 5)
-        { 10622, 46, 20000, after = 1064 },   -- Chain Heal (Rank 2)
-        { 16341, 46, 20000, after = 16339 },   -- Flametongue Weapon (Rank 5)
-        { 10472, 46, 20000, after = 8058 },   -- Frost Shock (Rank 3)
-        { 10586, 46, 20000, after = 10585 },   -- Magma Totem (Rank 3)
-        { 10496, 46, 20000, after = 10495 },   -- Mana Spring Totem (Rank 3)
-        { 15111, 46, 20000, after = 15107 },   -- Windwall Totem (Rank 2)
-        { 20776, 48, 22000, after = 20610 },   -- Ancestral Spirit (Rank 4)
-        { 2860, 48, 22000, after = 930 },   -- Chain Lightning (Rank 3)
-        { 10413, 48, 22000, after = 10412 },   -- Earth Shock (Rank 6)
-        { 10526, 48, 22000, after = 8249 },   -- Flametongue Totem (Rank 3)
-        { 16355, 48, 22000, after = 10456 },   -- Frostbrand Weapon (Rank 4)
-        { 10395, 48, 22000, after = 8005 },   -- Healing Wave (Rank 8)
-        { 10431, 48, 22000, after = 8134 },   -- Lightning Shield (Rank 6)
-        { 17354, 48, 1100, owned = true },   -- Mana Tide Totem (Rank 2)
-        { 10427, 48, 22000, after = 6392 },   -- Stoneclaw Totem (Rank 5)
-        { 10462, 50, 24000, after = 6377 },   -- Healing Stream Totem (Rank 4)
-        { 1238299, 50, 24000, owned = true },   -- Lava Burst (Rank 2)
-        { 15207, 50, 24000, after = 10392 },   -- Lightning Bolt (Rank 9)
-        { 1239242, 50, 800, owned = true },   -- Riptide (Rank 2)
-        { 10437, 50, 24000, after = 6365 },   -- Searing Totem (Rank 5)
-        { 10486, 50, 24000, after = 8235 },   -- Windfury Weapon (Rank 3)
-        { 408345, 52, 27000, after = 408344 },   -- Fire Nova (Rank 5)
-        { 10448, 52, 27000, after = 10447 },   -- Flame Shock (Rank 5)
-        { 10467, 52, 27000, after = 10466 },   -- Lesser Healing Wave (Rank 5)
-        { 10442, 52, 27000, after = 8161 },   -- Strength of Earth Totem (Rank 4)
-        { 10614, 52, 27000, after = 10613 },   -- Windfury Totem (Rank 3)
-        { 10623, 54, 29000, after = 10622 },   -- Chain Heal (Rank 3)
-        { 10479, 54, 29000, after = 10478 },   -- Frost Resistance Totem (Rank 3)
-        { 16316, 54, 29000, after = 16315 },   -- Rockbiter Weapon (Rank 7)
-        { 10408, 54, 29000, after = 10407 },   -- Stoneskin Totem (Rank 6)
-        { 10605, 56, 30000, after = 2860 },   -- Chain Lightning (Rank 4)
-        { 16342, 56, 30000, after = 16341 },   -- Flametongue Weapon (Rank 6)
-        { 10627, 56, 30000, after = 8835 },   -- Grace of Air Totem (Rank 2)
-        { 10396, 56, 30000, after = 10395 },   -- Healing Wave (Rank 9)
-        { 15208, 56, 30000, after = 15207 },   -- Lightning Bolt (Rank 10)
-        { 10432, 56, 30000, after = 10431 },   -- Lightning Shield (Rank 7)
-        { 10587, 56, 30000, after = 10586 },   -- Magma Totem (Rank 4)
-        { 10497, 56, 30000, after = 10496 },   -- Mana Spring Totem (Rank 4)
-        { 15112, 56, 30000, after = 15111 },   -- Windwall Totem (Rank 3)
-        { 10538, 58, 32000, after = 10537 },   -- Fire Resistance Totem (Rank 3)
-        { 16387, 58, 32000, after = 10526 },   -- Flametongue Totem (Rank 4)
-        { 10473, 58, 32000, after = 10472 },   -- Frost Shock (Rank 4)
-        { 16356, 58, 32000, after = 16355 },   -- Frostbrand Weapon (Rank 5)
-        { 17359, 58, 1600, after = 17354 },   -- Mana Tide Totem (Rank 3)
-        { 10428, 58, 32000, after = 10427 },   -- Stoneclaw Totem (Rank 6)
-        { 20777, 60, 34000, after = 20776 },   -- Ancestral Spirit (Rank 5)
-        { 10414, 60, 34000, after = 10413 },   -- Earth Shock (Rank 7)
-        { 10463, 60, 34000, after = 10462 },   -- Healing Stream Totem (Rank 5)
-        { 1238300, 60, 34000, after = 1238299 },   -- Lava Burst (Rank 3)
-        { 10468, 60, 34000, after = 10467 },   -- Lesser Healing Wave (Rank 6)
-        { 10601, 60, 34000, after = 10600 },   -- Nature Resistance Totem (Rank 3)
-        { 1239243, 60, 1600, after = 1239242 },   -- Riptide (Rank 3)
-        { 10438, 60, 34000, after = 10437 },   -- Searing Totem (Rank 6)
-        { 16362, 60, 34000, after = 10486 },   -- Windfury Weapon (Rank 4)
+        { 8017, 1, 10 },
+        { 8042, 4, 100 },
+        { 2484, 6, 100 },
+        { 332, 6, 100, owned = true },
+        { 8044, 8, 100, after = 8042 },
+        { 529, 8, 100, owned = true },
+        { 324, 8, 100 },
+        { 8018, 8, 100, after = 8017 },
+        { 5730, 8, 100 },
+        { 8050, 10, 400 },
+        { 8024, 10, 400 },
+        { 8075, 10, 400 },
+        { 2008, 12, 800 },
+        { 408341, 12, 800 },
+        { 547, 12, 800, after = 332 },
+        { 370, 12, 800 },
+        { 8045, 14, 900, after = 8044 },
+        { 548, 14, 900, after = 529 },
+        { 8154, 14, 900, owned = true },
+        { 526, 16, 1800 },
+        { 325, 16, 1800, after = 324 },
+        { 8019, 16, 1800, after = 8018 },
+        { 8052, 18, 2000, after = 8050 },
+        { 8027, 18, 2000, after = 8024 },
+        { 913, 18, 2000, after = 547 },
+        { 6390, 18, 2000, after = 5730 },
+        { 8143, 18, 2000 },
+        { 66842, 20, 7000 },
+        { 8056, 20, 2200 },
+        { 8033, 20, 2200 },
+        { 2645, 20, 2200 },
+        { 8004, 20, 2200 },
+        { 915, 20, 2200, after = 548 },
+        { 6363, 20, 2200, owned = true },
+        { 36936, 20, 7000 },
+        { 2870, 22, 3000 },
+        { 408342, 22, 3000, after = 408341 },
+        { 8166, 22, 3000 },
+        { 437009, 22, 3000 },
+        { 131, 22, 3000 },
+        { 20609, 24, 3500, after = 2008 },
+        { 8046, 24, 3500, after = 8045 },
+        { 8181, 24, 3500 },
+        { 939, 24, 3500, after = 913 },
+        { 905, 24, 3500, after = 325 },
+        { 10399, 24, 3500, after = 8019 },
+        { 8155, 24, 3500, after = 8154 },
+        { 8160, 24, 3500, after = 8075 },
+        { 6196, 26, 4000 },
+        { 8030, 26, 4000, after = 8027 },
+        { 943, 26, 4000, after = 915 },
+        { 8190, 26, 4000 },
+        { 5675, 26, 4000 },
+        { 8184, 28, 6000 },
+        { 8053, 28, 6000, after = 8052 },
+        { 8227, 28, 6000 },
+        { 8038, 28, 6000, after = 8033 },
+        { 8008, 28, 6000, after = 8004 },
+        { 6391, 28, 6000, after = 6390 },
+        { 546, 28, 6000 },
+        { 556, 30, 7000 },
+        { 66843, 30, 7000 },
+        { 8177, 30, 7000 },
+        { 6375, 30, 7000, owned = true },
+        { 10595, 30, 7000 },
+        { 20608, 30, 7000 },
+        { 6364, 30, 7000, after = 6363 },
+        { 8232, 30, 7000 },
+        { 421, 32, 8000 },
+        { 408343, 32, 8000, after = 408342 },
+        { 959, 32, 8000, after = 939 },
+        { 6041, 32, 8000, after = 943 },
+        { 945, 32, 8000, after = 905 },
+        { 8012, 32, 8000, after = 370 },
+        { 8512, 32, 8000 },
+        { 8058, 34, 9000, after = 8056 },
+        { 16314, 34, 9000, after = 10399 },
+        { 6495, 34, 9000 },
+        { 10406, 34, 9000, after = 8155 },
+        { 20610, 36, 10000, after = 20609 },
+        { 10412, 36, 10000, after = 8046 },
+        { 16339, 36, 10000, after = 8030 },
+        { 8010, 36, 10000, after = 8008 },
+        { 10585, 36, 10000, after = 8190 },
+        { 10495, 36, 10000, after = 5675 },
+        { 15107, 36, 10000 },
+        { 8170, 38, 11000 },
+        { 8249, 38, 11000, after = 8227 },
+        { 10478, 38, 11000, after = 8181 },
+        { 10456, 38, 11000, after = 8038 },
+        { 10391, 38, 11000, after = 6041 },
+        { 6392, 38, 11000, after = 6391 },
+        { 8161, 38, 11000, after = 8160 },
+        { 66844, 40, 7000 },
+        { 1064, 40, 12000 },
+        { 930, 40, 12000, after = 421 },
+        { 10447, 40, 12000, after = 8053 },
+        { 6377, 40, 12000, after = 6375 },
+        { 8005, 40, 12000, after = 959 },
+        { 8134, 40, 12000, after = 945 },
+        { 6365, 40, 12000, after = 6364 },
+        { 8235, 40, 12000, after = 8232 },
+        { 408344, 42, 16000, after = 408343 },
+        { 10537, 42, 16000, after = 8184 },
+        { 8835, 42, 16000 },
+        { 10613, 42, 16000, after = 8512 },
+        { 10466, 44, 18000, after = 8010 },
+        { 10392, 44, 18000, after = 10391 },
+        { 10600, 44, 18000, after = 10595 },
+        { 16315, 44, 18000, after = 16314 },
+        { 10407, 44, 18000, after = 10406 },
+        { 10622, 46, 20000, after = 1064 },
+        { 16341, 46, 20000, after = 16339 },
+        { 10472, 46, 20000, after = 8058 },
+        { 10586, 46, 20000, after = 10585 },
+        { 10496, 46, 20000, after = 10495 },
+        { 15111, 46, 20000, after = 15107 },
+        { 20776, 48, 22000, after = 20610 },
+        { 2860, 48, 22000, after = 930 },
+        { 10413, 48, 22000, after = 10412 },
+        { 10526, 48, 22000, after = 8249 },
+        { 16355, 48, 22000, after = 10456 },
+        { 10395, 48, 22000, after = 8005 },
+        { 10431, 48, 22000, after = 8134 },
+        { 17354, 48, 1100, owned = true },
+        { 10427, 48, 22000, after = 6392 },
+        { 10462, 50, 24000, after = 6377 },
+        { 1238299, 50, 24000, owned = true },
+        { 15207, 50, 24000, after = 10392 },
+        { 1239242, 50, 800, owned = true },
+        { 10437, 50, 24000, after = 6365 },
+        { 10486, 50, 24000, after = 8235 },
+        { 408345, 52, 27000, after = 408344 },
+        { 10448, 52, 27000, after = 10447 },
+        { 10467, 52, 27000, after = 10466 },
+        { 10442, 52, 27000, after = 8161 },
+        { 10614, 52, 27000, after = 10613 },
+        { 10623, 54, 29000, after = 10622 },
+        { 10479, 54, 29000, after = 10478 },
+        { 16316, 54, 29000, after = 16315 },
+        { 10408, 54, 29000, after = 10407 },
+        { 10605, 56, 30000, after = 2860 },
+        { 16342, 56, 30000, after = 16341 },
+        { 10627, 56, 30000, after = 8835 },
+        { 10396, 56, 30000, after = 10395 },
+        { 15208, 56, 30000, after = 15207 },
+        { 10432, 56, 30000, after = 10431 },
+        { 10587, 56, 30000, after = 10586 },
+        { 10497, 56, 30000, after = 10496 },
+        { 15112, 56, 30000, after = 15111 },
+        { 10538, 58, 32000, after = 10537 },
+        { 16387, 58, 32000, after = 10526 },
+        { 10473, 58, 32000, after = 10472 },
+        { 16356, 58, 32000, after = 16355 },
+        { 17359, 58, 1600, after = 17354 },
+        { 10428, 58, 32000, after = 10427 },
+        { 20777, 60, 34000, after = 20776 },
+        { 10414, 60, 34000, after = 10413 },
+        { 10463, 60, 34000, after = 10462 },
+        { 1238300, 60, 34000, after = 1238299 },
+        { 10468, 60, 34000, after = 10467 },
+        { 10601, 60, 34000, after = 10600 },
+        { 1239243, 60, 1600, after = 1239242 },
+        { 10438, 60, 34000, after = 10437 },
+        { 16362, 60, 34000, after = 10486 },
     },
     MAGE = {
-        { 1459, 1, 10 },   -- Arcane Intellect (Rank 1)
-        { 5504, 4, 100 },   -- Conjure Water (Rank 1)
-        { 116, 4, 100 },   -- Frostbolt (Rank 1)
-        { 587, 6, 100 },   -- Conjure Food (Rank 1)
-        { 2136, 6, 100 },   -- Fire Blast (Rank 1)
-        { 143, 6, 100, owned = true },   -- Fireball (Rank 2)
-        { 5143, 8, 200 },   -- Arcane Missiles (Rank 1)
-        { 205, 8, 200, after = 116 },   -- Frostbolt (Rank 2)
-        { 118, 8, 200 },   -- Polymorph (Rank 1)
-        { 5505, 10, 400, after = 5504 },   -- Conjure Water (Rank 2)
-        { 7300, 10, 400, owned = true },   -- Frost Armor (Rank 2)
-        { 122, 10, 400 },   -- Frost Nova (Rank 1)
-        { 597, 12, 600, after = 587 },   -- Conjure Food (Rank 2)
-        { 604, 12, 600 },   -- Dampen Magic (Rank 1)
-        { 145, 12, 600, after = 143 },   -- Fireball (Rank 3)
-        { 130, 12, 600 },   -- Slow Fall
-        { 1449, 14, 900 },   -- Arcane Explosion (Rank 1)
-        { 1460, 14, 900, after = 1459 },   -- Arcane Intellect (Rank 2)
-        { 2137, 14, 900, after = 2136 },   -- Fire Blast (Rank 2)
-        { 837, 14, 900, after = 205 },   -- Frostbolt (Rank 3)
-        { 5144, 16, 1500, after = 5143 },   -- Arcane Missiles (Rank 2)
-        { 2120, 16, 1500 },   -- Flamestrike (Rank 1)
-        { 1008, 18, 1800 },   -- Amplify Magic (Rank 1)
-        { 3140, 18, 1800, after = 145 },   -- Fireball (Rank 4)
-        { 475, 18, 1800 },   -- Remove Lesser Curse
-        { 1953, 20, 2000 },   -- Blink
-        { 10, 20, 2000 },   -- Blizzard (Rank 1)
-        { 5506, 20, 2000, after = 5505 },   -- Conjure Water (Rank 3)
-        { 12051, 20, 2000 },   -- Evocation
-        { 543, 20, 2000 },   -- Fire Ward (Rank 1)
-        { 7301, 20, 2000, after = 7300 },   -- Frost Armor (Rank 3)
-        { 7322, 20, 2000, after = 837 },   -- Frostbolt (Rank 4)
-        { 1463, 20, 2000 },   -- Mana Shield (Rank 1)
-        { 12824, 20, 2000, after = 118 },   -- Polymorph (Rank 2)
-        { 8437, 22, 3000, after = 1449 },   -- Arcane Explosion (Rank 2)
-        { 990, 22, 3000, after = 597 },   -- Conjure Food (Rank 3)
-        { 2138, 22, 3000, after = 2137 },   -- Fire Blast (Rank 3)
-        { 6143, 22, 3000 },   -- Frost Ward (Rank 1)
-        { 2948, 22, 3000 },   -- Scorch (Rank 1)
-        { 5145, 24, 4000, after = 5144 },   -- Arcane Missiles (Rank 3)
-        { 2139, 24, 4000 },   -- Counterspell
-        { 8450, 24, 4000, after = 604 },   -- Dampen Magic (Rank 2)
-        { 8400, 24, 4000, after = 3140 },   -- Fireball (Rank 5)
-        { 2121, 24, 4000, after = 2120 },   -- Flamestrike (Rank 2)
-        { 12505, 24, 200, owned = true },   -- Pyroblast (Rank 2)
-        { 120, 26, 5000 },   -- Cone of Cold (Rank 1)
-        { 865, 26, 5000, after = 122 },   -- Frost Nova (Rank 2)
-        { 8406, 26, 5000, after = 7322 },   -- Frostbolt (Rank 5)
-        { 1461, 28, 7000, after = 1460 },   -- Arcane Intellect (Rank 3)
-        { 6141, 28, 7000, after = 10 },   -- Blizzard (Rank 2)
-        { 759, 28, 7000 },   -- Conjure Mana Agate
-        { 400640, 28, 3000, owned = true },   -- Ice Lance (Rank 2)
-        { 8494, 28, 7000, after = 1463 },   -- Mana Shield (Rank 2)
-        { 8444, 28, 7000, after = 2948 },   -- Scorch (Rank 2)
-        { 8455, 30, 8000, after = 1008 },   -- Amplify Magic (Rank 2)
-        { 1239696, 30, 8000, owned = true },   -- Arcane Blast (Rank 2)
-        { 8438, 30, 8000, after = 8437 },   -- Arcane Explosion (Rank 3)
-        { 6127, 30, 8000, after = 5506 },   -- Conjure Water (Rank 4)
-        { 8412, 30, 8000, after = 2138 },   -- Fire Blast (Rank 4)
-        { 8457, 30, 8000, after = 543 },   -- Fire Ward (Rank 2)
-        { 8401, 30, 8000, after = 8400 },   -- Fireball (Rank 6)
-        { 7302, 30, 8000 },   -- Ice Armor (Rank 1)
-        { 12522, 30, 400, after = 12505 },   -- Pyroblast (Rank 3)
-        { 8416, 32, 10000, after = 5145 },   -- Arcane Missiles (Rank 4)
-        { 6129, 32, 10000, after = 990 },   -- Conjure Food (Rank 4)
-        { 8422, 32, 10000, after = 2121 },   -- Flamestrike (Rank 3)
-        { 8461, 32, 10000, after = 6143 },   -- Frost Ward (Rank 2)
-        { 8407, 32, 10000, after = 8406 },   -- Frostbolt (Rank 6)
-        { 8492, 34, 12000, after = 120 },   -- Cone of Cold (Rank 2)
-        { 1240044, 34, 14500, after = 400640 },   -- Ice Lance (Rank 3)
-        { 6117, 34, 13000 },   -- Mage Armor (Rank 1)
-        { 8445, 34, 12000, after = 8444 },   -- Scorch (Rank 3)
-        { 13018, 36, 650, owned = true },   -- Blast Wave (Rank 2)
-        { 8427, 36, 13000, after = 6141 },   -- Blizzard (Rank 3)
-        { 8451, 36, 13000, after = 8450 },   -- Dampen Magic (Rank 3)
-        { 8402, 36, 13000, after = 8401 },   -- Fireball (Rank 7)
-        { 8495, 36, 13000, after = 8494 },   -- Mana Shield (Rank 3)
-        { 12523, 36, 650, after = 12522 },   -- Pyroblast (Rank 4)
-        { 8439, 38, 14000, after = 8438 },   -- Arcane Explosion (Rank 4)
-        { 3552, 38, 14000 },   -- Conjure Mana Jade
-        { 8413, 38, 14000, after = 8412 },   -- Fire Blast (Rank 5)
-        { 8408, 38, 14000, after = 8407 },   -- Frostbolt (Rank 7)
-        { 1239697, 40, 15000, after = 1239696 },   -- Arcane Blast (Rank 3)
-        { 8417, 40, 15000, after = 8416 },   -- Arcane Missiles (Rank 5)
-        { 10138, 40, 15000, after = 6127 },   -- Conjure Water (Rank 5)
-        { 8458, 40, 15000, after = 8457 },   -- Fire Ward (Rank 3)
-        { 8423, 40, 15000, after = 8422 },   -- Flamestrike (Rank 4)
-        { 6131, 40, 15000, after = 865 },   -- Frost Nova (Rank 3)
-        { 401502, 40, 15000 },   -- Frostfire Bolt (Rank 1)
-        { 7320, 40, 15000, after = 7302 },   -- Ice Armor (Rank 2)
-        { 12825, 40, 15000, after = 12824 },   -- Polymorph (Rank 3)
-        { 8446, 40, 15000, after = 8445 },   -- Scorch (Rank 4)
-        { 10169, 42, 18000, after = 8455 },   -- Amplify Magic (Rank 3)
-        { 10156, 42, 18000, after = 1461 },   -- Arcane Intellect (Rank 4)
-        { 10159, 42, 18000, after = 8492 },   -- Cone of Cold (Rank 3)
-        { 10144, 42, 18000, after = 6129 },   -- Conjure Food (Rank 5)
-        { 10148, 42, 18000, after = 8402 },   -- Fireball (Rank 8)
-        { 8462, 42, 18000, after = 8461 },   -- Frost Ward (Rank 3)
-        { 1240045, 42, 18000, after = 1240044 },   -- Ice Lance (Rank 4)
-        { 12524, 42, 900, after = 12523 },   -- Pyroblast (Rank 5)
-        { 13019, 44, 1150, after = 13018 },   -- Blast Wave (Rank 3)
-        { 10185, 44, 23000, after = 8427 },   -- Blizzard (Rank 4)
-        { 10179, 44, 23000, after = 8408 },   -- Frostbolt (Rank 8)
-        { 10191, 44, 23000, after = 8495 },   -- Mana Shield (Rank 4)
-        { 10201, 46, 26000, after = 8439 },   -- Arcane Explosion (Rank 5)
-        { 10197, 46, 26000, after = 8413 },   -- Fire Blast (Rank 6)
-        { 13031, 46, 1300, owned = true },   -- Ice Barrier (Rank 2)
-        { 22782, 46, 28000, after = 6117 },   -- Mage Armor (Rank 2)
-        { 10205, 46, 26000, after = 8446 },   -- Scorch (Rank 5)
-        { 10211, 48, 28000, after = 8417 },   -- Arcane Missiles (Rank 6)
-        { 10053, 48, 28000 },   -- Conjure Mana Citrine
-        { 10173, 48, 28000, after = 8451 },   -- Dampen Magic (Rank 4)
-        { 10149, 48, 28000, after = 10148 },   -- Fireball (Rank 9)
-        { 10215, 48, 28000, after = 8423 },   -- Flamestrike (Rank 5)
-        { 1240046, 48, 32000, after = 1240045 },   -- Ice Lance (Rank 5)
-        { 12525, 48, 1400, after = 12524 },   -- Pyroblast (Rank 6)
-        { 1239699, 50, 32000, after = 1239697 },   -- Arcane Blast (Rank 4)
-        { 10160, 50, 32000, after = 10159 },   -- Cone of Cold (Rank 4)
-        { 10139, 50, 32000, after = 10138 },   -- Conjure Water (Rank 6)
-        { 10223, 50, 32000, after = 8458 },   -- Fire Ward (Rank 4)
-        { 10180, 50, 32000, after = 10179 },   -- Frostbolt (Rank 9)
-        { 1237312, 50, 32000, after = 401502 },   -- Frostfire Bolt (Rank 2)
-        { 10219, 50, 32000, after = 7320 },   -- Ice Armor (Rank 3)
-        { 13020, 52, 1750, after = 13019 },   -- Blast Wave (Rank 4)
-        { 10186, 52, 35000, after = 10185 },   -- Blizzard (Rank 5)
-        { 10145, 52, 35000, after = 10144 },   -- Conjure Food (Rank 6)
-        { 10177, 52, 35000, after = 8462 },   -- Frost Ward (Rank 4)
-        { 13032, 52, 1750, after = 13031 },   -- Ice Barrier (Rank 3)
-        { 10192, 52, 35000, after = 10191 },   -- Mana Shield (Rank 5)
-        { 10206, 52, 35000, after = 10205 },   -- Scorch (Rank 6)
-        { 10170, 54, 36000, after = 10169 },   -- Amplify Magic (Rank 4)
-        { 10202, 54, 36000, after = 10201 },   -- Arcane Explosion (Rank 6)
-        { 10199, 54, 36000, after = 10197 },   -- Fire Blast (Rank 7)
-        { 10150, 54, 36000, after = 10149 },   -- Fireball (Rank 10)
-        { 10230, 54, 36000, after = 6131 },   -- Frost Nova (Rank 4)
-        { 12526, 54, 1800, after = 12525 },   -- Pyroblast (Rank 7)
-        { 10157, 56, 38000, after = 10156 },   -- Arcane Intellect (Rank 5)
-        { 10212, 56, 38000, after = 10211 },   -- Arcane Missiles (Rank 7)
-        { 10216, 56, 38000, after = 10215 },   -- Flamestrike (Rank 6)
-        { 10181, 56, 38000, after = 10180 },   -- Frostbolt (Rank 10)
-        { 1240047, 56, 40000, after = 1240046 },   -- Ice Lance (Rank 6)
-        { 10161, 58, 40000, after = 10160 },   -- Cone of Cold (Rank 5)
-        { 10054, 58, 40000 },   -- Conjure Mana Ruby
-        { 13033, 58, 2000, after = 13032 },   -- Ice Barrier (Rank 4)
-        { 22783, 58, 40000, after = 22782 },   -- Mage Armor (Rank 3)
-        { 10207, 58, 40000, after = 10206 },   -- Scorch (Rank 7)
-        { 1239700, 60, 42000, after = 1239699 },   -- Arcane Blast (Rank 5)
-        { 13021, 60, 2100, after = 13020 },   -- Blast Wave (Rank 5)
-        { 10187, 60, 42000, after = 10186 },   -- Blizzard (Rank 6)
-        { 10174, 60, 42000, after = 10173 },   -- Dampen Magic (Rank 5)
-        { 10225, 60, 42000, after = 10223 },   -- Fire Ward (Rank 5)
-        { 10151, 60, 42000, after = 10150 },   -- Fireball (Rank 11)
-        { 1237313, 60, 42000, after = 1237312 },   -- Frostfire Bolt (Rank 3)
-        { 10220, 60, 42000, after = 10219 },   -- Ice Armor (Rank 4)
-        { 10193, 60, 42000, after = 10192 },   -- Mana Shield (Rank 6)
-        { 12826, 60, 42000, after = 12825 },   -- Polymorph (Rank 4)
-        { 18809, 60, 2100, after = 12526 },   -- Pyroblast (Rank 8)
+        { 1459, 1, 10 },
+        { 5504, 4, 100 },
+        { 116, 4, 100 },
+        { 587, 6, 100 },
+        { 2136, 6, 100 },
+        { 143, 6, 100, owned = true },
+        { 5143, 8, 200 },
+        { 205, 8, 200, after = 116 },
+        { 118, 8, 200 },
+        { 5505, 10, 400, after = 5504 },
+        { 7300, 10, 400, owned = true },
+        { 122, 10, 400 },
+        { 597, 12, 600, after = 587 },
+        { 604, 12, 600 },
+        { 145, 12, 600, after = 143 },
+        { 130, 12, 600 },
+        { 1449, 14, 900 },
+        { 1460, 14, 900, after = 1459 },
+        { 2137, 14, 900, after = 2136 },
+        { 837, 14, 900, after = 205 },
+        { 5144, 16, 1500, after = 5143 },
+        { 2120, 16, 1500 },
+        { 1008, 18, 1800 },
+        { 3140, 18, 1800, after = 145 },
+        { 475, 18, 1800 },
+        { 1953, 20, 2000 },
+        { 10, 20, 2000 },
+        { 5506, 20, 2000, after = 5505 },
+        { 12051, 20, 2000 },
+        { 543, 20, 2000 },
+        { 7301, 20, 2000, after = 7300 },
+        { 7322, 20, 2000, after = 837 },
+        { 1463, 20, 2000 },
+        { 12824, 20, 2000, after = 118 },
+        { 8437, 22, 3000, after = 1449 },
+        { 990, 22, 3000, after = 597 },
+        { 2138, 22, 3000, after = 2137 },
+        { 6143, 22, 3000 },
+        { 2948, 22, 3000 },
+        { 5145, 24, 4000, after = 5144 },
+        { 2139, 24, 4000 },
+        { 8450, 24, 4000, after = 604 },
+        { 8400, 24, 4000, after = 3140 },
+        { 2121, 24, 4000, after = 2120 },
+        { 12505, 24, 200, owned = true },
+        { 120, 26, 5000 },
+        { 865, 26, 5000, after = 122 },
+        { 8406, 26, 5000, after = 7322 },
+        { 1461, 28, 7000, after = 1460 },
+        { 6141, 28, 7000, after = 10 },
+        { 759, 28, 7000 },
+        { 400640, 28, 3000, owned = true },
+        { 8494, 28, 7000, after = 1463 },
+        { 8444, 28, 7000, after = 2948 },
+        { 8455, 30, 8000, after = 1008 },
+        { 1239696, 30, 8000, owned = true },
+        { 8438, 30, 8000, after = 8437 },
+        { 6127, 30, 8000, after = 5506 },
+        { 8412, 30, 8000, after = 2138 },
+        { 8457, 30, 8000, after = 543 },
+        { 8401, 30, 8000, after = 8400 },
+        { 7302, 30, 8000 },
+        { 12522, 30, 400, after = 12505 },
+        { 8416, 32, 10000, after = 5145 },
+        { 6129, 32, 10000, after = 990 },
+        { 8422, 32, 10000, after = 2121 },
+        { 8461, 32, 10000, after = 6143 },
+        { 8407, 32, 10000, after = 8406 },
+        { 8492, 34, 12000, after = 120 },
+        { 1240044, 34, 14500, after = 400640 },
+        { 6117, 34, 13000 },
+        { 8445, 34, 12000, after = 8444 },
+        { 13018, 36, 650, owned = true },
+        { 8427, 36, 13000, after = 6141 },
+        { 8451, 36, 13000, after = 8450 },
+        { 8402, 36, 13000, after = 8401 },
+        { 8495, 36, 13000, after = 8494 },
+        { 12523, 36, 650, after = 12522 },
+        { 8439, 38, 14000, after = 8438 },
+        { 3552, 38, 14000 },
+        { 8413, 38, 14000, after = 8412 },
+        { 8408, 38, 14000, after = 8407 },
+        { 1239697, 40, 15000, after = 1239696 },
+        { 8417, 40, 15000, after = 8416 },
+        { 10138, 40, 15000, after = 6127 },
+        { 8458, 40, 15000, after = 8457 },
+        { 8423, 40, 15000, after = 8422 },
+        { 6131, 40, 15000, after = 865 },
+        { 401502, 40, 15000 },
+        { 7320, 40, 15000, after = 7302 },
+        { 12825, 40, 15000, after = 12824 },
+        { 8446, 40, 15000, after = 8445 },
+        { 10169, 42, 18000, after = 8455 },
+        { 10156, 42, 18000, after = 1461 },
+        { 10159, 42, 18000, after = 8492 },
+        { 10144, 42, 18000, after = 6129 },
+        { 10148, 42, 18000, after = 8402 },
+        { 8462, 42, 18000, after = 8461 },
+        { 1240045, 42, 18000, after = 1240044 },
+        { 12524, 42, 900, after = 12523 },
+        { 13019, 44, 1150, after = 13018 },
+        { 10185, 44, 23000, after = 8427 },
+        { 10179, 44, 23000, after = 8408 },
+        { 10191, 44, 23000, after = 8495 },
+        { 10201, 46, 26000, after = 8439 },
+        { 10197, 46, 26000, after = 8413 },
+        { 13031, 46, 1300, owned = true },
+        { 22782, 46, 28000, after = 6117 },
+        { 10205, 46, 26000, after = 8446 },
+        { 10211, 48, 28000, after = 8417 },
+        { 10053, 48, 28000 },
+        { 10173, 48, 28000, after = 8451 },
+        { 10149, 48, 28000, after = 10148 },
+        { 10215, 48, 28000, after = 8423 },
+        { 1240046, 48, 32000, after = 1240045 },
+        { 12525, 48, 1400, after = 12524 },
+        { 1239699, 50, 32000, after = 1239697 },
+        { 10160, 50, 32000, after = 10159 },
+        { 10139, 50, 32000, after = 10138 },
+        { 10223, 50, 32000, after = 8458 },
+        { 10180, 50, 32000, after = 10179 },
+        { 1237312, 50, 32000, after = 401502 },
+        { 10219, 50, 32000, after = 7320 },
+        { 13020, 52, 1750, after = 13019 },
+        { 10186, 52, 35000, after = 10185 },
+        { 10145, 52, 35000, after = 10144 },
+        { 10177, 52, 35000, after = 8462 },
+        { 13032, 52, 1750, after = 13031 },
+        { 10192, 52, 35000, after = 10191 },
+        { 10206, 52, 35000, after = 10205 },
+        { 10170, 54, 36000, after = 10169 },
+        { 10202, 54, 36000, after = 10201 },
+        { 10199, 54, 36000, after = 10197 },
+        { 10150, 54, 36000, after = 10149 },
+        { 10230, 54, 36000, after = 6131 },
+        { 12526, 54, 1800, after = 12525 },
+        { 10157, 56, 38000, after = 10156 },
+        { 10212, 56, 38000, after = 10211 },
+        { 10216, 56, 38000, after = 10215 },
+        { 10181, 56, 38000, after = 10180 },
+        { 1240047, 56, 40000, after = 1240046 },
+        { 10161, 58, 40000, after = 10160 },
+        { 10054, 58, 40000 },
+        { 13033, 58, 2000, after = 13032 },
+        { 22783, 58, 40000, after = 22782 },
+        { 10207, 58, 40000, after = 10206 },
+        { 1239700, 60, 42000, after = 1239699 },
+        { 13021, 60, 2100, after = 13020 },
+        { 10187, 60, 42000, after = 10186 },
+        { 10174, 60, 42000, after = 10173 },
+        { 10225, 60, 42000, after = 10223 },
+        { 10151, 60, 42000, after = 10150 },
+        { 1237313, 60, 42000, after = 1237312 },
+        { 10220, 60, 42000, after = 10219 },
+        { 10193, 60, 42000, after = 10192 },
+        { 12826, 60, 42000, after = 12825 },
+        { 18809, 60, 2100, after = 12526 },
     },
     WARLOCK = {
-        { 348, 1, 10 },   -- Immolate (Rank 1)
-        { 172, 4, 100 },   -- Corruption (Rank 1)
-        { 702, 4, 100 },   -- Curse of Weakness (Rank 1)
-        { 1454, 6, 100 },   -- Life Tap (Rank 1)
-        { 695, 6, 100, owned = true },   -- Shadow Bolt (Rank 2)
-        { 980, 8, 200 },   -- Bane of Agony (Rank 1)
-        { 5782, 8, 200 },   -- Fear (Rank 1)
-        { 6201, 10, 300 },   -- Create Healthstone (Rank 1)
-        { 696, 10, 300, owned = true },   -- Demon Skin (Rank 2)
-        { 1120, 10, 300 },   -- Drain Soul (Rank 1)
-        { 707, 10, 300, after = 348 },   -- Immolate (Rank 2)
-        { 1108, 12, 600, after = 702 },   -- Curse of Weakness (Rank 2)
-        { 755, 12, 600 },   -- Health Funnel (Rank 1)
-        { 705, 12, 600, after = 695 },   -- Shadow Bolt (Rank 3)
-        { 6222, 14, 900, after = 172 },   -- Corruption (Rank 2)
-        { 704, 14, 900 },   -- Curse of Recklessness (Rank 1)
-        { 689, 14, 900 },   -- Drain Life (Rank 1)
-        { 1455, 16, 1200, after = 1454 },   -- Life Tap (Rank 2)
-        { 5697, 16, 1200 },   -- Unending Breath
-        { 1014, 18, 1500, after = 980 },   -- Bane of Agony (Rank 2)
-        { 693, 18, 1500 },   -- Create Soulstone (Rank 1)
-        { 5676, 18, 1500 },   -- Searing Pain (Rank 1)
-        { 440892, 20, 2000 },   -- Curse of the Elements (Rank 1)
-        { 706, 20, 2000 },   -- Demon Armor (Rank 1)
-        { 3698, 20, 2000, after = 755 },   -- Health Funnel (Rank 2)
-        { 1094, 20, 2000, after = 707 },   -- Immolate (Rank 3)
-        { 5740, 20, 2000 },   -- Rain of Fire (Rank 1)
-        { 698, 20, 2000 },   -- Ritual of Summoning
-        { 1088, 20, 2000, after = 705 },   -- Shadow Bolt (Rank 4)
-        { 6202, 22, 2500, after = 6201 },   -- Create Healthstone (Rank 2)
-        { 6205, 22, 2500, after = 1108 },   -- Curse of Weakness (Rank 3)
-        { 699, 22, 2500, after = 689 },   -- Drain Life (Rank 2)
-        { 126, 22, 2500 },   -- Eye of Kilrogg (Summon)
-        { 6223, 24, 3000, after = 6222 },   -- Corruption (Rank 3)
-        { 5138, 24, 3000 },   -- Drain Mana (Rank 1)
-        { 8288, 24, 3000, after = 1120 },   -- Drain Soul (Rank 2)
-        { 5500, 24, 3000 },   -- Sense Demons
-        { 18867, 24, 150, owned = true },   -- Shadowburn (Rank 2)
-        { 1714, 26, 4000 },   -- Curse of Tongues (Rank 1)
-        { 132, 26, 4000 },   -- Detect Invisibility (Rank 1)
-        { 1456, 26, 4000, after = 1455 },   -- Life Tap (Rank 3)
-        { 17919, 26, 4000, after = 5676 },   -- Searing Pain (Rank 2)
-        { 6217, 28, 5000, after = 1014 },   -- Bane of Agony (Rank 3)
-        { 710, 28, 5000 },   -- Banish (Rank 1)
-        { 6366, 28, 5000 },   -- Create Firestone (Rank 1)
-        { 7658, 28, 5000, after = 704 },   -- Curse of Recklessness (Rank 2)
-        { 3699, 28, 5000, after = 3698 },   -- Health Funnel (Rank 3)
-        { 1106, 28, 5000, after = 1088 },   -- Shadow Bolt (Rank 5)
-        { 20752, 30, 6000, after = 693 },   -- Create Soulstone (Rank 2)
-        { 1311676, 30, 6000, after = 440892 },   -- Curse of the Elements (Rank 2)
-        { 1086, 30, 6000, after = 706 },   -- Demon Armor (Rank 2)
-        { 709, 30, 6000, after = 699 },   -- Drain Life (Rank 3)
-        { 1949, 30, 6000 },   -- Hellfire (Rank 1)
-        { 2941, 30, 6000, after = 1094 },   -- Immolate (Rank 4)
-        { 1098, 30, 6000 },   -- Subjugate Demon (Rank 1)
-        { 1293818, 32, 300, owned = true },   -- Conflagrate (Rank 2)
-        { 7646, 32, 7000, after = 6205 },   -- Curse of Weakness (Rank 4)
-        { 6213, 32, 7000, after = 5782 },   -- Fear (Rank 2)
-        { 6229, 32, 7000 },   -- Shadow Ward (Rank 1)
-        { 18868, 32, 350, after = 18867 },   -- Shadowburn (Rank 3)
-        { 7648, 34, 8000, after = 6223 },   -- Corruption (Rank 4)
-        { 5699, 34, 8000, after = 6202 },   -- Create Healthstone (Rank 3)
-        { 6226, 34, 8000, after = 5138 },   -- Drain Mana (Rank 2)
-        { 6219, 34, 8000, after = 5740 },   -- Rain of Fire (Rank 2)
-        { 17920, 34, 8000, after = 17919 },   -- Searing Pain (Rank 3)
-        { 17951, 36, 9000, after = 6366 },   -- Create Firestone (Rank 2)
-        { 2362, 36, 9000 },   -- Create Spellstone (Rank 1)
-        { 3700, 36, 9000, after = 3699 },   -- Health Funnel (Rank 4)
-        { 11687, 36, 9000, after = 1456 },   -- Life Tap (Rank 4)
-        { 7641, 36, 9000, after = 1106 },   -- Shadow Bolt (Rank 6)
-        { 11711, 38, 10000, after = 6217 },   -- Bane of Agony (Rank 4)
-        { 2970, 38, 10000, after = 132 },   -- Detect Invisibility (Rank 2)
-        { 7651, 38, 10000, after = 709 },   -- Drain Life (Rank 4)
-        { 8289, 38, 10000, after = 8288 },   -- Drain Soul (Rank 3)
-        { 18879, 38, 500, owned = true },   -- Siphon Life (Rank 2)
-        { 17962, 40, 500, after = 1293818 },   -- Conflagrate (Rank 3)
-        { 20755, 40, 11000, after = 20752 },   -- Create Soulstone (Rank 3)
-        { 1311677, 40, 11000, after = 1311676 },   -- Curse of the Elements (Rank 3)
-        { 11733, 40, 11000, after = 1086 },   -- Demon Armor (Rank 3)
-        { 5484, 40, 11000 },   -- Howl of Terror (Rank 1)
-        { 11665, 40, 11000, after = 2941 },   -- Immolate (Rank 5)
-        { 18869, 40, 550, after = 18868 },   -- Shadowburn (Rank 4)
-        { 7659, 42, 11000, after = 7658 },   -- Curse of Recklessness (Rank 3)
-        { 11707, 42, 11000, after = 7646 },   -- Curse of Weakness (Rank 5)
-        { 6789, 42, 11000 },   -- Death Coil (Rank 1)
-        { 11683, 42, 11000, after = 1949 },   -- Hellfire (Rank 2)
-        { 17921, 42, 11000, after = 17920 },   -- Searing Pain (Rank 4)
-        { 11739, 42, 11000, after = 6229 },   -- Shadow Ward (Rank 2)
-        { 11671, 44, 12000, after = 7648 },   -- Corruption (Rank 5)
-        { 11703, 44, 12000, after = 6226 },   -- Drain Mana (Rank 3)
-        { 11693, 44, 12000, after = 3700 },   -- Health Funnel (Rank 5)
-        { 11659, 44, 12000, after = 7641 },   -- Shadow Bolt (Rank 7)
-        { 11725, 44, 12000, after = 1098 },   -- Subjugate Demon (Rank 2)
-        { 17952, 46, 13000, after = 17951 },   -- Create Firestone (Rank 3)
-        { 11729, 46, 13000, after = 5699 },   -- Create Healthstone (Rank 4)
-        { 11699, 46, 13000, after = 7651 },   -- Drain Life (Rank 5)
-        { 11688, 46, 13000, after = 11687 },   -- Life Tap (Rank 5)
-        { 11677, 46, 13000, after = 6219 },   -- Rain of Fire (Rank 3)
-        { 11712, 48, 14000, after = 11711 },   -- Bane of Agony (Rank 5)
-        { 18647, 48, 14000, after = 710 },   -- Banish (Rank 2)
-        { 18930, 48, 700, after = 17962 },   -- Conflagrate (Rank 4)
-        { 17727, 48, 14000, after = 2362 },   -- Create Spellstone (Rank 2)
-        { 18870, 48, 700, after = 18869 },   -- Shadowburn (Rank 5)
-        { 18880, 48, 700, after = 18879 },   -- Siphon Life (Rank 3)
-        { 6353, 48, 14000 },   -- Soul Fire (Rank 1)
-        { 20756, 50, 15000, after = 20755 },   -- Create Soulstone (Rank 4)
-        { 11719, 50, 15000, after = 1714 },   -- Curse of Tongues (Rank 2)
-        { 1311680, 50, 15000, after = 1311677 },   -- Curse of the Elements (Rank 4)
-        { 17925, 50, 15000, after = 6789 },   -- Death Coil (Rank 2)
-        { 11734, 50, 15000, after = 11733 },   -- Demon Armor (Rank 4)
-        { 11743, 50, 15000, after = 2970 },   -- Detect Invisibility (Rank 3)
-        { 11667, 50, 15000, after = 11665 },   -- Immolate (Rank 6)
-        { 1293812, 50, 900, owned = true },   -- Incinerate (Rank 2)
-        { 17922, 50, 15000, after = 17921 },   -- Searing Pain (Rank 5)
-        { 11708, 52, 18000, after = 11707 },   -- Curse of Weakness (Rank 6)
-        { 11675, 52, 18000, after = 8289 },   -- Drain Soul (Rank 4)
-        { 11694, 52, 18000, after = 11693 },   -- Health Funnel (Rank 6)
-        { 11660, 52, 18000, after = 11659 },   -- Shadow Bolt (Rank 8)
-        { 11740, 52, 18000, after = 11739 },   -- Shadow Ward (Rank 3)
-        { 18931, 54, 1000, after = 18930 },   -- Conflagrate (Rank 5)
-        { 11672, 54, 20000, after = 11671 },   -- Corruption (Rank 6)
-        { 11700, 54, 20000, after = 11699 },   -- Drain Life (Rank 6)
-        { 11704, 54, 20000, after = 11703 },   -- Drain Mana (Rank 4)
-        { 11684, 54, 20000, after = 11683 },   -- Hellfire (Rank 3)
-        { 17928, 54, 20000, after = 5484 },   -- Howl of Terror (Rank 2)
-        { 17953, 56, 22000, after = 17952 },   -- Create Firestone (Rank 4)
-        { 11717, 56, 22000, after = 7659 },   -- Curse of Recklessness (Rank 4)
-        { 6215, 56, 22000, after = 6213 },   -- Fear (Rank 3)
-        { 11689, 56, 22000, after = 11688 },   -- Life Tap (Rank 6)
-        { 18871, 56, 1100, after = 18870 },   -- Shadowburn (Rank 6)
-        { 17924, 56, 22000, after = 6353 },   -- Soul Fire (Rank 2)
-        { 11713, 58, 24000, after = 11712 },   -- Bane of Agony (Rank 6)
-        { 11730, 58, 24000, after = 11729 },   -- Create Healthstone (Rank 5)
-        { 17926, 58, 24000, after = 17925 },   -- Death Coil (Rank 3)
-        { 11678, 58, 24000, after = 11677 },   -- Rain of Fire (Rank 4)
-        { 17923, 58, 24000, after = 17922 },   -- Searing Pain (Rank 6)
-        { 18881, 58, 1200, after = 18880 },   -- Siphon Life (Rank 4)
-        { 11726, 58, 24000, after = 11725 },   -- Subjugate Demon (Rank 3)
-        { 603, 60, 26000 },   -- Bane of Doom
-        { 18932, 60, 1300, after = 18931 },   -- Conflagrate (Rank 6)
-        { 20757, 60, 26000, after = 20756 },   -- Create Soulstone (Rank 5)
-        { 17728, 60, 26000, after = 17727 },   -- Create Spellstone (Rank 3)
-        { 11735, 60, 26000, after = 11734 },   -- Demon Armor (Rank 5)
-        { 11695, 60, 26000, after = 11694 },   -- Health Funnel (Rank 7)
-        { 11668, 60, 26000, after = 11667 },   -- Immolate (Rank 7)
-        { 1293813, 60, 1100, after = 1293812 },   -- Incinerate (Rank 3)
-        { 11661, 60, 26000, after = 11660 },   -- Shadow Bolt (Rank 9)
+        { 348, 1, 10 },
+        { 172, 4, 100 },
+        { 702, 4, 100 },
+        { 1454, 6, 100 },
+        { 695, 6, 100, owned = true },
+        { 980, 8, 200 },
+        { 5782, 8, 200 },
+        { 6201, 10, 300 },
+        { 696, 10, 300, owned = true },
+        { 1120, 10, 300 },
+        { 707, 10, 300, after = 348 },
+        { 1108, 12, 600, after = 702 },
+        { 755, 12, 600 },
+        { 705, 12, 600, after = 695 },
+        { 6222, 14, 900, after = 172 },
+        { 704, 14, 900 },
+        { 689, 14, 900 },
+        { 1455, 16, 1200, after = 1454 },
+        { 5697, 16, 1200 },
+        { 1014, 18, 1500, after = 980 },
+        { 693, 18, 1500 },
+        { 5676, 18, 1500 },
+        { 440892, 20, 2000 },
+        { 706, 20, 2000 },
+        { 3698, 20, 2000, after = 755 },
+        { 1094, 20, 2000, after = 707 },
+        { 5740, 20, 2000 },
+        { 698, 20, 2000 },
+        { 1088, 20, 2000, after = 705 },
+        { 6202, 22, 2500, after = 6201 },
+        { 6205, 22, 2500, after = 1108 },
+        { 699, 22, 2500, after = 689 },
+        { 126, 22, 2500 },
+        { 6223, 24, 3000, after = 6222 },
+        { 5138, 24, 3000 },
+        { 8288, 24, 3000, after = 1120 },
+        { 5500, 24, 3000 },
+        { 18867, 24, 150, owned = true },
+        { 1714, 26, 4000 },
+        { 132, 26, 4000 },
+        { 1456, 26, 4000, after = 1455 },
+        { 17919, 26, 4000, after = 5676 },
+        { 6217, 28, 5000, after = 1014 },
+        { 710, 28, 5000 },
+        { 6366, 28, 5000 },
+        { 7658, 28, 5000, after = 704 },
+        { 3699, 28, 5000, after = 3698 },
+        { 1106, 28, 5000, after = 1088 },
+        { 20752, 30, 6000, after = 693 },
+        { 1311676, 30, 6000, after = 440892 },
+        { 1086, 30, 6000, after = 706 },
+        { 709, 30, 6000, after = 699 },
+        { 1949, 30, 6000 },
+        { 2941, 30, 6000, after = 1094 },
+        { 1098, 30, 6000 },
+        { 1293818, 32, 300, owned = true },
+        { 7646, 32, 7000, after = 6205 },
+        { 6213, 32, 7000, after = 5782 },
+        { 6229, 32, 7000 },
+        { 18868, 32, 350, after = 18867 },
+        { 7648, 34, 8000, after = 6223 },
+        { 5699, 34, 8000, after = 6202 },
+        { 6226, 34, 8000, after = 5138 },
+        { 6219, 34, 8000, after = 5740 },
+        { 17920, 34, 8000, after = 17919 },
+        { 17951, 36, 9000, after = 6366 },
+        { 2362, 36, 9000 },
+        { 3700, 36, 9000, after = 3699 },
+        { 11687, 36, 9000, after = 1456 },
+        { 7641, 36, 9000, after = 1106 },
+        { 11711, 38, 10000, after = 6217 },
+        { 2970, 38, 10000, after = 132 },
+        { 7651, 38, 10000, after = 709 },
+        { 8289, 38, 10000, after = 8288 },
+        { 18879, 38, 500, owned = true },
+        { 17962, 40, 500, after = 1293818 },
+        { 20755, 40, 11000, after = 20752 },
+        { 1311677, 40, 11000, after = 1311676 },
+        { 11733, 40, 11000, after = 1086 },
+        { 5484, 40, 11000 },
+        { 11665, 40, 11000, after = 2941 },
+        { 18869, 40, 550, after = 18868 },
+        { 7659, 42, 11000, after = 7658 },
+        { 11707, 42, 11000, after = 7646 },
+        { 6789, 42, 11000 },
+        { 11683, 42, 11000, after = 1949 },
+        { 17921, 42, 11000, after = 17920 },
+        { 11739, 42, 11000, after = 6229 },
+        { 11671, 44, 12000, after = 7648 },
+        { 11703, 44, 12000, after = 6226 },
+        { 11693, 44, 12000, after = 3700 },
+        { 11659, 44, 12000, after = 7641 },
+        { 11725, 44, 12000, after = 1098 },
+        { 17952, 46, 13000, after = 17951 },
+        { 11729, 46, 13000, after = 5699 },
+        { 11699, 46, 13000, after = 7651 },
+        { 11688, 46, 13000, after = 11687 },
+        { 11677, 46, 13000, after = 6219 },
+        { 11712, 48, 14000, after = 11711 },
+        { 18647, 48, 14000, after = 710 },
+        { 18930, 48, 700, after = 17962 },
+        { 17727, 48, 14000, after = 2362 },
+        { 18870, 48, 700, after = 18869 },
+        { 18880, 48, 700, after = 18879 },
+        { 6353, 48, 14000 },
+        { 20756, 50, 15000, after = 20755 },
+        { 11719, 50, 15000, after = 1714 },
+        { 1311680, 50, 15000, after = 1311677 },
+        { 17925, 50, 15000, after = 6789 },
+        { 11734, 50, 15000, after = 11733 },
+        { 11743, 50, 15000, after = 2970 },
+        { 11667, 50, 15000, after = 11665 },
+        { 1293812, 50, 900, owned = true },
+        { 17922, 50, 15000, after = 17921 },
+        { 11708, 52, 18000, after = 11707 },
+        { 11675, 52, 18000, after = 8289 },
+        { 11694, 52, 18000, after = 11693 },
+        { 11660, 52, 18000, after = 11659 },
+        { 11740, 52, 18000, after = 11739 },
+        { 18931, 54, 1000, after = 18930 },
+        { 11672, 54, 20000, after = 11671 },
+        { 11700, 54, 20000, after = 11699 },
+        { 11704, 54, 20000, after = 11703 },
+        { 11684, 54, 20000, after = 11683 },
+        { 17928, 54, 20000, after = 5484 },
+        { 17953, 56, 22000, after = 17952 },
+        { 11717, 56, 22000, after = 7659 },
+        { 6215, 56, 22000, after = 6213 },
+        { 11689, 56, 22000, after = 11688 },
+        { 18871, 56, 1100, after = 18870 },
+        { 17924, 56, 22000, after = 6353 },
+        { 11713, 58, 24000, after = 11712 },
+        { 11730, 58, 24000, after = 11729 },
+        { 17926, 58, 24000, after = 17925 },
+        { 11678, 58, 24000, after = 11677 },
+        { 17923, 58, 24000, after = 17922 },
+        { 18881, 58, 1200, after = 18880 },
+        { 11726, 58, 24000, after = 11725 },
+        { 603, 60, 26000 },
+        { 18932, 60, 1300, after = 18931 },
+        { 20757, 60, 26000, after = 20756 },
+        { 17728, 60, 26000, after = 17727 },
+        { 11735, 60, 26000, after = 11734 },
+        { 11695, 60, 26000, after = 11694 },
+        { 11668, 60, 26000, after = 11667 },
+        { 1293813, 60, 1100, after = 1293812 },
+        { 11661, 60, 26000, after = 11660 },
     },
     DRUID = {
-        { 1126, 1, 10 },   -- Mark of the Wild (Rank 1)
-        { 8921, 4, 100 },   -- Moonfire (Rank 1)
-        { 774, 4, 100 },   -- Rejuvenation (Rank 1)
-        { 467, 6, 100 },   -- Thorns (Rank 1)
-        { 5177, 6, 100, owned = true },   -- Wrath (Rank 2)
-        { 339, 8, 200 },   -- Entangling Roots (Rank 1)
-        { 5186, 8, 200, owned = true },   -- Healing Touch (Rank 2)
-        { 99, 10, 300 },   -- Demoralizing Roar (Rank 1)
-        { 5232, 10, 300, after = 1126 },   -- Mark of the Wild (Rank 2)
-        { 8924, 10, 300, after = 8921 },   -- Moonfire (Rank 2)
-        { 16689, 10, 300 },   -- Nature's Grasp (Rank 1)
-        { 1058, 10, 300, after = 774 },   -- Rejuvenation (Rank 2)
-        { 5229, 12, 800 },   -- Enrage
-        { 8936, 12, 800 },   -- Regrowth (Rank 1)
-        { 437138, 12, 800 },   -- Revive (Rank 1)
-        { 5211, 14, 900 },   -- Bash (Rank 1)
-        { 5187, 14, 900, after = 5186 },   -- Healing Touch (Rank 3)
-        { 782, 14, 900, after = 467 },   -- Thorns (Rank 2)
-        { 5178, 14, 900, after = 5177 },   -- Wrath (Rank 3)
-        { 8925, 16, 1800, after = 8924 },   -- Moonfire (Rank 3)
-        { 1430, 16, 1800, after = 1058 },   -- Rejuvenation (Rank 3)
-        { 779, 16, 1800 },   -- Swipe (Rank 1)
-        { 1062, 18, 1900, after = 339 },   -- Entangling Roots (Rank 2)
-        { 770, 18, 1900 },   -- Faerie Fire (Rank 1)
-        { 2637, 18, 1900 },   -- Hibernate (Rank 1)
-        { 6808, 18, 1900, owned = true },   -- Maul (Rank 2)
-        { 16810, 18, 95, after = 16689 },   -- Nature's Grasp (Rank 2)
-        { 8938, 18, 1900, after = 8936 },   -- Regrowth (Rank 2)
-        { 768, 20, 2000 },   -- Cat Form (Shapeshift)
-        { 1082, 20, 2000 },   -- Claw (Rank 1)
-        { 1735, 20, 2000, after = 99 },   -- Demoralizing Roar (Rank 2)
-        { 5188, 20, 2000, after = 5187 },   -- Healing Touch (Rank 4)
-        { 6756, 20, 2000, after = 5232 },   -- Mark of the Wild (Rank 3)
-        { 16864, 20, 2400 },   -- Omen of Clarity
-        { 5215, 20, 2000 },   -- Prowl (Rank 1)
-        { 20484, 20, 2000 },   -- Rebirth (Rank 1)
-        { 1079, 20, 2000 },   -- Rip (Rank 1)
-        { 2912, 20, 2000 },   -- Starfire (Rank 1)
-        { 8926, 22, 3000, after = 8925 },   -- Moonfire (Rank 4)
-        { 2090, 22, 3000, after = 1430 },   -- Rejuvenation (Rank 4)
-        { 5221, 22, 3000 },   -- Shred (Rank 1)
-        { 2908, 22, 3000 },   -- Soothe Animal (Rank 1)
-        { 5179, 22, 3000, after = 5178 },   -- Wrath (Rank 4)
-        { 1822, 24, 4000 },   -- Rake (Rank 1)
-        { 8939, 24, 4000, after = 8938 },   -- Regrowth (Rank 3)
-        { 2782, 24, 4000 },   -- Remove Curse
-        { 1237948, 24, 3800, after = 437138 },   -- Revive (Rank 2)
-        { 780, 24, 4000, after = 779 },   -- Swipe (Rank 2)
-        { 1075, 24, 4000, after = 782 },   -- Thorns (Rank 3)
-        { 5217, 24, 4000 },   -- Tiger's Fury
-        { 2893, 26, 4500 },   -- Abolish Poison
-        { 1850, 26, 4500 },   -- Dash (Rank 1)
-        { 5189, 26, 4500, after = 5188 },   -- Healing Touch (Rank 5)
-        { 6809, 26, 4500, after = 6808 },   -- Maul (Rank 3)
-        { 8949, 26, 4500, after = 2912 },   -- Starfire (Rank 2)
-        { 5209, 28, 5000 },   -- Challenging Roar
-        { 3029, 28, 5000, after = 1082 },   -- Claw (Rank 2)
-        { 8998, 28, 5000 },   -- Cower (Rank 1)
-        { 5195, 28, 5000, after = 1062 },   -- Entangling Roots (Rank 3)
-        { 8927, 28, 5000, after = 8926 },   -- Moonfire (Rank 5)
-        { 16811, 28, 250, after = 16810 },   -- Nature's Grasp (Rank 3)
-        { 2091, 28, 5000, after = 2090 },   -- Rejuvenation (Rank 5)
-        { 9492, 28, 5000, after = 1079 },   -- Rip (Rank 2)
-        { 6798, 30, 6000, after = 5211 },   -- Bash (Rank 2)
-        { 778, 30, 6000, after = 770 },   -- Faerie Fire (Rank 2)
-        { 24974, 30, 300, owned = true },   -- Insect Swarm (Rank 2)
-        { 5234, 30, 6000, after = 6756 },   -- Mark of the Wild (Rank 4)
-        { 20739, 30, 6000, after = 20484 },   -- Rebirth (Rank 2)
-        { 8940, 30, 6000, after = 8939 },   -- Regrowth (Rank 4)
-        { 6800, 30, 6000, after = 5221 },   -- Shred (Rank 2)
-        { 740, 30, 6000 },   -- Tranquility (Rank 1)
-        { 783, 30, 6000 },   -- Travel Form (Shapeshift)
-        { 5180, 30, 6000, after = 5179 },   -- Wrath (Rank 5)
-        { 9490, 32, 8000, after = 1735 },   -- Demoralizing Roar (Rank 3)
-        { 22568, 32, 8000 },   -- Ferocious Bite (Rank 1)
-        { 6778, 32, 8000, after = 5189 },   -- Healing Touch (Rank 6)
-        { 6785, 32, 8000 },   -- Ravage (Rank 1)
-        { 5225, 32, 8000 },   -- Track Humanoids
-        { 8972, 34, 10000, after = 6809 },   -- Maul (Rank 4)
-        { 8928, 34, 10000, after = 8927 },   -- Moonfire (Rank 6)
-        { 1823, 34, 10000, after = 1822 },   -- Rake (Rank 2)
-        { 3627, 34, 10000, after = 2091 },   -- Rejuvenation (Rank 6)
-        { 8950, 34, 10000, after = 8949 },   -- Starfire (Rank 3)
-        { 769, 34, 10000, after = 780 },   -- Swipe (Rank 3)
-        { 8914, 34, 10000, after = 1075 },   -- Thorns (Rank 4)
-        { 22842, 36, 11000 },   -- Frenzied Regeneration
-        { 9005, 36, 11000 },   -- Pounce (Rank 1)
-        { 8941, 36, 11000, after = 8940 },   -- Regrowth (Rank 5)
-        { 1237949, 36, 8000, after = 1237948 },   -- Revive (Rank 3)
-        { 9493, 36, 11000, after = 9492 },   -- Rip (Rank 3)
-        { 5201, 38, 12000, after = 3029 },   -- Claw (Rank 3)
-        { 5196, 38, 12000, after = 5195 },   -- Entangling Roots (Rank 4)
-        { 8903, 38, 12000, after = 6778 },   -- Healing Touch (Rank 7)
-        { 18657, 38, 12000, after = 2637 },   -- Hibernate (Rank 2)
-        { 16812, 38, 600, after = 16811 },   -- Nature's Grasp (Rank 4)
-        { 8992, 38, 12000, after = 6800 },   -- Shred (Rank 3)
-        { 8955, 38, 12000, after = 2908 },   -- Soothe Animal (Rank 2)
-        { 6780, 38, 12000, after = 5180 },   -- Wrath (Rank 6)
-        { 9000, 40, 14000, after = 8998 },   -- Cower (Rank 2)
-        { 9634, 40, 14000 },   -- Dire Bear Form (Shapeshift)
-        { 20719, 40, 14000 },   -- Feline Grace (Passive)
-        { 22827, 40, 14000, after = 22568 },   -- Ferocious Bite (Rank 2)
-        { 16914, 40, 14000 },   -- Hurricane (Rank 1)
-        { 29166, 40, 14000 },   -- Innervate
-        { 24975, 40, 700, after = 24974 },   -- Insect Swarm (Rank 3)
-        { 8907, 40, 14000, after = 5234 },   -- Mark of the Wild (Rank 5)
-        { 8929, 40, 14000, after = 8928 },   -- Moonfire (Rank 7)
-        { 6783, 40, 14000, after = 5215 },   -- Prowl (Rank 2)
-        { 20742, 40, 14000, after = 20739 },   -- Rebirth (Rank 3)
-        { 8910, 40, 14000, after = 3627 },   -- Rejuvenation (Rank 7)
-        { 8918, 40, 14000, after = 740 },   -- Tranquility (Rank 2)
-        { 9747, 42, 16000, after = 9490 },   -- Demoralizing Roar (Rank 4)
-        { 9749, 42, 16000, after = 778 },   -- Faerie Fire (Rank 3)
-        { 414644, 42, 12000 },   -- Lacerate (Rank 1)
-        { 9745, 42, 16000, after = 8972 },   -- Maul (Rank 5)
-        { 6787, 42, 16000, after = 6785 },   -- Ravage (Rank 2)
-        { 9750, 42, 16000, after = 8941 },   -- Regrowth (Rank 6)
-        { 8951, 42, 16000, after = 8950 },   -- Starfire (Rank 4)
-        { 22812, 44, 18000 },   -- Barkskin
-        { 9758, 44, 18000, after = 8903 },   -- Healing Touch (Rank 8)
-        { 1824, 44, 18000, after = 1823 },   -- Rake (Rank 3)
-        { 9752, 44, 18000, after = 9493 },   -- Rip (Rank 4)
-        { 9754, 44, 18000, after = 769 },   -- Swipe (Rank 4)
-        { 9756, 44, 18000, after = 8914 },   -- Thorns (Rank 5)
-        { 8983, 46, 20000, after = 6798 },   -- Bash (Rank 3)
-        { 9821, 46, 20000, after = 1850 },   -- Dash (Rank 2)
-        { 9833, 46, 20000, after = 8929 },   -- Moonfire (Rank 8)
-        { 9823, 46, 20000, after = 9005 },   -- Pounce (Rank 2)
-        { 9839, 46, 20000, after = 8910 },   -- Rejuvenation (Rank 8)
-        { 9829, 46, 20000, after = 8992 },   -- Shred (Rank 4)
-        { 8905, 46, 20000, after = 6780 },   -- Wrath (Rank 7)
-        { 9849, 48, 22000, after = 5201 },   -- Claw (Rank 4)
-        { 9852, 48, 22000, after = 5196 },   -- Entangling Roots (Rank 5)
-        { 22828, 48, 22000, after = 22827 },   -- Ferocious Bite (Rank 3)
-        { 16813, 48, 1100, after = 16812 },   -- Nature's Grasp (Rank 5)
-        { 9856, 48, 22000, after = 9750 },   -- Regrowth (Rank 7)
-        { 1237950, 48, 17000, after = 1237949 },   -- Revive (Rank 4)
-        { 9888, 50, 23000, after = 9758 },   -- Healing Touch (Rank 9)
-        { 17401, 50, 23000, after = 16914 },   -- Hurricane (Rank 2)
-        { 24976, 50, 1150, after = 24975 },   -- Insect Swarm (Rank 4)
-        { 1235826, 50, 18000, after = 414644 },   -- Lacerate (Rank 2)
-        { 9884, 50, 23000, after = 8907 },   -- Mark of the Wild (Rank 6)
-        { 9880, 50, 23000, after = 9745 },   -- Maul (Rank 6)
-        { 9866, 50, 23000, after = 6787 },   -- Ravage (Rank 3)
-        { 20747, 50, 23000, after = 20742 },   -- Rebirth (Rank 4)
-        { 9875, 50, 23000, after = 8951 },   -- Starfire (Rank 5)
-        { 9862, 50, 23000, after = 8918 },   -- Tranquility (Rank 3)
-        { 1238214, 50, 18000, owned = true },   -- Wild Growth (Rank 2)
-        { 9892, 52, 26000, after = 9000 },   -- Cower (Rank 3)
-        { 9898, 52, 26000, after = 9747 },   -- Demoralizing Roar (Rank 5)
-        { 9834, 52, 26000, after = 9833 },   -- Moonfire (Rank 9)
-        { 9840, 52, 26000, after = 9839 },   -- Rejuvenation (Rank 9)
-        { 9894, 52, 26000, after = 9752 },   -- Rip (Rank 5)
-        { 9907, 54, 28000, after = 9749 },   -- Faerie Fire (Rank 4)
-        { 9904, 54, 28000, after = 1824 },   -- Rake (Rank 4)
-        { 9857, 54, 28000, after = 9856 },   -- Regrowth (Rank 8)
-        { 9830, 54, 28000, after = 9829 },   -- Shred (Rank 5)
-        { 9901, 54, 28000, after = 8955 },   -- Soothe Animal (Rank 3)
-        { 9908, 54, 28000, after = 9754 },   -- Swipe (Rank 5)
-        { 9910, 54, 28000, after = 9756 },   -- Thorns (Rank 6)
-        { 9912, 54, 28000, after = 8905 },   -- Wrath (Rank 8)
-        { 22829, 56, 30000, after = 22828 },   -- Ferocious Bite (Rank 4)
-        { 9889, 56, 30000, after = 9888 },   -- Healing Touch (Rank 10)
-        { 9827, 56, 30000, after = 9823 },   -- Pounce (Rank 3)
-        { 9850, 58, 32000, after = 9849 },   -- Claw (Rank 5)
-        { 9853, 58, 32000, after = 9852 },   -- Entangling Roots (Rank 6)
-        { 18658, 58, 32000, after = 18657 },   -- Hibernate (Rank 3)
-        { 1235827, 58, 22000, after = 1235826 },   -- Lacerate (Rank 3)
-        { 9881, 58, 32000, after = 9880 },   -- Maul (Rank 7)
-        { 9835, 58, 32000, after = 9834 },   -- Moonfire (Rank 10)
-        { 17329, 58, 1600, after = 16813 },   -- Nature's Grasp (Rank 6)
-        { 9867, 58, 32000, after = 9866 },   -- Ravage (Rank 4)
-        { 9841, 58, 32000, after = 9840 },   -- Rejuvenation (Rank 10)
-        { 9876, 58, 32000, after = 9875 },   -- Starfire (Rank 6)
-        { 17402, 60, 34000, after = 17401 },   -- Hurricane (Rank 3)
-        { 24977, 60, 1700, after = 24976 },   -- Insect Swarm (Rank 5)
-        { 9885, 60, 34000, after = 9884 },   -- Mark of the Wild (Rank 7)
-        { 9913, 60, 34000, after = 6783 },   -- Prowl (Rank 3)
-        { 20748, 60, 34000, after = 20747 },   -- Rebirth (Rank 5)
-        { 9858, 60, 34000, after = 9857 },   -- Regrowth (Rank 9)
-        { 1237951, 60, 24000, after = 1237950 },   -- Revive (Rank 5)
-        { 9896, 60, 34000, after = 9894 },   -- Rip (Rank 6)
-        { 9863, 60, 34000, after = 9862 },   -- Tranquility (Rank 4)
-        { 1238215, 60, 24000, after = 1238214 },   -- Wild Growth (Rank 3)
+        { 1126, 1, 10 },
+        { 8921, 4, 100 },
+        { 774, 4, 100 },
+        { 467, 6, 100 },
+        { 5177, 6, 100, owned = true },
+        { 339, 8, 200 },
+        { 5186, 8, 200, owned = true },
+        { 99, 10, 300 },
+        { 5232, 10, 300, after = 1126 },
+        { 8924, 10, 300, after = 8921 },
+        { 16689, 10, 300 },
+        { 1058, 10, 300, after = 774 },
+        { 5229, 12, 800 },
+        { 8936, 12, 800 },
+        { 437138, 12, 800 },
+        { 5211, 14, 900 },
+        { 5187, 14, 900, after = 5186 },
+        { 782, 14, 900, after = 467 },
+        { 5178, 14, 900, after = 5177 },
+        { 8925, 16, 1800, after = 8924 },
+        { 1430, 16, 1800, after = 1058 },
+        { 779, 16, 1800 },
+        { 1062, 18, 1900, after = 339 },
+        { 770, 18, 1900 },
+        { 2637, 18, 1900 },
+        { 6808, 18, 1900, owned = true },
+        { 16810, 18, 95, after = 16689 },
+        { 8938, 18, 1900, after = 8936 },
+        { 768, 20, 2000 },
+        { 1082, 20, 2000 },
+        { 1735, 20, 2000, after = 99 },
+        { 5188, 20, 2000, after = 5187 },
+        { 6756, 20, 2000, after = 5232 },
+        { 16864, 20, 2400 },
+        { 5215, 20, 2000 },
+        { 20484, 20, 2000 },
+        { 1079, 20, 2000 },
+        { 2912, 20, 2000 },
+        { 8926, 22, 3000, after = 8925 },
+        { 2090, 22, 3000, after = 1430 },
+        { 5221, 22, 3000 },
+        { 2908, 22, 3000 },
+        { 5179, 22, 3000, after = 5178 },
+        { 1822, 24, 4000 },
+        { 8939, 24, 4000, after = 8938 },
+        { 2782, 24, 4000 },
+        { 1237948, 24, 3800, after = 437138 },
+        { 780, 24, 4000, after = 779 },
+        { 1075, 24, 4000, after = 782 },
+        { 5217, 24, 4000 },
+        { 2893, 26, 4500 },
+        { 1850, 26, 4500 },
+        { 5189, 26, 4500, after = 5188 },
+        { 6809, 26, 4500, after = 6808 },
+        { 8949, 26, 4500, after = 2912 },
+        { 5209, 28, 5000 },
+        { 3029, 28, 5000, after = 1082 },
+        { 8998, 28, 5000 },
+        { 5195, 28, 5000, after = 1062 },
+        { 8927, 28, 5000, after = 8926 },
+        { 16811, 28, 250, after = 16810 },
+        { 2091, 28, 5000, after = 2090 },
+        { 9492, 28, 5000, after = 1079 },
+        { 6798, 30, 6000, after = 5211 },
+        { 778, 30, 6000, after = 770 },
+        { 24974, 30, 300, owned = true },
+        { 5234, 30, 6000, after = 6756 },
+        { 20739, 30, 6000, after = 20484 },
+        { 8940, 30, 6000, after = 8939 },
+        { 6800, 30, 6000, after = 5221 },
+        { 740, 30, 6000 },
+        { 783, 30, 6000 },
+        { 5180, 30, 6000, after = 5179 },
+        { 9490, 32, 8000, after = 1735 },
+        { 22568, 32, 8000 },
+        { 6778, 32, 8000, after = 5189 },
+        { 6785, 32, 8000 },
+        { 5225, 32, 8000 },
+        { 8972, 34, 10000, after = 6809 },
+        { 8928, 34, 10000, after = 8927 },
+        { 1823, 34, 10000, after = 1822 },
+        { 3627, 34, 10000, after = 2091 },
+        { 8950, 34, 10000, after = 8949 },
+        { 769, 34, 10000, after = 780 },
+        { 8914, 34, 10000, after = 1075 },
+        { 22842, 36, 11000 },
+        { 9005, 36, 11000 },
+        { 8941, 36, 11000, after = 8940 },
+        { 1237949, 36, 8000, after = 1237948 },
+        { 9493, 36, 11000, after = 9492 },
+        { 5201, 38, 12000, after = 3029 },
+        { 5196, 38, 12000, after = 5195 },
+        { 8903, 38, 12000, after = 6778 },
+        { 18657, 38, 12000, after = 2637 },
+        { 16812, 38, 600, after = 16811 },
+        { 8992, 38, 12000, after = 6800 },
+        { 8955, 38, 12000, after = 2908 },
+        { 6780, 38, 12000, after = 5180 },
+        { 9000, 40, 14000, after = 8998 },
+        { 9634, 40, 14000 },
+        { 20719, 40, 14000 },
+        { 22827, 40, 14000, after = 22568 },
+        { 16914, 40, 14000 },
+        { 29166, 40, 14000 },
+        { 24975, 40, 700, after = 24974 },
+        { 8907, 40, 14000, after = 5234 },
+        { 8929, 40, 14000, after = 8928 },
+        { 6783, 40, 14000, after = 5215 },
+        { 20742, 40, 14000, after = 20739 },
+        { 8910, 40, 14000, after = 3627 },
+        { 8918, 40, 14000, after = 740 },
+        { 9747, 42, 16000, after = 9490 },
+        { 9749, 42, 16000, after = 778 },
+        { 414644, 42, 12000 },
+        { 9745, 42, 16000, after = 8972 },
+        { 6787, 42, 16000, after = 6785 },
+        { 9750, 42, 16000, after = 8941 },
+        { 8951, 42, 16000, after = 8950 },
+        { 22812, 44, 18000 },
+        { 9758, 44, 18000, after = 8903 },
+        { 1824, 44, 18000, after = 1823 },
+        { 9752, 44, 18000, after = 9493 },
+        { 9754, 44, 18000, after = 769 },
+        { 9756, 44, 18000, after = 8914 },
+        { 8983, 46, 20000, after = 6798 },
+        { 9821, 46, 20000, after = 1850 },
+        { 9833, 46, 20000, after = 8929 },
+        { 9823, 46, 20000, after = 9005 },
+        { 9839, 46, 20000, after = 8910 },
+        { 9829, 46, 20000, after = 8992 },
+        { 8905, 46, 20000, after = 6780 },
+        { 9849, 48, 22000, after = 5201 },
+        { 9852, 48, 22000, after = 5196 },
+        { 22828, 48, 22000, after = 22827 },
+        { 16813, 48, 1100, after = 16812 },
+        { 9856, 48, 22000, after = 9750 },
+        { 1237950, 48, 17000, after = 1237949 },
+        { 9888, 50, 23000, after = 9758 },
+        { 17401, 50, 23000, after = 16914 },
+        { 24976, 50, 1150, after = 24975 },
+        { 1235826, 50, 18000, after = 414644 },
+        { 9884, 50, 23000, after = 8907 },
+        { 9880, 50, 23000, after = 9745 },
+        { 9866, 50, 23000, after = 6787 },
+        { 20747, 50, 23000, after = 20742 },
+        { 9875, 50, 23000, after = 8951 },
+        { 9862, 50, 23000, after = 8918 },
+        { 1238214, 50, 18000, owned = true },
+        { 9892, 52, 26000, after = 9000 },
+        { 9898, 52, 26000, after = 9747 },
+        { 9834, 52, 26000, after = 9833 },
+        { 9840, 52, 26000, after = 9839 },
+        { 9894, 52, 26000, after = 9752 },
+        { 9907, 54, 28000, after = 9749 },
+        { 9904, 54, 28000, after = 1824 },
+        { 9857, 54, 28000, after = 9856 },
+        { 9830, 54, 28000, after = 9829 },
+        { 9901, 54, 28000, after = 8955 },
+        { 9908, 54, 28000, after = 9754 },
+        { 9910, 54, 28000, after = 9756 },
+        { 9912, 54, 28000, after = 8905 },
+        { 22829, 56, 30000, after = 22828 },
+        { 9889, 56, 30000, after = 9888 },
+        { 9827, 56, 30000, after = 9823 },
+        { 9850, 58, 32000, after = 9849 },
+        { 9853, 58, 32000, after = 9852 },
+        { 18658, 58, 32000, after = 18657 },
+        { 1235827, 58, 22000, after = 1235826 },
+        { 9881, 58, 32000, after = 9880 },
+        { 9835, 58, 32000, after = 9834 },
+        { 17329, 58, 1600, after = 16813 },
+        { 9867, 58, 32000, after = 9866 },
+        { 9841, 58, 32000, after = 9840 },
+        { 9876, 58, 32000, after = 9875 },
+        { 17402, 60, 34000, after = 17401 },
+        { 24977, 60, 1700, after = 24976 },
+        { 9885, 60, 34000, after = 9884 },
+        { 9913, 60, 34000, after = 6783 },
+        { 20748, 60, 34000, after = 20747 },
+        { 9858, 60, 34000, after = 9857 },
+        { 1237951, 60, 24000, after = 1237950 },
+        { 9896, 60, 34000, after = 9894 },
+        { 9863, 60, 34000, after = 9862 },
+        { 1238215, 60, 24000, after = 1238214 },
     },
 }

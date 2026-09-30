@@ -1,0 +1,196 @@
+Written by gen_borders.py each run; not read by the addon.
+
+Zone-to-zone walking crossings (Data/Forever/Borders.lua): a pair of nodes, one just inside each zone, joined
+by a walk edge. A crossing with no `cost` has real travel inside it (a tunnel); the engine works the cost out
+from the distance between its two ends. Coordinates were read off the in-game world map, so they are rough:
+refine by walking a crossing and capturing `/mzdump here`.
+
+Checked and NOT walkable (left out on purpose):
+  Elwynn Forest <-> Duskwood: Technically you can just swim across the southern river into Duskwood, but there's no "road" crossing
+  Redridge Mountains <-> Burning Steppes: Doesn't Exist...it's part of Riverglades now
+  Dun Morogh <-> Wetlands: Does Not Exist
+
+Zones that touch on the map but have no crossing (no walkable link found):
+kalimdor:
+   33 cells  Darkshore <-> Felwood
+   22 cells  Dustwallow Marsh <-> Thousand Needles
+   20 cells  Felwood <-> Mount Hyjal
+   19 cells  Desolace <-> Mulgore
+   16 cells  Azshara <-> Winterspring
+   15 cells  Feralas <-> Silithus
+   13 cells  Darkshore <-> Moonglade
+   11 cells  Feralas <-> Shen'dralas
+   10 cells  Feralas <-> Mulgore
+    8 cells  Mulgore <-> Shen'dralas
+    7 cells  Mulgore <-> Stonetalon Mountains
+    3 cells  Thousand Needles <-> Un'Goro Crater
+    2 cells  Ashenvale <-> Durotar
+easternkingdoms:
+   21 cells  Eastern Plaguelands <-> The Hinterlands
+   20 cells  Dun Morogh <-> Wetlands
+   20 cells  Duskwood <-> Elwynn Forest
+   18 cells  Arathi Highlands <-> The Hinterlands
+   17 cells  Burning Steppes <-> Elwynn Forest
+   15 cells  Alterac Mountains <-> Silverpine Forest
+   14 cells  Dun Morogh <-> Searing Gorge
+    9 cells  Stranglethorn Vale <-> Westfall
+    9 cells  Blasted Lands <-> Stranglethorn Vale
+    7 cells  Alterac Mountains <-> The Hinterlands
+    7 cells  Blasted Lands <-> Deadwind Pass
+    6 cells  Badlands <-> Burning Steppes
+    4 cells  Burning Steppes <-> Redridge Mountains
+    3 cells  Alterac Mountains <-> Tirisfal Glades
+    3 cells  Redridge Mountains <-> Swamp of Sorrows
+    1 cells  Deadwind Pass <-> Stranglethorn Vale
+
+Every node and crossing written:
+  BORDER_DUROTAR_TO_THE_BARRENS: Durotar side of the Durotar/The Barrens crossing
+  BORDER_THE_BARRENS_TO_DUROTAR: The Barrens side of the The Barrens/Durotar crossing
+  crossing BORDER_DUROTAR_TO_THE_BARRENS -> BORDER_THE_BARRENS_TO_DUROTAR: Durotar <-> The Barrens
+  BORDER_MULGORE_TO_THE_BARRENS: Mulgore side of the Mulgore/The Barrens crossing
+  BORDER_THE_BARRENS_TO_MULGORE: The Barrens side of the The Barrens/Mulgore crossing
+  crossing BORDER_MULGORE_TO_THE_BARRENS -> BORDER_THE_BARRENS_TO_MULGORE: Mulgore <-> The Barrens
+  BORDER_THE_BARRENS_TO_STONETALON_MOUNTAINS: The Barrens side of the The Barrens/Stonetalon Mountains crossing
+  BORDER_STONETALON_MOUNTAINS_TO_THE_BARRENS: Stonetalon Mountains side of the Stonetalon Mountains/The Barrens crossing
+  crossing BORDER_THE_BARRENS_TO_STONETALON_MOUNTAINS -> BORDER_STONETALON_MOUNTAINS_TO_THE_BARRENS: The Barrens <-> Stonetalon Mountains
+  BORDER_THE_BARRENS_TO_ASHENVALE: The Barrens side of the The Barrens/Ashenvale crossing
+  BORDER_ASHENVALE_TO_THE_BARRENS: Ashenvale side of the Ashenvale/The Barrens crossing
+  crossing BORDER_THE_BARRENS_TO_ASHENVALE -> BORDER_ASHENVALE_TO_THE_BARRENS: The Barrens <-> Ashenvale
+  BORDER_THE_BARRENS_TO_THOUSAND_NEEDLES: The Barrens side of the The Barrens/Thousand Needles crossing
+  BORDER_THOUSAND_NEEDLES_TO_THE_BARRENS: Thousand Needles side of the Thousand Needles/The Barrens crossing
+  crossing BORDER_THE_BARRENS_TO_THOUSAND_NEEDLES -> BORDER_THOUSAND_NEEDLES_TO_THE_BARRENS: The Barrens <-> Thousand Needles
+  BORDER_THE_BARRENS_TO_DUSTWALLOW_MARSH: The Barrens side of the The Barrens/Dustwallow Marsh crossing
+  BORDER_DUSTWALLOW_MARSH_TO_THE_BARRENS: Dustwallow Marsh side of the Dustwallow Marsh/The Barrens crossing
+  crossing BORDER_THE_BARRENS_TO_DUSTWALLOW_MARSH -> BORDER_DUSTWALLOW_MARSH_TO_THE_BARRENS: The Barrens <-> Dustwallow Marsh
+  BORDER_ASHENVALE_TO_STONETALON_MOUNTAINS: Ashenvale side of the Ashenvale/Stonetalon Mountains crossing
+  BORDER_STONETALON_MOUNTAINS_TO_ASHENVALE: Stonetalon Mountains side of the Stonetalon Mountains/Ashenvale crossing
+  crossing BORDER_ASHENVALE_TO_STONETALON_MOUNTAINS -> BORDER_STONETALON_MOUNTAINS_TO_ASHENVALE: Ashenvale <-> Stonetalon Mountains (via Talondeep Path tunnel (not zero travel))
+  BORDER_ASHENVALE_TO_DARKSHORE: Ashenvale side of the Ashenvale/Darkshore crossing
+  BORDER_DARKSHORE_TO_ASHENVALE: Darkshore side of the Darkshore/Ashenvale crossing
+  crossing BORDER_ASHENVALE_TO_DARKSHORE -> BORDER_DARKSHORE_TO_ASHENVALE: Ashenvale <-> Darkshore
+  BORDER_ASHENVALE_TO_FELWOOD: Ashenvale side of the Ashenvale/Felwood crossing
+  BORDER_FELWOOD_TO_ASHENVALE: Felwood side of the Felwood/Ashenvale crossing
+  crossing BORDER_ASHENVALE_TO_FELWOOD -> BORDER_FELWOOD_TO_ASHENVALE: Ashenvale <-> Felwood
+  BORDER_ASHENVALE_TO_AZSHARA: Ashenvale side of the Ashenvale/Azshara crossing
+  BORDER_AZSHARA_TO_ASHENVALE: Azshara side of the Azshara/Ashenvale crossing
+  crossing BORDER_ASHENVALE_TO_AZSHARA -> BORDER_AZSHARA_TO_ASHENVALE: Ashenvale <-> Azshara
+  BORDER_FELWOOD_TO_WINTERSPRING: Felwood side of the Felwood/Winterspring crossing
+  BORDER_WINTERSPRING_TO_FELWOOD: Winterspring side of the Winterspring/Felwood crossing
+  crossing BORDER_FELWOOD_TO_WINTERSPRING -> BORDER_WINTERSPRING_TO_FELWOOD: Felwood <-> Winterspring (via Timbermaw Hold tunnel (not zero travel))
+  BORDER_FELWOOD_TO_MOONGLADE: Felwood side of the Felwood/Moonglade crossing
+  BORDER_MOONGLADE_TO_FELWOOD: Moonglade side of the Moonglade/Felwood crossing
+  crossing BORDER_FELWOOD_TO_MOONGLADE -> BORDER_MOONGLADE_TO_FELWOOD: Felwood <-> Moonglade (via Timbermaw Hold tunnel (not zero travel))
+  BORDER_WINTERSPRING_TO_MOONGLADE: Winterspring side of the Winterspring/Moonglade crossing
+  BORDER_MOONGLADE_TO_WINTERSPRING: Moonglade side of the Moonglade/Winterspring crossing
+  crossing BORDER_WINTERSPRING_TO_MOONGLADE -> BORDER_MOONGLADE_TO_WINTERSPRING: Winterspring <-> Moonglade (via Timbermaw Hold tunnel (not zero travel))
+  BORDER_WINTERSPRING_TO_MOUNT_HYJAL: Winterspring side of the Winterspring/Mount Hyjal crossing
+  BORDER_MOUNT_HYJAL_TO_WINTERSPRING: Mount Hyjal side of the Mount Hyjal/Winterspring crossing
+  crossing BORDER_WINTERSPRING_TO_MOUNT_HYJAL -> BORDER_MOUNT_HYJAL_TO_WINTERSPRING: Winterspring <-> Mount Hyjal
+  BORDER_STONETALON_MOUNTAINS_TO_DESOLACE: Stonetalon Mountains side of the Stonetalon Mountains/Desolace crossing
+  BORDER_DESOLACE_TO_STONETALON_MOUNTAINS: Desolace side of the Desolace/Stonetalon Mountains crossing
+  crossing BORDER_STONETALON_MOUNTAINS_TO_DESOLACE -> BORDER_DESOLACE_TO_STONETALON_MOUNTAINS: Stonetalon Mountains <-> Desolace
+  BORDER_DESOLACE_TO_FERALAS: Desolace side of the Desolace/Feralas crossing
+  BORDER_FERALAS_TO_DESOLACE: Feralas side of the Feralas/Desolace crossing
+  crossing BORDER_DESOLACE_TO_FERALAS -> BORDER_FERALAS_TO_DESOLACE: Desolace <-> Feralas
+  BORDER_DESOLACE_TO_SHENDRALAS: Desolace side of the Desolace/Shen'dralas crossing
+  BORDER_SHENDRALAS_TO_DESOLACE: Shen'dralas side of the Shen'dralas/Desolace crossing
+  crossing BORDER_DESOLACE_TO_SHENDRALAS -> BORDER_SHENDRALAS_TO_DESOLACE: Desolace <-> Shen'dralas
+  BORDER_DESOLACE_TO_SHENDRALAS_2: Desolace side of the Desolace/Shen'dralas crossing
+  BORDER_SHENDRALAS_TO_DESOLACE_2: Shen'dralas side of the Shen'dralas/Desolace crossing
+  crossing BORDER_DESOLACE_TO_SHENDRALAS_2 -> BORDER_SHENDRALAS_TO_DESOLACE_2: Desolace <-> Shen'dralas
+  BORDER_THOUSAND_NEEDLES_TO_TANARIS: Thousand Needles side of the Thousand Needles/Tanaris crossing
+  BORDER_TANARIS_TO_THOUSAND_NEEDLES: Tanaris side of the Tanaris/Thousand Needles crossing
+  crossing BORDER_THOUSAND_NEEDLES_TO_TANARIS -> BORDER_TANARIS_TO_THOUSAND_NEEDLES: Thousand Needles <-> Tanaris
+  BORDER_THOUSAND_NEEDLES_TO_FERALAS: Thousand Needles side of the Thousand Needles/Feralas crossing
+  BORDER_FERALAS_TO_THOUSAND_NEEDLES: Feralas side of the Feralas/Thousand Needles crossing
+  crossing BORDER_THOUSAND_NEEDLES_TO_FERALAS -> BORDER_FERALAS_TO_THOUSAND_NEEDLES: Thousand Needles <-> Feralas
+  BORDER_TANARIS_TO_UNGORO_CRATER: Tanaris side of the Tanaris/Un'Goro Crater crossing
+  BORDER_UNGORO_CRATER_TO_TANARIS: Un'Goro Crater side of the Un'Goro Crater/Tanaris crossing
+  crossing BORDER_TANARIS_TO_UNGORO_CRATER -> BORDER_UNGORO_CRATER_TO_TANARIS: Tanaris <-> Un'Goro Crater
+  BORDER_UNGORO_CRATER_TO_SILITHUS: Un'Goro Crater side of the Un'Goro Crater/Silithus crossing
+  BORDER_SILITHUS_TO_UNGORO_CRATER: Silithus side of the Silithus/Un'Goro Crater crossing
+  crossing BORDER_UNGORO_CRATER_TO_SILITHUS -> BORDER_SILITHUS_TO_UNGORO_CRATER: Un'Goro Crater <-> Silithus
+  BORDER_ELWYNN_FOREST_TO_WESTFALL: Elwynn Forest side of the Elwynn Forest/Westfall crossing
+  BORDER_WESTFALL_TO_ELWYNN_FOREST: Westfall side of the Westfall/Elwynn Forest crossing
+  crossing BORDER_ELWYNN_FOREST_TO_WESTFALL -> BORDER_WESTFALL_TO_ELWYNN_FOREST: Elwynn Forest <-> Westfall (captured on both sides)
+  BORDER_ELWYNN_FOREST_TO_REDRIDGE_MOUNTAINS: Elwynn Forest side of the Elwynn Forest/Redridge Mountains crossing
+  BORDER_REDRIDGE_MOUNTAINS_TO_ELWYNN_FOREST: Redridge Mountains side of the Redridge Mountains/Elwynn Forest crossing
+  crossing BORDER_ELWYNN_FOREST_TO_REDRIDGE_MOUNTAINS -> BORDER_REDRIDGE_MOUNTAINS_TO_ELWYNN_FOREST: Elwynn Forest <-> Redridge Mountains
+  BORDER_DUSKWOOD_TO_WESTFALL: Duskwood side of the Duskwood/Westfall crossing
+  BORDER_WESTFALL_TO_DUSKWOOD: Westfall side of the Westfall/Duskwood crossing
+  crossing BORDER_DUSKWOOD_TO_WESTFALL -> BORDER_WESTFALL_TO_DUSKWOOD: Duskwood <-> Westfall
+  BORDER_DUSKWOOD_TO_REDRIDGE_MOUNTAINS: Duskwood side of the Duskwood/Redridge Mountains crossing
+  BORDER_REDRIDGE_MOUNTAINS_TO_DUSKWOOD: Redridge Mountains side of the Redridge Mountains/Duskwood crossing
+  crossing BORDER_DUSKWOOD_TO_REDRIDGE_MOUNTAINS -> BORDER_REDRIDGE_MOUNTAINS_TO_DUSKWOOD: Duskwood <-> Redridge Mountains
+  BORDER_DUSKWOOD_TO_STRANGLETHORN_VALE: Duskwood side of the Duskwood/Stranglethorn Vale crossing
+  BORDER_STRANGLETHORN_VALE_TO_DUSKWOOD: Stranglethorn Vale side of the Stranglethorn Vale/Duskwood crossing
+  crossing BORDER_DUSKWOOD_TO_STRANGLETHORN_VALE -> BORDER_STRANGLETHORN_VALE_TO_DUSKWOOD: Duskwood <-> Stranglethorn Vale
+  BORDER_DUSKWOOD_TO_DEADWIND_PASS: Duskwood side of the Duskwood/Deadwind Pass crossing
+  BORDER_DEADWIND_PASS_TO_DUSKWOOD: Deadwind Pass side of the Deadwind Pass/Duskwood crossing
+  crossing BORDER_DUSKWOOD_TO_DEADWIND_PASS -> BORDER_DEADWIND_PASS_TO_DUSKWOOD: Duskwood <-> Deadwind Pass
+  BORDER_DEADWIND_PASS_TO_SWAMP_OF_SORROWS: Deadwind Pass side of the Deadwind Pass/Swamp of Sorrows crossing
+  BORDER_SWAMP_OF_SORROWS_TO_DEADWIND_PASS: Swamp of Sorrows side of the Swamp of Sorrows/Deadwind Pass crossing
+  crossing BORDER_DEADWIND_PASS_TO_SWAMP_OF_SORROWS -> BORDER_SWAMP_OF_SORROWS_TO_DEADWIND_PASS: Deadwind Pass <-> Swamp of Sorrows
+  BORDER_SWAMP_OF_SORROWS_TO_BLASTED_LANDS: Swamp of Sorrows side of the Swamp of Sorrows/Blasted Lands crossing
+  BORDER_BLASTED_LANDS_TO_SWAMP_OF_SORROWS: Blasted Lands side of the Blasted Lands/Swamp of Sorrows crossing
+  crossing BORDER_SWAMP_OF_SORROWS_TO_BLASTED_LANDS -> BORDER_BLASTED_LANDS_TO_SWAMP_OF_SORROWS: Swamp of Sorrows <-> Blasted Lands
+  BORDER_BURNING_STEPPES_TO_SEARING_GORGE: Burning Steppes side of the Burning Steppes/Searing Gorge crossing
+  BORDER_SEARING_GORGE_TO_BURNING_STEPPES: Searing Gorge side of the Searing Gorge/Burning Steppes crossing
+  crossing BORDER_BURNING_STEPPES_TO_SEARING_GORGE -> BORDER_SEARING_GORGE_TO_BURNING_STEPPES: Burning Steppes <-> Searing Gorge (via Blackrock Mountain (not zero travel))
+  BORDER_SEARING_GORGE_TO_BADLANDS: Searing Gorge side of the Searing Gorge/Badlands crossing
+  BORDER_BADLANDS_TO_SEARING_GORGE: Badlands side of the Badlands/Searing Gorge crossing
+  crossing BORDER_SEARING_GORGE_TO_BADLANDS -> BORDER_BADLANDS_TO_SEARING_GORGE: Searing Gorge <-> Badlands
+  BORDER_BADLANDS_TO_LOCH_MODAN: Badlands side of the Badlands/Loch Modan crossing
+  BORDER_LOCH_MODAN_TO_BADLANDS: Loch Modan side of the Loch Modan/Badlands crossing
+  crossing BORDER_BADLANDS_TO_LOCH_MODAN -> BORDER_LOCH_MODAN_TO_BADLANDS: Badlands <-> Loch Modan
+  BORDER_BADLANDS_TO_RIVERGLADES: Badlands side of the Badlands/Riverglades crossing
+  BORDER_RIVERGLADES_TO_BADLANDS: Riverglades side of the Riverglades/Badlands crossing
+  crossing BORDER_BADLANDS_TO_RIVERGLADES -> BORDER_RIVERGLADES_TO_BADLANDS: Badlands <-> Riverglades
+  BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS: Riverglades side of the Riverglades/Redridge Mountains crossing
+  BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES: Redridge Mountains side of the Redridge Mountains/Riverglades crossing
+  crossing BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS -> BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES: Riverglades <-> Redridge Mountains
+  BORDER_RIVERGLADES_TO_BURNING_STEPPES: Riverglades side of the Riverglades/Burning Steppes crossing
+  BORDER_BURNING_STEPPES_TO_RIVERGLADES: Burning Steppes side of the Burning Steppes/Riverglades crossing
+  crossing BORDER_RIVERGLADES_TO_BURNING_STEPPES -> BORDER_BURNING_STEPPES_TO_RIVERGLADES: Riverglades <-> Burning Steppes
+  BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS: Riverglades side of the Riverglades/Swamp of Sorrows crossing
+  BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES: Swamp of Sorrows side of the Swamp of Sorrows/Riverglades crossing
+  crossing BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS -> BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES: Riverglades <-> Swamp of Sorrows
+  BORDER_LOCH_MODAN_TO_DUN_MOROGH: Loch Modan side of the Loch Modan/Dun Morogh crossing
+  BORDER_DUN_MOROGH_TO_LOCH_MODAN: Dun Morogh side of the Dun Morogh/Loch Modan crossing
+  crossing BORDER_LOCH_MODAN_TO_DUN_MOROGH -> BORDER_DUN_MOROGH_TO_LOCH_MODAN: Loch Modan <-> Dun Morogh (South Gate; captured at the gate on both sides)
+  BORDER_LOCH_MODAN_TO_WETLANDS: Loch Modan side of the Loch Modan/Wetlands crossing
+  BORDER_WETLANDS_TO_LOCH_MODAN: Wetlands side of the Wetlands/Loch Modan crossing
+  crossing BORDER_LOCH_MODAN_TO_WETLANDS -> BORDER_WETLANDS_TO_LOCH_MODAN: Loch Modan <-> Wetlands (via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel))
+  BORDER_LOCH_MODAN_TO_SEARING_GORGE: Loch Modan side of the Loch Modan/Searing Gorge crossing
+  BORDER_SEARING_GORGE_TO_LOCH_MODAN: Searing Gorge side of the Searing Gorge/Loch Modan crossing
+  crossing BORDER_LOCH_MODAN_TO_SEARING_GORGE -> BORDER_SEARING_GORGE_TO_LOCH_MODAN: Loch Modan <-> Searing Gorge (Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel)
+  BORDER_WETLANDS_TO_ARATHI_HIGHLANDS: Wetlands side of the Wetlands/Arathi Highlands crossing
+  BORDER_ARATHI_HIGHLANDS_TO_WETLANDS: Arathi Highlands side of the Arathi Highlands/Wetlands crossing
+  crossing BORDER_WETLANDS_TO_ARATHI_HIGHLANDS -> BORDER_ARATHI_HIGHLANDS_TO_WETLANDS: Wetlands <-> Arathi Highlands (Thandol Span; captured on both sides)
+  BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS: Arathi Highlands side of the Arathi Highlands/Hillsbrad Foothills crossing
+  BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS: Hillsbrad Foothills side of the Hillsbrad Foothills/Arathi Highlands crossing
+  crossing BORDER_ARATHI_HIGHLANDS_TO_HILLSBRAD_FOOTHILLS -> BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS: Arathi Highlands <-> Hillsbrad Foothills (captured on both sides)
+  BORDER_HILLSBRAD_FOOTHILLS_TO_HINTERLANDS: Hillsbrad Foothills side of the Hillsbrad Foothills/The Hinterlands crossing
+  BORDER_HINTERLANDS_TO_HILLSBRAD_FOOTHILLS: The Hinterlands side of the The Hinterlands/Hillsbrad Foothills crossing
+  crossing BORDER_HILLSBRAD_FOOTHILLS_TO_HINTERLANDS -> BORDER_HINTERLANDS_TO_HILLSBRAD_FOOTHILLS: Hillsbrad Foothills <-> The Hinterlands
+  BORDER_HILLSBRAD_FOOTHILLS_TO_SILVERPINE_FOREST: Hillsbrad Foothills side of the Hillsbrad Foothills/Silverpine Forest crossing
+  BORDER_SILVERPINE_FOREST_TO_HILLSBRAD_FOOTHILLS: Silverpine Forest side of the Silverpine Forest/Hillsbrad Foothills crossing
+  crossing BORDER_HILLSBRAD_FOOTHILLS_TO_SILVERPINE_FOREST -> BORDER_SILVERPINE_FOREST_TO_HILLSBRAD_FOOTHILLS: Hillsbrad Foothills <-> Silverpine Forest
+  BORDER_HILLSBRAD_FOOTHILLS_TO_ALTERAC_MOUNTAINS: Hillsbrad Foothills side of the Hillsbrad Foothills/Alterac Mountains crossing
+  BORDER_ALTERAC_MOUNTAINS_TO_HILLSBRAD_FOOTHILLS: Alterac Mountains side of the Alterac Mountains/Hillsbrad Foothills crossing
+  crossing BORDER_HILLSBRAD_FOOTHILLS_TO_ALTERAC_MOUNTAINS -> BORDER_ALTERAC_MOUNTAINS_TO_HILLSBRAD_FOOTHILLS: Hillsbrad Foothills <-> Alterac Mountains
+  BORDER_HINTERLANDS_TO_WESTERN_PLAGUELANDS: The Hinterlands side of the The Hinterlands/Western Plaguelands crossing
+  BORDER_WESTERN_PLAGUELANDS_TO_HINTERLANDS: Western Plaguelands side of the Western Plaguelands/The Hinterlands crossing
+  crossing BORDER_HINTERLANDS_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_HINTERLANDS: The Hinterlands <-> Western Plaguelands
+  BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS: Alterac Mountains side of the Alterac Mountains/Western Plaguelands crossing
+  BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS: Western Plaguelands side of the Western Plaguelands/Alterac Mountains crossing
+  crossing BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS: Alterac Mountains <-> Western Plaguelands
+  BORDER_SILVERPINE_FOREST_TO_TIRISFAL_GLADES: Silverpine Forest side of the Silverpine Forest/Tirisfal Glades crossing
+  BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST: Tirisfal Glades side of the Tirisfal Glades/Silverpine Forest crossing
+  crossing BORDER_SILVERPINE_FOREST_TO_TIRISFAL_GLADES -> BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST: Silverpine Forest <-> Tirisfal Glades
+  BORDER_TIRISFAL_GLADES_TO_WESTERN_PLAGUELANDS: Tirisfal Glades side of the Tirisfal Glades/Western Plaguelands crossing
+  BORDER_WESTERN_PLAGUELANDS_TO_TIRISFAL_GLADES: Western Plaguelands side of the Western Plaguelands/Tirisfal Glades crossing
+  crossing BORDER_TIRISFAL_GLADES_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_TIRISFAL_GLADES: Tirisfal Glades <-> Western Plaguelands
+  BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS: Western Plaguelands side of the Western Plaguelands/Eastern Plaguelands crossing
+  BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS: Eastern Plaguelands side of the Eastern Plaguelands/Western Plaguelands crossing
+  crossing BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS -> BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS: Western Plaguelands <-> Eastern Plaguelands

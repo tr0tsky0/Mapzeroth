@@ -6,147 +6,6 @@
 -- (`taxi`), the client's area name (`area`), or a locale string CITY_<KEY> / TOWN_<KEY>,
 -- in that order. Place names are built from a kind pattern and the settlement's name
 -- ("Goldshire Inn"), so a place needs no string of its own.
---
--- Held back (unconfirmed new Forever content; confirm in game and capture with
--- `/mzdump poi`):
---   Alterac Mountains (Dalaran): 7 bank NPC(s)
---   Alterac Mountains (Dalaran): 1 stable NPC(s)
---   Riverglades: 1 bank NPC(s)
---   a continent map (no exact position): 1 trainer NPC(s)
---
--- 131 places outside any city or town (starter areas and the like);
--- they keep a zone-based name:
---   convergence on map 1411 at (45.1, 15.7)
---   DEMON trainer on map 1411 at (40.6, 68.4)
---   WARRIOR trainer on map 1411 at (42.8, 69.4)
---   HUNTER trainer on map 1411 at (42.8, 69.2)
---   ROGUE trainer on map 1411 at (41.2, 68.0)
---   WARLOCK trainer on map 1411 at (40.6, 68.4)
---   SHAMAN trainer on map 1411 at (42.4, 69.0)
---   ALCHEMY trainer on map 1411 at (55.5, 74.0)
---   HERBALISM trainer on map 1411 at (55.5, 75.0)
---   PRIEST trainer on map 1411 at (42.4, 68.8)
---   MAGE trainer on map 1411 at (56.2, 75.0)
---   MAGE trainer on map 1411 at (42.5, 69.0)
---   FISHING trainer on map 1411 at (53.2, 81.5)
---   RIDING trainer on map 1411 at (55.2, 75.5)
---   battlemaster on map 1412 at (36.8, 30.8)
---   ENGINEERING trainer on map 1412 at (61.8, 31.5)
---   PALADIN trainer on map 1412 at (36.2, 29.7)
---   SHAMAN trainer on map 1412 at (33.6, 22.4)
---   DRUID trainer on map 1412 at (33.4, 22.0)
---   WARRIOR trainer on map 1412 at (44.0, 76.0)
---   DRUID trainer on map 1412 at (45.0, 76.0)
---   HUNTER trainer on map 1412 at (44.2, 75.8)
---   SHAMAN trainer on map 1412 at (45.0, 76.0)
---   MAGE trainer on map 1412 at (35.7, 30.1)
---   leyline on map 1416 at (19.9, 86.1)
---   leyline on map 1417 at (25.3, 30.0)
---   leyline on map 1417 at (48.0, 60.5)
---   LEATHERWORKING trainer on map 1417 at (28.2, 45.0)
---   LEATHERWORKING trainer on map 1418 at (62.5, 57.5)
---   WARRIOR trainer on map 1420 at (32.5, 65.6)
---   ROGUE trainer on map 1420 at (32.5, 65.6)
---   PRIEST trainer on map 1420 at (31.0, 66.0)
---   MAGE trainer on map 1420 at (30.8, 66.0)
---   WARLOCK trainer on map 1420 at (30.8, 66.2)
---   PALADIN trainer on map 1420 at (31.0, 66.2)
---   PALADIN trainer on map 1420 at (22.0, 47.2)
---   DEMON trainer on map 1420 at (30.8, 66.4)
---   battlemaster on map 1426 at (62.3, 35.3)
---   leyline on map 1426 at (56.6, 45.6)
---   leyline on map 1426 at (63.8, 50.7)
---   stable on map 1426 at (62.2, 34.6)
---   COOKING trainer on map 1426 at (68.4, 54.5)
---   FISHING trainer on map 1426 at (35.5, 40.3)
---   MINING trainer on map 1426 at (69.2, 55.5)
---   SHAMAN trainer on map 1426 at (28.8, 66.2)
---   WARLOCK trainer on map 1426 at (28.6, 66.2)
---   RIDING trainer on map 1426 at (63.8, 50.2)
---   DEMON trainer on map 1426 at (28.8, 66.2)
---   PRIEST trainer on map 1426 at (28.6, 66.5)
---   HUNTER trainer on map 1426 at (29.0, 67.5)
---   WARRIOR trainer on map 1426 at (28.8, 67.2)
---   ROGUE trainer on map 1426 at (28.4, 67.5)
---   PALADIN trainer on map 1426 at (28.8, 68.2)
---   MAGE trainer on map 1426 at (28.6, 66.4)
---   LEATHERWORKING trainer on map 1427 at (63.5, 75.7)
---   leyline on map 1428 at (78.6, 61.8)
---   battlemaster on map 1429 at (33.7, 11.0)
---   leyline on map 1429 at (64.9, 67.3)
---   stable on map 1429 at (25.2, 11.0)
---   TAILORING trainer on map 1429 at (79.2, 69.0)
---   ENCHANTING trainer on map 1429 at (64.8, 70.5)
---   ALCHEMY trainer on map 1429 at (39.8, 48.5)
---   HERBALISM trainer on map 1429 at (39.8, 48.4)
---   MAGE trainer on map 1429 at (49.5, 39.5)
---   HUNTER trainer on map 1429 at (51.2, 40.8)
---   PRIEST trainer on map 1429 at (49.8, 39.5)
---   WARLOCK trainer on map 1429 at (49.8, 42.6)
---   RIDING trainer on map 1429 at (84.2, 65.0)
---   DEMON trainer on map 1429 at (50.0, 42.6)
---   WARRIOR trainer on map 1429 at (50.2, 42.2)
---   ROGUE trainer on map 1429 at (50.5, 39.9)
---   PALADIN trainer on map 1429 at (50.4, 42.0)
---   leyline on map 1431 at (18.7, 57.2)
---   leyline on map 1431 at (72.5, 30.6)
---   HUNTER trainer on map 1432 at (82.3, 62.5)
---   ENGINEERING trainer on map 1432 at (45.8, 13.5)
---   PET trainer on map 1432 at (82.2, 62.6)
---   leyline on map 1433 at (12.6, 72.8)
---   SKINNING trainer on map 1433 at (88.8, 71.0)
---   leyline on map 1436 at (51.1, 67.5)
---   leyline on map 1436 at (59.8, 31.5)
---   stable on map 1438 at (25.4, 49.0)
---   WARRIOR trainer on map 1438 at (59.5, 38.5)
---   ROGUE trainer on map 1438 at (59.5, 38.7)
---   PRIEST trainer on map 1438 at (59.2, 40.5)
---   HUNTER trainer on map 1438 at (58.5, 40.5)
---   DRUID trainer on map 1438 at (58.6, 40.4)
---   LEATHERWORKING trainer on map 1438 at (41.8, 49.5)
---   ENCHANTING trainer on map 1438 at (36.8, 34.2)
---   FISHING trainer on map 1438 at (55.8, 93.5)
---   SKINNING trainer on map 1438 at (42.0, 50.0)
---   leyline on map 1439 at (57.6, 26.6)
---   FISHING trainer on map 1440 at (10.8, 33.5)
---   PET trainer on map 1440 at (18.0, 60.0)
---   HUNTER trainer on map 1440 at (50.0, 67.8)
---   ALCHEMY trainer on map 1440 at (50.8, 67.0)
---   HERBALISM trainer on map 1440 at (50.5, 67.0)
---   PET trainer on map 1440 at (49.8, 67.0)
---   SKINNING trainer on map 1440 at (50.0, 67.2)
---   HUNTER trainer on map 1440 at (18.0, 59.8)
---   LEATHERWORKING trainer on map 1443 at (55.2, 56.2)
---   LEATHERWORKING trainer on map 1444 at (89.4, 46.5)
---   LEATHERWORKING trainer on map 1447 at (37.5, 65.5)
---   PET trainer on map 1448 at (62.2, 24.2)
---   HUNTER trainer on map 1448 at (61.8, 23.5)
---   DRUID trainer on map 1448 at (61.9, 24.5)
---   stable on map 1450 at (56.2, 32.4)
---   HERBALISM trainer on map 1450 at (45.5, 46.9)
---   DRUID trainer on map 1450 at (52.5, 40.5)
---   convergence on map 2521 at (34.1, 59.8)
---   convergence on map 2521 at (35.9, 33.7)
---   convergence on map 2521 at (46.6, 38.2)
---   convergence on map 2521 at (47.6, 69.5)
---   convergence on map 2521 at (48.4, 20.3)
---   convergence on map 2521 at (48.5, 55.8)
---   convergence on map 2521 at (52.9, 57.5)
---   convergence on map 2521 at (59.1, 79.8)
---   leyline on map 2521 at (33.8, 55.5)
---   leyline on map 2521 at (35.3, 33.7)
---   leyline on map 2521 at (38.4, 47.6)
---   leyline on map 2521 at (45.5, 81.3)
---   leyline on map 2521 at (46.0, 18.1)
---   leyline on map 2521 at (48.0, 59.1)
---   leyline on map 2521 at (50.3, 33.2)
---   leyline on map 2521 at (53.8, 66.3)
---   leyline on map 2521 at (55.0, 50.4)
---   leyline on map 2521 at (58.8, 33.5)
---   leyline on map 2521 at (63.7, 45.9)
---   leyline on map 2521 at (63.9, 74.1)
---   leyline on map 2521 at (68.8, 61.9)
---   ENGINEERING trainer on map 2521 at (54.0, 38.9)
 
 local addonName, addon = ...
 if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
@@ -209,6 +68,8 @@ addon.Towns = {
 
 addon.Nodes.Pois = {
     { id = "CONVERGENCE_C1411_451_157", container = "kalimdor.durotar", mapID = 1411, x = 0.4512, y = 0.1570, kind = "convergence" },
+    { id = "CONVERGENCE_C1411_532_162", container = "kalimdor.durotar", mapID = 1411, x = 0.5317, y = 0.1615, kind = "convergence" },
+    { id = "ENTRANCE_C1411_355_46", container = "kalimdor.durotar", mapID = 1411, x = 0.3550, y = 0.0457, kind = "entrance", city = "orgrimmar" },
     { id = "ENTRANCE_C1411_455_119", container = "kalimdor.durotar", mapID = 1411, x = 0.4550, y = 0.1190, kind = "entrance", city = "orgrimmar" },
     { id = "INN_6928", container = "kalimdor.durotar", mapID = 1411, x = 0.5150, y = 0.4160, kind = "inn", town = "razor_hill", npcs = { { id = 6928 } } },
     { id = "STABLE_9987", container = "kalimdor.durotar", mapID = 1411, x = 0.5200, y = 0.4180, kind = "stable", town = "razor_hill", npcs = { { id = 9987 } } },
@@ -238,6 +99,11 @@ addon.Nodes.Pois = {
     { id = "TRAINER_DEMON_6027", container = "kalimdor.durotar", mapID = 1411, x = 0.5453, y = 0.4147, kind = "trainer", trainer = "DEMON", town = "razor_hill", npcs = { { id = 6027, faction = "Horde" } } },
     { id = "TRAINER_RIDING_7953", container = "kalimdor.durotar", mapID = 1411, x = 0.5520, y = 0.7550, kind = "trainer", trainer = "RIDING", npcs = { { id = 7953, faction = "Horde", teaches = { 10861, 33388, 33391 } } } },
     { id = "BATTLEMASTER_12198", container = "kalimdor.mulgore", mapID = 1412, x = 0.3680, y = 0.3080, kind = "battlemaster", npcs = { { id = 12198 } } },
+    { id = "CONVERGENCE_C1412_386_447", container = "kalimdor.mulgore", mapID = 1412, x = 0.3861, y = 0.4473, kind = "convergence" },
+    { id = "ENTRANCE_C1412_359_364", container = "kalimdor.mulgore", mapID = 1412, x = 0.3594, y = 0.3642, kind = "entrance", city = "thunder_bluff", area = 1638 },
+    { id = "ENTRANCE_C1412_383_407", container = "kalimdor.mulgore", mapID = 1412, x = 0.3831, y = 0.4066, kind = "entrance", city = "thunder_bluff", area = 1638 },
+    { id = "ENTRANCE_C1412_395_292", container = "kalimdor.mulgore", mapID = 1412, x = 0.3952, y = 0.2920, kind = "entrance", city = "thunder_bluff", area = 1638 },
+    { id = "ENTRANCE_C1412_422_300", container = "kalimdor.mulgore", mapID = 1412, x = 0.4222, y = 0.3003, kind = "entrance", city = "thunder_bluff", area = 1638 },
     { id = "INN_6747", container = "kalimdor.mulgore", mapID = 1412, x = 0.4660, y = 0.6100, kind = "inn", town = "bloodhoof_village", npcs = { { id = 6747 } } },
     { id = "STABLE_10050", container = "kalimdor.mulgore", mapID = 1412, x = 0.4680, y = 0.6020, kind = "stable", town = "bloodhoof_village", npcs = { { id = 10050 } } },
     { id = "TRAINER_ENGINEERING_10993", container = "kalimdor.mulgore", mapID = 1412, x = 0.6180, y = 0.3150, kind = "trainer", trainer = "ENGINEERING", npcs = { { id = 10993, faction = "Horde", teaches = { 4036 } } } },
@@ -261,6 +127,13 @@ addon.Nodes.Pois = {
     { id = "TRAINER_MAGE_5957", container = "kalimdor.mulgore", mapID = 1412, x = 0.3570, y = 0.3010, kind = "trainer", trainer = "MAGE", npcs = { { id = 5957, faction = "Horde" } } },
     { id = "TRAINER_SKINNING_6290", container = "kalimdor.mulgore", mapID = 1412, x = 0.4550, y = 0.5780, kind = "trainer", trainer = "SKINNING", town = "bloodhoof_village", npcs = { { id = 6290, faction = "Horde", teaches = { 8613, 8617, 8618, 10768 } } } },
     { id = "BANK_3496", container = "kalimdor.the_barrens", mapID = 1413, x = 0.6260, y = 0.3740, kind = "bank", town = "ratchet", npcs = { { id = 3496 }, { id = 8119 } } },
+    { id = "CONVERGENCE_C1413_436_422", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4358, y = 0.4215, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_448_550", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4479, y = 0.5497, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_485_463", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4850, y = 0.4629, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_491_155", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4907, y = 0.1547, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_497_346", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4967, y = 0.3458, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_540_266", container = "kalimdor.the_barrens", mapID = 1413, x = 0.5402, y = 0.2659, kind = "convergence" },
+    { id = "CONVERGENCE_C1413_548_347", container = "kalimdor.the_barrens", mapID = 1413, x = 0.5482, y = 0.3473, kind = "convergence" },
     { id = "INN_3934", container = "kalimdor.the_barrens", mapID = 1413, x = 0.5200, y = 0.2980, kind = "inn", town = "crossroads", npcs = { { id = 3934 } } },
     { id = "INN_6791", container = "kalimdor.the_barrens", mapID = 1413, x = 0.6200, y = 0.3940, kind = "inn", town = "ratchet", npcs = { { id = 6791 } } },
     { id = "INN_7714", container = "kalimdor.the_barrens", mapID = 1413, x = 0.4550, y = 0.5900, kind = "inn", town = "camp_taurajo", npcs = { { id = 7714 } } },
@@ -288,6 +161,7 @@ addon.Nodes.Pois = {
     { id = "TRAINER_HERBALISM_C1416_184_631", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1840, y = 0.6310, kind = "trainer", trainer = "HERBALISM", city = "dalaran", npcs = { { faction = "Alliance", teaches = { 2366, 2368, 3570, 11993 } } } },
     { id = "TRAINER_ALCHEMY_C1416_185_623", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1850, y = 0.6240, kind = "trainer", trainer = "ALCHEMY", city = "dalaran", npcs = { { faction = "Alliance", teaches = { 2259, 3101, 3464 } }, { faction = "Alliance", teaches = { 2259, 3101, 3464 } } } },
     { id = "TRAINER_BLACKSMITHING_C1416_197_633", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1970, y = 0.6330, kind = "trainer", trainer = "BLACKSMITHING", city = "dalaran", npcs = { { faction = "Alliance", teaches = { 2018, 3100, 3538 } } } },
+    { id = "CONVERGENCE_C1417_520_507", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.5205, y = 0.5070, kind = "convergence" },
     { id = "INN_9501", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.7380, y = 0.3250, kind = "inn", town = "hammerfall", npcs = { { id = 9501 } } },
     { id = "LEYLINE_C1417_253_300", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.2530, y = 0.3000, kind = "leyline" },
     { id = "LEYLINE_C1417_480_605", container = "easternkingdoms.arathi_highlands", mapID = 1417, x = 0.4800, y = 0.6050, kind = "leyline" },
@@ -467,6 +341,7 @@ addon.Nodes.Pois = {
     { id = "LEYLINE_C1436_511_675", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5110, y = 0.6750, kind = "leyline" },
     { id = "LEYLINE_C1436_598_315", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5980, y = 0.3150, kind = "leyline" },
     { id = "STABLE_10045", container = "easternkingdoms.westfall", mapID = 1436, x = 0.5300, y = 0.5300, kind = "stable", town = "sentinel_hill", npcs = { { id = 10045 } } },
+    { id = "CONVERGENCE_C1437_602_570", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.6020, y = 0.5698, kind = "convergence" },
     { id = "INN_1464", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.1060, y = 0.6080, kind = "inn", town = "menethil_harbor", npcs = { { id = 1464 } } },
     { id = "STABLE_10046", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.1040, y = 0.5960, kind = "stable", town = "menethil_harbor", npcs = { { id = 10046 } } },
     { id = "TRAINER_HERBALISM_1458", container = "easternkingdoms.wetlands", mapID = 1437, x = 0.0800, y = 0.5580, kind = "trainer", trainer = "HERBALISM", town = "menethil_harbor", npcs = { { id = 1458, faction = "Alliance", teaches = { 2366, 2368, 3570, 11993 } } } },
@@ -515,8 +390,10 @@ addon.Nodes.Pois = {
     { id = "TRAINER_PET_4320", container = "kalimdor.ashenvale", mapID = 1440, x = 0.4980, y = 0.6700, kind = "trainer", trainer = "PET", npcs = { { id = 4320, faction = "Alliance" } } },
     { id = "TRAINER_SKINNING_6288", container = "kalimdor.ashenvale", mapID = 1440, x = 0.5000, y = 0.6720, kind = "trainer", trainer = "SKINNING", npcs = { { id = 6288, faction = "Alliance" } } },
     { id = "TRAINER_HUNTER_8308", container = "kalimdor.ashenvale", mapID = 1440, x = 0.1800, y = 0.5980, kind = "trainer", trainer = "HUNTER", npcs = { { id = 8308, faction = "Alliance" } } },
+    { id = "CONVERGENCE_C1441_422_495", container = "kalimdor.thousand_needles", mapID = 1441, x = 0.4219, y = 0.4947, kind = "convergence" },
     { id = "INN_11116", container = "kalimdor.thousand_needles", mapID = 1441, x = 0.4600, y = 0.5150, kind = "inn", town = "freewind_post", npcs = { { id = 11116 } } },
     { id = "STABLE_11117", container = "kalimdor.thousand_needles", mapID = 1441, x = 0.4580, y = 0.5100, kind = "stable", town = "freewind_post", npcs = { { id = 11117 } } },
+    { id = "CONVERGENCE_C1442_748_944", container = "kalimdor.stonetalon_mountains", mapID = 1442, x = 0.7484, y = 0.9443, kind = "convergence" },
     { id = "INN_16458", container = "kalimdor.stonetalon_mountains", mapID = 1442, x = 0.3560, y = 0.0580, kind = "inn", town = "stonetalon_peak", npcs = { { id = 16458 } } },
     { id = "INN_7731", container = "kalimdor.stonetalon_mountains", mapID = 1442, x = 0.4750, y = 0.6200, kind = "inn", town = "sun_rock_retreat", npcs = { { id = 7731 } } },
     { id = "STABLE_10048", container = "kalimdor.stonetalon_mountains", mapID = 1442, x = 0.4780, y = 0.6120, kind = "stable", town = "sun_rock_retreat", npcs = { { id = 10048 } } },
@@ -602,6 +479,7 @@ addon.Nodes.Pois = {
     { id = "BANK_C1454_496_693", container = "kalimdor.durotar", mapID = 1454, x = 0.4960, y = 0.6930, kind = "bank", city = "orgrimmar", npcs = { { id = 3309 }, { id = 3318 }, { id = 3320 } } },
     { id = "BATTLEMASTER_14990", container = "kalimdor.durotar", mapID = 1454, x = 0.5030, y = 0.6590, kind = "battlemaster", city = "orgrimmar", npcs = { { id = 14990 }, { id = 15105 }, { id = 15106 } } },
     { id = "BATTLEMASTER_3890", container = "kalimdor.durotar", mapID = 1454, x = 0.7910, y = 0.3037, kind = "battlemaster", city = "orgrimmar", npcs = { { id = 3890 }, { id = 14942 }, { id = 15006 } } },
+    { id = "ENTRANCE_C1454_115_669", container = "kalimdor.durotar", mapID = 1454, x = 0.1150, y = 0.6686, kind = "entrance", city = "orgrimmar" },
     { id = "ENTRANCE_C1454_517_858", container = "kalimdor.durotar", mapID = 1454, x = 0.5170, y = 0.8580, kind = "entrance", city = "orgrimmar" },
     { id = "INN_C1454_541_684", container = "kalimdor.durotar", mapID = 1454, x = 0.5410, y = 0.6840, kind = "inn", city = "orgrimmar", npcs = { { id = 6929 } } },
     { id = "TRAINER_PET_10088", container = "kalimdor.durotar", mapID = 1454, x = 0.6647, y = 0.1520, kind = "trainer", trainer = "PET", city = "orgrimmar", npcs = { { id = 10088, faction = "Horde" } } },
@@ -659,6 +537,10 @@ addon.Nodes.Pois = {
     { id = "BANK_C1456_474_586", container = "kalimdor.mulgore", mapID = 1456, x = 0.4740, y = 0.5860, kind = "bank", city = "thunder_bluff", npcs = { { id = 2996 }, { id = 8356 }, { id = 8357 } } },
     { id = "BATTLEMASTER_14990_1456", container = "kalimdor.mulgore", mapID = 1456, x = 0.4400, y = 0.5727, kind = "battlemaster", city = "thunder_bluff", npcs = { { id = 14990 }, { id = 15105 }, { id = 15106 } } },
     { id = "BATTLEMASTER_7427", container = "kalimdor.mulgore", mapID = 1456, x = 0.5770, y = 0.7690, kind = "battlemaster", city = "thunder_bluff", npcs = { { id = 7427 }, { id = 10360 } } },
+    { id = "ENTRANCE_C1456_243_547", container = "kalimdor.mulgore", mapID = 1456, x = 0.2428, y = 0.5467, kind = "entrance", city = "thunder_bluff" },
+    { id = "ENTRANCE_C1456_376_790", container = "kalimdor.mulgore", mapID = 1456, x = 0.3764, y = 0.7901, kind = "entrance", city = "thunder_bluff" },
+    { id = "ENTRANCE_C1456_454_123", container = "kalimdor.mulgore", mapID = 1456, x = 0.4536, y = 0.1231, kind = "entrance", city = "thunder_bluff" },
+    { id = "ENTRANCE_C1456_607_173", container = "kalimdor.mulgore", mapID = 1456, x = 0.6070, y = 0.1727, kind = "entrance", city = "thunder_bluff" },
     { id = "INN_6746", container = "kalimdor.mulgore", mapID = 1456, x = 0.4560, y = 0.6388, kind = "inn", city = "thunder_bluff", npcs = { { id = 6746 } } },
     { id = "STABLE_10054", container = "kalimdor.mulgore", mapID = 1456, x = 0.4500, y = 0.5920, kind = "stable", city = "thunder_bluff", npcs = { { id = 10054 } } },
     { id = "TRAINER_PET_10086", container = "kalimdor.mulgore", mapID = 1456, x = 0.5440, y = 0.8333, kind = "trainer", trainer = "PET", city = "thunder_bluff", npcs = { { id = 10086, faction = "Horde" } } },
@@ -747,9 +629,16 @@ addon.Nodes.Pois = {
     { id = "CONVERGENCE_C2521_466_382", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4659, y = 0.3824, kind = "convergence" },
     { id = "CONVERGENCE_C2521_476_695", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4764, y = 0.6954, kind = "convergence" },
     { id = "CONVERGENCE_C2521_484_203", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4844, y = 0.2031, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_484_806", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4839, y = 0.8064, kind = "convergence" },
     { id = "CONVERGENCE_C2521_485_558", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4850, y = 0.5581, kind = "convergence" },
     { id = "CONVERGENCE_C2521_528_575", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5285, y = 0.5752, kind = "convergence" },
     { id = "CONVERGENCE_C2521_591_798", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.5914, y = 0.7981, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_616_515", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6159, y = 0.5153, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_648_380", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6485, y = 0.3802, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_675_505", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6751, y = 0.5054, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_679_749", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6789, y = 0.7494, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_684_660", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6836, y = 0.6604, kind = "convergence" },
+    { id = "CONVERGENCE_C2521_700_614", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.7004, y = 0.6141, kind = "convergence" },
     { id = "INN_C2521_430_433", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.4300, y = 0.4330, kind = "inn", town = "shendar_village" },
     { id = "INN_C2521_622_727", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.6218, y = 0.7269, kind = "inn", town = "valanaar" },
     { id = "LEYLINE_C2521_338_555", container = "zephras_isle.zephras_isle", mapID = 2521, x = 0.3380, y = 0.5550, kind = "leyline" },

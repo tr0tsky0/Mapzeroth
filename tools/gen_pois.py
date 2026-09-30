@@ -589,20 +589,21 @@ def main():
         "-- (`taxi`), the client's area name (`area`), or a locale string CITY_<KEY> / TOWN_<KEY>,",
         "-- in that order. Place names are built from a kind pattern and the settlement's name",
         "-- (\"Goldshire Inn\"), so a place needs no string of its own.",
-        "--",
-        "-- Held back (unconfirmed new Forever content; confirm in game and capture with",
-        "-- `/mzdump poi`):",
     ]
+    # What the generator left out or couldn't place is for whoever maintains the data, not for the game: it goes
+    # to a report next to the tools, and Pois.lua carries only what the addon reads.
+    report = ["Written by gen_pois.py each run; not read by the addon.", "",
+              "Held back (unconfirmed new Forever content; confirm in game and capture with `/mzdump poi`):"]
     for (zone, kind), count in sorted(held.items()):
-        lines.append(f"--   {zone}: {count} {kind} NPC(s)")
+        report.append(f"  {zone}: {count} {kind} NPC(s)")
     if unassigned:
-        lines += ["--", f"-- {len(unassigned)} places outside any city or town (starter areas and the like);",
-                  "-- they keep a zone-based name:"]
+        report += ["", f"{len(unassigned)} places outside any city or town (starter areas and the like), which keep a zone-based name:"]
         for p in unassigned:
             what = p["trainer"] and f"{p['trainer']} trainer" or p["kind"]
-            lines.append(f"--   {what} on map {p['map']} at ({p['pos'][0]:.1f}, {p['pos'][1]:.1f})")
+            report.append(f"  {what} on map {p['map']} at ({p['pos'][0]:.1f}, {p['pos'][1]:.1f})")
     if skipped_tags:
-        lines += ["--", "-- Trainer roles not modeled yet: " + ", ".join(f"{t} ({n})" for t, n in sorted(skipped_tags.items()))]
+        report += ["", "Trainer roles not modeled yet: " + ", ".join(f"{t} ({n})" for t, n in sorted(skipped_tags.items()))]
+    (ROOT / "tools" / "poi_report.txt").write_text("\n".join(report) + "\n", encoding="utf-8")
     lines += ["", "local addonName, addon = ...", "if addon.RULESET ~= \"forever\" then return end   -- one addon for both games: this data is Forever's (Constants.lua)", "", "addon.Nodes = addon.Nodes or {}", ""]
     lines += lua_table("Cities", cities, taxi) + [""]
     lines += lua_table("Towns", towns, taxi) + [""]
