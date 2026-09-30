@@ -18,9 +18,21 @@ local CONTENT_HEIGHT = 760      -- how tall the settings are laid out; the page 
 local widgets = {}
 local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
--- One option per row: its label and description on the left, at whatever width the page has, and its control
--- (a dropdown) at the right-hand edge, level with the label.
-local TEXT_WIDTH = 470
+-- One option per row: its label and description on the left, and its control (a dropdown, all one width) at the
+-- right-hand edge, level with the label. The description stops short of the control, whatever width the page has
+-- (fitTexts, below, sets that as the page is sized).
+local CONTROL_WIDTH = 150
+local GAP = 16                      -- between a description and the control beside it
+local START_WIDTH = 600             -- the page's width until it has been laid out
+local texts = {}                    -- the descriptions to fit: { hint = fontstring, beside = true when a control sits at its right }
+
+local function textWidth(pageWidth, beside)
+    return math.max(160, pageWidth - 2 * PAD - (beside and (CONTROL_WIDTH + GAP) or 0))
+end
+
+local function fitTexts(pageWidth)
+    for _, t in ipairs(texts) do t.hint:SetWidth(textWidth(pageWidth, t.beside)) end
+end
 
 local function optionRow(parent, top, label, description)
     local title = Theme:Text(parent, "body")
@@ -28,9 +40,10 @@ local function optionRow(parent, top, label, description)
     title:SetText(label)
     local hint = Theme:Text(parent, "dim")
     hint:SetPoint("TOPLEFT", PAD, -(top + 20))
-    hint:SetWidth(TEXT_WIDTH)
+    hint:SetWidth(textWidth(START_WIDTH, true))
     hint:SetWordWrap(true)
     hint:SetText(description)
+    texts[#texts + 1] = { hint = hint, beside = true }
     return title, hint
 end
 
@@ -38,7 +51,7 @@ end
 local function toggleRow(parent, top, key, label, description)
     local _, hint = optionRow(parent, top, label, description)
     local choices = { { id = true, label = L["OPT_ON"] }, { id = false, label = L["OPT_OFF"] } }
-    local dropdown = Theme:Dropdown(parent, 120, choices, function(id) Options:Set(key, id) end, menuHost)
+    local dropdown = Theme:Dropdown(parent, CONTROL_WIDTH, choices, function(id) Options:Set(key, id) end, menuHost)
     dropdown.button:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -PAD, -(top + 2))
     dropdown.hint = hint
     dropdown.key = key
@@ -53,9 +66,10 @@ local function sliderRow(parent, top, key, label, description, formatValue)
 
     local hint = Theme:Text(parent, "dim")
     hint:SetPoint("TOPLEFT", PAD, -(top + 20))
-    hint:SetWidth(520)
+    hint:SetWidth(textWidth(START_WIDTH, false))
     hint:SetWordWrap(true)
     hint:SetText(description)
+    texts[#texts + 1] = { hint = hint, beside = false }
 
     local slider = Theme:Slider(parent, 300)
     slider:SetPoint("TOPLEFT", PAD, -(top + 58))
@@ -87,7 +101,7 @@ function OptionsPanel:Build()
     scroll:SetPoint("TOPLEFT", 12, -12)             -- inside Classic's frame border as well as Modern Dark's line
     scroll:SetPoint("BOTTOMRIGHT", -32, 12)
     local box = CreateFrame("Frame", nil, scroll)
-    box:SetSize(600, CONTENT_HEIGHT)
+    box:SetSize(START_WIDTH, CONTENT_HEIGHT)
     scroll:SetScrollChild(box)
 
     local bar = Theme:Slider(panel, 100, true)
@@ -100,7 +114,10 @@ function OptionsPanel:Build()
     end)
     local function fit()
         local width = scroll:GetWidth()
-        if width and width > 0 then box:SetWidth(width) end
+        if width and width > 0 then
+            box:SetWidth(width)
+            fitTexts(width)
+        end
         local range = math.max(0, CONTENT_HEIGHT - (scroll:GetHeight() or CONTENT_HEIGHT))
         bar:SetMinMaxValues(0, range)
         bar:SetShown(range > 0)
@@ -125,7 +142,7 @@ function OptionsPanel:Build()
     optionRow(box, 272, L["OPT_THEME"], L["OPT_THEME_DESC"])
     local choices = {}
     for _, id in ipairs(Theme:List()) do choices[#choices + 1] = { id = id, label = Theme:Label(id) } end
-    widgets.theme = Theme:Dropdown(box, 220, choices, function(id) Options:Set("theme", id) end, menuHost)
+    widgets.theme = Theme:Dropdown(box, CONTROL_WIDTH, choices, function(id) Options:Set("theme", id) end, menuHost)
     widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -274)
 
     widgets.routeMap = toggleRow(box, 352, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
@@ -137,7 +154,7 @@ function OptionsPanel:Build()
     widgets.assumeFlights = toggleRow(box, 512, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
 
     optionRow(box, 592, L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"])
-    widgets.stepMarkers = Theme:Dropdown(box, 160,
+    widgets.stepMarkers = Theme:Dropdown(box, CONTROL_WIDTH,
         { { id = "icon", label = L["OPT_MARKERS_ICON"] }, { id = "chip", label = L["OPT_MARKERS_CHIP"] } },
         function(id) Options:Set("stepMarkers", id) end, menuHost)
     widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -594)
