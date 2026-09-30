@@ -27,7 +27,8 @@ addon:RegisterLocale("enUS", {
     NODE_PORTAL_DARNASSUS_RUTTHERAN = "Gate to Rut'theran Village",
     NODE_PORTAL_RUTTHERAN_DARNASSUS = "Gate to Darnassus",
     NODE_TELEPORT_MOONGLADE        = "Moonglade Teleport Landing",
-    NODE_ZEPPELIN_ORGRIMMAR        = "Orgrimmar Zeppelin Tower",
+    NODE_ZEPPELIN_ORGRIMMAR_GROMGOL  = "Orgrimmar Zeppelin Tower (Grom'gol)",
+    NODE_ZEPPELIN_ORGRIMMAR_TIRISFAL = "Orgrimmar Zeppelin Tower (Undercity)",
 
     -- Eastern Kingdoms
     NODE_DOCK_BOOTYBAY             = "Booty Bay Harbor",
@@ -44,8 +45,10 @@ addon:RegisterLocale("enUS", {
     NODE_TAXI_POWDERFUSE           = "Powderfuse Port, Riverglades",
     NODE_TRAM_IRONFORGE            = "Deeprun Tram Entrance (Ironforge)",
     NODE_TRAM_STORMWIND            = "Deeprun Tram Entrance (Stormwind)",
-    NODE_ZEPPELIN_GROMGOL          = "Grom'gol Zeppelin Tower",
-    NODE_ZEPPELIN_TIRISFAL         = "Tirisfal Zeppelin Tower",
+    NODE_ZEPPELIN_GROMGOL_ORGRIMMAR = "Grom'gol Zeppelin Tower (Orgrimmar)",
+    NODE_ZEPPELIN_GROMGOL_TIRISFAL = "Grom'gol Zeppelin Tower (Undercity)",
+    NODE_ZEPPELIN_TIRISFAL_ORGRIMMAR = "Tirisfal Zeppelin Tower (Orgrimmar)",
+    NODE_ZEPPELIN_TIRISFAL_GROMGOL = "Tirisfal Zeppelin Tower (Grom'gol)",
 
     -- Zephras Isle
     NODE_DOCK_ZEPHRAS_ALLIANCE     = "Zephras Isle Airship Dock (Dalaran)",

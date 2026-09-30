@@ -146,11 +146,11 @@ for _, edge in ipairs({
     { from = "PORTAL_RUTTHERAN_DARNASSUS", to = "PORTAL_DARNASSUS_RUTTHERAN", method = "transition", cost = 2, loadingScreens = 1 }, -- Rut'theran <-> Darnassus
 
     -- Zeppelins (Horde only)
-    -- Same shuttle model as the ships (average = 2T + D). Orgrimmar<->Grom'gol
-    -- measured live: T = 60, D = 60 -> best 60, worst 300, average 180.
-    { from = "ZEPPELIN_ORGRIMMAR", to = "ZEPPELIN_TIRISFAL", method = "zeppelin", cost = 180, requirements = { faction = "Horde" } }, -- estimated from the Orgrimmar<->Grom'gol measurement, not independently timed
-    { from = "ZEPPELIN_ORGRIMMAR", to = "ZEPPELIN_GROMGOL", method = "zeppelin", cost = 180, requirements = { faction = "Horde" } }, -- MEASURED live: T = 60, D = 60
-    { from = "ZEPPELIN_TIRISFAL", to = "ZEPPELIN_GROMGOL", method = "zeppelin", cost = 180, requirements = { faction = "Horde" } }, -- estimated from the Orgrimmar<->Grom'gol measurement, not independently timed
+    -- Same shuttle model as the ships (average = 2T + D), all three legs measured live (D = 60):
+    -- Orgrimmar <-> Undercity T = 120, Undercity <-> Grom'gol T = 90, Grom'gol <-> Orgrimmar T = 95.
+    { from = "ZEPPELIN_ORGRIMMAR_TIRISFAL", to = "ZEPPELIN_TIRISFAL_ORGRIMMAR", method = "zeppelin", cost = 300, requirements = { faction = "Horde" } }, -- MEASURED live Orgrimmar -> Undercity: T = 120, D = 60 -> 2T + D = 300 (taken as the same both ways)
+    { from = "ZEPPELIN_ORGRIMMAR_GROMGOL", to = "ZEPPELIN_GROMGOL_ORGRIMMAR", method = "zeppelin", cost = 250, requirements = { faction = "Horde" } }, -- MEASURED live Grom'gol -> Orgrimmar: T = 95, D = 60 -> 2T + D = 250 (taken as the same both ways; an earlier reading of T = 60 is superseded)
+    { from = "ZEPPELIN_TIRISFAL_GROMGOL", to = "ZEPPELIN_GROMGOL_TIRISFAL", method = "zeppelin", cost = 240, requirements = { faction = "Horde" } }, -- MEASURED live Undercity -> Grom'gol: T = 90, D = 60 -> 2T + D = 240 (taken as the same both ways)
 
     -- Deeprun Tram (Alliance only), exterior entrance to exterior entrance.
     -- Cost is everything inside the instance (run to platform + wait + ride +

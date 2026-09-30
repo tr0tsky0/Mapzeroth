@@ -64,8 +64,10 @@ addon.Nodes.EasternKingdoms = {
     -- (Atlas map calibration + /mzdump resolve). VERIFY IN-GAME.
     -- Powderfuse Port resolving to mapID 2548 (Riverglades) independently
     -- confirms that container assignment from the taxi-node dump.
-    { id = "ZEPPELIN_TIRISFAL", container = "easternkingdoms.tirisfal_glades",     mapID = 1420, x = 0.8018, y = 0.4475 }, -- Tirisfal Zeppelin Towers (ESTIMATED)
-    { id = "ZEPPELIN_GROMGOL",  container = "easternkingdoms.stranglethorn_vale",  mapID = 1434, x = 0.3450, y = 0.2647 }, -- Grom'gol Zeppelin Tower (ESTIMATED)
+    { id = "ZEPPELIN_TIRISFAL_ORGRIMMAR", container = "easternkingdoms.tirisfal_glades", mapID = 1420, x = 0.6070, y = 0.5880 }, -- Tirisfal Zeppelin Tower, the Orgrimmar platform (captured live)
+    { id = "ZEPPELIN_TIRISFAL_GROMGOL", container = "easternkingdoms.tirisfal_glades", mapID = 1420, x = 0.6190, y = 0.5910 }, -- Tirisfal Zeppelin Tower, the Grom'gol platform (captured live)
+    { id = "ZEPPELIN_GROMGOL_ORGRIMMAR", container = "easternkingdoms.stranglethorn_vale", mapID = 1434, x = 0.3130, y = 0.3010 }, -- Grom'gol Zeppelin Tower, the Orgrimmar platform (captured live)
+    { id = "ZEPPELIN_GROMGOL_TIRISFAL", container = "easternkingdoms.stranglethorn_vale", mapID = 1434, x = 0.3160, y = 0.2920 }, -- Grom'gol Zeppelin Tower, the Undercity platform (captured live)
     { id = "DOCK_MENETHIL",     container = "easternkingdoms.wetlands",            mapID = 1437, x = 0.0464, y = 0.5716 }, -- Menethil pier for the Auberdine/Southshore loop (captured live; the earlier estimate was ~7% off in y)
     { id = "DOCK_MENETHIL_THERAMORE", container = "easternkingdoms.wetlands",    mapID = 1437, x = 0.0509, y = 0.6351 }, -- Menethil pier for the Theramore ship (captured live)
     { id = "DOCK_SOUTHSHORE",   container = "easternkingdoms.hillsbrad_foothills", mapID = 1424, x = 0.5053, y = 0.6975 }, -- Southshore Harbor (captured live; the earlier estimate was ~19% off in y)

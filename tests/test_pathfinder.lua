@@ -20,10 +20,10 @@ check(not methods(h):find("tram"), "Horde must not take the tram")
 check(h.cost > r.cost * 3, "walking is far slower than the flight")
 
 -- 3. Zeppelins are Horde-only.
-local z = route(horde, "ZEPPELIN_ORGRIMMAR", "ZEPPELIN_GROMGOL")
+local z = route(horde, "ZEPPELIN_ORGRIMMAR_GROMGOL", "ZEPPELIN_GROMGOL_ORGRIMMAR")
 check(z and z.steps[1].method == "zeppelin", "Horde takes the zeppelin")
 -- Alliance can still cross (the neutral Booty Bay-Ratchet ship), just never by zeppelin.
-local az = route(ali, "ZEPPELIN_ORGRIMMAR", "ZEPPELIN_GROMGOL")
+local az = route(ali, "ZEPPELIN_ORGRIMMAR_GROMGOL", "ZEPPELIN_GROMGOL_ORGRIMMAR")
 check(az and not methods(az):find("zeppelin"), "Alliance can't use zeppelins: " .. (az and methods(az) or "nil"))
 
 -- 4. The Auberdine-Menethil-Southshore loop: the pass-through edge (488s + a

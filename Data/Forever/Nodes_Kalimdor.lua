@@ -79,7 +79,8 @@ addon.Nodes.Kalimdor = {
     { id = "DOCK_STEAMWHEEDLE", container = "kalimdor.tanaris",              mapID = 1446, x = 0.6538, y = 0.2245 }, -- Steamwheedle Port (ESTIMATED, new Forever route)
     { id = "DOCK_FEATHERMOON",  container = "kalimdor.feralas",              mapID = 1444, x = 0.2780, y = 0.3171 }, -- Feathermoon Stronghold Harbor (ESTIMATED)
     { id = "DOCK_FORGOTTENCOAST", container = "kalimdor.feralas",           mapID = 1444, x = 0.3542, y = 0.5040 }, -- Forgotten Coast Harbor (ESTIMATED)
-    { id = "ZEPPELIN_ORGRIMMAR", container = "kalimdor.durotar",            mapID = 1411, x = 0.4768, y = 0.3067 }, -- Orgrimmar Zeppelin Towers (ESTIMATED)
+    { id = "ZEPPELIN_ORGRIMMAR_GROMGOL", container = "kalimdor.durotar", mapID = 1411, x = 0.5070, y = 0.1280 }, -- Orgrimmar Zeppelin Tower, the Grom'gol platform (captured live)
+    { id = "ZEPPELIN_ORGRIMMAR_TIRISFAL", container = "kalimdor.durotar", mapID = 1411, x = 0.5080, y = 0.1370 }, -- Orgrimmar Zeppelin Tower, the Undercity platform (captured live)
 
     -- Captured live with `/mzdump here` (exact, not estimated).
     { id = "PORTAL_RUTTHERAN_DARNASSUS", container = "kalimdor.teldrassil.ruttheran",   mapID = 1438, x = 0.5592, y = 0.8969 }, -- Rut'theran Village portal to Darnassus
