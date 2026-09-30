@@ -131,3 +131,8 @@ for _ in pairs(addon.CLASS_TOKENS) do classCount = classCount + 1 end
 check(classCount == 9 and not addon.CLASS_TOKENS.DEATHKNIGHT, "Forever has its nine classes")
 check(addon.FREQUENT_FLIER and addon.FREQUENT_FLIER.spellID == 1225490, "Forever has the Frequent Flier perk")
 check(addon.HOLIDAYS == nil, "Forever has no holiday table")
+
+-- A profession is had by knowing any of its ranks: a Journeyman whose Apprentice spell has been replaced (only 8617
+-- known) still has skinning, and needs Expert.
+check(shendar and relevant(shendar, { class = "SHAMAN", faction = "Horde", spells = { 8617 } }),
+    "a Journeyman skinner who no longer knows the Apprentice spell still sees the trainers")

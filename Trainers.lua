@@ -74,7 +74,8 @@ local function needFor(node, ctx)
         end
         local wanted = {}
         if ranks[known + 1] then wanted[ranks[known + 1]] = true end
-        return ctx.knowsSpell(firstRank), wanted,
+        -- Having the profession is knowing any of its ranks: a higher rank can replace the Apprentice spell.
+        return ctx.knowsSpell(firstRank) or known > 0, wanted,
             { ranks = ranks, known = known, anyone = addon.GatheringProfessions and addon.GatheringProfessions[token] }
     end
     return true, nil
