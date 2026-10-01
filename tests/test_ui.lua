@@ -608,14 +608,14 @@ addon.Panel:Query("")
 local relevant = headerIndex("relevant")
 check(relevant, "there is a Personally relevant section")
 addon.Panel:Choose(relevant)
-check(not pickNamed("Nearest Ley Line"), "no ley line pick for a character who can't read them")
+check(not pickNamed("Nearest Potential Ley Line"), "no ley line pick for a character who can't read them")
 check(pickNamed("Nearest Class Trainer"), "but their class trainer is there")
 addon.Panel:Choose(relevant)
 IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
 WorldMapFrame._hooks.OnShow()
 addon.Panel:Query("")
 addon.Panel:Choose(headerIndex("relevant"))
-local leyline = pickNamed("Nearest Ley Line")
+local leyline = pickNamed("Nearest Potential Ley Line")
 check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4, "a Skyborne is offered the nearest ley line, over every one we know")
 IsPlayerSpell = function() return false end
 

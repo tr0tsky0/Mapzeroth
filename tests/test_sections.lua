@@ -33,7 +33,7 @@ check(#sections == 3 and sections[1].id == "relevant" and sections[2].id == "cit
 local mage = picks(sections)
 check(mage["Nearest Class Trainer"] and #mage["Nearest Class Trainer"].nodeIDs >= 2, "a mage has a class trainer pick over every mage trainer")
 check(mage["Nearest Weapon Trainer"], "and a weapon master that teaches something they can learn")
-check(not mage["Nearest Pet Trainer"] and not mage["Nearest Demon Trainer"] and not mage["Nearest Ley Line"], "no pet or demon trainers, no ley lines")
+check(not mage["Nearest Pet Trainer"] and not mage["Nearest Demon Trainer"] and not mage["Nearest Potential Ley Line"], "no pet or demon trainers, no ley lines")
 for _, item in ipairs(section(sections, "relevant").items) do
     check(item.nodeIDs and #item.nodeIDs > 0 and item.nodeID == item.nodeIDs[1], "each pick can be routed to: " .. item.name)
 end
@@ -51,12 +51,12 @@ check(not picks((sectionsFor({ class = "WARRIOR", faction = "Alliance" })))["Nea
 
 -- Ley lines for Skyborne (whoever can read them).
 local skyborne = picks((sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })))
-check(skyborne["Nearest Ley Line"] and #skyborne["Nearest Ley Line"].nodeIDs >= 4, "a Skyborne has the nearest ley line, over all of them")
+check(skyborne["Nearest Potential Ley Line"] and #skyborne["Nearest Potential Ley Line"].nodeIDs >= 4, "a Skyborne has the nearest ley line, over all of them")
 
 -- Horde Skyborne get the nearest elemental convergence instead, and no ley line.
 local hordeSky = picks((sectionsFor({ class = "DRUID", faction = "Horde", spells = { 1259686 } })))
-check(hordeSky["Nearest Elemental Convergence"] and #hordeSky["Nearest Elemental Convergence"].nodeIDs >= 4, "a Horde Skyborne has the nearest convergence, over all of them")
-check(not hordeSky["Nearest Ley Line"] and not skyborne["Nearest Elemental Convergence"], "each faction gets only its own")
+check(hordeSky["Nearest Potential Elemental Convergence"] and #hordeSky["Nearest Potential Elemental Convergence"].nodeIDs >= 4, "a Horde Skyborne has the nearest convergence, over all of them")
+check(not hordeSky["Nearest Potential Ley Line"] and not skyborne["Nearest Potential Elemental Convergence"], "each faction gets only its own")
 
 -- Weapons already known aren't offered again: a character who knows all of a weapon master's skills gets no pick.
 local knowsAll = {}
