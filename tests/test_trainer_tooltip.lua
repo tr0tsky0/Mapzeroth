@@ -28,16 +28,16 @@ check(has(lines, L["TIP_NOTHING_NEW"]), "nothing left: says so")
 
 -- 2. Profession trainers: each trainer's rank and the skill it trains up to; yours.
 local master = findNode(function(n)
-    for _, npc in ipairs(n.npcs or {}) do if npc.id == 11052 then return true end end   -- Artisan tailor
+    for _, npc in ipairs(n.npcs or {}) do if npc.id == 11052 then return true end end   -- Master tailor (tier 4, recipes up to 300)
 end)
 info = addon.Trainers:Describe(master, makeCtx({ spells = { 3908, 3909, 3910 } }))
 check(info.kind == "profession" and info.rank == 3 and info.has, "an Expert tailor")
 local artisan
-for _, npc in ipairs(info.npcs) do if npc.top == 4 then artisan = npc end end
-check(artisan and artisan.useful, "the Artisan trainer is useful to an Expert")
+for _, npc in ipairs(info.npcs) do if npc.top == 5 then artisan = npc end end
+check(artisan and artisan.useful, "the Master trainer is useful to an Expert")
 lines = addon.Panel.TooltipLines(entryFor(master), makeCtx({ spells = { 3908, 3909, 3910 } }))
 check(has(lines, L["TIP_PROF_YOUR_RANK"]:format(L["PROF_RANK_3"])), "shows your rank")
-check(has(lines, L["TIP_PROF_TRAINER"]:format(L["PROF_RANK_4"], 300)), "and the trainer's: Artisan, up to 300")
+check(has(lines, L["TIP_PROF_TRAINER"]:format(L["PROF_RANK_5"], 300)), "and the trainer's: its title tier, Master, up to 300")
 lines = addon.Panel.TooltipLines(entryFor(master), makeCtx({}))
 check(has(lines, L["TIP_PROF_NOT_KNOWN"]), "a player without tailoring is told so")
 lines = addon.Panel.TooltipLines(entryFor(master), makeCtx({ spells = { 3908, 3909, 3910, 12180 } }))

@@ -181,6 +181,22 @@ function Sections:Price(sections, session)
             item.nearest, item.eta = nearest, cost
             local place = item.pick and nearest and sections.index[nearest]
             item.where = place and place.name or nil
+            -- A pick with a choice of places also gets its quickest round trip, when that is somewhere else than the
+            -- nearest (the nearest place's own round trip is slower): the panel then lists both.
+            item.roundTrip = nil
+            if item.pick and nearest and #item.nodeIDs > 1 then
+                local best = addon.Journey:RoundTrip(session, item.nodeIDs)
+                if best and best.nodeID ~= nearest then
+                    local own = addon.Journey:RoundTrip(session, { nearest })
+                    if not own or best.total + 1 < own.total then
+                        local there = sections.index[best.nodeID]
+                        item.roundTrip = {
+                            nearest = best.nodeID, where = there and there.name or nil, eta = best.total,
+                            out = best.out, back = best.back, banned = best.banned, backBanned = best.backBanned,
+                        }
+                    end
+                end
+            end
         end
         if section.id ~= "relevant" then
             table.sort(section.items, function(a, b)

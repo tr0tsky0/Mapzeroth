@@ -18,6 +18,7 @@ local definitions = {
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
     assumeFlightsFound = { default = true, boolean = true },              -- a flight point Mapzeroth hasn't seen a flight master's window about counts as found (FlightKnowledge.lua)
     docked = { default = true, boolean = true },
+    hideSllcmHint = { default = false, boolean = true },                  -- the picker's pointer to Skyborne Ley Line & Convergence Marker, dismissed (UI/Panel.lua)
     hideMinimapButton = { default = false, boolean = true },              -- the button on the minimap rim (UI/MinimapButton.lua)
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)                          -- the panel: docked beside the map, or free-floating (UI/Panel.lua)
 }

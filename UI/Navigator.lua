@@ -170,8 +170,8 @@ end
 
 -- The player flew somewhere the route didn't go (a mis-click; to change their mind they can stop and pick
 -- again): plan the way on from where they landed.
-function Navigator:Replan(entry)
-    local plan = Journey:PlanFromHere(entry)
+function Navigator:Replan(entry, returnTo)
+    local plan = Journey:PlanFromHere(entry, returnTo)
     if plan and #plan.steps > 0 then
         Navigation:Start(entry, plan, "NAV_REROUTED")
         addon.Panel:OnRerouted(entry, plan)
@@ -191,7 +191,7 @@ function Navigator:Render(model)
     if addon.RouteLines then addon.RouteLines:Follow(plan, index) end
     if addon.MinimapLines then addon.MinimapLines:Follow(plan, index) end
     if model and model.replan then
-        self:Replan(model.entry)
+        self:Replan(model.entry, model.returnTo)
         return
     end
     addon.Equipment:Sync(model)             -- put back what an equip step replaced, once the trip is past using it

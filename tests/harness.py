@@ -56,6 +56,8 @@ function makeCtx(overrides)
         raceID = overrides.raceID or 1,
         level = overrides.level or 20,
         knowsSpell = function(id) return known[id] or false end,
+        professionSkill = function(token) return (overrides.skills or {})[token] end,   -- skills = { TAILORING = 76 }; absent: unknown
+        talentRank = function(id) return (overrides.talents or {})[id] or 0 end,   -- talents = { [spellID] = points }
         hasItem = function(id) return items[id] or false end,
         hasToy = function(id) return toys[id] or false end,
         isEquippable = function(id) return equippable[id] or false end,

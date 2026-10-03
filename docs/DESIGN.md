@@ -242,6 +242,10 @@ A profession trainer's teaches list is limited to its own profession's ranks. In
 
 `addon.ClassWeapons` is a Classic recollection and is unverified for Forever, and `addon.ProfessionRanks` lacks the higher-rank spell IDs no trainer has been seen teaching. Both are flagged in their data files.
 
+### Round trips for "Nearest ..." picks
+
+A "Nearest ..." pick (ley line, trainers) normally shows the quickest way *there*. Where the pick has several places and the quickest round trip (there, and back to where the player stood) is somewhere else, and quicker than the nearest place's own round trip, the picker shows two rows: "(one way)" for the nearest and "(round trip)" for the other, with the round trip's total time. Where they agree it is one row, unchanged. A one-place pick (the waypoint) has nothing to choose, so it stays one row. An ability with a cooldown (the hearthstone, Astral Recall) is spent by whichever leg uses it, so the search tries every split of those abilities between the two legs (`Journey:RoundTrip`, `Pathfinder` `opts.banned`); abilities without one (Teleport: Moonglade, the mage teleports) can be used both ways. A per-search one-way/round-trip toggle for ordinary routes is deliberately not built: add it if players ask.
+
 ## 5b. The destination panel and themes
 
 The first slice of the UI is a panel docked to the World Map's right edge (inside the map's edge when the map is maximised): a search box, matching places with the time to each, and a chosen destination's route as steps. Lines on the map, the pop-out window and the collapsed strip come later. The pieces:

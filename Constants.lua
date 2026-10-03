@@ -11,6 +11,13 @@ addon.WALK_SPEED = 7
 -- road measured 1.06 (cities measured 1.7-2.0). Refine with more samples.
 addon.DEFAULT_PATH_FACTOR = 1.15
 
+-- The player's other addon, which pins where ley lines and convergences have been found: the picker points to it
+-- (UI/Panel.lua) until they have it or dismiss the pointer. WoW can't open links, so the popup offers the URL to copy.
+-- SLLCM_FOLDERS: its AddOns folder names (the released one, and the dev copy).
+addon.SLLCM_NAME = "Skyborne Ley Line & Convergence Marker"
+addon.SLLCM_URL = "https://www.curseforge.com/wow/addons/sllcm"
+addon.SLLCM_FOLDERS = { "SkyborneLeyLineConvergenceMarker", "SkyborneLeyLineConvergenceMarker-Dev" }
+
 -- Seconds added per loading screen when totalling a route.
 addon.DEFAULT_LOADING_SCREEN_TAX = 10     -- the player can change it (Options.lua)
 
@@ -26,6 +33,11 @@ addon.FLIGHT_CHAIN_SAVING = 0.10
 -- case; a trainer whose top rank is at most this many above the player's own is taken to talk to them
 -- (so an Apprentice can learn Journeyman from an Expert-tier trainer, and then talk to the Artisan).
 addon.PROFESSION_TRAINER_REACH = 2
+
+-- The skill range each tier of profession trainer teaches recipes over (Journeyman, Expert, Artisan,
+-- Master), from the NPC's title (`tier` in Pois.lua). They overlap: from the next tier's required skill
+-- on, either trainer has something. A trainer is worth a trip while the player's skill is inside its range.
+addon.PROFESSION_TIER_SKILL = { { 0, 75 }, { 50, 150 }, { 125, 225 }, { 200, 300 } }
 
 -- Auto-generated `fly` edges (only where a ruleset has flying) connect nodes
 -- within this many yards of each other, continent-wide.

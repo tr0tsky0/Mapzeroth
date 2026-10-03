@@ -33,6 +33,12 @@ addon.SkysightSpell = 1259686
 addon.Abilities.GroundForms = {
     { spellID = 783,  bonus = 0.40, indoorCapable = false }, -- Druid: Travel Form
     { spellID = 2645, bonus = 0.40, indoorCapable = false }, -- Shaman: Ghost Wolf
+    -- Hunter: Aspect of the Cheetah (+30%, dazed when hit). Works indoors. Confirmed on Forever.
+    { spellID = 5118, bonus = 0.30, indoorCapable = true },
+    -- Druid: Cat Form with Feral Swiftness (+15% a rank, 2 ranks). The bonus comes from the talent's rank in the
+    -- talent tree (ctx.talentRank), not from knowing the form; Cat Form works indoors. Confirmed live: 17002
+    -- reads as known, there is no separate spell per rank, and the rank lives on the trait node.
+    { spellID = 768, talent = { spellID = 17002, perRank = 0.15 }, indoorCapable = true },
 }
 
 addon.Abilities.Teleports = {

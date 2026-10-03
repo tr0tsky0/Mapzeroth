@@ -14,10 +14,10 @@ local function bestRidingBonus(ctx)
     return best
 end
 
--- container is a World container object or a path.
-function addon:GetGroundSpeed(container, ctx)
+-- The multiplier on base speed that wins in this container, and the form behind it (nil: none, or a mount).
+local function bestMultiplier(container, ctx)
     local indoor = addon.World:GetFlag(container, "indoor")
-    local best = 1.0
+    local best, winner = 1.0, nil
 
     if not indoor then
         -- Riding data wins when a dataset has it (Forever: the skills the character knows, none known is no mount).
@@ -29,11 +29,31 @@ function addon:GetGroundSpeed(container, ctx)
 
     for _, form in ipairs(addon.Abilities and addon.Abilities.GroundForms or {}) do
         if ctx.knowsSpell(form.spellID) and (not indoor or form.indoorCapable) then
-            best = math.max(best, 1.0 + form.bonus)
+            -- A form's bonus is either flat or earned per rank of a talent (Cat Form's Feral Swiftness).
+            local bonus = form.bonus or (form.talent.perRank * ctx.talentRank(form.talent.spellID))
+            if 1.0 + bonus > best then best, winner = 1.0 + bonus, form end
         end
     end
 
-    return addon.WALK_SPEED * best
+    return best, winner
+end
+
+local iconSources = {}      -- spellID -> { spellID }, one table per form so edges share it
+
+-- container is a World container object or a path. The second result is what a walking step shows as its
+-- picture: the spell of the form that sets the speed ({ spellID }), or nil when on foot or on a mount (mounts
+-- get their own picture later: a horse or a wolf).
+function addon:GetGroundSpeed(container, ctx)
+    local multiplier, winner = bestMultiplier(container, ctx)
+    local source
+    if winner then
+        source = iconSources[winner.spellID]
+        if not source then
+            source = { spellID = winner.spellID }
+            iconSources[winner.spellID] = source
+        end
+    end
+    return addon.WALK_SPEED * multiplier, source
 end
 
 -- Multiplier on a flight-path mount's speed from perks that make it faster (currently just

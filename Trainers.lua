@@ -76,7 +76,8 @@ local function needFor(node, ctx)
         if ranks[known + 1] then wanted[ranks[known + 1]] = true end
         -- Having the profession is knowing any of its ranks: a higher rank can replace the Apprentice spell.
         return ctx.knowsSpell(firstRank) or known > 0, wanted,
-            { ranks = ranks, known = known, anyone = addon.GatheringProfessions and addon.GatheringProfessions[token] }
+            { ranks = ranks, known = known, anyone = addon.GatheringProfessions and addon.GatheringProfessions[token],
+              skill = ctx.professionSkill and ctx.professionSkill(token) }
     end
     return true, nil
 end
@@ -132,7 +133,11 @@ function Trainers:RelevantNPCs(node, ctx)
     if #npcs == 0 then npcs = { {} } end
     for _, npc in ipairs(npcs) do
         if not npc.specialty then
-            if npc.teaches and #npc.teaches > 0 then
+            if gate and gate.skill and npc.tier then
+                -- A titled trainer teaches recipes over its tier's skill range: worth a visit while the skill is in it.
+                local range = addon.PROFESSION_TIER_SKILL[npc.tier]
+                if range and gate.skill >= range[1] and gate.skill <= range[2] then result[#result + 1] = npc end
+            elseif npc.teaches and #npc.teaches > 0 then
                 if teachesUnknown(npc, ctx, wanted) and talksTo(npc, gate) then result[#result + 1] = npc end
             else
                 result[#result + 1] = npc      -- nothing known about what it teaches
@@ -183,9 +188,13 @@ function Trainers:Describe(node, ctx)
         local useful, byKey = {}, {}
         for _, npc in ipairs(self:RelevantNPCs(node, ctx)) do useful[npc] = true end
         for _, npc in ipairs(serving) do
-            local teaches, top = asSet(npc.teaches), nil
+            local teaches, top, cap = asSet(npc.teaches), nil, nil
             for i, spellID in ipairs(gate.ranks) do
                 if teaches[spellID] then top = i end
+            end
+            -- A titled trainer's tier (Journeyman is the first, rank 2) and the skill its recipes run up to.
+            if npc.tier and addon.PROFESSION_TIER_SKILL[npc.tier] then
+                top, cap = npc.tier + 1, addon.PROFESSION_TIER_SKILL[npc.tier][2]
             end
             -- Two trainers of one rank at a place are one line.
             local key = npc.specialty and "specialty" or (top or "unknown")
@@ -193,7 +202,7 @@ function Trainers:Describe(node, ctx)
             if same then
                 same.useful = same.useful or useful[npc] == true
             else
-                byKey[key] = { top = not npc.specialty and top or nil, specialty = npc.specialty, useful = useful[npc] == true }
+                byKey[key] = { top = not npc.specialty and top or nil, cap = cap, specialty = npc.specialty, useful = useful[npc] == true }
                 info.npcs[#info.npcs + 1] = byKey[key]
             end
         end

@@ -35,6 +35,7 @@ local state = {
     pinned = false,       -- a trip is being followed: reopening the map shows its route, not the search page
     stepOffset = 0,       -- how many of the route's steps are scrolled past, when it has more than fit
     stepRows = STEPS,     -- how many step rows fit under the route's notes (layoutSteps)
+    stepsTop = STEPS_TOP, -- and where the first of them starts
     docked = true,         -- beside the map (Reanchor), or free-floating where the player dragged it
     dockedHidden = false,  -- docked, and the player hid the panel (the map opens without it)
     detached = false,      -- docked, but the map is closed and the panel is up on its own (Toggle)
@@ -172,6 +173,21 @@ local function build(parent)
         row.name:SetMaxLines(2)
         ui.steps[i] = row
     end
+    -- The pointer to Skyborne Ley Line & Convergence Marker, under the last step of a ley line or convergence route
+    -- (placed by RenderSteps, and only when there is room).
+    ui.tip = makeRow(frame, 0, 1, ROW_H, false)
+    ui.tip.name:SetPoint("TOPLEFT", 14, -5)
+    ui.tip.name:SetText(L["SLLCM_TIP"])
+    ui.tip.sub = Theme:Text(ui.tip, "small")
+    ui.tip.sub:SetPoint("BOTTOMLEFT", 14, 5)
+    ui.tip.sub:SetWidth(INNER - 14 - 8)
+    ui.tip.sub:SetWordWrap(false)
+    ui.tip.sub:SetText(addon.SLLCM_NAME)
+    ui.tip.markerGroup = "hint"
+    Theme:Restyle(ui.tip)
+    ui.tip:SetScript("OnClick", function() Panel:ShowSllcmLink() end)
+    ui.tip:Hide()
+
     ui.more = Theme:Text(frame, "dim")
     ui.more:SetPoint("BOTTOMLEFT", PAD + 14, PAD + 4)      -- beside Start, never under it
 
@@ -196,6 +212,7 @@ local function showRouteWidgets(show)
     end
     if not show then
         for _, row in ipairs(ui.steps) do row:Hide() end
+        ui.tip:Hide()
     end
 end
 
@@ -294,7 +311,7 @@ local function professionLines(info, lines)
         if npc.specialty then
             text = L["TIP_PROF_SPECIALTY"]
         elseif npc.top then
-            text = L["TIP_PROF_TRAINER"]:format(L["PROF_RANK_" .. npc.top], 75 * npc.top)
+            text = L["TIP_PROF_TRAINER"]:format(L["PROF_RANK_" .. npc.top], npc.cap or 75 * npc.top)
         else
             text = L["TIP_PROF_UNKNOWN"]
         end
@@ -386,6 +403,28 @@ local function setStatus(text)
     ui.status:SetShown(text ~= nil and text ~= "")
 end
 
+-- Whether to point the player to Skyborne Ley Line & Convergence Marker (it shows where ley lines and convergences
+-- have been found, which a "Nearest Potential ..." pick can't know): not once they have it, or said they don't want to see this.
+local function sllcmHintWanted()
+    if addon.Options:Get("hideSllcmHint") then return false end
+    if Panel.ignoreSllcmInstall then return true end          -- set by /mzr sllcm (MapzerothDataTools), to see the pointer with the addon installed
+    local isLoaded = (C_AddOns and C_AddOns.IsAddOnLoaded) or IsAddOnLoaded
+    if isLoaded then
+        for _, folder in ipairs(addon.SLLCM_FOLDERS) do
+            if isLoaded(folder) then return false end
+        end
+    end
+    return true
+end
+
+-- Choosing the pointer offers the address to copy, and a way to stop being shown it.
+function Panel:ShowSllcmLink()
+    addon.LinkPopup:Show(addon.SLLCM_NAME, addon.SLLCM_URL, function()
+        addon.Options:Set("hideSllcmHint", true)
+        if ui and state.view == "route" and state.plan then Panel:RenderSteps() end
+    end)
+end
+
 -- A section's heading and, when it is open, the sections inside it and its items, each a step further in.
 -- An item is a copy of its entry (taken once the section is priced), so the same place can sit in two
 -- sections at different depths.
@@ -400,6 +439,19 @@ local function addSectionRows(rows, section, depth)
         for k, v in pairs(item) do row[k] = v end
         row.inSection, row.depth = true, depth + 1
         rows[#rows + 1] = row
+        -- A pick whose quickest round trip is somewhere else than its nearest place is two rows (Sections:Price).
+        local trip = item.roundTrip
+        if trip then
+            row.name = L["PICK_ONE_WAY"]:format(item.name)
+            local second = {}
+            for k, v in pairs(item) do second[k] = v end
+            second.name, second.roundTrip = L["PICK_ROUND_TRIP"]:format(item.name), nil
+            second.nodeID, second.nodeIDs = trip.nearest, { trip.nearest }
+            second.nearest, second.where, second.eta = trip.nearest, trip.where, trip.eta
+            second.banned, second.backBanned = trip.banned, trip.backBanned      -- planning the way there and back (Journey:Plan)
+            second.inSection, second.depth = true, depth + 1
+            rows[#rows + 1] = second
+        end
     end
 end
 
@@ -471,7 +523,7 @@ end
 
 function Panel:Scroll(delta)
     if state.view == "route" and state.plan then
-        local max = math.max(0, #state.plan.steps - state.stepRows)
+        local max = math.max(0, #(state.plan.shown or state.plan.steps) - state.stepRows)
         state.stepOffset = math.max(0, math.min(max, state.stepOffset + delta))
         self:RenderSteps()
         return
@@ -493,6 +545,7 @@ function Panel:ShowRoute(entry)
     ui.routeHint:SetText("")
     ui.more:SetText("")
     for _, row in ipairs(ui.steps) do row:Hide() end
+    ui.tip:Hide()
     ui.start:SetShown(false)
 
     local ctx = addon:GetPlayerContext()
@@ -526,6 +579,7 @@ local function layoutSteps()
     local hint = ui.routeHint:GetText()
     local height = (hint and hint ~= "" and ui.routeHint:GetStringHeight()) or 0
     local top = math.max(STEPS_TOP, LIST_TOP + 74 + math.ceil(height) + 10)
+    state.stepsTop = top
     state.stepRows = math.max(1, math.min(STEPS, math.floor((STEPS_BOTTOM - top) / STEP_H)))
     for i, row in ipairs(ui.steps) do
         row:ClearAllPoints()
@@ -540,6 +594,16 @@ function Panel:DisplayPlan(entry, plan)
     setStatus(nil)
     ui.routeTitle:SetText(entry.name)
     local total = plan.cost < 20 and L["ROUTE_ALREADY"] or L["ROUTE_TOTAL"]:format(Journey:FormatTime(plan.cost))
+    -- A round trip lists the way back after the way there, under a heading (the navigator follows both: Navigation:Start).
+    plan.shown = nil
+    if plan.back then
+        total = L["ROUTE_ROUND_TOTAL"]:format(Journey:FormatTime(plan.cost), Journey:FormatTime(plan.back.cost),
+            Journey:FormatTime(plan.cost + plan.back.cost))
+        plan.shown = {}
+        for _, step in ipairs(plan.steps) do plan.shown[#plan.shown + 1] = step end
+        plan.shown[#plan.shown + 1] = { heading = true, text = L["ROUTE_BACK_HEADING"] }
+        for _, step in ipairs(plan.back.steps) do plan.shown[#plan.shown + 1] = step end
+    end
     if plan.fare and plan.fare > 0 then total = total .. " - " .. L["ROUTE_FARES"]:format(Journey:FormatMoney(plan.fare)) end
     ui.routeTotal:SetText(total)
     -- Each may be nil, so not ipairs over one table (it would stop at the first nil: a route with no fare note lost
@@ -559,14 +623,15 @@ end
 -- moves it; more than fit is never lost, just scrolled to, like the search results list).
 function Panel:RenderSteps()
     local plan = state.plan
+    local list = plan.shown or plan.steps
     for i = 1, STEPS do
-        local row, step = ui.steps[i], i <= state.stepRows and plan.steps[state.stepOffset + i]
+        local row, step = ui.steps[i], i <= state.stepRows and list[state.stepOffset + i]
         if step then
-            local time = Journey:FormatTime(step.seconds)
+            local time = step.heading and "" or Journey:FormatTime(step.seconds)
             row.name:SetText(step.text)
             row.eta:SetText(step.approx and L["TIME_ABOUT"]:format(time) or time)
-            row.markerMethod, row.markerSource = step.method, step.source
-            row.markerGroup = nil
+            row.markerMethod, row.markerSource = step.method, step.source or step.iconSource
+            row.markerGroup = step.heading and "place" or nil
             Theme:Restyle(row)
             -- An icon is wider than the chip: the text moves over for it.
             local left = row.iconShown and 28 or 14
@@ -580,11 +645,23 @@ function Panel:RenderSteps()
     end
     -- Say when steps are out of sight, above or below: a route can be longer than the list, and the
     -- first step scrolled away was easy to miss.
-    local above, below = state.stepOffset, #plan.steps - state.stepOffset - state.stepRows
+    local above, below = state.stepOffset, #list - state.stepOffset - state.stepRows
     local notes = {}
     if above > 0 then notes[#notes + 1] = L["ROUTE_MORE_ABOVE"]:format(above) end
     if below > 0 then notes[#notes + 1] = L["ROUTE_MORE_BELOW"]:format(below) end
     ui.more:SetText(table.concat(notes, "   "))
+    -- A ley line or convergence is where spawns vary: point to the addon that shows where they've been found, in
+    -- the room under the last step (a route that fills the list has none).
+    local entry, shown = state.entry, math.min(state.stepRows, #list - state.stepOffset)
+    ui.tip:Hide()
+    if entry and (entry.group == "leyline" or entry.group == "convergence") and sllcmHintWanted() then
+        local tipTop = state.stepsTop + shown * STEP_H + 12
+        if tipTop + ROW_H <= STEPS_BOTTOM then
+            ui.tip:ClearAllPoints()
+            ui.tip:SetPoint("TOPLEFT", PAD, -tipTop)
+            ui.tip:Show()
+        end
+    end
     self:MarkCurrentStep()
 end
 
@@ -594,8 +671,10 @@ function Panel:MarkCurrentStep()
     if not ui then return end
     local model = state.pinned and addon.Navigation:Model()
     local current = model and not model.finished and model.index
+    -- A round trip's way back sits under a heading in the list, one row further than the navigator counts it.
+    if current and state.plan and state.plan.back and current > #state.plan.steps then current = current + 1 end
     if current and (current <= state.stepOffset or current > state.stepOffset + state.stepRows) then
-        state.stepOffset = math.max(0, math.min(#state.plan.steps - state.stepRows, current - 1))
+        state.stepOffset = math.max(0, math.min(#(state.plan.shown or state.plan.steps) - state.stepRows, current - 1))
         self:RenderSteps()
         return
     end

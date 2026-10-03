@@ -14,6 +14,20 @@ addon.Containers["kalimdor.testhall"] = { indoor = true }
 addon.World:Build()
 check(speed({ 33388, 783 }, "kalimdor.testhall") == 7, "indoor: base speed")
 
+-- Cat Form: its speed is Feral Swiftness' 15% a rank, and it works indoors.
+local function catSpeed(points, container)
+    return addon:GetGroundSpeed(container or "kalimdor.mulgore",
+        makeCtx({ spells = { 768, 17002 }, talents = { [17002] = points } }))
+end
+check(catSpeed(0) == 7, "Cat Form without Feral Swiftness: base speed")
+check(math.abs(catSpeed(1) - 7 * 1.15) < 1e-9, "Feral Swiftness rank 1: +15%")
+check(math.abs(catSpeed(2, "kalimdor.testhall") - 7 * 1.3) < 1e-9, "Feral Swiftness rank 2: +30%, even indoors")
+check(math.abs(addon:GetGroundSpeed("kalimdor.mulgore",
+    makeCtx({ spells = { 768, 783 }, talents = { [17002] = 2 } })) - 7 * 1.4) < 1e-9, "Travel Form outdoors beats Cat Form")
+
+check(math.abs(speed({ 5118 }) - 7 * 1.3) < 1e-9, "Aspect of the Cheetah +30%")
+check(math.abs(speed({ 5118 }, "kalimdor.testhall") - 7 * 1.3) < 1e-9, "and indoors")
+
 -- Frequent Flier: +20% flight-path mount speed, nothing without it.
 check(addon:GetFlightSpeedMultiplier(makeCtx({})) == 1, "no Frequent Flier: no change")
 check(math.abs(addon:GetFlightSpeedMultiplier(makeCtx({ spells = { 1225490 } })) - 1.2) < 1e-9,

@@ -33,29 +33,46 @@ function Journey:Build(ctx, start, extras)
     return { ctx = ctx, start = start, graph = graph, extras = extras }
 end
 
+-- (A session can be told, in `returnTo`, that a round trip's way back goes to somewhere other than where it starts.)
+
 -- A flight costs its fare, and a route the player can't pay for isn't a route: with the player's money
 -- known (ctx.money, copper) the search only takes routes whose flights it covers, and picks the
 -- quickest of those. With no money known, fares are only reported.
-local function searchOptions(session, budget)
-    return { fareFactor = session.ctx.fareFactor or 1, budget = budget }
+-- `banned`: abilities not to use (a set keyed by Pathfinder.AbilityKey), when part of the trip has spent them.
+local function searchOptions(session, budget, banned)
+    return { fareFactor = session.ctx.fareFactor or 1, budget = budget, banned = banned }
 end
 
-local function costs(session)
-    if session.costs then return session.costs end
+local function banKey(banned)
+    local keys = {}
+    for key in pairs(banned or {}) do keys[#keys + 1] = tostring(key) end
+    table.sort(keys)
+    return table.concat(keys, ",")
+end
+
+local function costsFor(session, banned)
+    session.costCache = session.costCache or {}
+    local cacheKey = banKey(banned)
+    if session.costCache[cacheKey] then return session.costCache[cacheKey] end
     local money = session.ctx.money
-    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, nil))
-    session.costs = quickest
+    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, nil, banned))
+    local result = quickest
     if money then
         -- The exact search that keeps every trade of time against fare is dearer, so it only runs when some
         -- place's quickest route is one the player can't pay for (and then covers the whole map at once).
         for _, fare in pairs(fares) do
             if fare > money then
-                session.costs = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, money))
+                result = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, money, banned))
                 break
             end
         end
     end
-    return session.costs
+    session.costCache[cacheKey] = result
+    return result
+end
+
+local function costs(session)
+    return costsFor(session, nil)
 end
 
 -- Tests only.
@@ -76,6 +93,85 @@ function Journey:Nearest(session, nodeIDs)
         if cost and (not bestCost or cost < bestCost) then best, bestCost = id, cost end
     end
     return best, bestCost
+end
+
+-- The route there and back. "Back" is to where the player stands now (a destination added to the graph the
+-- first time it is needed). An ability with a cooldown (the hearthstone) is spent by whichever leg uses it, so
+-- the other can't: every split of those abilities between the two legs is tried, and the quickest total wins.
+local function returnDestination(session)
+    if session.returnID == nil then
+        -- Where the way back ends: where the player started, or (a trip planned again part way) where it first began.
+        local home = session.returnTo or session.start
+        local dest = { id = "RETURN_" .. home.id, mapID = home.mapID, x = home.x, y = home.y }
+        session.returnID = addon.TravelGraph:AddDestination(session.graph, session.ctx, dest, session.start) and dest.id or false
+    end
+    return session.returnID or nil
+end
+
+-- The abilities usable from anywhere that the trip can only use once (they have a cooldown).
+local function spentOnce(session)
+    local keys, seen = {}, {}
+    for _, ability in ipairs(session.graph.anywhere or {}) do
+        local key = addon.Pathfinder.AbilityKey(ability.source)
+        if key and (ability.source.cooldown or 0) > 0 and not seen[key] then
+            seen[key] = true
+            keys[#keys + 1] = key
+        end
+    end
+    table.sort(keys)
+    return keys
+end
+
+-- Seconds from a place back to where the player started, without the `banned` abilities; nil if there's no way.
+local function backCost(session, fromID, returnID, banned)
+    session.backCache = session.backCache or {}
+    local cacheKey = fromID .. "|" .. banKey(banned)
+    local cached = session.backCache[cacheKey]
+    if cached ~= nil then return cached or nil end
+    local graph, money = session.graph, session.ctx.money
+    local path = addon.Pathfinder:FindPath(graph, fromID, returnID, graph.phase, searchOptions(session, nil, banned))
+    if path and money and path.fare > money then
+        path = addon.Pathfinder:FindPath(graph, fromID, returnID, graph.phase, searchOptions(session, money, banned)) or path
+    end
+    session.backCache[cacheKey] = path and path.cost or false
+    return path and path.cost or nil
+end
+
+-- The place among `nodeIDs` with the quickest round trip: { nodeID, out, back, total, banned, backBanned } (`banned`: the
+-- abilities the way there must leave alone, `backBanned` those the way back must, for planning each leg), or nil when none can be reached and left again.
+function Journey:RoundTrip(session, nodeIDs)
+    local returnID = returnDestination(session)
+    if not returnID then return nil end
+    local keys = spentOnce(session)
+    -- Each way of dividing the one-use abilities: bit i set means the way there uses key i, so the way back can't.
+    local splits = {}
+    for mask = 0, 2 ^ #keys - 1 do
+        local there, back = {}, {}
+        for i, key in ipairs(keys) do
+            if math.floor(mask / 2 ^ (i - 1)) % 2 == 1 then back[key] = true else there[key] = true end
+        end
+        splits[#splits + 1] = { there = there, back = back }
+    end
+    -- Quickest to reach first: a place whose one-way time alone is no better than the best total can't win.
+    local order, free = {}, costs(session)
+    for _, id in ipairs(nodeIDs) do
+        if free[id] then order[#order + 1] = { id = id, floor = free[id] } end
+    end
+    table.sort(order, function(a, b) return a.floor < b.floor end)
+    local best
+    for _, candidate in ipairs(order) do
+        if best and candidate.floor >= best.total then break end
+        for _, split in ipairs(splits) do
+            local out = costsFor(session, split.there)[candidate.id]
+            if out and (not best or out < best.total) then
+                local back = backCost(session, candidate.id, returnID, split.back)
+                if back and (not best or out + back < best.total) then
+                    best = { nodeID = candidate.id, out = out, back = back, total = out + back, banned = split.there, backBanned = split.back }
+                end
+            end
+        end
+    end
+    return best
 end
 
 -- The client's name for the spell or item an ability step uses, and which it is ("spell" / "item"), or
@@ -128,7 +224,7 @@ local TRIVIAL_WALK = 4     -- seconds: a walk this short is standing where you a
 local function pointOf(session, id)
     local node = addon.World:GetNode(id)
     if not node and session then
-        if session.start and session.start.id == id then node = session.start end
+        if session.start and (session.start.id == id or session.returnID == id) then node = session.start end
         for _, extra in ipairs(session.extras or {}) do
             if extra.id == id then node = extra end
         end
@@ -137,6 +233,11 @@ local function pointOf(session, id)
 end
 
 local function readableSteps(result, session)
+    -- The place a round trip ends is where the player started, which has no node name.
+    local function nameOf(id)
+        if session and session.returnID == id then return L["PLACE_START"] end
+        return addon:GetNodeName(id)
+    end
     local steps = {}
     local legs = addon.Pathfinder:CollapseSteps(result.steps)
     for _, step in ipairs(legs) do
@@ -146,12 +247,12 @@ local function readableSteps(result, session)
             -- A portal we have a name for is named for where it leads (Forever's "Stormwind Portal");
             -- one we only know by its map (Modern's) is described by where you come out.
             local ownName = step.method == "portal" and addon:HasNodeName(step.from)
-            local name = addon:GetNodeName(ownName and step.from or step.to)
+            local name = ownName and addon:GetNodeName(step.from) or nameOf(step.to)
             -- A flight ticket that passes through other flight points names them.
             local via
             if step.method == "taxi" and #step.parts > 1 then
                 via = {}
-                for i = 1, #step.parts - 1 do via[#via + 1] = addon:GetNodeName(step.parts[i].to) end
+                for i = 1, #step.parts - 1 do via[#via + 1] = nameOf(step.parts[i].to) end
             end
             -- The points it goes through, for drawing it on the map: where it starts, each stop it passes
             -- (the nodes a merged walk or a through-ticket is made of), and where it ends.
@@ -174,6 +275,7 @@ local function readableSteps(result, session)
             end
             steps[#steps + 1] = {
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
+                iconSource = step.iconSource,
                 seconds = seconds, name = name, via = via, path = path,
                 text = (step.method == "portal" and not ownName)
                     and L["STEP_PORTAL_TO"]:format(name) or stepText(step.method, name, via, step.source),
@@ -231,13 +333,16 @@ end
 -- and `unaffordable` if no route is within their means (then it is the cheapest there is).
 -- Returns nil if there is no way there (and, second, a hint like `hint` when a flight this player may not
 -- have found is all that stands in the way).
-function Journey:Plan(session, goalID)
+-- `banned`: abilities to leave out (the way there of a round trip leaves some for the way back). `backBanned`: given for
+-- a round trip (a set, empty for none): the plan then also has `back` = { cost, steps }, the way from the place it
+-- reaches to where the player started, without those abilities.
+function Journey:Plan(session, goalID, banned, backBanned)
     local money = session.ctx.money
-    local fastest = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, nil))
+    local fastest = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, nil, banned))
     if not fastest then return nil, missingFlightHint(session, goalID) end
     local chosen = fastest
     if money and fastest.fare > money then
-        chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, money))
+        chosen = addon.Pathfinder:FindPath(session.graph, session.start.id, goalID, session.graph.phase, searchOptions(session, money, banned))
     end
     local result = chosen or fastest
     local plan = { cost = result.cost, steps = readableSteps(result, session), goal = result.goal,
@@ -249,6 +354,16 @@ function Journey:Plan(session, goalID)
         plan.quickest = { fare = fastest.fare, saves = chosen.cost - fastest.cost }
     end
     plan.hint = flightHint(session, goalID, plan)
+    local returnID = backBanned and returnDestination(session)
+    if returnID then
+        plan.returnTo = session.returnTo or session.start      -- kept if the trip is planned again part way
+        local graph = session.graph
+        local back = addon.Pathfinder:FindPath(graph, plan.goal, returnID, graph.phase, searchOptions(session, nil, backBanned))
+        if back and money and back.fare > money then
+            back = addon.Pathfinder:FindPath(graph, plan.goal, returnID, graph.phase, searchOptions(session, money, backBanned)) or back
+        end
+        if back then plan.back = { cost = back.cost, steps = readableSteps(back, session), fare = back.fare } end
+    end
     -- Flights taken on the strength of the "assume found" setting: no flight master's window has said either way.
     local ctx = session.ctx
     for _, step in ipairs(plan.raw) do
@@ -261,7 +376,7 @@ function Journey:Plan(session, goalID)
 end
 
 function Journey:PlanEntry(session, entry)
-    return self:Plan(session, goalsOf(entry))       -- the plan, or nil and a hint about a missing flight
+    return self:Plan(session, goalsOf(entry), entry.banned, entry.backBanned)       -- the plan, or nil and a hint about a missing flight
 end
 
 -- "1g 20s 5c" for an amount in copper.
@@ -288,9 +403,10 @@ function Journey:FareText(plan)
 end
 
 -- The route to a destination entry from where the player is now (nil if there is none).
-function Journey:PlanFromHere(entry)
+function Journey:PlanFromHere(entry, returnTo)
     local start = addon:GetPlayerStart()
     local session = start and self:Build(addon:GetPlayerContext(), start, entry.dest and { entry.dest } or nil)
+    if session then session.returnTo = returnTo end
     return session and self:PlanEntry(session, entry) or nil
 end
 

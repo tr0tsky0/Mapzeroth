@@ -16,6 +16,39 @@ local function isSpellKnown(spellID)
     return false
 end
 
+-- The player's current skill in a profession (a key of addon.Professions), or nil when the client can't say.
+-- The client names a profession as its first-rank spell does.
+local function professionSkill(token)
+    local firstRank = addon.Professions and addon.Professions[token]
+    local spell = firstRank and C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(firstRank)
+    if not (spell and spell.name and GetProfessions and GetProfessionInfo) then return nil end
+    for _, index in pairs({ GetProfessions() }) do
+        local name, _, skill = GetProfessionInfo(index)
+        if name == spell.name then return skill end
+    end
+    return nil
+end
+
+-- Points spent in the talent that teaches this spell (0 when none, or when the client has no talent tree).
+-- A talent is one spell with its rank on a trait node, so knowing the spell can't say how many points. The
+-- tree is walked once per call; callers ask once per speed calculation.
+local function talentRank(spellID)
+    local cfg = C_ClassTalents and C_ClassTalents.GetActiveConfigID and C_ClassTalents.GetActiveConfigID()
+    local config = cfg and C_Traits and C_Traits.GetConfigInfo and C_Traits.GetConfigInfo(cfg)
+    if not config then return 0 end
+    for _, treeID in ipairs(config.treeIDs or {}) do
+        for _, nodeID in ipairs(C_Traits.GetTreeNodes(treeID)) do
+            local node = C_Traits.GetNodeInfo(cfg, nodeID)
+            for _, entryID in ipairs(node and node.entryIDs or {}) do
+                local entry = C_Traits.GetEntryInfo(cfg, entryID)
+                local def = entry and entry.definitionID and C_Traits.GetDefinitionInfo(entry.definitionID)
+                if def and def.spellID == spellID then return node.currentRank or 0 end
+            end
+        end
+    end
+    return 0
+end
+
 local function hasItem(itemID)
     if C_Item and C_Item.GetItemCount then
         return (C_Item.GetItemCount(itemID) or 0) > 0
@@ -104,6 +137,8 @@ function addon:GetPlayerContext()
         raceID = raceID,          -- for abilities only some races learn (ClassSpells' race masks)
         level = UnitLevel("player"),
         knowsSpell = isSpellKnown,
+        professionSkill = professionSkill,    -- current skill points, nil if unknown (no gate then)
+        talentRank = talentRank,
         hasItem = hasItem,
         hasToy = hasToy,
         cooldownRemaining = cooldownRemaining,

@@ -100,6 +100,9 @@ GATHERING = load_gathering()
 
 
 TIER_RANKS = {"journeyman": 2, "expert": 3, "artisan": 4}
+# A profession trainer's title tier: each teaches recipes over its own skill range (Constants.lua's
+# PROFESSION_TIER_SKILL), which is what decides whether a player should visit it.
+TITLE_TIERS = {"journeyman": 1, "expert": 2, "artisan": 3, "master": 4}
 
 
 def captured_teaches(trainer, tier=None):
@@ -287,9 +290,13 @@ def load_trainers():
             pos = to_forever(int(map_id), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
             teaches = teaches_ids(kind, cols[6]) if len(cols) > 6 else []
             specialty = kind in PROFESSION_TOKENS and any(w in tag.lower() for w in SPECIALTY_WORDS)
+            # The title's first word is the tier ("Expert Tailor"); gathering trainers teach everyone.
+            tier = None
+            if kind in PROFESSION_TOKENS and kind not in GATHERING and not specialty:
+                tier = TITLE_TIERS.get(tag.split(" ")[0].lower())
             trainers.append({"kind": "trainer", "trainer": kind, "id": int(npc_id), "label": npc_id,
                              "captured": False, "map": int(map_id), "pos": pos, "teaches": teaches,
-                             "specialty": specialty})
+                             "specialty": specialty, "tier": tier})
     return trainers, skipped
 
 
@@ -394,6 +401,8 @@ def cluster(npcs):
     places = []
     for (kind, trainer, map_id), members in groups.items():
         radius = HALL_RADIUS.get((kind, map_id), CLUSTER_RADIUS_BY_KIND.get(kind, CLUSTER_RADIUS))
+        if trainer in PROFESSION_TOKENS:
+            radius = CLUSTER_RADIUS     # tiers stand apart (Sellandus is up the hill from Stormwind's other tailors)
         remaining = list(members)
         while remaining:
             group = [remaining.pop()]
@@ -540,7 +549,7 @@ def main():
                 continue                       # nothing known about a captured NPC but where it is
             teaches = f"teaches = {{ {', '.join(str(t) for t in m['teaches'])} }}" if m["teaches"] else ""
             ident_part = "" if m["captured"] else f"id = {m['id']}"
-            specialty = "specialty = true" if m.get("specialty") else ""
+            specialty = "specialty = true" if m.get("specialty") else (f"tier = {m['tier']}" if m.get("tier") else "")
             side = None
             if p["kind"] == "trainer":
                 side = npc_factions.get(m["id"]) if not m["captured"] else None

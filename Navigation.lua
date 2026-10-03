@@ -278,9 +278,28 @@ end
 
 -- Begin following a plan (from Journey:PlanEntry) to a destination entry.
 -- `notice` (optional) is a string key shown for a few seconds ("NAV_REROUTED").
+-- A round trip (plan.back, Journey:Plan) is followed as one trip: the way there, then the way back. `legEnd` is where
+-- the first leg ends (the later steps' places are not looked for before then: the way back ends where the player is now).
 function Navigation:Start(entry, plan, notice)
-    active = { entry = entry, plan = plan, steps = plan.steps, index = 1, finished = false, jumped = false,
-               notice = notice, extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil }
+    local steps, legEnd = plan.steps, nil
+    if plan.back then
+        steps = {}
+        for _, step in ipairs(plan.steps) do steps[#steps + 1] = step end
+        legEnd = #steps
+        for _, step in ipairs(plan.back.steps) do steps[#steps + 1] = step end
+        local joined = {}
+        for k, v in pairs(plan) do joined[k] = v end
+        joined.steps = steps
+        plan = joined
+    end
+    active = { entry = entry, plan = plan, steps = steps, legEnd = legEnd, returnTo = plan.returnTo, index = 1, finished = false,
+               jumped = false, notice = notice, extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil }
+end
+
+-- The last step that can be looked ahead to from the current one: the end of this leg of a round trip, else the route's end.
+local function lookAheadEnd()
+    if active.legEnd and active.index <= active.legEnd then return active.legEnd end
+    return #active.steps
 end
 
 -- A flight was chosen at a flight master: stops = the node ids the ticket lands at, the last being where
@@ -296,7 +315,7 @@ end
 local function applyTicket(sample)
     local destination = active.ticket.stops[#active.ticket.stops]
     local match
-    for i = active.index, #active.steps do
+    for i = active.index, lookAheadEnd() do
         if kindOf(active.steps[i].method) == "flight" and active.steps[i].nodeID == destination then
             match = i
             break
@@ -380,9 +399,9 @@ update = function(sample)
 
         if active.offRoute then
             if not sample.onTaxi then            -- landed somewhere the route didn't go: plan again from here
-                local entry = active.entry
+                local entry, returnTo = active.entry, active.returnTo
                 active = nil
-                return { replan = true, entry = entry }
+                return { replan = true, entry = entry, returnTo = returnTo }
             end
             remember(sample)
             active.model = buildModel(sample)
@@ -393,7 +412,7 @@ update = function(sample)
         -- Already at a later step's destination: skip everything before it. (Not in the air: a flight
         -- passing over a later stop hasn't got there.)
         if not sample.onTaxi then
-            for j = #active.steps, active.index + 1, -1 do
+            for j = lookAheadEnd(), active.index + 1, -1 do
                 if arrived(active.steps[j], sample) then
                     active.index = j
                     beginStep(sample)

@@ -30,6 +30,10 @@ check(relevant(tailor, { class = "MAGE", spells = { 3908 } }), "an Apprentice ta
 check(relevant(tailor, { class = "MAGE", spells = { 3908, 3909 } }), "a Journeyman still has the Expert rank to learn")
 check(not relevant(tailor, { class = "MAGE", spells = { 3908, 3909, 3910 } }), "an Expert has outgrown them all")
 
+-- Skill gates the next rank: a Journeyman at 76/150 can't learn Expert (125), so no Expert trainer is worth a trip.
+check(not relevant(tailor, { class = "MAGE", spells = { 3908, 3909 }, skills = { TAILORING = 76 } }), "a Journeyman at 76 isn't sent to Stormwind's Expert tailors")
+check(relevant(tailor, { class = "MAGE", spells = { 3908, 3909 }, skills = { TAILORING = 125 } }), "but at 125 they are")
+
 -- The place holding a given trainer NPC, and that NPC's record.
 local function findNPC(id)
     for _, node in ipairs(addon.Nodes.Pois) do
@@ -43,6 +47,25 @@ local function relevantIDs(node, overrides)
     for _, npc in ipairs(addon.Trainers:RelevantNPCs(node, makeCtx(overrides))) do ids[npc.id or 0] = true end
     return ids
 end
+
+-- Trainers by title tier cover a skill range (Journeyman 0-75, Expert 50-150, Artisan 125-225), overlapping. Stormwind's
+-- tailors: Lawrence (Journeyman), Sellandus (Expert, in a place of his own up the hill), Georgio (Artisan).
+local sellandusNode = findNPC(5567)
+check(sellandusNode and #sellandusNode.npcs == 1, "Sellandus stands in a place of his own, not merged with the other tailors")
+local function tailorsAt(skill)
+    local ctx = { class = "MAGE", spells = { 3908, 3909 }, skills = { TAILORING = skill } }
+    local ids = relevantIDs(sellandusNode, ctx)
+    for id in pairs(relevantIDs(tailor, ctx)) do ids[id] = true end
+    return ids
+end
+check(tailorsAt(30)[1300] and not tailorsAt(30)[5567] and not tailorsAt(30)[1346], "at 30 only the Journeyman tailor")
+local at60 = tailorsAt(60)
+check(at60[1300] and at60[5567] and not at60[1346], "at 60 the Journeyman and Expert tailors both have recipes")
+local at76 = tailorsAt(76)
+check(at76[5567] and not at76[1300] and not at76[1346], "at 76 (the reported case) only Sellandus, the Expert")
+local at130 = tailorsAt(130)
+check(at130[5567] and at130[1346] and not at130[1300], "at 130 the Expert and Artisan overlap")
+check(not tailorsAt(160)[5567] and tailorsAt(160)[1346], "at 160 only the Artisan")
 
 -- Master-tier trainers teach the last rank, which an Expert hasn't got yet.
 local master = findNPC(11052)   -- Timothy Worthington, Master Tailor: 3908, 3909, 3910, 12180
@@ -136,3 +159,10 @@ check(addon.HOLIDAYS == nil, "Forever has no holiday table")
 -- known) still has skinning, and needs Expert.
 check(shendar and relevant(shendar, { class = "SHAMAN", faction = "Horde", spells = { 8617 } }),
     "a Journeyman skinner who no longer knows the Apprentice spell still sees the trainers")
+
+-- Knowing your skill must not hide trainers that have no tier: gathering trainers teach every rank to anyone, and
+-- First Aid, Cooking and Fishing trainers aren't tiered either.
+local herbs = find(function(n) return n.trainer == "HERBALISM" and n.city == "stormwind" end)
+check(relevant(herbs, { class = "MAGE", spells = { 2366, 2368 }, skills = { HERBALISM = 76 } }), "a Journeyman herbalist at 76 still sees the herbalism trainers")
+local firstAid = find(function(n) return n.trainer == "FIRSTAID" and n.city == "dalaran" end)
+check(relevant(firstAid, { class = "MAGE", spells = { 3273 }, skills = { FIRSTAID = 30 } }), "an Apprentice first aider at 30 still sees the first aid trainers")

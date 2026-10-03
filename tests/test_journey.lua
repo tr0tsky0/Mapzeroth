@@ -46,6 +46,22 @@ check(plan.steps[2].method == "taxi" and not plan.steps[2].approx, "a flight is 
 check(plan.steps[2].text == "Fly to Ironforge Flight Master", "the step reads well: " .. plan.steps[2].text)
 check(plan.steps[1].text == "Walk to Stormwind Flight Master", "walking to the flight master: " .. plan.steps[1].text)
 check(plan.hint == nil, "no hint when there's no flight rule in play")
+check(plan.steps[1].iconSource == nil, "on foot: no form behind the walk's icon")
+
+-- A form that sets the speed lends its spell to the walking step's icon; a flight keeps its own.
+local druid = makeCtx({ faction = "Alliance", spells = { 768, 17002 }, talents = { [17002] = 2 } })
+local druidPlan = J:Plan(J:Build(druid, start), "TAXI_6")
+check(druidPlan.steps[1].iconSource and druidPlan.steps[1].iconSource.spellID == 768,
+      "Cat Form with Feral Swiftness: the walk shows Cat Form")
+check(druidPlan.steps[2].iconSource == nil, "the flight step has no form icon")
+local waypoint = { id = "WAYPOINT_t1", mapID = 1453, x = 0.55, y = 0.55 }
+local wpSession = J:Build(druid, start, { waypoint })
+local wpPlan = J:Plan(wpSession, waypoint.id)
+check(wpPlan and wpPlan.steps[1].method == "walk" and wpPlan.steps[1].iconSource
+      and wpPlan.steps[1].iconSource.spellID == 768, "a walk from the player's spot to a waypoint shows the form too")
+check(druidPlan.steps[1].source == nil, "and the walk gets no cast source of its own")
+local travelPlan = J:Plan(J:Build(makeCtx({ faction = "Alliance", spells = { 783, 768, 17002 }, talents = { [17002] = 2 } }), start), "TAXI_6")
+check(travelPlan.steps[1].iconSource.spellID == 783, "Travel Form's 40% beats Cat Form's 30% (when the walk is outdoors)")
 
 -- Nearest of several.
 local best, cost = J:Nearest(session, { "TAXI_23", "TAXI_6", "TAXI_4" })

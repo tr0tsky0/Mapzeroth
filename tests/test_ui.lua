@@ -237,6 +237,24 @@ check(box.steps[LAST].name._text == "Step 10" and box.steps[LAST].sel._shown, "t
 addon.Navigation.Model = realModel
 state.pinned = false
 
+-- A round trip shows the way back after the way there, under a heading, and totals both; the navigator's steps
+-- (plan.steps) stay the way there.
+local there, back = { fakeStep(1), fakeStep(2) }, { fakeStep(3) }
+addon.Panel:DisplayPlan({ name = "Nearest (round trip)" }, { steps = there, cost = 20, back = { cost = 10, steps = back } })
+check(box.steps[1].name._text == "Step 1" and box.steps[2].name._text == "Step 2", "a round trip starts with the way there")
+check(box.steps[3].name._text == addon.L["ROUTE_BACK_HEADING"] and box.steps[3].eta._text == "", "then a heading for the way back, with no time")
+check(box.steps[4].name._text == "Step 3" and not box.steps[5]._shown, "then the way back")
+check(box.routeTotal._text:find(addon.L["ROUTE_ROUND_TOTAL"]:format("20s", "10s", "30s"), 1, true), "and the total there, back, and both: " .. tostring(box.routeTotal._text))
+check(#state.plan.steps == 2, "the plan's own steps are only the way there")
+-- The navigator counts the way back straight on from the way there; the list has the heading between them.
+state.pinned = true
+local realModel2 = addon.Navigation.Model
+addon.Navigation.Model = function() return { index = 3, finished = false } end
+addon.Panel:MarkCurrentStep()
+check(box.steps[4].sel._shown and not box.steps[3].sel._shown, "the first step of the way back is marked below the heading")
+addon.Navigation.Model = realModel2
+state.pinned = false
+
 -- A long hint (several wrapped lines) pushes the steps down instead of printing over them, and fewer rows show;
 -- the rest are scrolled to as usual.
 for _, row in ipairs(box.steps) do
@@ -604,6 +622,23 @@ check(#state.results == 4 and state.results[3].inSection and state.results[3].de
 state.sections, state.open = savedSections, savedOpen
 addon.Panel:Query("")
 
+-- A pick with a quicker round trip elsewhere is two rows: the nearest one way, and the round trip (its own place,
+-- its total time, and the abilities its way there must leave for the way back).
+local spent = { [6948] = true }
+state.sections = { { id = "relevant", title = "Relevant", items = { {
+    name = "Nearest Thing", group = "trainer", pick = true, nodeID = "A", nodeIDs = { "A", "B" }, nearest = "A", where = "Aville", eta = 30,
+    roundTrip = { nearest = "B", where = "Bville", eta = 100, banned = spent },
+} } } }
+state.open = { relevant = true }
+addon.Panel:Query("")
+check(#state.results == 3, "a pick with a round trip is two rows under its heading")
+check(state.results[2].name == addon.L["PICK_ONE_WAY"]:format("Nearest Thing") and state.results[2].eta == 30 and state.results[2].where == "Aville", "the nearest, one way")
+local second = state.results[3]
+check(second.name == addon.L["PICK_ROUND_TRIP"]:format("Nearest Thing") and second.where == "Bville" and second.eta == 100, "then the round trip, with its total time")
+check(second.nodeIDs[1] == "B" and #second.nodeIDs == 1 and second.banned == spent and second.pick, "which routes to its own place, leaving the spent abilities out")
+state.sections, state.open = savedSections, savedOpen
+addon.Panel:Query("")
+
 -- A character who can't read ley lines has no such pick; a Skyborne does.
 local relevant = headerIndex("relevant")
 check(relevant, "there is a Personally relevant section")
@@ -821,4 +856,60 @@ do
         check(r == r2 and g == g2 and b == b2, id .. ": a zeppelin takes the boat colour")
     end
     Theme:Set(saved)
+end
+
+-- The pointer to Skyborne Ley Line & Convergence Marker: under the steps of a ley line route, gone once they have
+-- the addon or dismiss it, and choosing it offers the address to copy.
+do
+    local realIsLoaded = IsAddOnLoaded
+    IsAddOnLoaded = function() return false end
+    addon.Options:Set("hideSllcmHint", false)
+    local widgets = addon.Panel.widgets
+    local function leyRoute(group)
+        addon.Panel:ShowRoute({ name = "Nearest", nodeID = "TOWN_BOOTY_BAY", nodeIDs = { "TOWN_BOOTY_BAY" }, group = group, pick = true })
+    end
+    leyRoute("leyline")
+    check(state.plan and widgets.tip._shown, "a ley line route has the pointer")
+    check(widgets.tip.name:GetText() == "See where they can spawn", "it says what it is for: " .. tostring(widgets.tip.name:GetText()))
+    check(widgets.tip.sub:GetText() == "Skyborne Ley Line & Convergence Marker", "and names the addon in full")
+    leyRoute("convergence")
+    check(widgets.tip._shown, "so does a convergence route")
+    leyRoute("place")
+    check(not widgets.tip._shown, "another place's route doesn't")
+    leyRoute("leyline")
+
+    widgets.tip._scripts.OnClick()
+    local popup = addon.LinkPopup.widgets
+    check(addon.LinkPopup:IsShown() and popup.box:GetText() == "https://www.curseforge.com/wow/addons/sllcm", "choosing it offers the address to copy")
+    check(popup.title:GetText() == "Skyborne Ley Line & Convergence Marker" and popup.hide:IsShown(), "under the addon's name, with a way to dismiss it")
+    popup.box._scripts.OnTextChanged(popup.box, true)
+    check(popup.box:GetText() == "https://www.curseforge.com/wow/addons/sllcm", "the address can't be edited")
+    popup.close._scripts.OnClick()
+    check(not addon.LinkPopup:IsShown() and widgets.tip._shown and not addon.Options:Get("hideSllcmHint"), "Close puts it away and the pointer stays")
+
+    widgets.tip._scripts.OnClick()
+    popup.hide._scripts.OnClick()
+    check(not addon.LinkPopup:IsShown() and addon.Options:Get("hideSllcmHint") == true, "Don't show again closes it and saves that")
+    check(not widgets.tip._shown, "and the pointer goes from the route at once")
+    leyRoute("leyline")
+    check(not widgets.tip._shown, "and stays away")
+
+    addon.Options:Set("hideSllcmHint", false)
+    IsAddOnLoaded = function(folder) return folder == "SkyborneLeyLineConvergenceMarker" end
+    leyRoute("leyline")
+    check(not widgets.tip._shown, "with the addon already loaded there is no pointer")
+    addon.Panel.ignoreSllcmInstall = true
+    leyRoute("leyline")
+    check(widgets.tip._shown, "unless the dev switch ignores the install")
+    addon.Panel.ignoreSllcmInstall = nil
+
+    -- A route that fills the list has no room for it.
+    IsAddOnLoaded = function() return false end
+    local steps = {}
+    for i = 1, 12 do steps[i] = { text = "Step " .. i, seconds = 5, method = "walk" } end
+    addon.Panel:DisplayPlan({ name = "Nearest", group = "leyline", pick = true }, { steps = steps, cost = 60 })
+    check(not widgets.tip._shown, "a route that fills the list has no room for it")
+    addon.Panel:Query("")
+    check(not widgets.tip._shown, "and going back to the list hides it")
+    IsAddOnLoaded = realIsLoaded
 end

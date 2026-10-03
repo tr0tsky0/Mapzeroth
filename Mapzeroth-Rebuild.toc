@@ -97,6 +97,7 @@ UI\Themes\Classic.lua
 UI\Themes\ModernDark.lua
 UI\RouteLines.lua
 UI\MinimapLines.lua
+UI\LinkPopup.lua
 UI\Panel.lua
 UI\MinimapButton.lua
 UI\Navigator.lua

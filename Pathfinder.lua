@@ -39,6 +39,11 @@ local addonName, addon = ...
 local Pathfinder = {}
 addon.Pathfinder = Pathfinder
 
+-- What names an "anywhere" ability for banning it: its item, else its spell (the hearthstone has both).
+function Pathfinder.AbilityKey(source)
+    return source.itemID or source.spellID
+end
+
 -- Binary min-heap of { priority, payload }.
 local function heapPush(heap, item)
     heap[#heap + 1] = item
@@ -258,8 +263,10 @@ local function run(graph, startID, initialPhase, opts, visit)
     heapPush(heap, { 0, start })
 
     -- Abilities usable from anywhere seed the search alongside the start node.
+    -- (opts.banned: abilities already spent on this trip, by Pathfinder.AbilityKey, which the search won't use.)
     for _, ability in ipairs(graph.anywhere or {}) do
-        local state = nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
+        local banned = opts.banned and opts.banned[Pathfinder.AbilityKey(ability.source)]
+        local state = not banned and nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
         if state then
             local pk = phaseKey(state)
             local label = {
@@ -323,7 +330,7 @@ end
 -- opts (optional): oneTicket = never land part way along a flight and take a new ticket (what the game
 -- would sell for a destination when clicked at a flight master, not the best plan); fareFactor = the
 -- player's fare discount (1 for none); budget = copper the player has: the route is then the quickest
--- whose flights they can pay for (nil ignores fares).
+-- whose flights they can pay for (nil ignores fares); banned = a set of abilities not to use (see run).
 -- Returns { cost = seconds, fare = copper the flights cost, goal = the node reached, steps = { {from,
 -- to, cost, method, source}, ... } } or nil when no goal can be reached.
 function Pathfinder:FindPath(graph, startID, goalID, initialPhase, opts)
@@ -394,12 +401,13 @@ function Pathfinder:CollapseSteps(steps)
         end
         if joins then
             last.to = step.to
+            last.iconSource = step.iconSource or last.iconSource    -- a walk's form: the leg's own, not a door's
             last.cost = last.cost + step.cost * (1 - (step.method == "taxi" and addon.FLIGHT_CHAIN_SAVING or 0))
             last.parts[#last.parts + 1] = step
         else
             collapsed[#collapsed + 1] = {
                 from = step.from, to = step.to, cost = step.cost, method = step.method,
-                source = step.source, parts = { step },
+                source = step.source, iconSource = step.iconSource, parts = { step },
             }
         end
     end

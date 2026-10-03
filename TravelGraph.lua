@@ -308,8 +308,11 @@ local function factsForWorld()
 end
 
 -- The cached edge tables for this context's ground speeds, made on first use from the static geometry.
-local function edgesFor(outdoorSpeed, indoorSpeed)
-    local key = ("%d|%.6f|%.6f"):format(addon.World.generation, outdoorSpeed, indoorSpeed or 0)
+-- A speed comes with the form behind it (`iconSource`, for the step's picture), so two forms of one speed are
+-- two caches.
+local function edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon)
+    local key = ("%d|%.6f|%s|%.6f|%s"):format(addon.World.generation, outdoorSpeed,
+        outdoorIcon and outdoorIcon.spellID or "", indoorSpeed or 0, indoorIcon and indoorIcon.spellID or "")
     local cached = edgeCaches[key]
     if cached then return cached end
 
@@ -318,7 +321,7 @@ local function edgesFor(outdoorSpeed, indoorSpeed)
     cached = {}
     for from, list in pairs(staticGeometryFor()) do
         local edges = {}
-        local speed
+        local speed, icon
         for _, e in ipairs(list) do
             local to, dtf, kind = e[1], e[2], e[3]
             if kind == "fly" then
@@ -326,8 +329,14 @@ local function edgesFor(outdoorSpeed, indoorSpeed)
             elseif kind == "gate" then
                 edges[#edges + 1] = { from = from, to = to, cost = 0, method = "walk" }
             else
-                speed = speed or (World:GetFlag(World:GetNodeContainer(from), "indoor") and indoorSpeed or outdoorSpeed)
-                edges[#edges + 1] = { from = from, to = to, cost = dtf / speed, method = "walk" }
+                if not speed then
+                    if World:GetFlag(World:GetNodeContainer(from), "indoor") then
+                        speed, icon = indoorSpeed, indoorIcon
+                    else
+                        speed, icon = outdoorSpeed, outdoorIcon
+                    end
+                end
+                edges[#edges + 1] = { from = from, to = to, cost = dtf / speed, method = "walk", iconSource = icon }
             end
         end
         cached[from] = edges
@@ -343,7 +352,7 @@ function TravelGraph:Build(ctx)
     local World = addon.World
     local adjacency = {}
 
-    local function link(from, to, cost, method, source, overridesPhase, inPhase)
+    local function link(from, to, cost, method, source, overridesPhase, inPhase, iconSource)
         local list = adjacency[from]
         if not list then
             list = {}
@@ -351,7 +360,7 @@ function TravelGraph:Build(ctx)
         end
         list[#list + 1] = {
             from = from, to = to, cost = cost, method = method,
-            source = source, overridesPhase = overridesPhase, inPhase = inPhase,
+            source = source, overridesPhase = overridesPhase, inPhase = inPhase, iconSource = iconSource,
             fare = source and source.fare,           -- copper, for a flight
         }
     end
@@ -379,10 +388,11 @@ function TravelGraph:Build(ctx)
     for _, edge in ipairs(addon.Edges or {}) do
         if addon:MeetsRequirements(edge.requirements, ctx) and not hostile(edge) then
             local a, b = World:GetNode(edge.from), World:GetNode(edge.to)
-            local cost = edge.cost
+            local cost, icon = edge.cost, nil
             if cost == nil and a and b then
                 local dist = TravelGraph.DistanceProvider(a, b)
-                local speed = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
+                local speed
+                speed, icon = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
                 cost = dist and (dist * pathFactor(a, b) / speed) or (edge.method == "walk" and addon.UNMEASURED_WALK_SECONDS or nil)
             elseif cost and edge.method == "taxi" then
                 cost = cost / addon:GetFlightSpeedMultiplier(ctx)
@@ -390,11 +400,11 @@ function TravelGraph:Build(ctx)
             if cost then
                 cost = cost + loadingCost(edge, ctx)
                 if not unfound(edge, edge.to) then
-                    link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase, edge.inPhase)
+                    link(edge.from, edge.to, cost, edge.method, edge, edge.overridesPhase, edge.inPhase, icon)
                 end
                 local reverseAuthored = authored[edge.to .. "|" .. edge.from .. "|" .. edge.method]
                 if not edge.oneway and not reverseAuthored and not unfound(edge, edge.from) then
-                    link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase, edge.inPhase)
+                    link(edge.to, edge.from, cost, edge.method, edge, edge.overridesPhase, edge.inPhase, icon)
                 end
             end
         end
@@ -403,9 +413,10 @@ function TravelGraph:Build(ctx)
     -- Walking, city gates and flying: the cached geometry, as edge tables already finished for this context's
     -- ground speeds (the outdoor one and, if any container is indoors, the indoor one) and shared between
     -- graphs: appended by reference, never copied or changed.
-    local outdoorSpeed = addon:GetGroundSpeed(facts.outdoor, ctx)
-    local indoorSpeed = facts.indoor and addon:GetGroundSpeed(facts.indoor, ctx) or nil
-    for from, edges in pairs(edgesFor(outdoorSpeed, indoorSpeed)) do
+    local outdoorSpeed, outdoorIcon = addon:GetGroundSpeed(facts.outdoor, ctx)
+    local indoorSpeed, indoorIcon
+    if facts.indoor then indoorSpeed, indoorIcon = addon:GetGroundSpeed(facts.indoor, ctx) end
+    for from, edges in pairs(edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon)) do
         local list = adjacency[from]
         if not list then
             list = {}
@@ -440,10 +451,10 @@ end
 function TravelGraph:AddDestination(graph, ctx, dest, start)
     local World = addon.World
     local container = World:GetContainerForMap(dest.mapID, graph.phase)
-    local function add(from, cost, method)
+    local function add(from, cost, method, iconSource)
         local list = graph.adjacency[from.id]
         if not list then list = {}; graph.adjacency[from.id] = list end
-        list[#list + 1] = { from = from.id, to = dest.id, method = method, cost = cost }
+        list[#list + 1] = { from = from.id, to = dest.id, method = method, cost = cost, iconSource = iconSource }
     end
 
     -- Flying to it: from any flyable, outdoor node within range, the same rule the fly mesh between
@@ -464,10 +475,10 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
     end
 
     if not container then return flew end
-    local speed = addon:GetGroundSpeed(container, ctx)
+    local speed, icon = addon:GetGroundSpeed(container, ctx)
     local function walk(from)
         local dist = TravelGraph.DistanceProvider(from, dest)
-        if dist then add(from, dist * pathFactor(from, dest) / speed, "walk") end
+        if dist then add(from, dist * pathFactor(from, dest) / speed, "walk", icon) end
     end
     for _, node in ipairs(container.nodes) do
         if insideCity(node) == insideCity(dest) then walk(node) end
@@ -481,7 +492,7 @@ end
 function TravelGraph:AddStart(graph, ctx, start)
     local container = addon.World:GetContainerForMap(start.mapID, graph.phase)
     if not container then return false end
-    local speed = addon:GetGroundSpeed(container, ctx)
+    local speed, icon = addon:GetGroundSpeed(container, ctx)
     local list = graph.adjacency[start.id]
     if not list then list = {}; graph.adjacency[start.id] = list end
     for _, node in ipairs(container.nodes) do
@@ -489,7 +500,7 @@ function TravelGraph:AddStart(graph, ctx, start)
         if dist then
             list[#list + 1] = {
                 from = start.id, to = node.id, method = "walk",
-                cost = dist * pathFactor(start, node) / speed,
+                cost = dist * pathFactor(start, node) / speed, iconSource = icon,
             }
         end
     end
