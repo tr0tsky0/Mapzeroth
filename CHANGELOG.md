@@ -4,6 +4,7 @@
 
 ### Added
 - **Round trips for "Nearest ..." picks.** When the quickest way there and back is somewhere other than the nearest place, the picker lists both: "(one way)" and "(round trip)", with the round trip's total time. The route shows the way there, then the way back to where you started, and the navigator follows both. A hearthstone (or Astral Recall) is used by one leg only; teleports without a cooldown can be used both ways.
+- **A pointer to Skyborne Ley Line & Convergence Marker** under the route to a ley line or convergence, for the addon that shows where they have been found. Choosing it offers the address to copy (the game can't open links). It doesn't show if you already have the addon, and you can dismiss it for good from that popup.
 - **Profession trainers by tier.** Journeyman, Expert, Artisan and Master trainers each cover a range of skill, and show while your skill is inside it (so at 76 tailoring you are sent to the Expert tailor, not the Artisan). The trainer tooltip names the tier and its range.
 
 ### Fixed
