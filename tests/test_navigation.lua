@@ -259,16 +259,15 @@ end
 -- A round trip is followed there and back as one trip. The way back ends where the player started, so looking ahead for
 -- "already at a later step's place" must not run past the way there until it is over (or the trip would end at once).
 local home = { id = "YOU_home", mapID = addon.World:GetNode("TAXI_2").mapID, x = 0.5, y = 0.5 }
-addon.World.GetNode = (function(real) return function(self, id) if id == "YOU_home" then return home end return real(self, id) end end)(addon.World.GetNode)
 local tripPlan = {
     steps = { step("walk", "YOU_home", "TAXI_2", 60), step("taxi", "TAXI_2", "TAXI_6", 200) },
-    back = { cost = 100, steps = { step("taxi", "TAXI_6", "TAXI_2", 100), step("walk", "TAXI_2", "YOU_home", 60) } },
-    returnTo = { id = "YOU_home" },
+    back = { cost = 100, steps = { step("taxi", "TAXI_6", "TAXI_2", 100), step("walk", "TAXI_2", "RETURN_YOU_home", 60) } },
+    returnTo = home,
 }
 N:Start(entry, tripPlan)
 m = N:Update({ mapID = home.mapID, x = home.x, y = home.y, now = 0, onTaxi = false })
 check(m.index == 1 and m.total == 4 and not m.finished, "standing where the trip started doesn't end it: the way back's last step ends there")
-check(#tripPlan.steps == 2 and N:CurrentPlan().steps[4].nodeID == "YOU_home", "the trip holds both legs; the plan it was given is left alone")
+check(#tripPlan.steps == 2 and N:CurrentPlan().steps[4].nodeID == "RETURN_YOU_home", "the trip holds both legs; the plan it was given is left alone")
 m = N:Update(at("TAXI_2", 0.002, 0, { now = 5 }))
 check(m.index == 2, "the way there goes on as usual")
 m = N:Update(at("TAXI_6", 0.002, 0, { now = 100 }))

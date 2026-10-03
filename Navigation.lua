@@ -292,8 +292,13 @@ function Navigation:Start(entry, plan, notice)
         joined.steps = steps
         plan = joined
     end
+    local extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil
+    if plan.returnTo then                    -- the way back ends at a point that is no node of ours (Journey's returnDestination)
+        extra = extra or {}
+        extra["RETURN_" .. plan.returnTo.id] = plan.returnTo
+    end
     active = { entry = entry, plan = plan, steps = steps, legEnd = legEnd, returnTo = plan.returnTo, index = 1, finished = false,
-               jumped = false, notice = notice, extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil }
+               jumped = false, notice = notice, extra = extra }
 end
 
 -- The last step that can be looked ahead to from the current one: the end of this leg of a round trip, else the route's end.
