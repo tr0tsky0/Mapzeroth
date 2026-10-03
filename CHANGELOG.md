@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.0
+
+### Added
+- **Round trips for "Nearest ..." picks.** When the quickest way there and back is somewhere other than the nearest place, the picker lists both: "(one way)" and "(round trip)", with the round trip's total time. The route shows the way there, then the way back to where you started, and the navigator follows both. A hearthstone (or Astral Recall) is used by one leg only; teleports without a cooldown can be used both ways.
+- **Profession trainers by tier.** Journeyman, Expert, Artisan and Master trainers each cover a range of skill, and show while your skill is inside it (so at 76 tailoring you are sent to the Expert tailor, not the Artisan). The trainer tooltip names the tier and its range.
+
+### Fixed
+- Stormwind's Expert tailor (Sellandus) has a place of his own, not merged with the other tailors. Profession trainers of different tiers are no longer merged into one averaged spot.
+- The Stormwind walk scale is now 1.5, the average of two measured routes (it was 1.7); Orgrimmar and Thunder Bluff follow.
+- A hearthstone bound before the addon was installed is found when the client's text for the place is longer than ours ("Stormwind City" for "Stormwind").
+- A round trip's fares are counted for both ways, and no longer run off the edge of the window.
+
+### Changed
+- Starter translations for the new text in all supported languages.
+
 ## 0.5.1
 
 ### Added
