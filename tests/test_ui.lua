@@ -246,6 +246,10 @@ check(box.steps[3].name._text == addon.L["ROUTE_BACK_HEADING"] and box.steps[3].
 check(box.steps[4].name._text == "Step 3" and not box.steps[5]._shown, "then the way back")
 check(box.routeTotal._text:find(addon.L["ROUTE_ROUND_TOTAL"]:format("20s", "10s", "30s"), 1, true), "and the total there, back, and both: " .. tostring(box.routeTotal._text))
 check(#state.plan.steps == 2, "the plan's own steps are only the way there")
+-- A round trip's fares (both ways) are in the notes, not on the already long total line.
+addon.Panel:DisplayPlan({ name = "Nearest (round trip)" }, { steps = there, cost = 20, fare = 100, back = { cost = 10, steps = back, fare = 250 } })
+check(not box.routeTotal._text:find(addon.L["ROUTE_FARES"]:format(addon.Journey:FormatMoney(350)), 1, true) and box.routeHint._text:find(addon.L["ROUTE_FARES"]:format(addon.Journey:FormatMoney(350)), 1, true),
+    "the fares for both ways head the notes: " .. tostring(box.routeHint._text))
 -- The navigator counts the way back straight on from the way there; the list has the heading between them.
 state.pinned = true
 local realModel2 = addon.Navigation.Model

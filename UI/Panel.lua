@@ -604,12 +604,16 @@ function Panel:DisplayPlan(entry, plan)
         plan.shown[#plan.shown + 1] = { heading = true, text = L["ROUTE_BACK_HEADING"] }
         for _, step in ipairs(plan.back.steps) do plan.shown[#plan.shown + 1] = step end
     end
-    if plan.fare and plan.fare > 0 then total = total .. " - " .. L["ROUTE_FARES"]:format(Journey:FormatMoney(plan.fare)) end
+    -- Fares go on the total's line, except for a round trip, whose line is long enough already: they head the notes below, for both ways.
+    local fare = (plan.fare or 0) + (plan.back and plan.back.fare or 0)
+    local fareNote = fare > 0 and L["ROUTE_FARES"]:format(Journey:FormatMoney(fare)) or nil
+    if fareNote and not plan.back then total = total .. " - " .. fareNote end
     ui.routeTotal:SetText(total)
     -- Each may be nil, so not ipairs over one table (it would stop at the first nil: a route with no fare note lost
     -- its flight hint that way).
     local hints = {}
     local function add(text) if text then hints[#hints + 1] = text end end
+    if plan.back then add(fareNote) end
     add(Journey:FareText(plan))
     add(Journey:HintText(plan.hint))
     add(Journey:AssumedText(plan))
