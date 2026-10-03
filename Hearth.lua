@@ -61,12 +61,22 @@ function addon:FindHearthNode(bind)
     end
 
     if bind.name and bind.name ~= "" then
-        for key in pairs(addon.Cities or {}) do
-            if addon:GetCityName(key) == bind.name then return innOf(key, true) end
+        -- The client's text for a bind needn't be the name we give the place ("Stormwind City" for "Stormwind"): an exact
+        -- match wins, else the longest name that starts the other, as a whole word, in either direction.
+        local wanted = bind.name:lower()
+        local best, bestScore
+        local function consider(name, key, isCity)
+            if not name then return end
+            local lower = name:lower()
+            local score = lower == wanted and math.huge
+                or ((wanted:sub(1, #lower + 1) == lower .. " " or lower:sub(1, #wanted + 1) == wanted .. " ") and #lower)
+            if score and (not bestScore or score > bestScore) and innOf(key, isCity) then
+                best, bestScore = innOf(key, isCity), score
+            end
         end
-        for key in pairs(addon.Towns or {}) do
-            if addon:GetTownName(key) == bind.name then return innOf(key, false) end
-        end
+        for key in pairs(addon.Cities or {}) do consider(addon:GetCityName(key), key, true) end
+        for key in pairs(addon.Towns or {}) do consider(addon:GetTownName(key), key, false) end
+        return best
     end
 end
 

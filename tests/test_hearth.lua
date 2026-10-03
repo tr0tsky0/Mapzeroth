@@ -20,6 +20,10 @@ check(addon:FindHearthNode({ mapID = 1429, x = 0.90, y = 0.10 }) == nil, "a bind
 -- 2. A character bound before the addon has no position: match the bind text to a town.
 check(addon:FindHearthNode({ name = "Goldshire" }) == "INN_295", "bind text 'Goldshire' finds the Goldshire inn")
 check(addon:FindHearthNode({ name = "Nowhere" }) == nil, "unknown bind text finds nothing")
+-- The client's text can be longer than our name for the place ("Stormwind City" for "Stormwind"), or shorter.
+check(addon:FindHearthNode({ name = "Goldshire Village" }) == "INN_295", "bind text that continues the town's name still finds it")
+check(addon:FindHearthNode({ name = "GOLDSHIRE" }) == "INN_295", "whatever its case")
+check(addon:FindHearthNode({ name = "Gold" }) == nil, "but part of a word is no match")
 
 -- 3. With the item and a bind, the hearthstone is a 10s cast plus a loading screen.
 local hearth = makeCtx({ faction = "Horde", items = { 6948 }, hearthNode = "INN_295" })
