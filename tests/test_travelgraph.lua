@@ -66,7 +66,7 @@ end
 -- turned out to be (2026-09-23): the picker prices its sections with one Build(), then plans
 -- the chosen route with another, and the O(n^2) fly-edge check used to run fresh both times.
 -- (Counted on the live pass: a shipped Geometry.lua would be served with no pass at all; see below for that.)
-addon.Geometry, addon.GeometryMeta = nil, nil
+addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
 addon.World:Build()
 local ctx1 = makeCtx({})
 local ctx2 = makeCtx({ class = "WARRIOR" })
@@ -111,7 +111,29 @@ local beforeMatch = addon.TravelGraph.staticBuildCount
 graph = addon.TravelGraph:Build(ctx1)
 check(addon.TravelGraph.staticBuildCount == beforeMatch, "a matching node count is used as-is: no live pass at all")
 check(hasEdgeTo(graph, "TAXI_2", "MADE_UP_DESTINATION"), "and the shipped edge is really what's used")
-addon.Geometry, addon.GeometryMeta = nil, nil
+addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
+
+-- The packed form (addon.GeometryPacked: ids once, each pair once as index rows) is unpacked with every edge
+-- mirrored, and refused when it names a node that doesn't exist even though the node count still matches.
+do
+    local first, second
+    addon.World:ForEachNode(function(node)
+        if not first then first = node.id elseif not second and node.id ~= first then second = node.id end
+    end)
+    addon.GeometryPacked = { nodeCount = nodeCount(), ids = { first, second }, walk = { { 1, 2, 123.5 } }, gate = { { 1, 2, 0 } } }
+    addon.World:Build()
+    local before = addon.TravelGraph.staticBuildCount
+    local geo = addon.TravelGraph:ShippedGeometry()
+    check(geo and #geo[first] == 2 and #geo[second] == 2, "a packed geometry gives each end of a pair its edge")
+    check(geo[first][1][1] == second and geo[first][1][2] == 123.5 and geo[first][1][3] == "walk", "walk edge forward")
+    check(geo[second][1][1] == first and geo[second][1][2] == 123.5 and geo[second][1][3] == "walk", "and its mirror")
+    check(geo[second][2][1] == first and geo[second][2][3] == "gate", "gate edges are mirrored too")
+    addon.TravelGraph:Build(ctx1)
+    check(addon.TravelGraph.staticBuildCount == before, "a fitting packed geometry means no live pass")
+    addon.GeometryPacked.ids[2] = "RENAMED_SINCE_THE_DUMP"
+    check(addon.TravelGraph:ShippedGeometry() == nil, "an id that is no longer a node makes it stale")
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
+end
 
 -- World coordinates are per continent (the first thing GetWorldPosFromMapPos returns): two places on
 -- different continents can share x/y, and were measured as neighbours -- a waypoint in Hyjal got a
@@ -146,7 +168,7 @@ addon.Edges = savedEdges
 do
     local TG = addon.TravelGraph
     useTestDistances()
-    addon.Geometry, addon.GeometryMeta = nil, nil
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
     addon.World:Build()
 
     -- A node with a geometry walk edge (no `source`: authored edges carry theirs).

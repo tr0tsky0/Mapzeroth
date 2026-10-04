@@ -5,7 +5,7 @@
 -- Run against the Modern TOC, not the default one:
 --   python tests/harness.py --toc Mapzeroth-Rebuild_Mainline.toc modern_smoke
 -- The shipped Geometry.lua, as loaded: a test below clears it to exercise the live pass.
-local SHIPPED_GEOMETRY, SHIPPED_META = addon.Geometry, addon.GeometryMeta
+local SHIPPED_GEOMETRY, SHIPPED_META, SHIPPED_PACKED = addon.Geometry, addon.GeometryMeta, addon.GeometryPacked
 
 useTestDistances()
 addon.World:Build()
@@ -163,7 +163,7 @@ check(keyRoute and keyRoute.steps[1].method == "teleport" and keyRoute.steps[1].
 -- The live geometry pass (used whenever the shipped Geometry.lua is stale) must still link a continent with
 -- hundreds of flyable nodes: it once skipped any continent over a cap, so a stale file left Silvermoon with no
 -- way to fly to Eversong or Zul'Aman ("no route" to Windrunner Spire, Den of Nalorakk, Maisara Caverns).
-addon.Geometry, addon.GeometryMeta = nil, nil
+addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
 addon.World:Build()
 local live = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
 local function flies(from, to)
@@ -419,13 +419,13 @@ do
         end
         return bad, reach
     end
-    local shipped, shippedMeta = addon.Geometry, addon.GeometryMeta
-    addon.Geometry, addon.GeometryMeta = nil, nil
+    local shipped, shippedMeta, shippedPacked = addon.Geometry, addon.GeometryMeta, addon.GeometryPacked
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
     World:Build()
     local bad, reach = sidesJoined(addon.TravelGraph:Build(makeCtx({ faction = "Alliance" })))
     check(#bad == 0, "no fly step joins two sides of a phase group: " .. tostring(bad[1]))
     check(reach > 0, "the computed fly mesh reaches phased nodes")
-    addon.Geometry, addon.GeometryMeta = shipped, shippedMeta
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = shipped, shippedMeta, shippedPacked
     World:Build()
 end
 
@@ -608,15 +608,15 @@ end
 do
     local World = addon.World
     World:Build()
-    local n = 0
-    World:ForEachNode(function() n = n + 1 end)
-    if SHIPPED_META.nodeCount ~= n then
-        print(("NOTICE: Data/Modern/Geometry.lua is stale (%d nodes, %d loaded): re-run /mzr dumpgeometry in retail")
-            :format(SHIPPED_META.nodeCount, n))
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = SHIPPED_GEOMETRY, SHIPPED_META, SHIPPED_PACKED
+    local SHIPPED = addon.TravelGraph:ShippedGeometry()
+    addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
+    if not SHIPPED then
+        print("NOTICE: Data/Modern/Geometry.lua is stale (its node count or an id doesn't match what loaded): re-run /mzr dumpgeometry in retail")
     else
         local function phaseOf(id) return World:GetPhase(World:GetNodeContainer(id)) end
         local across, reach = 0, 0
-        for from, list in pairs(SHIPPED_GEOMETRY) do
+        for from, list in pairs(SHIPPED) do
             for _, e in ipairs(list) do
                 if e[3] == "fly" then
                     local ga, sa = phaseOf(from)

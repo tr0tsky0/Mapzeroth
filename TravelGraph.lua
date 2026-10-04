@@ -254,16 +254,55 @@ local function countNodes()
     return n
 end
 
+-- addon.GeometryPacked is the shipped file's compact form (see Dev.lua's dumpgeometry): `ids` lists every
+-- node that has an edge, and `walk` / `gate` / `fly` are rows { from, to, dtf, to, dtf, ... } of 1-based
+-- indexes into `ids`, each pair written once (every edge has an identical reverse, so it's mirrored here).
+-- Unpacking gives the { to, dtf, kind } lists above.
+local PACKED_KINDS = { "walk", "gate", "fly" }
+
+local function unpackGeometry(packed)
+    local ids, geometry = packed.ids, {}
+    local function link(from, to, dtf, kind)
+        local list = geometry[from]
+        if not list then list = {}; geometry[from] = list end
+        list[#list + 1] = { to, dtf, kind }
+    end
+    for _, kind in ipairs(PACKED_KINDS) do
+        for _, row in ipairs(packed[kind] or {}) do
+            local from = ids[row[1]]
+            for i = 2, #row, 2 do
+                local to, dtf = ids[row[i]], row[i + 1]
+                link(from, to, dtf, kind)
+                link(to, from, dtf, kind)
+            end
+        end
+    end
+    return geometry
+end
+
+-- The shipped geometry, or nil when there is none or it no longer fits the loaded nodes (a forgotten
+-- regeneration after a data change). A packed file also has to name only nodes that exist, which catches
+-- a renamed node even when the node count hasn't changed.
+function TravelGraph:ShippedGeometry()
+    local packed = addon.GeometryPacked
+    if packed then
+        if packed.nodeCount ~= countNodes() then return nil end
+        for _, id in ipairs(packed.ids) do
+            if not addon.World:GetNode(id) then return nil end
+        end
+        return unpackGeometry(packed)
+    end
+    local shipped = addon.Geometry
+    if shipped and addon.GeometryMeta and addon.GeometryMeta.nodeCount == countNodes() then
+        return shipped
+    end
+end
+
 local function staticGeometryFor()
     if staticGeometry and staticGeneration == addon.World.generation then
         return staticGeometry
     end
-    local shipped = addon.Geometry
-    if shipped and addon.GeometryMeta and addon.GeometryMeta.nodeCount == countNodes() then
-        staticGeometry = shipped
-    else
-        staticGeometry = buildStaticGeometry()
-    end
+    staticGeometry = TravelGraph:ShippedGeometry() or buildStaticGeometry()
     staticGeneration = addon.World.generation
     return staticGeometry
 end

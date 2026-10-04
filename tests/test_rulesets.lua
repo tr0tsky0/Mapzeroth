@@ -30,22 +30,13 @@ check(addon.RidingSkills and addon.PICKER_LAYOUT == "settlements", "Forever's da
 check(addon.CURRENT_EXPANSION == nil and addon.Instances == nil and addon.HOLIDAYS == nil, "and none of Modern's")
 check(addon.Nodes.EK == nil and addon.Nodes.Pois ~= nil, "no Modern node group")
 
--- Forever's shipped Geometry.lua (dumped in the client with /mzr dumpgeometry): in use while its node count matches;
--- a stale one is ignored by the engine (computed live), so that is a notice to re-dump, not a failure.
+-- Forever's shipped Geometry.lua (dumped in the client with /mzr dumpgeometry): in use while it fits the loaded
+-- nodes; a stale one is ignored by the engine (computed live), which fails here so a release never ships it.
 do
     addon.World:Build()
-    local n = 0
-    addon.World:ForEachNode(function() n = n + 1 end)
-    check(addon.Geometry and addon.GeometryMeta, "Forever ships a Geometry.lua")
-    if addon.GeometryMeta.nodeCount ~= n then
-        print(("NOTICE: Data/Forever/Geometry.lua is stale (%d nodes, %d loaded): re-run /mzr dumpgeometry in Forever")
-            :format(addon.GeometryMeta.nodeCount, n))
-    else
-        local unknown = 0
-        for from, list in pairs(addon.Geometry) do
-            if not addon.World:GetNode(from) then unknown = unknown + 1 end
-            for _, e in ipairs(list) do if not addon.World:GetNode(e[1]) then unknown = unknown + 1 end end
-        end
-        check(unknown == 0, "every id in the shipped geometry is a node: " .. unknown .. " aren't")
-    end
+    check(addon.GeometryPacked, "Forever ships a Geometry.lua")
+    -- Accepted only while its node count and every id in it still match the loaded nodes (a node renamed or added
+    -- since the last dump makes it stale, and the engine then ignores it).
+    check(addon.TravelGraph:ShippedGeometry(),
+        "the shipped geometry fits the loaded nodes (stale? re-run /mzr dumpgeometry in Forever)")
 end
