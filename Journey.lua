@@ -246,7 +246,10 @@ local function readableSteps(result, session)
             -- (where you stand), not the one you come out of.
             -- A portal we have a name for is named for where it leads (Forever's "Stormwind Portal");
             -- one we only know by its map (Modern's) is described by where you come out.
-            local ownName = step.method == "portal" and addon:HasNodeName(step.from)
+            -- A "transition" (walking through Rut'theran's gate into Darnassus) reads the same way, as using the
+            -- gate you stand at, so it isn't mistaken for another walk ("Go to Gate to Rut'theran Village").
+            local usesPortal = step.method == "portal" or step.method == "transition"
+            local ownName = usesPortal and addon:HasNodeName(step.from)
             local name = ownName and addon:GetNodeName(step.from) or nameOf(step.to)
             -- A flight ticket that passes through other flight points names them.
             local via
@@ -278,7 +281,8 @@ local function readableSteps(result, session)
                 iconSource = step.iconSource,
                 seconds = seconds, name = name, via = via, path = path,
                 text = (step.method == "portal" and not ownName)
-                    and L["STEP_PORTAL_TO"]:format(name) or stepText(step.method, name, via, step.source),
+                    and L["STEP_PORTAL_TO"]:format(name)
+                    or stepText(ownName and "portal" or step.method, name, via, step.source),
                 approx = step.method == "walk",     -- a walk is an estimate
             }
         end

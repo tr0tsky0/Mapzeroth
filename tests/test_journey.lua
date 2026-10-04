@@ -128,6 +128,27 @@ local portalStep = viaPortal and viaPortal.steps[#viaPortal.steps]
 check(portalStep and portalStep.method == "portal", "a Skyborne in Dalaran takes the portal")
 check(portalStep.text == "Use Skyborne Portal to Stormwind", "and the step says which: " .. tostring(portalStep and portalStep.text))
 
+-- The gate between Rut'theran and Darnassus is a "transition" edge: its step reads like using a portal (the gate you
+-- stand at), not "Go to <the gate on the other side>".
+do
+    -- From Moonglade (so by the flight to Rut'theran); the land route is made far enough that the gate is the way in.
+    local provider = addon.TravelGraph.DistanceProvider
+    addon.TravelGraph.DistanceProvider = function(a, b)
+        local d = provider(a, b)
+        return d and d * 100
+    end
+    addon.World:Build()
+    local ruttheran = J:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_r", mapID = 1450, x = 0.4428, y = 0.4534 })
+    local inside = J:Plan(ruttheran, "CITY_DARNASSUS")
+    local gate
+    for _, step in ipairs(inside and inside.steps or {}) do
+        if step.method == "transition" then gate = step end
+    end
+    check(gate and gate.text == "Use Gate to Darnassus", "the gate into Darnassus is 'Use ...': " .. tostring(gate and gate.text))
+    addon.TravelGraph.DistanceProvider = provider
+    addon.World:Build()
+end
+
 -- Standing at a flight master, the walk to it isn't a step.
 local atFlightMaster = J:Build(ali, { id = "YOU_fm", mapID = 1453, x = 0.7098, y = 0.7293 })
 local justFly = J:Plan(atFlightMaster, "TAXI_6")
