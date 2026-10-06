@@ -208,6 +208,12 @@ EDGES = [
     # Dornogal -> the Timeways, one way (confirmed in game); lands where Silvermoon's does.
     {"from": "PORTAL_DORNOGAL_TIMEWAYS", "to": "PORTAL_TIMEWAYS_SILVERMOON", "method": "portal", "cost": 0,
      "oneway": True},
+    # The Vaults of Atal'Utek's Windcaller network, from the Amani Foothold Windcaller (see DROP_EDGES): the old
+    # data's times for these legs, which it gave the flight master a few steps away.
+    {"from": "AMANI_FOOTHOLD_FLIGHT_2", "to": "FLIGHT_NORTHERN_AMANI_BULWARK", "method": "taxi", "cost": 33},
+    {"from": "AMANI_FOOTHOLD_FLIGHT_2", "to": "FLIGHT_EASTERN_AMANI_OUTPOST", "method": "taxi", "cost": 22},
+    {"from": "AMANI_FOOTHOLD_FLIGHT_2", "to": "FLIGHT_THE_VENOMOUS_ABYSS", "method": "taxi", "cost": 27},
+    {"from": "AMANI_FOOTHOLD_FLIGHT_2", "to": "FLIGHT_THE_UNDERBELLY", "method": "taxi", "cost": 43},
 ]
 
 # The current Mythic+ season's portals out of the Timeways: one to each of the season's dungeons from older
@@ -245,6 +251,13 @@ EDGES += MPLUS_SEASON_EDGES
 # replaces it (left in, it would undercut the real route).
 DROP_EDGES = [
     {"from": "ORIBOS", "to": "TAXI_2395", "method": "walk"},
+    # The Vaults of Atal'Utek's Windcallers are a network of their own (checked in game 2026-10-06): the old data
+    # flew them from the zone's flight master, Amani Foothold (TAXI_3288), which only flies out of the Vaults. They
+    # leave from the Amani Foothold Windcaller instead (EDGES).
+    {"from": "TAXI_3288", "to": "FLIGHT_NORTHERN_AMANI_BULWARK", "method": "taxi"},
+    {"from": "TAXI_3288", "to": "FLIGHT_EASTERN_AMANI_OUTPOST", "method": "taxi"},
+    {"from": "TAXI_3288", "to": "FLIGHT_THE_VENOMOUS_ABYSS", "method": "taxi"},
+    {"from": "TAXI_3288", "to": "FLIGHT_THE_UNDERBELLY", "method": "taxi"},
     # The Burning Crusade Quel'Thalas is shut off from the rest of the world since Midnight (checked in game
     # 2026-09-24): these pre-Midnight flights into it no longer exist. Its ways in are EPL's portal, Orgrimmar's and
     # Tirisfal's portals (Horde), and Shattrath's portal to the Isle of Quel'Danas (one way).
@@ -338,6 +351,14 @@ INSTANCE_JOURNALS = {
 
 # Area ids by hand (see the docstring): none yet.
 AREA_OVERRIDES = {
+    # The Vaults of Atal'Utek's Windcallers (by the old data's ids), by the place each stands at (a FLIGHT_ id would read
+    # "Vaults of Atal'Utek Flight Master", all five alike). The Venomous Abyss has no area of its own in the Vaults:
+    # the dungeon's is the nearest name.
+    "AMANI_FOOTHOLD_FLIGHT_2": 17650,           # Amani Foothold
+    "NORTHERN_AMANI_BULWARK_FLIGHT": 17729,     # Northern Amani Bulwark
+    "EASTERN_AMANI_OUTPOST_FLIGHT": 17730,      # Eastern Amani Outpost
+    "THE_UNDERBELLY_FLIGHT": 16990,             # The Underbelly (the Vaults')
+    "THE_VENOMOUS_ABYSS_FLIGHT": 16915,         # The Venomous Abyss
 }
 
 # Places of a POI kind (see the docstring). Silvermoon's inn: the hearthstone can resolve to it.

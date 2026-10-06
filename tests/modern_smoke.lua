@@ -132,6 +132,20 @@ do
         "Cheetah and Travel Form add nothing on Modern")
 end
 
+-- The Vaults of Atal'Utek: the Windcallers are a network of their own, leaving from the Amani Foothold Windcaller, not
+-- from the zone's flight master a few steps away (TAXI_3288). Flying in and on to a Windcaller stop means landing,
+-- walking over, and taking the Windcaller.
+do
+    local trip = addon.Pathfinder:FindPath(graph, "TAXI_3168", "FLIGHT_THE_UNDERBELLY")
+    local fromFlightMaster, viaWindcaller = false, false
+    for _, step in ipairs(trip and trip.steps or {}) do
+        if step.from == "TAXI_3288" and step.method == "taxi" and step.to:find("^FLIGHT_") then fromFlightMaster = true end
+        if step.from == "AMANI_FOOTHOLD_FLIGHT_2" and step.method == "taxi" then viaWindcaller = true end
+    end
+    check(trip and viaWindcaller and not fromFlightMaster,
+        "into the Vaults by flight master, then on by the Windcallers: " .. (trip and methods(trip) or "no route"))
+end
+
 -- The two new requirement checkers this pass needed (EdgeRequirements.lua): holiday and
 -- anyQuest, exercised directly rather than only through a route.
 local noHoliday = makeCtx({})

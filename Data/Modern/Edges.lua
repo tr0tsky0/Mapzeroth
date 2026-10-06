@@ -236,10 +236,6 @@ addon.Edges = {
     { from = "PORTAL_MAGISTERS_SILVERMOON", to = "PORTAL_SILVERMOON_STORMWIND", method = "portal", cost = 0, oneway = true },
     { from = "PORTAL_SILVERMOON_COILED_ISLE", to = "PORTAL_COILED_ISLE_SILVERMOON", method = "portal", cost = 0, requirements = { quest = 96474 } },
     { from = "TAXI_3168", to = "TAXI_3288", method = "taxi", cost = 86 },
-    { from = "TAXI_3288", to = "FLIGHT_NORTHERN_AMANI_BULWARK", method = "taxi", cost = 33 },
-    { from = "TAXI_3288", to = "FLIGHT_EASTERN_AMANI_OUTPOST", method = "taxi", cost = 22 },
-    { from = "TAXI_3288", to = "FLIGHT_THE_VENOMOUS_ABYSS", method = "taxi", cost = 27 },
-    { from = "TAXI_3288", to = "FLIGHT_THE_UNDERBELLY", method = "taxi", cost = 43 },
     { from = "FLIGHT_NORTHERN_AMANI_BULWARK", to = "FLIGHT_EASTERN_AMANI_OUTPOST", method = "taxi", cost = 21 },
     { from = "FLIGHT_NORTHERN_AMANI_BULWARK", to = "FLIGHT_THE_VENOMOUS_ABYSS", method = "taxi", cost = 8 },
     { from = "FLIGHT_NORTHERN_AMANI_BULWARK", to = "FLIGHT_THE_UNDERBELLY", method = "taxi", cost = 10 },
@@ -288,6 +284,10 @@ addon.Edges = {
     { from = "PORTAL_SILVERMOON_TIMEWAYS", to = "PORTAL_TIMEWAYS_SILVERMOON", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_SILVERMOON", to = "PORTAL_SILVERMOON_TIMEWAYS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_DORNOGAL_TIMEWAYS", to = "PORTAL_TIMEWAYS_SILVERMOON", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "AMANI_FOOTHOLD_FLIGHT_2", to = "FLIGHT_NORTHERN_AMANI_BULWARK", method = "taxi", cost = 33 }, -- hand-added: tools/modern_manual.py
+    { from = "AMANI_FOOTHOLD_FLIGHT_2", to = "FLIGHT_EASTERN_AMANI_OUTPOST", method = "taxi", cost = 22 }, -- hand-added: tools/modern_manual.py
+    { from = "AMANI_FOOTHOLD_FLIGHT_2", to = "FLIGHT_THE_VENOMOUS_ABYSS", method = "taxi", cost = 27 }, -- hand-added: tools/modern_manual.py
+    { from = "AMANI_FOOTHOLD_FLIGHT_2", to = "FLIGHT_THE_UNDERBELLY", method = "taxi", cost = 43 }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_KINGS_REST", to = "TIMEWAYS_ARRIVAL_KINGS_REST", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", to = "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", to = "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
