@@ -181,6 +181,8 @@ def main():
             parts.append(f'faction = "{entry["faction"]}"')
         if entry.get("toy"):
             parts.append("toy = true")
+        if entry.get("itemID") in manual.CONSUMABLES:
+            parts.append("consumable = true")
         if entry.get("itemID") in manual.EQUIP_COOLDOWNS:
             parts.append(f'equipCooldown = {int(manual.EQUIP_COOLDOWNS[entry["itemID"]])}')
         return "    { " + ", ".join(parts) + " },"

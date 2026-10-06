@@ -14,7 +14,7 @@ local Theme = addon.Theme
 local Options = addon.Options
 
 local PAD = 20
-local CONTENT_HEIGHT = 760      -- how tall the settings are laid out; the page scrolls when the window is shorter
+local CONTENT_HEIGHT = 864      -- how tall the settings are laid out; the page scrolls when the window is shorter
 local widgets = {}
 local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
@@ -136,30 +136,35 @@ function OptionsPanel:Build()
 
     widgets.tax = sliderRow(box, 64, "loadingScreenTax", L["OPT_TAX"], L["OPT_TAX_DESC"],
         function(v) return L["OPT_SECONDS"]:format(v) end)
-    widgets.scale = sliderRow(box, 168, "scale", L["OPT_SCALE"], L["OPT_SCALE_DESC"],
+    widgets.cooldown = sliderRow(box, 168, "maxCooldown", L["OPT_MAX_COOLDOWN"], L["OPT_MAX_COOLDOWN_DESC"],
+        function(v)
+            local _, top = Options:Range("maxCooldown")
+            return (v >= top and L["OPT_HOURS_PLUS"] or L["OPT_HOURS"]):format(v)
+        end)
+    widgets.scale = sliderRow(box, 272, "scale", L["OPT_SCALE"], L["OPT_SCALE_DESC"],
         function(v) return L["OPT_PERCENT"]:format(math.floor(v * 100 + 0.5)) end)
 
-    optionRow(box, 272, L["OPT_THEME"], L["OPT_THEME_DESC"])
+    optionRow(box, 376, L["OPT_THEME"], L["OPT_THEME_DESC"])
     local choices = {}
     for _, id in ipairs(Theme:List()) do choices[#choices + 1] = { id = id, label = Theme:Label(id) } end
     widgets.theme = Theme:Dropdown(box, CONTROL_WIDTH, choices, function(id) Options:Set("theme", id) end, menuHost)
-    widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -274)
+    widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -378)
 
-    widgets.routeMap = toggleRow(box, 352, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
-    widgets.routeMinimap = toggleRow(box, 432, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
+    widgets.routeMap = toggleRow(box, 456, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
+    widgets.routeMinimap = toggleRow(box, 536, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
     if not (addon.MinimapLines and addon.MinimapLines:IsAvailable()) then
         widgets.routeMinimap.hint:SetText(L["OPT_MINIMAP_UNAVAILABLE"])       -- it can't be done here: say so
         widgets.routeMinimap.button:Disable()
     end
-    widgets.assumeFlights = toggleRow(box, 512, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
+    widgets.assumeFlights = toggleRow(box, 616, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
 
-    optionRow(box, 592, L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"])
+    optionRow(box, 696, L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"])
     widgets.stepMarkers = Theme:Dropdown(box, CONTROL_WIDTH,
         { { id = "icon", label = L["OPT_MARKERS_ICON"] }, { id = "chip", label = L["OPT_MARKERS_CHIP"] } },
         function(id) Options:Set("stepMarkers", id) end, menuHost)
-    widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -594)
+    widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -698)
 
-    widgets.hideMinimap = toggleRow(box, 672, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
+    widgets.hideMinimap = toggleRow(box, 776, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
 
     -- Hooks the game's Settings window calls on a canvas page.
     frame.OnCommit = function() end
@@ -182,6 +187,8 @@ function OptionsPanel:Sync()
     if not self.frame then return end
     widgets.tax.slider:SetValue(Options:Get("loadingScreenTax"))
     widgets.tax.value:SetText(widgets.tax.format(Options:Get("loadingScreenTax")))
+    widgets.cooldown.slider:SetValue(Options:Get("maxCooldown"))
+    widgets.cooldown.value:SetText(widgets.cooldown.format(Options:Get("maxCooldown")))
     widgets.scale.slider:SetValue(Options:Get("scale"))
     widgets.scale.value:SetText(widgets.scale.format(Options:Get("scale")))
     widgets.theme:SetValue(Options:Get("theme"))

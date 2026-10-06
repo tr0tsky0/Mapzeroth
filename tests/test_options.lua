@@ -6,6 +6,13 @@ check(O:Get("scale") == 1, "scale defaults to 100%")
 check(O:Get("theme") == "moderndark", "the theme defaults to Modern Dark")
 local min, max, step = O:Range("loadingScreenTax")
 check(min == 0 and max == 20 and step == 1, "loading screen time runs 0 to 20 s")
+check(O:Get("maxCooldown") == 8, "the longest cooldown routed through defaults to 8 hours")
+min, max, step = O:Range("maxCooldown")
+check(min == 1 and max == 8 and step == 1, "and runs 1 to 8 hours")
+check(addon:MaxCooldownSeconds() == nil, "the top of the range (8+) is no limit at all")
+O:Set("maxCooldown", 4)
+check(addon:MaxCooldownSeconds() == 4 * 3600, "below it, the limit in seconds")
+O:Set("maxCooldown", 8)
 check(O:Get("nonsense") == nil, "an unknown setting is nil")
 
 -- Values are forced into range and to whole steps.

@@ -58,6 +58,8 @@ addon:RegisterLocale("enUS", {
     OPT_TITLE         = "Mapzeroth",
     OPT_TAX           = "Loading screen time",
     OPT_TAX_DESC      = "How long a loading screen (a portal, teleport, hearthstone or tram) counts for when Mapzeroth times a route.",
+    OPT_MAX_COOLDOWN  = "Longest cooldown to use",
+    OPT_MAX_COOLDOWN_DESC = "Abilities and items with a longer cooldown than this are left out of routes (8+ uses them all).",
     OPT_ASSUME_FLIGHTS      = "Assume flight points are found",
     OPT_ASSUME_FLIGHTS_DESC = "Until a flight master's window shows which flight points you have found, plan flights as if you had all of them. Off: only flights to points Mapzeroth has seen you find.",
     OPT_SCALE         = "Scale",
@@ -69,6 +71,8 @@ addon:RegisterLocale("enUS", {
     OPT_MARKERS_ICON      = "Icons",
     OPT_MARKERS_CHIP      = "Colour bars",
     OPT_SECONDS       = "%d s",
+    OPT_HOURS         = "%d h",
+    OPT_HOURS_PLUS    = "%d+ h",
     OPT_PERCENT       = "%d%%",
 
     -- Following a route (the navigator).

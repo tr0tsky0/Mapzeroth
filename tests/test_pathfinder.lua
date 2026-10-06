@@ -87,6 +87,32 @@ check(viaList and viaList.steps[1].method == "teleport" and viaList.steps[1].to 
     "a multi-destination ability (toList) is picked as whichever landing spot is actually cheapest: "
     .. (viaList and viaList.steps[1].to or "nil"))
 
+-- Two items to the same spot with the same cast, so the routes tie and only the choice of item differs:
+-- a short cooldown before a long one, and anything before a consumable. The trip's time doesn't change.
+table.insert(addon.Abilities.Items, { itemID = 900010, to = "TAXI_49", cost = 5, cooldown = 28800 })
+table.insert(addon.Abilities.Items, { itemID = 900011, to = "TAXI_49", cost = 5, cooldown = 1800 })
+table.insert(addon.Abilities.Items, { itemID = 900012, to = "TAXI_49", cost = 5, cooldown = 60, consumable = true })
+local function itemUsed(items, extra)
+    local overrides = { faction = "Alliance", items = items }
+    for k, v in pairs(extra or {}) do overrides[k] = v end
+    local r = route(makeCtx(overrides), "TAXI_2", "TAXI_49")
+    return r and r.steps[1].source and r.steps[1].source.itemID, r
+end
+check(itemUsed({ 900010, 900011, 900012 }) == 900011, "a short cooldown is spent before a long one: "
+    .. tostring(itemUsed({ 900010, 900011, 900012 })))
+check(itemUsed({ 900010, 900012 }) == 900010, "and a long cooldown before a consumable: " .. tostring(itemUsed({ 900010, 900012 })))
+check(itemUsed({ 900012 }) == 900012, "a consumable is still used when it's the only way")
+local _, tied = itemUsed({ 900010, 900011, 900012 })
+local _, plain = itemUsed({ 900010 })
+check(tied.cost == plain.cost and tied.cost == 5 + makeCtx({}).loadingScreenTax,
+    "the tie-break doesn't change the trip's time: " .. tostring(tied.cost))
+local costs = addon.Pathfinder:FindCosts(addon.TravelGraph:Build(makeCtx({ faction = "Alliance", items = { 900012 } })), "TAXI_2")
+check(costs.TAXI_49 == 5 + makeCtx({}).loadingScreenTax, "nor a cost to every node: " .. tostring(costs.TAXI_49))
+-- The maxCooldown setting (seconds in the context): a longer cooldown isn't routed through at all.
+check(itemUsed({ 900010, 900012 }, { maxCooldown = 4 * 3600 }) == 900012,
+    "over the longest cooldown allowed, an item is left out, even for a consumable")
+check(itemUsed({ 900011 }, { maxCooldown = 1800 }) == 900011, "a cooldown equal to the limit is allowed")
+
 -- 8. Consecutive walk steps collapse into one for display, keeping the total and the parts.
 local steps = {
     { from = "A", to = "B", cost = 10, method = "walk" },

@@ -264,13 +264,16 @@ local function run(graph, startID, initialPhase, opts, visit)
 
     -- Abilities usable from anywhere seed the search alongside the start node.
     -- (opts.banned: abilities already spent on this trip, by Pathfinder.AbilityKey, which the search won't use.)
+    -- An ability's bias (addon:AbilityBias, a sliver of a second) rides on the label's time, so of two routes
+    -- that are otherwise as quick the one spending the better ability wins; `bias` remembers it, to take it out.
     for _, ability in ipairs(graph.anywhere or {}) do
         local banned = opts.banned and opts.banned[Pathfinder.AbilityKey(ability.source)]
         local state = not banned and nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
         if state then
             local pk = phaseKey(state)
             local label = {
-                key = ability.to .. "|" .. pk, pk = pk, id = ability.to, state = state, d = ability.cost, paid = 0,
+                key = ability.to .. "|" .. pk, pk = pk, id = ability.to, state = state,
+                d = ability.cost + (ability.bias or 0), bias = ability.bias, paid = 0,
                 prev = start, step = { from = startID, to = ability.to, cost = ability.cost,
                                        method = ability.method, source = ability.source },
             }
@@ -293,7 +296,7 @@ local function run(graph, startID, initialPhase, opts, visit)
         local next = {
             key = key, pk = pk, id = step.to, state = state,
             d = d, paid = paid, origin = origin, single = single, startD = startD,
-            prev = label, step = step, through = through,
+            prev = label, step = step, through = through, bias = label.bias,
         }
         if addLabel(store, next, useFare) then heapPush(heap, { d, next }) end
     end
@@ -360,7 +363,7 @@ function Pathfinder:FindPath(graph, startID, goalID, initialPhase, opts)
         table.insert(steps, 1, step)
         label = label.prev
     end
-    return { cost = goal.d, fare = goal.paid, goal = goal.id, steps = steps }
+    return { cost = goal.d - (goal.bias or 0), fare = goal.paid, goal = goal.id, steps = steps }
 end
 
 -- The cheapest cost in seconds from startID to every node it can reach, as
@@ -370,7 +373,7 @@ function Pathfinder:FindCosts(graph, startID, initialPhase, opts)
     local costs, fares = {}, {}
     run(graph, startID, initialPhase, opts or {}, function(label)
         if costs[label.id] == nil and canLand(graph, label) then
-            costs[label.id], fares[label.id] = label.d, label.paid
+            costs[label.id], fares[label.id] = label.d - (label.bias or 0), label.paid
         end
         return false
     end)

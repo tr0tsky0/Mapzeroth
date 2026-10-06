@@ -127,6 +127,14 @@ local function isHolidayActive(key)
     return active
 end
 
+-- The maxCooldown setting in seconds, or nil at the top of its range: that reads "8+ h", no limit at all.
+function addon:MaxCooldownSeconds()
+    local hours = addon.Options:Get("maxCooldown")
+    local _, top = addon.Options:Range("maxCooldown")
+    if hours >= top then return nil end
+    return hours * 3600
+end
+
 function addon:GetPlayerContext()
     local _, classToken = UnitClass("player")
     local _, raceToken, raceID = UnitRace("player")
@@ -157,18 +165,31 @@ function addon:GetPlayerContext()
         -- The art id the client shows for a map: which side of a phase group (Zidormi) the player is on.
         mapArtID = function(mapID) return C_Map and C_Map.GetMapArtID and C_Map.GetMapArtID(mapID) or nil end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
+        maxCooldown = addon:MaxCooldownSeconds(),                        -- nil: no limit
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
         fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master
     }
 end
 
--- (`cooldown` on an ability in the data files, and `bind` on Forever's hearthstone, are documentation
--- only: nothing reads them, routing asks the live cooldown APIs through the context.)
+-- Between routes that take the same time, which ability to spend: one with a short cooldown, then a long
+-- one, then one that is used up (`consumable`). A bias in seconds far under anything the search times, so it
+-- only decides ties; Pathfinder adds it to the seed and takes it back out of the trip's time.
+local BIAS = 1e-4
+function addon:AbilityBias(ability)
+    local cooldown = ability.cooldown or 0
+    local bias = BIAS * cooldown / (cooldown + 3600)       -- grows with the cooldown, never reaching BIAS
+    if ability.consumable then bias = bias + BIAS end
+    return bias
+end
+
+-- (`cooldown` on an ability in the data files is its full cooldown: it ranks abilities (AbilityBias) and is
+-- held against the maxCooldown setting, but whether one is ready now is asked of the live cooldown APIs
+-- through the context. `bind` on Forever's hearthstone is documentation only.)
 -- The "Anywhere -> Node" abilities the player can use right now: class teleports they
 -- know, an item-based teleport (a toy/trinket to a fixed spot, addon.Abilities.Items) they
 -- carry, and the hearthstone if they carry it and have a bind. Each entry says where it
--- goes and what it costs; abilities on cooldown, or restricted to the other faction, are
--- left out. An ability with several possible landing spots the player picks between
+-- goes and what it costs; abilities on cooldown, with a cooldown over the maxCooldown
+-- setting, or restricted to the other faction, are left out. An ability with several possible landing spots the player picks between
 -- (`toList` instead of a single `to` -- Modern's Mole Machine is the first of these) is
 -- expanded into one candidate per spot; the search picks whichever is actually cheapest.
 function addon:GetKnownTeleports(ctx)
@@ -193,6 +214,7 @@ function addon:GetKnownTeleports(ctx)
         return ability.equipCooldown or addon.DEFAULT_EQUIP_SECONDS or 0
     end
     local function add(ability, to, defaultMethod)
+        if ctx.maxCooldown and (ability.cooldown or 0) > ctx.maxCooldown then return end
         local wait = equipSeconds(ability)
         local source = ability
         if wait then
@@ -202,7 +224,7 @@ function addon:GetKnownTeleports(ctx)
         end
         known[#known + 1] = {
             to = to, cost = (ability.cost or 0) + (wait or 0), method = ability.method or defaultMethod or "teleport",
-            loadingScreens = ability.loadingScreens, ability = source,
+            loadingScreens = ability.loadingScreens, ability = source, bias = addon:AbilityBias(ability),
         }
     end
     local function addAll(ability, to)

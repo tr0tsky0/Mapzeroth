@@ -12,6 +12,7 @@ EDGES    connections the old data lacks: { "from", "to", "method", optional "cos
          optional "requirements" = { key: value } as the engine's EdgeRequirements has them (faction = "Horde") }.
          Leave `cost` out for a walk and the engine works it out from distance and the default path
          factor, like any other walk.
+CONSUMABLES  { itemID }: teleport items used up when used; routing prefers anything else as quick.
 EQUIP_COOLDOWNS  { itemID: seconds }: how long an equippable teleport item is on cooldown after it is put on, which
          is what its "Equip" step is priced at (the route then "Uses" it). An item not listed gets
          addon.DEFAULT_EQUIP_SECONDS (Constants.lua, 0). Only items that have to be worn matter; the game says which.
@@ -206,6 +207,18 @@ DROP_EDGES = [
 # Seconds an equip step takes, per item (see above). The rest of the equippable teleport items can be used at once
 # (measured in game 2026-09-24: 40586, 65360, 63206, 63352, 65274, 63207, 63353, 103678, 63379, 63378, 46874,
 # 144391, 144392, 142469), which is the default.
+# Teleport items that are used up when used (`consumable = true`): routing spends one only when nothing else as
+# quick will do (PlayerAbilities.lua's AbilityBias).
+CONSUMABLES = {
+    167075,     # Ultrasafe Transporter: Mechagon
+    184500,     # Attendant's Pocket Portal: Bastion
+    184501,     # Attendant's Pocket Portal: Revendreth
+    184502,     # Attendant's Pocket Portal: Maldraxxus
+    184503,     # Attendant's Pocket Portal: Ardenweald
+    184504,     # Attendant's Pocket Portal: Oribos
+    252607,     # Abundant Beacon
+}
+
 EQUIP_COOLDOWNS = {
     32757: 30,      # Blessed Medallion of Karabor: on cooldown for 30 s once equipped (its cast time is 10 s)
 }

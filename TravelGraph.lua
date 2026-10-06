@@ -474,6 +474,7 @@ function TravelGraph:Build(ctx)
                 cost = entry.cost + screens * ctx.loadingScreenTax,
                 method = entry.method,
                 source = entry.ability,
+                bias = entry.bias,             -- the tie-break between abilities (addon:AbilityBias)
             }
         end
     end
