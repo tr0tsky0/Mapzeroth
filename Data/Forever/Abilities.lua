@@ -38,7 +38,7 @@ addon.Abilities.GroundForms = {
     -- Druid: Cat Form with Feral Swiftness (+15% a rank, 2 ranks). The bonus comes from the talent's rank in the
     -- talent tree (ctx.talentRank), not from knowing the form; Cat Form works indoors. Confirmed live: 17002
     -- reads as known, there is no separate spell per rank, and the rank lives on the trait node.
-    { spellID = 768, talent = { spellID = 17002, perRank = 0.15 }, indoorCapable = true },
+    { spellID = 768, talents = { { spellID = 17002, perRank = 0.15 } }, indoorCapable = true },
 }
 
 addon.Abilities.Teleports = {

@@ -29,8 +29,11 @@ local function bestMultiplier(container, ctx)
 
     for _, form in ipairs(addon.Abilities and addon.Abilities.GroundForms or {}) do
         if ctx.knowsSpell(form.spellID) and (not indoor or form.indoorCapable) then
-            -- A form's bonus is either flat or earned per rank of a talent (Cat Form's Feral Swiftness).
-            local bonus = form.bonus or (form.talent.perRank * ctx.talentRank(form.talent.spellID))
+            -- A form's own bonus, plus what each talent that speeds it up adds per rank (Cat Form's Feral Swiftness).
+            local bonus = form.bonus or 0
+            for _, talent in ipairs(form.talents or {}) do
+                bonus = bonus + talent.perRank * ctx.talentRank(talent.spellID)
+            end
             if 1.0 + bonus > best then best, winner = 1.0 + bonus, form end
         end
     end

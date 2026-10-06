@@ -113,6 +113,25 @@ local back = addon.Pathfinder:FindPath(graph, "TIMEWAYS_ARRIVAL_KINGS_REST", "PO
 check(not back or back.steps[1].method ~= "portal" or back.steps[1].to ~= "PORTAL_TIMEWAYS_KINGS_REST",
     "the season's portals are one way")
 
+-- Run-speed forms (Data/Modern/Movement.lua): indoors, where nobody mounts, a form and its talents set the pace.
+do
+    local indoor, outdoor = "ek_overworld.map2393.interior", "ek_overworld.map2393"
+    local function speed(spells, talents, container)
+        return addon:GetGroundSpeed(container, makeCtx({ spells = spells, talents = talents }))
+    end
+    check(math.abs(speed({}, {}, indoor) - addon.WALK_SPEED) < 1e-9, "on foot indoors: base speed")
+    local wolf, icon = speed({ 2645 }, { [382215] = 2, [260878] = 1 }, indoor)
+    check(math.abs(wolf - addon.WALK_SPEED * 1.66) < 1e-9 and icon and icon.spellID == 2645,
+        "Ghost Wolf with both ranks of Winds of Al'Akir and Spirit Wolf: +66%: " .. wolf)
+    check(math.abs(speed({ 2645 }, {}, indoor) - addon.WALK_SPEED * 1.3) < 1e-9, "Ghost Wolf alone: +30%")
+    check(math.abs(speed({ 768 }, { [131768] = 1 }, indoor) - addon.WALK_SPEED * 1.45) < 1e-9,
+        "Cat Form with Feline Swiftness: +45%")
+    check(math.abs(speed({ 2645 }, { [382215] = 2, [260878] = 1 }, outdoor) - addon.WALK_SPEED * 2) < 1e-9,
+        "outdoors the mount is still faster")
+    check(math.abs(speed({ 5118, 186257, 783 }, {}, indoor) - addon.WALK_SPEED) < 1e-9,
+        "Cheetah and Travel Form add nothing on Modern")
+end
+
 -- The two new requirement checkers this pass needed (EdgeRequirements.lua): holiday and
 -- anyQuest, exercised directly rather than only through a route.
 local noHoliday = makeCtx({})
