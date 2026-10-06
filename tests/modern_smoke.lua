@@ -44,7 +44,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1270, "every node made it into the tree (1215 converted + 31 hand-added + 24 city centres): " .. total)
+check(total == 1279, "every node made it into the tree (1215 converted + 40 hand-added + 24 city centres): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -90,6 +90,28 @@ check(toBoralus and #toBoralus.steps == 1 and toBoralus.steps[1].method == "port
     "a converted portal edge actually routes")
 check(math.abs(toBoralus.cost - ctx.loadingScreenTax) < 0.01,
     "cost 0 plus the loading tax, nothing extra: " .. tostring(toBoralus and toBoralus.cost))
+
+-- The Timeways: Silvermoon's portal in, and the Mythic+ season's one-way portals out to each dungeon
+-- (tools/modern_manual.py's MPLUS_SEASON_*), walking on from where each lands to the entrance.
+check(addon.World:GetFlag(addon.World:GetContainer("timeways.map2266"), "fly") == false, "the Timeways is no-fly")
+for _, dungeon in ipairs({ "KINGS_REST", "RUBY_LIFE_POOLS", "TEMPLE_OF_SETHRALISS" }) do
+    local trip = addon.Pathfinder:FindPath(graph, "PORTAL_SILVERMOON_TIMEWAYS", "INSTANCE_" .. dungeon)
+    local through = trip and #trip.steps >= 2 and trip.steps[1].to == "PORTAL_TIMEWAYS_SILVERMOON"
+    local out = false
+    for _, step in ipairs(trip and trip.steps or {}) do
+        if step.from == "PORTAL_TIMEWAYS_" .. dungeon and step.to == "TIMEWAYS_ARRIVAL_" .. dungeon then out = true end
+    end
+    check(through and out, "Silvermoon -> the Timeways -> " .. dungeon .. ": "
+        .. (trip and tostring(#trip.steps) .. " steps, first to " .. trip.steps[1].to or "no route"))
+end
+local fromDornogal = addon.Pathfinder:FindPath(graph, "PORTAL_DORNOGAL_TIMEWAYS", "PORTAL_TIMEWAYS_KINGS_REST")
+check(fromDornogal and fromDornogal.steps[1].method == "portal" and fromDornogal.steps[1].to == "PORTAL_TIMEWAYS_SILVERMOON",
+    "Dornogal's portal still goes to the Timeways")
+local toDornogal = addon.Pathfinder:FindPath(graph, "PORTAL_TIMEWAYS_SILVERMOON", "PORTAL_DORNOGAL_TIMEWAYS")
+check(not toDornogal or toDornogal.steps[1].to ~= "PORTAL_DORNOGAL_TIMEWAYS", "but not back")
+local back = addon.Pathfinder:FindPath(graph, "TIMEWAYS_ARRIVAL_KINGS_REST", "PORTAL_TIMEWAYS_KINGS_REST")
+check(not back or back.steps[1].method ~= "portal" or back.steps[1].to ~= "PORTAL_TIMEWAYS_KINGS_REST",
+    "the season's portals are one way")
 
 -- The two new requirement checkers this pass needed (EdgeRequirements.lua): holiday and
 -- anyQuest, exercised directly rather than only through a route.

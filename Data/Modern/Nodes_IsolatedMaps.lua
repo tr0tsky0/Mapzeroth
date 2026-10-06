@@ -74,4 +74,8 @@ addon.Nodes.IsolatedMaps = {
     { id = "NAZJATAR_HORDE", container = "nazjatar.map1355", mapID = 1355, x = 0.4719, y = 0.6263, area = 10333 }, -- Newhome
     { id = "SHADOWFORGE_CITY_MOLE", container = "dark_iron_city.map1186", mapID = 1186, x = 0.6140, y = 0.2440 }, -- Shadowforge City
     { id = "INSTANCE_SPOREFALL", container = "harandar.map2413", mapID = 2413, x = 0.7360, y = 0.6650, kind = "instance", journal = 1305 }, -- Sporefall (Harandar): a single-boss raid, entered from the open world (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_TIMEWAYS_SILVERMOON", container = "timeways.map2266", mapID = 2266, x = 0.4930, y = 0.5190 }, -- The Timeways: the portal to Silvermoon, and where the way in lands (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_TIMEWAYS_KINGS_REST", container = "timeways.map2266", mapID = 2266, x = 0.7339, y = 0.4821 }, -- The Timeways: the season's portal to Kings' Rest (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", container = "timeways.map2266", mapID = 2266, x = 0.7655, y = 0.6135 }, -- The Timeways: the season's portal to the Ruby Life Pools (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", container = "timeways.map2266", mapID = 2266, x = 0.7014, y = 0.7152 }, -- The Timeways: the season's portal to the Temple of Sethraliss (hand-added: tools/modern_manual.py)
 }

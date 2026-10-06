@@ -80,4 +80,5 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2905", container = "emerald_dream.map2200", mapID = 2200, x = 0.3564, y = 0.3362 }, -- Wellspring Overlook
     { id = "TAXI_2902", container = "emerald_dream.map2200", mapID = 2200, x = 0.5111, y = 0.6219 }, -- Central Encampment
     { id = "TAXI_2904", container = "emerald_dream.map2200", mapID = 2200, x = 0.5538, y = 0.2931 }, -- Eye of Ysera
+    { id = "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", container = "dragon_isles.map2022", mapID = 2022, x = 0.5804, y = 0.7840, area = 13944 }, -- The Waking Shores: where the Timeways portal to the Ruby Life Pools lands (hand-added: tools/modern_manual.py)
 }

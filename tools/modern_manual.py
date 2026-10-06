@@ -132,6 +132,16 @@ NODES = [
      "x": 0.5553, "y": 0.1426, "note": "Brawl'gar Arena: the way out to Orgrimmar"},
     {"id": "ORGRIMMAR_TO_BRAWLGAR", "out": "Nodes_Kalimdor.lua", "container": "kalimdor_overworld.map85", "mapID": 85,
      "x": 0.7055, "y": 0.3103, "note": "Orgrimmar (Valley of Strength): the way in to Brawl'gar Arena"},
+    # The Timeways (map 2266): reached by a portal in Silvermoon, with a portal back, and by Dornogal's old portal
+    # (one way now: it still works, but the Timeways' only way out to a city is Silvermoon's). Ground mounts, no flying
+    # (gen_modern_nodes.py's NO_FLY_MAPS). The season's Mythic+ portals out of it are below (MPLUS_SEASON_*).
+    # Captured with /mzdump here.
+    {"id": "PORTAL_SILVERMOON_TIMEWAYS", "out": "Nodes_EK.lua", "container": "ek_overworld.map2393", "mapID": 2393,
+     "x": 0.4218, "y": 0.5827, "note": "Silvermoon: the portal to the Timeways, and where the way back lands"},
+    {"id": "PORTAL_DORNOGAL_TIMEWAYS", "out": "Nodes_KhazAlgar.lua", "container": "khaz_algar.map2339", "mapID": 2339,
+     "x": 0.5380, "y": 0.3872, "note": "Dornogal: the portal to the Timeways (one way: the way back goes to Silvermoon)"},
+    {"id": "PORTAL_TIMEWAYS_SILVERMOON", "out": "Nodes_IsolatedMaps.lua", "container": "timeways.map2266", "mapID": 2266,
+     "x": 0.4930, "y": 0.5190, "note": "The Timeways: the portal to Silvermoon, and where the way in lands"},
 ]
 
 # Old-data nodes that are inside Silvermoon's portal room (the room's own portals, and where its incoming portals
@@ -189,7 +199,47 @@ EDGES = [
     {"from": "BIZMOS_TO_TRAM", "to": "TRAM_TO_BIZMOS", "method": "walk", "cost": 2, "loadingScreens": 0},
     {"from": "DEEPRUN_TRAM_TO_STORMWIND", "to": "STORMWIND_TO_DEEPRUN_TRAM", "method": "walk", "cost": 2,
      "loadingScreens": 1},
+    # Silvermoon <-> the Timeways: a portal each way, clicked, a loading screen each (confirmed in game). Each lands
+    # by the other side's portal.
+    {"from": "PORTAL_SILVERMOON_TIMEWAYS", "to": "PORTAL_TIMEWAYS_SILVERMOON", "method": "portal", "cost": 0,
+     "oneway": True},
+    {"from": "PORTAL_TIMEWAYS_SILVERMOON", "to": "PORTAL_SILVERMOON_TIMEWAYS", "method": "portal", "cost": 0,
+     "oneway": True},
+    # Dornogal -> the Timeways, one way (confirmed in game); lands where Silvermoon's does.
+    {"from": "PORTAL_DORNOGAL_TIMEWAYS", "to": "PORTAL_TIMEWAYS_SILVERMOON", "method": "portal", "cost": 0,
+     "oneway": True},
 ]
+
+# The current Mythic+ season's portals out of the Timeways: one to each of the season's dungeons from older
+# expansions, one way, clicked, a loading screen each, no requirements (as far as is known). Swap these two
+# lists each season and regenerate (gen_modern_nodes.py, then gen_modern_edges.py). Each lands near the dungeon,
+# and the walk on to its entrance (INSTANCE_*) is worked out like any other. Captured with /mzdump here.
+MPLUS_SEASON_NODES = [
+    {"id": "PORTAL_TIMEWAYS_KINGS_REST", "out": "Nodes_IsolatedMaps.lua", "container": "timeways.map2266",
+     "mapID": 2266, "x": 0.7339, "y": 0.4821, "note": "The Timeways: the season's portal to Kings' Rest"},
+    {"id": "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", "out": "Nodes_IsolatedMaps.lua", "container": "timeways.map2266",
+     "mapID": 2266, "x": 0.7655, "y": 0.6135, "note": "The Timeways: the season's portal to the Ruby Life Pools"},
+    {"id": "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", "out": "Nodes_IsolatedMaps.lua", "container": "timeways.map2266",
+     "mapID": 2266, "x": 0.7014, "y": 0.7152, "note": "The Timeways: the season's portal to the Temple of Sethraliss"},
+    {"id": "TIMEWAYS_ARRIVAL_KINGS_REST", "out": "Nodes_Zandalar.lua", "container": "zandalar.map862", "mapID": 862,
+     "x": 0.4368, "y": 0.4543, "area": 9404, "note": "Zuldazar: where the Timeways portal to Kings' Rest lands"},
+    {"id": "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2022",
+     "mapID": 2022, "x": 0.5804, "y": 0.7840, "area": 13944,
+     "note": "The Waking Shores: where the Timeways portal to the Ruby Life Pools lands"},
+    {"id": "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", "out": "Nodes_Zandalar.lua", "container": "zandalar.map864",
+     "mapID": 864, "x": 0.5092, "y": 0.3822, "area": 9347,
+     "note": "Vol'dun: where the Timeways portal to the Temple of Sethraliss lands"},
+]
+MPLUS_SEASON_EDGES = [
+    {"from": "PORTAL_TIMEWAYS_KINGS_REST", "to": "TIMEWAYS_ARRIVAL_KINGS_REST", "method": "portal", "cost": 0,
+     "oneway": True},
+    {"from": "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", "to": "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", "method": "portal",
+     "cost": 0, "oneway": True},
+    {"from": "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", "to": "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", "method": "portal",
+     "cost": 0, "oneway": True},
+]
+NODES += MPLUS_SEASON_NODES
+EDGES += MPLUS_SEASON_EDGES
 
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
 # replaces it (left in, it would undercut the real route).

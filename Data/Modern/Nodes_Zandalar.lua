@@ -63,4 +63,6 @@ addon.Nodes.Zandalar = {
     { id = "TAXI_2153", container = "zandalar.map862", mapID = 862, x = 0.6420, y = 0.4750 }, -- Mistvine Ledge
     { id = "ZULDAZAR_MOLE", container = "zandalar.map862", mapID = 862, x = 0.3820, y = 0.7240 }, -- Xibala Incursion
     { id = "INSTANCE_THE_UNDERROT", container = "zandalar.map863", mapID = 863, x = 0.5200, y = 0.6600, kind = "instance", journal = 1022 }, -- The Underrot
+    { id = "TIMEWAYS_ARRIVAL_KINGS_REST", container = "zandalar.map862", mapID = 862, x = 0.4368, y = 0.4543, area = 9404 }, -- Zuldazar: where the Timeways portal to Kings' Rest lands (hand-added: tools/modern_manual.py)
+    { id = "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", container = "zandalar.map864", mapID = 864, x = 0.5092, y = 0.3822, area = 9347 }, -- Vol'dun: where the Timeways portal to the Temple of Sethraliss lands (hand-added: tools/modern_manual.py)
 }

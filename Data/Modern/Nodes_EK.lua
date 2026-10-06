@@ -250,4 +250,5 @@ addon.Nodes.EK = {
     { id = "TRAM_STORMWIND_TO_DEEPRUN", container = "ek_overworld.map84", mapID = 84, x = 0.6937, y = 0.3138, city = "stormwind" }, -- Stormwind (Dwarven District): the way down to the Deeprun Tram (hand-added: tools/modern_manual.py)
     { id = "SILVERMOON_PORTAL_ROOM_ENTRANCE", container = "ek_overworld.map2393", mapID = 2393, x = 0.5323, y = 0.6611, city = "silvermoon" }, -- Silvermoon: the portal room's door, street side (hand-added: tools/modern_manual.py)
     { id = "SILVERMOON_PORTAL_ROOM_EXIT", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5316, y = 0.6604, city = "silvermoon" }, -- Silvermoon: the portal room's door, room side (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_SILVERMOON_TIMEWAYS", container = "ek_overworld.map2393", mapID = 2393, x = 0.4218, y = 0.5827, city = "silvermoon" }, -- Silvermoon: the portal to the Timeways, and where the way back lands (hand-added: tools/modern_manual.py)
 }

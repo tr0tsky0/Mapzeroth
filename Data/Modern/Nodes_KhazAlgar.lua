@@ -58,4 +58,5 @@ addon.Nodes.KhazAlgar = {
     { id = "TAXI_2998", container = "undermine.map2346", mapID = 2346, x = 0.5791, y = 0.0882, city = "undermine" }, -- Demolition Dome
     { id = "TAXI_2997", container = "undermine.map2346", mapID = 2346, x = 0.2439, y = 0.5221, city = "undermine" }, -- Slam Central Station
     { id = "TAXI_2988", container = "undermine.map2346", mapID = 2346, x = 0.4289, y = 0.4618, city = "undermine" }, -- The Incontinental Hotel
+    { id = "PORTAL_DORNOGAL_TIMEWAYS", container = "khaz_algar.map2339", mapID = 2339, x = 0.5380, y = 0.3872, city = "dornogal" }, -- Dornogal: the portal to the Timeways (one way: the way back goes to Silvermoon) (hand-added: tools/modern_manual.py)
 }

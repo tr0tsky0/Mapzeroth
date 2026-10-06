@@ -285,4 +285,10 @@ addon.Edges = {
     { from = "BRAWLGAR_TO_ORGRIMMAR", to = "ORGRIMMAR_TO_BRAWLGAR", method = "walk", cost = 2, loadingScreens = 1 }, -- hand-added: tools/modern_manual.py
     { from = "TRAM_BIZMOS_TO", to = "TRAM_TO_BIZMOS", method = "walk", cost = 2, loadingScreens = 0 }, -- hand-added: tools/modern_manual.py
     { from = "DEEPRUN_TRAM_TO_STORMWIND", to = "TRAM_STORMWIND_TO_DEEPRUN", method = "walk", cost = 2, loadingScreens = 1 }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_SILVERMOON_TIMEWAYS", to = "PORTAL_TIMEWAYS_SILVERMOON", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_TIMEWAYS_SILVERMOON", to = "PORTAL_SILVERMOON_TIMEWAYS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_DORNOGAL_TIMEWAYS", to = "PORTAL_TIMEWAYS_SILVERMOON", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_TIMEWAYS_KINGS_REST", to = "TIMEWAYS_ARRIVAL_KINGS_REST", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", to = "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", to = "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
 }

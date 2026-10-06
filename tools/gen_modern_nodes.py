@@ -95,6 +95,7 @@ NO_FLY_MAPS = {
     2346: "Undermine (11.1)",
     2509: "Coiled Isle / Vaults of Atal'Utek (12.1) -- mount-only, no flying",
     407: "Darkmoon Island",
+    2266: "The Timeways -- ground mounts, no flying",
 }
 
 
@@ -324,6 +325,7 @@ def main():
                 f'-- {mn["note"]} (hand-added: tools/modern_manual.py)'
             )
             emitted.append((out_id, mn["container"], mn["mapID"], mn["x"], mn["y"]))
+            mapid_groups.setdefault(int(mn["mapID"]), set()).add(mn["container"].split(".")[0])   # for NO_FLY_MAPS
             total_written += 1
         lines.append('}')
         (OUT / out_name).write_text(
