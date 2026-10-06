@@ -138,6 +138,8 @@ end
 function addon:GetPlayerContext()
     local _, classToken = UnitClass("player")
     local _, raceToken, raceID = UnitRace("player")
+    local inn = addon:GetBoundInnNode()
+    local hearthPlace = addon:GetHearthPlace(inn)       -- the bound spot, when no inn of ours is there
     return {
         faction = UnitFactionGroup("player"),
         class = classToken,
@@ -151,7 +153,8 @@ function addon:GetPlayerContext()
         hasToy = hasToy,
         cooldownRemaining = cooldownRemaining,
         itemCooldownRemaining = itemCooldownRemaining,
-        hearthNode = addon:GetBoundInnNode(),
+        hearthNode = inn or (hearthPlace and hearthPlace.id),   -- where the hearthstone lands
+        hearthPlace = hearthPlace,
         questCompleted = isQuestCompleted,
         holidayActive = isHolidayActive,
         isEquippable = function(itemID) return IsEquippableItem ~= nil and IsEquippableItem(itemID) and true or false end,

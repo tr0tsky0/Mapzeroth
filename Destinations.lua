@@ -78,10 +78,25 @@ end
 
 -- The nodes that count as arriving at a settlement: a walled city's entrances (Forever: no flying, so a city is
 -- entered through its gates), otherwise its centre node (CITY_<KEY> / TOWN_<KEY>). `entrances` is from entrancesByCity.
-local function arrivalNodes(key, field, entrances)
+-- A town with no centre node of its own (Modern's) is arrived at by its inns.
+local function arrivalNodes(key, field, entrances, innsByTown)
     local centre = field:upper() .. "_" .. key:upper()
     if field == "city" and entrances[key] then return entrances[key] end
     if addon.World:GetNode(centre) then return { centre } end
+    if field == "town" then return innsByTown[key] end
+end
+
+-- town key -> { inn node ids }, sorted.
+local function innsByTown()
+    local byTown = {}
+    addon.World:ForEachNode(function(node)
+        if node.kind == "inn" and node.town then
+            byTown[node.town] = byTown[node.town] or {}
+            table.insert(byTown[node.town], node.id)
+        end
+    end)
+    for _, list in pairs(byTown) do table.sort(list) end
+    return byTown
 end
 
 -- city key -> { entrance node ids }, from every node of kind "entrance".
@@ -115,6 +130,7 @@ function Destinations:Build(ctx)
     local entries = {}
     local skills = weaponSkills()
     local byInstance = {}                       -- journal instance id -> its entry
+    local byInn = {}                            -- "city:<key>" / "town:<key>" -> the entry for that place's inns
 
     World:ForEachNode(function(node)
         local group = groupOf(node)
@@ -136,6 +152,14 @@ function Destinations:Build(ctx)
             table.insert(shared.nodeIDs, node.id)
             return
         end
+        -- A town that is its inn (Modern's: no centre node) is listed as the town; its inn isn't listed again.
+        if node.kind == "inn" and node.town and not World:GetNode("TOWN_" .. node.town:upper()) then return end
+        -- A city's or town's inns (Stormwind has several) are one destination too: "Stormwind Inn", the nearest.
+        local innKey = node.kind == "inn" and (node.city and "city:" .. node.city or node.town and "town:" .. node.town)
+        if innKey and byInn[innKey] then
+            table.insert(byInn[innKey].nodeIDs, node.id)
+            return
+        end
         local instance = instanceID and addon.Instances and addon.Instances[instanceID]
         entries[#entries + 1] = {
             instanceID = instanceID, expansion = instance and instance[1], raid = instance and instance[2] or nil,
@@ -146,6 +170,7 @@ function Destinations:Build(ctx)
             trainer = node.trainer,
         }
         if instanceID then byInstance[instanceID] = entries[#entries] end
+        if innKey then byInn[innKey] = entries[#entries] end
     end)
 
     -- Whose a place is: its faction's, or both's (or nobody's on record). The other faction's are still
@@ -157,11 +182,11 @@ function Destinations:Build(ctx)
     -- Two settlements the client gives the same name (Modern's two Dalarans, the Burning Crusade and the Midnight
     -- Silvermoon) are told apart by their expansion ("Silvermoon City (Midnight)"), or by their continent when the data
     -- gives no expansion.
-    local entrances, made, names = entrancesByCity(), {}, {}
+    local entrances, inns, made, names = entrancesByCity(), innsByTown(), {}, {}
     local function addSettlements(list, getName, field, label)
         for key, settlement in pairs(list or {}) do
             local name = getName(addon, key)
-            local nodeIDs = name and arrivalNodes(key, field, entrances)
+            local nodeIDs = name and arrivalNodes(key, field, entrances, inns)
             if nodeIDs then
                 made[#made + 1] = {
                     nodeID = nodeIDs[1], nodeIDs = nodeIDs, name = name, group = "place", kind = label,

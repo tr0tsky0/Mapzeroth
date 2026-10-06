@@ -88,3 +88,13 @@ function addon:GetBoundInnNode()
     end
     return addon:FindHearthNode(bind)
 end
+
+-- When no inn of ours stands where the player bound (one the data lacks), the hearthstone still lands there: the
+-- bound spot itself, as a place of its own, { id, mapID, x, y, name }. Nil when there's an inn, or no position.
+addon.HEARTH_PLACE_ID = "HEARTH_BIND"
+function addon:GetHearthPlace(innNode)
+    if innNode then return nil end
+    local bind = addon:GetBind()
+    if not (bind and bind.mapID and bind.x and bind.y) then return nil end
+    return { id = addon.HEARTH_PLACE_ID, mapID = bind.mapID, x = bind.x, y = bind.y, name = bind.name, nocache = true }
+end

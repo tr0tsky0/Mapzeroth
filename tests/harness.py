@@ -64,7 +64,8 @@ function makeCtx(overrides)
         isEquipped = function(id) return equipped[id] or false end,
         cooldownRemaining = function(id) return (overrides.cooldowns or {})[id] or 0 end,
         itemCooldownRemaining = function(id) return (overrides.itemCooldowns or {})[id] or 0 end,
-        hearthNode = overrides.hearthNode,
+        hearthNode = overrides.hearthNode or (overrides.hearthPlace and overrides.hearthPlace.id),
+        hearthPlace = overrides.hearthPlace,       -- where the hearthstone lands when no inn is there (Hearth.lua)
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,

@@ -44,7 +44,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1279, "every node made it into the tree (1215 converted + 40 hand-added + 24 city centres): " .. total)
+check(total == 1771, "every node made it into the tree (1215 converted + 40 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -553,9 +553,128 @@ do
     local realGetMapInfo = C_Map.GetMapInfo
     C_Map.GetMapInfo = function(id) if id == 2393 then return { name = "Silvermoon City" } end return realGetMapInfo(id) end
     addon:ClearNodeNameCache()
-    check(addon:FindHearthNode({ name = "Silvermoon City" }) == "SILVERMOON_INN", "a hearthstone bound in Silvermoon goes to its inn")
+    local bound = addon:FindHearthNode({ name = "Silvermoon City" })
+    check(bound and World:GetNode(bound).kind == "inn" and World:GetNode(bound).city == "silvermoon",
+        "a hearthstone bound in Silvermoon goes to one of its inns: " .. tostring(bound))
     C_Map.GetMapInfo = realGetMapInfo
     addon:ClearNodeNameCache()
+
+    -- Towns and their inns (tools/gen_modern_pois.py, Data/Modern/Pois.lua).
+    local Towns = addon.Towns
+    check(Towns.goldshire and Towns.goldshire.expansion == 1 and Towns.goldshire.faction == "Alliance",
+        "Goldshire is a Classic Alliance town (Cataclysm remade it, but Classic had it)")
+    check(Towns.lor_danel and Towns.lor_danel.expansion == 4, "Lor'danel is Cataclysm's: it replaced Auberdine")
+    check(Towns.the_crossroads and Towns.the_crossroads.faction == "Horde",
+        "the Crossroads is Horde's, though a visiting innkeeper serves both")
+    check(addon:FindHearthNode({ mapID = 37, x = 0.437, y = 0.661 }) == "INN_295", "a bind in Goldshire goes to its inn")
+    check(World:GetNode("INN_62996_390").city == "shrine_of_two_moons" and World:GetNode("INN_64149_390").city == "shrine_of_seven_stars",
+        "each shrine's inn is its own, though the two share the Vale's map")
+    check(World:GetNode("INN_58691").city == nil, "and an inn elsewhere in the Vale is neither's")
+    local unnamed = 0
+    World:ForEachNode(function(node)
+        if node.kind == "inn" and node.town then check(Towns[node.town], "an inn's town exists: " .. node.town) end
+        if node.kind == "inn" and not node.town and not node.city then unnamed = unnamed + 1 end
+    end)
+    check(unnamed < 20, "most inns belong to a town or a city: " .. unnamed .. " don't")
+
+    -- In the picker: each town once, at its own node; a place's several inns are one destination, the nearest.
+    local realTaxiNodes = C_TaxiMap.GetTaxiNodesForMap
+    C_TaxiMap.GetTaxiNodesForMap = function()
+        return { { nodeID = 582, name = "Goldshire, Elwynn" }, { nodeID = 2915, name = "Bel'ameth, Amirdrassil" } }
+    end
+    local realMapInfo = C_Map.GetMapInfo
+    C_Map.GetMapInfo = function(id) if id == 84 then return { name = "Stormwind City" } end return realMapInfo(id) end
+    addon:ClearNodeNameCache()
+    local entries = addon.Destinations:Build(makeCtx({ faction = "Alliance" }))
+    C_TaxiMap.GetTaxiNodesForMap, C_Map.GetMapInfo = realTaxiNodes, realMapInfo
+    addon:ClearNodeNameCache()
+    local town = addon.Destinations:Find(entries, "INN_295", "place")
+    check(town and town.kind == "town" and town.expansion == 1 and town.name == "Goldshire",
+        "Goldshire is listed as a Classic town, named by its flight master, arrived at by its inn: " .. tostring(town and town.name))
+    local innListed = false
+    for _, entry in ipairs(entries) do if entry.group ~= "place" and entry.nodeID == "INN_295" then innListed = true end end
+    check(not innListed, "and its inn isn't listed a second time as \"Goldshire Inn\"")
+    local bel = addon.Destinations:Find(entries, "INN_214888", "place") or addon.Destinations:Find(entries, "INN_206947", "place")
+    check(bel and #bel.nodeIDs == 2, "a town with two inns arrives at whichever is nearer (Bel'ameth)")
+    local stormwindInns, innEntries = 0, 0
+    World:ForEachNode(function(node) if node.kind == "inn" and node.city == "stormwind" then stormwindInns = stormwindInns + 1 end end)
+    for _, entry in ipairs(entries) do
+        if entry.kind == "inn" and World:GetNode(entry.nodeID).city == "stormwind" then
+            innEntries = innEntries + 1
+            check(#entry.nodeIDs == stormwindInns, "the one Stormwind inn entry reaches every Stormwind inn: " .. #entry.nodeIDs)
+        end
+    end
+    check(stormwindInns > 1 and innEntries == 1, "Stormwind's " .. stormwindInns .. " inns are one entry: " .. innEntries)
+
+    -- An inn is where a trip arrives, never a stop on the way: the geometry only leads into one (TravelGraph's
+    -- isLeaf), and the one the hearthstone lands at gets every way out, per character.
+    local plain = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+    check(#(plain.adjacency.INN_295 or {}) == 0, "nothing leads out of an inn the hearthstone doesn't land at")
+    local into = 0
+    for _, edge in ipairs(plain.adjacency.TAXI_582 or {}) do if edge.to == "INN_295" then into = into + 1 end end
+    check(into == 1, "Goldshire's flight master walks into its inn")
+    local hearthGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance", items = { 6948 }, hearthNode = "INN_295" }))
+    local flies = 0
+    for _, edge in ipairs(hearthGraph.adjacency.INN_295 or {}) do if edge.method == "fly" then flies = flies + 1 end end
+    check(flies > 0, "the inn the hearthstone lands at flies on to anywhere in range: " .. flies)
+
+    -- The shipped geometry round-trips with inns in it. /mzr dumpgeometry (MapzerothDataTools' Dev.lua, packed the
+    -- same way here) keeps each pair once, whichever way its edge runs; the loader mirrors it, except out of an inn.
+    do
+        local fresh = addon.TravelGraph:BuildFreshGeometry()
+        local ids, index, noted = {}, {}, {}
+        local function note(id) if not noted[id] then noted[id] = true; ids[#ids + 1] = id end end
+        for id, list in pairs(fresh) do note(id); for _, e in ipairs(list) do note(e[1]) end end
+        table.sort(ids)
+        for i, id in ipairs(ids) do index[id] = i end
+        local packed, pairSeen = { ids = ids }, {}
+        World:ForEachNode(function() packed.nodeCount = (packed.nodeCount or 0) + 1 end)
+        local rows = { walk = {}, gate = {}, fly = {} }
+        for id, list in pairs(fresh) do
+            for _, e in ipairs(list) do
+                local lo, hi = math.min(index[id], index[e[1]]), math.max(index[id], index[e[1]])
+                local key = e[3] .. "|" .. lo .. "|" .. hi
+                if not pairSeen[key] then
+                    pairSeen[key] = true
+                    rows[e[3]][lo] = rows[e[3]][lo] or { lo }
+                    table.insert(rows[e[3]][lo], hi); table.insert(rows[e[3]][lo], e[2])
+                end
+            end
+        end
+        for kind, byLow in pairs(rows) do
+            packed[kind] = {}
+            for _, row in pairs(byLow) do table.insert(packed[kind], row) end
+        end
+        local saved = addon.GeometryPacked
+        addon.GeometryPacked = packed
+        local loaded = addon.TravelGraph:ShippedGeometry()
+        addon.GeometryPacked = saved
+        local function edgeSet(geo)
+            local set, n = {}, 0
+            for from, list in pairs(geo) do for _, e in ipairs(list) do set[from .. ">" .. e[1] .. ":" .. e[3]] = true; n = n + 1 end end
+            return set, n
+        end
+        local a, na = edgeSet(fresh)
+        local b, nb = edgeSet(loaded or {})
+        local same = loaded and na == nb
+        for k in pairs(a) do if not b[k] then same = false end end
+        check(same, "packing and loading the geometry gives back the same edges, inns arrive-only: " .. na .. " vs " .. nb)
+    end
+
+    -- No inn of ours where they bound: the hearthstone lands on the bound spot, and the trip goes on from there.
+    local highmountain
+    World:ForEachNode(function(node)
+        if not highmountain and node.mapID == 650 and node.kind ~= "inn" then highmountain = node.id end
+    end)
+    local spot = { id = addon.HEARTH_PLACE_ID, mapID = 650, x = 0.40, y = 0.50, name = "Somewhere in Highmountain", nocache = true }
+    local spotCtx = makeCtx({ faction = "Alliance", items = { 6948 }, hearthPlace = spot })
+    local spotGraph = addon.TravelGraph:Build(spotCtx)
+    local seeded = false
+    for _, ability in ipairs(spotGraph.anywhere) do if ability.to == spot.id then seeded = true end end
+    check(seeded and #(spotGraph.adjacency[spot.id] or {}) > 0, "the hearthstone lands on the bound spot, and the trip can leave it")
+    local trip = addon.Pathfinder:FindPath(spotGraph, "TAXI_2", highmountain)
+    check(trip and trip.steps[1].method == "hearthstone" and trip.steps[1].to == spot.id,
+        "Stormwind to Highmountain hearths to the bound spot first: " .. (trip and methods(trip) or "no route"))
 end
 
 -- The Burning Crusade Quel'Thalas (maps 94, 95, 110) is a region of its own beside Midnight's, entered by portal: EPL's
@@ -668,6 +787,17 @@ do
             end
         end
         check(across == 0 and reach > 0, "shipped fly edges keep phase sides apart and reach phased places: " .. across .. ", " .. reach)
+        -- Inns, as loaded from it: nothing leads out of one, and something walks into nearly every one.
+        local inns, reached, leaving = 0, {}, 0
+        World:ForEachNode(function(node) if node.kind == "inn" then inns = inns + 1 end end)
+        for from, list in pairs(SHIPPED) do
+            if World:GetNode(from).kind == "inn" then leaving = leaving + #list end
+            for _, e in ipairs(list) do if World:GetNode(e[1]).kind == "inn" then reached[e[1]] = true end end
+        end
+        local reachedCount = 0
+        for _ in pairs(reached) do reachedCount = reachedCount + 1 end
+        check(leaving == 0 and reachedCount >= inns - 10,
+            "shipped geometry leads into " .. reachedCount .. " of " .. inns .. " inns and out of none: " .. leaving)
     end
 end
 

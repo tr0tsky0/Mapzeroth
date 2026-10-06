@@ -1,0 +1,408 @@
+key	name	mapID	x	y	faction	expansion	inns	named by
+razor_hill	Razor Hill	1	51.5	41.6	Horde	1	1	flight master
+bloodhoof_village	Bloodhoof Village	7	46.8	60.4	Horde	1	1	flight master
+ratchet	Ratchet	10	67.2	74.5	Both	1	1	flight master
+the_crossroads	The Crossroads	10	49.5	57.8	Horde	1	1	flight master
+hammerfall	Hammerfall	14	69.3	32.8	Horde	1	1	flight master
+refuge_pointe	Refuge Pointe	14	40.2	48.5	Alliance	1	1	flight master
+new_kargath	New Kargath	15	18.4	42.8	Horde	1	1	flight master
+brill	Brill	18	60.8	51.5	Horde	1	1	area
+the_sepulcher	The Sepulcher	21	46.4	42.6	Horde	1	1	flight master
+light_s_hope_chapel	Light's Hope Chapel	23	75.5	52.5	Both	1	1	flight master
+tarren_mill	Tarren Mill	25	57.9	47.2	Horde	1	1	flight master
+aerie_peak	Aerie Peak	26	14.0	44.6	Alliance	1	1	flight master
+revantusk_village	Revantusk Village	26	78.2	81.2	Horde	1	1	flight master
+kharanos	Kharanos	27	54.4	50.7	Alliance	1	1	flight master
+goldshire	Goldshire	37	43.6	65.9	Alliance	1	1	flight master
+darkshire	Darkshire	47	73.8	44.0	Alliance	1	1	flight master
+farstrider_lodge	Farstrider Lodge	48	81.8	64.5	Alliance	1	1	flight master
+thelsamar	Thelsamar	48	35.5	48.6	Alliance	1	1	flight master
+lakeshire	Lakeshire	49	26.3	41.5	Both	1	1	flight master
+grom_gol	Grom'gol	50	37.2	51.8	Horde	1	1	flight master
+stonard	Stonard	51	46.8	56.6	Horde	1	1	flight master
+sentinel_hill	Sentinel Hill	52	52.8	53.5	Alliance	1	1	flight master
+menethil_harbor	Menethil Harbor	56	10.6	60.8	Alliance	1	1	flight master
+dolanaar	Dolanaar	57	55.4	52.2	Alliance	1	1	flight master
+astranaar	Astranaar	63	36.9	49.3	Alliance	1	1	flight master
+splintertree_post	Splintertree Post	63	74.0	60.6	Horde	1	1	flight master
+freewind_post	Freewind Post	64	46.0	51.2	Horde	1	1	area
+sun_rock_retreat	Sun Rock Retreat	65	50.4	63.8	Horde	1	1	flight master
+nijel_s_point	Nijel's Point	66	66.2	6.6	Alliance	1	1	flight master
+shadowprey_village	Shadowprey Village	66	24.0	68.2	Horde	1	1	flight master
+camp_mojache	Camp Mojache	69	74.8	45.0	Horde	1	1	flight master
+theramore	Theramore	70	66.4	45.4	Alliance	1	1	flight master
+gadgetzan	Gadgetzan	71	52.5	27.0	Both	1	1	flight master
+cenarion_hold	Cenarion Hold	81	55.5	36.6	Both	1	1	area
+everlook	Everlook	83	59.8	51.2	Both	1	1	flight master
+fairbreeze_village	Fairbreeze Village	94	43.6	71.2	Horde	1	1	flight master
+falconwing_square	Falconwing Square	94	48.0	47.6	Horde	1	1	flight master
+booty_bay	Booty Bay	210	40.8	73.8	Both	1	1	flight master
+brackenwall_village	Brackenwall Village	70	36.8	32.4	Horde	2	1	flight master
+mudsprocket	Mudsprocket	70	41.8	74.0	Both	2	1	flight master
+tranquillien_95	Tranquillien	95	48.8	32.4	Horde	2	1	flight master
+azure_watch	Azure Watch	97	48.4	49.2	Alliance	2	1	flight master
+falcon_watch	Falcon Watch	100	26.8	59.5	Horde	2	1	flight master
+honor_hold	Honor Hold	100	54.2	63.5	Alliance	2	1	flight master
+temple_of_telhamat	Temple of Telhamat	100	23.4	36.5	Alliance	2	1	flight master
+thrallmar	Thrallmar	100	56.6	37.5	Horde	2	1	flight master
+cenarion_refuge	Cenarion Refuge	102	78.5	63.0	Both	2	1	area
+orebor_harborage	Orebor Harborage	102	41.8	26.2	Alliance	2	1	flight master
+telredor	Telredor	102	67.2	49.0	Alliance	2	1	flight master
+zabra_jin	Zabra'jin	102	30.6	50.8	Horde	2	1	flight master
+altar_of_sha_tar	Altar of Sha'tar	104	61.0	28.2	Both	2	1	flight master
+netherwing_ledge	Netherwing Ledge	104	66.2	87.0	Both	2	1	area
+sanctum_of_the_stars	Sanctum of the Stars	104	56.2	59.8	Both	2	1	flight master
+shadowmoon_village	Shadowmoon Village	104	30.2	27.8	Horde	2	1	flight master
+wildhammer_stronghold	Wildhammer Stronghold	104	37.0	58.2	Alliance	2	1	flight master
+evergrove	Evergrove	105	62.8	38.2	Both	2	1	flight master
+mok_nathal_village	Mok'Nathal Village	105	13.6	86.8	Horde	2	1	area
+sylvanaar	Sylvanaar	105	35.8	63.8	Alliance	2	1	flight master
+thunderlord_stronghold	Thunderlord Stronghold	105	53.2	55.4	Horde	2	1	flight master
+toshley_s_station	Toshley's Station	105	60.8	68.2	Alliance	2	1	flight master
+blood_watch	Blood Watch	106	55.6	59.6	Alliance	2	1	flight master
+garadar	Garadar	107	56.6	34.5	Horde	2	1	flight master
+telaar	Telaar	107	54.2	76.0	Alliance	2	1	flight master
+allerian_stronghold	Allerian Stronghold	108	56.6	53.2	Alliance	2	1	flight master
+stonebreaker_hold	Stonebreaker Hold	108	48.8	45.0	Horde	2	1	flight master
+area_52	Area 52	109	32.0	64.4	Both	2	1	flight master
+the_stormspire	The Stormspire	109	43.4	36.0	Both	2	1	flight master
+shattered_sun_staging_area	Shattered Sun Staging Area	122	51.1	33.6	Both	2	1	flight master
+bor_gorok_outpost	Bor'gorok Outpost	114	49.6	10.0	Horde	3	1	flight master
+fizzcrank_airstrip	Fizzcrank Airstrip	114	57.0	18.6	Alliance	3	1	flight master
+taunka_le_village	Taunka'le Village	114	76.2	37.2	Horde	3	1	flight master
+unu_pe	Unu'pe	114	78.4	49.2	Both	3	1	flight master
+valiance_keep	Valiance Keep	114	58.2	68.0	Alliance	3	1	flight master
+warsong_hold	Warsong Hold	114	41.8	54.5	Horde	3	1	flight master
+agmar_s_hammer	Agmar's Hammer	115	38.3	46.3	Horde	3	1	flight master
+moa_ki	Moa'ki	115	48.2	74.6	Both	3	1	flight master
+stars_rest	Stars' Rest	115	28.8	56.0	Alliance	3	1	flight master
+venomspite	Venomspite	115	76.8	63.0	Horde	3	1	flight master
+wintergarde_keep	Wintergarde Keep	115	77.4	51.5	Alliance	3	1	flight master
+wyrmrest_temple	Wyrmrest Temple	115	59.8	54.2	Both	3	1	flight master
+amberpine_lodge	Amberpine Lodge	116	32.0	60.2	Alliance	3	1	flight master
+camp_oneqwah	Camp Oneqwah	116	65.4	47.0	Horde	3	1	flight master
+conquest_hold	Conquest Hold	116	20.8	64.5	Horde	3	1	flight master
+westfall_brigade	Westfall Brigade	116	59.5	26.3	Alliance	3	1	flight master
+camp_winterhoof	Camp Winterhoof	117	49.4	10.8	Horde	3	1	flight master
+fort_wildervar	Fort Wildervar	117	60.5	15.8	Alliance	3	1	flight master
+kamagua	Kamagua	117	25.4	59.8	Both	3	1	flight master
+new_agamand	New Agamand	117	52.2	66.5	Horde	3	1	flight master
+valgarde_port	Valgarde Port	117	58.4	62.5	Alliance	3	1	flight master
+vengeance_landing	Vengeance Landing	117	79.6	30.8	Horde	3	1	flight master
+westguard_keep	Westguard Keep	117	30.8	41.5	Alliance	3	1	flight master
+argent_tournament_grounds	Argent Tournament Grounds	118	76.0	24.0	Both	3	2	flight master
+the_shadow_vault	The Shadow Vault	118	44.0	22.2	Both	3	1	flight master
+nesingwary_base_camp	Nesingwary Base Camp	119	26.8	59.2	Both	3	1	flight master
+bouldercrag_s_refuge	Bouldercrag's Refuge	120	30.8	37.2	Both	3	1	flight master
+brunnhildar_village	Brunnhildar Village	120	48.8	65.0	Both	3	1	area
+camp_tunka_lo	Camp Tunka'lo	120	67.5	50.5	Horde	3	1	flight master
+frosthold	Frosthold	120	28.6	74.4	Alliance	3	1	flight master
+grom_arsh_crash_site	Grom'arsh Crash-Site	120	37.0	49.5	Horde	3	1	flight master
+k3	K3	120	9.6	46.4	Both	3	1	area
+the_argent_stand	The Argent Stand	121	40.8	66.2	Both	3	1	flight master
+zim_torga	Zim'Torga	121	59.2	57.2	Both	3	1	flight master
+grol_dom_farm	Grol'dom Farm	10	56.2	40.0	Horde	4	1	area
+nozzlepot_s_outpost	Nozzlepot's Outpost	10	62.5	16.6	Horde	4	1	flight master
+dragon_s_mouth	Dragon's Mouth	15	20.6	56.2	Alliance	4	1	flight master
+fuselight	Fuselight	15	65.8	35.5	Both	4	1	flight master
+dreadmaul_hold	Dreadmaul Hold	17	40.5	11.5	Horde	4	1	area
+nethergarde_keep	Nethergarde Keep	17	60.6	14.0	Alliance	4	1	area
+surwich	Surwich	17	44.5	87.5	Alliance	4	1	area
+the_bulwark	The Bulwark	18	83.0	71.8	Horde	4	1	flight master
+forsaken_rear_guard	Forsaken Rear Guard	21	44.4	20.5	Horde	4	1	flight master
+andorhal	Andorhal	22	48.2	63.8	Horde	4	1	flight master
+chillwind_camp	Chillwind Camp	22	43.4	84.5	Alliance	4	1	flight master
+eastpoint_tower	Eastpoint Tower	25	59.7	64.4	Horde	4	1	flight master
+southpoint_gate	Southpoint Gate	25	35.8	61.2	Horde	4	1	flight master
+hiri_watha_research_station	Hiri'watha Research Station	26	31.8	58.0	Horde	4	1	flight master
+stormfeather_outpost	Stormfeather Outpost	26	66.2	44.4	Alliance	4	1	flight master
+iron_summit	Iron Summit	32	39.5	66.3	Both	4	1	flight master
+fort_livingston	Fort Livingston	50	53.2	66.8	Alliance	4	1	flight master
+bogpaddle	Bogpaddle	51	71.6	13.8	Both	4	1	flight master
+the_harborage	The Harborage	51	29.0	32.5	Alliance	4	1	flight master
+greenwarden_s_grove	Greenwarden's Grove	56	58.0	39.2	Alliance	4	1	flight master
+swiftgear_station	Swiftgear Station	56	25.6	25.8	Alliance	4	1	area
+lor_danel	Lor'danel	62	51.0	18.5	Alliance	4	1	flight master
+hellscream_s_watch	Hellscream's Watch	63	38.6	42.2	Horde	4	1	flight master
+silverwind_refuge	Silverwind Refuge	63	50.4	67.0	Horde	4	1	flight master
+zoram_gar_outpost	Zoram'gar Outpost	63	13.0	34.0	Horde	4	1	flight master
+fizzle_pozzik_s_speedbarge	Fizzle & Pozzik's Speedbarge	64	76.5	74.7	Both	4	1	flight master
+farwatcher_s_glen	Farwatcher's Glen	65	31.5	60.5	Alliance	4	1	flight master
+krom_gar_fortress	Krom'gar Fortress	65	66.4	64.2	Horde	4	1	flight master
+northwatch_expedition_base_camp	Northwatch Expedition Base Camp	65	71.0	79.0	Alliance	4	1	flight master
+thal_darah_overlook	Thal'darah Overlook	65	39.5	32.8	Alliance	4	1	flight master
+windshear_hold	Windshear Hold	65	59.0	56.4	Alliance	4	1	flight master
+karnum_s_glade	Karnum's Glade	66	56.8	50.0	Both	4	1	flight master
+camp_ataya	Camp Ataya	69	41.4	15.6	Horde	4	1	flight master
+dreamer_s_rest	Dreamer's Rest	69	51.0	17.8	Alliance	4	1	flight master
+feathermoon	Feathermoon	69	46.0	45.2	Alliance	4	1	flight master
+stonemaul_hold	Stonemaul Hold	69	51.8	47.5	Horde	4	1	flight master
+bootlegger_outpost	Bootlegger Outpost	71	55.6	60.8	Both	4	1	flight master
+bilgewater_harbor	Bilgewater Harbor	76	57.0	50.4	Horde	4	1	flight master
+talonbranch_glade	Talonbranch Glade	77	61.8	26.6	Alliance	4	1	flight master
+whisperwind_grove	Whisperwind Grove	77	44.8	29.0	Both	4	1	flight master
+wildheart_point	Wildheart Point	77	44.0	61.8	Both	4	1	flight master
+marshal_s_stand	Marshal's Stand	78	55.1	62.4	Both	4	1	flight master
+grove_of_aessina	Grove of Aessina	198	18.6	37.2	Both	4	1	flight master
+nordrassil	Nordrassil	198	63.0	24.0	Both	4	1	flight master
+shrine_of_aviana	Shrine of Aviana	198	42.6	45.5	Both	4	1	flight master
+desolation_hold	Desolation Hold	199	40.8	69.2	Horde	4	1	flight master
+fort_triumph	Fort Triumph	199	49.0	68.5	Alliance	4	1	flight master
+honor_s_stand	Honor's Stand	199	39.0	11.0	Alliance	4	1	flight master
+hunter_s_hill	Hunter's Hill	199	39.2	20.0	Horde	4	1	flight master
+northwatch_hold	Northwatch Hold	199	65.5	46.5	Alliance	4	1	flight master
+legion_s_fate	Legion's Fate	201	38.8	31.5	Horde	4	1	area
+darkbreak_cove	Darkbreak Cove	204	54.6	72.2	Alliance	4	1	flight master
+tenebrous_cavern	Tenebrous Cavern	204	51.2	60.5	Horde	4	1	flight master
+stygian_bounty	Stygian Bounty	205	51.5	62.5	Horde	4	1	flight master
+tranquil_wash	Tranquil Wash	205	49.5	57.4	Alliance	4	1	flight master
+temple_of_earth	Temple of Earth	207	49.4	52.1	Both	4	1	area
+hardwrench_hideaway	Hardwrench Hideaway	210	35.0	27.4	Horde	4	1	flight master
+bloodgulch	Bloodgulch	241	53.2	42.8	Horde	4	1	area
+crushblow	Crushblow	241	45.0	76.6	Horde	4	1	area
+dragonmaw_port	Dragonmaw Port	241	75.8	52.6	Horde	4	1	area
+firebeard_s_patrol	Firebeard's Patrol	241	60.4	58.0	Alliance	4	1	flight master
+highbank	Highbank	241	79.2	78.0	Alliance	4	1	flight master
+kirthaven	Kirthaven	241	54.5	18.0	Alliance	4	1	area
+the_krazzworks	The Krazzworks	241	75.4	16.5	Horde	4	1	area
+thundermar	Thundermar	241	49.5	30.4	Alliance	4	1	flight master
+victor_s_point	Victor's Point	241	43.6	57.2	Alliance	4	1	flight master
+oasis_of_vir_sar	Oasis of Vir'sar	249	26.6	7.2	Both	4	1	flight master
+ramkahen	Ramkahen	249	54.6	32.8	Both	4	1	flight master
+schnottz_s_landing	Schnottz's Landing	249	22.0	64.5	Both	4	1	flight master
+dawn_s_blossom	Dawn's Blossom	371	45.7	43.7	Both	5	1	flight master
+emperor_s_omen	Emperor's Omen	371	48.2	34.8	Both	5	1	flight master
+honeydew_village	Honeydew Village	371	28.5	13.2	Horde	5	1	flight master
+jade_temple_grounds	Jade Temple Grounds	371	54.6	63.2	Both	5	1	flight master
+paw_don_village	Paw'Don Village	371	44.8	84.4	Alliance	5	1	flight master
+pearlfin_village	Pearlfin Village	371	59.5	83.2	Alliance	5	1	flight master
+sri_la_village	Sri-La Village	371	55.8	24.4	Both	5	1	flight master
+tian_monastery	Tian Monastery	371	41.6	23.2	Both	5	1	flight master
+halfhill	Halfhill	376	55.1	50.5	Both	5	1	flight master
+pang_s_stead	Pang's Stead	376	83.5	20.2	Both	5	1	flight master
+stoneplow	Stoneplow	376	19.8	55.8	Both	5	1	flight master
+binan_village	Binan Village	379	72.6	92.2	Both	5	1	flight master
+eastwind_rest	Eastwind Rest	379	62.6	80.5	Horde	5	1	flight master
+kota_basecamp	Kota Basecamp	379	42.6	69.6	Both	5	1	flight master
+one_keg	One Keg	379	57.4	60.0	Both	5	1	flight master
+shado_pan_fallback	Shado-Pan Fallback	379	44.5	90.2	Both	5	1	flight master
+temple_of_the_white_tiger	Temple of the White Tiger	379	66.8	51.0	Both	5	1	flight master
+westwind_rest	Westwind Rest	379	54.0	82.8	Alliance	5	1	flight master
+zouchin_village	Zouchin Village	379	62.4	28.8	Both	5	2	flight master
+gao_ran_battlefront	Gao-Ran Battlefront	388	75.8	82.8	Both	5	1	flight master
+longying_outpost	Longying Outpost	388	71.0	57.8	Both	5	1	flight master
+shado_pan_garrison	Shado-Pan Garrison	388	48.8	70.8	Both	5	1	flight master
+mistfall_village	Mistfall Village	390	35.3	77.5	Both	5	1	flight master
+crane_wing_refuge	Crane Wing Refuge	418	40.8	34.5	Both	5	1	area
+dawnchaser_retreat	Dawnchaser Retreat	418	28.2	50.6	Horde	5	1	flight master
+domination_point	Domination Point	418	9.8	49.6	Horde	5	1	flight master
+lion_s_landing	Lion's Landing	418	88.8	35.2	Alliance	5	1	flight master
+marista	Marista	418	51.5	77.2	Both	5	1	flight master
+thunder_cleft	Thunder Cleft	418	60.8	24.8	Horde	5	1	flight master
+zhu_s_watch	Zhu's Watch	418	75.8	7.2	Both	5	1	flight master
+klaxxi_vess	Klaxxi'vess	422	55.8	32.2	Both	5	1	flight master
+soggy_s_gamble	Soggy's Gamble	422	55.2	71.0	Both	5	1	flight master
+tavern_in_the_mists	Tavern in the Mists	433	54.6	72.5	Both	5	1	flight master
+dawnseeker_promontory	Dawnseeker Promontory	504	33.5	32.6	Horde	5	1	area
+violet_rise	Violet Rise	504	64.6	72.4	Alliance	5	1	area
+the_celestial_court	The Celestial Court	554	36.5	46.8	Both	5	1	area
+darkspear_s_edge	Darkspear's Edge	525	52.2	39.8	Horde	6	1	flight master
+stonefang_outpost	Stonefang Outpost	525	40.6	51.6	Horde	6	1	flight master
+throm_var	Throm'Var	525	32.0	10.0	Horde	6	1	flight master
+wor_gol	Wor'gol	525	20.8	56.5	Horde	6	1	flight master
+lion_s_watch	Lion's Watch	534	58.5	60.2	Alliance	6	1	flight master
+vol_mar	Vol'mar	534	61.4	46.0	Horde	6	1	flight master
+anchorite_s_sojourn	Anchorite's Sojourn	535	77.2	57.4	Both	6	1	flight master
+durotan_s_grasp	Durotan's Grasp	535	50.8	44.5	Both	6	1	flight master
+fort_wrynn_alliance	Fort Wrynn (Alliance)	535	69.6	21.8	Alliance	6	1	flight master
+frostwolf_overlook	Frostwolf Overlook	535	61.8	10.8	Horde	6	1	flight master
+vol_jin_s_pride	Vol'jin's Pride	535	72.0	30.0	Horde	6	1	flight master
+zangarra	Zangarra	535	85.2	31.8	Both	6	1	flight master
+elodor_alliance	Elodor (Alliance)	539	60.0	27.2	Alliance	6	1	flight master
+embaari_village	Embaari Village	539	46.6	40.8	Alliance	6	1	flight master
+the_draakorium	The Draakorium	539	56.8	57.4	Alliance	6	1	flight master
+admiral_taylor_s_garrison	Admiral Taylor's Garrison	542	37.6	50.9	Alliance	6	1	area
+axefall	Axefall	542	40.4	43.0	Horde	6	1	flight master
+pinchwhistle_gearworks	Pinchwhistle Gearworks	542	61.6	73.4	Both	6	1	flight master
+southport	Southport	542	40.0	61.4	Alliance	6	2	flight master
+veil_terokk	Veil Terokk	542	46.5	44.0	Both	6	1	flight master
+beastwatch	Beastwatch	543	46.0	69.8	Horde	6	1	flight master
+highpass	Highpass	543	53.2	59.8	Alliance	6	1	flight master
+riverside_post	Riverside Post	550	48.5	47.2	Horde	6	1	flight master
+telaari_station	Telaari Station	550	63.6	62.4	Alliance	6	2	flight master
+wor_var	Wor'var	550	82.6	45.4	Horde	6	1	flight master
+yrel_s_watch	Yrel's Watch	550	62.2	40.0	Alliance	6	1	flight master
+illidari_stand	Illidari Stand	630	43.0	42.5	Both	7	2	flight master
+shackle_s_den	Shackle's Den	630	56.5	59.5	Both	7	1	flight master
+dreadwake_s_landing	Dreadwake's Landing	634	54.0	72.2	Horde	7	1	flight master
+greywatch	Greywatch	634	71.6	60.5	Alliance	7	1	flight master
+skyfire_triage_camp	Skyfire Triage Camp	634	33.6	50.8	Both	7	1	flight master
+valdisdall	Valdisdall	634	60.5	50.2	Both	7	1	flight master
+bradensbrook	Bradensbrook	641	42.5	59.4	Both	7	1	flight master
+lorlathil	Lorlathil	641	56.0	73.5	Both	7	1	flight master
+starsong_refuge	Starsong Refuge	641	69.5	49.5	Both	7	1	flight master
+deliverance_point	Deliverance Point	646	41.0	58.8	Both	7	1	flight master
+ironhorn_enclave	Ironhorn Enclave	650	54.6	84.8	Both	7	1	flight master
+nesingwary_s_retreat	Nesingwary's Retreat	650	40.0	52.5	Both	7	1	flight master
+prepfoot	Prepfoot	650	57.4	27.6	Both	7	1	flight master
+skyhorn	Skyhorn	650	53.0	44.8	Both	7	1	flight master
+stonehoof_watch	Stonehoof Watch	650	58.6	65.2	Both	7	1	flight master
+sylvan_falls	Sylvan Falls	650	38.2	68.4	Both	7	1	flight master
+meredil	Meredil	680	37.0	46.1	Both	7	1	flight master
+suramar_city	Suramar City	680	59.2	84.8	Horde	7	1	area
+temple_of_five_dawns	Temple of Five Dawns	709	49.0	58.4	Both	7	1	area
+grove_of_the_ancients	Grove of the Ancients	62	45.0	87.0	Horde	8	1	flight master
+castaway_encampment	Castaway Encampment	862	77.2	55.6	Alliance	8	1	flight master
+garden_of_the_loa	Garden of the Loa	862	53.0	32.8	Horde	8	1	flight master
+mistvine_ledge	Mistvine Ledge	862	64.5	47.2	Alliance	8	1	flight master
+mugamba_overlook	Mugamba Overlook	862	44.8	27.5	Alliance	8	1	flight master
+scaletrader_post	Scaletrader Post	862	71.4	29.0	Both	8	1	flight master
+the_mugambala	The Mugambala	862	53.2	57.0	Horde	8	2	flight master
+veiled_grotto	Veiled Grotto	862	44.2	36.5	Alliance	8	1	flight master
+verdant_hollow	Verdant Hollow	862	55.0	25.6	Both	8	2	flight master
+warbeast_kraal	Warbeast Kraal	862	66.5	42.3	Horde	8	1	flight master
+xibala	Xibala	862	44.5	71.8	Both	8	2	flight master
+fort_victory	Fort Victory	863	62.0	40.8	Alliance	8	1	flight master
+gloom_hollow	Gloom Hollow	863	67.6	41.8	Both	8	1	flight master
+grimwatt_s_crash	Grimwatt's Crash	863	34.0	63.4	Alliance	8	1	flight master
+redfield_s_watch	Redfield's Watch	863	51.4	21.5	Alliance	8	1	flight master
+zo_bal_ruins	Zo'bal Ruins	863	40.8	43.5	Horde	8	1	flight master
+zul_jan	Zul'jan	863	38.5	78.5	Horde	8	1	flight master
+atul_aman	Atul'Aman	864	43.4	60.2	Horde	8	1	area
+sanctuary_of_the_devoted	Sanctuary of the Devoted	864	26.8	52.2	Both	8	1	flight master
+scorched_sands_outpost	Scorched Sands Outpost	864	43.0	76.4	Both	8	1	flight master
+temple_of_akunda	Temple of Akunda	864	52.0	89.8	Horde	8	1	flight master
+tortaka_refuge	Tortaka Refuge	864	61.5	20.5	Both	8	1	flight master
+vorrik_s_sanctum	Vorrik's Sanctum	864	36.8	35.2	Alliance	8	1	flight master
+vulpera_hideaway	Vulpera Hideaway	864	56.8	49.8	Both	8	1	flight master
+vulture_s_nest	Vulture's Nest	864	53.6	37.8	Alliance	8	1	flight master
+bridgeport	Bridgeport	895	75.8	50.5	Alliance	8	1	flight master
+castaway_point	Castaway Point	895	85.2	80.4	Both	8	1	flight master
+freehold	Freehold	895	77.2	84.0	Alliance	8	1	flight master
+hatherford	Hatherford	895	66.2	24.2	Alliance	8	1	flight master
+kennings_lodge	Kennings Lodge	895	75.6	64.5	Alliance	8	1	flight master
+norwington_estate	Norwington Estate	895	53.2	28.2	Alliance	8	1	flight master
+outrigger_post	Outrigger Post	895	35.2	24.2	Alliance	8	1	flight master
+plunder_harbor	Plunder Harbor	895	87.2	50.0	Horde	8	1	flight master
+roughneck_camp	Roughneck Camp	895	42.0	22.8	Alliance	8	1	flight master
+stonefist_watch	Stonefist Watch	895	53.4	63.2	Horde	8	1	flight master
+timberfell_outpost	Timberfell Outpost	895	72.0	52.4	Horde	8	1	flight master
+vigil_hill	Vigil Hill	895	57.8	62.0	Alliance	8	1	flight master
+wolf_s_den	Wolf's Den	895	62.4	13.8	Horde	8	1	flight master
+anyport	Anyport	896	21.4	43.6	Both	8	1	flight master
+arom_s_stand	Arom's Stand	896	37.4	48.6	Alliance	8	1	flight master
+falconhurst	Falconhurst	896	26.6	72.5	Alliance	8	1	flight master
+fallhaven	Fallhaven	896	55.3	34.4	Alliance	8	1	flight master
+krazzlefrazz_outpost	Krazzlefrazz Outpost	896	37.6	25.4	Horde	8	1	flight master
+mudfisher_cove	Mudfisher Cove	896	62.0	16.6	Horde	8	1	flight master
+swiftwind_post	Swiftwind Post	896	66.2	59.5	Horde	8	1	flight master
+brennadam	Brennadam	942	58.6	70.4	Alliance	8	1	flight master
+deadwash	Deadwash	942	43.2	54.2	Alliance	8	1	flight master
+diretusk_hollow	Diretusk Hollow	942	54.0	47.2	Horde	8	1	flight master
+fort_daelin	Fort Daelin	942	34.8	47.2	Alliance	8	1	flight master
+hillcrest_pasture	Hillcrest Pasture	942	54.0	78.6	Horde	8	1	flight master
+millstone_hamlet	Millstone Hamlet	942	31.5	67.2	Alliance	8	1	flight master
+seekers_vista	Seekers Vista	942	40.8	37.0	Both	8	1	flight master
+stonetusk_watch	Stonetusk Watch	942	39.4	68.5	Horde	8	1	flight master
+tidecross	Tidecross	942	65.4	48.2	Alliance	8	1	flight master
+warfang_hold	Warfang Hold	942	50.8	33.5	Horde	8	1	flight master
+windfall_cavern	Windfall Cavern	942	60.3	25.3	Horde	8	1	flight master
+mezzamere	Mezzamere	1355	37.8	55.5	Alliance	8	1	flight master
+newhome	Newhome	1355	50.8	65.2	Horde	8	1	flight master
+overspark_expedition_camp	Overspark Expedition Camp	1462	71.2	35.8	Both	8	1	flight master
+ramkahen_1527	Ramkahen	1527	54.6	32.8	Both	8	1	area
+charred_ramparts	Charred Ramparts	1525	40.8	46.6	Both	9	1	flight master
+darkhaven	Darkhaven	1525	62.0	64.4	Both	9	1	flight master
+halls_of_atonement	Halls of Atonement	1525	72.2	39.8	Both	9	1	flight master
+old_gate	Old Gate	1525	60.2	39.8	Both	9	1	flight master
+pridefall_hamlet	Pridefall Hamlet	1525	71.4	80.2	Both	9	1	flight master
+sanctuary_of_the_mad	Sanctuary of the Mad	1525	31.2	46.6	Both	9	1	flight master
+wanecrypt_hill	Wanecrypt Hill	1525	47.4	70.5	Both	9	1	flight master
+aspirant_s_rest	Aspirant's Rest	1533	48.0	73.0	Both	9	1	flight master
+elysian_hold	Elysian Hold	1533	65.4	18.8	Both	9	2	flight master
+hero_s_rest	Hero's Rest	1533	53.2	46.8	Both	9	1	flight master
+sagehaven	Sagehaven	1533	43.0	32.6	Both	9	1	flight master
+bleak_redoubt	Bleak Redoubt	1536	55.2	68.6	Both	9	1	flight master
+keres_rest	Keres' Rest	1536	54.2	30.6	Both	9	1	flight master
+renounced_bastille	Renounced Bastille	1536	67.6	44.8	Both	9	1	flight master
+the_spearhead	The Spearhead	1536	39.5	55.2	Both	9	1	flight master
+theater_of_pain	Theater of Pain	1536	50.8	53.0	Both	9	1	flight master
+dreamsong_fenn	Dreamsong Fenn	1565	36.8	37.0	Both	9	1	area
+glitterfall_basin	Glitterfall Basin	1565	50.6	33.8	Both	9	1	flight master
+hibernal_hollow	Hibernal Hollow	1565	60.5	53.8	Both	9	1	flight master
+refugee_camp	Refugee Camp	1565	48.4	50.5	Both	9	1	flight master
+root_home	Root-Home	1565	36.4	53.2	Both	9	1	flight master
+tirna_vaal	Tirna Vaal	1565	62.6	35.5	Both	9	1	flight master
+keeper_s_respite	Keeper's Respite	1961	60.8	24.0	Both	9	1	flight master
+haven	Haven	1970	34.8	64.0	Both	9	1	flight master
+pilgrim_s_grace	Pilgrim's Grace	1970	61.4	49.2	Both	9	1	flight master
+gilneas_city	Gilneas City	217	58.8	54.0	Alliance	10	1	area
+stormglen_village	Stormglen Village	217	60.0	91.6	Alliance	10	1	area
+apex_observatory	Apex Observatory	2022	24.4	82.2	Both	10	1	flight master
+dragonscale_basecamp	Dragonscale Basecamp	2022	47.7	83.2	Both	10	1	flight master
+life_vault_ruins	Life Vault Ruins	2022	65.2	58.0	Both	10	1	flight master
+obsidian_bulwark	Obsidian Bulwark	2022	43.0	66.5	Both	10	1	flight master
+obsidian_throne	Obsidian Throne	2022	25.8	55.2	Both	10	1	flight master
+ruby_life_pools	Ruby Life Pools	2022	58.0	67.5	Both	10	2	flight master
+skytop_observatory	Skytop Observatory	2022	76.0	54.6	Both	10	1	flight master
+uktulut_backwater	Uktulut Backwater	2022	53.8	39.2	Both	10	1	flight master
+uktulut_pier	Uktulut Pier	2022	46.4	27.2	Both	10	1	flight master
+wingrest_embassy	Wingrest Embassy	2022	76.2	35.5	Horde	10	3	flight master
+broadhoof_outpost	Broadhoof Outpost	2023	46.0	40.5	Both	10	1	flight master
+emberwatch	Emberwatch	2023	66.2	24.4	Both	10	1	flight master
+forkriver_crossing	Forkriver Crossing	2023	72.0	80.5	Both	10	1	flight master
+maruukai	Maruukai	2023	62.8	40.6	Both	10	3	flight master
+ohn_iri_springs	Ohn'iri Springs	2023	57.1	76.5	Both	10	1	flight master
+pinewood_post	Pinewood Post	2023	81.2	59.2	Both	10	1	flight master
+rusza_thar_reach	Rusza'thar Reach	2023	85.8	35.2	Both	10	1	flight master
+shady_sanctuary	Shady Sanctuary	2023	28.5	60.5	Both	10	1	flight master
+teerakai	Teerakai	2023	41.8	60.5	Both	10	1	flight master
+timberstep_outpost	Timberstep Outpost	2023	85.0	26.0	Both	10	1	flight master
+azure_archives	Azure Archives	2024	37.4	62.4	Both	10	1	flight master
+camp_antonidas	Camp Antonidas	2024	46.8	40.2	Both	10	1	flight master
+camp_nowhere	Camp Nowhere	2024	62.8	57.8	Both	10	1	flight master
+iskaara	Iskaara	2024	12.4	49.4	Both	10	1	flight master
+theron_s_watch	Theron's Watch	2024	65.5	16.1	Both	10	1	flight master
+three_falls_lookout	Three-Falls Lookout	2024	18.8	24.4	Both	10	1	flight master
+algeth_era	Algeth'era	2025	50.2	42.5	Both	10	1	flight master
+garden_shrine	Garden Shrine	2025	35.0	79.2	Both	10	1	flight master
+gelikyr_post	Gelikyr Post	2025	52.4	69.5	Both	10	1	flight master
+temporal_conflux	Temporal Conflux	2025	59.3	82.3	Both	10	1	flight master
+loamm	Loamm	2133	56.4	55.8	Both	10	1	area
+obsidian_rest	Obsidian Rest	2133	52.2	26.2	Both	10	1	flight master
+morqut_village	Morqut Village	2151	33.8	59.0	Both	10	1	flight master
+central_encampment	Central Encampment	2200	49.8	61.6	Both	10	1	flight master
+eye_of_ysera	Eye of Ysera	2200	52.5	25.2	Both	10	1	flight master
+verdant_landing	Verdant Landing	2200	69.5	53.2	Both	10	1	flight master
+wellspring_overlook	Wellspring Overlook	2200	36.5	32.6	Both	10	1	flight master
+bel_ameth	Bel'ameth	2239	48.0	54.2	Alliance	10	2	flight master
+camp_murroch	Camp Murroch	2214	54.8	64.0	Both	11	1	flight master
+gundargaz	Gundargaz	2214	43.8	32.2	Both	11	2	flight master
+gutterville	Gutterville	2214	72.0	84.0	Both	11	1	flight master
+opportunity_point	Opportunity Point	2214	59.2	78.8	Both	11	1	flight master
+shadowvein_point	Shadowvein Point	2214	57.6	46.2	Both	11	1	flight master
+dunelle_s_kindness	Dunelle's Kindness	2215	69.2	45.6	Both	11	1	flight master
+light_s_redoubt	Light's Redoubt	2215	40.6	68.0	Both	11	1	flight master
+lorel_s_crossing	Lorel's Crossing	2215	49.2	39.5	Both	11	1	flight master
+mereldar	Mereldar	2215	42.8	55.8	Both	11	1	flight master
+freywold_village	Freywold Village	2248	41.8	74.2	Both	11	1	flight master
+rambleshire	Rambleshire	2248	58.4	27.4	Both	11	1	flight master
+faerin_s_advance	Faerin's Advance	2255	59.0	18.8	Both	11	1	flight master
+mmarl	Mmarl	2255	77.8	63.0	Both	11	1	flight master
+weaver_s_lair	Weaver's Lair	2255	56.8	38.8	Both	11	1	flight master
+wildcamp_ul_ar	Wildcamp Ul'ar	2255	44.8	66.5	Both	11	1	flight master
+shadow_point	Shadow Point	2472	41.0	25.0	Both	11	1	flight master
+fairbreeze_village_2395	Fairbreeze Village	2395	46.2	46.0	Both	12	1	flight master
+tranquillien	Tranquillien	2395	49.0	68.3	Both	12	2	flight master
+howling_ridge	Howling Ridge	2405	53.0	68.2	Both	12	1	flight master
+locus_point	Locus Point	2405	41.6	74.6	Both	12	1	flight master
+the_ingress	The Ingress	2405	35.6	58.6	Both	12	1	flight master
+har_alnor	Har'alnor	2413	31.0	65.0	Both	12	1	flight master
+har_athir	Har'athir	2413	69.1	51.5	Both	12	1	flight master
+har_kuai	Har'kuai	2413	66.2	24.5	Both	12	1	flight master
+har_mara	Har'mara	2413	35.0	22.8	Both	12	1	flight master
+the_den	The Den	2413	50.8	55.5	Both	12	1	area
+amani_zar_village	Amani'Zar Village	2437	45.4	65.0	Both	12	1	flight master
+camp_stonewash	Camp Stonewash	2437	46.5	25.7	Both	12	1	flight master
+witherbark_bluffs	Witherbark Bluffs	2437	36.8	23.5	Both	12	1	flight master
+tokka_s_landing	Tokka's Landing	2512	58.4	45.4	Both	12	1	flight master

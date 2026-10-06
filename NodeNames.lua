@@ -300,6 +300,13 @@ local function portalName(nodeID)
 end
 
 function addon:GetNodeName(nodeID)
+    -- Where the hearthstone lands when no inn of ours is there (Hearth.lua): the client's own name for the bind
+    -- ("Thunder Totem"), else its zone. Never cached: a new bind moves it.
+    if nodeID == addon.HEARTH_PLACE_ID then
+        local bind = addon:GetBind()
+        local name = bind and bind.name ~= "" and bind.name or (GetBindLocation and GetBindLocation())
+        return (name and name ~= "") and name or (bind and zoneName(bind.mapID)) or nil
+    end
     local cached = nameCache[nodeID]
     if cached then return cached end
 

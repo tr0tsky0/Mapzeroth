@@ -228,6 +228,8 @@ local function pointOf(session, id)
         for _, extra in ipairs(session.extras or {}) do
             if extra.id == id then node = extra end
         end
+        local hearth = session.ctx and session.ctx.hearthPlace     -- where the hearthstone lands, when no inn of ours
+        if hearth and hearth.id == id then node = hearth end
     end
     return node and { mapID = node.mapID, x = node.x, y = node.y } or nil
 end

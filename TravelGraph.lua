@@ -135,6 +135,16 @@ local function isFlyable(node)
     return nil
 end
 
+-- An inn is somewhere to arrive, never a waypoint on the way to somewhere else: the geometry only leads into it,
+-- from the nodes of its own container, and it takes no part in the fly mesh (hundreds of them would triple the
+-- edges for nothing). The one inn a trip leaves from, where the hearthstone lands, gets its ways out per context
+-- (TravelGraph:Build, as the player's own spot does).
+local function isLeaf(node)
+    return node.kind == "inn"
+end
+
+local departure     -- (below, with AddStart) every way out of a place a trip leaves from
+
 -- Two containers that are different sides of one phase group: the same ground in two states, never
 -- a flight apart (Zidormi is the way between them).
 local function otherSide(a, b)
@@ -181,17 +191,19 @@ local function buildStaticGeometry()
         list[#list + 1] = { to, dtf, kind }
     end
 
-    -- Walking: every pair of nodes in one container.
+    -- Walking: every pair of nodes in one container (into an inn only, never out of one or between two).
     World:ForEachContainer(function(container)
         local list = container.nodes
         if #list < 2 then return end
         for i = 1, #list - 1 do
             for j = i + 1, #list do
-                local dist = insideCity(list[i]) == insideCity(list[j]) and TravelGraph.DistanceProvider(list[i], list[j])
+                local a, b = list[i], list[j]
+                local leafA, leafB = isLeaf(a), isLeaf(b)
+                local dist = not (leafA and leafB) and insideCity(a) == insideCity(b) and TravelGraph.DistanceProvider(a, b)
                 if dist then
-                    local dtf = dist * pathFactor(list[i], list[j])
-                    link(list[i].id, list[j].id, dtf, "walk")
-                    link(list[j].id, list[i].id, dtf, "walk")
+                    local dtf = dist * pathFactor(a, b)
+                    if not leafA then link(a.id, b.id, dtf, "walk") end
+                    if not leafB then link(b.id, a.id, dtf, "walk") end
                 end
             end
         end
@@ -216,7 +228,7 @@ local function buildStaticGeometry()
     local flyable = {}
     for _, list in pairs(addon.Nodes or {}) do
         for _, node in ipairs(list) do
-            local c = isFlyable(node)
+            local c = not isLeaf(node) and isFlyable(node)
             if c then
                 local continent = World:GetContinent(c)
                 local key = continent and continent.path
@@ -267,13 +279,17 @@ local function unpackGeometry(packed)
         if not list then list = {}; geometry[from] = list end
         list[#list + 1] = { to, dtf, kind }
     end
+    -- Each pair is stored once and mirrored here, except out of an inn: the geometry only leads into one (isLeaf).
+    local World = addon.World
+    local leaf = {}
+    for _, id in ipairs(ids) do leaf[id] = isLeaf(World:GetNode(id)) end
     for _, kind in ipairs(PACKED_KINDS) do
         for _, row in ipairs(packed[kind] or {}) do
             local from = ids[row[1]]
             for i = 2, #row, 2 do
                 local to, dtf = ids[row[i]], row[i + 1]
-                link(from, to, dtf, kind)
-                link(to, from, dtf, kind)
+                if not leaf[from] then link(from, to, dtf, kind) end
+                if not leaf[to] then link(to, from, dtf, kind) end
             end
         end
     end
@@ -466,8 +482,9 @@ function TravelGraph:Build(ctx)
 
     -- Teleports and the like: available from wherever the player stands.
     local anywhere = {}
+    local landing = ctx.hearthPlace           -- the spot the player bound at, when no inn of ours stands there
     for _, entry in ipairs(addon:GetKnownTeleports(ctx)) do
-        if World:GetNode(entry.to) then
+        if World:GetNode(entry.to) or (landing and entry.to == landing.id) then
             local screens = entry.loadingScreens or addon:Method(entry.method).screens
             anywhere[#anywhere + 1] = {
                 to = entry.to,
@@ -477,6 +494,15 @@ function TravelGraph:Build(ctx)
                 bias = entry.bias,             -- the tie-break between abilities (addon:AbilityBias)
             }
         end
+    end
+
+    -- Where the hearthstone lands is where the trip carries on from: the bound inn (which the geometry only leads
+    -- into) or the bound spot, given every way out the player's own spot has.
+    local inn = not landing and ctx.hearthNode and World:GetNode(ctx.hearthNode)
+    if inn and isLeaf(inn) then landing = inn end
+    if landing then
+        local container = inn and World:GetNodeContainer(inn.id) or World:GetContainerForMap(landing.mapID)
+        if container then departure(adjacency, ctx, landing, container) end
     end
 
     return { adjacency = adjacency, anywhere = anywhere }
@@ -532,11 +558,17 @@ end
 function TravelGraph:AddStart(graph, ctx, start)
     local container = addon.World:GetContainerForMap(start.mapID, graph.phase)
     if not container then return false end
+    return departure(graph.adjacency, ctx, start, container)
+end
+
+-- Every way out of a place a trip leaves from (the player's spot, or the inn the hearthstone lands at): a walk
+-- to each node of its container, and in the open where flying is allowed a flight to any outdoor node in range.
+departure = function(adjacency, ctx, start, container)
     local speed, icon = addon:GetGroundSpeed(container, ctx)
-    local list = graph.adjacency[start.id]
-    if not list then list = {}; graph.adjacency[start.id] = list end
+    local list = adjacency[start.id]
+    if not list then list = {}; adjacency[start.id] = list end
     for _, node in ipairs(container.nodes) do
-        local dist = insideCity(node) == insideCity(start) and TravelGraph.DistanceProvider(start, node)
+        local dist = node.id ~= start.id and insideCity(node) == insideCity(start) and TravelGraph.DistanceProvider(start, node)
         if dist then
             list[#list + 1] = {
                 from = start.id, to = node.id, method = "walk",

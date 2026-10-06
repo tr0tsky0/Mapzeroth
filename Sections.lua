@@ -14,9 +14,10 @@ local addonName, addon = ...
 -- is the page above. Modern's is "expansions" (Data/Modern/Places.lua): it has too many places for that, so the page
 -- shows the current expansion and what is used every day:
 --   Cities               the current expansion's, and the hub cities of any expansion
+--   Towns                the current expansion's
 --   Dungeons             the current expansion's, and the older ones in this season's Mythic+ pool
 --   Raids                the current expansion's
---   Older content        one section for each earlier expansion, newest first, holding its cities, dungeons and raids
+--   Older content        one section for each earlier expansion, newest first, holding its cities, towns, dungeons and raids
 -- (a section can hold sections; searching finds everything wherever it is filed).
 --
 -- The other faction's places are not listed here; searching still finds them. A section is
@@ -50,29 +51,30 @@ end
 local function modernSections(entries, add, sections)
     local current, seasonal = addon.CURRENT_EXPANSION, {}
     for _, id in ipairs(addon.SEASONAL_DUNGEONS or {}) do seasonal[id] = true end
-    local cities, dungeons, raids = {}, {}, {}
-    local older = {}                                      -- expansion -> { cities, dungeons, raids } lists
+    local cities, towns, dungeons, raids = {}, {}, {}, {}
+    local older = {}                                      -- expansion -> { cities, towns, dungeons, raids } lists
     for _, entry in ipairs(entries) do
         local rev = entry.expansion
         if rev and entry.relevant ~= false then
             local kind
-            if entry.group == "place" and entry.kind == "city" then kind = "cities"
+            if entry.group == "place" then kind = entry.kind == "city" and "cities" or "towns"
             elseif entry.group == "instance" then kind = entry.raid and "raids" or "dungeons" end
             if kind then
                 entry.eta, entry.nearest = nil, nil
                 if rev == current or (kind == "cities" and entry.hub) or (kind == "dungeons" and seasonal[entry.instanceID]) then
-                    table.insert(kind == "cities" and cities or kind == "raids" and raids or dungeons, entry)
+                    table.insert(({ cities = cities, towns = towns, raids = raids, dungeons = dungeons })[kind], entry)
                 end
                 if rev < current then
-                    older[rev] = older[rev] or { cities = {}, dungeons = {}, raids = {} }
+                    older[rev] = older[rev] or { cities = {}, towns = {}, dungeons = {}, raids = {} }
                     table.insert(older[rev][kind], entry)
                 end
             end
         end
     end
     local byName = function(a, b) return a.name < b.name end
-    for _, list in ipairs({ cities, dungeons, raids }) do table.sort(list, byName) end
+    for _, list in ipairs({ cities, towns, dungeons, raids }) do table.sort(list, byName) end
     add("cities", L["SECTION_CITIES"], cities)
+    add("towns", L["SECTION_TOWNS"], towns)
     add("dungeons", L["SECTION_DUNGEONS"], dungeons)
     add("raids", L["SECTION_RAIDS"], raids)
     -- This season's dungeons lead the Dungeons list, ahead of the rest, however near those are.
@@ -85,7 +87,7 @@ local function modernSections(entries, add, sections)
         local group = older[rev]
         if group then
             local items = {}
-            for _, list in ipairs({ group.cities, group.dungeons, group.raids }) do
+            for _, list in ipairs({ group.cities, group.towns, group.dungeons, group.raids }) do
                 table.sort(list, byName)
                 for _, entry in ipairs(list) do items[#items + 1] = entry end
             end

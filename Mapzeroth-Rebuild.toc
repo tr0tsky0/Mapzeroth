@@ -66,6 +66,7 @@ Data\Modern\Geometry.lua
 Data\Modern\Instances.lua
 Data\Modern\Places.lua
 Data\Modern\Settlements.lua
+Data\Modern\Pois.lua
 Data\Modern\Movement.lua
 Data\Modern\Game.lua
 
