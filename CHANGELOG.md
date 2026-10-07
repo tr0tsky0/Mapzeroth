@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.1
+
+### Added
+- **The shorter cooldown goes first.** When two routes are equally quick and differ only in the teleport they use, Mapzeroth picks the one with the shorter cooldown, so a shaman uses Astral Recall before the Hearthstone. Items that are used up come last.
+- **"Longest cooldown to use" setting** (1 to 8 hours, or 8+ for no limit, the default): abilities and items with a longer cooldown are left out of routes.
+- **Hearthstone to a place Mapzeroth has no inn for.** If you bind somewhere Mapzeroth doesn't know an inn, routes still use your hearthstone and take you to the spot where you bound.
+
+### Fixed
+- Darnassus: the gates between Rut'theran Village and the city are in their measured places, and the step reads "Use" the gate rather than "Go to" it.
+- Dalaran's two inns are one entry in the picker, going to whichever is nearer.
+
+### Changed
+- Smaller download: the travel data ships in a compact form (the zip is about a third smaller).
+- Starter translations for the new text in all supported languages.
+
 ## 0.6.0
 
 ### Added
