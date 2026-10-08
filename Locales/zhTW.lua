@@ -58,6 +58,8 @@ addon:RegisterLocale("zhTW", {
     ROUTE_ROUND_TOTAL = "去程 %s，回程 %s：共 %s",
     ROUTE_BACK_HEADING = "然後返回出發地",
     PLACE_START       = "出發地",
+    PLACE_CAMP        = "你的營地",
+    PLACE_CAMP_IN     = "你在%s的營地",
     ROUTE_ALREADY     = "你已經在這裡了。",
     ROUTE_NONE        = "無法從這裡找到路線。",
     NOWHERE           = "Mapzeroth目前無法判斷你的位置（不支援副本內）。",

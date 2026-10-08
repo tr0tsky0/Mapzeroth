@@ -60,6 +60,8 @@ addon:RegisterLocale("ruRU", {
     ROUTE_ROUND_TOTAL = "%s туда, %s обратно: всего %s",
     ROUTE_BACK_HEADING = "Затем назад, к месту старта",
     PLACE_START       = "место старта",
+    PLACE_CAMP        = "ваш лагерь",
+    PLACE_CAMP_IN     = "ваш лагерь: %s",
     ROUTE_ALREADY     = "Вы уже здесь.",
     ROUTE_NONE        = "Отсюда маршрут не найден.",
     NOWHERE           = "Mapzeroth сейчас не может определить, где вы находитесь (подземелья и рейды не поддерживаются).",

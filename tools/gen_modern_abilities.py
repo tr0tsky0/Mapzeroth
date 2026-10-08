@@ -1,7 +1,7 @@
 """tools/gen_modern_abilities.py -- converts the original retail addon's four travel-ability
 tables (../Mapzeroth/PlayerAbilities.lua: TravelItems, ClassTeleports, RacialAbilities,
 DungeonTeleports) into the rebuild's schema (Data/Modern/Abilities.lua, addon.Abilities.
-{Teleports,Hearthstones,Items} -- see Data/Forever/Abilities.lua for the shape and
+{Teleports,Hearthstones,Items,Camps} -- see Data/Forever/Abilities.lua for the shape and
 PlayerAbilities.lua:GetKnownTeleports for how each is consumed). Run after
 tools/gen_modern_nodes.py and gen_modern_edges.py (this script checks every destination
 against that pass's node ids, applying the same TAXI_/INSTANCE_ renames, and drops --
@@ -204,6 +204,12 @@ def main():
     lines += [fmt(e) for e in hearthstones]
     lines += ["}", "", "addon.Abilities.Items = {"]
     lines += [fmt(e) for e in items]
+    lines += ["}", "", "addon.Abilities.Camps = {"]
+    for c in manual.CAMPS:
+        parts = [f'spellID = {int(c["spellID"])}', f'setSpellID = {int(c["setSpellID"])}', f'cost = {int(c.get("cost", 10))}']
+        if c.get("cooldown"):
+            parts.append(f'cooldown = {int(c["cooldown"])}')
+        lines.append("    { " + ", ".join(parts) + " },")
     lines += ["}"]
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

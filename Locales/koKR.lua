@@ -59,6 +59,8 @@ addon:RegisterLocale("koKR", {
     ROUTE_ROUND_TOTAL = "가는 데 %s, 오는 데 %s: 총 %s",
     ROUTE_BACK_HEADING = "그 후 출발한 곳으로 돌아가기",
     PLACE_START       = "출발한 곳",
+    PLACE_CAMP        = "야영지",
+    PLACE_CAMP_IN     = "%s의 야영지",
     ROUTE_ALREADY     = "이미 도착했습니다.",
     ROUTE_NONE        = "여기서 가는 경로를 찾을 수 없습니다.",
     NOWHERE           = "Mapzeroth가 지금 현재 위치를 알 수 없습니다 (인스턴스는 지원하지 않습니다).",

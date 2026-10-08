@@ -58,6 +58,8 @@ addon:RegisterLocale("zhCN", {
     ROUTE_ROUND_TOTAL = "去程 %s，回程 %s：共 %s",
     ROUTE_BACK_HEADING = "然后返回出发地",
     PLACE_START       = "出发地",
+    PLACE_CAMP        = "你的营地",
+    PLACE_CAMP_IN     = "你在%s的营地",
     ROUTE_ALREADY     = "你已经在这里了。",
     ROUTE_NONE        = "无法从这里找到路线。",
     NOWHERE           = "Mapzeroth目前无法确定你的位置（不支持副本内）。",

@@ -689,6 +689,26 @@ do
     local trip = addon.Pathfinder:FindPath(spotGraph, "TAXI_2", highmountain)
     check(trip and trip.steps[1].method == "hearthstone" and trip.steps[1].to == spot.id,
         "Stormwind to Highmountain hearths to the bound spot first: " .. (trip and methods(trip) or "no route"))
+
+    -- A Vulpera's camp works the same way: Return to Camp (a teleport) lands on it, the trip leaves from it, and
+    -- without the spell, on cooldown, or with no camp made it isn't offered.
+    local camp = { id = addon.CAMP_PLACE_ID, mapID = 650, x = 0.40, y = 0.50, nocache = true }
+    local campCtx = makeCtx({ faction = "Horde", spells = { 312372 }, campPlace = camp })
+    local campTrip = addon.Pathfinder:FindPath(addon.TravelGraph:Build(campCtx), "TAXI_2", highmountain)
+    check(campTrip and campTrip.steps[1].method == "teleport" and campTrip.steps[1].to == camp.id,
+        "Stormwind to Highmountain returns to camp first: " .. (campTrip and methods(campTrip) or "no route"))
+    check(math.abs(campTrip.steps[1].cost - (10 + campCtx.loadingScreenTax)) < 1e-6,
+        "Return to Camp costs its cast plus a loading screen: " .. campTrip.steps[1].cost)
+    local function camps(ctx)
+        local n = 0
+        for _, entry in ipairs(addon:GetKnownTeleports(ctx)) do if entry.to == camp.id then n = n + 1 end end
+        return n
+    end
+    check(camps(makeCtx({ faction = "Horde", campPlace = camp })) == 0, "no Return to Camp without the spell")
+    check(camps(makeCtx({ faction = "Horde", spells = { 312372 } })) == 0, "nor without a camp")
+    check(camps(makeCtx({ faction = "Horde", spells = { 312372 }, campPlace = camp, cooldowns = { [312372] = 600 } })) == 0,
+        "nor on cooldown")
+    check(addon:IsMakeCamp(312370) and not addon:IsMakeCamp(312372), "Make Camp is what sets the camp")
 end
 
 -- The Burning Crusade Quel'Thalas (maps 94, 95, 110) is a region of its own beside Midnight's, entered by portal: EPL's

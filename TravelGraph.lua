@@ -482,9 +482,11 @@ function TravelGraph:Build(ctx)
 
     -- Teleports and the like: available from wherever the player stands.
     local anywhere = {}
-    local landing = ctx.hearthPlace           -- the spot the player bound at, when no inn of ours stands there
+    -- Places of the player's own an ability lands at (the spot they bound at when no inn of ours is there, their camp).
+    local landings, own = addon:OwnPlaces(ctx), {}
+    for _, place in ipairs(landings) do own[place.id] = true end
     for _, entry in ipairs(addon:GetKnownTeleports(ctx)) do
-        if World:GetNode(entry.to) or (landing and entry.to == landing.id) then
+        if World:GetNode(entry.to) or own[entry.to] then
             local screens = entry.loadingScreens or addon:Method(entry.method).screens
             anywhere[#anywhere + 1] = {
                 to = entry.to,
@@ -497,11 +499,11 @@ function TravelGraph:Build(ctx)
     end
 
     -- Where the hearthstone lands is where the trip carries on from: the bound inn (which the geometry only leads
-    -- into) or the bound spot, given every way out the player's own spot has.
-    local inn = not landing and ctx.hearthNode and World:GetNode(ctx.hearthNode)
-    if inn and isLeaf(inn) then landing = inn end
-    if landing then
-        local container = inn and World:GetNodeContainer(inn.id) or World:GetContainerForMap(landing.mapID)
+    -- into) or the bound spot; the camp likewise. Each is given every way out the player's own spot has.
+    local inn = not ctx.hearthPlace and ctx.hearthNode and World:GetNode(ctx.hearthNode)
+    if inn and isLeaf(inn) then landings[#landings + 1] = inn end
+    for _, landing in ipairs(landings) do
+        local container = landing == inn and World:GetNodeContainer(inn.id) or World:GetContainerForMap(landing.mapID)
         if container then departure(adjacency, ctx, landing, container) end
     end
 

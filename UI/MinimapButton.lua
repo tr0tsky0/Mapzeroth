@@ -78,13 +78,24 @@ local function follow()
     MinimapButton:SetAngle(math.deg(atan2(cy / scale - my, cx / scale - mx)))
 end
 
-function MinimapButton:Tooltip()
-    Theme:ShowTooltip(button, {
+-- What either click does: right opens the settings, anything else the window.
+local function click(mouse)
+    if mouse == "RightButton" then
+        if not addon.OptionsPanel:Open() then print(L["CMD_NO_SETTINGS"]) end
+    else
+        addon.Panel:Toggle()
+    end
+end
+
+-- owner: the compartment's row, when shown there (it can't be dragged); the minimap button otherwise.
+function MinimapButton:Tooltip(owner)
+    local lines = {
         { L["PANEL_TITLE"], "title" },
         { L["MINIMAP_TIP_TOGGLE"], "body" },
         { L["MINIMAP_TIP_SETTINGS"], "body" },
-        { L["MINIMAP_TIP_DRAG"], "dim" },
-    })
+    }
+    if not owner or owner == button then lines[#lines + 1] = { L["MINIMAP_TIP_DRAG"], "dim" } end
+    Theme:ShowTooltip(owner or button, lines)
 end
 
 -- Shown unless the player has hidden it (Options).
@@ -100,13 +111,7 @@ function MinimapButton:Init()
     self.button = button
     button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     button:RegisterForDrag("LeftButton")
-    button:SetScript("OnClick", function(_, mouse)
-        if mouse == "RightButton" then
-            if not addon.OptionsPanel:Open() then print(L["CMD_NO_SETTINGS"]) end
-        else
-            addon.Panel:Toggle()
-        end
-    end)
+    button:SetScript("OnClick", function(_, mouse) click(mouse) end)
     button:SetScript("OnDragStart", function(self)
         self:SetScript("OnUpdate", follow)
         Theme:HideTooltip(self)
@@ -117,5 +122,26 @@ function MinimapButton:Init()
     self:Place()
     self:Apply()
     addon.Options:OnChange(function(key) if key == "hideMinimapButton" then MinimapButton:Apply() end end)
+    return true
+end
+
+-- The same two clicks from the addon compartment (the minimap's addon list), for players who hide minimap buttons.
+-- Registered from here rather than the .toc, so the icon's path follows this addon's folder name. Once; nothing where
+-- the client has no compartment.
+local compartmentAdded = false
+function MinimapButton:AddToCompartment()
+    if compartmentAdded or not (AddonCompartmentFrame and AddonCompartmentFrame.RegisterAddon) then return false end
+    compartmentAdded = true
+    AddonCompartmentFrame:RegisterAddon({
+        text = L["PANEL_TITLE"],
+        icon = ICON,
+        notCheckable = true,
+        registerForAnyClick = true,
+        func = function(_, inputData)
+            click(type(inputData) == "table" and inputData.buttonName or (GetMouseButtonClicked and GetMouseButtonClicked()))
+        end,
+        funcOnEnter = function(owner) if owner then MinimapButton:Tooltip(owner) end end,
+        funcOnLeave = function(owner) if owner then Theme:HideTooltip(owner) end end,
+    })
     return true
 end

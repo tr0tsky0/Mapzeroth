@@ -7,10 +7,20 @@ MapzerothAddon = addon
 
 local L = addon.L
 
+-- Where the player stands: mapID, x, y (0-1 on that map), or nil.
+local function playerPosition()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
+    if not pos then return nil end
+    local x, y = pos:GetXY()
+    return mapID, x, y
+end
+
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("HEARTHSTONE_BOUND")
+frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 frame:RegisterEvent("TAXIMAP_OPENED")
 frame:RegisterEvent("FACTION_STANDING_CHANGED")
 frame:RegisterEvent("UI_INFO_MESSAGE")
@@ -47,11 +57,16 @@ frame:SetScript("OnEvent", function(_, event, ...)
     end
     if event == "HEARTHSTONE_BOUND" then
         -- You bind at an inn, so this is where the inn is.
-        local mapID = C_Map.GetBestMapForUnit("player")
-        local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
-        if pos then
-            local x, y = pos:GetXY()
-            addon:SaveBind(mapID, x, y, GetBindLocation and GetBindLocation() or nil)
+        local mapID, x, y = playerPosition()
+        if mapID then addon:SaveBind(mapID, x, y, GetBindLocation and GetBindLocation() or nil) end
+        return
+    end
+    if event == "UNIT_SPELLCAST_SUCCEEDED" then
+        -- Make Camp (Vulpera) pitches the camp where the player stands: Return to Camp goes back here.
+        local _, _, spellID = ...
+        if addon:IsMakeCamp(spellID) then
+            local mapID, x, y = playerPosition()
+            if mapID then addon:SaveCamp(mapID, x, y) end
         end
         return
     end
@@ -64,6 +79,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
         addon.OptionsPanel:Register()
         addon.Panel:Init()
         addon.MinimapButton:Init()
+        addon.MinimapButton:AddToCompartment()
         -- Which flight was chosen: the navigator wants to know where it goes (a post-hook: it changes nothing).
         if type(TakeTaxiNode) == "function" and not addon.takeTaxiHooked then
             addon.takeTaxiHooked = true

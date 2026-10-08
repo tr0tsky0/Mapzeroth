@@ -307,6 +307,12 @@ function addon:GetNodeName(nodeID)
         local name = bind and bind.name ~= "" and bind.name or (GetBindLocation and GetBindLocation())
         return (name and name ~= "") and name or (bind and zoneName(bind.mapID)) or nil
     end
+    -- The Vulpera's camp: "your camp", with its zone when known. Never cached either: Make Camp moves it.
+    if nodeID == addon.CAMP_PLACE_ID then
+        local camp = addon:GetCamp()
+        local zone = camp and zoneName(camp.mapID)
+        return zone and L["PLACE_CAMP_IN"]:format(zone) or L["PLACE_CAMP"]
+    end
     local cached = nameCache[nodeID]
     if cached then return cached end
 

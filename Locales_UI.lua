@@ -45,6 +45,8 @@ addon:RegisterLocale("enUS", {
     ROUTE_ROUND_TOTAL = "%s there, %s back: %s in total",
     ROUTE_BACK_HEADING = "Then back to where you started",
     PLACE_START       = "where you started",
+    PLACE_CAMP        = "your camp",
+    PLACE_CAMP_IN     = "your camp in %s",
     NAV_ITEM_READY_IN = "Ready to use in %d s",
     ROUTE_MORE_ABOVE  = "%d more above",
     ROUTE_MORE_BELOW  = "%d more below",

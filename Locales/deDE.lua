@@ -60,6 +60,8 @@ addon:RegisterLocale("deDE", {
     ROUTE_ROUND_TOTAL = "%s hin, %s zurück: %s insgesamt",
     ROUTE_BACK_HEADING = "Dann zurück zum Ausgangspunkt",
     PLACE_START       = "dem Ausgangspunkt",
+    PLACE_CAMP        = "dein Lager",
+    PLACE_CAMP_IN     = "dein Lager in %s",
     ROUTE_ALREADY     = "Ihr seid bereits hier.",
     ROUTE_NONE        = "Von hier aus wurde keine Route gefunden.",
     NOWHERE           = "Mapzeroth kann gerade nicht feststellen, wo Ihr seid (Instanzen werden nicht abgedeckt).",

@@ -155,6 +155,7 @@ function addon:GetPlayerContext()
         itemCooldownRemaining = itemCooldownRemaining,
         hearthNode = inn or (hearthPlace and hearthPlace.id),   -- where the hearthstone lands
         hearthPlace = hearthPlace,
+        campPlace = addon:GetCampPlace(),                   -- where Return to Camp goes (Vulpera), when a camp was made
         questCompleted = isQuestCompleted,
         holidayActive = isHolidayActive,
         isEquippable = function(itemID) return IsEquippableItem ~= nil and IsEquippableItem(itemID) and true or false end,
@@ -190,7 +191,7 @@ end
 -- through the context. `bind` on Forever's hearthstone is documentation only.)
 -- The "Anywhere -> Node" abilities the player can use right now: class teleports they
 -- know, an item-based teleport (a toy/trinket to a fixed spot, addon.Abilities.Items) they
--- carry, and the hearthstone if they carry it and have a bind. Each entry says where it
+-- carry, the hearthstone if they carry it and have a bind, and Return to Camp if they made one. Each entry says where it
 -- goes and what it costs; abilities on cooldown, with a cooldown over the maxCooldown
 -- setting, or restricted to the other faction, are left out. An ability with several possible landing spots the player picks between
 -- (`toList` instead of a single `to` -- Modern's Mole Machine is the first of these) is
@@ -251,6 +252,12 @@ function addon:GetKnownTeleports(ctx)
             or (not ability.itemID and ability.spellID and ctx.knowsSpell(ability.spellID))
         if owns and ctx.hearthNode and spellReady(ability) and itemReady(ability) then
             add(ability, ctx.hearthNode, "hearthstone")
+        end
+    end
+    -- Return to Camp: to the spot the player last made camp (ctx.campPlace), not a fixed one.
+    for _, ability in ipairs(abilities.Camps or {}) do
+        if ctx.campPlace and ctx.knowsSpell(ability.spellID) and spellReady(ability) then
+            add(ability, ctx.campPlace.id)
         end
     end
     for _, ability in ipairs(abilities.Items or {}) do

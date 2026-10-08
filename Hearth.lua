@@ -98,3 +98,42 @@ function addon:GetHearthPlace(innNode)
     if not (bind and bind.mapID and bind.x and bind.y) then return nil end
     return { id = addon.HEARTH_PLACE_ID, mapID = bind.mapID, x = bind.x, y = bind.y, name = bind.name, nocache = true }
 end
+
+-- Vulpera's camp (Modern): Make Camp sets it wherever the player stands, Return to Camp goes back to it. Like the bound
+-- spot above it is a place of its own, not one of our nodes: the position saved when Make Camp was cast (Core.lua,
+-- the Camps abilities' `setSpellID`), per character. A character who made camp before this addon was installed has
+-- none until they make camp again: the client can't be asked where the camp is.
+addon.CAMP_PLACE_ID = "CAMP"
+
+function addon:GetCamp()
+    local db = MapzerothRebuildDB
+    return db and db.camps and db.camps[addon:CharacterKey()]
+end
+
+function addon:SaveCamp(mapID, x, y)
+    MapzerothRebuildDB = MapzerothRebuildDB or {}
+    MapzerothRebuildDB.camps = MapzerothRebuildDB.camps or {}
+    MapzerothRebuildDB.camps[addon:CharacterKey()] = { mapID = mapID, x = x, y = y }
+end
+
+-- Is spellID one that makes camp (a Camps ability's setSpellID)?
+function addon:IsMakeCamp(spellID)
+    for _, ability in ipairs(addon.Abilities and addon.Abilities.Camps or {}) do
+        if ability.setSpellID == spellID then return true end
+    end
+    return false
+end
+
+function addon:GetCampPlace()
+    local camp = addon:GetCamp()
+    if not (camp and camp.mapID and camp.x and camp.y) then return nil end
+    return { id = addon.CAMP_PLACE_ID, mapID = camp.mapID, x = camp.x, y = camp.y, nocache = true }
+end
+
+-- The places of the player's own an ability lands at that aren't our nodes (the bound spot, the camp), from a context.
+function addon:OwnPlaces(ctx)
+    local places = {}
+    if ctx.hearthPlace then places[#places + 1] = ctx.hearthPlace end
+    if ctx.campPlace then places[#places + 1] = ctx.campPlace end
+    return places
+end

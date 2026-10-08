@@ -59,6 +59,8 @@ addon:RegisterLocale("itIT", {
     ROUTE_ROUND_TOTAL = "%s all'andata, %s al ritorno: %s in tutto",
     ROUTE_BACK_HEADING = "Poi di nuovo al punto di partenza",
     PLACE_START       = "il punto di partenza",
+    PLACE_CAMP        = "il tuo accampamento",
+    PLACE_CAMP_IN     = "il tuo accampamento in %s",
     ROUTE_ALREADY     = "Sei già qui.",
     ROUTE_NONE        = "Nessun percorso trovato da qui.",
     NOWHERE           = "Mapzeroth non riesce a capire dove ti trovi (le istanze non sono coperte).",

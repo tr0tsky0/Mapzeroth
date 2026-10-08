@@ -167,3 +167,7 @@ addon.Abilities.Items = {
     { itemID = 110560, to = "FROSTWALL", cost = 10, cooldown = 1200, faction = "Horde", toy = true },
     { itemID = 140192, to = "DALARAN_BROKEN_ISLES", cost = 10, cooldown = 1200, toy = true },
 }
+
+addon.Abilities.Camps = {
+    { spellID = 312372, setSpellID = 312370, cost = 10, cooldown = 3600 },
+}

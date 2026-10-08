@@ -37,6 +37,9 @@ CONFIRMED_TAXI_IDS  { source id: "taxiNodeID" or None }: a flight master's id se
          matcher can't read (continent-relative coordinates); None keeps it unmatched until someone captures it.
 TELEPORTS  spells the old data lacks: { "spellID", "to" (the node it lands on), optional "cost" (cast seconds, 10),
          optional "faction" }.
+CAMPS    abilities that go back to a spot the player set themselves (Vulpera's Return to Camp): { "spellID" (the one
+         that goes there), "setSpellID" (the one that sets the spot: its cast saves the position, Core.lua), optional
+         "cost" (cast seconds, 10), optional "cooldown" (seconds) }. Written to addon.Abilities.Camps.
 CITIES   the cities, in the same shape as Forever's (addon.Cities, Data/Forever/Pois.lua): key -> { "maps" (the
          uiMapIDs the city is, the first its own), "expansion" (major version), "faction", optional "hub" (also on
          the picker's main page whatever its expansion), optional "nodes" (the node ids its centre is the average of,
@@ -392,6 +395,12 @@ CONFIRMED_TAXI_IDS = {
 # data has it); 1259190 "Teleport: Silvermoon City" is new and lands in Midnight Silvermoon's portal room.
 TELEPORTS = [
     {"spellID": 1259190, "to": "SILVERMOON_PORTAL_ROOM"},
+]
+
+# Vulpera: a successful Make Camp (312370) sets the camp; Return to Camp (312372) goes there: 10 s cast, a loading screen,
+# 60 min cooldown (the user's figures, 2026-10-08; retail's SpellCooldowns table has no row for it).
+CAMPS = [
+    {"spellID": 312372, "setSpellID": 312370, "cooldown": 3600},
 ]
 
 # Inns (tools/gen_modern_pois.py). Wowhead gives some innkeepers as a zone and a floor, not a map: the map each is

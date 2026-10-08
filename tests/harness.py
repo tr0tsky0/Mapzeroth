@@ -21,7 +21,7 @@ TOC = ROOT / "Mapzeroth-Rebuild.toc"
 STUBS = r"""
 function GetLocale() return "enUS" end
 function GetBuildInfo() return "1.60.1", "16001", "Sep 1 2026", 16001 end   -- Forever; --modern swaps it
-function CreateFrame() return { RegisterEvent = function() end, SetScript = function() end } end
+function CreateFrame() return { RegisterEvent = function() end, RegisterUnitEvent = function() end, SetScript = function() end } end
 function CreateVector2D(x, y) return { x = x, y = y, GetXY = function(self) return self.x, self.y end } end
 SlashCmdList = {}
 function hooksecurefunc() end
@@ -66,6 +66,7 @@ function makeCtx(overrides)
         itemCooldownRemaining = function(id) return (overrides.itemCooldowns or {})[id] or 0 end,
         hearthNode = overrides.hearthNode or (overrides.hearthPlace and overrides.hearthPlace.id),
         hearthPlace = overrides.hearthPlace,       -- where the hearthstone lands when no inn is there (Hearth.lua)
+        campPlace = overrides.campPlace,           -- where Return to Camp goes (Hearth.lua)
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,

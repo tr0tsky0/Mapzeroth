@@ -58,6 +58,8 @@ addon:RegisterLocale("ptBR", {
     ROUTE_ROUND_TOTAL = "%s de ida, %s de volta: %s no total",
     ROUTE_BACK_HEADING = "Depois, de volta ao ponto de partida",
     PLACE_START       = "o ponto de partida",
+    PLACE_CAMP        = "seu acampamento",
+    PLACE_CAMP_IN     = "seu acampamento em %s",
     ROUTE_ALREADY     = "Você já está aqui.",
     ROUTE_NONE        = "Nenhuma rota encontrada daqui.",
     NOWHERE           = "O Mapzeroth não consegue saber onde você está agora (instâncias não são cobertas).",
