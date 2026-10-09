@@ -44,7 +44,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1772, "every node made it into the tree (1215 converted + 41 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1780, "every node made it into the tree (1215 converted + 49 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -838,3 +838,28 @@ end
 -- One .toc for both games: a retail client loads Modern's data and none of Forever's.
 check(addon.RULESET == "modern", "the smoke test plays a retail client")
 check(addon.RidingSkills == nil and addon.Nodes.Pois == nil and addon.Nodes.EasternKingdoms == nil, "none of Forever's data is loaded")
+
+-- Gnomeregan (captured in game 2026-10-09): the Alliance goes in through New Tinkertown's tunnel and the elevator down to
+-- the entrance underground; the Horde through the teleporter at Grom'gol (the guards at the tunnel are the Alliance's).
+do
+    -- (Each faction is offered its own entrance: the picker leaves the other out, Destinations.lua.)
+    local function trip(faction, from)
+        local ctx = makeCtx({ faction = faction, level = 80 })
+        local graph = addon.TravelGraph:Build(ctx)
+        local result = addon.Pathfinder:FindPath(graph, from, faction == "Alliance" and "INSTANCE_GNOMEREGAN" or "INSTANCE_GNOMEREGAN_HORDE")
+        local through = {}
+        for _, step in ipairs(result and result.steps or {}) do through[step.to] = true end
+        return result, through
+    end
+    local alliance, a = trip("Alliance", "TAXI_6")        -- Ironforge's flight master
+    check(alliance and alliance.goal == "INSTANCE_GNOMEREGAN" and a.NEW_TINKERTOWN_TUNNEL and a.GNOMEREGAN_TUNNEL
+        and a.GNOMEREGAN_ELEVATOR_TOP and a.GNOMEREGAN_ELEVATOR_BASE,
+        "the Alliance goes down New Tinkertown's tunnel and the elevator: " .. (alliance and methods(alliance) or "no route"))
+    local horde, h = trip("Horde", "TAXI_20")             -- Grom'gol's flight master
+    check(horde and horde.goal == "INSTANCE_GNOMEREGAN_HORDE" and not h.NEW_TINKERTOWN_TUNNEL,
+        "the Horde goes in at Grom'gol, not past the guards: " .. (horde and tostring(horde.goal) or "no route"))
+    -- From underground, the Horde can't walk out through the tunnel or take the teleporter.
+    local ctx = makeCtx({ faction = "Horde", level = 80 })
+    local graph = addon.TravelGraph:Build(ctx)
+    check(not addon.Pathfinder:FindPath(graph, "INSTANCE_GNOMEREGAN", "NEW_TINKERTOWN_TUNNEL"), "no way out to New Tinkertown for the Horde")
+end

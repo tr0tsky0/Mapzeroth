@@ -182,16 +182,13 @@ addon.Edges = {
     { from = "TAXI_296", to = "TAXI_294", method = "ship", cost = 45 },
     { from = "TAXI_294", to = "TAXI_295", method = "ship", cost = 60 },
     { from = "WORLDS_END_TAVERN", to = "CAVERNS_OF_TIME", method = "portal", cost = 0, oneway = true },
-    { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423 } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185 } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291 } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457 } },
     { from = "BLACKROCK_QUARRY_EXTERIOR", to = "INSTANCE_BLACKROCK_DEPTHS", method = "walk" },
     { from = "BLACKROCK_MOUNTAIN_MOLE", to = "INSTANCE_BLACKROCK_DEPTHS", method = "walk" },
-    { from = "BORALUS_PET", to = "INSTANCE_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Alliance" } },
     { from = "BORALUS_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185, faction = "Alliance" } },
     { from = "BORALUS_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291, faction = "Alliance" } },
-    { from = "DAZARALOR_PET", to = "INSTANCE_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Horde" } },
@@ -291,4 +288,10 @@ addon.Edges = {
     { from = "DALARAN_BROKEN_ISLES_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491 } }, -- hand-added: tools/modern_manual.py
     { from = "DAZARALOR_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Horde" } }, -- hand-added: tools/modern_manual.py
     { from = "BORALUS_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "DALARAN_BROKEN_ISLES_PET", to = "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423 } }, -- hand-added: tools/modern_manual.py
+    { from = "DAZARALOR_PET", to = "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Horde" } }, -- hand-added: tools/modern_manual.py
+    { from = "BORALUS_PET", to = "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "GNOMEREGAN_ELEVATOR_BASE", to = "GNOMEREGAN_ELEVATOR_TOP", method = "walk", cost = 25 }, -- hand-added: tools/modern_manual.py
+    { from = "GNOMEREGAN_TELEPORTER", to = "NEW_TINKERTOWN_TELEPORT_EXIT", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "GNOMEREGAN_TUNNEL", to = "NEW_TINKERTOWN_TUNNEL", method = "walk", requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
 }

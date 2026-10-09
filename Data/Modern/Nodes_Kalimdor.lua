@@ -199,4 +199,5 @@ addon.Nodes.Kalimdor = {
     { id = "BRAWLGAR_ARENA", container = "brawlgar_arena.map503", mapID = 503, x = 0.4222, y = 0.7481 }, -- Brawl'gar Arena: where the Pugilist's ring lands you (hand-added: tools/modern_manual.py)
     { id = "BRAWLGAR_TO_ORGRIMMAR", container = "brawlgar_arena.map503", mapID = 503, x = 0.5553, y = 0.1426 }, -- Brawl'gar Arena: the way out to Orgrimmar (hand-added: tools/modern_manual.py)
     { id = "ORGRIMMAR_TO_BRAWLGAR", container = "kalimdor_overworld.map85", mapID = 85, x = 0.7055, y = 0.3103, area = 5170, city = "orgrimmar" }, -- Orgrimmar (Valley of Strength): the way in to Brawl'gar Arena (hand-added: tools/modern_manual.py)
+    { id = "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", container = "kalimdor_overworld.map10", mapID = 10, x = 0.3874, y = 0.6860, area = 386 }, -- Northern Barrens: the Wailing Caverns' cave mouth, for the pet battle portals that land just inside (hand-added: tools/modern_manual.py)
 }

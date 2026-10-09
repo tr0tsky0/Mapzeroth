@@ -118,7 +118,7 @@ addon.Nodes.EK = {
     { id = "TAXI_3130", container = "ek_overworld.map2437", mapID = 2437, x = 0.3887, y = 0.2323 }, -- Witherbark Bluffs Flightmaster
     { id = "TAXI_13", container = "ek_overworld.map25", mapID = 25, x = 0.5581, y = 0.4583 }, -- Tarren Mill
     { id = "INSTANCE_THE_STOCKADE", container = "ek_overworld.map84", mapID = 84, x = 0.5100, y = 0.6800, city = "stormwind", kind = "instance", journal = 238 }, -- The Stockade
-    { id = "INSTANCE_GNOMEREGAN", container = "ek_overworld.map27", mapID = 27, x = 0.3120, y = 0.3789, kind = "instance", journal = 231 }, -- Gnomeregan
+    { id = "INSTANCE_GNOMEREGAN", container = "ek_overworld.map30", mapID = 30, x = 0.3194, y = 0.7170, kind = "instance", journal = 231, faction = "Alliance" }, -- Gnomeregan
     { id = "TAXI_3288", container = "ek_overworld.map2509", mapID = 2509, x = 0.4439, y = 0.6236 }, -- Amani Foothold
     { id = "TAXI_610", container = "ek_overworld.map205", mapID = 205, x = 0.5381, y = 0.6551 }, -- Stygian Bounty
     { id = "FLIGHT_EASTERN_AMANI_OUTPOST", container = "ek_overworld.map2509", mapID = 2509, x = 0.5431, y = 0.3947, area = 17730 }, -- Eastern Amani Outpost Windcaller
@@ -252,4 +252,11 @@ addon.Nodes.EK = {
     { id = "SILVERMOON_PORTAL_ROOM_EXIT", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5316, y = 0.6604, city = "silvermoon" }, -- Silvermoon: the portal room's door, room side (hand-added: tools/modern_manual.py)
     { id = "PORTAL_SILVERMOON_TIMEWAYS", container = "ek_overworld.map2393", mapID = 2393, x = 0.4218, y = 0.5827, city = "silvermoon" }, -- Silvermoon: the portal to the Timeways, and where the way back lands (hand-added: tools/modern_manual.py)
     { id = "PET_PORTAL_ARRIVAL_STRATHOLME", container = "ek_overworld.map23", mapID = 23, x = 0.4320, y = 0.1998, area = 2275 }, -- Eastern Plaguelands: where the pet battle portals to Stratholme land, by the Eastwall gate (hand-added: tools/modern_manual.py)
+    { id = "GNOMEREGAN_ELEVATOR_BASE", container = "ek_overworld.map30", mapID = 30, x = 0.6808, y = 0.8287 }, -- Gnomeregan, underground: the foot of the elevator (hand-added: tools/modern_manual.py)
+    { id = "GNOMEREGAN_TELEPORTER", container = "ek_overworld.map30", mapID = 30, x = 0.6730, y = 0.8380 }, -- Gnomeregan, underground: the teleporter up to New Tinkertown (hand-added: tools/modern_manual.py)
+    { id = "GNOMEREGAN_ELEVATOR_TOP", container = "ek_overworld.map30.upper", mapID = 30, x = 0.7147, y = 0.8296 }, -- Gnomeregan, underground: the top of the elevator (hand-added: tools/modern_manual.py)
+    { id = "GNOMEREGAN_TUNNEL", container = "ek_overworld.map30.upper", mapID = 30, x = 0.8125, y = 0.8431 }, -- Gnomeregan: the tunnel's end, under New Tinkertown (captured on Dun Morogh's map) (hand-added: tools/modern_manual.py)
+    { id = "NEW_TINKERTOWN_TUNNEL", container = "ek_overworld.map27", mapID = 27, x = 0.3135, y = 0.3803 }, -- New Tinkertown: the tunnel down to Gnomeregan (captured on map 469) (hand-added: tools/modern_manual.py)
+    { id = "NEW_TINKERTOWN_TELEPORT_EXIT", container = "ek_overworld.map27", mapID = 27, x = 0.3388, y = 0.3859 }, -- New Tinkertown: where Gnomeregan's teleporter comes out (captured on map 469) (hand-added: tools/modern_manual.py)
+    { id = "INSTANCE_GNOMEREGAN_HORDE", container = "ek_overworld.map50", mapID = 50, x = 0.3684, y = 0.5099, kind = "instance", journal = 231, faction = "Horde" }, -- Grom'gol Base Camp: the Horde's teleporter into Gnomeregan (hand-added: tools/modern_manual.py)
 }

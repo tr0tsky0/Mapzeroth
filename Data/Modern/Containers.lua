@@ -40,6 +40,8 @@ addon.Containers["ek_overworld.map2649"] = { indoor = true } -- hand-marked inte
 addon.Containers["deeprun_tram"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 addon.Containers["ek_overworld.map2393.interior"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 addon.Containers["brawlgar_arena"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
+addon.Containers["ek_overworld.map30"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
+addon.Containers["ek_overworld.map30.upper"] = { indoor = true } -- hand-marked interior (tools/modern_manual.py)
 
 -- Phase groups (Zidormi's zones): phaseSide is the side's map art id, phaseMap the map whose art shows it.
 addon.Containers["ek_overworld.map17_art18"] = { phaseGroup = "blasted_lands", phaseSide = 18, phaseMap = 17 }

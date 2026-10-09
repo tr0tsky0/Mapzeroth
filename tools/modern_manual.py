@@ -160,7 +160,8 @@ DROP_NODES = ["BIZMOS_BRAWLPUB", "BRAWLGAR_ARENA"]
 
 # The Lycaneum's own map: its portal room is an interior reached on foot from the entrance above,
 # not a point you can fly to.
-INDOOR = ["ek_overworld.map2649", "deeprun_tram", "ek_overworld.map2393.interior", "brawlgar_arena"]        # the tram and Bizmo's Brawlpub are both under it
+INDOOR = ["ek_overworld.map2649", "deeprun_tram", "ek_overworld.map2393.interior", "brawlgar_arena",
+          "ek_overworld.map30", "ek_overworld.map30.upper"]     # Gnomeregan's two underground levels        # the tram and Bizmo's Brawlpub are both under it
 
 EDGES = [
     # EPL <-> the old Ghostlands, each landing by the other side's portal. Tirisfal <-> the old Silvermoon (confirmed in
@@ -250,13 +251,18 @@ MPLUS_SEASON_EDGES = [
 NODES += MPLUS_SEASON_NODES
 EDGES += MPLUS_SEASON_EDGES
 
-# The pet battle portals to Stratholme (Dalaran, Dazar'alor, Boralus) land by Stratholme's Eastwall gate, not at the
-# dungeon's main entrance where the old data had them (captured in game 2026-10-09). STRATHOLME_DUNGEON stays the
-# main entrance; the portals land here instead (DROP_EDGES has the old landings).
+# The pet battle portals (Dalaran, Dazar'alor, Boralus) land by an NPC near each dungeon, not at its entrance where the
+# old data had them (captured in game 2026-10-09). Stratholme's land by its Eastwall gate (STRATHOLME_DUNGEON stays the
+# main entrance); Wailing Caverns' just inside its small cave, given as the cave mouth outside. Gnomeregan's, the
+# Deadmines' and Blackrock Depths' land within a few yards of their entrances, which stay their landings (Gnomeregan's
+# entrance moved underground: GNOMEREGAN_NODES). DROP_EDGES has the old landings.
 PET_PORTAL_NODES = [
     {"id": "PET_PORTAL_ARRIVAL_STRATHOLME", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
      "x": 0.4320, "y": 0.1998, "area": 2275,
      "note": "Eastern Plaguelands: where the pet battle portals to Stratholme land, by the Eastwall gate"},
+    {"id": "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", "out": "Nodes_Kalimdor.lua", "container": "kalimdor_overworld.map10",
+     "mapID": 10, "x": 0.3874, "y": 0.6860, "area": 386,
+     "note": "Northern Barrens: the Wailing Caverns' cave mouth, for the pet battle portals that land just inside"},
 ]
 PET_PORTAL_EDGES = [
     {"from": "DALARAN_BROKEN_ISLES_PET", "to": "PET_PORTAL_ARRIVAL_STRATHOLME", "method": "portal", "cost": 0,
@@ -266,8 +272,51 @@ PET_PORTAL_EDGES = [
     {"from": "BORALUS_PET", "to": "PET_PORTAL_ARRIVAL_STRATHOLME", "method": "portal", "cost": 0,
      "oneway": True, "requirements": {"quest": 56491, "faction": "Alliance"}},
 ]
+for _quest, _arrival in [(45423, "PET_PORTAL_ARRIVAL_WAILING_CAVERNS")]:
+    PET_PORTAL_EDGES += [
+        {"from": "DALARAN_BROKEN_ISLES_PET", "to": _arrival, "method": "portal", "cost": 0, "oneway": True,
+         "requirements": {"quest": _quest}},
+        {"from": "DAZARALOR_PET", "to": _arrival, "method": "portal", "cost": 0, "oneway": True,
+         "requirements": {"quest": _quest, "faction": "Horde"}},
+        {"from": "BORALUS_PET", "to": _arrival, "method": "portal", "cost": 0, "oneway": True,
+         "requirements": {"quest": _quest, "faction": "Alliance"}},
+    ]
+
 NODES += PET_PORTAL_NODES
 EDGES += PET_PORTAL_EDGES
+
+# Gnomeregan (captured in game 2026-10-09). Its entrance is underground (map 30, under New Tinkertown), beside where the
+# pet battle portals land: two levels, no mount at all (INDOOR), joined by an elevator (D = 5, T = 10: 2T + D = 25 s).
+# From the top a tunnel comes out in New Tinkertown (map 469, over Dun Morogh, open to fly in and out: its two nodes are
+# put on Dun Morogh's map, where a player in New Tinkertown is placed too, by the client's map table); a
+# teleporter beside the elevator goes one way to the surface (a loading screen). Elite guards stand at the tunnel's
+# mouth and New Tinkertown is the Alliance's: the tunnel and the teleporter are Alliance only. The Horde's way in is a
+# teleporter at Grom'gol Base Camp straight into the dungeon (leaving the dungeon goes back there), so the Horde has an
+# entrance of its own (INSTANCE_JOURNALS).
+GNOMEREGAN_NODES = [
+    {"id": "GNOMEREGAN_ELEVATOR_BASE", "out": "Nodes_EK.lua", "container": "ek_overworld.map30", "mapID": 30,
+     "x": 0.6808, "y": 0.8287, "note": "Gnomeregan, underground: the foot of the elevator"},
+    {"id": "GNOMEREGAN_TELEPORTER", "out": "Nodes_EK.lua", "container": "ek_overworld.map30", "mapID": 30,
+     "x": 0.6730, "y": 0.8380, "note": "Gnomeregan, underground: the teleporter up to New Tinkertown"},
+    {"id": "GNOMEREGAN_ELEVATOR_TOP", "out": "Nodes_EK.lua", "container": "ek_overworld.map30.upper", "mapID": 30,
+     "x": 0.7147, "y": 0.8296, "note": "Gnomeregan, underground: the top of the elevator"},
+    {"id": "GNOMEREGAN_TUNNEL", "out": "Nodes_EK.lua", "container": "ek_overworld.map30.upper", "mapID": 30,
+     "x": 0.8125, "y": 0.8431, "note": "Gnomeregan: the tunnel's end, under New Tinkertown (captured on Dun Morogh's map)"},
+    {"id": "NEW_TINKERTOWN_TUNNEL", "out": "Nodes_EK.lua", "container": "ek_overworld.map27", "mapID": 27,
+     "x": 0.3135, "y": 0.3803, "note": "New Tinkertown: the tunnel down to Gnomeregan (captured on map 469)"},
+    {"id": "NEW_TINKERTOWN_TELEPORT_EXIT", "out": "Nodes_EK.lua", "container": "ek_overworld.map27", "mapID": 27,
+     "x": 0.3388, "y": 0.3859, "note": "New Tinkertown: where Gnomeregan's teleporter comes out (captured on map 469)"},
+    {"id": "GNOMEREGAN_DUNGEON_HORDE", "out": "Nodes_EK.lua", "container": "ek_overworld.map50", "mapID": 50,
+     "x": 0.3684, "y": 0.5099, "note": "Grom'gol Base Camp: the Horde's teleporter into Gnomeregan"},
+]
+GNOMEREGAN_EDGES = [
+    {"from": "GNOMEREGAN_ELEVATOR_BASE", "to": "GNOMEREGAN_ELEVATOR_TOP", "method": "walk", "cost": 25},
+    {"from": "GNOMEREGAN_TELEPORTER", "to": "NEW_TINKERTOWN_TELEPORT_EXIT", "method": "portal", "cost": 0, "oneway": True,
+     "requirements": {"faction": "Alliance"}},
+    {"from": "GNOMEREGAN_TUNNEL", "to": "NEW_TINKERTOWN_TUNNEL", "method": "walk", "requirements": {"faction": "Alliance"}},
+]
+NODES += GNOMEREGAN_NODES
+EDGES += GNOMEREGAN_EDGES
 
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
 # replaces it (left in, it would undercut the real route).
@@ -291,6 +340,9 @@ DROP_EDGES = [
     {"from": "DALARAN_BROKEN_ISLES_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
     {"from": "DAZARALOR_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
     {"from": "BORALUS_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
+    {"from": "DALARAN_BROKEN_ISLES_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
+    {"from": "DAZARALOR_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
+    {"from": "BORALUS_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
 ]
 
 # Seconds an equip step takes, per item (see above). The rest of the equippable teleport items can be used at once
@@ -365,6 +417,8 @@ INSTANCE_JOURNALS = {
     "LOST_CITY_OF_THE_TOLVIR": 69,
     "MAGISTERS_TERRACE_DUNGEON": 1300,              # the Midnight Magisters' Terrace (Quel'Thalas), not the old one
     "MAGISTERS_TERRACE_BC_DUNGEON": 249,            # the Burning Crusade one, Isle of Quel'Danas
+    "GNOMEREGAN_DUNGEON": (231, "Alliance"),        # underground in Dun Morogh (GNOMEREGAN_NODES)
+    "GNOMEREGAN_DUNGEON_HORDE": (231, "Horde"),     # the teleporter at Grom'gol
     "BATTLE_OF_DAZARALOR_RAID_ALLIANCE": (1176, "Alliance"),
     "BATTLE_OF_DAZARALOR_RAID_HORDE": (1176, "Horde"),
     "SIEGE_OF_BORALUS_DUNGEON_ALLIANCE": (1023, "Alliance"),
@@ -405,6 +459,8 @@ NODE_PLACES = {
     "QUELDANAS": {"container": "queldanas.map122", "mapID": 122, "x": 0.4825, "y": 0.3448},
     # /mzdump nodes 110: Falconwing Square is in old Eversong, not in old Silvermoon.
     "FALCONWING_SQUARE_FLIGHT": {"container": "quelthalas.map94", "mapID": 94, "x": 0.4629, "y": 0.4665},
+    # Gnomeregan's entrance is underground, beside where the pet battle portals land (GNOMEREGAN_NODES).
+    "GNOMEREGAN_DUNGEON": {"container": "ek_overworld.map30", "mapID": 30, "x": 0.3194, "y": 0.7170},
 }
 
 CONFIRMED_TAXI_IDS = {
