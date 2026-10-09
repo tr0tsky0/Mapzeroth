@@ -130,6 +130,7 @@ local strings = {
     PASTE_ROUTE       = "Ruta",
     PASTE_CANCEL      = "Cancelar",
     PASTE_NONE        = "No se encontraron coordenadas en el texto.",
+    SECTION_HOLIDAY_ROUTES = "Rutas de festividades",
     SECTION_ROUTES    = "Rutas guardadas",
     TOUR_STOPS        = "%d paradas",
     ROUTE_EDIT        = "Editar",

@@ -302,3 +302,62 @@ do
     check(own and own.steps[1].text == addon.L["STEP_CAST"]:format("Path of the Windrunners"), "a single landing doesn't: " .. tostring(own and own.steps[1].text))
     C_Spell = realSpell
 end
+
+-- Holiday routes (Data/Modern/HolidayRoutes.lua, MultiRoute:HolidayRoutes): offered only while their holiday is on, with
+-- the neutral stops and the player's own faction's.
+do
+    local function offers(faction, on)
+        return MR:HolidayRoutes(makeCtx({ faction = faction, holidays = { hallows_end = on } }))
+    end
+    check(#offers("Horde", false) == 0, "no holiday routes when the holiday is off")
+    local horde, alliance = offers("Horde", true), offers("Alliance", true)
+    check(#horde == #addon.HolidayRoutes and #alliance == #addon.HolidayRoutes, "every Hallow's End route while it is on")
+    local function count(text)
+        local n = 0
+        for _ in (text or ""):gmatch("[^\n]+") do n = n + 1 end
+        return n
+    end
+    local ek = addon.HolidayRoutes[1]
+    check(#horde[1].points == count(ek.neutral) + count(ek.horde) and #alliance[1].points == count(ek.neutral) + count(ek.alliance),
+        "each faction gets the neutral stops and its own: " .. #horde[1].points .. " / " .. #alliance[1].points)
+    local neither = MR:HolidayRoutes(makeCtx({ faction = "Neutral", holidays = { hallows_end = true } }))
+    check(neither[1] and #neither[1].points == count(ek.neutral), "a player of neither faction, only the neutral ones")
+
+    -- Every stop reads, and is on a map we can place (the Underbelly through Dalaran's map above it, as the client does).
+    local parents = { [126] = 125 }
+    local realInfo, realToWorld, realFromWorld = C_Map.GetMapInfo, C_Map.GetWorldPosFromMapPos, C_Map.GetMapPosFromWorldPos
+    CreateVector2D = CreateVector2D or function(x, y) return { x = x, y = y, GetXY = function(self) return self.x, self.y end } end
+    C_Map.GetMapInfo = function(id) return parents[id] and { parentMapID = parents[id] } or nil end
+    C_Map.GetWorldPosFromMapPos = function(id, pos)
+        local b = RETAIL_MAP_BOUNDS[id]
+        local x, y = pos:GetXY()
+        return b.continent, { wy = b.maxY - x * (b.maxY - b.minY), wx = b.maxX - y * (b.maxX - b.minX) }
+    end
+    C_Map.GetMapPosFromWorldPos = function(continent, world, id)
+        local b = RETAIL_MAP_BOUNDS[id]
+        return continent, CreateVector2D((b.maxY - world.wy) / (b.maxY - b.minY), (b.maxX - world.wx) / (b.maxX - b.minX))
+    end
+    for _, route in ipairs(addon.HolidayRoutes) do
+        for _, block in ipairs({ "neutral", "alliance", "horde" }) do
+            local _, bad = MR.ParseWay(route[block] or "")
+            check(#bad == 0, route.name .. " " .. block .. ": every line reads")
+        end
+        for _, offer in ipairs({ horde, alliance }) do
+            for _, o in ipairs(offer) do
+                if o.route == route then
+                    local _, unplaced = MR:Entry(route.name, o.points)
+                    check(#unplaced == 0, route.name .. ": every stop placed: " .. table.concat(unplaced, ", "))
+                end
+            end
+        end
+    end
+    C_Map.GetMapInfo, C_Map.GetWorldPosFromMapPos, C_Map.GetMapPosFromWorldPos = realInfo, realToWorld, realFromWorld
+
+    -- Planned like any tour: Outland for the Horde, from Hellfire, reaches every stop.
+    local ctx = makeCtx({ faction = "Horde", level = 80, holidays = { hallows_end = true } })
+    local outland
+    for _, o in ipairs(MR:HolidayRoutes(ctx)) do if o.route.name:find("Outland") then outland = o end end
+    local entry = MR:Entry(outland.route.name, outland.points)
+    local plan = J:PlanEntry(J:Build(ctx, { id = "YOU_TEST_HELLFIRE", mapID = 100, x = 0.5, y = 0.5 }, J:ExtrasOf(entry)), entry)
+    check(plan and #plan.legs == #outland.points and #plan.dropped == 0, "the Outland route reaches all its stops")
+end

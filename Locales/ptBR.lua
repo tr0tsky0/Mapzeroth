@@ -129,6 +129,7 @@ addon:RegisterLocale("ptBR", {
     PASTE_ROUTE       = "Rota",
     PASTE_CANCEL      = "Cancelar",
     PASTE_NONE        = "Nenhuma coordenada encontrada no texto.",
+    SECTION_HOLIDAY_ROUTES = "Rotas de feriados",
     SECTION_ROUTES    = "Rotas salvas",
     TOUR_STOPS        = "%d paradas",
     ROUTE_EDIT        = "Editar",

@@ -131,6 +131,7 @@ addon:RegisterLocale("deDE", {
     PASTE_ROUTE       = "Route",
     PASTE_CANCEL      = "Abbrechen",
     PASTE_NONE        = "Keine Koordinaten im Text gefunden.",
+    SECTION_HOLIDAY_ROUTES = "Feiertagsrouten",
     SECTION_ROUTES    = "Gespeicherte Routen",
     TOUR_STOPS        = "%d Stationen",
     ROUTE_EDIT        = "Bearbeiten",

@@ -109,6 +109,9 @@ function addon:ResetHolidayCache()
 end
 
 local function isHolidayActive(key)
+    -- A holiday faked on or off for testing (MapzerothDataTools' /mzr holiday): nothing in the addon sets this.
+    local faked = addon.HolidayOverrides and addon.HolidayOverrides[key]
+    if faked ~= nil then return faked end
     if not addon.calendarReady then return false end
     if holidayCache[key] ~= nil then return holidayCache[key] end
     local icons = addon.HOLIDAYS and addon.HOLIDAYS[key]

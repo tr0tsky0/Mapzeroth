@@ -129,6 +129,7 @@ addon:RegisterLocale("zhCN", {
     PASTE_ROUTE       = "规划",
     PASTE_CANCEL      = "取消",
     PASTE_NONE        = "文本中没有找到坐标。",
+    SECTION_HOLIDAY_ROUTES = "节日路线",
     SECTION_ROUTES    = "已保存的路线",
     TOUR_STOPS        = "%d个站点",
     ROUTE_EDIT        = "编辑",

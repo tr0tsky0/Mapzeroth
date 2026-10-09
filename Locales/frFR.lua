@@ -130,6 +130,7 @@ addon:RegisterLocale("frFR", {
     PASTE_ROUTE       = "Itinéraire",
     PASTE_CANCEL      = "Annuler",
     PASTE_NONE        = "Aucune coordonnée trouvée dans ce texte.",
+    SECTION_HOLIDAY_ROUTES = "Itinéraires des fêtes",
     SECTION_ROUTES    = "Itinéraires enregistrés",
     TOUR_STOPS        = "%d étapes",
     ROUTE_EDIT        = "Modifier",

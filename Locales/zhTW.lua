@@ -129,6 +129,7 @@ addon:RegisterLocale("zhTW", {
     PASTE_ROUTE       = "規劃",
     PASTE_CANCEL      = "取消",
     PASTE_NONE        = "文字中沒有找到座標。",
+    SECTION_HOLIDAY_ROUTES = "節日路線",
     SECTION_ROUTES    = "已儲存的路線",
     TOUR_STOPS        = "%d個站點",
     ROUTE_EDIT        = "編輯",

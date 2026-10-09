@@ -10,7 +10,7 @@ addon.CLASS_TOKENS = {
     SHAMAN = true, MAGE = true, WARLOCK = true, MONK = true, DRUID = true, DEMONHUNTER = true, EVOKER = true,
 }
 
--- Seasonal-event portals (a `requirements = { holiday = "..." }` edge): each key is the set of calendar
+-- Seasonal events (a `requirements = { holiday = "..." }` edge, a holiday route's `holiday`): each key is the set of calendar
 -- iconTexture ids the event's day entry can show, matched by PlayerAbilities.lua's ctx.holidayActive against
 -- C_Calendar's day events. Keep the keys equal to HOLIDAY_KEYS in tools/gen_modern_edges.py. Optional: a dataset
 -- without it has no holiday edges.
@@ -18,4 +18,5 @@ addon.HOLIDAYS = {
     love_is_in_the_air = { 235466, 235467, 235468 },
     darkmoon_faire = { 235446, 235447, 235448 },
     feast_of_winters_veil = { 235482, 235484, 235485 },
+    hallows_end = { 235460, 235461, 235462 },                 -- also gates the holiday routes (HolidayRoutes.lua)
 }

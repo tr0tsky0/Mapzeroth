@@ -131,6 +131,7 @@ addon:RegisterLocale("ruRU", {
     PASTE_ROUTE       = "Маршрут",
     PASTE_CANCEL      = "Отмена",
     PASTE_NONE        = "В тексте не найдено координат.",
+    SECTION_HOLIDAY_ROUTES = "Праздничные маршруты",
     SECTION_ROUTES    = "Сохранённые маршруты",
     TOUR_STOPS        = "Остановок: %d",
     ROUTE_EDIT        = "Изменить",

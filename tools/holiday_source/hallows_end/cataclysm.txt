@@ -1,0 +1,22 @@
+Neutral (7)
+Kelp'thar Forest	63.5 60.2	Deepmist Grotto
+Shimmering Expanse	49.2, 41.8	Silver Tide Hollow
+Mount Hyjal	63.1, 24.1	Nordrassil Inn
+Mount Hyjal	42.7, 45.7	Shrine of Aviana
+Mount Hyjal	18.6, 37.3	Grove of Aessina
+Uldum	26.6, 7.2	Oasis of Vir'sar
+Uldum	54.7, 33.0	Ramkahen
+Alliance (6)
+Twilight Highlands	49.6, 30.4	Thundermar
+Twilight Highlands	60.3, 58.2	Firebeard's Patrol
+Twilight Highlands	79.5, 78.5	Highbank
+Twilight Highlands	43.5, 57.3	Victor's Point
+Shimmering Expanse	49.7, 57.4	Tranquil Wash
+Abyssal Depths	54.7, 72.1	Darkbreak Cove
+Horde (6)
+Twilight Highlands	45.1, 76.8	Crushblow
+Twilight Highlands	53.4, 42.8	Bloodgulch
+Twilight Highlands	75.4, 16.5	The Krazzworks
+Twilight Highlands	75.3, 54.9	Dragonmaw Port (not for meta)
+Shimmering Expanse	51.4, 62.3	Legion's Rest
+Abyssal Depths	51.3, 60.5	Tenebrous Cavern

@@ -130,6 +130,7 @@ addon:RegisterLocale("itIT", {
     PASTE_ROUTE       = "Percorso",
     PASTE_CANCEL      = "Annulla",
     PASTE_NONE        = "Nessuna coordinata trovata nel testo.",
+    SECTION_HOLIDAY_ROUTES = "Percorsi delle festività",
     SECTION_ROUTES    = "Percorsi salvati",
     TOUR_STOPS        = "%d tappe",
     ROUTE_EDIT        = "Modifica",

@@ -29,6 +29,7 @@ addon.MultiRoute = MultiRoute
 local L = addon.L
 
 local EXACT_LIMIT = 12      -- stops: the exact order's work grows as 2^n * n^2 (12 stops: about 600,000 steps)
+local OPTIONS_PER_STOP = 4  -- one-use abilities weighed for each stop when ordering: the quickest few (MultiRoute.Options)
 local MAX_BOOSTS = 20       -- landings of one-use abilities searched from for real (the rest are guessed): see Plan
 local INF = math.huge
 
@@ -180,17 +181,18 @@ function MultiRoute.Improve(order, price, yield)
 end
 
 -- Gives one-use abilities to the legs of an order, each ability to one leg at most and each leg one at most, the
--- biggest saving first. legCost(from, to) is a leg without them; land[a][to] is the leg using ability a (its cast and
--- the way on from where it lands), nil when it can't help. Returns the total and { [leg number] = a }.
-function MultiRoute.Assign(order, legCost, land)
+-- biggest saving first. legCost(from, to) is a leg without them; options[to] the quickest ways to stop `to` by an
+-- ability, { { a, seconds }, ... } quickest first (MultiRoute.Options: a few per stop, as only those can win). Returns
+-- the total and { [leg number] = a }. Called for every order tried, so it is kept to a few steps a leg.
+function MultiRoute.Assign(order, legCost, options)
     local total, saves = 0, {}
     local from = 0
     for k, to in ipairs(order) do
         local base = legCost(from, to)
         total = total + base
-        for a, row in pairs(land) do
-            local with = row[to]
-            if with and with < base then saves[#saves + 1] = { gain = base - with, leg = k, a = a } end
+        for _, option in ipairs(options[to] or {}) do
+            if option[2] >= base then break end
+            saves[#saves + 1] = { gain = base - option[2], leg = k, a = option[1] }
         end
         from = to
     end
@@ -205,6 +207,22 @@ function MultiRoute.Assign(order, legCost, land)
         end
     end
     return total, given
+end
+
+-- options[stop] for Assign from land[a][stop] (seconds to that stop by ability a): its `keep` quickest, sorted.
+function MultiRoute.Options(land, keep)
+    local options = {}
+    for a, row in pairs(land) do
+        for stop, t in pairs(row) do
+            options[stop] = options[stop] or {}
+            table.insert(options[stop], { a, t })
+        end
+    end
+    for _, list in pairs(options) do
+        table.sort(list, function(x, y) return x[2] < y[2] end)
+        for i = #list, (keep or #list) + 1, -1 do list[i] = nil end
+    end
+    return options
 end
 
 -- The quickest order to visit stops 1..n from the start (0): a list of stop numbers and its seconds, or nil when
@@ -292,9 +310,12 @@ function MultiRoute:Plan(session, entry, yield)
         return assemble(session, legs, {})
     end
 
-    -- 1. The time between every two places, without the one-use abilities.
+    -- 1. The time between every two places, without the one-use abilities. Each search stops once it has priced every
+    -- stop (Pathfinder:FindCosts' targets): the rest of the world is no part of the tour.
     local opts = { fareFactor = session.ctx.fareFactor or 1, banned = oneUse }
-    local fromStart = Pathfinder:FindCosts(graph, session.start.id, graph.phase, opts)
+    local targets = {}
+    for _, stop in ipairs(entry.stops) do targets[stopID(stop)] = true end
+    local fromStart = Pathfinder:FindCosts(graph, session.start.id, graph.phase, opts, targets)
     yield()
     local stops, dropped = {}, {}
     for _, name in ipairs(entry.unplaced or {}) do dropped[#dropped + 1] = name end
@@ -302,9 +323,13 @@ function MultiRoute:Plan(session, entry, yield)
         if fromStart[stopID(stop)] then stops[#stops + 1] = stop else dropped[#dropped + 1] = stop.name end
     end
     if #stops == 0 then return nil end
+    targets = {}                                      -- a stop nothing reaches would make every search the whole world
+    for _, stop in ipairs(stops) do targets[stopID(stop)] = true end
     local rows = { [0] = fromStart }
     for i, stop in ipairs(stops) do
-        rows[i] = Pathfinder:FindCosts(graph, stopID(stop), graph.phase, opts)
+        -- Out to the farthest stop, and at least as far as the way here from the start: a one-use ability landing
+        -- within that can shorten a leg into this stop (the way back from here to it stands in for the way there).
+        rows[i] = Pathfinder:FindCosts(graph, stopID(stop), graph.phase, opts, targets, fromStart[stopID(stop)])
         yield()
     end
     local function cost(i, j)
@@ -349,14 +374,23 @@ function MultiRoute:Plan(session, entry, yield)
                 local back = ability.to == stopID(stop) and 0 or rows[j][ability.to]
                 if back then landing.guess[j], any = ability.cost + back, true end
             end
-            landing.unguessed = not any
+            -- No guess: no search from a stop got as far as it before pricing every stop. Mostly that is a landing
+            -- too far off to help, but not always: the way back can be long where the way there is quick (the
+            -- hearthstone to an inn in Goldshire, then Stormwind's portals to Northrend). So the hearthstone's landing
+            -- (and the bound spot, the camp, which no search reaches at all) is searched from for real anyway; the
+            -- rest are left out.
+            landing.unguessed = not any and (ability.method == "hearthstone" or not addon.World:GetNode(ability.to))
             landings[#landings + 1] = landing
         end
     end
-    local searches = 0
+    local searches, searched = 0, {}
     local function search(landing)
-        searches = searches + 1
-        local from = Pathfinder:FindCosts(graph, landing.to, graph.phase, opts)
+        local from = searched[landing.to]           -- Hearthstone and Astral Recall land in one place: searched once
+        if not from then
+            searches = searches + 1
+            from = Pathfinder:FindCosts(graph, landing.to, graph.phase, opts, targets)
+            searched[landing.to] = from
+        end
         landing.real = {}
         for j, stop in ipairs(stops) do
             local on = landing.to == stopID(stop) and 0 or from[stopID(stop)]
@@ -384,9 +418,10 @@ function MultiRoute:Plan(session, entry, yield)
     if #landings > 0 then
         repeat
             local land, via = abilityTimes()
-            order = MultiRoute.Improve(order, function(trial) return (MultiRoute.Assign(trial, cost, land)) end, yield)
+            local options = MultiRoute.Options(land, OPTIONS_PER_STOP)
+            order = MultiRoute.Improve(order, function(trial) return (MultiRoute.Assign(trial, cost, options)) end, yield)
             local _
-            _, given = MultiRoute.Assign(order, cost, land)
+            _, given = MultiRoute.Assign(order, cost, options)
             local guessed = false
             for number, key in pairs(given) do
                 local landing = via[key][order[number]]
@@ -421,12 +456,24 @@ function MultiRoute:Plan(session, entry, yield)
     return assemble(session, legs, dropped)
 end
 
--- Runs work(yield) a little at a time: each yield() lets a frame go by, so a long plan doesn't freeze the game
--- (or run past the client's time limit for one script). done(result, second) is called with what work returned, or
--- with nil if it failed (the error goes to the game's error handler). Without C_Timer (headless) it runs at once.
+-- Runs work(yield) a little at a time, so a long plan doesn't freeze the game (or run past the client's time limit for
+-- one script): a yield() lets a frame go by once FRAME_BUDGET seconds of work have been done in this one, and otherwise
+-- returns at once. (Letting a frame go by at every yield made a 35-stop tour take 19 s in game for 5 s of work: most
+-- yields come after a sliver of ordering.) done(result, second) is called with what work returned, or with nil if it
+-- failed (the error goes to the game's error handler). Without C_Timer (headless) it runs at once.
+local FRAME_BUDGET = 0.04
+local function now()
+    if debugprofilestop then return debugprofilestop() / 1000 end
+    return os.clock()
+end
 function MultiRoute:Run(work, done)
-    local co = coroutine.create(function() return work(coroutine.yield) end)
+    local started
+    local function yield()
+        if now() - started >= FRAME_BUDGET then coroutine.yield() end
+    end
+    local co = coroutine.create(function() return work(yield) end)
     local function resume()
+        started = now()
         local ok, a, b = coroutine.resume(co)
         if not ok then
             local handler = geterrorhandler and geterrorhandler()
@@ -575,3 +622,23 @@ function MultiRoute.WayText(points)
     end
     return table.concat(lines, "\n")
 end
+
+-- ---------------------------------------------------------------------------------------
+-- Holiday routes: lists that ship with the addon (addon.HolidayRoutes, Data/<flavour>/HolidayRoutes.lua, generated),
+-- offered while their holiday is on. Each has its stops for everyone (neutral) and for each faction.
+
+-- The holiday routes this player is offered now, each { route, points }: those whose holiday is on, with the neutral
+-- stops and their own faction's (a player of neither faction gets the neutral ones).
+function MultiRoute:HolidayRoutes(ctx)
+    local offered = {}
+    for _, route in ipairs(addon.HolidayRoutes or {}) do
+        if ctx.holidayActive and ctx.holidayActive(route.holiday) then
+            local points = MultiRoute.ParseWay(route.neutral or "")
+            local own = ctx.faction == "Alliance" and route.alliance or ctx.faction == "Horde" and route.horde
+            for _, point in ipairs(own and MultiRoute.ParseWay(own) or {}) do points[#points + 1] = point end
+            if #points > 0 then offered[#offered + 1] = { route = route, points = points } end
+        end
+    end
+    return offered
+end
+

@@ -80,6 +80,17 @@ do
 end
 check(sections.top and sections.top[#sections.top].action == "paste", "with the paste pick on top")
 
+-- During Hallow's End, its routes are a section before the saved ones.
+do
+    local ctx = makeCtx({ faction = "Horde", holidays = { hallows_end = true } })
+    local during = addon.Sections:Build(addon.Destinations:Build(ctx), ctx)
+    local ids = {}
+    for _, s in ipairs(during) do ids[#ids + 1] = s.id end
+    check(table.concat(ids, ","):find("^holiday_routes,routes,") and #find(during, "holiday_routes").items == #addon.HolidayRoutes,
+        "holiday routes come first while the holiday is on: " .. table.concat(ids, ","))
+    check(find(during, "holiday_routes").items[1].action == "holidayroute" and find(during, "holiday_routes").untimed, "one line each, planned when chosen")
+end
+
 local cities = names(find(sections, "cities"))
 check(cities["Stormwind City"] and cities["Dornogal"] and cities["Valdrakken"] and cities["Silvermoon City"],
     "the hub cities and the current expansion's, whatever their expansion")

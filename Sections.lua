@@ -228,6 +228,8 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
         if #items > 0 then sections[#sections + 1] = { id = id, title = title, items = items } end
     end
     add("trainers", L["SECTION_TRAINERS"], picks)
+    local holiday = Sections:HolidayRoutes(ctx)
+    if holiday then sections[#sections + 1] = holiday end
     local routes = Sections:Routes()
     if routes then sections[#sections + 1] = routes end
     if byExpansion then
@@ -244,6 +246,17 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
         end
     end
     return sections
+end
+
+-- The holiday routes on now for this player (MultiRoute:HolidayRoutes) as a section, or nil: one line each, no time.
+function Sections:HolidayRoutes(ctx)
+    local items = {}
+    for _, offer in ipairs(addon.MultiRoute:HolidayRoutes(ctx)) do
+        items[#items + 1] = { name = offer.route.name, group = "waypoint", action = "holidayroute", points = offer.points,
+                              sub = L["TOUR_STOPS"]:format(#offer.points) }
+    end
+    if #items == 0 then return nil end
+    return { id = "holiday_routes", title = L["SECTION_HOLIDAY_ROUTES"], items = items, untimed = true }
 end
 
 -- The player's saved routes (MultiRoute:SavedRoutes) as a section, or nil when there are none: one line each, no time

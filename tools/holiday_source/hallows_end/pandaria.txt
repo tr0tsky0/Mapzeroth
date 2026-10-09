@@ -1,0 +1,31 @@
+Neutral (18)
+Dread Wastes	55.9, 32.2	Klaxxi'vess
+Dread Wastes	55.2, 71.2	Soggy's Gamble
+The Jade Forest	45.7, 43.6	Dawn's Blossom
+The Jade Forest	48.0, 34.6	Greenstone Village
+The Jade Forest	54.6, 63.3	Jade Temple Grounds
+The Jade Forest	55.7, 24.4	Sri-La Village
+The Jade Forest	41.6, 23.1	Tian Monastery
+Krasarang Wilds	51.4, 77.2	Marista
+Krasarang Wilds	75.9, 6.87	Zhu's Watch
+Kun-Lai Summit	72.7, 92.2	Binan Village
+Kun-Lai Summit	64.2, 61.2	The Grummle Bazaar
+Kun-Lai Summit	57.4, 59.9	One Keg
+Kun-Lai Summit	62.3, 29	Zouchin Village
+The Veiled Stair	55.0, 72.2	Tavern in the Mists
+Townlong Steppes	71.1, 57.8	Longying Outpost
+Vale of Eternal Blossoms	35.1, 77.7	Mistfall Village
+Valley of the Four Winds	83.6, 20.1	Pang's Stead
+Valley of the Four Winds	19.8, 55.7	Stoneplow
+Alliance (4)
+The Jade Forest	44.8, 84.4	Paw'don Village
+The Jade Forest	59.6, 83.2	Pearlfin Village
+Kun-Lai Summit	54.1, 82.8	Westwind Rest
+Vale of Eternal Blossoms	87.0, 69.0	Shrine of Seven Stars
+Horde (6)
+The Jade Forest	28, 47.4	Grookin Hill
+The Jade Forest	28.4, 13.2	Honeydew Village
+Krasarang Wilds	28.2, 50.7	Dawnchaser Retreat
+Krasarang Wilds	61.0, 25.1	Thunder Cleft
+Kun-Lai Summit	62.7, 80.5	Eastwind Rest
+Vale of Eternal Blossoms	61.9, 16.2	Shrine of Two Moons

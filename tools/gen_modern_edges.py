@@ -84,7 +84,7 @@ def known_node_ids():
 
 
 # The keys of addon.HOLIDAYS (Data/Modern/Game.lua): what an edge's `holiday` requirement must say.
-HOLIDAY_KEYS = {"love_is_in_the_air", "darkmoon_faire", "feast_of_winters_veil"}
+HOLIDAY_KEYS = {"love_is_in_the_air", "darkmoon_faire", "feast_of_winters_veil", "hallows_end"}
 
 
 def holiday_key(name):

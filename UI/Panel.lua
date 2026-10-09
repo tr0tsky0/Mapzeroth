@@ -947,6 +947,8 @@ function Panel:Choose(index)
         self:TogglePaste()
     elseif entry.action == "tomtom" then
         self:RouteTour(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {})
+    elseif entry.action == "holidayroute" then
+        self:RouteTour(entry.name, entry.points)          -- not a saved route: its view offers Save, to keep a copy
     elseif entry.action == "route" then
         local route = addon.MultiRoute:FindRoute(entry.routeID)
         if route then self:RouteTour(route.name, addon.MultiRoute:RoutePoints(route), nil, route.id) end
@@ -1015,7 +1017,9 @@ function Panel:RefreshRoutes()
     local routes = addon.Sections:Routes()
     if routes then
         local at = 1
-        for i, section in ipairs(sections) do if section.id == "trainers" then at = i + 1 end end
+        for i, section in ipairs(sections) do
+            if section.id == "trainers" or section.id == "holiday_routes" then at = i + 1 end
+        end
         table.insert(sections, at, routes)
     end
 end

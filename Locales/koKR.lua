@@ -130,6 +130,7 @@ addon:RegisterLocale("koKR", {
     PASTE_ROUTE       = "경로",
     PASTE_CANCEL      = "취소",
     PASTE_NONE        = "텍스트에서 좌표를 찾을 수 없습니다.",
+    SECTION_HOLIDAY_ROUTES = "축제 경로",
     SECTION_ROUTES    = "저장된 경로",
     TOUR_STOPS        = "경유지 %d곳",
     ROUTE_EDIT        = "편집",

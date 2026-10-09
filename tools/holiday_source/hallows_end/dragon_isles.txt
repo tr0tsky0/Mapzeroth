@@ -1,0 +1,40 @@
+Neutral (35)
+Ohn'ahran Plains	46.2, 40.6	Broadhoof Outpost
+Ohn'ahran Plains	66.3, 24.5	Emberwatch
+Ohn'ahran Plains	72.1, 80.4	Forkriver Crossing
+Ohn'ahran Plains	62.9, 40.6	Maruukai
+Ohn'ahran Plains	57.1, 76.7	Ohn'iri Springs
+Ohn'ahran Plains	81.3, 59.2	Pinewood Post
+Ohn'ahran Plains	85.9, 35.4	Rusza'thar Reach
+Ohn'ahran Plains	28.6, 60.6	Shady Sanctuary
+Ohn'ahran Plains	41.9, 60.4	Teerakai
+Ohn'ahran Plains	85.0, 26.0	Timberstep Outpost
+Thaldraszus	50.1, 42.7	Algeth'era Court
+Thaldraszus	35.1, 79.2	Garden Shrine
+Thaldraszus	52.4, 69.8	Gelikyr Post
+Thaldraszus	59.9, 82.7	Temporal Conflux
+The Azure Span	47.0, 40.3	Camp Antonidas
+The Azure Span	62.8, 57.7	Camp Nowhere
+The Azure Span	12.4, 49.4	Iskaara
+The Azure Span	65.5, 16.3	Theron's Watch
+The Azure Span	18.8, 24.6	Three-Falls Lookout
+The Forbidden Reach	33.9, 58.8	Morqut Village
+The Waking Shores	24.5, 82.1	Apex Observatory
+The Waking Shores	47.7, 83.3	Dragonscale Basecamp
+The Waking Shores	65.2, 57.9	Life Vault Ruins
+The Waking Shores	43.1, 66.7	Obsidian Bulwark
+The Waking Shores	25.8, 55.2	Obsidian Throne
+The Waking Shores	58.0, 67.3	Ruby Lifeshrine
+The Waking Shores	76.1, 57.7	Skytop Observatory
+The Waking Shores	53.9, 39.0	Uktulut Backwater
+The Waking Shores	46.4, 27.4	Uktulut Pier
+The Waking Shores	76.2, 35.4	Wingrest Embassy
+Valdrakken	72.4, 46.7	The Parting Glass
+Valdrakken	47.2, 45.5	The Roasted Ram
+Valdrakken	22.4, 30.9	Weyrnrest
+Zaralek Cavern	56.4, 56.4	Loamm
+Zaralek Cavern	52.1, 26.5	Obsidian Rest
+Alliance (1)
+The Waking Shores	81.3, 32.0	Wild Coast
+Horde (1)
+The Waking Shores	80.4, 27.9	Wild Coast

@@ -1,0 +1,28 @@
+Neutral (8)
+Netherstorm	43.4, 36.1	Stormspire
+Netherstorm	32.1, 64.5	Area 52
+Zangarmarsh	78.5, 62.9	Cenarion Refuge
+Shattrath City	28.1, 49.0	Aldor Rise
+Shattrath City	56.2, 81.8	Scryers Tier
+Shadowmoon Valley	61.0, 28.2	Altar of Sha’tar
+Shadowmoon Valley	56.3, 59.8	Sanctum of the Stars
+Blade's Edge Mountains	62.9, 38.3	Evergrove
+Alliance (9)
+Blade's Edge Mountains	61.1, 68.1	Toshley's Station
+Blade's Edge Mountains	35.8, 63.7	Sylvanaar
+Zangarmarsh	41.9, 26.2	Orebor Harborage
+Zangarmarsh	67.2, 48.9	Telredor
+Hellfire Peninsula	23.4, 36.4	Temple of Telhamat
+Hellfire Peninsula	54.2, 63.7	Honor Hold
+Shadowmoon Valley	37.0, 58.3	Wildhammer Stronghold
+Terokkar Forest	56.6, 53.2	Allerian Stronghold
+Nagrand	54.2, 75.9	Telaar
+Horde (8)
+Blade's Edge Mountains	76.2, 60.4	Mok'Nathal Village
+Blade's Edge Mountains	53.4, 55.5	Thunderlord Stronghold
+Zangarmarsh	30.7, 50.9	Zabra'jin
+Hellfire Peninsula	56.8, 37.5	Thrallmar
+Hellfire Peninsula	26.9, 59.6	Falcon Watch
+Nagrand	56.7, 34.6	Garadar
+Terokkar Forest	48.8, 45.2	Stonebreaker Hold
+Shadowmoon Valley	30.3, 27.8	Shadowmoon Village

@@ -1,0 +1,38 @@
+Neutral (11)
+Zul'Drak	40.8, 66.0	The Argent Stand
+Zul'Drak	59.3, 57.1	Zim'Torga
+Sholazar Basin	26.6, 59.2	Nesingwary Base Camp
+The Storm Peaks	41, 85.8	K3
+The Storm Peaks	30.9, 37.1	Bouldercrag's Refuge
+Howling Fjord	25.4, 59.8	Kamagua
+Dragonblight	60.1, 53.4	Wyrmrest Temple
+Dragonblight	48.1, 74.6	Moa'ki Harbor
+The Situation in Dalaran	37.8, 46.4	The Underbelly
+The Situation in Dalaran	48.3, 40.8	The Legerdemain Lounge
+Borean Tundra	78.4 49.1	Unu'pe
+Alliance (11)
+Borean Tundra	57.1, 18.8	Fizzcrank Airstrip
+Borean Tundra	58.5, 67.8	Valiance Keep
+The Situation in Dalaran	42.3, 63	Silver Enclave
+Dragonblight	28.9, 56.2	Stars' Rest
+Dragonblight	77.5, 51.2	Wintergarde Keep
+Grizzly Hills	31.9, 60.2	Amberpine Lodge
+Grizzly Hills	59.6, 26.3	Westfall Brigade
+Howling Fjord	60.4, 15.9	Fort Wildervar
+Howling Fjord	58.3, 62.8	Valgarde
+Howling Fjord	30.8, 41.4	Westguard Keep
+The Storm Peaks	28.7, 74.2	Frosthold
+Horde (13)
+The Storm Peaks	37, 49.5	Grom'arsh Crash Site
+The Storm Peaks	67.6, 50.6	Camp Tunka'lo
+Howling Fjord	79.2, 30.6	Vengeance Landing
+Howling Fjord	52.1, 66.1	New Agamand
+Howling Fjord	49.4, 10.7	Camp Winterhoof
+Grizzly Hills	20.8, 64.7	Conquest Hold
+Grizzly Hills	65.3 47	Camp Onegwah
+Dragonblight	76.8, 63.2	Venomspite
+Dragonblight	37.8, 46.4	Agmar's Hammer
+The Situation in Dalaran	66.8, 29.6	Sunreaver's Sanctuary
+Borean Tundra	41.7, 54.4	Warsong Hold
+Borean Tundra	49.7 9.9	Bor'gorok Outpost
+Borean Tundra	76.6, 37.4	Taunka'le Village

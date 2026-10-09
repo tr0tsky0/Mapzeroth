@@ -369,13 +369,21 @@ end
 -- The cheapest cost in seconds from startID to every node it can reach, as
 -- { [nodeID] = seconds }: one search for a whole list of results. opts as for FindPath. The second
 -- result is what the flights on each of those routes cost, { [nodeID] = copper }.
-function Pathfinder:FindCosts(graph, startID, initialPhase, opts)
+-- targets (optional): a set of node ids, { [id] = true }. The search stops once all of them are priced, and it has
+-- gone at least `radius` seconds out (optional), so only that much is (a tour's stops: a search over the whole world is
+-- several times the work, and the client's Lua is slow enough for that to be seconds).
+function Pathfinder:FindCosts(graph, startID, initialPhase, opts, targets, radius)
     local costs, fares = {}, {}
+    local left = 0
+    for id in pairs(targets or {}) do
+        if id ~= startID then left = left + 1 end
+    end
     run(graph, startID, initialPhase, opts or {}, function(label)
         if costs[label.id] == nil and canLand(graph, label) then
             costs[label.id], fares[label.id] = label.d - (label.bias or 0), label.paid
+            if targets and targets[label.id] and label.id ~= startID then left = left - 1 end
         end
-        return false
+        return targets ~= nil and left <= 0 and label.d >= (radius or 0)
     end)
     costs[startID], fares[startID] = nil, nil
     return costs, fares

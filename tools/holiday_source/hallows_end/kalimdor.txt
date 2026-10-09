@@ -1,0 +1,53 @@
+Neutral (9)
+Dustwallow Marsh	41.9, 74.1	Mudsprocket
+Desolace	56.7, 50.1	Karnum's Glade
+Felwood	44.7 29.0	Whisperwind Grove
+Winterspring	59.8 51.1	Everlook
+Tanaris	55.7, 61.0	Bootlegger Outpost
+Tanaris	52.6, 27.1	Gadgetzan
+Un'Goro Crater	55.3, 62.1	Marshal's Stand
+Silithus	55.5, 36.8	Cenarion Hold
+Northern Barrens	67.3, 74.6	Ratchet
+Alliance (19)
+Southern Barrens	39.0, 11.0	Honor's Stand
+Southern Barrens	65.6, 46.5	Northwatch Hold
+Southern Barrens	49.0, 68.5	Fort Triumph
+Dustwallow Marsh	66.6, 45.3	Theramore Isle (not part of meta achievement)
+Feralas	46.3, 45.2	Feathermoon Stronghold
+Feralas	51.1, 17.8	Dreamer's Rest
+Desolace	66.3, 6.6	Nijel's Point
+Stonetalon Mountains	40.6, 17.7	Stonetalon Peak
+Stonetalon Mountains	71.0, 79.0	Northwatch Expedition Base Camp
+Stonetalon Mountains	59.0, 56.3	Windshear Hold
+Stonetalon Mountains	31.5, 60.7	Farwatcher's Glen
+Stonetalon Mountains	39.5, 32.8	Thal'darah Overlook
+Ashenvale	37.0, 49.3	Astranaar
+Felwood	61.9, 26.7	Talonbranch Glade
+Darkshore	50.8, 18.8	Lor'danel
+Darnassus	62.2, 33.1	Craftsmen's Terrace
+Teldrassil	55.4, 52.3	Dolanaar
+Bloodmyst Isle	55.7, 60.0	Blood Watch
+Azuremyst Isle	48.5, 49.0	Azure Watch
+Azuremyst Isle	59.3, 18.5	The Exodar
+Horde (21)
+Ashenvale	12.9, 34.1	Zoram'gar Outpost
+Ashenvale	38.6, 42.4	Hellscream's Watch
+Ashenvale	50.2, 67.3	Silverwind Refuge
+Ashenvale	73.9, 60.6	Splintertree Post
+Azshara	57.0 50.3	Bilgewater Harbor
+Dustwallow Marsh	36.8, 32.4	Brackenwall Village
+Desolace	24.1, 68.3	Shadowprey Village
+Feralas	74.8, 45.1	Camp Mojache
+Feralas	52.0, 47.6	Stonemaul Hold
+Feralas	41.4, 15.7	Camp Ataya
+Southern Barrens	40.7, 69.3	Desolation Hold
+Southern Barrens	39.3, 20.1	Hunter's Hill
+Mulgore	46.8, 60.4	Bloodhoof Village
+Thunder Bluff	45.6, 64.9	Thunder Bluff
+Stonetalon Mountains	50.4, 63.8	Sun Rock Retreat
+Stonetalon Mountains	66.5, 64.2	Krom'gar Fortress
+Northern Barrens	62.5, 16.6	Nozzlepot's Outpost
+Northern Barrens	56.2, 40.0	Grol'dom Farm
+Northern Barrens	49.5, 57.9	Crossroads
+Durotar	51.6, 41.6	Razor Hill
+Orgrimmar	53.6 78.7	Valley of Strength

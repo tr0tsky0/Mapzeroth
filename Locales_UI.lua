@@ -145,6 +145,7 @@ addon:RegisterLocale("enUS", {
     PASTE_ROUTE       = "Route",
     PASTE_CANCEL      = "Cancel",
     PASTE_NONE        = "No coordinates found in that text.",
+    SECTION_HOLIDAY_ROUTES = "Holiday Routes",
     SECTION_ROUTES    = "Saved Routes",
     TOUR_STOPS        = "%d stops",
     ROUTE_EDIT        = "Edit",
