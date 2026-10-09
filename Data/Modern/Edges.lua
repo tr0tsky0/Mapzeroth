@@ -24,7 +24,6 @@ addon.Edges = {
     { from = "STORMWIND_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_BL", method = "portal", cost = 0, oneway = true, inPhase = { "blasted_lands", 628 }, requirements = { faction = "Alliance" } },
     { from = "STORMWIND_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_OUTLANDS", method = "portal", cost = 0, oneway = true, inPhase = { "blasted_lands", 18 }, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_EXODAR", to = "EXODAR", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
-    { from = "EXODAR", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_BELAMETH", to = "BELAMETH", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_FOUNDERS_POINT", to = "FOUNDERS_POINT", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "FOUNDERS_POINT", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
@@ -294,4 +293,17 @@ addon.Edges = {
     { from = "GNOMEREGAN_ELEVATOR_BASE", to = "GNOMEREGAN_ELEVATOR_TOP", method = "walk", cost = 25 }, -- hand-added: tools/modern_manual.py
     { from = "GNOMEREGAN_TELEPORTER", to = "NEW_TINKERTOWN_TELEPORT_EXIT", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
     { from = "GNOMEREGAN_TUNNEL", to = "NEW_TINKERTOWN_TUNNEL", method = "walk", requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "PORTAL_EXODAR_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_EXODAR_AZUREMYST_EAST", to = "BORDER_AZUREMYST_EXODAR_EAST", method = "walk" }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_EXODAR_AZUREMYST_WEST", to = "BORDER_AZUREMYST_EXODAR_WEST", method = "walk" }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_AZUREMYST_BLOODMYST", to = "BORDER_BLOODMYST_AZUREMYST", method = "walk" }, -- hand-added: tools/modern_manual.py
+    { from = "DOCK_AZUREMYST_ISLE", to = "AZUREMYST_PORTAL_ARRIVAL_LORDANEL", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 1176 }, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_94", to = "TAXI_624", method = "taxi", cost = 39, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_624", to = "TAXI_94", method = "taxi", cost = 41, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_94", to = "TAXI_93", method = "taxi", cost = 88, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_93", to = "TAXI_94", method = "taxi", cost = 100, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_94", to = "TAXI_26", method = "taxi", cost = 99, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_26", to = "TAXI_94", method = "taxi", cost = 154, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_94", to = "TAXI_339", method = "taxi", cost = 193, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "TAXI_339", to = "TAXI_94", method = "taxi", cost = 189, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
 }

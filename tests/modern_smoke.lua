@@ -44,7 +44,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1780, "every node made it into the tree (1215 converted + 49 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1788, "every node made it into the tree (1215 converted + 57 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -164,7 +164,7 @@ do
         check(not (edge.requirements and edge.requirements.mapArtID), "no edge keeps a mapArtID requirement")
         if edge.inPhase then gated = gated + 1 end
     end
-    check(gated == 20, "20 edges are gated on a phase (18 from the old data, the old Silvermoon portal's two ways back): " .. gated)
+    check(gated == 21, "21 edges are gated on a phase (18 from the old data, the old Silvermoon portal's two ways back, Azuremyst's portal to present Darkshore): " .. gated)
 end
 
 -- Abilities (tools/gen_modern_abilities.py): a real converted Mage teleport seeds the
@@ -862,4 +862,24 @@ do
     local ctx = makeCtx({ faction = "Horde", level = 80 })
     local graph = addon.TravelGraph:Build(ctx)
     check(not addon.Pathfinder:FindPath(graph, "INSTANCE_GNOMEREGAN", "NEW_TINKERTOWN_TUNNEL"), "no way out to New Tinkertown for the Horde")
+end
+
+-- The Exodar, Azuremyst and Bloodmyst (captured in game 2026-10-09): out of the city through its doors, over the road into
+-- Bloodmyst, and the Exodar's flights; Blood Watch, unreachable in the old data, is reached.
+do
+    local ctx = makeCtx({ faction = "Alliance", level = 80 })
+    local graph = addon.TravelGraph:Build(ctx)
+    local walk = addon.Pathfinder:FindPath(graph, "EXODAR", "TAXI_624", nil, {})
+    local doors = false
+    for _, step in ipairs(walk and walk.steps or {}) do
+        if step.to == "BORDER_AZUREMYST_EXODAR_EAST" or step.to == "BORDER_AZUREMYST_EXODAR_WEST" then doors = true end
+    end
+    check(walk and (doors or walk.steps[#walk.steps].method == "taxi"), "from the Exodar to Azure Watch, by a door or the flight: " .. (walk and methods(walk) or "no route"))
+    check(addon.Pathfinder:FindPath(graph, "EXODAR", "INN_17553"), "Blood Watch's inn is reachable")
+    local noFlights = makeCtx({ faction = "Alliance", level = 80 })
+    noFlights.flightUsable = function() return false end
+    local road = addon.Pathfinder:FindPath(addon.TravelGraph:Build(noFlights), "TAXI_624", "INN_17553")
+    local crossed = false
+    for _, step in ipairs(road and road.steps or {}) do if step.to == "BORDER_BLOODMYST_AZUREMYST" then crossed = true end end
+    check(road and crossed, "and on foot from Azure Watch, over the road into Bloodmyst: " .. (road and methods(road) or "no route"))
 end

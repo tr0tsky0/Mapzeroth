@@ -9,9 +9,9 @@ if addon.RULESET ~= "modern" then return end   -- one addon for both games: this
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Kalimdor = {
-    { id = "TAXI_94", container = "draenei_home.map103", mapID = 103, x = 0.5410, y = 0.3670, city = "exodar" }, -- Flightmaster
+    { id = "TAXI_94", container = "draenei_home.map103", mapID = 103, x = 0.5437, y = 0.3644, city = "exodar" }, -- Flightmaster
     { id = "DOCK_AZUREMYST_ISLE", container = "draenei_home.map97", mapID = 97, x = 0.2148, y = 0.5407 }, -- Azuremyst Isle Dock
-    { id = "TAXI_624", container = "draenei_home.map97", mapID = 97, x = 0.5010, y = 0.5010 }, -- Azure Watch
+    { id = "TAXI_624", container = "draenei_home.map97", mapID = 97, x = 0.4968, y = 0.4918 }, -- Azure Watch
     { id = "EXODAR", container = "draenei_home.map103", mapID = 103, x = 0.4760, y = 0.5980, city = "exodar" }, -- Entrance
     { id = "TAXI_93", container = "draenei_home.map106", mapID = 106, x = 0.5730, y = 0.5420 }, -- Blood Watch
     { id = "DARNASSUS", container = "teldrassil.map89_art67", mapID = 89, x = 0.4350, y = 0.7870, area = 1657, city = "darnassus" }, -- Darnassus
@@ -200,4 +200,12 @@ addon.Nodes.Kalimdor = {
     { id = "BRAWLGAR_TO_ORGRIMMAR", container = "brawlgar_arena.map503", mapID = 503, x = 0.5553, y = 0.1426 }, -- Brawl'gar Arena: the way out to Orgrimmar (hand-added: tools/modern_manual.py)
     { id = "ORGRIMMAR_TO_BRAWLGAR", container = "kalimdor_overworld.map85", mapID = 85, x = 0.7055, y = 0.3103, area = 5170, city = "orgrimmar" }, -- Orgrimmar (Valley of Strength): the way in to Brawl'gar Arena (hand-added: tools/modern_manual.py)
     { id = "PET_PORTAL_ARRIVAL_WAILING_CAVERNS", container = "kalimdor_overworld.map10", mapID = 10, x = 0.3874, y = 0.6860, area = 386 }, -- Northern Barrens: the Wailing Caverns' cave mouth, for the pet battle portals that land just inside (hand-added: tools/modern_manual.py)
+    { id = "PORTAL_EXODAR_STORMWIND", container = "draenei_home.map103", mapID = 103, x = 0.4829, y = 0.6268 }, -- The Exodar: the portal to Stormwind (hand-added: tools/modern_manual.py)
+    { id = "BORDER_EXODAR_AZUREMYST_EAST", container = "draenei_home.map103", mapID = 103, x = 0.8815, y = 0.6510 }, -- The Exodar: the east door, to Azuremyst (hand-added: tools/modern_manual.py)
+    { id = "BORDER_AZUREMYST_EXODAR_EAST", container = "draenei_home.map97", mapID = 97, x = 0.3698, y = 0.4704 }, -- Azuremyst: outside the Exodar's east door (hand-added: tools/modern_manual.py)
+    { id = "BORDER_EXODAR_AZUREMYST_WEST", container = "draenei_home.map103", mapID = 103, x = 0.4159, y = 0.7367 }, -- The Exodar: the west door, to Azuremyst (hand-added: tools/modern_manual.py)
+    { id = "BORDER_AZUREMYST_EXODAR_WEST", container = "draenei_home.map97", mapID = 97, x = 0.2464, y = 0.4941 }, -- Azuremyst: outside the Exodar's west door (hand-added: tools/modern_manual.py)
+    { id = "BORDER_AZUREMYST_BLOODMYST", container = "draenei_home.map97", mapID = 97, x = 0.4209, y = 0.0157 }, -- Azuremyst: the road north into Bloodmyst (hand-added: tools/modern_manual.py)
+    { id = "BORDER_BLOODMYST_AZUREMYST", container = "draenei_home.map106", mapID = 106, x = 0.6553, y = 0.9515 }, -- Bloodmyst: the road south into Azuremyst (hand-added: tools/modern_manual.py)
+    { id = "AZUREMYST_PORTAL_ARRIVAL_LORDANEL", container = "kalimdor_overworld.map62_art1176", mapID = 62, x = 0.4595, y = 0.1874 }, -- Darkshore (present): where Azuremyst's portal lands, by Lor'danel (hand-added: tools/modern_manual.py)
 }

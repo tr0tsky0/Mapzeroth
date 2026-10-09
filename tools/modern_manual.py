@@ -318,6 +318,54 @@ GNOMEREGAN_EDGES = [
 NODES += GNOMEREGAN_NODES
 EDGES += GNOMEREGAN_EDGES
 
+# The Exodar, Azuremyst and Bloodmyst (captured in game 2026-10-09). The old data joined none of them: the Exodar and
+# Azure Watch were reached only by portal, Bloodmyst not at all. All three are ground mounts, no flying (the city too).
+# The Exodar has two doors out to Azuremyst; its portal to Stormwind stands a few steps from where the Stormwind and
+# Boralus portals land (EXODAR); a road crosses from Azuremyst into Bloodmyst. Azuremyst's portal (by the dock,
+# DOCK_AZUREMYST_ISLE) goes to Rut'theran in Darkshore's past (the old data's edge) and to Lor'danel in its present.
+# The Exodar's flights, direct legs to Azure Watch, Blood Watch and Lor'danel (its flight master's routes, captured in
+# Darkshore's present), timed by InFlight's retail data (LudiusMaximus/InFlight Defaults.lua, Alliance: 94 <-> 624,
+# 93, 26; it knows Lor'danel only as 26, the past side's node, but the capture was the present's). Azure Watch and
+# Blood Watch fly only to the Exodar (checked in game): InFlight's Azure Watch <-> Blood Watch time is a ticket through
+# it, not a leg of its own. Lor'danel flies to the Exodar in Darkshore's past (TAXI_26, checked in game). In its present
+# there is no flight master at Lor'danel (a battlefield): tickets only fly through it, so the Exodar's link to the
+# mainland there is its ticket to Grove of the Ancients (TAXI_339, present side; InFlight: 193 s, 189 s back). Taxis
+# in Modern only join containers that flying doesn't: the rest of Darkshore's network isn't needed.
+DRAENEI_NODES = [
+    {"id": "PORTAL_EXODAR_STORMWIND", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map103", "mapID": 103,
+     "x": 0.4829, "y": 0.6268, "note": "The Exodar: the portal to Stormwind"},
+    {"id": "BORDER_EXODAR_AZUREMYST_EAST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map103", "mapID": 103,
+     "x": 0.8815, "y": 0.6510, "note": "The Exodar: the east door, to Azuremyst"},
+    {"id": "BORDER_AZUREMYST_EXODAR_EAST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map97", "mapID": 97,
+     "x": 0.3698, "y": 0.4704, "note": "Azuremyst: outside the Exodar's east door"},
+    {"id": "BORDER_EXODAR_AZUREMYST_WEST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map103", "mapID": 103,
+     "x": 0.4159, "y": 0.7367, "note": "The Exodar: the west door, to Azuremyst"},
+    {"id": "BORDER_AZUREMYST_EXODAR_WEST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map97", "mapID": 97,
+     "x": 0.2464, "y": 0.4941, "note": "Azuremyst: outside the Exodar's west door"},
+    {"id": "BORDER_AZUREMYST_BLOODMYST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map97", "mapID": 97,
+     "x": 0.4209, "y": 0.0157, "note": "Azuremyst: the road north into Bloodmyst"},
+    {"id": "BORDER_BLOODMYST_AZUREMYST", "out": "Nodes_Kalimdor.lua", "container": "draenei_home.map106", "mapID": 106,
+     "x": 0.6553, "y": 0.9515, "note": "Bloodmyst: the road south into Azuremyst"},
+    {"id": "AZUREMYST_PORTAL_ARRIVAL_LORDANEL", "out": "Nodes_Kalimdor.lua", "container": "kalimdor_overworld.map62_art1176",
+     "mapID": 62, "x": 0.4595, "y": 0.1874, "note": "Darkshore (present): where Azuremyst's portal lands, by Lor'danel"},
+]
+DRAENEI_EDGES = [
+    {"from": "PORTAL_EXODAR_STORMWIND", "to": "STORMWIND_PORTAL_ROOM_LOWER", "method": "portal", "cost": 0, "oneway": True,
+     "requirements": {"faction": "Alliance"}},
+    {"from": "BORDER_EXODAR_AZUREMYST_EAST", "to": "BORDER_AZUREMYST_EXODAR_EAST", "method": "walk"},
+    {"from": "BORDER_EXODAR_AZUREMYST_WEST", "to": "BORDER_AZUREMYST_EXODAR_WEST", "method": "walk"},
+    {"from": "BORDER_AZUREMYST_BLOODMYST", "to": "BORDER_BLOODMYST_AZUREMYST", "method": "walk"},
+    {"from": "DOCK_AZUREMYST_ISLE", "to": "AZUREMYST_PORTAL_ARRIVAL_LORDANEL", "method": "portal", "cost": 0, "oneway": True,
+     "inPhase": ("darkshore", 1176), "requirements": {"faction": "Alliance"}},
+]
+for _to, _out, _back in [("TAXI_624", 39, 41), ("TAXI_93", 88, 100), ("TAXI_26", 99, 154), ("TAXI_339", 193, 189)]:
+    DRAENEI_EDGES += [
+        {"from": "TAXI_94", "to": _to, "method": "taxi", "cost": _out, "oneway": True, "requirements": {"faction": "Alliance"}},
+        {"from": _to, "to": "TAXI_94", "method": "taxi", "cost": _back, "oneway": True, "requirements": {"faction": "Alliance"}},
+    ]
+NODES += DRAENEI_NODES
+EDGES += DRAENEI_EDGES
+
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
 # replaces it (left in, it would undercut the real route).
 DROP_EDGES = [
@@ -340,6 +388,8 @@ DROP_EDGES = [
     {"from": "DALARAN_BROKEN_ISLES_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
     {"from": "DAZARALOR_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
     {"from": "BORALUS_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
+    # The Exodar's portal to Stormwind stands a few steps from where the portals in land (PORTAL_EXODAR_STORMWIND).
+    {"from": "EXODAR", "to": "STORMWIND_PORTAL_ROOM_LOWER", "method": "portal"},
     {"from": "DALARAN_BROKEN_ISLES_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
     {"from": "DAZARALOR_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
     {"from": "BORALUS_PET", "to": "INSTANCE_WAILING_CAVERNS", "method": "portal"},
@@ -386,7 +436,8 @@ CITIES = {
     "orgrimmar":            {"maps": [85],   "expansion": 1,  "faction": "Horde", "hub": True},
     "thunder_bluff":        {"maps": [88],   "expansion": 1,  "faction": "Horde"},
     "undercity":            {"maps": [90],   "expansion": 1,  "faction": "Horde"},
-    "exodar":               {"maps": [103],  "expansion": 2,  "faction": "Alliance"},
+    "exodar":               {"maps": [103],  "expansion": 2,  "faction": "Alliance",
+                             "nodes": ["EXODAR", "TAXI_94"]},       # not its doors (DRAENEI_NODES), at the city's edge
     "silvermoon_bc":        {"maps": [110],  "expansion": 2,  "faction": "Horde"},
     "shattrath":            {"maps": [111],  "expansion": 2,  "faction": "Both"},
     "dalaran_northrend":    {"maps": [125],  "expansion": 3,  "faction": "Both", "hub": True},
@@ -459,6 +510,9 @@ NODE_PLACES = {
     "QUELDANAS": {"container": "queldanas.map122", "mapID": 122, "x": 0.4825, "y": 0.3448},
     # /mzdump nodes 110: Falconwing Square is in old Eversong, not in old Silvermoon.
     "FALCONWING_SQUARE_FLIGHT": {"container": "quelthalas.map94", "mapID": 94, "x": 0.4629, "y": 0.4665},
+    # The Exodar's and Azure Watch's flight masters (captured in game 2026-10-09).
+    "THE_EXODAR_FLIGHT": {"container": "draenei_home.map103", "mapID": 103, "x": 0.5437, "y": 0.3644},
+    "AZURE_WATCH_FLIGHT": {"container": "draenei_home.map97", "mapID": 97, "x": 0.4968, "y": 0.4918},
     # Gnomeregan's entrance is underground, beside where the pet battle portals land (GNOMEREGAN_NODES).
     "GNOMEREGAN_DUNGEON": {"container": "ek_overworld.map30", "mapID": 30, "x": 0.3194, "y": 0.7170},
 }
