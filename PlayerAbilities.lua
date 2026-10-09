@@ -15,6 +15,7 @@ local function isSpellKnown(spellID)
     end
     return false
 end
+addon.IsSpellKnown = isSpellKnown
 
 -- The player's current skill in a profession (a key of addon.Professions), or nil when the client can't say.
 -- The client names a profession as its first-rank spell does.

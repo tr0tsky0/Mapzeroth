@@ -220,6 +220,28 @@ check(math.abs(FK:FareFactor() - 0.96) < 0.01, "sanity: a factor is learned befo
 FK:OnFactionChanged()
 check(FK:FareFactor() == 1, "a standing change forgets the learned factor")
 check(MapzerothRebuildDB.fareFactors["Tester-Realm"].typical == nil, "and persists the forgetting immediately")
+
+-- Frequent Flier halves fares: factors learned without it are forgotten once it is unlocked, and the
+-- saved factors remember which side of it they were learned on.
+FK:OnTaxiMapOpened(ali)
+FK:OnSpellsChanged()
+check(math.abs(FK:FareFactor() - 0.96) < 0.01, "a spellbook change that isn't the perk keeps the factors")
+local savedIsPlayerSpell = IsPlayerSpell
+IsPlayerSpell = function(id) return id == addon.FREQUENT_FLIER.spellID end
+FK:OnSpellsChanged()
+check(FK:FareFactor() == 1, "unlocking Frequent Flier forgets the factors learned without it")
+check(MapzerothRebuildDB.fareFactors["Tester-Realm"].typical == nil, "and persists the forgetting")
+TaxiNodeCost = function(slot) return ({ 0, 25 })[slot] end      -- half of 50
+FK:OnTaxiMapOpened(ali)
+check(math.abs(FK:FareFactor() - 0.5) < 0.01, "the next window learns the perk's price")
+FK:Save()
+FK:Reset()
+FK:Load()
+FK:OnSpellsChanged()
+check(math.abs(FK:FareFactor() - 0.5) < 0.01, "factors saved with the perk are kept while it is still known")
+IsPlayerSpell = savedIsPlayerSpell
+FK:OnSpellsChanged()
+check(FK:FareFactor() == 1, "and forgotten when it isn't")
 TaxiNodeCost = nil
 GetTaxiMapID = nil
 

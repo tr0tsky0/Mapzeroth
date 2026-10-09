@@ -31,6 +31,13 @@ addon.FlightKnowledge = FlightKnowledge
 local found = {}    -- "TAXI_<id>" -> true | false
 local fareFactor        -- what the player pays as a fraction of the base fares, typically, once seen
 local originFactors = {}    -- the same for tickets bought at one flight master: "TAXI_<id>" -> factor
+local faresFlier = false    -- whether Frequent Flier was known when those factors were learned
+
+-- Forever's Frequent Flier legacy perk halves every fare (false on Modern, which has no such perk).
+local function knowsFlier()
+    local perk = addon.FREQUENT_FLIER
+    return perk ~= nil and addon.IsSpellKnown(perk.spellID)
+end
 
 -- Enum.FlightPathState on the beta: Current = 0, Reachable = 1, Unreachable = 2.
 local function states()
@@ -56,7 +63,7 @@ function FlightKnowledge.AnyFlight() return true end
 -- Tests only.
 function FlightKnowledge:Reset()
     found = {}
-    fareFactor, originFactors = nil, {}
+    fareFactor, originFactors, faresFlier = nil, {}, false
 end
 
 -- What the player pays for a ticket as a fraction of the game's base fares. It is probably a
@@ -113,6 +120,8 @@ function FlightKnowledge:LearnFares(entries)
     if self.onFares then self.onFares(from, samples) end
     if #ratios == 0 then return end
     table.sort(ratios)
+    if faresFlier ~= knowsFlier() then self:ForgetFares() end
+    faresFlier = knowsFlier()
     originFactors[from] = ratios[math.ceil(#ratios / 2)]
     -- For places whose flight master we haven't seen: the highest seen, that is the smallest discount,
     -- so an unseen flight master is never assumed cheaper than it may be (a route the player can't pay
@@ -188,6 +197,19 @@ function FlightKnowledge:OnFactionChanged()
     self:Save()
 end
 
+-- Frequent Flier halves every price, so factors learned before it was unlocked (or saved by a character
+-- that didn't have it then) would make every flight cost twice what it does. SPELLS_CHANGED calls this; a
+-- change in the perk forgets the factors, and the next window relearns them. Only on SPELLS_CHANGED, not
+-- at login, so an answer read before the spellbook has loaded never throws good factors away.
+function FlightKnowledge:OnSpellsChanged()
+    if faresFlier == knowsFlier() then return end
+    faresFlier = knowsFlier()
+    if fareFactor or next(originFactors) then
+        self:ForgetFares()
+        self:Save()
+    end
+end
+
 -- The map the open flight window is showing: its own id if the client has one, else the
 -- continent above the player.
 local function taxiMapID()
@@ -249,7 +271,7 @@ function FlightKnowledge:Save()
     MapzerothRebuildDB.fareFactors = MapzerothRebuildDB.fareFactors or {}
     local origins = {}
     for id, factor in pairs(originFactors) do origins[id] = factor end
-    MapzerothRebuildDB.fareFactors[addon:CharacterKey()] = { typical = fareFactor, origins = origins }
+    MapzerothRebuildDB.fareFactors[addon:CharacterKey()] = { typical = fareFactor, origins = origins, flier = faresFlier or nil }
 end
 
 function FlightKnowledge:Load()
@@ -258,5 +280,6 @@ function FlightKnowledge:Load()
     for id, value in pairs(saved or {}) do found[id] = value end
     local factors = MapzerothRebuildDB and MapzerothRebuildDB.fareFactors and MapzerothRebuildDB.fareFactors[addon:CharacterKey()]
     fareFactor, originFactors = factors and factors.typical or nil, {}
+    faresFlier = factors and factors.flier or false
     for id, factor in pairs(factors and factors.origins or {}) do originFactors[id] = factor end
 end

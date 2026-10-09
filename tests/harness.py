@@ -105,6 +105,25 @@ function useTestDistances()
     addon.Geometry, addon.GeometryMeta, addon.GeometryPacked = nil, nil, nil
 end
 
+-- Yards between places as the retail client measures them (--modern only): each map projected into its continent's
+-- world coordinates by RETAIL_MAP_BOUNDS (map x runs east to west across world Y, map y north to south across world X);
+-- places on two continents have no distance, as in the client. The shipped Geometry.lua was measured this way, so it
+-- stays.
+function useRetailDistances()
+    local bounds = assert(RETAIL_MAP_BOUNDS, "useRetailDistances needs a --modern run")
+    local function world(p)
+        local b = bounds[p.mapID]
+        if not b then return nil end
+        return b.continent, b.maxY - p.x * (b.maxY - b.minY), b.maxX - p.y * (b.maxX - b.minX)
+    end
+    addon.TravelGraph.DistanceProvider = function(a, b)
+        local ca, ay, ax = world(a)
+        local cb, by, bx = world(b)
+        if not ca or ca ~= cb then return nil end
+        return math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
+    end
+end
+
 -- Route from startID to goalID as this player; returns the result or nil.
 function route(ctx, startID, goalID)
     addon.World:Build()
@@ -144,6 +163,25 @@ function GetBuildInfo() return "12.1.0", "63000", "Sep 1 2026", 120100 end
 '''
 
 
+# Each retail map's place in the world, from the client's own UiMapAssignment table (tools/modern_source, wago.tools):
+# the row covering the whole map (0-1) gives its continent and world box. For --modern tests that want real distances.
+UIMAP_ASSIGNMENT = ROOT / "tools" / "modern_source" / "uimap_assignment_retail.csv"
+
+
+def retail_map_bounds(lua):
+    import csv
+    bounds = lua.eval("{}")
+    with UIMAP_ASSIGNMENT.open(encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            whole = (float(row["UiMin_0"]), float(row["UiMin_1"]), float(row["UiMax_0"]), float(row["UiMax_1"])) == (0, 0, 1, 1)
+            ui_map = int(row["UiMapID"])
+            if whole and row["OrderIndex"] == "0" and ui_map not in bounds:
+                bounds[ui_map] = lua.table(continent=int(row["MapID"]),
+                                           minX=float(row["Region_0"]), minY=float(row["Region_1"]),
+                                           maxX=float(row["Region_3"]), maxY=float(row["Region_4"]))
+    return bounds
+
+
 def new_runtime(toc=None, modern=False):
     lua = LuaRuntime(unpack_returned_tuples=True)
     lua.execute(STUBS)
@@ -160,6 +198,8 @@ def new_runtime(toc=None, modern=False):
     compile_chunk(loadstring, support.read_text(encoding="utf-8"), support.name)("MapzerothRebuild", addon)
     lua.globals().addon = addon
     lua.globals().ADDON_ROOT = str(ROOT)          # for tests that read the addon's own files (test_rulesets)
+    if modern and UIMAP_ASSIGNMENT.is_file():
+        lua.globals().RETAIL_MAP_BOUNDS = retail_map_bounds(lua)
     return lua
 
 

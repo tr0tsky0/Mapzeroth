@@ -516,7 +516,9 @@ end
 -- Returns false if we have no nodes on the start's map to walk to.
 -- A place that isn't one of our nodes but somewhere to go (the player's map waypoint): { id, mapID, x, y }.
 -- Walking edges lead to it from every node in its container, and from the start if that is in the same one.
-function TravelGraph:AddDestination(graph, ctx, dest, start)
+-- `others` (optional): more places that aren't nodes (a tour's other stops), joined to it the same way as the start,
+-- and, as for the start, by flying straight there where both are in the open and flying is allowed.
+function TravelGraph:AddDestination(graph, ctx, dest, start, others)
     local World = addon.World
     local container = World:GetContainerForMap(dest.mapID, graph.phase)
     local function add(from, cost, method, iconSource)
@@ -542,6 +544,22 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
         end)
     end
 
+    -- Straight there from one of the other places (the start, a tour's stops), mounting first, as from the start.
+    local function openAir(c)
+        return c and World:GetFlag(c, "fly") and not World:GetFlag(c, "indoor")
+    end
+    if flyable and others then
+        for _, from in ipairs(others) do
+            if from.id ~= dest.id and openAir(World:GetContainerForMap(from.mapID, graph.phase)) and insideCity(from) == insideCity(dest) then
+                local dist = TravelGraph.DistanceProvider(from, dest)
+                if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE and dist / addon.FLY_SPEED >= addon.MIN_FLY_SECONDS then
+                    add(from, addon.MOUNT_SECONDS + dist / addon.FLY_SPEED, "fly")
+                    flew = true
+                end
+            end
+        end
+    end
+
     if not container then return flew end
     local speed, icon = addon:GetGroundSpeed(container, ctx)
     local function walk(from)
@@ -551,7 +569,13 @@ function TravelGraph:AddDestination(graph, ctx, dest, start)
     for _, node in ipairs(container.nodes) do
         if insideCity(node) == insideCity(dest) then walk(node) end
     end
-    if start and World:GetContainerForMap(start.mapID, graph.phase) == container and insideCity(start) == insideCity(dest) then walk(start) end
+    local function nearby(place)
+        return place.id ~= dest.id and World:GetContainerForMap(place.mapID, graph.phase) == container and insideCity(place) == insideCity(dest)
+    end
+    if start and nearby(start) then walk(start) end
+    for _, place in ipairs(others or {}) do
+        if place ~= start and nearby(place) then walk(place) end
+    end
     return true
 end
 

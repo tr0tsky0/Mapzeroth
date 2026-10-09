@@ -38,6 +38,7 @@ local function kindOf(method)
 end
 
 local active       -- the trip: { entry, plan, steps, index, state, finished, model }
+local destinationName   -- (below, with Start) what the navigator's title says
 
 -- A flight is timed from take-off to landing, a boat from leaving the dock to arriving (the plan's number
 -- also includes waiting for it, so that comparison is only rough). Each measurement, { kind, from, to,
@@ -223,7 +224,7 @@ local function buildModel(sample)
     local kind = kindOf(step.method)
     local model = {
         finished = false, index = active.index, total = #steps, step = step, kind = kind,
-        destination = active.entry and active.entry.name,
+        destination = destinationName(),
     }
     local node = nodeOf(step.nodeID)
     local left = step.seconds
@@ -278,33 +279,70 @@ end
 
 -- Begin following a plan (from Journey:PlanEntry) to a destination entry.
 -- `notice` (optional) is a string key shown for a few seconds ("NAV_REROUTED").
--- A round trip (plan.back, Journey:Plan) is followed as one trip: the way there, then the way back. `legEnd` is where
--- the first leg ends (the later steps' places are not looked for before then: the way back ends where the player is now).
+-- A plan with legs (Journey:Legs: a round trip's way there and back, a tour's stops) is followed as one trip, leg after
+-- leg. `legEnds` holds where each leg ends: the later legs' places are not looked for before then (the way back ends
+-- where the player is now; a tour can pass a later stop on the way to an earlier one).
 function Navigation:Start(entry, plan, notice)
-    local steps, legEnd = plan.steps, nil
-    if plan.back then
-        steps = {}
-        for _, step in ipairs(plan.steps) do steps[#steps + 1] = step end
-        legEnd = #steps
-        for _, step in ipairs(plan.back.steps) do steps[#steps + 1] = step end
+    local steps, legs, legEnds, legOf = plan.steps, addon.Journey:Legs(plan), nil, nil
+    if legs then
+        steps, legEnds, legOf = {}, {}, {}
+        for k, leg in ipairs(legs) do
+            for _, step in ipairs(leg.steps) do
+                steps[#steps + 1] = step
+                legOf[#steps] = k
+            end
+            legEnds[k] = #steps
+        end
         local joined = {}
-        for k, v in pairs(plan) do joined[k] = v end
+        for key, v in pairs(plan) do joined[key] = v end
         joined.steps = steps
         plan = joined
     end
-    local extra = entry and entry.dest and { [entry.dest.id] = entry.dest } or nil
-    if plan.returnTo then                    -- the way back ends at a point that is no node of ours (Journey's returnDestination)
+    -- Where steps end that are no nodes of ours: the waypoint, a tour's stops, the way back's end (Journey's returnDestination).
+    local extra
+    for _, place in ipairs(entry and addon.Journey:ExtrasOf(entry) or {}) do
+        extra = extra or {}
+        extra[place.id] = place
+    end
+    if plan.returnTo then
         extra = extra or {}
         extra["RETURN_" .. plan.returnTo.id] = plan.returnTo
     end
-    active = { entry = entry, plan = plan, steps = steps, legEnd = legEnd, returnTo = plan.returnTo, index = 1, finished = false,
-               jumped = false, notice = notice, extra = extra }
+    active = { entry = entry, plan = plan, steps = steps, legs = legs, legEnds = legEnds, legOf = legOf, returnTo = plan.returnTo,
+               index = 1, finished = false, jumped = false, notice = notice, extra = extra }
 end
 
--- The last step that can be looked ahead to from the current one: the end of this leg of a round trip, else the route's end.
+-- The last step that can be looked ahead to from the current one: the end of the leg it is on, else the route's end.
 local function lookAheadEnd()
-    if active.legEnd and active.index <= active.legEnd then return active.legEnd end
+    if active.legOf and active.legOf[active.index] then return active.legEnds[active.legOf[active.index]] end
     return #active.steps
+end
+
+-- What the navigator's title says: where the trip goes, or for a tour the stop this leg goes to ("Zunta (3 of 12)").
+destinationName = function()
+    local entry = active.entry
+    if active.legs and entry and entry.stops then
+        local k = active.legOf[active.index] or #active.legs
+        local leg = active.legs[k]
+        local number = leg.stop and leg.stop.number or k
+        local total = entry.tourSize or #active.legs
+        return addon.L["NAV_STOP_OF"]:format(leg.name or "", number, total)
+    end
+    return entry and entry.name
+end
+
+-- The rest of a tour from the leg the trip is on, as an entry to plan again (MultiRoute:Plan with `keep`): its stop
+-- first, then the later legs as they were.
+local function restOfTour()
+    local entry = active.entry
+    local k = active.legOf[active.index] or #active.legs
+    local rest = { name = entry.name, tourSize = entry.tourSize or #active.legs, stops = {}, keep = {} }
+    for i = k, #active.legs do
+        local leg = active.legs[i]
+        rest.stops[#rest.stops + 1] = leg.stop
+        if i > k then rest.keep[#rest.keep + 1] = leg end
+    end
+    return rest
 end
 
 -- A flight was chosen at a flight master: stops = the node ids the ticket lands at, the last being where
@@ -405,6 +443,7 @@ update = function(sample)
         if active.offRoute then
             if not sample.onTaxi then            -- landed somewhere the route didn't go: plan again from here
                 local entry, returnTo = active.entry, active.returnTo
+                if entry and entry.stops and active.legs then entry = restOfTour() end      -- a tour: the stops still to come
                 active = nil
                 return { replan = true, entry = entry, returnTo = returnTo }
             end

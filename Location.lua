@@ -55,8 +55,55 @@ function addon:GetWaypoint()
     local x, y
     if position.GetXY then x, y = position:GetXY() else x, y = position.x, position.y end
     if not (x and y) then return nil end
-    local knownID, kx, ky = knownMap(point.uiMapID, x, y)
+    return addon:PlaceAt(point.uiMapID, x, y, "WAYPOINT")
+end
+
+-- A position (a map and 0-1 coordinates) as a place the planner can route to, { id, mapID, x, y }, or nil when it is on
+-- a map we can't place (no nodes on it or any map above it). The id is `prefix` and the spot, rounded, so the same spot
+-- always has the same id (distances are cached by id).
+function addon:PlaceAt(mapID, x, y, prefix)
+    local knownID, kx, ky = knownMap(mapID, x, y)
     if not knownID then return nil end
-    local id = ("WAYPOINT_%d_%d_%d"):format(knownID, math.floor(kx * 2000 + 0.5), math.floor(ky * 2000 + 0.5))
+    local id = ("%s_%d_%d_%d"):format(prefix, knownID, math.floor(kx * 2000 + 0.5), math.floor(ky * 2000 + 0.5))
     return { id = id, mapID = knownID, x = kx, y = ky }
+end
+
+-- The waypoints TomTom has set, as points { mapID, x, y, name } (x and y 0-1), or nil when TomTom isn't loaded
+-- (another addon's data: read only, never changed). TomTom keeps them by map, each { mapID, x, y, title = ... }.
+function addon:GetTomTomPoints()
+    local waypoints = type(TomTom) == "table" and type(TomTom.waypoints) == "table" and TomTom.waypoints
+    if not waypoints then return nil end
+    local points = {}
+    for _, onMap in pairs(waypoints) do
+        if type(onMap) == "table" then
+            for _, point in pairs(onMap) do
+                if type(point) == "table" and point[1] and point[2] and point[3] then
+                    points[#points + 1] = { mapID = point[1], x = point[2], y = point[3], name = point.title }
+                end
+            end
+        end
+    end
+    -- TomTom's tables have no order: by map, then from top to bottom, so the same waypoints always read the same.
+    table.sort(points, function(a, b)
+        if a.mapID ~= b.mapID then return a.mapID < b.mapID end
+        if a.y ~= b.y then return a.y < b.y end
+        return a.x < b.x
+    end)
+    return points
+end
+
+-- The map a zone name means ("Elwynn Forest", any case), for /way lines that name the zone instead of giving "#37":
+-- among the maps we have nodes on, by the client's name for each. Nil when none is called that.
+local mapsByName
+function addon:MapByName(name)
+    if not (name and C_Map and C_Map.GetMapInfo) then return nil end
+    if not mapsByName then
+        mapsByName = {}
+        addon.World:ForEachNode(function(node)
+            local info = node.mapID and C_Map.GetMapInfo(node.mapID)
+            local key = info and info.name and info.name:lower()
+            if key and not mapsByName[key] then mapsByName[key] = node.mapID end
+        end)
+    end
+    return mapsByName[name:lower():gsub("^%s+", ""):gsub("%s+$", "")]
 end

@@ -65,7 +65,9 @@ end
 local sections = build("Alliance")
 local order = {}
 for _, s in ipairs(sections) do order[#order + 1] = s.id end
+-- Above them the top picks, always there with pasting coordinates for a tour; no trainers section on Modern (Sections:Build).
 check(table.concat(order, ",") == "cities,dungeons,raids,older", "cities, dungeons, raids, older content: " .. table.concat(order, ","))
+check(sections.top and sections.top[#sections.top].action == "paste", "with the paste pick on top")
 
 local cities = names(find(sections, "cities"))
 check(cities["Stormwind City"] and cities["Dornogal"] and cities["Valdrakken"] and cities["Silvermoon City"],

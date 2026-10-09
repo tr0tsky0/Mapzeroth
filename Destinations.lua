@@ -11,7 +11,9 @@ local addonName, addon = ...
 --   relevant   false for things this player has little use for by default (other classes'
 --              trainers and the like); they are still found by searching
 --   expansion  for a city, dungeon or raid whose data says (Modern's): its expansion (by major version, Classic 1 ...
---   raid       Modern instances: true for a raid, nil for a dungeon
+--   raid       an instance: true for a raid, nil for a dungeon
+--   minLevel   an instance the client knows the level of (Forever's): the group finder's suggested range for it
+--   maxLevel   (minLevel-maxLevel, by its `instanceMap`), else the dungeon finder's minimum (by its `lfg` ids; no maxLevel)
 --   details    optional, what a place offers that a search can hit and the list shows: for a
 --              weapon master, { { text = "One-Handed Swords", alias = "..." }, ... } (the weapon skills
 --              its trainers teach, in the client's names)
@@ -124,6 +126,50 @@ local function continentName(mapID)
     return info and info.name
 end
 
+-- The group finder's suggested level range for each instance map it has an activity for: { [mapID] = { min, max } },
+-- across an instance's several activities (Scarlet Monastery's wings) the lowest min and the highest max. Empty when
+-- the client has no group finder.
+function addon:GroupFinderRanges()
+    local ranges, lfg = {}, C_LFGList
+    if not (lfg and lfg.GetAvailableCategories and lfg.GetAvailableActivities and lfg.GetActivityInfoTable) then return ranges end
+    local ok, categories = pcall(lfg.GetAvailableCategories)
+    for _, category in ipairs(ok and categories or {}) do
+        local okActs, activities = pcall(lfg.GetAvailableActivities, category)
+        for _, activity in ipairs(okActs and activities or {}) do
+            local okInfo, info = pcall(lfg.GetActivityInfoTable, activity)
+            local map, low, high = okInfo and info and info.mapID, okInfo and info and info.minLevelSuggestion,
+                okInfo and info and info.maxLevelSuggestion
+            if map and map > 0 and low and low > 0 and high and high >= low then
+                local range = ranges[map]
+                if range then
+                    range[1], range[2] = math.min(range[1], low), math.max(range[2], high)
+                else
+                    ranges[map] = { low, high }
+                end
+            end
+        end
+    end
+    return ranges
+end
+
+-- An instance node's levels: the group finder's suggested range (min, max) when it has one for the node's
+-- `instanceMap` (ranges: from GroupFinderRanges), else the dungeon finder's minimum and no max (the least of its `lfg`
+-- ids', for an instance the finder splits into wings), else nil.
+function addon:GetInstanceLevels(node, ranges)
+    if not node then return nil end
+    local range = node.instanceMap and ranges and ranges[node.instanceMap]
+    if range then return range[1], range[2] end
+    if not (node.lfg and GetLFGDungeonInfo) then return nil end
+    local lowest
+    for _, id in ipairs(node.lfg) do
+        local ok, name, _, _, minLevel = pcall(GetLFGDungeonInfo, id)
+        if ok and name and type(minLevel) == "number" and minLevel > 0 and (not lowest or minLevel < lowest) then
+            lowest = minLevel
+        end
+    end
+    return lowest
+end
+
 -- Builds the list for this player (ctx from addon:GetPlayerContext()), prepared for Search.
 function Destinations:Build(ctx)
     local World = addon.World
@@ -131,6 +177,7 @@ function Destinations:Build(ctx)
     local skills = weaponSkills()
     local byInstance = {}                       -- journal instance id -> its entry
     local byInn = {}                            -- "city:<key>" / "town:<key>" -> the entry for that place's inns
+    local ranges = addon:GroupFinderRanges()
 
     World:ForEachNode(function(node)
         local group = groupOf(node)
@@ -161,8 +208,11 @@ function Destinations:Build(ctx)
             return
         end
         local instance = instanceID and addon.Instances and addon.Instances[instanceID]
+        local minLevel, maxLevel
+        if group == "instance" then minLevel, maxLevel = addon:GetInstanceLevels(node, ranges) end
         entries[#entries + 1] = {
-            instanceID = instanceID, expansion = instance and instance[1], raid = instance and instance[2] or nil,
+            instanceID = instanceID, expansion = instance and instance[1], raid = instance and instance[2] or node.raid or nil,
+            minLevel = minLevel, maxLevel = maxLevel,
             nodeID = node.id, nodeIDs = { node.id }, name = name, group = group, kind = node.kind,
             zone = addon:GetZoneName(node.mapID),
             relevant = addon.Relevance:IsRelevant(node, ctx),

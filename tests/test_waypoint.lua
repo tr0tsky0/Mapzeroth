@@ -41,14 +41,14 @@ C_Map.HasUserWaypoint = nil
 check(addon:GetWaypoint() == nil, "a client without waypoints gives nothing")
 C_Map.HasUserWaypoint = hasApi
 
--- Offered first among the personally relevant picks.
+-- Offered first among the top picks.
 local ctx = makeCtx({ class = "MAGE", faction = "Alliance" })
 local entries = addon.Destinations:Build(ctx)
 local without = addon.Sections:Build(entries, ctx, nil)
-check(without[1].items[1].group ~= "waypoint", "no waypoint, no such pick")
+check(without.top[1].group ~= "waypoint" or without.top[1].action, "no waypoint, no such pick")
 local sections = addon.Sections:Build(entries, ctx, dest)
-local pick = sections[1].items[1]
-check(sections[1].id == "relevant" and pick.group == "waypoint" and pick.name == "Your Waypoint" and pick.dest == dest,
+local pick = sections.top[1]
+check(pick.group == "waypoint" and pick.name == "Your Waypoint" and pick.dest == dest,
     "with a waypoint it is the first pick: " .. tostring(pick.name))
 check(pick.nodeIDs[1] == dest.id, "and its node is the waypoint")
 
@@ -66,9 +66,9 @@ local farPlan = far and addon.Journey:PlanEntry(far, pick)
 check(farPlan and farPlan.steps[#farPlan.steps].nodeID == dest.id and farPlan.cost > plan.cost, "from another city it takes longer and still gets there")
 check(addon.Journey:PlanEntry(addon.Journey:Build(ctx, start), pick) == nil, "without the extra destination in the graph there is no way there")
 
--- Priced like the other picks, with its zone as the place.
+-- Like the other picks, it has no time in the list.
 addon.Sections:Price(sections, session)
-check(pick.eta and math.abs(pick.eta - plan.cost) < 1e-6 and pick.where == "Stormwind City", "priced, and says where: " .. tostring(pick.eta) .. " " .. tostring(pick.where))
+check(pick.eta == nil, "not priced in the list")
 
 -- Replanning after a mis-clicked flight keeps the waypoint reachable.
 addon.GetPlayerStart = function() return start end

@@ -301,7 +301,8 @@ def load_trainers():
 
 
 def load_instances():
-    """tools/poi_source/instances.tsv: key, category, mapID, x, y, English name, areaID, level."""
+    """tools/poi_source/instances.tsv: key, category, mapID, x, y, English name, areaID, dungeon finder ids, instance map
+    id, container."""
     instances = []
     path = SRC / "instances.tsv"
     if not path.exists():
@@ -309,10 +310,12 @@ def load_instances():
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip() or line.startswith("#"):
             continue
-        key, category, map_id, x, y, name, area, _level, container = (line.split("\t") + [""] * 9)[:9]
+        key, category, map_id, x, y, name, area, lfg, instance_map, container = (line.split("\t") + [""] * 10)[:10]
         fx, fy = to_forever(int(map_id), (float(x), float(y)))
         instances.append({"key": key, "category": category, "map": int(map_id), "x": fx, "y": fy,
-                          "name": name, "area": int(area) if area else None, "container": container or None})
+                          "name": name, "area": int(area) if area else None, "container": container or None,
+                          "lfg": [int(i) for i in lfg.split(",") if i.strip()],
+                          "instanceMap": int(instance_map) if instance_map else None})
     return instances
 
 
@@ -581,10 +584,13 @@ def main():
     for inst in instances:
         area = f", area = {inst['area']}" if inst["area"] else ""
         raid = ", raid = true" if inst["category"] == "raid" else ""
+        lfg = ", lfg = { " + ", ".join(str(i) for i in inst["lfg"]) + " }" if inst["lfg"] else ""
+        if inst["instanceMap"]:
+            lfg += f", instanceMap = {inst['instanceMap']}"
         out_nodes.append(
             f'    {{ id = "INSTANCE_{inst["key"].upper()}", container = "{inst["container"] or containers[inst["map"]]}", '
             f'mapID = {inst["map"]}, x = {inst["x"] / 100:.4f}, y = {inst["y"] / 100:.4f}, '
-            f'kind = "instance"{raid}{area} }},')
+            f'kind = "instance"{raid}{area}{lfg} }},')
 
     cities = {k: t for k, t in settlements.items() if t["type"] == "city"}
     towns = {k: t for k, t in settlements.items() if t["type"] == "town"}

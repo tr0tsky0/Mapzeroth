@@ -23,6 +23,7 @@ frame:RegisterEvent("HEARTHSTONE_BOUND")
 frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 frame:RegisterEvent("TAXIMAP_OPENED")
 frame:RegisterEvent("FACTION_STANDING_CHANGED")
+frame:RegisterEvent("SPELLS_CHANGED")
 frame:RegisterEvent("UI_INFO_MESSAGE")
 pcall(frame.RegisterEvent, frame, "USER_WAYPOINT_UPDATED")
 pcall(frame.RegisterEvent, frame, "CALENDAR_UPDATE_EVENT_LIST")
@@ -38,6 +39,10 @@ frame:SetScript("OnEvent", function(_, event, ...)
         -- A standing tier crossing can change vendor/flight discounts; see FlightKnowledge's
         -- own doc comment for why this forgets rather than tries to guess which one changed.
         addon.FlightKnowledge:OnFactionChanged()
+        return
+    elseif event == "SPELLS_CHANGED" then
+        -- Frequent Flier unlocked (or gone): fares learned on the other side of it are off by half.
+        addon.FlightKnowledge:OnSpellsChanged()
         return
     elseif event == "USER_WAYPOINT_UPDATED" then
         addon.Panel:OnWaypointChanged()

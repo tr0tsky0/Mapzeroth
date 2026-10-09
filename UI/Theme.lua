@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 -- The one place styling lives. The panel never sets a colour, texture, backdrop or font of
--- its own: it asks the theme for a widget ("panel", "button", "edit", "row", "text", ...)
+-- its own: it asks the theme for a widget ("panel", "button", "edit", "area", "row", "text", ...)
 -- and the theme skins it. Every widget made this way is remembered, so switching theme
 -- re-skins what is already on screen.
 --
@@ -267,6 +267,24 @@ skin.edit = function(edit)
     edit:SetTextColor(Theme:Color("text"))
 end
 
+-- A text area: the border is an edit box's, and so are the text's font and colour.
+skin.area = function(area)
+    area:SetBackdrop(current.edit.backdrop)
+    area:SetBackdropColor(Theme:Color("editBg"))
+    area:SetBackdropBorderColor(Theme:Color("editBorder"))
+    area.edit:SetFontObject(fontObject(current.fonts.body))
+    area.edit:SetTextColor(Theme:Color("text"))
+end
+
+-- A checkbox: its box is drawn like an edit box (the theme's border), the tick in the accent colour.
+skin.check = function(check)
+    check.box:SetBackdrop(current.edit.backdrop)
+    check.box:SetBackdropColor(Theme:Color("editBg"))
+    check.box:SetBackdropBorderColor(Theme:Color(check.mzHover and "accent" or "editBorder"))
+    check.tick:SetVertexColor(Theme:Color("accent"))
+    skin.text(check.label, { style = "body" })
+end
+
 skin.row = function(row)
     row.hl:SetColorTexture(Theme:Color("rowHover"))
     row.sel:SetColorTexture(Theme:Color("rowSelected"))
@@ -449,6 +467,44 @@ function Theme:Dropdown(parent, width, options, onSelect, menuParent)
     return dropdown
 end
 
+-- A checkbox with its label beside it; clicking either ticks it. onToggle(checked) runs when the player clicks it.
+-- check:SetChecked(on) shows a value without calling onToggle; check:GetChecked() reads it.
+local CHECK_BOX = 18
+local CHECK_TICK = "Interface\\Buttons\\UI-CheckBox-Check"       -- in every client
+
+function Theme:Checkbox(parent, text, onToggle)
+    local check = CreateFrame("Button", nil, parent)
+    check.box = CreateFrame("Frame", nil, check, "BackdropTemplate")
+    check.box:SetSize(CHECK_BOX, CHECK_BOX)
+    check.box:SetPoint("LEFT", 0, 0)
+    check.tick = check.box:CreateTexture(nil, "OVERLAY")
+    check.tick:SetTexture(CHECK_TICK)
+    check.tick:SetPoint("CENTER", 1, 0)
+    check.tick:SetSize(CHECK_BOX + 6, CHECK_BOX + 6)
+    check.tick:Hide()
+    check.label = withFont(check:CreateFontString(nil, "OVERLAY"))
+    check.label:SetPoint("LEFT", check.box, "RIGHT", 8, 0)
+    check.label:SetJustifyH("LEFT")
+    check.label:SetText(text)
+    check:SetSize(CHECK_BOX + 8 + math.max(40, check.label:GetStringWidth() or 0), CHECK_BOX + 4)
+    function check:SetChecked(on)
+        self.mzChecked = on and true or false
+        self.tick:SetShown(self.mzChecked)
+    end
+    function check:GetChecked() return self.mzChecked == true end
+    check:SetScript("OnClick", function(self)
+        self:SetChecked(not self.mzChecked)
+        if onToggle then onToggle(self.mzChecked) end
+    end)
+    local function hover(on)
+        check.mzHover = on
+        if current then skin.check(check) end
+    end
+    check:SetScript("OnEnter", function() hover(true) end)
+    check:SetScript("OnLeave", function() hover(false) end)
+    return register(check, "check")
+end
+
 -- An arrow pointing up until rotated: arrow:SetRotation(radians), counter-clockwise. Its picture
 -- and colour come from the theme (`arrow` in the theme definition, else the minimap arrow).
 function Theme:Arrow(parent, size)
@@ -474,6 +530,41 @@ function Theme:EditBox(parent, width, height)
     edit:SetAutoFocus(false)
     edit:SetTextInsets(8, 8, 0, 0)
     return register(edit, "edit")
+end
+
+-- A box for several lines of text (pasting a list into), looking like an edit box. The text scrolls with the mouse
+-- wheel and follows the cursor. Returns the box; its EditBox is box.edit.
+function Theme:TextArea(parent, width, height)
+    local area = CreateFrame("Frame", nil, parent, "BackdropTemplate")
+    area:SetSize(width, height)
+    local scroll = CreateFrame("ScrollFrame", nil, area)
+    scroll:SetPoint("TOPLEFT", 8, -6)
+    scroll:SetPoint("BOTTOMRIGHT", -8, 6)
+    local edit = CreateFrame("EditBox", nil, scroll)
+    edit:SetMultiLine(true)
+    edit:SetAutoFocus(false)
+    edit:SetMaxLetters(0)
+    edit:SetSize(width - 16, height - 12)
+    scroll:SetScrollChild(edit)
+    -- Keep the line being typed on in view.
+    edit:SetScript("OnCursorChanged", function(_, _, y, _, lineHeight)
+        local top, offset, view = -y, scroll:GetVerticalScroll(), scroll:GetHeight()
+        if top < offset then
+            scroll:SetVerticalScroll(top)
+        elseif top + lineHeight > offset + view then
+            scroll:SetVerticalScroll(top + lineHeight - view)
+        end
+    end)
+    scroll:EnableMouseWheel(true)
+    scroll:SetScript("OnMouseWheel", function(self, delta)
+        local most = self:GetVerticalScrollRange() or 0
+        self:SetVerticalScroll(math.max(0, math.min(most, self:GetVerticalScroll() - delta * 20)))
+    end)
+    -- A click anywhere in the box puts the cursor in it, not just on the lines there are.
+    area:EnableMouse(true)
+    area:SetScript("OnMouseDown", function() edit:SetFocus() end)
+    area.edit, area.scroll = edit, scroll
+    return register(area, "area")
 end
 
 -- A clickable list row: a marker bar on the left, highlight on hover, a selected state.

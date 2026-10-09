@@ -384,7 +384,7 @@ end
 -- Presentation: what a person sees. The search happily walks through unrelated nodes
 -- on the way (a trainer that happens to lie along the road), which costs the same as
 -- walking straight there, so consecutive walk steps read as one "walk to X", and
--- flights along one ticket (see the top of the file) as "fly to X". A walk still stops where a person would
+-- flights along one ticket (see the top of the file) as "fly to X", and hops of the player's own flight as one. A walk still stops where a person would
 -- mark the route: at a zone border or a city entrance, and where it goes from one container
 -- into another (out of an interior, into a city), so those stay steps of their own.
 -- Returns a new list; the result's own steps are untouched, and each merged step keeps the
@@ -394,9 +394,11 @@ function Pathfinder:CollapseSteps(steps)
     for _, step in ipairs(steps) do
         local last = collapsed[#collapsed]
         -- Consecutive walks are one walk; consecutive flights are one ticket (in game you buy a
-        -- ticket to the far flight point and fly through the stops without landing).
+        -- ticket to the far flight point and fly through the stops without landing); and consecutive flights on
+        -- the player's own mount are one flight (a long one is made of hops between nodes, MAX_AUTO_EDGE_DISTANCE
+        -- apart at most, all in the open: nothing to stop for between them).
         local joins = last and step.method == last.method
-            and (step.method == "walk" or (step.method == "taxi" and step.through))
+            and (step.method == "walk" or step.method == "fly" or (step.method == "taxi" and step.through))
         if joins and step.method == "walk" then
             local World = addon.World
             joins = not World:IsMilestone(last.to)

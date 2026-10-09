@@ -5,6 +5,9 @@ local addonName, addon = ...
 -- our windows, the theme, whether the route is drawn on the map and on the minimap, and icons or colour bars beside route steps. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.
+--
+-- A second page under it, "Picker", has a checkbox for each pick the picker can offer above its places
+-- (Sections:PickChoices), to leave out the ones a player doesn't want.
 
 local OptionsPanel = {}
 addon.OptionsPanel = OptionsPanel
@@ -86,22 +89,19 @@ local function sliderRow(parent, top, key, label, description, formatValue)
     return { slider = slider, value = value, format = formatValue, key = key }
 end
 
-function OptionsPanel:Build()
-    local frame = CreateFrame("Frame", "MapzerothRebuildOptions", UIParent)
-    frame.name = L["OPT_TITLE"]
-    self.frame = frame
-
+-- A themed panel filling `frame`, holding a page `height` tall that scrolls inside it, with a scroll bar at its right
+-- when it doesn't fit. Returns the panel, the page to lay things out on, fit() (call it as the page is shown), and
+-- { frame, bar, fit } for tests.
+local function scrolledPage(frame, height)
     local panel = Theme:Panel(frame, nil)
     panel:SetPoint("TOPLEFT", 8, -8)
     panel:SetPoint("BOTTOMRIGHT", -8, 8)
-    menuHost = panel
 
-    -- The settings sit on a page that scrolls inside the panel, with a scroll bar at its right when they don't fit.
     local scroll = CreateFrame("ScrollFrame", nil, panel)
     scroll:SetPoint("TOPLEFT", 12, -12)             -- inside Classic's frame border as well as Modern Dark's line
     scroll:SetPoint("BOTTOMRIGHT", -32, 12)
     local box = CreateFrame("Frame", nil, scroll)
-    box:SetSize(START_WIDTH, CONTENT_HEIGHT)
+    box:SetSize(START_WIDTH, height)
     scroll:SetScrollChild(box)
 
     local bar = Theme:Slider(panel, 100, true)
@@ -118,7 +118,7 @@ function OptionsPanel:Build()
             box:SetWidth(width)
             fitTexts(width)
         end
-        local range = math.max(0, CONTENT_HEIGHT - (scroll:GetHeight() or CONTENT_HEIGHT))
+        local range = math.max(0, height - (scroll:GetHeight() or height))
         bar:SetMinMaxValues(0, range)
         bar:SetShown(range > 0)
         if (bar:GetValue() or 0) > range then bar:SetValue(range) end
@@ -128,7 +128,69 @@ function OptionsPanel:Build()
     scroll:SetScript("OnMouseWheel", function(_, delta)
         bar:SetValue((bar:GetValue() or 0) - delta * 40)
     end)
-    widgets.scroll = { frame = scroll, bar = bar, fit = fit }
+    return panel, box, fit, { frame = scroll, bar = bar, fit = fit }
+end
+
+-- The hooks the game's Settings window calls on a canvas page.
+local function settingsHooks(frame, fit)
+    frame.OnCommit = function() end
+    frame.OnDefault = function()
+        Options:Reset()
+        OptionsPanel:Sync()
+    end
+    frame.OnRefresh = function() OptionsPanel:Sync() end
+    frame:SetScript("OnShow", function()
+        fit()
+        OptionsPanel:Sync()
+    end)
+end
+
+local CHECK_ROW = 28                -- how far apart the picker page's checkboxes sit
+
+-- The "Picker" page: a heading, what it does, and a checkbox per pick.
+function OptionsPanel:BuildPicks()
+    local frame = CreateFrame("Frame", "MapzerothRebuildOptionsPicks", UIParent)
+    frame.name = L["OPT_PICKS_TITLE"]
+    frame.parent = L["OPT_TITLE"]                     -- older clients' options window files it under ours by this
+    self.picksFrame = frame
+
+    local faction = UnitFactionGroup and UnitFactionGroup("player")
+    local class = UnitClass and select(2, UnitClass("player"))
+    local choices = addon.Sections:PickChoices(class, faction, addon:GetTomTomPoints() ~= nil)
+    local top = 84                                    -- where the first checkbox goes, under the heading and the text
+    local _, box, fit, scroll = scrolledPage(frame, top + #choices * CHECK_ROW + PAD)
+    widgets.picksScroll = scroll
+
+    local title = Theme:Text(box, "title")
+    title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
+    title:SetText(L["OPT_PICKS_TITLE"])
+    local hint = Theme:Text(box, "dim")
+    hint:SetPoint("TOPLEFT", PAD, -44)
+    hint:SetWidth(textWidth(START_WIDTH, false))
+    hint:SetWordWrap(true)
+    hint:SetText(L["OPT_PICKS_DESC"])
+    texts[#texts + 1] = { hint = hint, beside = false }
+
+    widgets.picks = {}
+    for i, choice in ipairs(choices) do
+        local check = Theme:Checkbox(box, choice.label, function(on) Options:SetShowsPick(choice.key, on) end)
+        check:SetPoint("TOPLEFT", PAD, -(top + (i - 1) * CHECK_ROW))
+        check.key = choice.key
+        widgets.picks[#widgets.picks + 1] = check
+    end
+
+    settingsHooks(frame, fit)
+    return frame
+end
+
+function OptionsPanel:Build()
+    local frame = CreateFrame("Frame", "MapzerothRebuildOptions", UIParent)
+    frame.name = L["OPT_TITLE"]
+    self.frame = frame
+
+    local panel, box, fit, scroll = scrolledPage(frame, CONTENT_HEIGHT)
+    menuHost = panel
+    widgets.scroll = scroll
 
     local title = Theme:Text(box, "title")
     title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
@@ -166,17 +228,7 @@ function OptionsPanel:Build()
 
     widgets.hideMinimap = toggleRow(box, 776, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
 
-    -- Hooks the game's Settings window calls on a canvas page.
-    frame.OnCommit = function() end
-    frame.OnDefault = function()
-        Options:Reset()
-        OptionsPanel:Sync()
-    end
-    frame.OnRefresh = function() OptionsPanel:Sync() end
-    frame:SetScript("OnShow", function()
-        fit()
-        OptionsPanel:Sync()
-    end)
+    settingsHooks(frame, fit)
 
     self.widgets = widgets
     return frame
@@ -197,17 +249,23 @@ function OptionsPanel:Sync()
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
     widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
     widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
+    for _, check in ipairs(widgets.picks or {}) do check:SetChecked(Options:ShowsPick(check.key)) end
 end
 
 -- Add the page to the game's Settings window (once).
 function OptionsPanel:Register()
     if self.registered then return true end
     if not self.frame then self:Build() end
+    if not self.picksFrame then self:BuildPicks() end
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
         self.category = Settings.RegisterCanvasLayoutCategory(self.frame, self.frame.name)
+        if Settings.RegisterCanvasLayoutSubcategory then
+            self.picksCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.picksFrame, self.picksFrame.name)
+        end
         Settings.RegisterAddOnCategory(self.category)
     elseif InterfaceOptions_AddCategory then
         InterfaceOptions_AddCategory(self.frame)            -- older clients
+        InterfaceOptions_AddCategory(self.picksFrame)
     else
         return false
     end

@@ -62,6 +62,12 @@ addon.DEFAULT_EQUIP_SECONDS = 0
 -- walk exists, so it is kept at a plausible price, not dropped and the places beyond it cut off.
 addon.UNMEASURED_WALK_SECONDS = 20
 
+-- An ability whose cooldown is this short or shorter is back before a trip needs it again (Dreamwalk into the druids'
+-- Emerald Dreamway, Death Gate, Zen Pilgrimage: 60 s), so a round trip or a tour can use it on any leg, as often as it
+-- likes. A longer one (the hearthstone, a dungeon's teleport) is spent by the first leg that uses it. A consumable is
+-- spent either way: the bags may hold only one.
+addon.REUSABLE_COOLDOWN = 300
+
 -- Every travel method a step can have, and what each part of the addon makes of it:
 --   kind     how the trip window follows it (Navigation.lua): walk, flight, transport, ability, portal
 --   style    how a route draws it and which theme colour it takes (MapRoute.lua, UI/RouteLines.lua, UI/Themes):

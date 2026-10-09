@@ -164,6 +164,13 @@ check(#within == 1, "walking between nodes of one container stays one step")
 local across = addon.Pathfinder:CollapseSteps({ walkTo("A", "TAXI_2", 10), walkTo("TAXI_2", "TAXI_4", 20) })
 check(addon.World:GetNodeContainer("TAXI_2") ~= addon.World:GetNodeContainer("TAXI_4") and #across == 2,
     "walking on into another container starts a new step")
+-- Hops of the player's own flight are one flight, wherever they cross.
+local hops = addon.Pathfinder:CollapseSteps({
+    { from = "A", to = "TAXI_2", cost = 10, method = "fly" }, { from = "TAXI_2", to = "TAXI_4", cost = 20, method = "fly" },
+    { from = "TAXI_4", to = "B", cost = 5, method = "walk" },
+})
+check(#hops == 2 and hops[1].method == "fly" and hops[1].to == "TAXI_4" and hops[1].cost == 30 and #hops[1].parts == 2,
+    "consecutive flights on the player's own mount are one step")
 
 -- Flights are single legs, chained by the planner. A leg's time differs by direction (Morgan's Vigil ->
 -- Thorium Point 104 s, back 96 s), each direction's own time is used, and taking a leg straight after

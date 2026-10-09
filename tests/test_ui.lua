@@ -133,7 +133,7 @@ box.search._scripts.OnTextChanged(box.search)
 check(box.clear._shown and not box.hint._shown, "typing shows it")
 box.clear._scripts.OnClick()
 check(box.search:GetText() == "" and not box.clear._shown and box.hint._shown, "clicking it empties the box and hides it again")
-check(state.view == "list" and #state.results >= 1 and state.results[1].header, "and the search goes back to the sections")
+check(state.view == "list" and #state.results >= 1 and not state.results[1].inSection and (state.results[1].header or state.results[1].pick), "and the search goes back to the picks and sections")
 
 -- The pop-out button: docked by default, and toggling it flips state, the Options setting and
 -- the button's own label. (This mock frame has no real geometry -- GetLeft/GetTop return
@@ -234,6 +234,17 @@ local realModel = addon.Navigation.Model
 addon.Navigation.Model = function() return { index = 10, finished = false } end
 addon.Panel:MarkCurrentStep()
 check(box.steps[LAST].name._text == "Step 10" and box.steps[LAST].sel._shown, "the current step scrolls into view and is marked: " .. box.steps[LAST].name._text)
+-- But only when it changes: the player scrolling away from it isn't pulled back while the trip stays on that step.
+addon.Panel:Scroll(-1000)
+addon.Panel:OnTripUpdate({ index = 10, finished = false })
+check(box.steps[1].name._text == "Step 1", "scrolled up by hand, the list stays there: " .. box.steps[1].name._text)
+addon.Navigation.Model = function() return { index = 2, finished = false } end
+addon.Panel:OnTripUpdate({ index = 2, finished = false })
+addon.Panel:Scroll(1000)
+check(box.steps[LAST].name._text == "Step 10", "and can be scrolled to the end past the current step: " .. box.steps[LAST].name._text)
+addon.Navigation.Model = function() return { index = 3, finished = false } end
+addon.Panel:OnTripUpdate({ index = 3, finished = false })
+check(box.steps[1].name._text == "Step 3", "the trip moving on to a step out of sight scrolls to it again: " .. box.steps[1].name._text)
 addon.Navigation.Model = realModel
 state.pinned = false
 
@@ -571,8 +582,12 @@ check(#state.results >= 2, "the empty window shows the accordion's sections")
 local rowCount = #addon.Panel.widgets.rows
 local listBottom = 86 + rowCount * 38
 check(listBottom <= 500 - 16 and 500 - 16 - listBottom < 38, "the list fills the panel: " .. rowCount .. " rows end at " .. listBottom)
-for _, row in ipairs(state.results) do check(row.header and not row.open, "and they start closed: " .. tostring(row.name)) end
-check(not state.priced, "nothing is priced just for opening the window")
+for _, row in ipairs(state.results) do
+    check((row.header and not row.open) or (row.pick and row.action and row.depth == 0),
+        "only top tour picks and closed headings: " .. tostring(row.name))
+end
+check(state.results[1].action == "paste" and state.results[2].header, "the paste pick sits on top, above the headings")
+check(not state.priced, "nothing is priced just for opening the window when no top pick wants a time")
 -- Hovering a row shows a tooltip for a trainer (Panel.TooltipLines, tests/test_trainer_tooltip.lua); a heading has none.
 local tipLines
 GameTooltip = { SetOwner = function() end, AddLine = function(_, text) tipLines = (tipLines or 0) + 1 end,
@@ -581,6 +596,10 @@ local firstRow = addon.Panel.widgets.rows[1]
 check(firstRow._hooks.OnEnter and firstRow._hooks.OnLeave, "rows show a tooltip on hover")
 firstRow._hooks.OnEnter(firstRow)
 firstRow._hooks.OnLeave(firstRow)
+check(tipLines and tipLines >= 2, "the paste pick explains itself")
+tipLines = nil
+local headingRow = addon.Panel.widgets.rows[2]
+headingRow._hooks.OnEnter(headingRow)
 check(tipLines == nil, "a section heading has no tooltip")
 GameTooltip = nil
 
@@ -626,51 +645,59 @@ check(#state.results == 4 and state.results[3].inSection and state.results[3].de
 state.sections, state.open = savedSections, savedOpen
 addon.Panel:Query("")
 
--- A pick with a quicker round trip elsewhere is two rows: the nearest one way, and the round trip (its own place,
--- its total time, and the abilities its way there must leave for the way back).
-local spent = { [6948] = true }
-state.sections = { { id = "relevant", title = "Relevant", items = { {
-    name = "Nearest Thing", group = "trainer", pick = true, nodeID = "A", nodeIDs = { "A", "B" }, nearest = "A", where = "Aville", eta = 30,
-    roundTrip = { nearest = "B", where = "Bville", eta = 100, banned = spent },
-} } } }
-state.open = { relevant = true }
-addon.Panel:Query("")
-check(#state.results == 3, "a pick with a round trip is two rows under its heading")
-check(state.results[2].name == addon.L["PICK_ONE_WAY"]:format("Nearest Thing") and state.results[2].eta == 30 and state.results[2].where == "Aville", "the nearest, one way")
-local second = state.results[3]
-check(second.name == addon.L["PICK_ROUND_TRIP"]:format("Nearest Thing") and second.where == "Bville" and second.eta == 100, "then the round trip, with its total time")
-check(second.nodeIDs[1] == "B" and #second.nodeIDs == 1 and second.banned == spent and second.pick, "which routes to its own place, leaving the spent abilities out")
-state.sections, state.open = savedSections, savedOpen
-addon.Panel:Query("")
 
--- A character who can't read ley lines has no such pick; a Skyborne does.
-local relevant = headerIndex("relevant")
-check(relevant, "there is a Personally relevant section")
-addon.Panel:Choose(relevant)
-check(not pickNamed("Nearest Potential Ley Line"), "no ley line pick for a character who can't read them")
-check(pickNamed("Nearest Class Trainer"), "but their class trainer is there")
-addon.Panel:Choose(relevant)
+-- A character who can't read ley lines has no such pick; a Skyborne does, on top, timed as the window opens.
+local trainers = headerIndex("trainers")
+check(trainers and state.results[trainers].name == addon.L["SECTION_TRAINERS"], "there is a section for their nearest trainers")
+addon.Panel:Choose(trainers)
+check(not pickNamed("Nearest Ley Line"), "no ley line pick for a character who can't read them")
+check(pickNamed("Class Trainer"), "but their class trainer is there")
+addon.Panel:Choose(trainers)
 IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
 WorldMapFrame._hooks.OnShow()
 addon.Panel:Query("")
-addon.Panel:Choose(headerIndex("relevant"))
-local leyline = pickNamed("Nearest Potential Ley Line")
-check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4, "a Skyborne is offered the nearest ley line, over every one we know")
+local leyline = pickNamed("Nearest Ley Line")
+check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4 and leyline.depth == 0,
+    "a Skyborne is offered the nearest ley line on top, over every one we know")
+check(not state.priced and leyline.eta == nil, "with no time, so opening the window searched no routes")
 IsPlayerSpell = function() return false end
 
--- A waypoint set on the map is the first personally relevant pick, and the accordion follows it being set or cleared.
+-- A waypoint set on the map is the first pick, on top, and the list follows it being set or cleared.
 C_Map.HasUserWaypoint = function() return true end
 C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.4, 0.3 end } } end
 addon.Panel:OnWaypointChanged()
-addon.Panel:Choose(headerIndex("relevant"))
 local way = pickNamed("Your Waypoint")
-check(way and way.dest and way.dest.mapID == 1453 and state.results[headerIndex("relevant") + 1] == way, "a waypoint is the first pick under Personally relevant")
-check(way.eta ~= nil, "and priced when the section is opened")
+check(way and way.dest and way.dest.mapID == 1453 and state.results[1] == way, "a waypoint is the very first row")
 C_Map.HasUserWaypoint = function() return false end
 addon.Panel:OnWaypointChanged()
-addon.Panel:Choose(headerIndex("relevant"))
 check(not pickNamed("Your Waypoint"), "clearing it removes the pick")
 C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+
+-- Picks are one line with no time; chosen, the route is one way or a round trip, as picked on the route itself.
+do
+    addon.Panel:Query("")
+    addon.Panel:Choose(headerIndex("trainers"))
+    local idx
+    for i, row in ipairs(state.results) do if row.name == "Class Trainer" then idx = i end end
+    local row = state.results[idx]
+    check(row and addon.Panel.Subtitle(row) == "" and addon.Panel.EtaText(row) == "", "a pick is one line, with no time")
+    addon.Options:Set("roundTrip", false)
+    addon.Panel:Choose(idx)
+    local w = addon.Panel.widgets
+    check(state.view == "route" and w.oneWay._shown and w.roundTrip._shown, "its route offers one way or a round trip")
+    check(w.oneWay:GetChecked() and not w.roundTrip:GetChecked() and state.plan and not state.plan.back, "one way to start with")
+    w.roundTrip._scripts.OnClick(w.roundTrip)
+    check(addon.Options:Get("roundTrip") and w.roundTrip:GetChecked() and not w.oneWay:GetChecked(), "ticking round trip swaps the choice")
+    check(state.plan and state.plan.back and state.planned and #state.planned.nodeIDs == 1 and state.planned.backBanned,
+        "and plans there and back, to one place, with the abilities each way leaves alone")
+    local planned = state.plan
+    w.roundTrip._scripts.OnClick(w.roundTrip)
+    check(w.roundTrip:GetChecked() and state.plan == planned, "ticking the chosen one again keeps it, without planning again")
+    w.oneWay._scripts.OnClick(w.oneWay)
+    check(not addon.Options:Get("roundTrip") and state.plan and not state.plan.back and state.planned == nil, "and back to one way")
+    addon.Panel:Query("")
+    check(not w.oneWay._shown and not w.roundTrip._shown, "the choice goes with the route")
+end
 
 -- Searching still works, and lists everything.
 addon.Panel:Query("storm")
@@ -763,9 +790,10 @@ CreateFrame = realCreateFrame
 check(addon.Panel.UpdateThemeLabel == nil, "the panel has no theme button to update")
 
 -- The settings page: registered with the game's Settings window, showing and changing the settings.
-local registeredFrame, openedID
+local registeredFrame, openedID, subParent, subFrame
 Settings = {
     RegisterCanvasLayoutCategory = function(frame, name) registeredFrame = frame; return { GetID = function() return 42 end } end,
+    RegisterCanvasLayoutSubcategory = function(parent, frame) subParent, subFrame = parent, frame end,
     RegisterAddOnCategory = function() end,
     OpenToCategory = function(id) openedID = id end,
 }
@@ -812,6 +840,20 @@ registeredFrame.OnDefault()
 check(Options:Get("loadingScreenTax") == 10 and Options:Get("scale") == 1 and Theme:Current().id == "moderndark", "the Defaults button restores everything")
 check(pw.tax.value._text == "10 s", "and the page shows it")
 check(addon.OptionsPanel:Open() and openedID == 42, "/mapzeroth settings opens the page")
+
+-- The "Picker" page, filed under ours: a checkbox per pick, ticked until turned off.
+do
+    check(subParent and subParent:GetID() == 42 and subFrame and subFrame.name == addon.L["OPT_PICKS_TITLE"],
+        "a Picker page is registered under Mapzeroth's")
+    local checks = {}
+    for _, c in ipairs(pw.picks) do checks[c.key] = c end
+    check(checks.waypoint and checks.class and checks.paste and checks.weapon, "it has a checkbox for the picks")
+    check(checks.class:GetChecked() and checks.class.tick._shown, "each starts ticked")
+    checks.class._scripts.OnClick(checks.class)
+    check(not Options:ShowsPick("class") and not checks.class.tick._shown, "clicking one turns that pick off")
+    subFrame.OnDefault()
+    check(Options:ShowsPick("class") and checks.class:GetChecked(), "and Defaults turns it back on")
+end
 
 -- Two on/off settings: the route on the map and on the minimap.
 check(pw.routeMap.button.label._text:find("On", 1, true) and pw.routeMinimap.button.label._text:find("On", 1, true), "both route settings show On by default")
@@ -916,4 +958,62 @@ do
     addon.Panel:Query("")
     check(not widgets.tip._shown, "and going back to the list hides it")
     IsAddOnLoaded = realIsLoaded
+end
+
+-- Tours from the panel (MultiRoute.lua): the last pick opens a box in the list to paste /way lines into, and Route plans the
+-- quickest way through them on the panel; with TomTom loaded and waypoints set, a pick routes through those.
+do
+    maps[1429] = maps[1429] or { name = "Elwynn Forest", mapType = 3, parentMapID = 1415 }
+    C_Map.GetBestMapForUnit = function() return 1429 end
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.42, 0.65 end } end
+    local state = addon.Panel:GetState()
+    local function pickRow(action)
+        addon.Panel:Refresh()
+        addon.Panel:Query("")
+        local function find()
+            for i, entry in ipairs(state.results) do if entry.action == action then return i end end
+        end
+        return find()
+    end
+
+    local paste = pickRow("paste")
+    check(paste and state.results[paste].name == addon.L["PICK_PASTE"], "the pick to paste coordinates is listed")
+    local box = addon.Panel.widgets
+    check(not box.paste._shown, "the paste box is closed until the pick is chosen")
+    addon.Panel:Choose(paste)
+    check(box.paste._shown, "choosing it opens the box in the list, under the pick")
+    local spacers = 0
+    for i = paste + 1, #state.results do if state.results[i].spacer then spacers = spacers + 1 else break end end
+    check(spacers > 0 and state.results[paste + spacers + 1] and not state.results[paste + spacers + 1].spacer,
+        "the box takes rows of its own, and the rest of the list follows it")
+    addon.Panel:Choose(paste)
+    check(not box.paste._shown, "choosing the pick again closes it")
+    addon.Panel:Choose(paste)
+
+    addon.Panel:RoutePasted("nothing to see here")
+    check(box.paste._shown and box.pasteStatus:GetText() == addon.L["PASTE_NONE"], "text with no coordinates says so and the box stays open")
+
+    addon.Panel:RoutePasted("/way #1429 41.7 65.6 Goldshire Inn\n/way Elwynn Forest 24.2 74.0 Westbrook\n/way 84 69 Eastvale\nnot a line")
+    check(not box.paste._shown and state.view == "route", "Route plans the tour on the panel")
+    check(state.entry and state.entry.stops and #state.entry.stops == 3, "and the tour's three stops are on the panel (a zone's name and the player's own map read too)")
+    check(state.plan and state.plan.legs and #state.plan.legs + #state.plan.dropped == 3, "planned, every stop a leg or named as unreachable")
+    check(addon.Panel.widgets.routeTotal._text:find(addon.L["ROUTE_TOUR_TOTAL"]:format(#state.plan.legs, ""):sub(1, 6), 1, true),
+        "the total counts the stops: " .. tostring(addon.Panel.widgets.routeTotal._text))
+    check(addon.Panel.widgets.routeHint._text:find(addon.L["ROUTE_TOUR_UNREAD"]:format(1), 1, true), "and the unreadable line is mentioned: " .. tostring(addon.Panel.widgets.routeHint._text))
+    addon.Panel:Query("")
+    check(not box.paste._shown, "back on the list, the box is closed again")
+
+    -- TomTom: no pick without waypoints, one with them.
+    TomTom = { waypoints = {} }
+    check(not pickRow("tomtom"), "TomTom with no waypoints has no pick")
+    TomTom = { waypoints = { [1429] = {
+        a = { 1429, 0.417, 0.656, title = "Goldshire Inn" },
+        b = { 1429, 0.84, 0.69, title = "Eastvale" },
+    } } }
+    local tomtom = pickRow("tomtom")
+    check(tomtom and state.results[tomtom].name == addon.L["PICK_TOMTOM"]:format(2), "with two waypoints, a pick for them")
+    addon.Panel:Choose(tomtom)
+    check(state.plan and state.plan.legs and #state.plan.legs == 2 and state.entry.name == addon.L["TOUR_TOMTOM"],
+        "choosing it plans the way through both")
+    TomTom = nil
 end

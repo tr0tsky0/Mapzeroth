@@ -18,11 +18,21 @@ local definitions = {
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
     assumeFlightsFound = { default = true, boolean = true },              -- a flight point Mapzeroth hasn't seen a flight master's window about counts as found (FlightKnowledge.lua)
-    docked = { default = true, boolean = true },
+    docked = { default = true, boolean = true },                          -- the panel: docked beside the map, or free-floating (UI/Panel.lua)
     hideSllcmHint = { default = false, boolean = true },                  -- the picker's pointer to Skyborne Ley Line & Convergence Marker, dismissed (UI/Panel.lua)
     hideMinimapButton = { default = false, boolean = true },              -- the button on the minimap rim (UI/MinimapButton.lua)
-    stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)                          -- the panel: docked beside the map, or free-floating (UI/Panel.lua)
+    roundTrip = { default = false, boolean = true },                      -- routes are there and back to here (UI/Panel.lua's choice on a route)
+    stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
 }
+
+-- "showPick_<key>": whether the picker offers that pick (a top pick or one of the trainers) (Sections.lua names the
+-- keys; the profession ones depend on the dataset, so they aren't listed above). All shown until turned off.
+local PICK_PREFIX = "showPick_"
+local pickDefinition = { default = true, boolean = true }
+
+local function definition(key)
+    return definitions[key] or (type(key) == "string" and key:sub(1, #PICK_PREFIX) == PICK_PREFIX and pickDefinition) or nil
+end
 
 local listeners = {}
 
@@ -39,12 +49,22 @@ local function store(create)
 end
 
 function Options:Default(key)
-    return definitions[key] and definitions[key].default
+    local d = definition(key)
+    return d and d.default
+end
+
+-- Whether the picker pick named `key` (Sections.lua) is shown.
+function Options:ShowsPick(key)
+    return self:Get(PICK_PREFIX .. key) ~= false
+end
+
+function Options:SetShowsPick(key, shown)
+    return self:Set(PICK_PREFIX .. key, shown)
 end
 
 -- min, max, step of a numeric setting.
 function Options:Range(key)
-    local d = definitions[key]
+    local d = definition(key)
     return d and d.min, d and d.max, d and d.step
 end
 
@@ -57,7 +77,7 @@ end
 
 -- A value forced into a setting's limits, and to a whole number of steps for numbers.
 local function clean(key, value)
-    local d = definitions[key]
+    local d = definition(key)
     if not d then return nil end
     if d.boolean then return value and true or false end
     if d.min then
@@ -89,6 +109,11 @@ end
 
 function Options:Reset()
     for key, d in pairs(definitions) do self:Set(key, d.default) end
+    local picks = {}
+    for key in pairs(store(false) or {}) do
+        if definition(key) == pickDefinition then picks[#picks + 1] = key end
+    end
+    for _, key in ipairs(picks) do self:Set(key, true) end
 end
 
 -- fn(key, value) runs after any setting changes.

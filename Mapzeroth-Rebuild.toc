@@ -89,6 +89,7 @@ Destinations.lua
 Sections.lua
 Location.lua
 Journey.lua
+MultiRoute.lua
 Navigation.lua
 MapRoute.lua
 

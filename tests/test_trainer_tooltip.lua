@@ -95,12 +95,27 @@ check(has(lines, L["TIP_CLASS_NEXT"]:format(addon.ClassTraining:Status(makeCtx({
 lines = addon.Panel.TooltipLines(entryFor(mage), makeCtx({ class = "MAGE", level = 1, spells = { 133, 168 } }))
 check(lines and #lines >= 2, "a tooltip at level 1 too")
 
--- The "Nearest Class Trainer" pick needs no route to say this; a profession pick describes the nearest one.
-lines = addon.Panel.TooltipLines({ name = "Nearest Class Trainer", group = "trainer", pick = true, nodeIDs = { mage.id } },
+-- Picks have no place chosen: the "Class Trainer" pick needs none to say this; a profession pick gives the player's rank,
+-- and the weapon master pick every weapon one of them can teach.
+lines = addon.Panel.TooltipLines({ name = "Class Trainer", group = "trainer", pick = true, nodeIDs = { mage.id } },
     makeCtx({ class = "MAGE", level = 4 }))
 check(has(lines, "Spell 116"), "the class pick has the tooltip before pricing")
-check(addon.Panel.TooltipLines({ name = "Nearest", group = "trainer", pick = true, nodeIDs = { master.id } },
-    makeCtx({ spells = { 3908 } })) == nil, "a profession pick with no nearest yet has none")
+lines = addon.Panel.TooltipLines({ name = "Tailoring Trainer", group = "trainer", pick = true, nodeIDs = { master.id } },
+    makeCtx({ spells = { 3908 } }))
+check(lines and lines[1][1] == "Tailoring Trainer" and #lines == 2 and lines[2][1] == L["TIP_PROF_YOUR_RANK"]:format(L["PROF_RANK_1"]),
+    "a profession pick says the player's rank")
+do
+    local masters = {}
+    for _, node in ipairs(addon.Nodes.Pois) do
+        if node.trainer == "WEAPON" and (node.city == "stormwind" or node.city == "ironforge" or node.city == "darnassus") then
+            masters[#masters + 1] = node.id
+        end
+    end
+    lines = addon.Panel.TooltipLines({ name = "Weapon Trainer", group = "trainer", pick = true, nodeIDs = masters },
+        makeCtx({ class = "MAGE", faction = "Alliance" }))
+    check(#masters >= 2 and lines and has(lines, L["TIP_WEAPON_LEARN_ANY"]) and #lines >= 3,
+        "a weapon master pick lists what they can teach between them: " .. tostring(lines and #lines))
+end
 lines = addon.Panel.TooltipLines({ name = "Nearest", group = "trainer", pick = true, nodeIDs = { master.id },
     nearest = master.id, where = "Stormwind Tailoring" }, makeCtx({ spells = { 3908, 3909 } }))
 check(lines and lines[1][1] == "Stormwind Tailoring", "a priced pick is titled with the place it goes to")
@@ -116,6 +131,16 @@ local orgWeapons = findNode(function(n) return n.trainer == "WEAPON" and n.city 
 lines = addon.Panel.TooltipLines(entryFor(orgWeapons), makeCtx({ class = "MAGE", faction = "Alliance" }))
 check(has(lines, L["TIP_OTHER_FACTION"]:format("Horde")) and not has(lines, L["TIP_WEAPON_LEARN"]), "and at the Horde's weapon masters")
 FACTION_HORDE = nil
+
+-- A ley line or convergence says it's only where one can be; a tour says what it does.
+lines = addon.Panel.TooltipLines({ name = L["PICK_LEYLINE"], group = "leyline", pick = true, nodeIDs = { "A", "B" } }, makeCtx())
+check(lines and lines[1][1] == L["PICK_LEYLINE"] and has(lines, L["TIP_LEYLINE"]), "a ley line pick: only a potential one")
+lines = addon.Panel.TooltipLines({ name = L["PICK_CONVERGENCE"], group = "convergence", pick = true, nodeIDs = { "A", "B" } }, makeCtx())
+check(has(lines, L["TIP_CONVERGENCE"]), "and a convergence pick")
+lines = addon.Panel.TooltipLines({ name = L["PICK_PASTE"], group = "waypoint", pick = true, action = "paste" }, makeCtx())
+check(lines and has(lines, L["TIP_TOUR_PASTE"]), "pasting coordinates explains itself")
+lines = addon.Panel.TooltipLines({ name = "Your TomTom waypoints (3)", group = "waypoint", pick = true, action = "tomtom" }, makeCtx())
+check(lines and lines[1][1] == "Your TomTom waypoints (3)" and has(lines, L["TIP_TOUR_TOMTOM"]), "and so do TomTom's waypoints")
 
 -- Not a trainer: no tooltip.
 check(addon.Panel.TooltipLines({ name = "Goldshire", group = "place", nodeID = "TOWN_GOLDSHIRE" }, makeCtx()) == nil, "places have none")

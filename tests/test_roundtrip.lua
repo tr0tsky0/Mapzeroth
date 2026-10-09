@@ -1,4 +1,4 @@
--- Round trips for the picker's "Nearest ..." picks: there and back, with a cooldown ability spent by one leg unavailable
+-- Round trips (a route's "Round Trip" choice): there and back, with a cooldown ability spent by one leg unavailable
 -- to the other.
 addon.World:Build()
 useTestDistances()
@@ -65,19 +65,19 @@ check(pathCost(stormwindDruid, session.returnID, { [HEARTH] = true }) >= pathCos
 local nowhere = J:RoundTrip(J:Build(druid, westfall), { "NOT_A_NODE" })
 check(nowhere == nil, "an unknown place has no round trip")
 
--- A pick lists its round trip as well when that goes somewhere other than the nearest place and beats the nearest's own.
-local nearestStub, tripStub = J.Nearest, J.RoundTrip
-local function priced(nearestID, bestTrip, ownTrip, nodeIDs)
-    J.Nearest = function() return nearestID, 10 end
-    J.RoundTrip = function(_, _, ids) if #ids == 1 then return ownTrip end return bestTrip end
-    local item = { name = "Nearest Thing", pick = true, nodeIDs = nodeIDs or { "A", "B" } }
-    addon.Sections:Price({ index = { A = { name = "Aville" }, B = { name = "Bville" } }, { id = "relevant", items = { item } } }, {})
-    return item
+-- Planning a round trip to an entry: its quickest place there and back, and the entry that is followed (that one place,
+-- and the abilities each way leaves alone, so Navigation can plan it again part way).
+do
+    local entry = { name = "Druid Trainer", pick = true, group = "trainer", nodeIDs = { stormwindDruid } }
+    local plan, followed = J:PlanRoundTrip(J:Build(druid, westfall), entry)
+    check(plan and plan.back and plan.back.cost > 0, "a round-trip plan has its way back")
+    check(followed and followed ~= entry and followed.nodeIDs[1] == stormwindDruid and #followed.nodeIDs == 1,
+        "and the entry followed is the one place it goes to")
+    check(followed.banned and followed.backBanned and followed.name == entry.name, "with each way's abilities, under the same name")
+    check(entry.banned == nil, "the entry chosen is left as it was")
+    local again = J:PlanEntry(J:Build(druid, westfall), followed)
+    check(again and again.back and math.abs(again.cost + again.back.cost - (plan.cost + plan.back.cost)) < 1e-6,
+        "planning the followed entry again gives the same trip")
+    check(J:PlanRoundTrip(J:Build(druid, westfall), { name = "Nowhere", nodeIDs = { "NOT_A_NODE" } }) == nil,
+        "no way there and back is no plan")
 end
-local item = priced("A", { nodeID = "B", out = 60, back = 40, total = 100 }, { total = 300 })
-check(item.roundTrip and item.roundTrip.nearest == "B" and item.roundTrip.where == "Bville" and item.roundTrip.eta == 100, "a quicker round trip elsewhere is listed")
-check(priced("A", { nodeID = "A", out = 10, back = 10, total = 20 }, { total = 20 }).roundTrip == nil, "the same place both ways is one row")
-check(priced("A", { nodeID = "B", out = 60, back = 40, total = 100 }, { total = 100.5 }).roundTrip == nil, "a tie isn't worth a second row")
-check(priced("A", { nodeID = "B", out = 60, back = 40, total = 100 }, nil).roundTrip, "the nearest having no way back gives the other")
-check(priced("A", { nodeID = "B", out = 60, back = 40, total = 100 }, { total = 300 }, { "A" }).roundTrip == nil, "a pick with one place has no choice to show")
-J.Nearest, J.RoundTrip = nearestStub, tripStub
