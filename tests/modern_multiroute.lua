@@ -185,11 +185,11 @@ do
         local legs = J:Legs(plan)
         check(legs == plan.legs, "a tour's legs are its own")
         local model = N:Update({ mapID = orgrimmar.mapID, x = orgrimmar.x, y = orgrimmar.y, now = 0, facing = 0 })
-        check(model and model.destination == ("%s (1 of 12)"):format(plan.legs[1].name), "the navigator heads for stop 1: " .. tostring(model and model.destination))
+        check(model and model.destination == plan.legs[1].name, "the navigator heads for stop 1: " .. tostring(model and model.destination))
         N:Stop()
 
         -- Planned again from somewhere else part way (a flight went astray): the rest of the order is kept.
-        local rest = { name = entry.name, tourSize = 12, stops = {}, keep = {} }
+        local rest = { name = entry.name, stops = {}, keep = {} }
         for i = 5, 12 do
             rest.stops[#rest.stops + 1] = plan.legs[i].stop
             if i > 5 then rest.keep[#rest.keep + 1] = plan.legs[i] end
@@ -283,4 +283,22 @@ do
     check(not once[193753], "Dreamwalk isn't used up by one leg")
     check(once[6948] and once[1254400], "the hearthstone and Path of the Windrunners are")
     check(once[184504], "and so is a consumable (the Oribos portal, 5 min), short cooldown or not")
+end
+
+-- An ability with a choice of landings says which to pick: "Cast Mole Machine to Aerie Peak", not just "Cast Mole Machine".
+do
+    local realSpell = C_Spell
+    C_Spell = { GetSpellInfo = function(id) if id == 265225 then return { name = "Mole Machine" } end end }
+    local mole = makeCtx({ faction = "Alliance", race = "DarkIronDwarf", spells = { 265225 } })
+    local session = J:Build(mole, orgrimmar, nil)
+    local plan = J:Plan(session, "AERIE_PEAK_MOLE")
+    local first = plan and plan.steps[1]
+    check(first and first.source and first.source.toList and first.text == addon.L["STEP_CAST_TO"]:format("Mole Machine", first.name),
+        "the step names the landing: " .. tostring(first and first.text))
+    -- One with a single landing still reads as before.
+    C_Spell = { GetSpellInfo = function(id) if id == 1254400 then return { name = "Path of the Windrunners" } end end }
+    local runner = makeCtx({ faction = "Alliance", spells = { 1254400 } })
+    local own = J:Plan(J:Build(runner, orgrimmar, nil), "INSTANCE_WINDRUNNER_SPIRE")
+    check(own and own.steps[1].text == addon.L["STEP_CAST"]:format("Path of the Windrunners"), "a single landing doesn't: " .. tostring(own and own.steps[1].text))
+    C_Spell = realSpell
 end

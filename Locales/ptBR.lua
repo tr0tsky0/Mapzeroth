@@ -64,7 +64,6 @@ addon:RegisterLocale("ptBR", {
     ROUTE_TOUR_DROPPED = "Sem rota para: %s",
     ROUTE_PLANNING    = "Planejando a rota...",
     ROUTE_STOP_UNNAMED = "Parada %d",
-    NAV_STOP_OF       = "%s (%d de %d)",
     PLACE_START       = "o ponto de partida",
     PLACE_CAMP        = "seu acampamento",
     PLACE_CAMP_IN     = "seu acampamento em %s",
@@ -221,6 +220,8 @@ addon:RegisterLocale("ptBR", {
     STEP_EQUIP_ITEM = "Equipe %s",
     STEP_PORTAL_TO = "Pegue o portal para %s",
     STEP_USE_ITEM = "Use %s",
+    STEP_CAST_TO     = "Lançar %s para %s",
+    STEP_USE_ITEM_TO = "Usar %s para ir a %s",
     KIND_dungeon = "Masmorra",
     KIND_raid = "Raide",
 })

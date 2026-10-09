@@ -318,15 +318,13 @@ local function lookAheadEnd()
     return #active.steps
 end
 
--- What the navigator's title says: where the trip goes, or for a tour the stop this leg goes to ("Zunta (3 of 12)").
+-- What the navigator's title says: where the trip goes, or for a tour the stop this leg goes to (the step count beside
+-- it already says how far along the trip is).
 destinationName = function()
     local entry = active.entry
     if active.legs and entry and entry.stops then
-        local k = active.legOf[active.index] or #active.legs
-        local leg = active.legs[k]
-        local number = leg.stop and leg.stop.number or k
-        local total = entry.tourSize or #active.legs
-        return addon.L["NAV_STOP_OF"]:format(leg.name or "", number, total)
+        local leg = active.legs[active.legOf[active.index] or #active.legs]
+        return leg.name
     end
     return entry and entry.name
 end
@@ -336,7 +334,7 @@ end
 local function restOfTour()
     local entry = active.entry
     local k = active.legOf[active.index] or #active.legs
-    local rest = { name = entry.name, tourSize = entry.tourSize or #active.legs, stops = {}, keep = {} }
+    local rest = { name = entry.name, stops = {}, keep = {} }
     for i = k, #active.legs do
         local leg = active.legs[i]
         rest.stops[#rest.stops + 1] = leg.stop

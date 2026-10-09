@@ -65,7 +65,6 @@ local strings = {
     ROUTE_TOUR_DROPPED = "Sin ruta a: %s",
     ROUTE_PLANNING    = "Planificando la ruta...",
     ROUTE_STOP_UNNAMED = "Parada %d",
-    NAV_STOP_OF       = "%s (%d de %d)",
     PLACE_START       = "el punto de partida",
     PLACE_CAMP        = "tu campamento",
     PLACE_CAMP_IN     = "tu campamento en %s",
@@ -222,6 +221,8 @@ local strings = {
     STEP_EQUIP_ITEM = "Equipa %s",
     STEP_PORTAL_TO = "Toma el portal a %s",
     STEP_USE_ITEM = "Usa %s",
+    STEP_CAST_TO     = "Lanzar %s a %s",
+    STEP_USE_ITEM_TO = "Usar %s para ir a %s",
     KIND_dungeon = "Mazmorra",
     KIND_raid = "Banda",
 }

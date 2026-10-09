@@ -64,7 +64,6 @@ addon:RegisterLocale("zhTW", {
     ROUTE_TOUR_DROPPED = "無法到達：%s",
     ROUTE_PLANNING    = "正在規劃路線...",
     ROUTE_STOP_UNNAMED = "站點%d",
-    NAV_STOP_OF       = "%s（%d/%d）",
     PLACE_START       = "出發地",
     PLACE_CAMP        = "你的營地",
     PLACE_CAMP_IN     = "你在%s的營地",
@@ -221,6 +220,8 @@ addon:RegisterLocale("zhTW", {
     STEP_EQUIP_ITEM = "裝備%s",
     STEP_PORTAL_TO = "透過傳送門前往%s",
     STEP_USE_ITEM = "使用%s",
+    STEP_CAST_TO     = "施放%s，前往%s",
+    STEP_USE_ITEM_TO = "使用%s，前往%s",
     KIND_dungeon = "地城",
     KIND_raid = "團隊副本",
 })

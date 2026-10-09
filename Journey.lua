@@ -237,6 +237,10 @@ local function stepText(method, name, via, source)
     if addon:Method(method).ability then
         local label, kind = abilityName(source)
         if label and label ~= "" then
+            -- One with a choice of landings (Mole Machine, the wormhole generators) says which to pick.
+            if type(source) == "table" and source.toList and name then
+                return L[kind == "item" and "STEP_USE_ITEM_TO" or "STEP_CAST_TO"]:format(label, name)
+            end
             return L[kind == "item" and "STEP_USE_ITEM" or "STEP_CAST"]:format(label)
         end
     end

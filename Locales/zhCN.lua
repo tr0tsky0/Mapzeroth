@@ -64,7 +64,6 @@ addon:RegisterLocale("zhCN", {
     ROUTE_TOUR_DROPPED = "无法到达：%s",
     ROUTE_PLANNING    = "正在规划路线...",
     ROUTE_STOP_UNNAMED = "站点%d",
-    NAV_STOP_OF       = "%s（%d/%d）",
     PLACE_START       = "出发地",
     PLACE_CAMP        = "你的营地",
     PLACE_CAMP_IN     = "你在%s的营地",
@@ -221,6 +220,8 @@ addon:RegisterLocale("zhCN", {
     STEP_EQUIP_ITEM = "装备%s",
     STEP_PORTAL_TO = "通过传送门前往%s",
     STEP_USE_ITEM = "使用%s",
+    STEP_CAST_TO     = "施放%s，前往%s",
+    STEP_USE_ITEM_TO = "使用%s，前往%s",
     KIND_dungeon = "地下城",
     KIND_raid = "团队副本",
 })

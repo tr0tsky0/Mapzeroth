@@ -65,7 +65,6 @@ addon:RegisterLocale("koKR", {
     ROUTE_TOUR_DROPPED = "경로 없음: %s",
     ROUTE_PLANNING    = "경로 계산 중...",
     ROUTE_STOP_UNNAMED = "경유지 %d",
-    NAV_STOP_OF       = "%s (%d/%d)",
     PLACE_START       = "출발한 곳",
     PLACE_CAMP        = "야영지",
     PLACE_CAMP_IN     = "%s의 야영지",
@@ -222,6 +221,8 @@ addon:RegisterLocale("koKR", {
     STEP_EQUIP_ITEM = "착용: %s",
     STEP_PORTAL_TO = "차원문 이동: %s",
     STEP_USE_ITEM = "사용: %s",
+    STEP_CAST_TO     = "%s 시전: %s(으)로",
+    STEP_USE_ITEM_TO = "%s 사용: %s(으)로",
     KIND_dungeon = "던전",
     KIND_raid = "공격대",
 })

@@ -65,7 +65,6 @@ addon:RegisterLocale("itIT", {
     ROUTE_TOUR_DROPPED = "Nessun percorso per: %s",
     ROUTE_PLANNING    = "Pianificazione del percorso...",
     ROUTE_STOP_UNNAMED = "Tappa %d",
-    NAV_STOP_OF       = "%s (%d di %d)",
     PLACE_START       = "il punto di partenza",
     PLACE_CAMP        = "il tuo accampamento",
     PLACE_CAMP_IN     = "il tuo accampamento in %s",
@@ -222,6 +221,8 @@ addon:RegisterLocale("itIT", {
     STEP_EQUIP_ITEM = "Equipaggia %s",
     STEP_PORTAL_TO = "Prendi il portale per %s",
     STEP_USE_ITEM = "Usa %s",
+    STEP_CAST_TO     = "Lancia %s verso %s",
+    STEP_USE_ITEM_TO = "Usa %s per andare a %s",
     KIND_dungeon = "Spedizione",
     KIND_raid = "Incursione",
 })

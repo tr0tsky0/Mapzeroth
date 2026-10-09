@@ -66,7 +66,6 @@ addon:RegisterLocale("ruRU", {
     ROUTE_TOUR_DROPPED = "Нет маршрута до: %s",
     ROUTE_PLANNING    = "Прокладка маршрута...",
     ROUTE_STOP_UNNAMED = "Остановка %d",
-    NAV_STOP_OF       = "%s (%d из %d)",
     PLACE_START       = "место старта",
     PLACE_CAMP        = "ваш лагерь",
     PLACE_CAMP_IN     = "ваш лагерь: %s",
@@ -223,6 +222,8 @@ addon:RegisterLocale("ruRU", {
     STEP_EQUIP_ITEM = "Надеть: %s",
     STEP_PORTAL_TO = "Портал: %s",
     STEP_USE_ITEM = "Используйте: %s",
+    STEP_CAST_TO     = "Применить %s: %s",
+    STEP_USE_ITEM_TO = "Использовать %s: %s",
     KIND_dungeon = "Подземелье",
     KIND_raid = "Рейд",
 })

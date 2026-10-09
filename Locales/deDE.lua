@@ -66,7 +66,6 @@ addon:RegisterLocale("deDE", {
     ROUTE_TOUR_DROPPED = "Keine Route zu: %s",
     ROUTE_PLANNING    = "Route wird geplant...",
     ROUTE_STOP_UNNAMED = "Station %d",
-    NAV_STOP_OF       = "%s (%d von %d)",
     PLACE_START       = "dem Ausgangspunkt",
     PLACE_CAMP        = "dein Lager",
     PLACE_CAMP_IN     = "dein Lager in %s",
@@ -223,6 +222,8 @@ addon:RegisterLocale("deDE", {
     STEP_EQUIP_ITEM = "Rüstet aus: %s",
     STEP_PORTAL_TO = "Nehmt das Portal nach: %s",
     STEP_USE_ITEM = "Benutzt: %s",
+    STEP_CAST_TO     = "%s wirken: nach %s",
+    STEP_USE_ITEM_TO = "%s benutzen: nach %s",
     KIND_dungeon = "Dungeon",
     KIND_raid = "Schlachtzug",
 })
