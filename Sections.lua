@@ -228,6 +228,8 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
         if #items > 0 then sections[#sections + 1] = { id = id, title = title, items = items } end
     end
     add("trainers", L["SECTION_TRAINERS"], picks)
+    local routes = Sections:Routes()
+    if routes then sections[#sections + 1] = routes end
     if byExpansion then
         modernSections(entries, add, sections)
     else
@@ -242,6 +244,18 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
         end
     end
     return sections
+end
+
+-- The player's saved routes (MultiRoute:SavedRoutes) as a section, or nil when there are none: one line each, no time
+-- (a tour is planned when chosen).
+function Sections:Routes()
+    local items = {}
+    for _, route in ipairs(addon.MultiRoute:SavedRoutes()) do
+        items[#items + 1] = { name = route.name, group = "waypoint", action = "route", routeID = route.id,
+                              sub = L["TOUR_STOPS"]:format(#addon.MultiRoute:RoutePoints(route)) }
+    end
+    if #items == 0 then return nil end
+    return { id = "routes", title = L["SECTION_ROUTES"], items = items, untimed = true }
 end
 
 -- Whether opening the section `id` needs times: it (or a section inside it) holds places, not just picks, and isn't

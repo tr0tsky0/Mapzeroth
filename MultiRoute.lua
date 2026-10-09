@@ -497,5 +497,81 @@ function MultiRoute:Entry(name, points)
             stops[#stops + 1] = { name = label, place = place }
         end
     end
-    return { name = name, stops = stops, unplaced = unplaced }, unplaced
+    return { name = name, stops = stops, unplaced = unplaced, points = points }, unplaced
+end
+
+-- ---------------------------------------------------------------------------------------
+-- Saved routes: the player's own tours, kept for every character (MapzerothRebuildDB.routes), offered in the picker and
+-- edited in the panel. Each is { id, name, way }: its stops as /way lines, each naming its map, so they read the same
+-- whichever map the player is on. A flavour's starters (addon.SampleRoutes, Data/<flavour>/Tours.lua) are added the
+-- first time, once: deleting one keeps it deleted.
+
+local function db()
+    MapzerothRebuildDB = MapzerothRebuildDB or {}
+    local saved = MapzerothRebuildDB
+    if not saved.routes then
+        saved.routes, saved.nextRouteID = {}, 1
+    end
+    if not saved.routesSeeded then
+        saved.routesSeeded = true
+        for _, sample in ipairs(addon.SampleRoutes or {}) do
+            saved.routes[#saved.routes + 1] = { id = saved.nextRouteID, name = sample.name, way = sample.way }
+            saved.nextRouteID = saved.nextRouteID + 1
+        end
+    end
+    return saved
+end
+
+-- The saved routes, in the order they were made.
+function MultiRoute:SavedRoutes()
+    return db().routes
+end
+
+function MultiRoute:FindRoute(id)
+    for _, route in ipairs(db().routes) do
+        if route.id == id then return route end
+    end
+end
+
+-- Saves a route (a new one when id is nil) and returns its id.
+function MultiRoute:SaveRoute(id, name, way)
+    local saved = db()
+    local route = id and self:FindRoute(id)
+    if not route then
+        route = { id = saved.nextRouteID }
+        saved.nextRouteID = saved.nextRouteID + 1
+        saved.routes[#saved.routes + 1] = route
+    end
+    route.name, route.way = name, way
+    return route.id
+end
+
+function MultiRoute:DeleteRoute(id)
+    local routes = db().routes
+    for i, route in ipairs(routes) do
+        if route.id == id then
+            table.remove(routes, i)
+            return true
+        end
+    end
+    return false
+end
+
+-- A saved route's stops as points ({ mapID, x, y, name }), read from its /way lines.
+function MultiRoute:RoutePoints(route)
+    return (MultiRoute.ParseWay(route.way))
+end
+
+-- Points as /way lines, each with its map: what a route is saved as.
+function MultiRoute.WayText(points)
+    local lines = {}
+    local function coordinate(v)
+        return (("%.2f"):format(v * 100):gsub("0+$", ""):gsub("%.$", ""))
+    end
+    for _, point in ipairs(points) do
+        local line = ("/way #%d %s %s"):format(point.mapID, coordinate(point.x), coordinate(point.y))
+        if point.name and point.name ~= "" then line = line .. " " .. point.name end
+        lines[#lines + 1] = line
+    end
+    return table.concat(lines, "\n")
 end

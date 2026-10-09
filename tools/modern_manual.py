@@ -250,6 +250,25 @@ MPLUS_SEASON_EDGES = [
 NODES += MPLUS_SEASON_NODES
 EDGES += MPLUS_SEASON_EDGES
 
+# The pet battle portals to Stratholme (Dalaran, Dazar'alor, Boralus) land by Stratholme's Eastwall gate, not at the
+# dungeon's main entrance where the old data had them (captured in game 2026-10-09). STRATHOLME_DUNGEON stays the
+# main entrance; the portals land here instead (DROP_EDGES has the old landings).
+PET_PORTAL_NODES = [
+    {"id": "PET_PORTAL_ARRIVAL_STRATHOLME", "out": "Nodes_EK.lua", "container": "ek_overworld.map23", "mapID": 23,
+     "x": 0.4320, "y": 0.1998, "area": 2275,
+     "note": "Eastern Plaguelands: where the pet battle portals to Stratholme land, by the Eastwall gate"},
+]
+PET_PORTAL_EDGES = [
+    {"from": "DALARAN_BROKEN_ISLES_PET", "to": "PET_PORTAL_ARRIVAL_STRATHOLME", "method": "portal", "cost": 0,
+     "oneway": True, "requirements": {"quest": 56491}},
+    {"from": "DAZARALOR_PET", "to": "PET_PORTAL_ARRIVAL_STRATHOLME", "method": "portal", "cost": 0,
+     "oneway": True, "requirements": {"quest": 56491, "faction": "Horde"}},
+    {"from": "BORALUS_PET", "to": "PET_PORTAL_ARRIVAL_STRATHOLME", "method": "portal", "cost": 0,
+     "oneway": True, "requirements": {"quest": 56491, "faction": "Alliance"}},
+]
+NODES += PET_PORTAL_NODES
+EDGES += PET_PORTAL_EDGES
+
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
 # replaces it (left in, it would undercut the real route).
 DROP_EDGES = [
@@ -268,6 +287,10 @@ DROP_EDGES = [
     {"from": "TAXI_213", "to": "LIGHTS_HOPE_CHAPEL", "method": "taxi"},
     # Shattrath's portal to the Isle of Quel'Danas leaves from the portal itself (PORTAL_SHATTRATH_QUELDANAS, below).
     {"from": "SHATTRATH_OUTLANDS", "to": "QUELDANAS", "method": "portal"},
+    # The pet battle portals land by Stratholme's Eastwall gate (PET_PORTAL_ARRIVAL_STRATHOLME), not at its main entrance.
+    {"from": "DALARAN_BROKEN_ISLES_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
+    {"from": "DAZARALOR_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
+    {"from": "BORALUS_PET", "to": "STRATHOLME_DUNGEON", "method": "portal"},
 ]
 
 # Seconds an equip step takes, per item (see above). The rest of the equippable teleport items can be used at once

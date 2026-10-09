@@ -251,4 +251,5 @@ addon.Nodes.EK = {
     { id = "SILVERMOON_PORTAL_ROOM_ENTRANCE", container = "ek_overworld.map2393", mapID = 2393, x = 0.5323, y = 0.6611, city = "silvermoon" }, -- Silvermoon: the portal room's door, street side (hand-added: tools/modern_manual.py)
     { id = "SILVERMOON_PORTAL_ROOM_EXIT", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5316, y = 0.6604, city = "silvermoon" }, -- Silvermoon: the portal room's door, room side (hand-added: tools/modern_manual.py)
     { id = "PORTAL_SILVERMOON_TIMEWAYS", container = "ek_overworld.map2393", mapID = 2393, x = 0.4218, y = 0.5827, city = "silvermoon" }, -- Silvermoon: the portal to the Timeways, and where the way back lands (hand-added: tools/modern_manual.py)
+    { id = "PET_PORTAL_ARRIVAL_STRATHOLME", container = "ek_overworld.map23", mapID = 23, x = 0.4320, y = 0.1998, area = 2275 }, -- Eastern Plaguelands: where the pet battle portals to Stratholme land, by the Eastwall gate (hand-added: tools/modern_manual.py)
 }

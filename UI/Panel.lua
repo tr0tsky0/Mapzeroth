@@ -142,6 +142,14 @@ local function build(parent)
         row:SetScript("OnClick", function(self) Panel:Choose(self.index) end)
         row:HookScript("OnEnter", function(self) Panel:ShowRowTooltip(self) end)
         row:HookScript("OnLeave", function(self) Theme:HideTooltip(self) end)
+        -- A saved route's pen, at the row's right: its editor, without planning it first.
+        row.editRoute = Theme:IconButton(row, 20, "edit", L["ROUTE_EDIT"])
+        row.editRoute:SetPoint("RIGHT", -8, 0)
+        row.editRoute:SetScript("OnClick", function()
+            local entry = row.index and state.results[row.index]
+            if entry and entry.routeID then Panel:OpenEditor(entry.routeID) end
+        end)
+        row.editRoute:Hide()
         ui.rows[i] = row
     end
 
@@ -183,6 +191,55 @@ local function build(parent)
     ui.roundTrip:SetPoint("TOPRIGHT", -PAD, -LIST_TOP)
     ui.oneWay = Theme:Checkbox(frame, L["ROUTE_ONE_WAY"], function() Panel:SetRoundTrip(false) end)
     ui.oneWay:SetPoint("TOPRIGHT", ui.roundTrip, "TOPLEFT", -12, 0)
+
+    -- A tour's own button, where the trip choice is for other routes (a tour has none): Edit for a saved route, Save
+    -- for one pasted or from TomTom.
+    ui.routeEdit = Theme:Button(frame, L["ROUTE_EDIT"], 70, 22)
+    ui.routeEdit:SetPoint("TOPRIGHT", -PAD, -LIST_TOP)
+    ui.routeEdit:SetScript("OnClick", function() Panel:OpenEditor() end)
+    ui.routeEdit:Hide()
+
+    -- The route editor (Panel:OpenEditor): a saved route's name and its stops as /way lines.
+    local editorHeight = HEIGHT - LIST_TOP - PAD
+    ui.editor = CreateFrame("Frame", nil, frame)
+    ui.editor:SetSize(INNER, editorHeight)
+    ui.editor:SetPoint("TOPLEFT", PAD, -LIST_TOP)
+    ui.editor:Hide()
+    ui.editTitle = Theme:Text(ui.editor, "title")
+    ui.editTitle:SetPoint("TOPLEFT", 0, 0)
+    ui.editName = Theme:EditBox(ui.editor, INNER, 28)
+    ui.editName:SetPoint("TOPLEFT", 0, -28)
+    ui.editNameHint = Theme:Text(ui.editName, "dim")
+    ui.editNameHint:SetPoint("LEFT", 10, 0)
+    ui.editNameHint:SetText(L["EDIT_NAME_HINT"])
+    ui.editName:SetScript("OnTextChanged", function(self) ui.editNameHint:SetShown(self:GetText() == "") end)
+    ui.editName:SetScript("OnEscapePressed", function() Panel:CloseEditor() end)
+    ui.editName:SetScript("OnTabPressed", function() ui.editArea.edit:SetFocus() end)
+    ui.editArea = Theme:TextArea(ui.editor, INNER, editorHeight - 28 - 36 - 72)
+    ui.editArea:SetPoint("TOPLEFT", 0, -(28 + 36))
+    ui.editHint = Theme:Text(ui.editArea, "dim")
+    ui.editHint:SetPoint("TOPLEFT", 10, -8)
+    ui.editHint:SetWidth(INNER - 20)
+    ui.editHint:SetWordWrap(true)
+    ui.editHint:SetText(L["PASTE_PROMPT"])
+    ui.editArea.edit:SetScript("OnTextChanged", function(self)
+        ui.editHint:SetShown(self:GetText() == "")
+        ui.editStatus:SetText("")
+    end)
+    ui.editArea.edit:SetScript("OnEscapePressed", function() Panel:CloseEditor() end)
+    ui.editStatus = Theme:Text(ui.editor, "warn")
+    ui.editStatus:SetPoint("BOTTOMLEFT", 0, 40)
+    ui.editStatus:SetWidth(INNER)
+    ui.editStatus:SetWordWrap(true)
+    ui.editSave = Theme:Button(ui.editor, L["EDIT_SAVE"], 80, 24, true)
+    ui.editSave:SetPoint("BOTTOMRIGHT", 0, 0)
+    ui.editSave:SetScript("OnClick", function() Panel:SaveEditor() end)
+    ui.editCancel = Theme:Button(ui.editor, L["PASTE_CANCEL"], 80, 24)
+    ui.editCancel:SetPoint("RIGHT", ui.editSave, "LEFT", -8, 0)
+    ui.editCancel:SetScript("OnClick", function() Panel:CloseEditor() end)
+    ui.editDelete = Theme:Button(ui.editor, L["EDIT_DELETE"], 80, 24)
+    ui.editDelete:SetPoint("BOTTOMLEFT", 0, 0)
+    ui.editDelete:SetScript("OnClick", function() Panel:DeleteEditor() end)
 
     ui.routeTitle = Theme:Text(frame, "title")
     ui.routeTitle:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 30))
@@ -240,6 +297,7 @@ end
 local function hideList()
     for _, row in ipairs(ui.rows) do row:Hide() end
     ui.paste:Hide()
+    ui.editor:Hide()
 end
 
 local function showRouteWidgets(show)
@@ -251,6 +309,8 @@ local function showRouteWidgets(show)
         ui.tip:Hide()
         ui.oneWay:Hide()
         ui.roundTrip:Hide()
+        ui.routeEdit:Hide()
+        ui.editor:Hide()
     end
 end
 
@@ -267,6 +327,10 @@ local function showTripChoice()
     ui.roundTrip:SetShown(shown)
     ui.oneWay:SetChecked(not round)
     ui.roundTrip:SetChecked(round)
+    local entry = state.entry
+    local tour = state.view == "route" and entry ~= nil and entry.stops ~= nil and not state.pinned
+    ui.routeEdit:SetShown(tour)
+    if tour then ui.routeEdit.label:SetText(L[entry.routeID and "ROUTE_EDIT" or "ROUTE_SAVE"]) end
 end
 
 -- Chosen on the route: one way or a round trip, kept for the next route, and this one planned again that way.
@@ -284,6 +348,7 @@ end
 -- else all it teaches), or "City - Stormwind City". Under a heading of the accordion the kind is already said,
 -- so a city or town shows just its zone. A pick has none: it is one line (where it goes is chosen with its route).
 local function subtitle(entry)
+    if entry.action then return entry.sub or "" end          -- a saved route: how many stops
     if entry.pick then return "" end
     if entry.inSection then
         -- Older content mixes cities, dungeons and raids in one list: say which this is.
@@ -362,6 +427,7 @@ function Panel:Render()
                 row.markerGroup = entry.group
             end
             row.markerMethod, row.markerSource = nil, nil
+            row.editRoute:SetShown(entry.action == "route")
             Theme:Restyle(row)
             row:SetSelected(row.index == state.selected)
             row:Show()
@@ -881,6 +947,9 @@ function Panel:Choose(index)
         self:TogglePaste()
     elseif entry.action == "tomtom" then
         self:RouteTour(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {})
+    elseif entry.action == "route" then
+        local route = addon.MultiRoute:FindRoute(entry.routeID)
+        if route then self:RouteTour(route.name, addon.MultiRoute:RoutePoints(route), nil, route.id) end
     else
         self:ShowRoute(entry)
     end
@@ -924,12 +993,117 @@ function Panel:RoutePasted(text)
     self:RouteTour(L["TOUR_PASTED"], points, #bad)
 end
 
--- A tour through points ({ mapID, x, y, name }: pasted /way lines, TomTom's waypoints), planned and shown like any
--- route. unread: how many pasted lines couldn't be read (a note under the route says so).
-function Panel:RouteTour(name, points, unread)
+-- A tour through points ({ mapID, x, y, name }: pasted /way lines, TomTom's waypoints, a saved route), planned and
+-- shown like any route. unread: how many pasted lines couldn't be read (a note under the route says so). routeID: the
+-- saved route it is (its route view then offers Edit, not Save).
+function Panel:RouteTour(name, points, unread, routeID)
     local entry = addon.MultiRoute:Entry(name, points)
-    entry.unread = unread
+    entry.unread, entry.routeID = unread, routeID
     self:ShowRoute(entry)
+end
+
+-- ---------------------------------------------------------------------------------------
+-- Saved routes (MultiRoute.lua): the editor, opened from a tour's route view.
+
+-- The Routes section again, after a route was saved or deleted (the rest of the list, and what is open, stay).
+function Panel:RefreshRoutes()
+    local sections = state.sections
+    if not sections then return end
+    for i = #sections, 1, -1 do
+        if sections[i].id == "routes" then table.remove(sections, i) end
+    end
+    local routes = addon.Sections:Routes()
+    if routes then
+        local at = 1
+        for i, section in ipairs(sections) do if section.id == "trainers" then at = i + 1 end end
+        table.insert(sections, at, routes)
+    end
+end
+
+-- The editor: for routeID, a saved route straight from the list (its pen); else for the tour on the panel, a saved
+-- route's name and lines as saved, or a pasted or TomTom tour's, to save it as a new route. Opened from the list, Save
+-- and Cancel go back to the list; from a route, to the route.
+function Panel:OpenEditor(routeID)
+    local entry = not routeID and state.entry or nil
+    if not routeID and not (entry and entry.stops) then return end
+    routeID = routeID or entry.routeID
+    local route = routeID and addon.MultiRoute:FindRoute(routeID)
+    if not (route or entry) then return end
+    state.editing = { routeID = route and route.id, entry = entry, plan = entry and state.plan }
+    state.view = "edit"
+    hideList()
+    showRouteWidgets(false)
+    setStatus(nil)
+    ui.editTitle:SetText(L[route and "EDIT_TITLE" or "EDIT_TITLE_NEW"])
+    ui.editName:SetText(route and route.name or entry.name or "")
+    ui.editArea.edit:SetText(route and route.way or addon.MultiRoute.WayText(entry.points or {}))
+    ui.editArea.scroll:SetVerticalScroll(0)
+    ui.editStatus:SetText("")
+    ui.editDelete:SetShown(route ~= nil)
+    ui.editDelete.label:SetText(L["EDIT_DELETE"])
+    state.confirmDelete = nil
+    ui.editor:Show()
+    ui.editName:SetFocus()
+end
+
+-- Back to the route the editor was opened from, unchanged.
+function Panel:CloseEditor()
+    local editing = state.editing
+    state.editing, state.confirmDelete = nil, nil
+    ui.editName:ClearFocus()
+    ui.editArea.edit:ClearFocus()
+    ui.editor:Hide()
+    if editing and editing.entry and editing.plan then
+        self:DisplayPlan(editing.entry, editing.plan)
+    elseif editing and editing.entry then
+        self:ShowRoute(editing.entry)
+    else
+        self:Query(ui.search:GetText())            -- opened from the list: back to it
+    end
+end
+
+-- Saves what is in the editor (a new route, or over the one being edited) and plans it. The lines are saved as read,
+-- each with its map, so a line that named none (the player's map) or a zone by name is the same wherever it is used.
+function Panel:SaveEditor()
+    local editing = state.editing
+    if not editing then return end
+    local here = C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player")
+    local points, bad = addon.MultiRoute.ParseWay(ui.editArea.edit:GetText(), here, function(name) return addon:MapByName(name) end)
+    if #points == 0 then
+        ui.editStatus:SetText(L["PASTE_NONE"])
+        return
+    end
+    local name = (ui.editName:GetText() or ""):gsub("^%s+", ""):gsub("%s+$", "")
+    if name == "" then name = L["ROUTE_UNNAMED"] end
+    local id = addon.MultiRoute:SaveRoute(editing.routeID, name, addon.MultiRoute.WayText(points))
+    state.editing, state.confirmDelete = nil, nil
+    ui.editName:ClearFocus()
+    ui.editArea.edit:ClearFocus()
+    self:RefreshRoutes()
+    if editing.entry then
+        self:RouteTour(name, points, #bad, id)      -- saved from a route: planned again as saved
+    else
+        ui.editor:Hide()
+        self:Query(ui.search:GetText())            -- edited from the list: back to it
+    end
+end
+
+-- Deletes the route being edited, on the second press (the first asks), and goes back to the list.
+function Panel:DeleteEditor()
+    local editing = state.editing
+    if not (editing and editing.routeID) then return end
+    if not state.confirmDelete then
+        state.confirmDelete = true
+        ui.editDelete.label:SetText(L["EDIT_DELETE_CONFIRM"])
+        return
+    end
+    addon.MultiRoute:DeleteRoute(editing.routeID)
+    state.editing, state.confirmDelete = nil, nil
+    ui.editName:ClearFocus()
+    ui.editArea.edit:ClearFocus()
+    ui.editor:Hide()
+    self:RefreshRoutes()
+    self:Query(ui.search:GetText())
 end
 
 -- Begin following the route on screen: the navigator takes over.
@@ -944,7 +1118,9 @@ function Panel:StartRoute()
 end
 
 function Panel:Escape()
-    if state.view == "route" then
+    if state.view == "edit" then
+        self:CloseEditor()
+    elseif state.view == "route" then
         self:Query(ui.search:GetText())
     elseif ui.search:GetText() ~= "" then
         ui.search:SetText("")

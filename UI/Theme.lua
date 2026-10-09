@@ -19,6 +19,7 @@ local addonName, addon = ...
 --   icons        (optional) pictures for route steps by method, each a list of texture paths, the first the client
 --                has winning; a method it leaves out uses STEP_ICONS below
 --   stepIcon     (optional) { size = pixels, crop = fraction trimmed off each edge (an icon's own frame) }
+--   buttonIcons  (optional) pictures for icon buttons by name (edit, ...); one it leaves out uses BUTTON_ICONS below
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
 local Theme = {}
@@ -39,6 +40,10 @@ local ARROW_CROP = 0.15         -- that texture is mostly empty around the arrow
 -- last of each list is an icon that has been in the game since launch. A step that uses a spell or an item
 -- (a hearthstone, a teleport) shows that spell's or item's own icon before any of these.
 local ICONS = "Interface\\Icons\\"
+-- The pictures on icon buttons (Theme:IconButton), unless a theme has its own (buttonIcons).
+local BUTTON_ICONS = {
+    edit = "Interface\\Buttons\\UI-GuildButton-PublicNote-Up",       -- the game's own "edit a note" pen
+}
 local STEP_ICONS = {
     walk        = { ICONS .. "Ability_Rogue_Sprint" },
     taxi        = { "Interface\Minimap\Tracking\FlightMaster", ICONS .. "Spell_Nature_RavenForm" },   -- the flight master's winged boot
@@ -256,6 +261,22 @@ skin.button = function(button, opts)
         button:SetBackdropColor(Theme:Color(bg))
         button:SetBackdropBorderColor(Theme:Color(opts.primary and "primaryBg" or "panelBorder"))
         skin.text(button.label, { style = opts.primary and "primary" or "button" })
+    end
+end
+
+-- An icon button: in a flat theme a small button of the theme's colours round the picture; in the Blizzard one just
+-- the picture, brighter under the mouse.
+skin.iconbutton = function(button, opts)
+    button.icon:SetTexture((current.buttonIcons or {})[opts.icon] or BUTTON_ICONS[opts.icon])
+    if current.button == "blizzard" then
+        button:SetBackdrop(nil)
+        button.icon:SetAlpha(button.mzHover and 1 or 0.75)
+    else
+        button:SetBackdrop({ bgFile = FLAT, edgeFile = FLAT, edgeSize = 1,
+                             insets = { left = 1, right = 1, top = 1, bottom = 1 } })
+        button:SetBackdropColor(Theme:Color(button.mzHover and "buttonHover" or "buttonBg"))
+        button:SetBackdropBorderColor(Theme:Color("panelBorder"))
+        button.icon:SetAlpha(1)
     end
 end
 
@@ -530,6 +551,28 @@ function Theme:EditBox(parent, width, height)
     edit:SetAutoFocus(false)
     edit:SetTextInsets(8, 8, 0, 0)
     return register(edit, "edit")
+end
+
+-- A small square button showing a picture (`icon`: a name from BUTTON_ICONS, "edit"), for an action on a row.
+-- tooltip (optional): the text shown under the mouse.
+function Theme:IconButton(parent, size, icon, tooltip)
+    local button = CreateFrame("Button", nil, parent, "BackdropTemplate")
+    button:SetSize(size, size)
+    button.icon = button:CreateTexture(nil, "ARTWORK")
+    button.icon:SetPoint("CENTER")
+    button.icon:SetSize(size - 4, size - 4)
+    local function hover(on)
+        button.mzHover = on
+        if current then skin.iconbutton(button, widgets[button].opts) end
+        if on and tooltip then
+            Theme:ShowTooltip(button, { { tooltip, "body" } })
+        elseif not on then
+            Theme:HideTooltip(button)
+        end
+    end
+    button:SetScript("OnEnter", function() hover(true) end)
+    button:SetScript("OnLeave", function() hover(false) end)
+    return register(button, "iconbutton", { icon = icon })
 end
 
 -- A box for several lines of text (pasting a list into), looking like an edit box. The text scrolls with the mouse

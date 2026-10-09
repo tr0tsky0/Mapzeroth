@@ -188,15 +188,12 @@ addon.Edges = {
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457 } },
     { from = "BLACKROCK_QUARRY_EXTERIOR", to = "INSTANCE_BLACKROCK_DEPTHS", method = "walk" },
     { from = "BLACKROCK_MOUNTAIN_MOLE", to = "INSTANCE_BLACKROCK_DEPTHS", method = "walk" },
-    { from = "DALARAN_BROKEN_ISLES_PET", to = "STRATHOLME_DUNGEON", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491 } },
     { from = "BORALUS_PET", to = "INSTANCE_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Alliance" } },
     { from = "BORALUS_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185, faction = "Alliance" } },
     { from = "BORALUS_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291, faction = "Alliance" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_WAILING_CAVERNS", method = "portal", cost = 0, oneway = true, requirements = { quest = 45423, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291, faction = "Horde" } },
-    { from = "DAZARALOR_PET", to = "STRATHOLME_DUNGEON", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Horde" } },
-    { from = "BORALUS_PET", to = "STRATHOLME_DUNGEON", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Alliance" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Horde" } },
     { from = "BORALUS_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Alliance" } },
     { from = "UNDERCITY", to = "ZEPPELIN_VENGEANCE_LANDING", method = "zeppelin", cost = 60 },
@@ -291,4 +288,7 @@ addon.Edges = {
     { from = "PORTAL_TIMEWAYS_KINGS_REST", to = "TIMEWAYS_ARRIVAL_KINGS_REST", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_RUBY_LIFE_POOLS", to = "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
     { from = "PORTAL_TIMEWAYS_TEMPLE_OF_SETHRALISS", to = "TIMEWAYS_ARRIVAL_TEMPLE_OF_SETHRALISS", method = "portal", cost = 0, oneway = true }, -- hand-added: tools/modern_manual.py
+    { from = "DALARAN_BROKEN_ISLES_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491 } }, -- hand-added: tools/modern_manual.py
+    { from = "DAZARALOR_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Horde" } }, -- hand-added: tools/modern_manual.py
+    { from = "BORALUS_PET", to = "PET_PORTAL_ARRIVAL_STRATHOLME", method = "portal", cost = 0, oneway = true, requirements = { quest = 56491, faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
 }

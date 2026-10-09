@@ -1017,3 +1017,100 @@ do
         "choosing it plans the way through both")
     TomTom = nil
 end
+
+-- Saved routes (MultiRoute.lua): a pasted tour can be saved, a saved one listed under Routes, edited and deleted, all in
+-- the panel. Forever ships no starters, so there are no routes until one is saved.
+do
+    MapzerothRebuildDB = MapzerothRebuildDB or {}
+    MapzerothRebuildDB.routes, MapzerothRebuildDB.routesSeeded, MapzerothRebuildDB.nextRouteID = nil, nil, nil
+    C_Map.GetBestMapForUnit = function() return 1429 end
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.42, 0.65 end } end
+    local state, box = addon.Panel:GetState(), addon.Panel.widgets
+    local function sectionRow(id)
+        addon.Panel:Query("")
+        for i, entry in ipairs(state.results) do if entry.header and entry.id == id then return i end end
+    end
+    local function routeRows()
+        local found = {}
+        for _, entry in ipairs(state.results) do if entry.action == "route" then found[#found + 1] = entry end end
+        return found
+    end
+    addon.Panel:Refresh()
+    check(not sectionRow("routes"), "no routes section before any is saved")
+
+    -- A pasted tour offers Save; the editor opens filled in.
+    addon.Panel:RoutePasted("/way #1429 41.7 65.6 Goldshire Inn\n/way Elwynn Forest 84 69 Eastvale")
+    check(box.routeEdit._shown and box.routeEdit.label:GetText() == addon.L["ROUTE_SAVE"], "a pasted tour's route offers Save")
+    check(not box.oneWay._shown, "and no trip choice")
+    addon.Panel:OpenEditor()
+    check(state.view == "edit" and box.editor._shown and not box.editDelete._shown, "the editor opens, with nothing to delete yet")
+    check(box.editArea.edit:GetText() == "/way #1429 41.7 65.6 Goldshire Inn\n/way #1429 84 69 Eastvale",
+        "its stops as /way lines, each with its map: " .. box.editArea.edit:GetText())
+    box.editArea.edit:SetText("")
+    addon.Panel:SaveEditor()
+    check(state.view == "edit" and box.editStatus:GetText() == addon.L["PASTE_NONE"], "no stops: not saved, and it says why")
+    box.editArea.edit:SetText("/way #1429 41.7 65.6 Goldshire Inn\n/way #1429 84 69 Eastvale")
+    box.editName:SetText("  Elwynn loop  ")
+    addon.Panel:SaveEditor()
+    check(#MapzerothRebuildDB.routes == 1 and MapzerothRebuildDB.routes[1].name == "Elwynn loop", "Save keeps it, the name trimmed")
+    check(state.view == "route" and state.entry.routeID == MapzerothRebuildDB.routes[1].id and box.routeEdit.label:GetText() == addon.L["ROUTE_EDIT"],
+        "and plans it: a saved route's view offers Edit")
+
+    -- Listed under Routes; chosen, it is planned.
+    local header = sectionRow("routes")
+    check(header, "a routes section once one is saved")
+    addon.Panel:Choose(header)
+    local rows = routeRows()
+    check(#rows == 1 and rows[1].name == "Elwynn loop" and rows[1].sub == addon.L["TOUR_STOPS"]:format(2), "listed by name, with its stops")
+    for i, entry in ipairs(state.results) do if entry.action == "route" then addon.Panel:Choose(i) break end end
+    check(state.view == "route" and state.entry.stops and #state.entry.stops == 2, "choosing it plans the tour")
+
+    -- Edit: change the name and stops; Cancel leaves it as it was.
+    addon.Panel:OpenEditor()
+    check(box.editName:GetText() == "Elwynn loop" and box.editDelete._shown, "editing shows its name, and Delete")
+    box.editName:SetText("Changed")
+    addon.Panel:CloseEditor()
+    check(state.view == "route" and MapzerothRebuildDB.routes[1].name == "Elwynn loop", "Cancel goes back to the route, unchanged")
+    addon.Panel:OpenEditor()
+    box.editName:SetText("Three stops")
+    box.editArea.edit:SetText("/way #1429 41.7 65.6 Goldshire Inn\n/way #1429 84 69 Eastvale\n/way #1429 24.2 74.0 Westbrook")
+    addon.Panel:SaveEditor()
+    check(#MapzerothRebuildDB.routes == 1 and MapzerothRebuildDB.routes[1].name == "Three stops" and #state.entry.stops == 3,
+        "Save changes it in place, and plans it again")
+
+    -- The pen on a saved route's row opens its editor from the list, without planning it; Save and Cancel go back there.
+    local function routeRowIndex()
+        sectionRow("routes")
+        if not state.open.routes then addon.Panel:ToggleSection("routes") end
+        for i, entry in ipairs(state.results) do if entry.action == "route" then return i end end
+    end
+    local i = routeRowIndex()
+    addon.Panel:Render()
+    local penRow, otherPen
+    for r = 1, #box.rows do
+        local entry = state.results[box.rows[r].index or 0]
+        if entry and entry.action == "route" then penRow = box.rows[r] elseif entry and box.rows[r].editRoute._shown then otherPen = true end
+    end
+    check(penRow and penRow.editRoute._shown and not otherPen, "a pen on the saved route's row, and on no other")
+    state.plan = nil
+    penRow.editRoute._scripts.OnClick()
+    check(state.view == "edit" and box.editName:GetText() == "Three stops" and box.editDelete._shown and state.plan == nil,
+        "the pen opens the editor, nothing planned")
+    addon.Panel:CloseEditor()
+    check(state.view == "list", "Cancel goes back to the list")
+    addon.Panel:OpenEditor(state.results[routeRowIndex()].routeID)
+    box.editName:SetText("Renamed")
+    addon.Panel:SaveEditor()
+    check(state.view == "list" and MapzerothRebuildDB.routes[1].name == "Renamed", "Save keeps the change and goes back to the list")
+    local renamed
+    for _, entry in ipairs(state.results) do if entry.action == "route" then renamed = entry.name end end
+    check(renamed == "Renamed", "where it is listed by its new name: " .. tostring(renamed))
+
+    -- Delete asks once more, then it's gone.
+    addon.Panel:OpenEditor()
+    addon.Panel:DeleteEditor()
+    check(#MapzerothRebuildDB.routes == 1 and box.editDelete.label:GetText() == addon.L["EDIT_DELETE_CONFIRM"], "the first Delete asks")
+    addon.Panel:DeleteEditor()
+    check(#MapzerothRebuildDB.routes == 0 and state.view == "list" and not sectionRow("routes"), "the second deletes it, and Routes goes")
+    MapzerothRebuildDB.routes, MapzerothRebuildDB.routesSeeded, MapzerothRebuildDB.nextRouteID = nil, nil, nil
+end

@@ -69,6 +69,7 @@ Data\Modern\Settlements.lua
 Data\Modern\Pois.lua
 Data\Modern\Movement.lua
 Data\Modern\Game.lua
+Data\Modern\Tours.lua
 
 # Engine
 World.lua

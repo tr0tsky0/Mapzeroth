@@ -66,7 +66,18 @@ local sections = build("Alliance")
 local order = {}
 for _, s in ipairs(sections) do order[#order + 1] = s.id end
 -- Above them the top picks, always there with pasting coordinates for a tour; no trainers section on Modern (Sections:Build).
-check(table.concat(order, ",") == "cities,dungeons,raids,older", "cities, dungeons, raids, older content: " .. table.concat(order, ","))
+-- First the player's saved routes: on a first run, Modern's starters (Data/Modern/Tours.lua, MultiRoute:SavedRoutes).
+check(table.concat(order, ",") == "routes,cities,dungeons,raids,older", "routes, cities, dungeons, raids, older content: " .. table.concat(order, ","))
+do
+    local routes = find(sections, "routes")
+    check(#routes.items == #addon.SampleRoutes and routes.items[1].name == addon.SampleRoutes[1].name and routes.untimed,
+        "the routes are the starters, one line each with no time: " .. #routes.items)
+    check(routes.items[1].sub == addon.L["TOUR_STOPS"]:format(12), "each says how many stops: " .. tostring(routes.items[1].sub))
+    for _, sample in ipairs(addon.SampleRoutes) do
+        local points, bad = addon.MultiRoute.ParseWay(sample.way)
+        check(#points > 0 and #bad == 0, sample.name .. ": every line reads")
+    end
+end
 check(sections.top and sections.top[#sections.top].action == "paste", "with the paste pick on top")
 
 local cities = names(find(sections, "cities"))
