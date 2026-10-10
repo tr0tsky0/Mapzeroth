@@ -25,35 +25,80 @@ function MapRoute:Project(point, mapID)
 end
 
 -- What to draw on map `mapID` for a plan: pieces = { { style, step, points = { {x, y}, ... } }, ... } in the
--- order of the route, and markers = { { kind = "step", index, style, x, y }, ..., { kind = "dest", x, y } }:
--- where each step starts, and where the route ends.
+-- order of the route, and markers, drawn in this order (later on top):
+--   { kind = "step", index, style, x, y }  where each step after the first starts (a small dot, unnumbered:
+--                                          numbers on every step were clutter)
+--   { kind = "edge", step, style, x, y }   where a step leaves or comes onto this map with nothing to join it to
+--                                          here (a boat to another continent): its other end can't be placed on
+--                                          this map, so it would draw nothing
+--   { kind = "portOut" | "portIn", step, x, y }  where a teleport, hearth or portal (the "ability" style) leaves
+--                                          from and lands. These are never lines: a jump drawn across the map
+--                                          says nothing the two ends don't, and a tour's criss-cross them
+--                                          everywhere. (A teleport cast from wherever the player stands has no
+--                                          start point, only its landing.)
+--   { kind = "stop", leg, step, x, y }     each stop of a tour (every leg's end but the last)
+--   { kind = "dest", x, y }                where the route ends
+-- A marker only shows where its place is on this map: a route that runs off the map has no end marker where
+-- it leaves, and a step that starts on another map has no dot. Nor does a step that a teleport starts or
+-- ends: its port marker is there.
 function MapRoute:Pieces(plan, mapID)
     local pieces, markers = {}, {}
-    local lastX, lastY
-    for index, step in ipairs(plan and plan.steps or {}) do
+    local steps = plan and plan.steps or {}
+    local edges, ports = {}, {}
+    local function place(point)
+        if point then return self:Project(point, mapID) end
+    end
+    for index, step in ipairs(steps) do
         local style = self:StyleOf(step.method)
-        local run = {}
-        local function flush()
-            if #run >= 2 then pieces[#pieces + 1] = { style = style, step = index, points = run } end
-            run = {}
-        end
-        local marked = false
-        for _, point in ipairs(step.path or {}) do
-            local x, y = self:Project(point, mapID)
-            if x then
-                run[#run + 1] = { x = x, y = y }
-                lastX, lastY = x, y
-                if not marked then
-                    markers[#markers + 1] = { kind = "step", index = index, style = style, x = x, y = y }
-                    marked = true
-                end
-            else
-                flush()
+        if style == "ability" then
+            local path = step.path or {}
+            local x, y = place(#path >= 2 and path[1] or nil)
+            if x then ports[#ports + 1] = { kind = "portOut", step = index, x = x, y = y } end
+            x, y = place(path[#path])
+            if x then ports[#ports + 1] = { kind = "portIn", step = index, x = x, y = y } end
+        else
+            local run, offMap = {}, false
+            local lone = {}
+            local function flush()
+                if #run >= 2 then pieces[#pieces + 1] = { style = style, step = index, points = run }
+                elseif #run == 1 then lone[#lone + 1] = run[1] end
+                run = {}
+            end
+            for _, point in ipairs(step.path or {}) do
+                local x, y = self:Project(point, mapID)
+                if x then run[#run + 1] = { x = x, y = y } else offMap = true flush() end
+            end
+            flush()
+            if offMap then
+                for _, p in ipairs(lone) do edges[#edges + 1] = { kind = "edge", step = index, style = style, x = p.x, y = p.y } end
             end
         end
-        flush()
     end
-    if lastX then markers[#markers + 1] = { kind = "dest", x = lastX, y = lastY } end
+    local function ability(i) return steps[i] and self:StyleOf(steps[i].method) == "ability" end
+    for index = 2, #steps do
+        local first = steps[index].path and steps[index].path[1]
+        local x, y
+        if first and not ability(index) and not ability(index - 1) then x, y = self:Project(first, mapID) end
+        if x then markers[#markers + 1] = { kind = "step", index = index, style = self:StyleOf(steps[index].method), x = x, y = y } end
+    end
+    for _, edge in ipairs(edges) do markers[#markers + 1] = edge end
+    for _, port in ipairs(ports) do markers[#markers + 1] = port end
+    local function lastPoint(step)
+        local path = step and step.path
+        local point = path and path[#path]
+        if point then return self:Project(point, mapID) end
+    end
+    local legs = plan and plan.legs
+    if type(legs) == "table" and #legs > 1 then
+        local through = 0
+        for leg = 1, #legs - 1 do
+            through = through + #(legs[leg].steps or {})
+            local x, y = lastPoint(steps[through])
+            if x then markers[#markers + 1] = { kind = "stop", leg = leg, step = through, x = x, y = y } end
+        end
+    end
+    local x, y = lastPoint(steps[#steps])
+    if x then markers[#markers + 1] = { kind = "dest", x = x, y = y } end
     return pieces, markers
 end
 

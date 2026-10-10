@@ -1,8 +1,8 @@
 local addonName, addon = ...
 
 -- The route on the minimap, for the trip being followed (Navigator hands it over): the same looks as on the
--- world map (dots on foot, dashes for flights, solid for boats, dotted brass for teleports), thinner, drawn
--- round the player.
+-- world map (dots on foot, dashes for flights, solid for boats, dotted for teleports, each on a dark casing in
+-- the theme's map colours), thinner, drawn round the player.
 --
 -- The minimap is a round window on the world, centred on the player, north up unless the player has set it
 -- to rotate. How many yards it spans depends on its zoom and on whether the player is indoors (the client
@@ -32,11 +32,12 @@ local LOOK = {
     boat = { width = 2.5 },
     ability = { width = 2, on = 1.5, off = 4.5 },
 }
+local CASING = 1.5             -- how much wider the dark line under each one is
 local MARGIN = 3               -- keep the route off the rim
 local INTERVAL = 0.1           -- seconds between redraws
 local DONE_ALPHA = 0.35        -- steps already done fade
 
-local state = { plan = nil, current = nil, lines = {}, used = 0, indoors = false, built = nil, pieces = {} }
+local state = { plan = nil, current = nil, lines = {}, used = 0, casings = {}, casingsUsed = 0, indoors = false, built = nil, pieces = {} }
 MinimapLines.state = state     -- for tests and tools
 
 -- Can this client draw on the minimap? (The settings page says so when it can't.)
@@ -116,12 +117,12 @@ local function ensureFrame()
     return frame
 end
 
-local function segment(frame, x1, y1, x2, y2, thickness, r, g, b, alpha)
-    state.used = state.used + 1
-    local line = state.lines[state.used]
+local function place(frame, pool, used, layer, x1, y1, x2, y2, thickness, r, g, b, alpha)
+    state[used] = state[used] + 1
+    local line = state[pool][state[used]]
     if not line then
-        line = frame:CreateLine(nil, "OVERLAY")
-        state.lines[state.used] = line
+        line = frame:CreateLine(nil, layer)
+        state[pool][state[used]] = line
     end
     line:SetThickness(thickness)
     line:SetColorTexture(r, g, b, alpha)
@@ -130,9 +131,21 @@ local function segment(frame, x1, y1, x2, y2, thickness, r, g, b, alpha)
     line:Show()
 end
 
+-- One run of a line on its casing (under it, reaching a little past each end so dots are edged all round).
+local function segment(frame, x1, y1, x2, y2, width, unit, r, g, b, alpha)
+    local cr, cg, cb, ca = Theme:MapColor("casing")
+    local dx, dy = x2 - x1, y2 - y1
+    local length = math.sqrt(dx * dx + dy * dy)
+    local px, py = 0, 0
+    if length > 0 then px, py = dx / length * CASING / 2 * unit, dy / length * CASING / 2 * unit end
+    place(frame, "casings", "casingsUsed", "ARTWORK", x1 - px, y1 - py, x2 + px, y2 + py, (width + CASING) * unit, cr, cg, cb, ca * alpha)
+    place(frame, "lines", "used", "OVERLAY", x1, y1, x2, y2, width * unit, r, g, b, alpha)
+end
+
 local function hideAll()
     for i = 1, state.used do state.lines[i]:Hide() end
-    state.used = 0
+    for i = 1, state.casingsUsed do state.casings[i]:Hide() end
+    state.used, state.casingsUsed = 0, 0
 end
 
 -- The route as dashes in yards on map `mapID` (x east, y south), for a minimap spanning `yardsPerPixel`.
@@ -193,13 +206,13 @@ local function draw(frame)
 
     for _, piece in ipairs(state.pieces) do
         local look = LOOK[piece.style] or LOOK.foot
-        local r, g, b = Theme:StyleColor(LOOK[piece.style] and piece.style or "foot")
+        local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot")
         local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
         for _, s in ipairs(piece.segments) do
             local ax, ay = toPixels(s[1], s[2])
             local bx, by = toPixels(s[3], s[4])
             local x1, y1, x2, y2 = MapRoute.ClipCircle(ax, ay, bx, by, radius)
-            if x1 then segment(frame, x1, y1, x2, y2, look.width * unit, r, g, b, alpha) end
+            if x1 then segment(frame, x1, y1, x2, y2, look.width, unit, r, g, b, alpha) end
         end
     end
 end

@@ -744,8 +744,9 @@ for i, r in ipairs(state.results) do if r.group == "flight" then previewIndex = 
 addon.Panel:Choose(previewIndex)
 check(state.view == "route" and state.plan and shown() == 0 and RouteLines.state.badgesUsed == 0, "a route that is only being looked at is not drawn on the map")
 startTrip()
-check(shown() > 10 and RouteLines.state.linesUsed == shown(), "started, a route on foot is drawn as many short dots: " .. shown())
-check(RouteLines.state.badgesUsed >= 2, "with a badge for a step and one for the end: " .. RouteLines.state.badgesUsed)
+check(shown() > 10 and RouteLines.state.linesUsed * 2 == shown() and RouteLines.state.casingsUsed == RouteLines.state.linesUsed,
+    "started, a route on foot is drawn as many short dots, each on a dark casing: " .. shown())
+check(RouteLines.state.badgesUsed >= 1, "with a marker for the end (and a small square at each step that starts on the map): " .. RouteLines.state.badgesUsed)
 local inside = true
 for _, line in ipairs(drawn) do
     if line._shown and not (line._from[1] >= 0 and line._from[1] <= 1000 and line._from[2] <= 0 and line._from[2] >= -500) then inside = false end
@@ -783,6 +784,15 @@ WorldMapFrame.GetMapID = function() error("the map isn't ready") end
 local ok = pcall(function() RouteLines:Redraw() end)
 check(ok and shown() == 0 and RouteLines.state.error, "an error while drawing is caught and leaves it undrawn: " .. tostring(RouteLines.state.error))
 WorldMapFrame.GetMapID = function() return 1453 end
+-- A continent or the world map shows far more ground: lines and markers are drawn smaller there.
+local realInfo = C_Map.GetMapInfo
+C_Map.GetMapInfo = function(id) return ({ [1453] = { mapType = 3 }, [13] = { mapType = 2 }, [947] = { mapType = 1 } })[id] end
+check(RouteLines.ShrinkFor(1453) == 1 and RouteLines.ShrinkFor(13) < 1 and RouteLines.ShrinkFor(947) < RouteLines.ShrinkFor(13)
+    and RouteLines.ShrinkFor(99999) == 1, "full size on a zone, smaller on a continent, smallest on the world map")
+check(RouteLines.DOT:find("^Interface\\AddOns\\[^\\]+\\Media\\Dot$") ~= nil,
+    "the dot texture's path has its backslashes: " .. RouteLines.DOT)
+check(select(2, RouteLines.ShrinkFor(947)) and not select(2, RouteLines.ShrinkFor(13)), "and the world map's lines have no casing")
+C_Map.GetMapInfo = realInfo
 addon.Navigator:Stop()
 CreateFrame = realCreateFrame
 

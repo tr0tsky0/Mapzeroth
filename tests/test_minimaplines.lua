@@ -18,8 +18,8 @@ local function newFrame()
     f.Show = function(self) self._shown = true end
     f.Hide = function(self) self._shown = false end
     f.GetEffectiveScale = function() return 1 end
-    f.CreateLine = function()
-        local line = { _shown = true }
+    f.CreateLine = function(_, _, layer)
+        local line = { _shown = true, _layer = layer }
         line.SetThickness = function(self, t) self._thickness = t end
         line.SetColorTexture = function(self, r, g, b, a) self._alpha = a end
         line.SetStartPoint = function(self, _, _, x, y) self._x1, self._y1 = x, y end
@@ -51,10 +51,16 @@ C_Map = {
 }
 addon.Theme:Init("moderndark")
 
+-- The coloured lines shown (each also has a dark casing under it, a little longer: see the casing check).
 local function visible()
     local out = {}
-    for _, line in ipairs(lines) do if line._shown then out[#out + 1] = line end end
+    for _, line in ipairs(lines) do if line._shown and line._layer ~= "ARTWORK" then out[#out + 1] = line end end
     return out
+end
+local function casings()
+    local n = 0
+    for _, line in ipairs(lines) do if line._shown and line._layer == "ARTWORK" then n = n + 1 end end
+    return n
 end
 local function extent()
     local minX, maxX, minY, maxY, farthest = 1e9, -1e9, 1e9, -1e9, 0
@@ -86,6 +92,7 @@ check(math.abs(across - 466 - 2 / 3) < 1e-6 and indoors == false, "at the furthe
 -- Drawn round the player: 3.33 yards to the pixel on this zoom outdoors, so 170 yards is 51 pixels up.
 MinimapLines:Follow(plan, 1)
 check(#visible() > 5, "the route is drawn as dots: " .. #visible())
+check(casings() == #visible(), "each on a dark casing")
 local minX, maxX, minY, maxY, farthest = extent()
 check(math.abs(minX) < 1e-6 and math.abs(maxX) < 1e-6, "straight up from the player")
 check(minY >= -0.01 and maxY > 45 and maxY <= 51.01, "as far as the route goes (51 pixels, the last dash ends a little short): " .. maxY)

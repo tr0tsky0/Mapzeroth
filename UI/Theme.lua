@@ -15,6 +15,10 @@ local addonName, addon = ...
 --   button       "flat" (a coloured backdrop) or "blizzard" (the classic red button textures)
 --   edit         { backdrop = <SetBackdrop table> }
 --   styles       colours by route style (foot, flight, boat, ability; addon.METHODS gives each method its style)
+--   map          (optional) colours for the route drawn on the world map and minimap: foot, flight, boat, ability
+--                (the route styles), casing (the dark edge under every line and marker, so it shows on any map
+--                art), stop (a tour's stops), dest (the end). The map is pale parchment and sepia whatever the
+--                theme, so these are brighter than the panel's styles; a colour left out falls back to styles.
 --   markers      colours by kind of place (place, flight, transport, instance, ...)
 --   icons        (optional) pictures for route steps by method, each a list of texture paths, the first the client
 --                has winning; a method it leaves out uses STEP_ICONS below
@@ -83,6 +87,16 @@ function Theme:StyleColor(style)
     local c = current and current.styles and (current.styles[style] or current.styles.default)
     if not c then return self:Color("text") end
     return c[1], c[2], c[3], c[4] or 1
+end
+
+-- A colour for the route on the map (see `map` above).
+function Theme:MapColor(name)
+    local c = current and current.map and current.map[name]
+    if c then return c[1], c[2], c[3], c[4] or 1 end
+    if name == "casing" then return 0.05, 0.04, 0.03, 0.85 end
+    if name == "dest" then return self:Color("accent") end
+    if name == "stop" then return 1, 1, 1, 1 end
+    return self:StyleColor(name)
 end
 
 function Theme:MethodColor(method)

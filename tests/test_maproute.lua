@@ -59,13 +59,39 @@ local plan = { steps = {
 local pieces, markers = MapRoute:Pieces(plan, 1)
 check(#pieces == 2 and pieces[1].style == "foot" and pieces[1].step == 1 and #pieces[1].points == 3 and pieces[2].style == "foot" and pieces[2].step == 4,
     "on map 1 the two walks are drawn; the flight and the boat go off the map and aren't: " .. #pieces .. " pieces")
-check(#markers == 5 and markers[1].kind == "step" and markers[1].index == 1 and markers[#markers].kind == "dest", "a badge for each step that shows, and the end")
+check(#markers == 5 and markers[1].kind == "step" and markers[1].index == 2 and markers[1].style == "flight" and markers[2].index == 4
+    and markers[3].kind == "edge" and markers[3].step == 2 and markers[3].x == 0.3 and markers[4].kind == "edge" and markers[4].step == 3
+    and markers[4].style == "boat" and markers[4].x == 0.7 and markers[5].kind == "dest",
+    "where the flight leaves the map and the boat comes onto it, an edge marker (they'd draw nothing: one end each is elsewhere), "
+        .. "a dot where each step that starts on this map starts (not the first: the player is there), and the end")
 check(markers[#markers].x == 0.9 and markers[#markers].y == 0.9, "the end is where the last piece ends")
 local _, onTwo = MapRoute:Pieces(plan, 2)
-check(#onTwo >= 1 and onTwo[#onTwo].kind == "dest" and onTwo[#onTwo].x == 0.5, "on map 2 the route ends at the last point it can show there")
+check(#onTwo == 3 and onTwo[1].kind == "step" and onTwo[1].index == 3 and onTwo[2].kind == "edge" and onTwo[3].kind == "edge", "on map 2 the route passes through but doesn't end there: no end marker where it leaves the map")
+plan.legs = { { steps = { plan.steps[1] } }, { steps = { plan.steps[2], plan.steps[3] } }, { steps = { plan.steps[4] } } }
+local _, tour = MapRoute:Pieces(plan, 1)
+check(#tour == 7 and tour[5].kind == "stop" and tour[5].leg == 1 and tour[5].x == 0.3 and tour[6].leg == 2 and tour[6].x == 0.7
+    and tour[7].kind == "dest", "a tour marks each stop (the last step of every leg but the last) and the end: " .. #tour)
+local _, tourOnTwo = MapRoute:Pieces(plan, 2)
+check(#tourOnTwo == 3, "and only the ones on the map that is open")
+plan.legs = nil
 local none, noMarkers = MapRoute:Pieces(plan, 3)
 check(#none == 0 and #noMarkers == 0, "on a map none of it is on, nothing is drawn")
 check(#MapRoute:Pieces({ steps = {} }, 1) == 0 and #MapRoute:Pieces(nil, 1) == 0, "no plan, no lines")
+-- A teleport is never a line: a ring where it leaves and a dot where it lands, on whichever map each end shows.
+local hop = { steps = {
+    { method = "walk", path = { { mapID = 1, x = 0.1, y = 0.1 }, { mapID = 1, x = 0.2, y = 0.2 } } },
+    { method = "teleport", path = { { mapID = 1, x = 0.2, y = 0.2 }, { mapID = 1, x = 0.8, y = 0.8 } } },
+    { method = "walk", path = { { mapID = 1, x = 0.8, y = 0.8 }, { mapID = 1, x = 0.9, y = 0.8 } } },
+    { method = "hearthstone", path = { { mapID = 2, x = 0.4, y = 0.4 } } },
+} }
+local hopPieces, hopMarkers = MapRoute:Pieces(hop, 1)
+local kinds = {}
+for _, m in ipairs(hopMarkers) do kinds[#kinds + 1] = m.kind end
+check(#hopPieces == 2 and hopPieces[1].style == "foot" and hopPieces[2].style == "foot", "the teleport between the walks draws no line")
+check(table.concat(kinds, ",") == "portOut,portIn", "a port out and a port in, and no step dots where they are: " .. table.concat(kinds, ","))
+local _, hopTwo = MapRoute:Pieces(hop, 2)
+check(#hopTwo == 2 and hopTwo[1].kind == "portIn" and hopTwo[1].step == 4 and hopTwo[2].kind == "dest",
+    "a hearth cast from anywhere has only its landing (and here the route ends): " .. #hopTwo)
 addon.Navigation.MapPoint = realMapPoint
 
 -- A real plan carries the points of its steps: a merged walk through its stops, the start, the end.

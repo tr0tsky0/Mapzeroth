@@ -29,7 +29,7 @@ DEV_TOC = ROOT / "Mapzeroth-Rebuild.toc"
 NAME = "Mapzeroth"
 INTERFACE = "16001"
 NOTES = "Plans the quickest way anywhere in WoW Forever: flights, boats, portals, hearthstones and your own spells."
-ASSETS = ["Media/Logo.tga"]            # shipped as they are: pictures the Lua names, which the .toc does not list
+ASSETS = ["Media/Logo.tga", "Media/Dot.tga", "Media/Ring.tga", "Media/RingEdge.tga"]            # shipped as they are: pictures the Lua names, which the .toc does not list
 GUARD = 'if addon.RULESET ~= "forever" then return end'
 
 

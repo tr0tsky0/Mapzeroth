@@ -51,6 +51,10 @@ addon.Theme:Register("classic", {
         foot = c(0.9, 0.9, 0.9), flight = c(0.4, 0.75, 1), boat = c(0.4, 0.75, 1), ability = c(1, 0.82, 0),
         default = c(0.62, 0.62, 0.62),
     },
+    map = {
+        foot = c(1, 1, 1), flight = c(0.25, 0.85, 1), boat = c(0.35, 0.55, 1), ability = c(0.9, 0.4, 1),
+        casing = c(0.06, 0.05, 0.04, 0.85), stop = c(1, 1, 1), dest = c(1, 0.25, 0.2),
+    },
     stepIcon = { size = 18, crop = 0 },          -- the icons keep their own dark frame, as on the action bars
     markers = {
         place = c(1, 0.82, 0), flight = c(0.4, 0.75, 1), transport = c(0.4, 0.75, 1), instance = c(0.9, 0.3, 0.3),
