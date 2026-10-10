@@ -30,7 +30,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2799", container = "dragon_isles.map2023", mapID = 2023, x = 0.8741, y = 0.3691 }, -- Rusza'thar Reach
     { id = "INSTANCE_DAWN_OF_THE_INFINITES", container = "dragon_isles.map2025", mapID = 2025, x = 0.6100, y = 0.8400, kind = "instance", journal = 1209 }, -- Dawn of the Infinites
     { id = "TAXI_2808", container = "dragon_isles.map2022", mapID = 2022, x = 0.4230, y = 0.6626 }, -- Obsidian Bulwark
-    { id = "TAXI_2865", container = "dragon_isles.map2133", mapID = 2133, x = 0.4023, y = 0.6753 }, -- Dragonscale Camp
+    { id = "TAXI_2865", container = "dragon_isles.map2133", mapID = 2133, x = 0.4033, y = 0.6787 }, -- Dragonscale Camp
     { id = "INSTANCE_ALGETHAR_ACADEMY", container = "dragon_isles.map2025", mapID = 2025, x = 0.5800, y = 0.4200, kind = "instance", journal = 1201 }, -- Algeth'ar Academy
     { id = "TAXI_2855", container = "dragon_isles.map2151", mapID = 2151, x = 0.3552, y = 0.5920 }, -- Morqut Village
     { id = "TAXI_2811", container = "dragon_isles.map2025", mapID = 2025, x = 0.5113, y = 0.6702 }, -- Gelikyr Post
@@ -39,7 +39,7 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2817", container = "dragon_isles.map2022", mapID = 2022, x = 0.7283, y = 0.5197 }, -- Skytop Observatory
     { id = "DOCK_WAKING_SHORES", container = "dragon_isles.map2022", mapID = 2022, x = 0.8194, y = 0.3065 }, -- Alliance Dock
     { id = "TAXI_2801", container = "dragon_isles.map2022", mapID = 2022, x = 0.2370, y = 0.8313 }, -- Apex Observatory
-    { id = "TAXI_2863", container = "dragon_isles.map2133", mapID = 2133, x = 0.4023, y = 0.6753 }, -- Loamm
+    { id = "TAXI_2863", container = "dragon_isles.map2133", mapID = 2133, x = 0.5562, y = 0.5484 }, -- Loamm
     { id = "TAXI_2816", container = "dragon_isles.map2025", mapID = 2025, x = 0.5733, y = 0.7907 }, -- Shifting Sands
     { id = "TAXI_2786", container = "dragon_isles.map2024", mapID = 2024, x = 0.6594, y = 0.2545 }, -- Rhonin's Shield
     { id = "PORTAL_VALDRAKKEN_BADLANDS", container = "dragon_isles.map2112", mapID = 2112, x = 0.2597, y = 0.4078, city = "valdrakken" }, -- Badlands Portal
@@ -81,4 +81,10 @@ addon.Nodes.DragonIsles = {
     { id = "TAXI_2902", container = "emerald_dream.map2200", mapID = 2200, x = 0.5111, y = 0.6219 }, -- Central Encampment
     { id = "TAXI_2904", container = "emerald_dream.map2200", mapID = 2200, x = 0.5538, y = 0.2931 }, -- Eye of Ysera
     { id = "TIMEWAYS_ARRIVAL_RUBY_LIFE_POOLS", container = "dragon_isles.map2022", mapID = 2022, x = 0.5804, y = 0.7840, area = 13944 }, -- The Waking Shores: where the Timeways portal to the Ruby Life Pools lands (hand-added: tools/modern_manual.py)
+    { id = "BORDER_OHNAHRAN_ZARALEK_EAST", container = "dragon_isles.map2023", mapID = 2023, x = 0.8623, y = 0.2656, area = 14094 }, -- Ohn'ahran Plains: the eastern cave down to Zaralek (hand-added: tools/modern_manual.py)
+    { id = "BORDER_ZARALEK_OHNAHRAN_EAST", container = "dragon_isles.map2133", mapID = 2133, x = 0.7879, y = 0.4699, area = 14711 }, -- Zaralek Cavern: the way up to eastern Ohn'ahran (hand-added: tools/modern_manual.py)
+    { id = "BORDER_OHNAHRAN_ZARALEK_WEST", container = "dragon_isles.map2023", mapID = 2023, x = 0.3765, y = 0.5844, area = 14356 }, -- Ohn'ahran Plains: the western cave down to Zaralek (hand-added: tools/modern_manual.py)
+    { id = "BORDER_ZARALEK_OHNAHRAN_WEST", container = "dragon_isles.map2133", mapID = 2133, x = 0.3106, y = 0.7593, area = 14696 }, -- Zaralek Cavern: the way up to western Ohn'ahran (hand-added: tools/modern_manual.py)
+    { id = "BORDER_AZURE_SPAN_ZARALEK", container = "dragon_isles.map2024", mapID = 2024, x = 0.1829, y = 0.2118, area = 13843 }, -- The Azure Span: the cave down to Zaralek (hand-added: tools/modern_manual.py)
+    { id = "BORDER_ZARALEK_AZURE_SPAN", container = "dragon_isles.map2133", mapID = 2133, x = 0.3472, y = 0.9741, area = 14696 }, -- Zaralek Cavern: the way up to the Azure Span (hand-added: tools/modern_manual.py)
 }

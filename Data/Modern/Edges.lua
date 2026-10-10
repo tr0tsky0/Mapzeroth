@@ -306,4 +306,7 @@ addon.Edges = {
     { from = "TAXI_26", to = "TAXI_94", method = "taxi", cost = 154, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
     { from = "TAXI_94", to = "TAXI_339", method = "taxi", cost = 193, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
     { from = "TAXI_339", to = "TAXI_94", method = "taxi", cost = 189, oneway = true, requirements = { faction = "Alliance" } }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_OHNAHRAN_ZARALEK_EAST", to = "BORDER_ZARALEK_OHNAHRAN_EAST", method = "walk", cost = 3 }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_OHNAHRAN_ZARALEK_WEST", to = "BORDER_ZARALEK_OHNAHRAN_WEST", method = "walk", cost = 3 }, -- hand-added: tools/modern_manual.py
+    { from = "BORDER_AZURE_SPAN_ZARALEK", to = "BORDER_ZARALEK_AZURE_SPAN", method = "walk", cost = 3 }, -- hand-added: tools/modern_manual.py
 }

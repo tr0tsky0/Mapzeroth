@@ -44,7 +44,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1788, "every node made it into the tree (1215 converted + 57 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1794, "every node made it into the tree (1215 converted + 63 hand-added + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -882,4 +882,20 @@ do
     local crossed = false
     for _, step in ipairs(road and road.steps or {}) do if step.to == "BORDER_BLOODMYST_AZUREMYST" then crossed = true end end
     check(road and crossed, "and on foot from Azure Watch, over the road into Bloodmyst: " .. (road and methods(road) or "no route"))
+end
+
+-- Zaralek Cavern (captured in game 2026-10-09): down through its cave mouths from Ohn'ahran Plains and the Azure Span.
+-- (This test's distances put any two maps 3000 yards apart, so it can't show the cavern is cut off without them: in the
+-- client it is a continent of its own. It checks the three ways through are there, both ways.)
+do
+    local graph = addon.TravelGraph:Build(makeCtx({ faction = "Horde", level = 80 }))
+    local function linked(a, b)
+        for _, edge in ipairs(graph.adjacency[a] or {}) do if edge.to == b then return true end end
+        return false
+    end
+    for _, pair in ipairs({ { "BORDER_OHNAHRAN_ZARALEK_EAST", "BORDER_ZARALEK_OHNAHRAN_EAST" },
+                            { "BORDER_OHNAHRAN_ZARALEK_WEST", "BORDER_ZARALEK_OHNAHRAN_WEST" },
+                            { "BORDER_AZURE_SPAN_ZARALEK", "BORDER_ZARALEK_AZURE_SPAN" } }) do
+        check(linked(pair[1], pair[2]) and linked(pair[2], pair[1]), "through the cave both ways: " .. pair[1])
+    end
 end

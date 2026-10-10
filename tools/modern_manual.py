@@ -366,6 +366,33 @@ for _to, _out, _back in [("TAXI_624", 39, 41), ("TAXI_93", 88, 100), ("TAXI_26",
 NODES += DRAENEI_NODES
 EDGES += DRAENEI_EDGES
 
+# Zaralek Cavern (map 2133; captured in game 2026-10-09): the old data had no way down to it. Three cave mouths you can
+# fly through, two from Ohn'ahran Plains and one from the Azure Span, each a capture outside and one inside. The client
+# puts the cavern on a continent of its own, so the way through can't be measured from positions: each crossing is
+# about 2-3 s (timed in game like a zone border, the captures close to either side of it): 3 s. Flying is
+# allowed inside, so from the mouths the cavern is flown like any zone.
+ZARALEK_NODES = [
+    {"id": "BORDER_OHNAHRAN_ZARALEK_EAST", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2023",
+     "mapID": 2023, "x": 0.8623, "y": 0.2656, "area": 14094, "note": "Ohn'ahran Plains: the eastern cave down to Zaralek"},
+    {"id": "BORDER_ZARALEK_OHNAHRAN_EAST", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2133",
+     "mapID": 2133, "x": 0.7879, "y": 0.4699, "area": 14711, "note": "Zaralek Cavern: the way up to eastern Ohn'ahran"},
+    {"id": "BORDER_OHNAHRAN_ZARALEK_WEST", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2023",
+     "mapID": 2023, "x": 0.3765, "y": 0.5844, "area": 14356, "note": "Ohn'ahran Plains: the western cave down to Zaralek"},
+    {"id": "BORDER_ZARALEK_OHNAHRAN_WEST", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2133",
+     "mapID": 2133, "x": 0.3106, "y": 0.7593, "area": 14696, "note": "Zaralek Cavern: the way up to western Ohn'ahran"},
+    {"id": "BORDER_AZURE_SPAN_ZARALEK", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2024",
+     "mapID": 2024, "x": 0.1829, "y": 0.2118, "area": 13843, "note": "The Azure Span: the cave down to Zaralek"},
+    {"id": "BORDER_ZARALEK_AZURE_SPAN", "out": "Nodes_DragonIsles.lua", "container": "dragon_isles.map2133",
+     "mapID": 2133, "x": 0.3472, "y": 0.9741, "area": 14696, "note": "Zaralek Cavern: the way up to the Azure Span"},
+]
+ZARALEK_EDGES = [
+    {"from": "BORDER_OHNAHRAN_ZARALEK_EAST", "to": "BORDER_ZARALEK_OHNAHRAN_EAST", "method": "walk", "cost": 3},
+    {"from": "BORDER_OHNAHRAN_ZARALEK_WEST", "to": "BORDER_ZARALEK_OHNAHRAN_WEST", "method": "walk", "cost": 3},
+    {"from": "BORDER_AZURE_SPAN_ZARALEK", "to": "BORDER_ZARALEK_AZURE_SPAN", "method": "walk", "cost": 3},
+]
+NODES += ZARALEK_NODES
+EDGES += ZARALEK_EDGES
+
 # The old data walked straight from Oribos to the flight master: two maps, so no distance. The pad route above
 # replaces it (left in, it would undercut the real route).
 DROP_EDGES = [
@@ -513,6 +540,9 @@ NODE_PLACES = {
     # The Exodar's and Azure Watch's flight masters (captured in game 2026-10-09).
     "THE_EXODAR_FLIGHT": {"container": "draenei_home.map103", "mapID": 103, "x": 0.5437, "y": 0.3644},
     "AZURE_WATCH_FLIGHT": {"container": "draenei_home.map97", "mapID": 97, "x": 0.4968, "y": 0.4918},
+    # Zaralek Cavern's Loamm and Dragonscale Camp flight masters: the old data had both at one spot (captured 2026-10-09).
+    "LOAMM_FLIGHT": {"container": "dragon_isles.map2133", "mapID": 2133, "x": 0.5562, "y": 0.5484},
+    "DRAGONSCALE_CAMP_FLIGHT": {"container": "dragon_isles.map2133", "mapID": 2133, "x": 0.4033, "y": 0.6787},
     # Gnomeregan's entrance is underground, beside where the pet battle portals land (GNOMEREGAN_NODES).
     "GNOMEREGAN_DUNGEON": {"container": "ek_overworld.map30", "mapID": 30, "x": 0.3194, "y": 0.7170},
 }
