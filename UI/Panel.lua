@@ -789,6 +789,7 @@ function Panel:ShowRoute(entry, onReady)
     end
     local function show(plan, why)
         if state.entry ~= entry then return end          -- the player moved on while it was planned
+        if plan then plan.holiday = entry.holiday end     -- the map and minimap draw a holiday route in its look
         state.plan = plan
         setStatus(nil)
         if not plan then
@@ -1031,7 +1032,7 @@ function Panel:Choose(index)
     elseif entry.action == "tomtom" then
         self:RouteTour(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {})
     elseif entry.action == "holidayroute" then
-        self:RouteTour(entry.name, entry.points)          -- not a saved route: its view offers Save, to keep a copy
+        self:RouteTour(entry.name, entry.points, nil, nil, entry.holiday)   -- not a saved route: its view offers Save
     elseif entry.action == "route" then
         local route = addon.MultiRoute:FindRoute(entry.routeID)
         if route then self:RouteTour(route.name, addon.MultiRoute:RoutePoints(route), nil, route.id) end
@@ -1081,9 +1082,9 @@ end
 -- A tour through points ({ mapID, x, y, name }: pasted /way lines, TomTom's waypoints, a saved route), planned and
 -- shown like any route. unread: how many pasted lines couldn't be read (a note under the route says so). routeID: the
 -- saved route it is (its route view then offers Edit, not Save).
-function Panel:RouteTour(name, points, unread, routeID)
+function Panel:RouteTour(name, points, unread, routeID, holiday)
     local entry = addon.MultiRoute:Entry(name, points)
-    entry.unread, entry.routeID = unread, routeID
+    entry.unread, entry.routeID, entry.holiday = unread, routeID, holiday     -- holiday: drawn in its look (Theme)
     self:ShowRoute(entry)
 end
 

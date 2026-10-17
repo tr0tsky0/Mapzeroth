@@ -383,7 +383,7 @@ end
 local function restOfTour()
     local entry = active.entry
     local k = active.legOf[active.index] or #active.legs
-    local rest = { name = entry.name, stops = {}, keep = {} }
+    local rest = { name = entry.name, stops = {}, keep = {}, holiday = entry.holiday }
     for i = k, #active.legs do
         local leg = active.legs[i]
         rest.stops[#rest.stops + 1] = leg.stop

@@ -253,6 +253,7 @@ function Sections:HolidayRoutes(ctx)
     local items = {}
     for _, offer in ipairs(addon.MultiRoute:HolidayRoutes(ctx)) do
         items[#items + 1] = { name = offer.route.name, group = "waypoint", action = "holidayroute", points = offer.points,
+                              holiday = offer.route.holiday,
                               sub = L["TOUR_STOPS"]:format(#offer.points) }
     end
     if #items == 0 then return nil end

@@ -36,7 +36,7 @@ RouteLines.LOOK = LOOK              -- for tests
 -- where it leaves (portOut) and one with an arrow into it where it lands (portIn), in the teleport colour, never a
 -- line. Each is a white picture (Media/, from tools/gen_media.py, drawn for these sizes) tinted, over its own dark
 -- edge picture tinted with the casing colour.
-local MARKER = { step = 7, edge = 14, portOut = 20, portIn = 20, stop = 11, dest = 15 }
+local MARKER = { step = 7, edge = 14, portOut = 20, portIn = 20, stop = 11, dest = 15, bucket = 18 }
 local PICTURE = {
     step = { MEDIA .. "Step", MEDIA .. "StepEdge" },
     stop = { MEDIA .. "Stop", MEDIA .. "StopEdge" },
@@ -44,8 +44,12 @@ local PICTURE = {
     edge = { MEDIA .. "Ring", MEDIA .. "RingEdge" },
     portOut = { MEDIA .. "PortOut", MEDIA .. "PortOutEdge" },
     portIn = { MEDIA .. "PortIn", MEDIA .. "PortInEdge" },
+    bucket = { MEDIA .. "Bucket", MEDIA .. "BucketEdge" },
 }
 RouteLines.PICTURE = PICTURE       -- for tests
+-- A holiday route's stops (and its last one) drawn as that holiday's picture instead (plan.holiday, an addon.HOLIDAYS key).
+local HOLIDAY_STOP = { hallows_end = "bucket" }
+RouteLines.HOLIDAY_STOP = HOLIDAY_STOP
 local DONE_ALPHA = 0.35            -- steps already done fade
 -- Everything above is for a zone map. A continent or the whole world puts far more ground in the same space, so
 -- lines and markers shrink there to keep from smothering it, by the map's kind (Enum.UIMapType: 0 cosmic,
@@ -130,7 +134,7 @@ end
 -- One run, on its casing (unless the map has none: state.noCasing).
 local function run(frame, look, ax, ay, bx, by, from, to, thickness, r, g, b, alpha)
     if not state.noCasing then
-        local cr, cg, cb, ca = Theme:MapColor("casing")
+        local cr, cg, cb, ca = Theme:MapColor("casing", state.holiday)
         place(acquire(frame, "casings", "casingsUsed", "ARTWORK"), frame, look, true, ax, ay, bx, by, from, to,
             thickness, cr, cg, cb, ca * alpha)
     end
@@ -161,7 +165,7 @@ end
 local function drawPiece(frame, piece, unit, shrink, W, H)
     local look = LOOK[piece.style] or LOOK.foot
     local thickness = math.max(look.thickness * shrink, MIN_THICKNESS) * unit
-    local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot")
+    local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", state.holiday)
     local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
     -- A solid line's runs reach half its width past each end, so a bend has no notch on its outside.
     local reach = look.solid and thickness / 2 or 0
@@ -181,11 +185,13 @@ local function drawPiece(frame, piece, unit, shrink, W, H)
 end
 
 -- Dress a badge as `marker` (MapRoute's): its size (unscaled), picture and colours, faded if its step is before
--- `current`. Where it goes is the caller's.
-function RouteLines.StyleBadge(badge, marker, current)
-    local size = MARKER[marker.kind] or MARKER.step
+-- `current`; `holiday` for a holiday route's look. Where it goes is the caller's.
+function RouteLines.StyleBadge(badge, marker, current, holiday)
+    local shape = marker.kind
+    if (shape == "stop" or shape == "dest") and holiday and HOLIDAY_STOP[holiday] then shape = HOLIDAY_STOP[holiday] end
+    local size = MARKER[shape] or MARKER.step
     badge:SetSize(size, size)
-    local picture = PICTURE[marker.kind] or PICTURE.step
+    local picture = PICTURE[shape] or PICTURE.step
     badge.fill:SetTexture(picture[1], "CLAMP", "CLAMP", "TRILINEAR")
     badge.ring:SetTexture(picture[2], "CLAMP", "CLAMP", "TRILINEAR")
     badge.fill:ClearAllPoints()
@@ -193,22 +199,22 @@ function RouteLines.StyleBadge(badge, marker, current)
     local r, g, b
     local done = false
     if marker.kind == "dest" then
-        r, g, b = Theme:MapColor("dest")
+        r, g, b = Theme:MapColor("dest", holiday)
     elseif marker.kind == "portOut" or marker.kind == "portIn" then
         r, g, b = Theme:MapColor("ability")
         done = current and marker.step < current
     elseif marker.kind == "edge" then
-        r, g, b = Theme:MapColor(LOOK[marker.style] and marker.style or "foot")
+        r, g, b = Theme:MapColor(LOOK[marker.style] and marker.style or "foot", holiday)
         done = current and marker.step < current
     elseif marker.kind == "stop" then
-        r, g, b = Theme:MapColor("stop")
+        r, g, b = Theme:MapColor("stop", holiday)
         done = current and marker.step < current
     else
-        r, g, b = Theme:MapColor(LOOK[marker.style] and marker.style or "foot")
+        r, g, b = Theme:MapColor(LOOK[marker.style] and marker.style or "foot", holiday)
         done = current and marker.index < current
     end
     local alpha = done and DONE_ALPHA or 1
-    local cr, cg, cb, ca = Theme:MapColor("casing")
+    local cr, cg, cb, ca = Theme:MapColor("casing", holiday)
     badge.ring:SetVertexColor(cr, cg, cb, math.max(ca, 0.9) * alpha)
     badge.fill:SetVertexColor(r, g, b, alpha)
 end
@@ -218,7 +224,7 @@ local function drawMarker(frame, marker, unit, W, H)
     badge:SetScale(unit)
     badge:ClearAllPoints()
     badge:SetPoint("CENTER", frame, "TOPLEFT", (marker.x * W) / unit, (-marker.y * H) / unit)
-    RouteLines.StyleBadge(badge, marker, state.current)
+    RouteLines.StyleBadge(badge, marker, state.current, state.holiday)
 end
 
 -- How much smaller than on a zone map to draw on map `mapID` (see SHRINK), and whether its lines go without casing.
@@ -234,6 +240,7 @@ local function draw(frame, plan, mapID)
     local shrink, noCasing = shrinkFor(mapID)
     local unit = unitOf(frame)
     state.noCasing = noCasing
+    state.holiday = plan.holiday           -- a holiday route's look (Theme:MapColor, HOLIDAY_STOP)
     local pieces, markers = MapRoute:Pieces(plan, mapID)
     for _, piece in ipairs(pieces) do drawPiece(frame, piece, unit, shrink, W, H) end
     for _, marker in ipairs(markers) do drawMarker(frame, marker, unit * shrink, W, H) end

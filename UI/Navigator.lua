@@ -187,6 +187,7 @@ end
 -- Follows `plan` instead of the trip being followed; false when there is no plan to follow.
 local function restart(entry, plan)
     if not (plan and #plan.steps > 0) then return false end
+    plan.holiday = entry and entry.holiday              -- a holiday route keeps its look on the map
     Navigation:Start(entry, plan, "NAV_REROUTED")
     addon.Panel:OnRerouted(entry, plan)
     ui.useStep = nil

@@ -100,9 +100,19 @@ function Theme:StyleColor(style)
     return c[1], c[2], c[3], c[4] or 1
 end
 
--- A colour for the route on the map (see `map` above).
-function Theme:MapColor(name)
-    local c = current and current.map and current.map[name]
+-- A holiday route's own look on the map, over whichever theme is on (a theme's `holidayMap[key]` wins): only the
+-- colours named here change; teleports keep the theme's. Hallow's End: pumpkin orange on near-black, the last stop green.
+local HOLIDAY_MAP = {
+    hallows_end = {
+        foot = { 0.96, 0.52, 0.13 }, flight = { 1, 0.68, 0.25 }, boat = { 0.85, 0.40, 0.08 },
+        stop = { 1, 0.55, 0.10 }, dest = { 0.55, 0.85, 0.25 }, casing = { 0.03, 0.02, 0.02, 0.92 },
+    },
+}
+
+-- A colour for the route on the map (see `map` above); `holiday` (an addon.HOLIDAYS key) for a holiday route's look.
+function Theme:MapColor(name, holiday)
+    local look = holiday and (current and current.holidayMap and current.holidayMap[holiday] or HOLIDAY_MAP[holiday])
+    local c = look and look[name] or current and current.map and current.map[name]
     if c then return c[1], c[2], c[3], c[4] or 1 end
     if name == "casing" then return 0.05, 0.04, 0.03, 0.85 end
     if name == "dest" then return self:Color("accent") end

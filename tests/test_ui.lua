@@ -931,6 +931,24 @@ check(RouteLines.ShrinkFor(1453) == 1 and RouteLines.ShrinkFor(13) < 1 and Route
 check(RouteLines.PICTURE.step[1]:find("^Interface\\AddOns\\[^\\]+\\Media\\Step$") ~= nil,
     "the marker pictures' paths have their backslashes: " .. RouteLines.PICTURE.step[1])
 check(select(2, RouteLines.ShrinkFor(947)) and not select(2, RouteLines.ShrinkFor(13)), "and the world map's lines have no casing")
+-- A holiday route (plan.holiday): its stops and last stop are the holiday's picture, its lines the holiday's colours.
+do
+    local function tex() return { SetTexture = function(self, p) self.path = p end, ClearAllPoints = function() end,
+        SetAllPoints = function() end, SetVertexColor = function(self, r, g, b) self.rgb = { r, g, b } end } end
+    local function dressed(kind, holiday)
+        local badge = { fill = tex(), ring = tex(), SetSize = function(self, w) self.size = w end }
+        RouteLines.StyleBadge(badge, { kind = kind, step = 1, x = 0, y = 0 }, nil, holiday)
+        return badge
+    end
+    check(dressed("stop").fill.path:find("Stop$") and dressed("stop", "hallows_end").fill.path:find("Bucket$")
+        and dressed("dest", "hallows_end").ring.path:find("BucketEdge$"), "a Hallow's End route's stops are buckets")
+    check(dressed("step", "hallows_end").fill.path:find("Step$"), "its step dots stay dots")
+    check(dressed("stop", "no_such_holiday").fill.path:find("Stop$"), "a holiday with no picture of its own keeps the square")
+    local plain, orange = { addon.Theme:MapColor("foot") }, { addon.Theme:MapColor("foot", "hallows_end") }
+    check(plain[1] ~= orange[1] or plain[2] ~= orange[2], "and its lines are the holiday's colour")
+    check(select(1, addon.Theme:MapColor("ability", "hallows_end")) == select(1, addon.Theme:MapColor("ability")),
+        "teleports keep the theme's colour")
+end
 C_Map.GetMapInfo = realInfo
 addon.Navigator:Stop()
 CreateFrame = realCreateFrame

@@ -118,6 +118,9 @@ function addon:ItemCooldownRemaining(itemID)
 end
 
 local function isQuestCompleted(questID)
+    -- A quest faked done or not for testing (MapzerothDataTools' /mzr fakequest): nothing in the addon sets this.
+    local faked = addon.QuestOverrides and addon.QuestOverrides[questID]
+    if faked ~= nil then return faked end
     return C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted(questID) and true or false
 end
 

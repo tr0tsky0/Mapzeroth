@@ -132,6 +132,22 @@ MARKERS = {   # name: (design size, shape)
 }
 HALO = ring(20, 20, 15, 2.2)       # 128 x 128 over 40 x 40 design px
 
+
+# A Hallow's End stop (RouteLines' "bucket", 18 design px): a jack-o'-lantern pail, its handle an arc over the top. The
+# face is cut out of the fill, so the dark edge picture under it shows through as the face.
+def bucket_shape():
+    body = ellipse(9, 10.9, 7.1, 5.9)
+    handle_ring = ring(9, 8.2, 5.6, 0.7)
+    handle = lambda x, y: max(handle_ring(x, y), y - 6.4)          # only its top: the arc over the pail
+    rim = rounded_square(9, 5.4, 3.0, 1.0)
+    rim_h = lambda x, y: max(rim(x, y), abs(y - 5.4) - 0.9)        # a flat strip where the handle meets the pail
+    outline = union(body, handle, rim_h)
+    eyes = [[(4.8, 10.2), (7.6, 10.2), (6.2, 8.0)], [(10.4, 10.2), (13.2, 10.2), (11.8, 8.0)]]
+    mouth = [(4.4, 12.0), (13.6, 12.0), (12.6, 14.4), (11.0, 13.4), (9.0, 14.6), (7.0, 13.4), (5.4, 14.4)]
+    face = lambda x, y: min(min(poly_sdf(x, y, e) for e in eyes), poly_sdf(x, y, mouth))
+    return outline, (lambda x, y: max(outline(x, y), -face(x, y)))
+
+
 # --- The navigator's arrow (256 x 256 over 72 x 72 design px), two-tone, its dark edge baked in ------------------
 CHEVRON = [(36, 8), (61, 61), (36, 48), (11, 61)]
 LEFT_HALF = [(36, 8), (36, 48), (11, 61)]
@@ -162,6 +178,9 @@ def main():
     for name, (size, shape) in MARKERS.items():
         render(name + ".tga", 64, 64, size, size, [(shape, 1.0)], aa=0.8)
         render(name + "Edge.tga", 64, 64, size, size, [(lambda x, y, f=shape: f(x, y) - 1.2, 1.0)], aa=0.8)
+    bucket_outline, bucket = bucket_shape()
+    render("Bucket.tga", 64, 64, 18, 18, [(bucket, 1.0)], aa=0.8)
+    render("BucketEdge.tga", 64, 64, 18, 18, [(lambda x, y: bucket_outline(x, y) - 1.2, 1.0)], aa=0.8)
     # The ring round the flight point a route flies to, on the flight master's map (Theme:TaxiMark): drawn larger than
     # the route's markers, since it sits round the game's own node button.
     render("Halo.tga", 128, 128, 40, 40, [(HALO, 1.0)], aa=0.8)

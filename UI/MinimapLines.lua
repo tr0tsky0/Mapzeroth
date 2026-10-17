@@ -128,7 +128,7 @@ end
 -- One run, on its casing.
 local function run(frame, look, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha)
     local place = addon.RouteLines.PlaceRun
-    local cr, cg, cb, ca = Theme:MapColor("casing")
+    local cr, cg, cb, ca = Theme:MapColor("casing", state.plan and state.plan.holiday)
     place(acquire(frame, "casings", "casingsUsed", "ARTWORK"), look, true, frame, "CENTER", x1, y1, x2, y2, from, to,
         thickness, cr, cg, cb, ca * alpha)
     place(acquire(frame, "lines", "used", "OVERLAY"), look, false, frame, "CENTER", x1, y1, x2, y2, from, to,
@@ -215,7 +215,7 @@ local function draw(frame)
     for _, piece in ipairs(state.pieces) do
         local look = LOOK[piece.style] or LOOK.foot
         local thickness = look.thickness * SCALE * unit
-        local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot")
+        local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", state.plan and state.plan.holiday)
         local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
         for i = 1, #piece.points - 1 do
             local p, q = piece.points[i], piece.points[i + 1]
@@ -241,7 +241,7 @@ local function draw(frame)
             badge:SetScale(unit * SCALE)
             badge:ClearAllPoints()
             badge:SetPoint("CENTER", frame, "CENTER", x / (unit * SCALE), y / (unit * SCALE))
-            addon.RouteLines.StyleBadge(badge, marker, state.current)
+            addon.RouteLines.StyleBadge(badge, marker, state.current, state.plan and state.plan.holiday)
         end
     end
 end
