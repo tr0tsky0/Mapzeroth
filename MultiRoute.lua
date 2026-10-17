@@ -628,14 +628,28 @@ end
 -- offered while their holiday is on. Each has its stops for everyone (neutral) and for each faction.
 
 -- The holiday routes this player is offered now, each { route, points }: those whose holiday is on, with the neutral
--- stops and their own faction's (a player of neither faction gets the neutral ones).
+-- stops and their own faction's (a player of neither faction gets the neutral ones). A stop whose quest (route.quests,
+-- line for line) this character has done is left out, as is one for a reputation's side they are below Neutral with
+-- (route.reps); a route with no stops left isn't offered.
 function MultiRoute:HolidayRoutes(ctx)
     local offered = {}
     for _, route in ipairs(addon.HolidayRoutes or {}) do
         if ctx.holidayActive and ctx.holidayActive(route.holiday) then
-            local points = MultiRoute.ParseWay(route.neutral or "")
-            local own = ctx.faction == "Alliance" and route.alliance or ctx.faction == "Horde" and route.horde
-            for _, point in ipairs(own and MultiRoute.ParseWay(own) or {}) do points[#points + 1] = point end
+            local points = {}
+            local own = ctx.faction == "Alliance" and "alliance" or ctx.faction == "Horde" and "horde" or nil
+            for _, block in ipairs({ "neutral", own }) do
+                local ids = route.quests and route.quests[block] or {}
+                local reps = route.reps and route.reps[block] or {}
+                for i, point in ipairs(MultiRoute.ParseWay(route[block] or "")) do
+                    local quest, rep = ids[i] or 0, reps[i]
+                    local done = quest > 0 and ctx.questCompleted and ctx.questCompleted(quest)
+                    local reaction = rep and ctx.reputationReaction and ctx.reputationReaction(rep)
+                    if not done and not (reaction and reaction < 4) then        -- 4: Neutral
+                        point.questID = quest > 0 and quest or nil
+                        points[#points + 1] = point
+                    end
+                end
+            end
             if #points > 0 then offered[#offered + 1] = { route = route, points = points } end
         end
     end

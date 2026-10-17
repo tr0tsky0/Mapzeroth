@@ -323,6 +323,45 @@ do
     local neither = MR:HolidayRoutes(makeCtx({ faction = "Neutral", holidays = { hallows_end = true } }))
     check(neither[1] and #neither[1].points == count(ek.neutral), "a player of neither faction, only the neutral ones")
 
+    -- Each stop's quest, line for line: a bucket this character has done is left out, and a route with none left too.
+    for _, route in ipairs(addon.HolidayRoutes) do
+        for _, block in ipairs({ "neutral", "alliance", "horde" }) do
+            check(#((route.quests or {})[block] or {}) == count(route[block]), route.name .. " " .. block .. ": a quest entry per stop")
+        end
+    end
+    local light = ek.quests.neutral[1]
+    local after = MR:HolidayRoutes(makeCtx({ faction = "Horde", holidays = { hallows_end = true }, quests = { [light] = true } }))
+    check(#after[1].points == #horde[1].points - 1 and after[1].points[1].questID ~= light, "a done bucket is left out")
+    local all = {}
+    for _, block in ipairs({ "neutral", "horde" }) do
+        for _, q in ipairs(ek.quests[block]) do if q > 0 then all[q] = true end end
+    end
+    local unknown = 0
+    for _, q in ipairs(ek.quests.horde) do if q == 0 then unknown = unknown + 1 end end
+    local rest = MR:HolidayRoutes(makeCtx({ faction = "Horde", holidays = { hallows_end = true }, quests = all }))
+    check(rest[1].route ~= ek or #rest[1].points == unknown, "every known bucket done: only stops with no known quest stay")
+    local outlandRoute
+    for _, route in ipairs(addon.HolidayRoutes) do if route.name:find("Outland") then outlandRoute = route end end
+    local outlandAll = {}
+    for _, block in ipairs({ "neutral", "horde" }) do
+        for _, q in ipairs(outlandRoute.quests[block]) do outlandAll[q] = true end
+    end
+    for _, o in ipairs(MR:HolidayRoutes(makeCtx({ faction = "Horde", holidays = { hallows_end = true }, quests = outlandAll }))) do
+        check(o.route ~= outlandRoute, "a route with every bucket done isn't offered")
+    end
+
+    -- Shattrath and Shadowmoon Valley: one quest each, a bucket per side; the side they're below Neutral with is left out.
+    local function names(reps)
+        local got = {}
+        for _, o in ipairs(MR:HolidayRoutes(makeCtx({ faction = "Alliance", holidays = { hallows_end = true }, reps = reps }))) do
+            if o.route == outlandRoute then for _, p in ipairs(o.points) do got[p.name] = true end end
+        end
+        return got
+    end
+    local both, aldor = names({}), names({ [932] = 6, [934] = 1 })
+    check(both["Aldor Rise"] and both["Scryers Tier"] and both["Sanctum of the Stars"], "neither side chosen: both buckets")
+    check(aldor["Aldor Rise"] and not aldor["Scryers Tier"] and not aldor["Sanctum of the Stars"], "Aldor: the Scryer buckets are left out")
+
     -- Every stop reads, and is on a map we can place (the Underbelly through Dalaran's map above it, as the client does).
     local parents = { [126] = 125 }
     local realInfo, realToWorld, realFromWorld = C_Map.GetMapInfo, C_Map.GetWorldPosFromMapPos, C_Map.GetMapPosFromWorldPos

@@ -68,6 +68,7 @@ function makeCtx(overrides)
         hearthPlace = overrides.hearthPlace,       -- where the hearthstone lands when no inn is there (Hearth.lua)
         campPlace = overrides.campPlace,           -- where Return to Camp goes (Hearth.lua)
         questCompleted = function(id) return (overrides.quests or {})[id] or false end,
+        reputationReaction = function(id) return (overrides.reps or {})[id] end,   -- reps = { [factionID] = reaction }
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,
         maxCooldown = overrides.maxCooldown,                 -- seconds; nil is no limit

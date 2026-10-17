@@ -185,6 +185,11 @@ function addon:GetPlayerContext()
         hearthPlace = hearthPlace,
         campPlace = addon:GetCampPlace(),                   -- where Return to Camp goes (Vulpera), when a camp was made
         questCompleted = isQuestCompleted,
+        -- 1 Hated ... 4 Neutral ... 8 Exalted, nil if the client doesn't say (holiday stops on one side of a rivalry)
+        reputationReaction = function(factionID)
+            local data = C_Reputation and C_Reputation.GetFactionDataByID and C_Reputation.GetFactionDataByID(factionID)
+            return data and data.reaction or nil
+        end,
         holidayActive = isHolidayActive,
         isEquippable = function(itemID) local f = addon.ItemFn("IsEquippableItem") return f ~= nil and f(itemID) and true or false end,
         isEquipped = function(itemID) local f = addon.ItemFn("IsEquippedItem") return f ~= nil and f(itemID) and true or false end,

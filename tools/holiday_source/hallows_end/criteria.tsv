@@ -1,0 +1,257 @@
+# Candy Bucket questIDs from the Tricks and Treats achievements' criteria (MapzerothDataTools /mzr buckets, Retail 12.1.5,
+# 2026-10-16): questID, then the criterion's name ("Zone, Place"). One row per quest. gen_holiday_routes.py matches route
+# stops to these by place name. Wild Coast (Waking Shores) has no quest in its criterion, so it isn't here.
+12345	Ashenvale, Astranaar
+12333	Azuremyst Isle, Azure Watch
+12341	Bloodmyst Isle, Blood Watch
+28951	Darkshore, Lor'danel
+12334	Darnassus, Craftsmen's Terrace
+28993	Desolace, Karnum's Glade
+12348	Desolace, Nijel's Point
+12398	Dustwallow Marsh, Mudsprocket
+12337	Exodar, Seat of the Naaru
+28995	Felwood - Talonbranch Glade
+28994	Felwood - Whisperwind Grove
+28952	Feralas, Dreamer's Rest
+12350	Feralas, Feathermoon Stronghold
+12396	Northern Barrens, Ratchet
+12401	Silithus, Cenarion Hold
+29008	Southern Barrens, Fort Triumph
+29006	Southern Barrens, Honor's Stand
+29007	Southern Barrens, Northwatch Hold
+29013	Stonetalon Mountains, Farwatcher's Glen
+29010	Stonetalon Mountains, Northwatch Expedition Base
+29012	Stonetalon Mountains, Thal'darah Overlook
+29011	Stonetalon Mountains, Windshear Hold
+29014	Tanaris, Bootlegger Outpost
+12399	Tanaris, Gadgetzan
+12331	Teldrassil, Dolanaar
+29018	Un'Goro Crater, Marshal's Stand
+12400	Winterspring, Everlook
+28958	Ashenvale, Hellscream's Watch
+28953	Ashenvale, Silverwind Refuge
+12377	Ashenvale, Splintertree Post
+28989	Ashenvale, Zoram'gar Outpost
+28992	Azshara, Bilgewater Harbor
+12381	Desolace, Shadowprey Village
+12361	Durotar, Razor Hill
+12383	Dustwallow Marsh, Brackenwall Village
+28996	Feralas, Camp Ataya
+12386	Feralas, Camp Mojache
+28998	Feralas, Stonemaul Hold
+12362	Mulgore, Bloodhoof Village
+12374	Northern Barrens, The Crossroads
+29002	Northern Barrens, Grol'dom Farm
+29003	Northern Barrens, Nozzlepot's Outpost
+12366	Orgrimmar, Valley of Strength
+29005	Southern Barrens, Desolation Hold
+29004	Southern Barrens, Hunter's Hill
+29009	Stonetalon Mountains, Krom'gar Fortress
+12378	Stonetalon Mountains, Sun Rock Retreat
+12367	Thunder Bluff, Lower Rise
+28954	Arathi Highlands, Refuge Point
+28956	Badlands, Dragon's Mouth
+28955	Badlands, Fuselight
+28960	Blasted Lands, Nethergarde Keep
+28961	Blasted Lands, Surwich
+12397	The Cape of Stranglethorn, Booty Bay
+12332	Dun Morogh, Kharanos
+12344	Duskwood, Darkshire
+12402	Eastern Plaguelands, Light's Hope Chapel
+12286	Elwynn Forest, Goldshire
+12351	The Hinterlands, Aerie Peak
+28970	The Hinterlands, Stormfeather Outpost
+12335	Ironforge, The Commons
+28963	Loch Modan, Farstrider Lodge
+12339	Loch Modan, Thelsamar
+28964	Northern Stranglethorn, Fort Livingston
+12342	Redridge Mountains, Lakeshire
+28965	Searing Gorge, Iron Summit
+12336	Stormwind, The Trade District
+28967	Swamp of Sorrows, Bogpaddle
+28968	Swamp of Sorrows, The Harborage
+28988	Western Plaguelands, Chillwind Camp
+12343	Wetlands, Menethil Harbor
+28990	Wetlands, Swiftgear Station
+12340	Westfall, Sentinel Hill
+28991	Wetlands, Greenwarden's Grove
+12380	Arathi Highlands, Hammerfall
+28957	Badlands, New Kargath
+28959	Blasted Lands, Dreadmaul Hold
+28969	The Cape of Stranglethorn, Hardwrench Hideaway
+12365	Eversong Woods, Fairbreeze Village
+12364	Eversong Woods, Falconwing Square
+12373	Ghostlands, Tranquillien
+28962	Hillsbrad Foothills, Eastpoint Tower
+12376	Hillsbrad Foothills, Tarren Mill
+28971	The Hinterlands, Hiri'watha Research Station
+12387	The Hinterlands, Revantusk Village
+12382	Northern Stranglethorn, Grom'gol Base Camp
+12370	Silvermoon City, The Bazaar
+12369	Silvermoon City, The Royal Exchange
+28966	Silverpine Forest, Forsaken Rear Guard
+12371	Silverpine Forest, The Sepulcher
+12384	Swamp of Sorrows, Stonard
+12363	Tirisfal Glades, Brill
+28972	Tirisfal Glades, The Bulwark
+12368	Undercity, The Trade Quarter
+28987	Western Plaguelands, Andorhal
+12406	Blade's Edge Mountains, Evergrove
+12394	Blade's Edge Mountains, Mok'Nathal Village
+12393	Blade's Edge Mountains, Thunderlord Stronghold
+12389	Hellfire Peninsula, Falcon Watch
+12388	Hellfire Peninsula, Thrallmar
+12392	Nagrand, Garadar
+12407	Netherstorm, Area 52
+12408	Netherstorm, The Stormspire
+12409	Shadowmoon Valley, Altar of Sha'tar or Sanctum of the Stars
+12395	Shadowmoon Valley, Shadowmoon Village
+12404	Shattrath City, Aldor Rise or Scryer's Tier
+12391	Terokkar Forest, Stonebreaker Hold
+12390	Zangarmarsh, Zabra'jin
+12403	Zangarmarsh, Cenarion Refuge
+12358	Blade's Edge Mountains, Sylvanaar
+12359	Blade's Edge Mountains, Toshley's Station
+12352	Hellfire Peninsula, Honor Hold
+12353	Hellfire Peninsula, Temple of Telhamat
+12357	Nagrand, Telaar
+12360	Shadowmoon Valley, Wildhammer Stronghold
+12356	Terokkar Forest, Allerian Stronghold
+12355	Zangarmarsh, Orebor Harborage
+12354	Zangarmarsh, Telredor
+13501	Borean Tundra, Bor'gorok Outpost
+13467	Borean Tundra, Taunka'le Village
+13460	Borean Tundra, Unu'pe
+13468	Borean Tundra, Warsong Hold
+13463	Dalaran, The Legerdemain Lounge
+13474	Dalaran, Sunreaver's Sanctuary
+13472	Dalaran, The Underbelly
+13469	Dragonblight, Agmar's Hammer
+13459	Dragonblight, Moa'ki Harbor
+13470	Dragonblight, Venomspite
+13456	Dragonblight, Wyrmrest Temple
+12947	Grizzly Hills, Camp Oneqwah
+12946	Grizzly Hills, Conquest Hold
+13464	Howling Fjord, Camp Winterhoof
+13452	Howling Fjord, Kamagua
+13465	Howling Fjord, New Agamand
+13466	Howling Fjord, Vengeance Landing
+12950	Sholazar Basin, Nesingwary Base Camp
+13462	Storm Peaks, Bouldercrag's Refuge
+13471	Storm Peaks, Camp Tunka'lo
+13548	Storm Peaks, Grom'arsh Crash Site
+13461	Storm Peaks, K3
+12941	Zul'Drak, The Argent Stand
+12940	Zul'Drak, Zim'Torga
+13437	Borean Tundra, Fizzcrank Airstrip
+13436	Borean Tundra, Valiance Keep
+13473	Dalaran, Silver Enclave
+13438	Dragonblight, Stars' Rest
+13439	Dragonblight, Wintergarde Keep
+12944	Grizzly Hills, Amberpine Lodge
+12945	Grizzly Hills, Westfall Brigade
+13435	Howling Fjord, Fort Wildervar
+13433	Howling Fjord, Valgarde
+13434	Howling Fjord, Westguard Keep
+13448	Storm Peaks, Frosthold
+29020	Deepholm, Temple of Earth
+29000	Mount Hyjal, Grove of Aessina
+28999	Mount Hyjal, Nordrassil
+29001	Mount Hyjal, Shrine of Aviana
+28977	Twilight Highlands, Firebeard's Patrol
+28980	Twilight Highlands, Highbank
+28978	Twilight Highlands, Thundermar
+28979	Twilight Highlands, Victor's Point
+29016	Uldum, Oasis of Vir'sar
+29017	Uldum, Ramkahen
+28985	Vashj'ir, Darkbreak Cove
+28981	Vashj'ir, Deepmist Grotto
+28982	Vashj'ir, Silver Tide Hollow
+28983	Vashj'ir, Tranquil Wash
+29019	Deepholm, Temple of Earth
+28973	Twilight Highlands, Bloodgulch
+28974	Twilight Highlands, Crushblow
+28976	Twilight Highlands, The Krazzworks
+28984	Vashj'ir, Legion's Rest
+28986	Vashj'ir, Tenebrous Cavern
+32024	Dread Wastes, Klaxxi'vess
+32023	Dread Wastes, Soggy's Gamble
+32027	Jade Forest, Dawn's Blossom
+32029	Jade Forest, Greenstone Village
+32032	Jade Forest, Jade Temple Grounds
+32049	Jade Forest, Paw'don Village
+32033	Jade Forest, Pearlfin Village
+32031	Jade Forest, Sri-La Village
+32021	Jade Forest, Tian Monastery
+32034	Krasarang Wilds, Marista
+32036	Krasarang Wilds, Zhu's Watch
+32039	Kun-Lai Summit, Binan Village
+32041	Kun-Lai Summit, The Grummle Bazaar
+32037	Kun-Lai Summit, One Keg
+32042	Kun-Lai Summit, Westwind Rest
+32051	Kun-Lai Summit, Zouchin Village
+32026	The Veiled Stair, Tavern in the Mists
+32043	Townlong Steppes, Longying Outpost
+32044	Vale of Eternal Blossoms, Mistfall Village
+32052	Vale of Eternal Blossoms, Shrine of Seven Stars
+32048	Valley of the Four Winds, Pang's Stead
+32046	Valley of the Four Winds, Stoneplow
+32028	Jade Forest, Grookin Hill
+32050	Jade Forest, Honeydew Village
+32020	Krasarang Wilds, Dawnchaser Retreat
+32047	Krasarang Wilds, Thunder Cleft
+32040	Kun-Lai Summit, Eastwind Rest
+32022	Vale of Eternal Blossoms, Shrine of Two Moons
+75684	Ohn'ahran Plains, Broadhoof Outpost
+75693	Ohn'ahran Plains, Emberwatch
+75692	Ohn'ahran Plains, Forkriver Crossing
+75685	Ohn'ahran Plains, Maruukai
+75687	Ohn'ahran Plains, Ohn'iri Springs
+75688	Ohn'ahran Plains, Pinewood Post
+75689	Ohn'ahran Plains, Rusza'thar Reach
+75686	Ohn'ahran Plains, Shady Sanctuary
+75691	Ohn'ahran Plains, Teerakai
+75690	Ohn'ahran Plains, Timberstep Outpost
+75698	Thaldraszus, Algeth'era Court
+75696	Thaldraszus, Garden Shrine
+75697	Thaldraszus, Gelikyr Post
+75695	Thaldraszus, Temporal Conflux
+75700	Thaldraszus, Valdrakken (The Parting Glass)
+75699	Thaldraszus, Valdrakken (The Roasted Ram)
+75701	Thaldraszus, Valdrakken (Weyrnrest)
+75667	The Azure Span, Camp Antonidas
+75668	The Azure Span, Camp Nowhere
+75669	The Azure Span, Iskaara
+75670	The Azure Span, Theron's Watch
+75671	The Azure Span, Three-Falls Lookout
+75702	The Forbidden Reach, Morqut Village
+75672	The Waking Shores, Apex Observatory
+75673	The Waking Shores, Dragonscale Basecamp
+75675	The Waking Shores, Life Vault Ruins
+77698	The Waking Shores, Obsidian Bulwark
+75676	The Waking Shores, Obsidian Throne
+75674	The Waking Shores, Ruby Lifeshrine
+75677	The Waking Shores, Skytop Observatory
+75678	The Waking Shores, Uktulut Backwater
+75679	The Waking Shores, Uktulut Pier
+75683	The Waking Shores, Wingrest Embassy
+75704	Zaralek Cavern, Loamm
+75703	Zaralek Cavern, Obsidian Rest
+84579	Azj-Kahet, Faerin's Advance
+84580	Azj-Kahet, Mmarl
+84582	Azj-Kahet, Weaver's Lair
+84581	Azj-Kahet, Wildcamp Ul'ar
+84576	City of Threads, High Hollows
+84578	City of Threads, Umbral Bazaar
+84577	City of Threads - Lower, The Burrows
+84572	Hallowfall, Dunelle's Kindness
+84574	Hallowfall, Light's Redoubt
+84573	Hallowfall, Lorel's Crossing
+84575	Hallowfall, Mereldar
+84564	Isle of Dorn, Dornogal
+84566	Isle of Dorn, Freywold Village
+84567	Isle of Dorn, Rambleshire
+84568	The Ringing Deeps, Camp Murroch
+84569	The Ringing Deeps, Gundargaz
+84570	The Ringing Deeps, Opportunity Point
+84571	The Ringing Deeps, Shadowvein Point

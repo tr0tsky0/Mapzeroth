@@ -29,7 +29,7 @@ Howling Fjord	79.2, 30.6	Vengeance Landing
 Howling Fjord	52.1, 66.1	New Agamand
 Howling Fjord	49.4, 10.7	Camp Winterhoof
 Grizzly Hills	20.8, 64.7	Conquest Hold
-Grizzly Hills	65.3 47	Camp Onegwah
+Grizzly Hills	65.3 47	Camp Oneqwah
 Dragonblight	76.8, 63.2	Venomspite
 Dragonblight	37.8, 46.4	Agmar's Hammer
 The Situation in Dalaran	66.8, 29.6	Sunreaver's Sanctuary
