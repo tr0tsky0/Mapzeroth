@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.2
+
+### Added
+- **More ley lines and convergences:** 4 more ley lines and 21 more convergences, 81 ley lines and 76 convergences in all.
+- **The flight map marks where you're flying to:** a pulsing ring round the flight point your route takes.
+- **An About page** on the settings page, with the Discord link.
+- Ley line sharing takes in Skyborne Compass's "not there any more" reports, so routes skip a node someone found gone. Sightings now last 90 minutes.
+
+### Fixed
+- Minimap detection of ley lines stopped working when the game renamed the minimap's "Ley Line" dot to "Leyline". It finds both now.
+- The minimap button no longer shows its ring when another addon gathers it off the minimap.
+- "You're already here" only shows for a few seconds of walking or flying, not for a quick trip by teleport.
+
 ## 2.0.0 (Retail)
 
 Mapzeroth has been rebuilt from the ground up, on the same engine as Mapzeroth for WoW: Forever. If you've tried it in the Forever Beta, it'll be very familiar.
