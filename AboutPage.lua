@@ -110,6 +110,7 @@ local function copyBox(parent, text)
     box:SetSize(BOX_WIDTH, 20)
     box:SetAutoFocus(false)
     box:SetText(text)
+    box:SetCursorPosition(0)
     box:SetScript("OnTextChanged", function(self, byUser)
         if byUser then
             self:SetText(text)
@@ -117,14 +118,7 @@ local function copyBox(parent, text)
         end
     end)
     box:SetScript("OnEditFocusGained", function(self) self:HighlightText() end)
-    -- A box filled while hidden keeps its cursor at the end and can show nothing of the address: start it from the
-    -- beginning whenever it is shown or let go.
-    local function toStart(self)
-        self:HighlightText(0, 0)
-        self:SetCursorPosition(0)
-    end
-    box:SetScript("OnShow", toStart)
-    box:SetScript("OnEditFocusLost", toStart)
+    box:SetScript("OnEditFocusLost", function(self) self:HighlightText(0, 0) end)
     box:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
     box:SetScript("OnKeyUp", function(self, key)
         if key == "C" and IsControlKeyDown() then self:ClearFocus() end

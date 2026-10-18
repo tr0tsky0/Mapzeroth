@@ -1036,6 +1036,8 @@ do
     for _, row in ipairs(pw.others) do ids[#ids + 1] = row.id end
     check(table.concat(ids, ",") == "sllcm,greyquestsmatter", "on Forever it lists SLLCM and Grey Quests Matter, not itself: " .. table.concat(ids, ","))
     local sllcm = pw.others[1]
+    check((sllcm.link:GetText() or "") == "", "the address boxes stay empty until the page is shown")
+    about.frame._scripts.OnShow()
     check(sllcm.notes:GetText() == addon.L["ABOUT_NOTES_SLLCM"] and sllcm.link:GetText() == "https://www.curseforge.com/wow/addons/sllcm",
         "with what it does and its CurseForge address")
     sllcm.link._scripts.OnTextChanged(sllcm.link, true)

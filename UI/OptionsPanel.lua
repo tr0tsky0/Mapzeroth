@@ -135,8 +135,8 @@ local function scrolledPage(frame, height)
     return panel, box, fit, { frame = scroll, bar = bar, fit = fit }
 end
 
--- The hooks the game's Settings window calls on a canvas page.
-local function settingsHooks(frame, fit)
+-- The hooks the game's Settings window calls on a canvas page. onShow (optional): more to do as the page is shown.
+local function settingsHooks(frame, fit, onShow)
     frame.OnCommit = function() end
     frame.OnDefault = function()
         Options:Reset()
@@ -146,6 +146,7 @@ local function settingsHooks(frame, fit)
     frame:SetScript("OnShow", function()
         fit()
         OptionsPanel:Sync()
+        if onShow then onShow() end
     end)
 end
 
@@ -196,10 +197,11 @@ local function metadata(field)
     return get and get(addonName, field)
 end
 
--- An address in a box, to select and copy (the game can't open links), not edit.
+-- An address in a box, to select and copy (the game can't open links), not edit. It starts empty: the page fills it
+-- when first shown (see BuildAbout).
 local function linkBox(parent, url)
     local edit = Theme:EditBox(parent, LINK_WIDTH, 28)
-    edit:SetText(url)
+    edit.url = url
     edit:SetScript("OnTextChanged", function(self, byUser)
         if byUser then
             self:SetText(url)
@@ -207,14 +209,7 @@ local function linkBox(parent, url)
         end
     end)
     edit:SetScript("OnEditFocusGained", function(self) self:HighlightText() end)
-    -- A box filled while hidden keeps its cursor at the end and shows nothing of a short address: start it from the
-    -- beginning whenever it is shown or let go.
-    local function toStart(self)
-        self:HighlightText(0, 0)
-        self:SetCursorPosition(0)
-    end
-    edit:SetScript("OnShow", toStart)
-    edit:SetScript("OnEditFocusLost", toStart)
+    edit:SetScript("OnEditFocusLost", function(self) self:HighlightText(0, 0) end)
     edit:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
     edit:SetScript("OnKeyUp", function(self, key)
         if key == "C" and IsControlKeyDown and IsControlKeyDown() then self:ClearFocus() end
@@ -226,6 +221,7 @@ end
 -- CurseForge addresses (the list is the shared AboutPage.lua's, the same in all of them).
 function OptionsPanel:BuildAbout()
     local frame = CreateFrame("Frame", "MapzerothRebuildOptionsAbout", UIParent)
+    frame:Hide()                                      -- a new frame is shown, and OnShow (which fills it) only runs on a change
     frame.name = L["OPT_ABOUT_TITLE"]
     frame.parent = L["OPT_TITLE"]                     -- older clients' options window files it under ours by this
     self.aboutFrame = frame
@@ -277,7 +273,16 @@ function OptionsPanel:BuildAbout()
         widgets.others[#widgets.others + 1] = row
     end
 
-    settingsHooks(frame, fit)
+    -- The page is built hidden at login, and an edit box given its text before it has ever been shown sits scrolled
+    -- to the end of it, blank. So the addresses go in once the page is on screen.
+    settingsHooks(frame, fit, function()
+        for _, row in ipairs(widgets.others) do
+            if row.link:GetText() ~= row.link.url then
+                row.link:SetText(row.link.url)
+                row.link:SetCursorPosition(0)
+            end
+        end
+    end)
     return frame
 end
 
