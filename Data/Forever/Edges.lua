@@ -112,7 +112,7 @@ for _, edge in ipairs({
     { from = "DOCK_MENETHIL", to = "DOCK_AUBERDINE_MENETHIL", method = "ship", cost = 498, ride = 270, loadingScreens = 1, oneway = true, requirements = { faction = "Alliance" } }, -- via Southshore, ride 135 + 60 + 75
     { from = "DOCK_SOUTHSHORE", to = "DOCK_MENETHIL", method = "ship", cost = 428, ride = 200, loadingScreens = 2, oneway = true, requirements = { faction = "Alliance" } }, -- via Auberdine, ride 75 + 60 + 65
 
-    { from = "DOCK_STEAMWHEEDLE", to = "DOCK_POWDERFUSE", method = "ship", cost = 90, loadingScreens = 1 }, -- new in Forever, both factions; Kalimdor <-> Eastern Kingdoms (Riverglades) so it should have a loading screen (cost still a PLACEHOLDER)
+    { from = "DOCK_STEAMWHEEDLE", to = "DOCK_POWDERFUSE", method = "ship", cost = 198, ride = 69, loadingScreens = 1 }, -- new in Forever, both factions; Kalimdor <-> Eastern Kingdoms (Riverglades) so it has a loading screen; MEASURED live Powderfuse -> Steamwheedle: T = 69, D = 60 -> 2T + D = 198 (taken as the same both ways)
     -- Menethil <-> Theramore shuttle: T = 155, D = 60 -> average 2T + D = 370. Crosses continents (one loading screen).
     { from = "DOCK_MENETHIL_THERAMORE", to = "DOCK_THERAMORE", method = "ship", cost = 370, ride = 155, loadingScreens = 1, requirements = { faction = "Alliance" } }, -- Classic
     { from = "DOCK_AUBERDINE_RUTTHERAN", to = "DOCK_RUTTHERAN", method = "ship", cost = 190, ride = 65, loadingScreens = 0, requirements = { faction = "Alliance" } }, -- Classic, Teldrassil ferry; T = 65, D = 60 -> 2T + D = 190, same continent so no loading screen

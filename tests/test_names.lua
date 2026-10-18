@@ -40,8 +40,10 @@ check(addon:GetNodeName("TAXI_900001") == "Tokka's Landing Flight Master", "plac
 check(addon:GetNodeName("TAXI_900002") == "Amani Foothold Flight Master", "found through its own map: " .. addon:GetNodeName("TAXI_900002"))
 C_TaxiMap.GetTaxiNodesForMap = realTaxi
 addon:ClearNodeNameCache()
--- ...unless we override what the client says (a node with no real taxi id).
-check(addon:GetNodeName("TAXI_POWDERFUSE") == "Powderfuse Port, Riverglades", "override for a taxi-style node")
+-- ...unless we override what the client says.
+addon:RegisterLocale("enUS", { NODE_TAXI_900001 = "Tokka's Roost" })
+addon:ClearNodeNameCache()
+check(addon:GetNodeName("TAXI_900001") == "Tokka's Roost", "override for a taxi node: " .. addon:GetNodeName("TAXI_900001"))
 
 -- 3. Border crossings are built from the two zones' names.
 check(addon:GetNodeName("BORDER_DUROTAR_TO_THE_BARRENS") == "Durotar / The Barrens border",

@@ -76,7 +76,7 @@ addon.Nodes.Kalimdor = {
     { id = "DOCK_AUBERDINE_MENETHIL", container = "kalimdor.darkshore",     mapID = 1439, x = 0.3237, y = 0.4381 }, -- Auberdine pier for the Menethil/Southshore ship
     { id = "DOCK_RATCHET",      container = "kalimdor.the_barrens",          mapID = 1413, x = 0.6446, y = 0.5083 }, -- Ratchet Harbor (ESTIMATED)
     { id = "DOCK_THERAMORE",    container = "kalimdor.dustwallow_marsh",     mapID = 1445, x = 0.7150, y = 0.5635 }, -- Theramore Isle Harbor (captured live; the earlier estimate was ~16% off in y)
-    { id = "DOCK_STEAMWHEEDLE", container = "kalimdor.tanaris",              mapID = 1446, x = 0.6538, y = 0.2245 }, -- Steamwheedle Port (ESTIMATED, new Forever route)
+    { id = "DOCK_STEAMWHEEDLE", container = "kalimdor.tanaris",              mapID = 1446, x = 0.6836, y = 0.2302, area = 977 }, -- Steamwheedle Port (captured live; the boat to Powderfuse Port)
     { id = "DOCK_FEATHERMOON",  container = "kalimdor.feralas",              mapID = 1444, x = 0.2780, y = 0.3171 }, -- Feathermoon Stronghold Harbor (ESTIMATED)
     { id = "DOCK_FORGOTTENCOAST", container = "kalimdor.feralas",           mapID = 1444, x = 0.3542, y = 0.5040 }, -- Forgotten Coast Harbor (ESTIMATED)
     { id = "ZEPPELIN_ORGRIMMAR_GROMGOL", container = "kalimdor.durotar", mapID = 1411, x = 0.5070, y = 0.1280 }, -- Orgrimmar Zeppelin Tower, the Grom'gol platform (captured live)

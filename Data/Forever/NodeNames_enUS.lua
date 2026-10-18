@@ -43,7 +43,6 @@ addon:RegisterLocale("enUS", {
     NODE_ENTRANCE_SW_WIZARDS_SANCTUM_INNER = "Wizard's Sanctum",
     NODE_PORTAL_DALARAN_STORMWIND  = "Skyborne Portal to Stormwind",
     NODE_PORTAL_STORMWIND_DALARAN  = "Skyborne Portal to Dalaran",
-    NODE_TAXI_POWDERFUSE           = "Powderfuse Port, Riverglades",
     NODE_TRAM_IRONFORGE            = "Deeprun Tram Entrance (Ironforge)",
     NODE_UNDERCITY_ELEVATOR_TOP_1  = "Undercity Elevator (top)",
     NODE_UNDERCITY_ELEVATOR_TOP_2  = "Undercity Elevator (top)",

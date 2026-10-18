@@ -57,8 +57,7 @@ addon.Nodes.EasternKingdoms = {
     { id = "TAXI_87", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.3259, y = 0.6398 }, -- Crown Guard Tower
     { id = "TAXI_3203", container = "easternkingdoms.riverglades",      mapID = 2548, x = 0.5961, y = 0.4506 }, -- Rog'mar (VERIFY in-game once level cap allows)
     { id = "TAXI_3276", container = "easternkingdoms.riverglades",      mapID = 2548, x = 0.6059, y = 0.8157 }, -- Farholde Keep (VERIFY in-game once level cap allows)
-    -- Powderfuse Port flight master: appears in the Alliance flight-map slots but is absent from the C_TaxiMap dump, so there's no real taxi node ID (id is a placeholder). Position derived from the slot's map position + /mzdump resolve, not walked to.
-    { id = "TAXI_POWDERFUSE", container = "easternkingdoms.riverglades", mapID = 2548, x = 0.7680, y = 0.5302 }, -- Powderfuse Port (no flight edges yet; connections unknown)
+    -- No flight master at Powderfuse Port (checked in game 2026-10-18), though a slot for one shows on the Alliance flight map.
 
     -- Docks / zeppelin towers — estimated the same way as Nodes_Kalimdor.lua's
     -- (Atlas map calibration + /mzdump resolve). VERIFY IN-GAME.
@@ -100,5 +99,5 @@ addon.Nodes.EasternKingdoms = {
     { id = "UNDERCITY_ELEVATOR_BOTTOM_3", container = "easternkingdoms.tirisfal_glades", mapID = 1458, x = 0.5940, y = 0.4402, city = "undercity" }, -- Undercity: west elevator, bottom
     { id = "TRAM_STORMWIND",    container = "easternkingdoms.elwynn_forest",      mapID = 1453, x = 0.6903, y = 0.3110 }, -- Deeprun Tram exterior entrance, Stormwind (captured live)
     { id = "TRAM_IRONFORGE",    container = "easternkingdoms.dun_morogh",         mapID = 1455, x = 0.7641, y = 0.5123 }, -- Deeprun Tram exterior entrance, Ironforge (captured live)
-    { id = "DOCK_POWDERFUSE",   container = "easternkingdoms.riverglades",        mapID = 2548, x = 0.7222, y = 0.7603 }, -- Powderfuse Port (ESTIMATED)
+    { id = "DOCK_POWDERFUSE",   container = "easternkingdoms.riverglades",        mapID = 2548, x = 0.8031, y = 0.5439, area = 16727 }, -- Powderfuse Port (captured live; the boat to Steamwheedle Port)
 }
