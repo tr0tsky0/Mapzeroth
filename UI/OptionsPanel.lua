@@ -2,12 +2,13 @@ local addonName, addon = ...
 
 -- The settings page, in the game's own Settings window (Game Menu > Options > AddOns >
 -- Mapzeroth, or /mapzeroth settings): how long a loading screen counts for in a route, the size of
--- our windows, the theme, whether the route is drawn on the map and on the minimap, icons or colour bars beside route steps, and (Forever) sharing ley line sightings; and by its title, the Discord invite. The page is built from our own themed widgets and handed to the
+-- our windows, the theme, whether the route is drawn on the map and on the minimap, icons or colour bars beside route steps, and (Forever) sharing ley line sightings. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.
 --
 -- A second page under it, "Picker", has a checkbox for each pick the picker can offer above its places
--- (Sections:PickChoices), to leave out the ones a player doesn't want.
+-- (Sections:PickChoices), to leave out the ones a player doesn't want. A third, "About", has the version, the Discord
+-- invite and the author's other addons.
 
 local OptionsPanel = {}
 addon.OptionsPanel = OptionsPanel
@@ -186,6 +187,100 @@ function OptionsPanel:BuildPicks()
     return frame
 end
 
+local ABOUT_TOP = 164               -- where the first of the other addons goes, under the version, Discord and heading
+local ABOUT_ROW = 84                -- and how far apart they sit: name, what it does, its address to copy
+local LINK_WIDTH = 380
+
+local function metadata(field)
+    local get = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
+    return get and get(addonName, field)
+end
+
+-- An address in a box, to select and copy (the game can't open links), not edit.
+local function linkBox(parent, url)
+    local edit = Theme:EditBox(parent, LINK_WIDTH, 28)
+    edit:SetText(url)
+    edit:SetScript("OnTextChanged", function(self, byUser)
+        if byUser then
+            self:SetText(url)
+            self:HighlightText()
+        end
+    end)
+    edit:SetScript("OnEditFocusGained", function(self) self:HighlightText() end)
+    -- A box filled while hidden keeps its cursor at the end and shows nothing of a short address: start it from the
+    -- beginning whenever it is shown or let go.
+    local function toStart(self)
+        self:HighlightText(0, 0)
+        self:SetCursorPosition(0)
+    end
+    edit:SetScript("OnShow", toStart)
+    edit:SetScript("OnEditFocusLost", toStart)
+    edit:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    edit:SetScript("OnKeyUp", function(self, key)
+        if key == "C" and IsControlKeyDown and IsControlKeyDown() then self:ClearFocus() end
+    end)
+    return edit
+end
+
+-- The "About" page: the version, the Discord invite, and the author's other addons for this client with their
+-- CurseForge addresses (the list is the shared AboutPage.lua's, the same in all of them).
+function OptionsPanel:BuildAbout()
+    local frame = CreateFrame("Frame", "MapzerothRebuildOptionsAbout", UIParent)
+    frame.name = L["OPT_ABOUT_TITLE"]
+    frame.parent = L["OPT_TITLE"]                     -- older clients' options window files it under ours by this
+    self.aboutFrame = frame
+
+    local others = addon.OtherAddons and addon.OtherAddons() or {}
+    local _, box, fit, scroll = scrolledPage(frame, ABOUT_TOP + #others * ABOUT_ROW + PAD)
+    widgets.aboutScroll = scroll
+    local author = metadata("Author") or "tr0tsky"
+
+    local title = Theme:Text(box, "title")
+    title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
+    title:SetText(L["OPT_TITLE"])
+    widgets.aboutVersion = Theme:Text(box, "body")
+    widgets.aboutVersion:SetPoint("TOPLEFT", PAD, -44)
+    widgets.aboutVersion:SetText(L["OPT_ABOUT_VERSION"]:format(metadata("Version") or "?", author))
+
+    local ask = Theme:Text(box, "body")
+    ask:SetPoint("TOPLEFT", PAD, -84)
+    ask:SetText(L["OPT_ABOUT_ASK"])
+    widgets.discord = Theme:BrandButton(box, "discord", "Discord", 24)
+    widgets.discord:SetPoint("LEFT", ask, "RIGHT", 12, 0)
+    widgets.discord:SetScript("OnClick", function() addon.LinkPopup:Show(L["DISCORD_TITLE"], addon.DISCORD_URL) end)
+
+    widgets.others = {}
+    if #others > 0 then
+        local more = Theme:Text(box, "accent")
+        more:SetPoint("TOPLEFT", PAD, -132)
+        more:SetText(L["OPT_ABOUT_MORE"]:format(author))
+    end
+    for i, other in ipairs(others) do
+        local top = ABOUT_TOP + (i - 1) * ABOUT_ROW
+        local row = { id = other.id }
+        row.name = Theme:Text(box, "body")
+        row.name:SetPoint("TOPLEFT", PAD, -top)
+        row.name:SetText(other.title)
+        if other.installed then
+            row.installed = Theme:Text(box, "accent")
+            row.installed:SetPoint("LEFT", row.name, "RIGHT", 10, 0)
+            row.installed:SetText(L["OPT_ABOUT_INSTALLED"])
+        end
+        row.notes = Theme:Text(box, "dim")
+        row.notes:SetPoint("TOPLEFT", PAD, -(top + 20))
+        row.notes:SetWidth(textWidth(START_WIDTH, false))
+        row.notes:SetWordWrap(true)
+        row.notes:SetText(L["ABOUT_NOTES_" .. other.id:upper()])
+        texts[#texts + 1] = { hint = row.notes, beside = false }
+        row.link = linkBox(box, other.url)
+        row.link:SetPoint("TOPLEFT", PAD, -(top + 42))
+        widgets.others[#widgets.others + 1] = row
+    end
+
+    settingsHooks(frame, fit)
+    return frame
+end
+
 function OptionsPanel:Build()
     local frame = CreateFrame("Frame", "MapzerothRebuildOptions", UIParent)
     frame.name = L["OPT_TITLE"]
@@ -198,10 +293,6 @@ function OptionsPanel:Build()
     local title = Theme:Text(box, "title")
     title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
     title:SetText(L["OPT_TITLE"])
-    -- Top right, level with the title: the Discord invite, offered to copy (the game can't open links).
-    widgets.discord = Theme:BrandButton(box, "discord", "Discord", 24)
-    widgets.discord:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -(PAD - 10))
-    widgets.discord:SetScript("OnClick", function() addon.LinkPopup:Show(L["DISCORD_TITLE"], addon.DISCORD_URL) end)
 
     widgets.tax = sliderRow(box, 64, "loadingScreenTax", L["OPT_TAX"], L["OPT_TAX_DESC"],
         function(v) return L["OPT_SECONDS"]:format(v) end)
@@ -286,15 +377,18 @@ function OptionsPanel:Register()
     if self.registered then return true end
     if not self.frame then self:Build() end
     if not self.picksFrame then self:BuildPicks() end
+    if not self.aboutFrame then self:BuildAbout() end
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
         self.category = Settings.RegisterCanvasLayoutCategory(self.frame, self.frame.name)
         if Settings.RegisterCanvasLayoutSubcategory then
             self.picksCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.picksFrame, self.picksFrame.name)
+            self.aboutCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.aboutFrame, self.aboutFrame.name)
         end
         Settings.RegisterAddOnCategory(self.category)
     elseif InterfaceOptions_AddCategory then
         InterfaceOptions_AddCategory(self.frame)            -- older clients
         InterfaceOptions_AddCategory(self.picksFrame)
+        InterfaceOptions_AddCategory(self.aboutFrame)
     else
         return false
     end

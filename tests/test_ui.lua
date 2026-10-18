@@ -957,10 +957,11 @@ CreateFrame = realCreateFrame
 check(addon.Panel.UpdateThemeLabel == nil, "the panel has no theme button to update")
 
 -- The settings page: registered with the game's Settings window, showing and changing the settings.
-local registeredFrame, openedID, subParent, subFrame
+local registeredFrame, openedID
+local subPages = {}                 -- name -> { parent, frame }, for each page filed under ours
 Settings = {
     RegisterCanvasLayoutCategory = function(frame, name) registeredFrame = frame; return { GetID = function() return 42 end } end,
-    RegisterCanvasLayoutSubcategory = function(parent, frame) subParent, subFrame = parent, frame end,
+    RegisterCanvasLayoutSubcategory = function(parent, frame, name) subPages[name] = { parent = parent, frame = frame } end,
     RegisterAddOnCategory = function() end,
     OpenToCategory = function(id) openedID = id end,
 }
@@ -1019,12 +1020,27 @@ Options:Set("shareSightings", false)
 C_AddOns = realLoaded
 addon.OptionsPanel.widgets.share = savedShare
 
--- The Discord button (top right, Discord's colours and logo in any theme) offers the invite to copy, nothing to dismiss.
-check(pw.discord.label:GetText() == "Discord" and pw.discord.logo._texture:find("Media\\Discord", 1, true), "a Discord button with its logo")
-pw.discord._scripts.OnClick()
-check(addon.LinkPopup:IsShown() and addon.LinkPopup.widgets.box:GetText() == "https://discord.gg/KkcnJPQQ5M", "the Discord button offers the invite")
-check(addon.LinkPopup.widgets.title:GetText() == "Mapzeroth on Discord" and not addon.LinkPopup.widgets.hide._shown, "under its own title, no \"don't show again\"")
-addon.LinkPopup:Hide()
+-- The "About" page, filed under ours: the Discord button (Discord's colours and logo in any theme) offers the invite to
+-- copy, nothing to dismiss; then the author's other addons for this client (the shared AboutPage.lua's list), each
+-- with what it does and its address to copy.
+do
+    local about = subPages[addon.L["OPT_ABOUT_TITLE"]]
+    check(about and about.parent:GetID() == 42 and about.frame == addon.OptionsPanel.aboutFrame, "an About page is registered under Mapzeroth's")
+    check(pw.discord.label:GetText() == "Discord" and pw.discord.logo._texture:find("Media\\Discord", 1, true), "a Discord button with its logo")
+    pw.discord._scripts.OnClick()
+    check(addon.LinkPopup:IsShown() and addon.LinkPopup.widgets.box:GetText() == "https://discord.gg/KkcnJPQQ5M", "the Discord button offers the invite")
+    check(addon.LinkPopup.widgets.title:GetText() == "Mapzeroth on Discord" and not addon.LinkPopup.widgets.hide._shown, "under its own title, no \"don't show again\"")
+    addon.LinkPopup:Hide()
+
+    local ids = {}
+    for _, row in ipairs(pw.others) do ids[#ids + 1] = row.id end
+    check(table.concat(ids, ",") == "sllcm,greyquestsmatter", "on Forever it lists SLLCM and Grey Quests Matter, not itself: " .. table.concat(ids, ","))
+    local sllcm = pw.others[1]
+    check(sllcm.notes:GetText() == addon.L["ABOUT_NOTES_SLLCM"] and sllcm.link:GetText() == "https://www.curseforge.com/wow/addons/sllcm",
+        "with what it does and its CurseForge address")
+    sllcm.link._scripts.OnTextChanged(sllcm.link, true)
+    check(sllcm.link:GetText() == "https://www.curseforge.com/wow/addons/sllcm", "which can't be edited")
+end
 
 -- The page scrolls when the Settings window is shorter than the settings, and doesn't when they fit.
 do
@@ -1059,7 +1075,9 @@ check(addon.OptionsPanel:Open() and openedID == 42, "/mapzeroth settings opens t
 
 -- The "Picker" page, filed under ours: a checkbox per pick, ticked until turned off.
 do
-    check(subParent and subParent:GetID() == 42 and subFrame and subFrame.name == addon.L["OPT_PICKS_TITLE"],
+    local picks = subPages[addon.L["OPT_PICKS_TITLE"]]
+    local subFrame = picks and picks.frame
+    check(picks and picks.parent:GetID() == 42 and subFrame.name == addon.L["OPT_PICKS_TITLE"],
         "a Picker page is registered under Mapzeroth's")
     local checks = {}
     for _, c in ipairs(pw.picks) do checks[c.key] = c end

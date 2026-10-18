@@ -109,6 +109,7 @@ UI\RouteLines.lua
 UI\TaxiMark.lua
 UI\MinimapLines.lua
 UI\LinkPopup.lua
+AboutPage.lua
 UI\Panel.lua
 UI\MinimapButton.lua
 UI\Navigator.lua

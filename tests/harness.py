@@ -17,6 +17,7 @@ from lupa.lua51 import LuaRuntime
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TOC = ROOT / "Mapzeroth-Rebuild.toc"
+ADDON_NAME = "Mapzeroth-Rebuild"    # what the client passes each file: the dev folder's name
 
 STUBS = r"""
 function GetLocale() return "enUS" end
@@ -193,10 +194,10 @@ def new_runtime(toc=None, modern=False):
     for name in toc_files(toc):
         path = ROOT / name
         chunk = compile_chunk(loadstring, path.read_text(encoding="utf-8"), name)
-        chunk("MapzerothRebuild", addon)
+        chunk(ADDON_NAME, addon)
     # Test support that isn't part of the addon: the data validator.
     support = ROOT / "tests" / "Validator.lua"
-    compile_chunk(loadstring, support.read_text(encoding="utf-8"), support.name)("MapzerothRebuild", addon)
+    compile_chunk(loadstring, support.read_text(encoding="utf-8"), support.name)(ADDON_NAME, addon)
     lua.globals().addon = addon
     lua.globals().ADDON_ROOT = str(ROOT)          # for tests that read the addon's own files (test_rulesets)
     if modern and UIMAP_ASSIGNMENT.is_file():

@@ -104,6 +104,16 @@ addon:RegisterLocale("enUS", {
     OPT_HIDE_MINIMAP_DESC = "Hides the Mapzeroth button on the minimap. /mapzeroth still opens the window.",
     OPT_PICKS_TITLE   = "Picker",
     OPT_PICKS_DESC    = "What the list offers before you type: the picks at the top, and your nearest trainers. Untick what you don't need. A pick for something you don't have (a profession, TomTom waypoints) only shows when you do.",
+    -- The "About" page (UI/OptionsPanel.lua). %s: the version, then the author; the author again in OPT_ABOUT_MORE.
+    -- ABOUT_NOTES_<id>: one line on each of the author's other addons (ids from AboutPage.lua).
+    OPT_ABOUT_TITLE   = "About",
+    OPT_ABOUT_VERSION = "Version %s by %s",
+    OPT_ABOUT_ASK     = "Questions, bug reports and ideas:",
+    OPT_ABOUT_MORE    = "More addons by %s",
+    OPT_ABOUT_INSTALLED = "Installed",
+    ABOUT_NOTES_SLLCM = "Marks leylines and elemental convergences, shared live between players.",
+    ABOUT_NOTES_GREYQUESTSMATTER = "Warns when a grey quest leads to follow-up quests that are not grey.",
+    ABOUT_NOTES_HOUSINGREPS = "Shows reputations that grant housing rewards.",
     OPT_PICK_TOMTOM   = "Your TomTom Waypoints",
     MONEY_GOLD        = "%dg",
     MONEY_SILVER      = "%ds",
