@@ -155,6 +155,7 @@ local CHECK_ROW = 28                -- how far apart the picker page's checkboxe
 -- The "Picker" page: a heading, what it does, and a checkbox per pick.
 function OptionsPanel:BuildPicks()
     local frame = CreateFrame("Frame", "MapzerothRebuildOptionsPicks", UIParent)
+    frame:Hide()                                      -- a new frame is shown, and OnShow (which fits it) only runs on a change
     frame.name = L["OPT_PICKS_TITLE"]
     frame.parent = L["OPT_TITLE"]                     -- older clients' options window files it under ours by this
     self.picksFrame = frame
@@ -190,7 +191,7 @@ end
 
 local ABOUT_TOP = 164               -- where the first of the other addons goes, under the version, Discord and heading
 local ABOUT_ROW = 84                -- and how far apart they sit: name, what it does, its address to copy
-local LINK_WIDTH = 380
+local LINK_WIDTH = 440               -- room for the longest address (grey-quests-matter) in the theme's font
 
 local function metadata(field)
     local get = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
@@ -288,6 +289,7 @@ end
 
 function OptionsPanel:Build()
     local frame = CreateFrame("Frame", "MapzerothRebuildOptions", UIParent)
+    frame:Hide()                                      -- a new frame is shown, and OnShow (which fits it) only runs on a change
     frame.name = L["OPT_TITLE"]
     self.frame = frame
 
