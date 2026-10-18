@@ -14,7 +14,8 @@ local addonName, addon = ...
 local LeyScan = {}
 addon.LeyScan = LeyScan
 
-local NAMES = { "Ley Line", "Elemental Convergence" }   -- the minimap tooltip's text; English only, as in SLLCM
+local NAMES = { "Leyline", "Ley Line", "Elemental Convergence" }   -- the minimap tooltip's text; English only, as in SLLCM
+-- "Leyline" since 2026-10-18 (was "Ley Line")
 local CHECK_SECONDS = 2        -- how often to decide whether to scan
 local MOVE_YARDS = 30          -- scan after moving this far
 local IDLE_SECONDS = 60        -- or after this long standing still: a node can come up next to you
