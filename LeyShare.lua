@@ -38,6 +38,7 @@ local THROTTLE_PAUSE = 5
 local CONFIRMATIONS = 2              -- NPC kinds agreeing before a confirmed phase is replaced
 local SCAN_SECONDS = 60              -- re-read nameplates this often (the shard can change while standing still)
 local RESTORE_SECONDS = 300          -- a phase saved at logout or /reload is picked up again only this soon after
+local QUERY_MEMORY = 300             -- a Q for a phase (ours or one heard) from before a /reload still counts this long
 local REJOIN_SECONDS = 60
 local SETTLE_SECONDS, SETTLE_MAX = 3, 30
 local REORDER_SECONDS = 60           -- after joining, game channels arriving above ours get moved below it this long
@@ -57,7 +58,7 @@ local tentativeNpc       -- read from one NPC kind only: any other reading repla
 local candidates = {}    -- candidates[phase] = { [npcID] = true, n = count }
 local waiting            -- an own sighting made before the phase was known
 local pending            -- a racial whose buff couldn't be read (combat): checked when combat ends
-local asked = {}         -- asked[phase] = true: our own Q for it has gone out (once a session)
+local asked = {}         -- asked[phase] = true: a Q for it, ours or one heard, has gone out this session
 local joinedAt           -- GetTime() of first joining the channel this session: no Q after TTL seconds on it
 local answering = {}     -- answering[phase] = a token while an answer to a Q for it waits (an S for it cancels)
 local queue, sending = {}, false
@@ -136,6 +137,9 @@ end
 
 local function ownReports() return ownStore("sightings") end
 local function ownGone() return ownStore("sightingsGone") end
+-- MapzerothRebuildDB.sightingQueries[fac][phase] = GetServerTime() of the last Q for it, ours or heard, so a
+-- /reload doesn't ask again what was just asked.
+local function ownQueries() return ownStore("sightingQueries") end
 
 -- SLLCM 0.3.1 keeps them the same way, db.crowdReports[fac][mapID]; 0.3.0 had one list for both factions,
 -- crowdReports[mapID], which is still read for anyone on that version (the node match keeps the factions apart).
@@ -183,6 +187,17 @@ local function pruneAll()
             end
             if next(all) == nil then MapzerothRebuildDB[key] = nil end
         end
+    end
+    local queries = MapzerothRebuildDB and MapzerothRebuildDB.sightingQueries
+    if type(queries) == "table" then
+        local now = GetServerTime()
+        for tag, byPhase in pairs(queries) do
+            for p, t in pairs(byPhase) do
+                if now - t > QUERY_MEMORY then byPhase[p] = nil end
+            end
+            if next(byPhase) == nil then queries[tag] = nil end
+        end
+        if next(queries) == nil then MapzerothRebuildDB.sightingQueries = nil end
     end
 end
 
@@ -468,12 +483,16 @@ local function coord(v)
 end
 
 -- Ask once a session per phase, and only in the first TTL (90 minutes) on the channel: every R and S reaches every client
--- whatever its phase, so after that there is nothing from before we joined left to ask for.
+-- whatever its phase, so after that there is nothing from before we joined left to ask for. For the same reason a Q
+-- heard from someone else does for us (we hear the answers), and so does one from just before a /reload.
 local function query()
     if not joinedAt and channelIndex() then joinedAt = GetTime() end
     if not phase or not hasNodes(phaseMap) or asked[phase] then return end
     if not joinedAt or GetTime() - joinedAt > TTL then return end
     asked[phase] = true
+    local queries, now = ownQueries(), GetServerTime()
+    if queries[phase] and now - queries[phase] <= QUERY_MEMORY then return end
+    queries[phase] = now
     send(("Q:%s:%s:%s"):format(VERSION, factionTag(), phase))
 end
 
@@ -536,6 +555,9 @@ function LeyShare:OnMessage(text)
     if (kind == "R" or kind == "XM") and rest then
         addFields(kind == "R" and add or addGone, p, strsplit(":", rest))
     elseif kind == "Q" then
+        -- We'll hear the answers to it, so we needn't ask about this phase ourselves.
+        asked[p] = true
+        ownQueries()[p] = GetServerTime()
         -- Answer after a random wait, unless someone else answers first: a short one when we saw a node there
         -- ourselves, a longer one when we only heard of it. One wait per phase.
         if answering[p] then return end

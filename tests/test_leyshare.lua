@@ -56,6 +56,7 @@ addon.Options:Set("shareSightings", true)
 local function reset()
     LS:ResetForTests()
     MapzerothRebuildDB.sightings, MapzerothRebuildDB.sightingsGone, MapzerothRebuildDB.sharedNodes = nil, nil, nil
+    MapzerothRebuildDB.sightingQueries = nil
     sent, timers, delays = {}, {}, {}
 end
 
@@ -266,6 +267,29 @@ LS:ReadGUID("Creature-0-1-2-6000-1111-0008")
 LS:ReadGUID("Vehicle-0-1-2-6000-2222-0009")
 runTimers()
 check(LS:Phase() == "6000" and #sent == 2, "after 90 minutes on the channel nothing is asked: every R and S since has been heard")
+
+-- Someone else's Q for a phase does for ours: we hear its answers. So does one from just before a /reload, for 5 min.
+reset()
+LS:OnMessage("Q:1:A:3104")
+LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
+runTimers()
+check(#sent == 0, "a phase someone else asked about isn't asked about again: " .. tostring(sent[1]))
+LS:ResetForTests()                                  -- a /reload: the session's memory goes, the saved file stays
+now = now + 240
+LS:ReadGUID("Creature-0-1-2-3104-1234-0002")
+runTimers()
+check(#sent == 0, "nor after a /reload 4 minutes later")
+LS:ResetForTests()
+now = now + 120
+LS:ReadGUID("Creature-0-1-2-3104-1234-0003")
+runTimers()
+check(#sent == 1 and sent[1] == "Q:1:A:3104", "but 6 minutes after the last Q it is: " .. tostring(sent[1]))
+LS:ResetForTests()
+now = now + 60
+LS:ReadGUID("Creature-0-1-2-3104-1234-0004")
+runTimers()
+check(#sent == 1, "and our own Q counts the same way after a /reload")
+now = now - 420
 
 -- Our own find: before the phase is known it waits, and goes out once it is (in the same zone).
 reset()
