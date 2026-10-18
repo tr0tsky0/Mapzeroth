@@ -7,7 +7,6 @@ refine by walking a crossing and capturing `/mzdump here`.
 
 Checked and NOT walkable (left out on purpose):
   Elwynn Forest <-> Duskwood: Technically you can just swim across the southern river into Duskwood, but there's no "road" crossing
-  Redridge Mountains <-> Burning Steppes: Doesn't Exist...it's part of Riverglades now
   Dun Morogh <-> Wetlands: Does Not Exist
 
 Zones that touch on the map but have no crossing (no walkable link found):
@@ -36,9 +35,7 @@ easternkingdoms:
     7 cells  Alterac Mountains <-> The Hinterlands
     7 cells  Blasted Lands <-> Deadwind Pass
     6 cells  Badlands <-> Burning Steppes
-    4 cells  Burning Steppes <-> Redridge Mountains
     3 cells  Alterac Mountains <-> Tirisfal Glades
-    3 cells  Redridge Mountains <-> Swamp of Sorrows
     1 cells  Deadwind Pass <-> Stranglethorn Vale
 
 Every node and crossing written:
@@ -138,6 +135,9 @@ Every node and crossing written:
   BORDER_SWAMP_OF_SORROWS_TO_BLASTED_LANDS: Swamp of Sorrows side of the Swamp of Sorrows/Blasted Lands crossing
   BORDER_BLASTED_LANDS_TO_SWAMP_OF_SORROWS: Blasted Lands side of the Blasted Lands/Swamp of Sorrows crossing
   crossing BORDER_SWAMP_OF_SORROWS_TO_BLASTED_LANDS -> BORDER_BLASTED_LANDS_TO_SWAMP_OF_SORROWS: Swamp of Sorrows <-> Blasted Lands
+  BORDER_REDRIDGE_MOUNTAINS_TO_BURNING_STEPPES: Redridge Mountains side of the Redridge Mountains/Burning Steppes crossing
+  BORDER_BURNING_STEPPES_TO_REDRIDGE_MOUNTAINS: Burning Steppes side of the Burning Steppes/Redridge Mountains crossing
+  crossing BORDER_REDRIDGE_MOUNTAINS_TO_BURNING_STEPPES -> BORDER_BURNING_STEPPES_TO_REDRIDGE_MOUNTAINS: Redridge Mountains <-> Burning Steppes (captured on both sides)
   BORDER_BURNING_STEPPES_TO_SEARING_GORGE: Burning Steppes side of the Burning Steppes/Searing Gorge crossing
   BORDER_SEARING_GORGE_TO_BURNING_STEPPES: Searing Gorge side of the Searing Gorge/Burning Steppes crossing
   crossing BORDER_BURNING_STEPPES_TO_SEARING_GORGE -> BORDER_SEARING_GORGE_TO_BURNING_STEPPES: Burning Steppes <-> Searing Gorge (via Blackrock Mountain (not zero travel))
@@ -152,13 +152,19 @@ Every node and crossing written:
   crossing BORDER_BADLANDS_TO_RIVERGLADES -> BORDER_RIVERGLADES_TO_BADLANDS: Badlands <-> Riverglades
   BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS: Riverglades side of the Riverglades/Redridge Mountains crossing
   BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES: Redridge Mountains side of the Redridge Mountains/Riverglades crossing
-  crossing BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS -> BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES: Riverglades <-> Redridge Mountains
+  crossing BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS -> BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES: Riverglades <-> Redridge Mountains (captured on both sides)
   BORDER_RIVERGLADES_TO_BURNING_STEPPES: Riverglades side of the Riverglades/Burning Steppes crossing
   BORDER_BURNING_STEPPES_TO_RIVERGLADES: Burning Steppes side of the Burning Steppes/Riverglades crossing
   crossing BORDER_RIVERGLADES_TO_BURNING_STEPPES -> BORDER_BURNING_STEPPES_TO_RIVERGLADES: Riverglades <-> Burning Steppes
   BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS: Riverglades side of the Riverglades/Swamp of Sorrows crossing
   BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES: Swamp of Sorrows side of the Swamp of Sorrows/Riverglades crossing
   crossing BORDER_RIVERGLADES_TO_SWAMP_OF_SORROWS -> BORDER_SWAMP_OF_SORROWS_TO_RIVERGLADES: Riverglades <-> Swamp of Sorrows
+  BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES_2: Redridge Mountains side of the Redridge Mountains/Riverglades crossing
+  BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS_2: Riverglades side of the Riverglades/Redridge Mountains crossing
+  crossing BORDER_REDRIDGE_MOUNTAINS_TO_RIVERGLADES_2 -> BORDER_RIVERGLADES_TO_REDRIDGE_MOUNTAINS_2: Redridge Mountains <-> Riverglades (captured on both sides; Redridge's east strip, cut off from the rest of Redridge)
+  BORDER_REDRIDGE_MOUNTAINS_TO_SWAMP_OF_SORROWS: Redridge Mountains side of the Redridge Mountains/Swamp of Sorrows crossing
+  BORDER_SWAMP_OF_SORROWS_TO_REDRIDGE_MOUNTAINS: Swamp of Sorrows side of the Swamp of Sorrows/Redridge Mountains crossing
+  crossing BORDER_REDRIDGE_MOUNTAINS_TO_SWAMP_OF_SORROWS -> BORDER_SWAMP_OF_SORROWS_TO_REDRIDGE_MOUNTAINS: Redridge Mountains <-> Swamp of Sorrows (Redridge's east strip; the Swamp side was captured on the continent map (56.15, 72.74), which is 67.2, -1.2 on the Swamp map, just past its north edge)
   BORDER_LOCH_MODAN_TO_DUN_MOROGH: Loch Modan side of the Loch Modan/Dun Morogh crossing
   BORDER_DUN_MOROGH_TO_LOCH_MODAN: Dun Morogh side of the Dun Morogh/Loch Modan crossing
   crossing BORDER_LOCH_MODAN_TO_DUN_MOROGH -> BORDER_DUN_MOROGH_TO_LOCH_MODAN: Loch Modan <-> Dun Morogh (South Gate; captured at the gate on both sides)

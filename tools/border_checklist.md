@@ -38,14 +38,16 @@ Each row is one guessed crossing point, seen from both sides.
 | Duskwood | 89.8, 40.0 | Deadwind Pass | 31.9, 34.8 |
 | Deadwind Pass | 59.1, 41.6 | Swamp of Sorrows | 2.9, 60.7 |
 | Swamp of Sorrows | 33.3, 74.1 | Blasted Lands | 52.7, 8.5 |
-*** | Redridge Mountains | 47.5, 10.4 | Burning Steppes | 78.1, 80.6 | Doesn't Exist...it's part of Riverglades now
+| Redridge Mountains | 41.34, 6.46 | Burning Steppes | 78.92, 83.61 | captured on both sides
 | Burning Steppes | 29.4, 38.5 | Searing Gorge | 34.9, 87.0 | via Blackrock Mountain (not zero travel) [areaA=254]
 | Searing Gorge | 77.6, 60.1 | Badlands | 8.7, 68.0 |
 | Badlands | 46.7, 3.6 | Loch Modan | 47.2, 85.4 |
 | Badlands | 62.5, 84.1 | Riverglades | 31.7, 25.0 |
-| Riverglades | 13.8, 78.4 | Redridge Mountains | 52.3, 7.6 |
+| Riverglades | 16.01, 68.62 | Redridge Mountains | 45.36, 7.92 | captured on both sides
 | Riverglades | 13.8, 64.8 | Burning Steppes | 94.5, 70.3 | 
 | Riverglades | 36.9, 91.9 | Swamp of Sorrows | 65.3, 10.6 |
+| Redridge Mountains | 66.54, 18.10 | Riverglades | 25.43, 73.19 | captured on both sides; Redridge's east strip, cut off from the rest of Redridge [subA=east]
+| Redridge Mountains | 95.96, 70.68 | Swamp of Sorrows | 67.22, 0.00 | Redridge's east strip; the Swamp side was captured on the continent map (56.15, 72.74), which is 67.2, -1.2 on the Swamp map, just past its north edge [subA=east]
 | Loch Modan | 19.66, 62.86 | Dun Morogh | 86.22, 51.29 | South Gate; captured at the gate on both sides [areaB=806]
 | Loch Modan | 25.57, 10.39 | Wetlands | 55.65, 84.80 | via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel)
 | Loch Modan | 16.8, 84.0 | Searing Gorge | 78.4, 16.7 | Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel

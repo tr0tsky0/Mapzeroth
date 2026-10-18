@@ -12,6 +12,8 @@ Each row is one crossing seen from both zones' own maps:
   * A note containing "not zero travel" marks a crossing with real travel
     inside it (a tunnel): its edge gets no fixed cost, so the engine works the
     cost out from the distance between the two entrances.
+  * [subA=name] / [subB=name] puts that side's node in a sub-container of its
+    zone (<zone>.name): a part of the zone you can't walk to from the rest.
 
 tools/grids.json (from `/mzdump grid` in the MapzerothDataTools addon) is only
 used to give each zone its mapID and to list zones that touch on the map but
@@ -78,6 +80,11 @@ def parse_checklist():
         row["area_a"] = int(areas["A"]) if "A" in areas else None
         row["area_b"] = int(areas["B"]) if "B" in areas else None
         row["note"] = re.sub(r"\s*\[area[AB]=\d+\]", "", row["note"]).strip()
+        # [subA=east] / [subB=...]: that side's node sits in a cut-off part of its zone, a sub-container
+        # (<zone>.east) that ground travel doesn't join to the rest of the zone.
+        subs = dict(re.findall(r"\[sub([AB])=([a-z0-9_]+)\]", row["note"]))
+        row["sub_a"], row["sub_b"] = subs.get("A"), subs.get("B")
+        row["note"] = re.sub(r"\s*\[sub[AB]=[a-z0-9_]+\]", "", row["note"]).strip()
         # "requires quest N" in a note gates the crossing behind that quest.
         quest = re.search(r"requires quest (\d+)", row["note"], re.I)
         row["quest"] = int(quest.group(1)) if quest else None
@@ -137,14 +144,15 @@ def main():
 
         prefix = CONTINENT_PREFIX[cont_a]
         ids = []
-        for side, other, zid, (x, y), area in ((row["a"], row["b"], id_a, row["ac"], row["area_a"]),
-                                               (row["b"], row["a"], id_b, row["bc"], row["area_b"])):
+        for side, other, zid, (x, y), area, sub in ((row["a"], row["b"], id_a, row["ac"], row["area_a"], row["sub_a"]),
+                                                    (row["b"], row["a"], id_b, row["bc"], row["area_b"], row["sub_b"])):
             nid = f"BORDER_{zone_slug(side).upper()}_TO_{zone_slug(other).upper()}"
             if any(nid in line for line in out_nodes):
                 nid += "_2"  # a second crossing between the same two zones
             ids.append(nid)
+            path = f"{prefix}.{zone_slug(side)}" + (f".{sub}" if sub else "")
             out_nodes.append(
-                f'    {{ id = "{nid}", container = "{prefix}.{zone_slug(side)}", mapID = {zid}, '
+                f'    {{ id = "{nid}", container = "{path}", mapID = {zid}, '
                 f'x = {x:.4f}, y = {y:.4f}{f", area = {area}" if area else ""} }},')
             named.append(f"{nid}: {side} side of the {side}/{other} crossing")
         tunnel = "not zero travel" in row["note"].lower()
