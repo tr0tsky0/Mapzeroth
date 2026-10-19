@@ -100,6 +100,10 @@ STOP_QUESTS = {
     (MIDNIGHT, "Witherbark Bluffs"): 97152,
     ("Tricks and Treats of the Dragon Isles", "Wild Coast", "alliance"): 75681,
     ("Tricks and Treats of the Dragon Isles", "Wild Coast", "horde"): 75682,
+    # Deepholm's one bucket (the Chamber of Respite, Temple of Earth), a quest per side (achievements 5837 / 5838);
+    # the Alliance one turned in there 2026-10-19, the Horde one taken to be the same bucket.
+    ("Tricks and Treats of Eastern Kingdoms", "Temple of Earth", "alliance"): 29020,
+    ("Tricks and Treats of Eastern Kingdoms", "Temple of Earth", "horde"): 29019,
 }
 # Stops only a reputation's side can use (Shattrath and Shadowmoon Valley: one quest, a bucket per side): stop -> factionID.
 # The picker leaves such a stop out while that faction is below Neutral.

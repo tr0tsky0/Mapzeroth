@@ -1,3 +1,2 @@
 # gen_holiday_routes.py: stops without a quest, and quests no stop has.
-quest no stop has: hallows_end 29020 (templeofearth)
-quest no stop has: hallows_end 29019 (templeofearth)
+

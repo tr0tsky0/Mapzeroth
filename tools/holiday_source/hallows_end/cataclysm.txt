@@ -6,7 +6,8 @@ Mount Hyjal	42.7, 45.7	Shrine of Aviana
 Mount Hyjal	18.6, 37.3	Grove of Aessina
 Uldum	26.6, 7.2	Oasis of Vir'sar
 Uldum	54.7, 33.0	Ramkahen
-Alliance (6)
+Alliance (7)
+Deepholm	47.42, 51.69	Temple of Earth
 Twilight Highlands	49.6, 30.4	Thundermar
 Twilight Highlands	60.3, 58.2	Firebeard's Patrol
 Twilight Highlands	79.5, 78.5	Highbank
@@ -14,6 +15,7 @@ Twilight Highlands	43.5, 57.3	Victor's Point
 Shimmering Expanse	49.7, 57.4	Tranquil Wash
 Abyssal Depths	54.7, 72.1	Darkbreak Cove
 Horde (6)
+Deepholm	47.42, 51.69	Temple of Earth
 Twilight Highlands	45.1, 76.8	Crushblow
 Twilight Highlands	53.4, 42.8	Bloodgulch
 Twilight Highlands	75.4, 16.5	The Krazzworks
