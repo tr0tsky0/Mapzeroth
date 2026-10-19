@@ -22,7 +22,6 @@ addon.Nodes.EK = {
     { id = "PORTAL_SILVERMOON_STORMWIND", container = "ek_overworld.map2393.interior", mapID = 2393, x = 0.5275, y = 0.6471, city = "silvermoon" }, -- Portal to Stormwind
     { id = "STORMWIND_MAGE_TOWER_ENTRANCE", container = "ek_overworld.map84", mapID = 84, x = 0.4942, y = 0.8679, city = "stormwind" }, -- Mage Tower: the door, street side
     { id = "STORMWIND_MAGE_TOWER_EXIT", container = "ek_overworld.map84.mage_tower", mapID = 84, x = 0.4927, y = 0.8700, city = "stormwind" }, -- Mage Tower: the door, tower side
-    { id = "STORMWIND_MAGE_TOWER_PORTAL_DOOR", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4938, y = 0.8674, city = "stormwind" }, -- Mage Tower: the lower portal floor's doorway, a teleport to the top of the stairwell
     { id = "TAXI_634", container = "ek_overworld.map15", mapID = 15, x = 0.2220, y = 0.5880 }, -- Dragon's Mouth
     { id = "INSTANCE_SHADOWFANG_KEEP", container = "ek_overworld.map21", mapID = 21, x = 0.4500, y = 0.6800, kind = "instance", journal = 64 }, -- Shadowfang Keep
     { id = "TAXI_630", container = "ek_overworld.map23", mapID = 23, x = 0.5400, y = 0.5350 }, -- Light's Shield Tower

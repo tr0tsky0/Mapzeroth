@@ -30,10 +30,9 @@ addon.Edges = {
     { from = "PORTAL_STORMWIND_SILVERMOON", to = "SILVERMOON_PORTAL_ROOM", method = "portal", cost = 0, oneway = true, requirements = { minLevel = 78, faction = "Alliance" } },
     { from = "PORTAL_SILVERMOON_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { minLevel = 78, faction = "Alliance" } },
     { from = "STORMWIND_MAGE_TOWER_ENTRANCE", to = "STORMWIND_MAGE_TOWER_EXIT", method = "walk", requirements = { faction = "Alliance" } },
-    -- the portal floor's doorway teleports you to the top of the stairwell, then down the spiral stairs: a straight line
-    -- from it to the street door (almost directly below) says nothing, so a fixed cost (a guess)
-    { from = "STORMWIND_MAGE_TOWER_PORTAL_DOOR", to = "STORMWIND_MAGE_TOWER_EXIT", method = "walk", cost = 10, requirements = { faction = "Alliance" } },
-    { from = "STORMWIND_MAGE_TOWER_PORTAL_DOOR", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "walk", requirements = { faction = "Alliance" } },
+    -- the portal floor to the street, one step: its doorway teleports you to the top of the stairwell, then down the
+    -- spiral stairs and out of the door, which a straight line can't measure (timed in game 2026-10-19: ~17 s)
+    { from = "STORMWIND_PORTAL_ROOM_LOWER", to = "STORMWIND_MAGE_TOWER_ENTRANCE", method = "walk", cost = 17, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_DORNOGAL", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_SILVERMOON", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_VALDRAKKEN", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "walk", requirements = { faction = "Alliance" } },

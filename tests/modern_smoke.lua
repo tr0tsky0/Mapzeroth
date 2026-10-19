@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1798, "every node made it into the tree (1282 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1797, "every node made it into the tree (1281 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -47,7 +47,7 @@ check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the fl
 -- container (the several portal rooms grouped together: one interior container per map).
 check(containers["ek_overworld.map84"] and containers["ek_overworld.map84"] > 1,
     "Stormwind's outdoor container holds more than one node")
-check(containers["ek_overworld.map84.interior"] == 17, "and its interior container holds the 17 portal-floor nodes: "
+check(containers["ek_overworld.map84.interior"] == 16, "and its interior container holds the 16 portal-floor nodes: "
     .. tostring(containers["ek_overworld.map84.interior"]))
 check(containers["ek_overworld.map84.mage_tower"] == 2, "and the Mage Tower stairwell its door and the Honor Hold Mage: "
     .. tostring(containers["ek_overworld.map84.mage_tower"]))
@@ -346,8 +346,8 @@ for from, list in pairs(roomGraph.adjacency) do
 end
 check(not flyIntoRoom, "nothing flies into or out of the portal room")
 
--- Stormwind's Mage Tower: the portal floors and the stairwell down to the street are separate interiors, joined only by
--- the lower floor's teleport doorway (the street door is almost directly below it: a straight line would say 10 yards).
+-- Stormwind's Mage Tower: the portal floor and the street door are joined by one timed walk (the doorway's teleport and
+-- the stairwell, which a straight line can't measure), never straight to the stairwell by the door.
 local towerGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
 local floorToDoor = false
 for _, e in ipairs(towerGraph.adjacency["STORMWIND_PORTAL_ROOM_LOWER"] or {}) do
@@ -357,8 +357,8 @@ check(not floorToDoor, "no straight walk from the portal floor to the stairwell"
 local out = addon.Pathfinder:FindPath(towerGraph, "STORMWIND_PORTAL_ROOM_LOWER", "STORMWIND_MAGE_TOWER_ENTRANCE")
 local through = {}
 for _, s in ipairs(out and out.steps or {}) do through[s.to] = true end
-check(through["STORMWIND_MAGE_TOWER_PORTAL_DOOR"] and through["STORMWIND_MAGE_TOWER_EXIT"],
-    "out of the tower goes through the teleport doorway and down to the street door")
+check(out and #out.steps == 1 and through["STORMWIND_MAGE_TOWER_ENTRANCE"],
+    "out of the tower is one walk to the street door: " .. tostring(out and #out.steps))
 local streetStart = { id = "START_SILVERMOON", mapID = 2393, x = 0.60, y = 0.75 }
 local toRoom = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = "Horde" }), streetStart), "PORTAL_SILVERMOON_ORGRIMMAR")
 local roomKinds = {}
