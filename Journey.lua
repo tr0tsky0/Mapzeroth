@@ -153,7 +153,7 @@ local function spentOnce(session)
             keys[#keys + 1] = key
         end
     end
-    table.sort(keys)
+    table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)   -- ids and shared-cooldown names together
     return keys
 end
 

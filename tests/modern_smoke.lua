@@ -915,3 +915,19 @@ end
 
 -- Modern characters are mostly well travelled: flight points not yet seen at a flight master count as found.
 check(addon.Options:Get("assumeFlightsFound") == true, "on Modern, unseen flight points are assumed found by default")
+
+-- The dungeon and raid teleports share one 8-hour cooldown: a trip of several legs (a tour, a round trip) can use one
+-- of them, not one each.
+do
+    local keys, dungeon = {}, 0
+    for _, a in ipairs(addon.Abilities.Teleports) do
+        if a.sharedCooldown == "dungeon" then
+            dungeon = dungeon + 1
+            keys[addon.Pathfinder.AbilityKey(a)] = true
+        end
+    end
+    local distinct = 0
+    for _ in pairs(keys) do distinct = distinct + 1 end
+    check(dungeon > 50 and distinct == 1, "every dungeon teleport is one ability: " .. dungeon .. " teleports, " .. distinct .. " key(s)")
+    check(addon.Pathfinder.AbilityKey({ spellID = 3561 }) == 3561, "a mage teleport keeps its own key")
+end

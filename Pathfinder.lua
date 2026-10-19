@@ -41,6 +41,8 @@ addon.Pathfinder = Pathfinder
 
 -- What names an "anywhere" ability for banning it: its item, else its spell (the hearthstone has both).
 function Pathfinder.AbilityKey(source)
+    -- Abilities that share a cooldown are one: using any of them spends them all.
+    if source.sharedCooldown then return "shared:" .. source.sharedCooldown end
     return source.itemID or source.spellID
 end
 

@@ -281,7 +281,7 @@ do
     local once = {}
     for _, key in ipairs(J:OneUseAbilities(session)) do once[key] = true end
     check(not once[193753], "Dreamwalk isn't used up by one leg")
-    check(once[6948] and once[1254400], "the hearthstone and Path of the Windrunners are")
+    check(once[6948] and once["shared:dungeon"], "the hearthstone and Path of the Windrunners (the dungeon teleports' one cooldown) are")
     check(once[184504], "and so is a consumable (the Oribos portal, 5 min), short cooldown or not")
 end
 
