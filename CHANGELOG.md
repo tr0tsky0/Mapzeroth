@@ -8,6 +8,7 @@
 ### Fixed
 - Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.
 - Deepholm's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
+- Teleport: Stonard was thought to land in Azshara, so routes after it had no arrow or map lines.
 
 ## 2.0.2 (Retail)
 
