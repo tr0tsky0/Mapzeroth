@@ -32,7 +32,15 @@ for _, edge in ipairs({
     -- Rog'mar being Horde-only is inferred from its absence there; not yet
     -- confirmed on a Horde slot list.
     { from = "TAXI_3203", to = "TAXI_70", cost = 263, requirements = { faction = "Horde" } }, -- Rog'mar -> Flame Crest
-    { from = "TAXI_3276", to = "TAXI_71", cost = 222, requirements = { faction = "Alliance" } }, -- Farholde Keep -> Morgan's Vigil
+    -- Farholde Keep's direct flights, from its flight map's routes (/mzroutes, 2026-10-18): every other destination
+    -- went through one of these three. Points not yet found then (Nethergarde, Booty Bay...) might have direct
+    -- flights too. Times are MEASURED base times (raw time x 1.2, flown with Frequent Flier).
+    { from = "TAXI_3276", to = "TAXI_5", cost = 131, requirements = { faction = "Alliance" } }, -- Farholde Keep -> Lakeshire, MEASURED 109.1 s with Frequent Flier
+    { from = "TAXI_5", to = "TAXI_3276", cost = 132, requirements = { faction = "Alliance" } }, -- Lakeshire -> Farholde Keep, MEASURED 110.3 s with Frequent Flier
+    { from = "TAXI_3276", to = "TAXI_8", cost = 173, requirements = { faction = "Alliance" } }, -- Farholde Keep -> Thelsamar, MEASURED 144.4 s with Frequent Flier
+    { from = "TAXI_8", to = "TAXI_3276", cost = 185, requirements = { faction = "Alliance" } }, -- Thelsamar -> Farholde Keep, MEASURED 153.9 s with Frequent Flier
+    { from = "TAXI_3276", to = "TAXI_71", cost = 123, requirements = { faction = "Alliance" } }, -- Farholde Keep -> Morgan's Vigil, MEASURED 102.3 s with Frequent Flier
+    { from = "TAXI_71", to = "TAXI_3276", cost = 131, requirements = { faction = "Alliance" } }, -- Morgan's Vigil -> Farholde Keep, MEASURED 109.4 s with Frequent Flier
 }) do
     edge.method = "taxi"
     table.insert(addon.Edges, edge)

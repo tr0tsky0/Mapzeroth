@@ -56,7 +56,7 @@ addon.Nodes.EasternKingdoms = {
     { id = "TAXI_86", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.5780, y = 0.4160 }, -- Eastwall Tower
     { id = "TAXI_87", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.3259, y = 0.6398 }, -- Crown Guard Tower
     { id = "TAXI_3203", container = "easternkingdoms.riverglades",      mapID = 2548, x = 0.5961, y = 0.4506 }, -- Rog'mar (VERIFY in-game once level cap allows)
-    { id = "TAXI_3276", container = "easternkingdoms.riverglades",      mapID = 2548, x = 0.6059, y = 0.8157 }, -- Farholde Keep (VERIFY in-game once level cap allows)
+    { id = "TAXI_3276", container = "easternkingdoms.riverglades",      mapID = 2548, x = 0.6059, y = 0.8157 }, -- Farholde Keep (flown from in game 2026-10-18)
     -- No flight master at Powderfuse Port (checked in game 2026-10-18), though a slot for one shows on the Alliance flight map.
 
     -- Docks / zeppelin towers — estimated the same way as Nodes_Kalimdor.lua's
