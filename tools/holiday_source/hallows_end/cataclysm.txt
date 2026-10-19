@@ -17,6 +17,5 @@ Horde (6)
 Twilight Highlands	45.1, 76.8	Crushblow
 Twilight Highlands	53.4, 42.8	Bloodgulch
 Twilight Highlands	75.4, 16.5	The Krazzworks
-Twilight Highlands	75.3, 54.9	Dragonmaw Port (not for meta)
 Shimmering Expanse	51.4, 62.3	Legion's Rest
 Abyssal Depths	51.3, 60.5	Tenebrous Cavern

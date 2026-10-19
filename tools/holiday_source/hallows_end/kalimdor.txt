@@ -12,11 +12,9 @@ Alliance (19)
 Southern Barrens	39.0, 11.0	Honor's Stand
 Southern Barrens	65.6, 46.5	Northwatch Hold
 Southern Barrens	49.0, 68.5	Fort Triumph
-Dustwallow Marsh	66.6, 45.3	Theramore Isle (not part of meta achievement)
 Feralas	46.3, 45.2	Feathermoon Stronghold
 Feralas	51.1, 17.8	Dreamer's Rest
 Desolace	66.3, 6.6	Nijel's Point
-Stonetalon Mountains	40.6, 17.7	Stonetalon Peak
 Stonetalon Mountains	71.0, 79.0	Northwatch Expedition Base Camp
 Stonetalon Mountains	59.0, 56.3	Windshear Hold
 Stonetalon Mountains	31.5, 60.7	Farwatcher's Glen
