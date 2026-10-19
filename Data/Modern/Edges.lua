@@ -177,7 +177,9 @@ addon.Edges = {
     { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, requirements = { quest = 25924, faction = "Horde" } },
     { from = "WESTERN_EARTHSHRINE_OG", to = "DRAGONMAW_PORT", method = "portal", cost = 0, requirements = { faction = "Horde" } },
     { from = "WESTERN_EARTHSHRINE_OG", to = "TOL_BARAD_HORDE", method = "portal", cost = 0, requirements = { faction = "Horde" } },
-    { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, requirements = { faction = "Horde" } },
+    { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
+    -- Deepholm's portal home lands in the portal room's upper floor, not back at the Earthshrine (seen 2026-10-19)
+    { from = "PORTAL_DEEPHOLM_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "WESTERN_EARTHSHRINE_OG", to = "ULDUM", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "WESTERN_EARTHSHRINE_OG", to = "MOUNT_HYJAL", method = "portal", cost = 0, requirements = { faction = "Horde" } },
     { from = "TAXI_296", to = "TAXI_294", method = "ship", cost = 45 },
