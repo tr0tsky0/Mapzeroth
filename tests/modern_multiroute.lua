@@ -362,8 +362,9 @@ do
     check(both["Aldor Rise"] and both["Scryers Tier"] and both["Sanctum of the Stars"], "neither side chosen: both buckets")
     check(aldor["Aldor Rise"] and not aldor["Scryers Tier"] and not aldor["Sanctum of the Stars"], "Aldor: the Scryer buckets are left out")
 
-    -- Every stop reads, and is on a map we can place (the Underbelly through Dalaran's map above it, as the client does).
-    local parents = { [126] = 125 }
+    -- Every stop reads, and is on a map we can place (the Underbelly through Dalaran's map above it, as the client does;
+    -- Slayer's Rise through Voidstorm's, the map it lies inside).
+    local parents = { [126] = 125, [2444] = 2405 }
     local realInfo, realToWorld, realFromWorld = C_Map.GetMapInfo, C_Map.GetWorldPosFromMapPos, C_Map.GetMapPosFromWorldPos
     CreateVector2D = CreateVector2D or function(x, y) return { x = x, y = y, GetXY = function(self) return self.x, self.y end } end
     C_Map.GetMapInfo = function(id) return parents[id] and { parentMapID = parents[id] } or nil end

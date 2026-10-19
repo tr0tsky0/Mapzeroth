@@ -34,6 +34,7 @@ ROUTES = [
     (HALLOWS, "Tricks and Treats of Pandaria", [("pandaria", None)]),
     (HALLOWS, "Tricks and Treats of the Dragon Isles", [("dragon_isles", None)]),
     (HALLOWS, "Tricks and Treats of Khaz Algar", [("khaz_algar", None)]),
+    (HALLOWS, "Tricks and Treats of Midnight", [("midnight", None)]),
 ]
 
 # Zone names that are more than one map with nodes, or that Wowhead writes its own way.
@@ -55,6 +56,12 @@ STOP_MAPS = {
     ("The Situation in Dalaran", "The Underbelly"): 126,     # Dalaran's sewers: placed through the map above them in game
 }
 
+# Maps without nodes that a /way stop may name anyway: the client carries the position up to a map that has some
+# (addon:PlaceAt).
+CARRIED_MAPS = {
+    2444,                                     # Slayer's Rise (Midnight)
+}
+
 FACTIONS = {"neutral": "neutral", "alliance": "alliance", "horde": "horde"}
 
 # A holiday's quest per stop: tools/holiday_source/<holiday>/criteria.tsv ("questID\tZone, Place", from /mzr buckets),
@@ -67,6 +74,12 @@ QUEST_ALIASES = {
     "Thunder Bluff": "Lower Rise",
     "Nordrassil Inn": "Nordrassil",
     "Northwatch Expedition Base Camp": "Northwatch Expedition Base",
+}
+# A stop's quest set by route, ahead of the name match: (route, stop) -> questID (0: none known). For a stop whose name
+# another route's bucket already has (Midnight's Eversong reuses the TBC inn names).
+STOP_QUESTS = {
+    ("Tricks and Treats of Midnight", "Fairbreeze Village"): 0,
+    ("Tricks and Treats of Midnight", "Tranquillien"): 0,
 }
 # Stops only a reputation's side can use (Shattrath and Shadowmoon Valley: one quest, a bucket per side): stop -> factionID.
 # The picker leaves such a stop out while that faction is below Neutral.
@@ -154,7 +167,7 @@ def read_list(path, by_name, with_nodes, keep, problems):
                     problems.append(f"{path.name}: zone {zone!r} is {candidates or 'no map with nodes'}: add it to ZONE_MAPS")
                     continue
                 map_id = candidates[0]
-        if map_id not in with_nodes and (zone, name) not in STOP_MAPS:
+        if map_id not in with_nodes and (zone, name) not in STOP_MAPS and map_id not in CARRIED_MAPS:
             problems.append(f"{path.name}: {name} is on map {map_id}, which has no nodes")
         stops[faction].append((map_id, x, y, name))
     return stops
@@ -198,7 +211,10 @@ def main():
             out.append(f"      {faction} = [[\n{way_lines(merged[faction])}\n]],")
             ids, needs = [], []
             for i, (m, x, y, stop) in enumerate(merged[faction], 1):
-                hits = known.get(key(QUEST_ALIASES.get(stop, stop)), [])
+                if (name, stop) in STOP_QUESTS:
+                    hits = [STOP_QUESTS[(name, stop)]] if STOP_QUESTS[(name, stop)] else []
+                else:
+                    hits = known.get(key(QUEST_ALIASES.get(stop, stop)), [])
                 if len(hits) > 1:
                     problems.append(f"{name}: {stop} names more than one quest: {hits}: add it to QUEST_ALIASES")
                 if not hits:

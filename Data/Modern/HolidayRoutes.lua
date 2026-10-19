@@ -326,4 +326,29 @@ addon.HolidayRoutes = {
 ]],
       quests = { neutral = { 84567, 84566, 84564, 84569, 84571, 84568, 84570, 84575, 84572, 84573, 84574, 84582, 84579, 84581, 84580, 84578, 84576, 84577 } },
     },
+    { name = "Tricks and Treats of Midnight", holiday = "hallows_end",
+      neutral = [[
+/way #2541 62.73 71 Arcantina
+/way #2393 55.81 69.84 Silvermoon
+/way #2395 46.4 46.07 Fairbreeze Village
+/way #2395 48.99 68.5 Tranquillien
+/way #2437 45.31 65.14 Amani'Zar
+/way #2437 46.57 25.85 Camp Stonewash
+/way #2437 36.88 23.43 Witherbark Bluffs
+/way #2413 30.92 65.03 Har'alnor
+/way #2413 69.04 51.7 Har'athir
+/way #2413 66.15 24.5 Har'kuai
+/way #2413 35.07 22.8 Har'mara
+/way #2576 64.82 63.82 The Den
+/way #2405 41.74 74.62 Locus Point
+/way #2405 35.67 58.6 The Ingress
+]],
+      alliance = [[
+/way #2444 75.95 77.59 Slayer's Rise
+]],
+      horde = [[
+/way #2444 21.32 55.42 Slayer's Rise
+]],
+      quests = { neutral = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, alliance = { 0 }, horde = { 0 } },
+    },
 }
