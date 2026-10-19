@@ -931,3 +931,20 @@ do
     check(dungeon > 50 and distinct == 1, "every dungeon teleport is one ability: " .. dungeon .. " teleports, " .. distinct .. " key(s)")
     check(addon.Pathfinder.AbilityKey({ spellID = 3561 }) == 3561, "a mage teleport keeps its own key")
 end
+
+-- Teleport: Undercity lands by Zidormi in present Tirisfal, whatever the phase: a trip into Undercity (only there in the
+-- past) talks to her, even with Tirisfal's phase unknown (the client can't tell it).
+do
+    local mage = makeCtx({ faction = "Horde", spells = { 3563 }, quests = { [50769] = true, [47098] = true } })
+    useRetailDistances()
+    local from = { id = "START_NAGRAND_UC", mapID = 107, x = 0.5, y = 0.5 }     -- Outland: the teleport is the way
+    local plan, why = addon.Journey:Plan(addon.Journey:Build(mage, from), "UNDERCITY")
+    useTestDistances()
+    local cast, zidormi, seen = false, false, {}
+    for _, step in ipairs(plan and plan.raw or plan and plan.steps or {}) do
+        if step.source and step.source.spellID == 3563 then cast = true end
+        if step.method == "phaseswitch" then zidormi = true end
+        seen[#seen + 1] = tostring(step.method) .. ">" .. tostring(step.to or step.nodeID)
+    end
+    check(cast and zidormi, "Teleport: Undercity, then Zidormi to the past: " .. table.concat(seen, ", ") .. " " .. tostring(why))
+end

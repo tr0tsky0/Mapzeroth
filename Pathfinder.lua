@@ -210,7 +210,21 @@ local function nextPhaseState(state, step)
     if not memo then return state end
     local group, side = memo[1], memo[2]
     local current = state[group]
-    if current == nil or current == side then return state end
+    if current == side then return state end
+    if current == nil then
+        -- An open group stays open, except after a teleport that puts you on a side whatever it was (Teleport: Undercity
+        -- lands in present Tirisfal): that side is then known. Learning it is not a switch, so the route keeps its one.
+        -- Not for Zidormi herself: you pick the side there, and recording it would split every open group's search.
+        for _, g in ipairs(step.method ~= "phaseswitch" and step.overridesPhase or {}) do
+            if g == group then
+                local copy = {}
+                for k, v in pairs(state) do copy[k] = v end
+                copy[group] = side
+                return copy
+            end
+        end
+        return state
+    end
 
     if step.overridesPhase and not state[SWITCHED] then
         for _, g in ipairs(step.overridesPhase) do

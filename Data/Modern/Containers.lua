@@ -49,6 +49,8 @@ addon.Containers["ek_overworld.map17_art18"] = { phaseGroup = "blasted_lands", p
 addon.Containers["ek_overworld.map17_art628"] = { phaseGroup = "blasted_lands", phaseSide = 628, phaseMap = 17 }
 addon.Containers["ek_overworld.map18_art19"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
 addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", phaseSide = 1136, phaseMap = 2070 }
+-- Undercity is only there in the past: its own map, on the past side (phaseMap stays 18, the map that tells the side)
+addon.Containers["ek_overworld.map90"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
 addon.Containers["kalimdor_overworld.map1527_art260"] = { phaseGroup = "uldum", phaseSide = 260, phaseMap = 1527 }
 addon.Containers["kalimdor_overworld.map249_art289"] = { phaseGroup = "uldum", phaseSide = 289, phaseMap = 249 }
 addon.Containers["kalimdor_overworld.map62_art1176"] = { phaseGroup = "darkshore", phaseSide = 1176, phaseMap = 62 }

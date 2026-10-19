@@ -29,7 +29,7 @@ addon.Abilities.Teleports = {
     { spellID = 88342, to = "TOL_BARAD_ALLIANCE", cost = 10 },
     { spellID = 176248, to = "STORMSHIELD_ASHRAN", cost = 10 },
     { spellID = 32272, to = "SILVERMOON", cost = 10 },
-    { spellID = 3563, to = "UNDERCITY", cost = 10 },
+    { spellID = 3563, to = "TIRISFAL_ZIDORMI_PRESENT", cost = 10, overridesPhase = { "tirisfal" } }, -- Teleport: Undercity always lands by Zidormi in present Tirisfal, whatever your phase (seen again 2026-10-19)
     { spellID = 3567, to = "ORGRIMMAR_PORTAL_ROOM_UPPER", cost = 10 },
     { spellID = 3561, to = "STORMWIND_PORTAL_ROOM_LOWER", cost = 10 },
     { spellID = 281404, to = "DAZARALOR_PORTAL_ROOM", cost = 10 },
