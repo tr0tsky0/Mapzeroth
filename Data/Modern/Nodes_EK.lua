@@ -99,7 +99,7 @@ addon.Nodes.EK = {
     { id = "TAXI_526", container = "ek_overworld.map204", mapID = 204, x = 0.6004, y = 0.5625 }, -- Tenebrous Cavern
     { id = "INSTANCE_RETURN_TO_KARAZHAN", container = "ek_overworld.map42", mapID = 42, x = 0.4700, y = 0.7400, kind = "instance", journal = 860 }, -- Return to Karazhan
     { id = "INSTANCE_ULDAMAN_LEGACY_OF_TYR", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000, kind = "instance", journal = 1197 }, -- Uldaman: Legacy of Tyr
-    { id = "STONARD", container = "ek_overworld.map76", mapID = 76, x = 0.4984, y = 0.5581 }, -- Stonard
+    { id = "STONARD", container = "ek_overworld.map51", mapID = 51, x = 0.4984, y = 0.5581 }, -- Stonard: Teleport: Stonard's landing (was on Azshara's map 76, 2026-10-19)
     { id = "TAXI_600", container = "ek_overworld.map51", mapID = 51, x = 0.2940, y = 0.3340 }, -- The Harborage
     { id = "INSTANCE_ULDAMAN", container = "ek_overworld.map15", mapID = 15, x = 0.4100, y = 0.1000, kind = "instance", journal = 239 }, -- Uldaman
     { id = "SUNKEN_TEMPLE_DUNGEON", container = "ek_overworld.map51", mapID = 51, x = 0.6900, y = 0.5400 }, -- Sunken Temple
