@@ -68,7 +68,7 @@ FACTIONS = {"neutral": "neutral", "alliance": "alliance", "horde": "horde"}
 # matched by place name. A stop no criterion names gets no quest and always stays in the route.
 # Stops our lists name differently from the criteria: stop -> the criterion's place.
 QUEST_ALIASES = {
-    "Silvermoon City Inn": "The Royal Exchange",     # TBC Silvermoon: inferred from where each inn stands, not yet seen
+    "Silvermoon City Inn": "The Royal Exchange",     # TBC Silvermoon: both turned in 2026-10-19 (12369, 12370)
     "Wayfarer's Rest": "The Bazaar",
     "The Exodar": "Seat of the Naaru",
     "Thunder Bluff": "Lower Rise",
