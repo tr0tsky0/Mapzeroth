@@ -92,8 +92,8 @@ addon.HolidayRoutes = {
 /way #198 63.1 24.1 Nordrassil Inn
 /way #198 42.7 45.7 Shrine of Aviana
 /way #198 18.6 37.3 Grove of Aessina
-/way #1527 26.6 7.2 Oasis of Vir'sar
-/way #1527 54.7 33 Ramkahen
+/way #249 26.6 7.2 Oasis of Vir'sar
+/way #249 54.7 33 Ramkahen
 ]],
       alliance = [[
 /way #199 39 11 Honor's Stand

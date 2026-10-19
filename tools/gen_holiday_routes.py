@@ -42,7 +42,7 @@ ZONE_MAPS = {
     "Silvermoon City (Burning Crusade)": 110,
     "Eversong Woods (Burning Crusade)": 94,
     "The Situation in Dalaran": 125,          # Wowhead's name for Northrend's Dalaran
-    "Uldum": 1527,                            # as the Cataclysm pet tamer route has it (Zidormi's other side is 249)
+    "Uldum": 249,                             # past Uldum: the buckets are only there (seen 2026-10-19); present is 1527
     "Vale of Eternal Blossoms": 390,          # the Vale as it was (Zidormi's other side is 1530)
     "Blasted Lands": 17,                      # Zidormi's other side is 1246
     "Tirisfal Glades": 18,                    # Zidormi's other side is 2070 (the Undercity bucket needs this side's city anyway)
