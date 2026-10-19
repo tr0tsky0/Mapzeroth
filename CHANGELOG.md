@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.1 (Retail)
+
+### Added
+- **Tricks and Treats of Midnight:** a Hallow's End route through Midnight's 15 candy buckets, with Slayer's Rise for your faction.
+- **Holiday Routes skip the candy buckets you've already done this year,** so you can stop partway and pick the route up later.
+- Hallow's End routes are drawn in orange on the map, with pumpkin pails for stops.
+- **An About page** on the settings page, with the Discord link.
+
+### Changed
+- Hallow's End routes only visit the buckets the Tricks and Treats achievements need: Dragonmaw Port, Theramore Isle and Stonetalon Peak are gone.
+
+### Fixed
+- Stormwind's Mage Tower: routes out of the portal room now go down the stairwell and out of the tower's door, and the navigator waits until you're at the door.
+
 ## 0.8.2
 
 ### Added
