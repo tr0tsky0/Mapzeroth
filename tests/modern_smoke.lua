@@ -948,3 +948,16 @@ do
     end
     check(cast and zidormi, "Teleport: Undercity, then Zidormi to the past: " .. table.concat(seen, ", ") .. " " .. tostring(why))
 end
+
+-- Zephyr (Shattrath's World's End Tavern) ports to the Caverns of Time only at Revered with the Keepers of Time (989).
+do
+    local function zephyr(reaction)
+        local graph = addon.TravelGraph:Build(makeCtx({ faction = "Horde", reps = { [989] = reaction } }))
+        for _, e in ipairs(graph.adjacency["WORLDS_END_TAVERN"] or {}) do
+            if e.to == "CAVERNS_OF_TIME" then return true end
+        end
+        return false
+    end
+    check(zephyr(7) and zephyr(8), "Revered or better: Zephyr's port is there")
+    check(not zephyr(6) and not zephyr(nil), "Honored, or no standing known: it isn't")
+end

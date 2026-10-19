@@ -15,6 +15,12 @@ checkers = {
     quest    = function(value, ctx) return ctx.questCompleted(value) end,
     notQuest = function(value, ctx) return not ctx.questCompleted(value) end,
     holiday  = function(value, ctx) return ctx.holidayActive(value) end,
+    -- minReputation = { factionID, reaction }: at least that standing (4 Neutral ... 7 Revered, 8 Exalted). A faction
+    -- the client says nothing about fails.
+    minReputation = function(value, ctx)
+        local reaction = ctx.reputationReaction and ctx.reputationReaction(value[1])
+        return reaction ~= nil and reaction >= value[2]
+    end,
 
     -- anyQuest = { 50769, 47098 }: true if any one of these quests is done (unlike `quest`,
     -- which needs a specific one; a Zidormi phase-switch that several different quest

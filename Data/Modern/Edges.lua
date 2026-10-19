@@ -184,7 +184,8 @@ addon.Edges = {
     { from = "WESTERN_EARTHSHRINE_OG", to = "MOUNT_HYJAL", method = "portal", cost = 0, requirements = { faction = "Horde" } },
     { from = "TAXI_296", to = "TAXI_294", method = "ship", cost = 45 },
     { from = "TAXI_294", to = "TAXI_295", method = "ship", cost = 60 },
-    { from = "WORLDS_END_TAVERN", to = "CAVERNS_OF_TIME", method = "portal", cost = 0, oneway = true },
+    -- Zephyr's port from the World's End Tavern: Revered with the Keepers of Time (989) (seen 2026-10-19)
+    { from = "WORLDS_END_TAVERN", to = "CAVERNS_OF_TIME", method = "portal", cost = 0, oneway = true, requirements = { minReputation = { 989, 7 } } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_GNOMEREGAN", method = "portal", cost = 0, oneway = true, requirements = { quest = 54185 } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291 } },
     { from = "DALARAN_BROKEN_ISLES_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457 } },
