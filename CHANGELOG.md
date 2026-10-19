@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased (Retail)
+
+### Added
+- Deepholm's Temple of Earth candy bucket on the Eastern Kingdoms Hallow's End route.
+
+### Fixed
+- Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.
+- Deepholm's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
+
 ## 2.0.2 (Retail)
 
 ### Fixed
