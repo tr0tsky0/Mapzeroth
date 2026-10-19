@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (Retail)
+## 2.0.2 (Retail)
 
 ### Fixed
 - Multi-stop routes (and round trips) could use two dungeon teleports, but they share one cooldown: now a trip uses one at most.
