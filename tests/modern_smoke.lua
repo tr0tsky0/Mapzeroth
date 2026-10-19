@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1796, "every node made it into the tree (1280 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1798, "every node made it into the tree (1282 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -47,8 +47,10 @@ check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the fl
 -- container (the several portal rooms grouped together: one interior container per map).
 check(containers["ek_overworld.map84"] and containers["ek_overworld.map84"] > 1,
     "Stormwind's outdoor container holds more than one node")
-check(containers["ek_overworld.map84.interior"] == 17, "and its interior container holds the 17 interior nodes: "
+check(containers["ek_overworld.map84.interior"] == 17, "and its interior container holds the 17 portal-floor nodes: "
     .. tostring(containers["ek_overworld.map84.interior"]))
+check(containers["ek_overworld.map84.mage_tower"] == 2, "and the Mage Tower stairwell its door and the Honor Hold Mage: "
+    .. tostring(containers["ek_overworld.map84.mage_tower"]))
 
 -- A phase-tagged pair (Darkshore) landed in two different containers, not one -- the whole
 -- point of the _art<N> suffix (see the script's docstring): nothing should claim they're
@@ -271,20 +273,23 @@ check(blocked == nil, "but a flight a window said isn't found is never taken, ho
 
 -- A waypoint on Stormwind's map (the Trade District) is out in the open, not among the portal rooms: a map's
 -- container prefers an outdoor one, though the portal rooms outnumber the streets. Teleport in, walk out of the
--- Mage Tower, fly to the waypoint -- not one "walk to the waypoint" from the portal room.
+-- Mage Tower, fly to the waypoint -- not one "walk to the waypoint" from the portal room. Real distances here: the test
+-- ones put every other map a flat 3000 yards away, so the start could fly straight to the waypoint across the sea.
+useRetailDistances()
 addon.World:Build()
 local streets = addon.World:GetContainerForMap(84)
 check(streets and not addon.World:GetFlag(streets, "indoor"), "Stormwind's map is the outdoor city: " .. tostring(streets and streets.path))
 local waypoint = { id = "WAYPOINT_TEST", mapID = 84, x = 0.58, y = 0.70 }
 local mageCtx = makeCtx({ faction = "Alliance", class = "MAGE", spells = { 3561 } })
-local ironforgeNode = addon.World:GetNode("IRONFORGE")
-local from = { id = "START_IF", mapID = ironforgeNode.mapID, x = ironforgeNode.x, y = ironforgeNode.y }
+local theramore = addon.World:GetNode("TAXI_32")    -- across the sea: no flying there, so the teleport it is
+local from = { id = "START_THERAMORE", mapID = theramore.mapID, x = theramore.x, y = theramore.y }
 local session = addon.Journey:Build(mageCtx, from, { waypoint })
 local trip = addon.Journey:Plan(session, "WAYPOINT_TEST")
 local kinds = {}
 for _, step in ipairs(trip and trip.steps or {}) do kinds[#kinds + 1] = step.method end
 check(trip and kinds[#kinds] == "fly", "the last leg to a waypoint in Stormwind is a flight: " .. table.concat(kinds, ","))
 check(trip and #kinds >= 3 and kinds[1] == "teleport" and kinds[2] == "walk", "teleport, walk out of the tower, then fly: " .. table.concat(kinds, ","))
+useTestDistances()
 
 -- Bizmo's Brawlpub (where the Pugilist's ring lands you) is on a map of its own inside the Deeprun Tram's: walk to the
 -- door, through to the tram (no loading screen), along to the stairs, up to Stormwind (one loading screen), then fly.
@@ -340,6 +345,20 @@ for from, list in pairs(roomGraph.adjacency) do
     end
 end
 check(not flyIntoRoom, "nothing flies into or out of the portal room")
+
+-- Stormwind's Mage Tower: the portal floors and the stairwell down to the street are separate interiors, joined only by
+-- the lower floor's teleport doorway (the street door is almost directly below it: a straight line would say 10 yards).
+local towerGraph = addon.TravelGraph:Build(makeCtx({ faction = "Alliance" }))
+local floorToDoor = false
+for _, e in ipairs(towerGraph.adjacency["STORMWIND_PORTAL_ROOM_LOWER"] or {}) do
+    if e.to == "STORMWIND_MAGE_TOWER_EXIT" or e.to == "STORMWIND_DARK_PORTAL_BL_NPC" then floorToDoor = true end
+end
+check(not floorToDoor, "no straight walk from the portal floor to the stairwell")
+local out = addon.Pathfinder:FindPath(towerGraph, "STORMWIND_PORTAL_ROOM_LOWER", "STORMWIND_MAGE_TOWER_ENTRANCE")
+local through = {}
+for _, s in ipairs(out and out.steps or {}) do through[s.to] = true end
+check(through["STORMWIND_MAGE_TOWER_PORTAL_DOOR"] and through["STORMWIND_MAGE_TOWER_EXIT"],
+    "out of the tower goes through the teleport doorway and down to the street door")
 local streetStart = { id = "START_SILVERMOON", mapID = 2393, x = 0.60, y = 0.75 }
 local toRoom = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = "Horde" }), streetStart), "PORTAL_SILVERMOON_ORGRIMMAR")
 local roomKinds = {}

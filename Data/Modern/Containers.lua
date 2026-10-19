@@ -35,6 +35,7 @@ addon.Containers["broken_isles.map715.interior"] = { indoor = true } -- 9 interi
 addon.Containers["broken_isles.map734.interior"] = { indoor = true } -- 1 interior node(s)
 addon.Containers["ek_overworld.map35.interior"] = { indoor = true } -- 2 interior node(s)
 addon.Containers["ek_overworld.map84.interior"] = { indoor = true } -- 17 interior node(s)
+addon.Containers["ek_overworld.map84.mage_tower"] = { indoor = true } -- Mage Tower stairwell: street door up to the portal floor's teleport doorway
 addon.Containers["kalimdor_overworld.map85.interior"] = { indoor = true } -- 17 interior node(s)
 addon.Containers["ek_overworld.map2649"] = { indoor = true } -- interior
 addon.Containers["deeprun_tram"] = { indoor = true } -- interior

@@ -29,6 +29,7 @@ local Navigation = {}
 addon.Navigation = Navigation
 
 local WALK_RADIUS = 30       -- yards
+local INDOOR_RADIUS = 8      -- yards, for a walk into, through or out of an interior: 30 is half a building there
 local ARRIVE_RADIUS = 60     -- yards, for everything that isn't walking: a landing spot is looser
 local DEPART_RADIUS = 40     -- yards moved from the boarding point before a ship counts as underway
 local JUMP = 300             -- yards between two updates that can only be a teleport or a portal
@@ -152,8 +153,18 @@ local function rideOf(step)
     return step.source and step.source.ride or step.seconds
 end
 
+-- A walk that starts or ends in an interior (the way out of Stormwind's Mage Tower): walls are close, so it is done only
+-- at the door, and it can't be passed by cutting across.
+local function indoorWalk(step)
+    if kindOf(step.method) ~= "walk" then return false end
+    local World = addon.World
+    local from, to = World:GetNodeContainer(step.fromID), World:GetNodeContainer(step.nodeID)
+    return (from ~= nil and World:GetFlag(from, "indoor") == true) or (to ~= nil and World:GetFlag(to, "indoor") == true)
+end
+
 local function radiusOf(step)
-    return kindOf(step.method) == "walk" and WALK_RADIUS or ARRIVE_RADIUS
+    if kindOf(step.method) ~= "walk" then return ARRIVE_RADIUS end
+    return indoorWalk(step) and INDOOR_RADIUS or WALK_RADIUS
 end
 
 -- True when the player is at the step's destination; also the yards to it, when they were measured.
@@ -182,7 +193,7 @@ local function beginStep(sample)
     -- far its end is from the next one's. Not when the player already starts nearer than that, though: the step
     -- may be the way round something (a pass over a ridge), and the next place only looks near in a straight line.
     local nextStep = active.index < lookAheadEnd() and active.steps[active.index + 1]
-    if nextStep and kindOf(nextStep.method) == "walk" and (kind == "walk" or kind == "transport") then
+    if nextStep and kindOf(nextStep.method) == "walk" and (kind == "walk" or kind == "transport") and not indoorWalk(step) then
         local nextNode = nodeOf(nextStep.nodeID)
         local gap = node and nextNode and addon.TravelGraph.DistanceProvider(node, nextNode)
         local fromStart = gap and distance(sample, nextNode)

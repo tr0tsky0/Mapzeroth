@@ -392,3 +392,19 @@ do
     N:Stop()
     check(N:FlightTarget("TAXI_2") == nil, "no trip, nothing to mark")
 end
+
+-- Out of an interior (the Wizard's Sanctum): an indoor walk is done only at the door, not 30 yards short of it.
+do
+    N:Start(entry, { steps = {
+        step("walk", "PORTAL_STORMWIND_DALARAN", "ENTRANCE_SW_WIZARDS_SANCTUM_INNER", 10),
+        step("walk", "ENTRANCE_SW_WIZARDS_SANCTUM_INNER", "ENTRANCE_SW_WIZARDS_SANCTUM_OUTER", 2),
+        step("walk", "ENTRANCE_SW_WIZARDS_SANCTUM_OUTER", "TAXI_2", 60),
+    } })
+    local m = N:Update(at("ENTRANCE_SW_WIZARDS_SANCTUM_INNER", 0.008, 0))     -- 20 yards inside
+    check(m.index == 1, "20 yards from the door, inside, it is still the walk to the door: step " .. m.index)
+    m = N:Update(at("ENTRANCE_SW_WIZARDS_SANCTUM_INNER", 0.002, 0))           -- 5 yards
+    check(m.index >= 2, "at the door it moves on: step " .. m.index)
+    m = N:Update(at("ENTRANCE_SW_WIZARDS_SANCTUM_OUTER", 0, 0))
+    check(m.index == 3, "out of the door, the walk on to the flight master: step " .. m.index)
+    N:Stop()
+end
