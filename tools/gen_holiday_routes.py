@@ -75,11 +75,27 @@ QUEST_ALIASES = {
     "Nordrassil Inn": "Nordrassil",
     "Northwatch Expedition Base Camp": "Northwatch Expedition Base",
 }
-# A stop's quest set by route, ahead of the name match: (route, stop) -> questID (0: none known). For a stop whose name
-# another route's bucket already has (Midnight's Eversong reuses the TBC inn names).
+# A stop's quest set by route, ahead of the name match: (route, stop) -> questID (0: none known). For a route whose stop
+# names another route's buckets already have: Midnight's Eversong reuses the TBC names (Fairbreeze Village,
+# Tranquillien), so its quests (achievement 63400, /mzr buckets 63400, 2026-10-19) are here, not in criteria.tsv.
+# Slayer's Rise's criterion has no quest.
+MIDNIGHT = "Tricks and Treats of Midnight"
 STOP_QUESTS = {
-    ("Tricks and Treats of Midnight", "Fairbreeze Village"): 0,
-    ("Tricks and Treats of Midnight", "Tranquillien"): 0,
+    (MIDNIGHT, "Arcantina"): 97213,
+    (MIDNIGHT, "Fairbreeze Village"): 97143,
+    (MIDNIGHT, "Silvermoon"): 97142,
+    (MIDNIGHT, "Tranquillien"): 97148,
+    (MIDNIGHT, "Har'alnor"): 97207,
+    (MIDNIGHT, "Har'athir"): 97155,
+    (MIDNIGHT, "Har'kuai"): 97154,
+    (MIDNIGHT, "Har'mara"): 97208,
+    (MIDNIGHT, "The Den"): 97206,
+    (MIDNIGHT, "Locus Point"): 97209,
+    (MIDNIGHT, "Slayer's Rise"): 0,
+    (MIDNIGHT, "The Ingress"): 97210,
+    (MIDNIGHT, "Amani'Zar"): 97150,
+    (MIDNIGHT, "Camp Stonewash"): 97151,
+    (MIDNIGHT, "Witherbark Bluffs"): 97152,
 }
 # Stops only a reputation's side can use (Shattrath and Shadowmoon Valley: one quest, a bucket per side): stop -> factionID.
 # The picker leaves such a stop out while that faction is below Neutral.

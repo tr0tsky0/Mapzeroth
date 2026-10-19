@@ -349,6 +349,6 @@ addon.HolidayRoutes = {
       horde = [[
 /way #2444 21.32 55.42 Slayer's Rise
 ]],
-      quests = { neutral = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, alliance = { 0 }, horde = { 0 } },
+      quests = { neutral = { 97213, 97142, 97143, 97148, 97150, 97151, 97152, 97207, 97155, 97154, 97208, 97206, 97209, 97210 }, alliance = { 0 }, horde = { 0 } },
     },
 }
