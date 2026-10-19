@@ -78,7 +78,8 @@ QUEST_ALIASES = {
 # A stop's quest set by route, ahead of the name match: (route, stop) -> questID (0: none known). For a route whose stop
 # names another route's buckets already have: Midnight's Eversong reuses the TBC names (Fairbreeze Village,
 # Tranquillien), so its quests (achievement 63400, /mzr buckets 63400, 2026-10-19) are here, not in criteria.tsv.
-# Slayer's Rise's criterion has no quest.
+# A key with a faction third is that side's bucket: a criterion that is "either side's quest" shows in /mzr buckets as
+# criteriaID 0 with no quest (Slayer's Rise, Wild Coast), so those quests are as the user read them (2026-10-19).
 MIDNIGHT = "Tricks and Treats of Midnight"
 STOP_QUESTS = {
     (MIDNIGHT, "Arcantina"): 97213,
@@ -91,11 +92,14 @@ STOP_QUESTS = {
     (MIDNIGHT, "Har'mara"): 97208,
     (MIDNIGHT, "The Den"): 97206,
     (MIDNIGHT, "Locus Point"): 97209,
-    (MIDNIGHT, "Slayer's Rise"): 0,
+    (MIDNIGHT, "Slayer's Rise", "alliance"): 97211,
+    (MIDNIGHT, "Slayer's Rise", "horde"): 97212,
     (MIDNIGHT, "The Ingress"): 97210,
     (MIDNIGHT, "Amani'Zar"): 97150,
     (MIDNIGHT, "Camp Stonewash"): 97151,
     (MIDNIGHT, "Witherbark Bluffs"): 97152,
+    ("Tricks and Treats of the Dragon Isles", "Wild Coast", "alliance"): 75681,
+    ("Tricks and Treats of the Dragon Isles", "Wild Coast", "horde"): 75682,
 }
 # Stops only a reputation's side can use (Shattrath and Shadowmoon Valley: one quest, a bucket per side): stop -> factionID.
 # The picker leaves such a stop out while that faction is below Neutral.
@@ -227,8 +231,9 @@ def main():
             out.append(f"      {faction} = [[\n{way_lines(merged[faction])}\n]],")
             ids, needs = [], []
             for i, (m, x, y, stop) in enumerate(merged[faction], 1):
-                if (name, stop) in STOP_QUESTS:
-                    hits = [STOP_QUESTS[(name, stop)]] if STOP_QUESTS[(name, stop)] else []
+                pinned = (name, stop, faction) if (name, stop, faction) in STOP_QUESTS else (name, stop)
+                if pinned in STOP_QUESTS:
+                    hits = [STOP_QUESTS[pinned]] if STOP_QUESTS[pinned] else []
                 else:
                     hits = known.get(key(QUEST_ALIASES.get(stop, stop)), [])
                 if len(hits) > 1:
