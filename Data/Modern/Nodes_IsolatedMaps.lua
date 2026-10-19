@@ -31,7 +31,6 @@ addon.Nodes.IsolatedMaps = {
     { id = "TAXI_3196", container = "harandar.map2413", mapID = 2413, x = 0.3552, y = 0.2375 }, -- Har'mara Flightmaster
     { id = "INSTANCE_THE_DREAMRIFT", container = "harandar.map2413", mapID = 2413, x = 0.6102, y = 0.6266, kind = "instance", journal = 1314 }, -- The Dreamrift
     { id = "TAXI_3193", container = "harandar.map2576", mapID = 2576, x = 0.7090, y = 0.5321 }, -- The Den Flightmaster
-    { id = "LOAKNIT_DEN_ZUL_AMAN", container = "harandar.map2413", mapID = 2413, x = 0.3160, y = 0.2120 }, -- Loaknit Den
     { id = "INSTANCE_THE_BLINDING_VALE", container = "harandar.map2413", mapID = 2413, x = 0.2659, y = 0.7804, kind = "instance", journal = 1309 }, -- The Blinding Vale
     { id = "TAXI_3194", container = "harandar.map2413", mapID = 2413, x = 0.6461, y = 0.2319 }, -- Har'kuai Flightmaster
     { id = "TAXI_3035", container = "karesh.map2472", mapID = 2472, x = 0.5415, y = 0.6277 }, -- Hosaas Rest

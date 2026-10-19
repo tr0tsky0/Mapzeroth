@@ -31,6 +31,7 @@ addon.Nodes.EK = {
     { id = "TAXI_681", container = "ek_overworld.map21", mapID = 21, x = 0.4580, y = 0.2164 }, -- Forsaken Rear Guard
     { id = "TAXI_646", container = "ek_overworld.map217", mapID = 217, x = 0.5675, y = 0.1801 }, -- Forsaken Forward Command
     { id = "TAXI_3127", container = "ek_overworld.map2437", mapID = 2437, x = 0.4483, y = 0.6544 }, -- Amani'Zar Flightmaster
+    { id = "LOAKNIT_DEN_ZUL_AMAN", container = "ek_overworld.map2437", mapID = 2437, x = 0.3168, y = 0.2626 }, -- Loaknit Den: the Abundant Beacon's landing (seen in game 2026-10-19; was on Harandar's map)
     { id = "TAXI_673", container = "ek_overworld.map32", mapID = 32, x = 0.4080, y = 0.6900 }, -- Iron Summit
     { id = "TAXI_84", container = "ek_overworld.map23", mapID = 23, x = 0.1840, y = 0.2890 }, -- Plaguewood Tower
     { id = "DOCK_BOOTY_BAY", container = "ek_overworld.map210", mapID = 210, x = 0.3886, y = 0.6692 }, -- Booty Bay Dock
