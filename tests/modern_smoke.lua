@@ -1173,6 +1173,14 @@ do
     local outbound = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_UC_ORG", mapID = 90, x = 0.66, y = 0.44 }), "ORGRIMMAR_PORTAL_ROOM_UPPER")
     described = kinds(outbound)
     check(described:find("portal>ORGRIMMAR_PORTAL_ROOM_UPPER", 1, true), "back by the tower's portal: " .. described)
+    -- Only the leg that reaches a portal (or its door) is named for it: the flight to the sewer, before going through it,
+    -- isn't "Go to Grom'gol Portal".
+    local toGromgol = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_UC_GROM", mapID = 90, x = 0.66, y = 0.44 }), "PORTAL_GROMGOL_UNDERCITY")
+    local named = 0
+    for _, step in ipairs(toGromgol and toGromgol.steps or {}) do
+        if step.method ~= "portal" and step.text:find("Portal", 1, true) then named = named + 1 end
+    end
+    check(toGromgol and named == 1, "one step on the way names the Grom'gol portal: " .. kinds(toGromgol))
     useTestDistances()
 end
 

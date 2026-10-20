@@ -297,13 +297,12 @@ local function readableSteps(result, session)
         local zone = node and not addon:HasNodeName(id) and addon:GetZoneName(node.mapID)
         return zone or nameOf(id)
     end
-    -- The portal a walk or flight is heading for: the next leg's, past any more walking or flying, or nil.
+    -- The portal a walk or flight is heading for: the next leg's, or the one after a single walk (a portal room's door,
+    -- then in to the portal), or nil. Not further: a way through (Undercity's sewer) is a stage of its own.
     local function portalAhead(legs, i)
-        for j = i + 1, #legs do
-            local method = legs[j].method
-            if method == "portal" then return legs[j] end
-            if method ~= "walk" and method ~= "fly" then return nil end
-        end
+        local next, after = legs[i + 1], legs[i + 2]
+        if next and next.method == "portal" then return next end
+        if next and next.method == "walk" and after and after.method == "portal" then return after end
     end
     local steps = {}
     local legs = addon.Pathfinder:CollapseSteps(result.steps)
