@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (Retail)
+## 2.0.3 (Retail)
 
 ### Added
 - Deepholm's Temple of Earth candy bucket on the Eastern Kingdoms Hallow's End route.
@@ -10,25 +10,22 @@
 - Past Tirisfal's portals to Orgrimmar, Grom'gol and Vengeance Landing (the zeppelins there are gone).
 
 ### Fixed
-- Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.
-- Deepholm's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
-- Teleport: Stonard was thought to land in Azshara, so routes after it had no arrow or map lines.
-- Zephyr's port from Shattrath to the Caverns of Time is only used at Revered with the Keepers of Time.
 - Routes know which time you've set with Zidormi in Tirisfal Glades, the Vale of Eternal Blossoms and Uldum, from anywhere in the world.
 - Uldum and Silithus share one Zidormi setting, as in the game: switching one switches both.
 - Arathi Highlands' three times (before the war, the Fourth War, the present) are known, with Zidormi to switch between them.
 - Hallow's End routes take you to the past side of Zidormi's zones (Hammerfall, Dreadmaul Hold, Uldum, Cenarion Hold and others), where the buckets are.
-- Routes into and out of Undercity go through its gate and the elevators between the ruins and the city below, instead of flying straight in.
+- Every way into Tirisfal (Teleport: Undercity, and the portals from Orgrimmar, Grom'gol, Vengeance Landing and old Silvermoon) lands by Zidormi in present Tirisfal, as in the game, and routes then use Zidormi to reach Undercity in the past.
+- Routes into and out of Undercity go through its gate and an elevator, or the sewer, instead of flying straight in.
 - Routes into and out of Ironforge go through its gate, instead of flying through the mountain.
 - Flying routes no longer cross a city's walls.
+- Deepholm's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
+- Teleport: Stonard was thought to land in Azshara, so routes after it had no arrow or map lines.
+- Zephyr's port from Shattrath to the Caverns of Time is only used at Revered with the Keepers of Time.
 - Steps on the way to a portal name the portal ("Walk to Stormwind City Portal"), not the city you're already in.
-- Portals out of Bel'ameth say where they go ("Take the portal to Val'sharah"), not "Use Bel'ameth".
+- A portal step names where you come out ("Take the portal to Val'sharah"), not "Use Bel'ameth" or the portal standing there.
+- A route's last step names where you asked to go ("Go to Undercity Inn"), not a spot a few steps short of it ("Go to Undercity").
 - A cloak or other wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
 - Taking the wrong portal from a portal room no longer marks the route's portal step as done.
-- The portals to Undercity from Orgrimmar, Grom'gol and Vengeance Landing, and old Silvermoon's portal to Tirisfal, land by Zidormi in present Tirisfal, as they do in the game.
-- A portal step names where you come out ("Take the portal to Silvermoon City"), not the portal standing there ("Orgrimmar Portal").
-- A route's last step names where you asked to go ("Go to Undercity Inn"), not a spot a few steps short of it ("Go to Undercity").
-- After a portal or teleport puts you in present Tirisfal, routes can still use Zidormi to go back to the past, where Undercity is.
 
 ## 2.0.2 (Retail)
 
