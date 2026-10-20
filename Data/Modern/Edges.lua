@@ -259,11 +259,15 @@ addon.Edges = {
     { from = "PORTAL_VALSHARAH_DRUID_DALARAN", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, requirements = { class = "DRUID" } },
     { from = "TIRISFAL_ZIDORMI_PAST", to = "TIRISFAL_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "tirisfal" }, requirements = { anyQuest = { 50769, 47098 } } },
     { from = "VALE_ZIDORMI_PAST", to = "VALE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "vale" }, requirements = { quest = 58506 } },
-    { from = "ULDUM_ZIDORMI_PAST", to = "ULDUM_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "uldum" } },
+    { from = "ULDUM_ZIDORMI_PAST", to = "ULDUM_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },   -- Uldum's Zidormi switches Silithus too: one setting
     { from = "DARKSHORE_ZIDORMI_PAST", to = "DARKSHORE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "darkshore" } },
     { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "blasted_lands" } },
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
+    -- Arathi has three times (before the war, the Fourth War, the present); taken to switch from any to any.
+    { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_WAR", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
+    { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
+    { from = "ARATHI_ZIDORMI_WAR", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
     { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 },
     { from = "BORDER_GHOSTLANDS_EVERSONG_BC", to = "BORDER_EVERSONG_GHOSTLANDS_BC", method = "walk", cost = 3 },
     { from = "BORDER_EVERSONG_SILVERMOON_BC", to = "BORDER_SILVERMOON_EVERSONG_BC", method = "walk", cost = 3 },

@@ -1083,7 +1083,7 @@ end
 -- shown like any route. unread: how many pasted lines couldn't be read (a note under the route says so). routeID: the
 -- saved route it is (its route view then offers Edit, not Save).
 function Panel:RouteTour(name, points, unread, routeID, holiday)
-    local entry = addon.MultiRoute:Entry(name, points)
+    local entry = addon.MultiRoute:Entry(name, points, holiday ~= nil)    -- a holiday's stops are in the past
     entry.unread, entry.routeID, entry.holiday = unread, routeID, holiday     -- holiday: drawn in its look (Theme)
     self:ShowRoute(entry)
 end

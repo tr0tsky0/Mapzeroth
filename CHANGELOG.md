@@ -10,6 +10,10 @@
 - Deepholm's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
 - Teleport: Stonard was thought to land in Azshara, so routes after it had no arrow or map lines.
 - Zephyr's port from Shattrath to the Caverns of Time is only used at Revered with the Keepers of Time.
+- Routes know which time you've set with Zidormi in Tirisfal Glades, the Vale of Eternal Blossoms and Uldum, from anywhere in the world.
+- Uldum and Silithus share one Zidormi setting, as in the game: switching one switches both.
+- Arathi Highlands' three times (before the war, the Fourth War, the present) are known, with Zidormi to switch between them.
+- Hallow's End routes take you to the past side of Zidormi's zones (Hammerfall, Dreadmaul Hold, Uldum, Cenarion Hold and others), where the buckets are.
 
 ## 2.0.2 (Retail)
 

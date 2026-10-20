@@ -29,7 +29,7 @@ end
 -- spot has, and the extras are joined to one another directly (walking, or flying where it's allowed).
 function Journey:Build(ctx, start, extras)
     local graph = addon.TravelGraph:Build(ctx)
-    graph.phase = addon.World:LivePhases(ctx.mapArtID)
+    graph.phase = addon.World:LivePhases(ctx.mapArtID, ctx.questCompleted)
     if not addon.TravelGraph:AddStart(graph, ctx, start) then return nil, "nowhere" end
     local linked = { start }                     -- the places a tour's stops are joined to directly
     for _, dest in ipairs(extras or {}) do

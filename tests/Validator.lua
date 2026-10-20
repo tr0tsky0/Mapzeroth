@@ -144,6 +144,22 @@ function addon:ValidateData()
         end
     end
 
+    -- Each group's past and present (addon.PhaseTimes) are sides of it, and every group has them (holiday stops and the
+    -- past flag need them).
+    local groups = World:GetPhaseGroups()
+    for group, times in pairs(addon.PhaseTimes or {}) do
+        local sides = groups[group]
+        if not (sides and sides[times.past] ~= nil and sides[times.present] ~= nil) then
+            add("error", ("PhaseTimes.%s: past %s / present %s are not sides of that group"):format(
+                group, tostring(times.past), tostring(times.present)))
+        end
+    end
+    for group in pairs(groups) do
+        if not (addon.PhaseTimes and addon.PhaseTimes[group]) then
+            add("error", ("phase group '%s' has no PhaseTimes entry"):format(group))
+        end
+    end
+
     -- What a dataset declares instead of the engine guessing from which tables happen to be loaded.
     if addon.PICKER_LAYOUT ~= "settlements" and addon.PICKER_LAYOUT ~= "expansions" then
         add("error", ("PICKER_LAYOUT is %s, not \"settlements\" or \"expansions\""):format(tostring(addon.PICKER_LAYOUT)))

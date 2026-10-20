@@ -17,7 +17,7 @@ local nodeContainer = {}   -- nodeID -> container
 local duplicates = {}      -- nodeIDs seen more than once
 local mapContainer = {}    -- uiMapID -> the container most of that map's nodes are in
 local mapPhased = {}       -- uiMapID -> { container, ... }: its outdoor phase-tagged containers (one per side)
-local phaseGroups = {}     -- phaseGroup -> { [side] = phaseMap }: the map whose art tells that side is live
+local phaseGroups = {}     -- phaseGroup -> { [side] = phaseMap }: the map whose art tells that side is live (false: none)
 
 local function parentPath(path)
     return path:match("^(.*)%.[^.]+$") or ROOT
@@ -101,12 +101,13 @@ function World:Build()
     end
 
     -- Phase groups (Zidormi's zones, Modern only): each side of a group is a container tagged
-    -- { phaseGroup, phaseSide = the map art id of that side, phaseMap = the map whose art shows it }.
+    -- { phaseGroup, phaseSide = the map art id of that side, phaseMap = the map whose art shows it }. A side no art
+    -- tells (Arathi before the war, and its present) has no phaseMap; its phaseSide is then just a number for it.
     for _, c in pairs(containers) do
         local own = c.own
         if own and own.phaseGroup then
             phaseGroups[own.phaseGroup] = phaseGroups[own.phaseGroup] or {}
-            phaseGroups[own.phaseGroup][own.phaseSide] = own.phaseMap
+            phaseGroups[own.phaseGroup][own.phaseSide] = own.phaseMap or false
         end
     end
 end
@@ -136,20 +137,43 @@ function World:GetContainerForMap(mapID, phases)
 end
 
 -- The side the player is on in each phase group, as { group = side }, for the search to start from (see
--- Pathfinder.lua). mapArtID(mapID) is the client's art id for a map (ctx.mapArtID). A group is left out when
--- the client can't tell: no answer, or more than one side's art showing (past and present Tirisfal are two maps,
--- each always with its own art); the search then takes whichever side a route first enters.
-function World:LivePhases(mapArtID)
+-- Pathfinder.lua). mapArtID(mapID) is the client's art id for a map (ctx.mapArtID), questCompleted(id) whether a
+-- quest is flagged (ctx.questCompleted). Map art decides when exactly one side's art shows. When it can't (past and
+-- present Tirisfal are two maps, each always with its own art), Zidormi's hidden past flag does, for a group that has
+-- one (addon.PhaseTimes). A group neither tells is left out; the search then takes whichever side a route first enters.
+function World:LivePhases(mapArtID, questCompleted)
     local live = {}
-    if not mapArtID then return live end
     for group, sides in pairs(phaseGroups) do
         local found, count = nil, 0
-        for side, phaseMap in pairs(sides) do
-            if mapArtID(phaseMap) == side then found, count = side, count + 1 end
+        if mapArtID then
+            for side, phaseMap in pairs(sides) do
+                if phaseMap and mapArtID(phaseMap) == side then found, count = side, count + 1 end
+            end
         end
-        if count == 1 then live[group] = found end
+        local flag = addon.PhaseTimes and addon.PhaseTimes[group]
+        if count == 1 then
+            live[group] = found
+        elseif flag and flag.quest and questCompleted then
+            local unlocked = not flag.unlock
+            for _, q in ipairs(flag.unlock or {}) do
+                if questCompleted(q) then unlocked = true end
+            end
+            live[group] = (questCompleted(flag.quest) or not unlocked) and flag.past or flag.present
+        end
     end
     return live
+end
+
+-- The past side's container on a map split between phase groups (addon.PhaseTimes names each group's past), with its
+-- group and side; nil when the map has none.
+function World:PastContainerForMap(mapID)
+    local list = mapPhased[mapID] or {}
+    for i = 0, #list do
+        local c = i == 0 and mapContainer[mapID] or list[i]
+        local group, side = self:GetPhase(c)
+        local times = group and addon.PhaseTimes and addon.PhaseTimes[group]
+        if times and times.past == side then return c, group, side end
+    end
 end
 
 -- Tests and the validator: { group = { [side] = phaseMap } }.

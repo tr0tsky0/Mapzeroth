@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1797, "every node made it into the tree (1281 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1800, "every node made it into the tree (1284 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -497,6 +497,87 @@ do
     World:Build()
 end
 
+-- Zidormi's hidden past flags (2026-10-19): where map art can't tell, the flag does; Uldum and Silithus are one setting;
+-- Arathi has three times; holiday stops are on the past side.
+do
+    local World, PF = addon.World, addon.Pathfinder
+    local function phaseOf(id) return World:GetPhase(World:GetNodeContainer(id)) end
+    local function live(arts, quests)
+        local done = quests or {}
+        return World:LivePhases(function(id) return (arts or {})[id] end, function(q) return done[q] or false end)
+    end
+    local function has(...)
+        local set = {}
+        for _, q in ipairs({ ... }) do set[q] = true end
+        return set
+    end
+
+    -- Tirisfal and the Vale: each map always shows its own art, so the flag decides.
+    local both = { [18] = 19, [2070] = 1136, [390] = 402, [1530] = 1342 }
+    check(live(both).tirisfal == 19 and live(both).vale == 402, "no Zidormi unlocked: held in the past")
+    check(live(both, has(50769)).tirisfal == 1136 and live(both, has(47098)).tirisfal == 1136,
+        "Tirisfal unlocked (either quest), no flag: the present")
+    check(live(both, has(50769, 52758)).tirisfal == 19, "Tirisfal's flag 52758: the past")
+    check(live(both, has(58506)).vale == 1342 and live(both, has(58506, 59024)).vale == 402,
+        "the Vale: unlocked is the present, 59024 the past")
+
+    -- Uldum and Silithus: one group, read by Silithus's map 81 (art first, then 50659).
+    local g, s = phaseOf("ULDUM_ZIDORMI_PAST")
+    check(g == "silithus" and s == 86, "past Uldum is Silithus's past side: " .. tostring(g) .. " " .. tostring(s))
+    g, s = phaseOf("ULDUM_ZIDORMI_PRESENT")
+    check(g == "silithus" and s == 962, "present Uldum is Silithus's present side")
+    check(World:GetPhaseGroups().uldum == nil, "no Uldum group of its own")
+    check(live({ [81] = 962 }, has(50659)).silithus == 962, "Silithus's art decides over the flag")
+    check(live({ [81] = 86 }).silithus == 86, "Silithus's art: the past")
+    check(live({}, has(50659)).silithus == 86 and live({}).silithus == 962, "no art: 50659 is the past, else the present")
+
+    -- Arathi: the Fourth War by map 14's art, before the war by 52781, else the present.
+    check(phaseOf("ARATHI_ZIDORMI_BEFORE") == "arathi" and select(2, phaseOf("ARATHI_ZIDORMI_WAR")) == 1137
+        and select(2, phaseOf("ARATHI_ZIDORMI_PRESENT")) == 2372, "Arathi's three Zidormi are three sides of one group")
+    check(phaseOf("TAXI_17") == nil and phaseOf("TAXI_16") == nil, "Hammerfall and Refuge Pointe are on no side")
+    check(live({ [14] = 1137 }, has(52781)).arathi == 1137, "art 1137 on map 14: the Fourth War")
+    check(live({ [14] = 15 }, has(52781)).arathi == 15, "art 15 and 52781: before the war")
+    check(live({ [14] = 15 }).arathi == 2372, "art 15 and no flag: the present")
+
+    -- Every Zidormi switch is one search state change: Uldum's Zidormi switches Silithus's.
+    local start = { id = "YOU_flags", mapID = 84, x = 0.50, y = 0.60 }
+    local function route(art, quests, goal, extras)
+        local ctx = makeCtx({ faction = "Horde", mapArt = art, quests = quests })
+        local session = addon.Journey:Build(ctx, start, extras)
+        return PF:FindPath(session.graph, start.id, goal, session.graph.phase), session
+    end
+    local function switches(r)
+        local n = 0
+        for _, step in ipairs(r and r.steps or {}) do if step.method == "phaseswitch" then n = n + 1 end end
+        return n
+    end
+    check(switches(route({ [81] = 86 }, nil, "ULDUM_ZIDORMI_PAST")) == 0, "Silithus in the past: past Uldum without Zidormi")
+    check(switches(route({ [81] = 962 }, nil, "ULDUM_ZIDORMI_PAST")) == 1, "Silithus in the present: past Uldum through Zidormi")
+    check(switches(route({ [14] = 1137 }, nil, "ARATHI_ZIDORMI_BEFORE")) == 1, "from the Fourth War, before the war is one switch")
+    check(switches(route({ [14] = 15 }, nil, "ARATHI_ZIDORMI_WAR")) == 1, "from the present, the Fourth War is one switch")
+
+    -- Holiday stops are on the past side: Hammerfall's bucket from the Fourth War goes through Zidormi; the same spot as
+    -- a plain waypoint doesn't, nor the bucket from before the war.
+    local function stop(id, mapID, x, y, past) return { id = id, mapID = mapID, x = x, y = y, leave = true, past = past } end
+    local bucket = stop("STOP_HAMMERFALL", 14, 0.69, 0.333, true)
+    check(switches(route({ [14] = 1137 }, nil, bucket.id, { bucket })) == 1, "Hammerfall's bucket from the Fourth War: via Zidormi")
+    check(switches(route({ [14] = 15 }, has(52781), bucket.id, { bucket })) == 0, "Hammerfall's bucket before the war: straight there")
+    local waypoint = stop("WAYPOINT_HAMMERFALL", 14, 0.69, 0.333, nil)
+    check(switches(route({ [14] = 1137 }, nil, waypoint.id, { waypoint })) == 0, "a waypoint there follows the player's time")
+    local dreadmaul = stop("STOP_DREADMAUL", 17, 0.405, 0.113, true)
+    check(switches(route({ [17] = 628 }, nil, dreadmaul.id, { dreadmaul })) == 1, "Dreadmaul Hold's bucket from present Blasted Lands: via Zidormi")
+    -- Two stops on one past map: the leg between them starts in the past, so no second Zidormi.
+    local vir, ram = stop("STOP_VIRSAR", 249, 0.266, 0.072, true), stop("STOP_RAMKAHEN", 249, 0.547, 0.33, true)
+    local _, session = route({ [81] = 962 }, nil, vir.id, { vir, ram })
+    local leg = PF:FindPath(session.graph, vir.id, ram.id, session.graph.phase)
+    check(leg and switches(leg) == 0, "Oasis of Vir'sar to Ramkahen: no Zidormi between them")
+    check(switches(PF:FindPath(session.graph, start.id, ram.id, session.graph.phase)) == 1, "but into the first one, yes")
+    local holiday = addon.MultiRoute:Entry("Hallow's End", { { mapID = 14, x = 0.69, y = 0.333 } }, true)
+    local tour = addon.MultiRoute:Entry("Mine", { { mapID = 14, x = 0.69, y = 0.333 } })
+    check(holiday.stops[1] and holiday.stops[1].place.past and tour.stops[1] and not tour.stops[1].place.past,
+        "a holiday route's stops are marked for the past, a player's own tour's aren't")
+end
+
 -- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build
 -- gave (the flight hint builds a second graph for every click).
 do
@@ -734,7 +815,9 @@ do
     check(World:GetNode("TAXI_625").mapID == 94 and World:GetNode("TAXI_3133").mapID == 2395, "old and new Fairbreeze are two nodes")
     check(World:GetNode("TAXI_631").mapID == 94, "Falconwing Square is in old Eversong")
     local function reaches(start, goal)
-        local session = addon.Journey:Build(makeCtx({ faction = "Horde" }), start)
+        -- Tirisfal's Zidormi unlocked and no past flag: present Tirisfal, where the Ruins are (without the unlock a
+        -- character is held in the past)
+        local session = addon.Journey:Build(makeCtx({ faction = "Horde", quests = { [50769] = true } }), start)
         return addon.Pathfinder:FindPath(session.graph, start.id, goal, session.graph.phase)
     end
     local fromEPL = reaches({ id = "YOU_epl", mapID = 23, x = 0.54, y = 0.10 }, "TAXI_83")

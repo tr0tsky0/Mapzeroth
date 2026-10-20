@@ -270,6 +270,8 @@ local function run(graph, startID, initialPhase, opts, visit)
     local useFare, budget = opts.budget ~= nil, opts.budget
     local startState = {}
     for k, v in pairs(initialPhase or {}) do startState[k] = v end
+    local pin = graph.pinned and graph.pinned[startID]       -- a holiday stop: you are on its side when you leave it
+    if pin then startState[pin[1]] = pin[2] end
 
     local store, heap = {}, {}
     local startPK = phaseKey(startState)

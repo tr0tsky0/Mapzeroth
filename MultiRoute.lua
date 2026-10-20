@@ -530,8 +530,9 @@ end
 -- A tour entry for points ({ mapID, x, y, name }, as ParseWay gives them): each becomes a stop at the place the
 -- planner knows it by (addon:PlaceAt: a position on a map with no nodes is carried up to one that has some). Points
 -- on maps we can't place at all are returned second, and kept on the entry (`unplaced`: the plan names them with the
--- stops it couldn't reach); two points at the same spot are one stop.
-function MultiRoute:Entry(name, points)
+-- stops it couldn't reach); two points at the same spot are one stop. `past`: a holiday route's stops, each on the past
+-- side of a Zidormi zone it is in (TravelGraph:AddDestination).
+function MultiRoute:Entry(name, points, past)
     local stops, unplaced, seen = {}, {}, {}
     for i, point in ipairs(points) do
         local place = addon:PlaceAt(point.mapID, point.x, point.y, "STOP")
@@ -540,7 +541,7 @@ function MultiRoute:Entry(name, points)
             unplaced[#unplaced + 1] = label
         elseif not seen[place.id] then
             seen[place.id] = true
-            place.name, place.leave = label, true
+            place.name, place.leave, place.past = label, true, past or nil
             stops[#stops + 1] = { name = label, place = place }
         end
     end

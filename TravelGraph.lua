@@ -518,13 +518,25 @@ end
 -- Walking edges lead to it from every node in its container, and from the start if that is in the same one.
 -- `others` (optional): more places that aren't nodes (a tour's other stops), joined to it the same way as the start,
 -- and, as for the start, by flying straight there where both are in the open and flying is allowed.
+-- A place marked `past` (a holiday stop: every one in a Zidormi zone is only there in the past) is on its map's past
+-- side, whatever the player's phase: every way in needs that side, and a leg from it starts there (graph.pinned,
+-- which Pathfinder reads).
 function TravelGraph:AddDestination(graph, ctx, dest, start, others)
     local World = addon.World
     local container = World:GetContainerForMap(dest.mapID, graph.phase)
+    local inPhase
+    if dest.past then
+        local past, group, side = World:PastContainerForMap(dest.mapID)
+        if past then
+            container, inPhase = past, { group, side }
+            graph.pinned = graph.pinned or {}
+            graph.pinned[dest.id] = { group, side, container = past }
+        end
+    end
     local function add(from, cost, method, iconSource)
         local list = graph.adjacency[from.id]
         if not list then list = {}; graph.adjacency[from.id] = list end
-        list[#list + 1] = { from = from.id, to = dest.id, method = method, cost = cost, iconSource = iconSource }
+        list[#list + 1] = { from = from.id, to = dest.id, method = method, cost = cost, iconSource = iconSource, inPhase = inPhase }
     end
 
     -- Flying to it: from any flyable, outdoor node within range, the same rule the fly mesh between
@@ -580,9 +592,10 @@ function TravelGraph:AddDestination(graph, ctx, dest, start, others)
 end
 
 -- On a map split between phases the player walks among the nodes of the side they are on (graph.phase, the
--- live phases Journey:Build set).
+-- live phases Journey:Build set), or for a place pinned to a side (AddDestination) among that side's.
 function TravelGraph:AddStart(graph, ctx, start)
-    local container = addon.World:GetContainerForMap(start.mapID, graph.phase)
+    local pin = graph.pinned and graph.pinned[start.id]
+    local container = pin and pin.container or addon.World:GetContainerForMap(start.mapID, graph.phase)
     if not container then return false end
     return departure(graph.adjacency, ctx, start, container)
 end
