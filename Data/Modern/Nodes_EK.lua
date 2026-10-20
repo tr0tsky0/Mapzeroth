@@ -50,8 +50,8 @@ addon.Nodes.EK = {
     { id = "PORTAL_STORMWIND_DORNOGAL", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4797, y = 0.9211, city = "stormwind" }, -- Portal to Dornogal
     { id = "TIRISFAL_ZIDORMI_PRESENT", container = "ek_overworld.map2070_art1136", mapID = 2070, x = 0.6941, y = 0.6274 }, -- Zidormi (Present Tirisfal)
     { id = "TIRISFAL_ZIDORMI_PAST", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6942, y = 0.6269 }, -- Zidormi (Past Tirisfal)
-    { id = "ARATHI_ZIDORMI_BEFORE", container = "ek_overworld.map14_art15", mapID = 14, x = 0.3819, y = 0.9019 }, -- Zidormi (Arathi before the war)
-    { id = "ARATHI_ZIDORMI_WAR", container = "ek_overworld.map14_art1137", mapID = 14, x = 0.3819, y = 0.9019 }, -- Zidormi (Arathi in the Fourth War)
+    { id = "ARATHI_ZIDORMI_BEFORE", container = "ek_overworld.map14_art15", mapID = 14, x = 0.3818, y = 0.8998 }, -- Zidormi (Arathi before the war)
+    { id = "ARATHI_ZIDORMI_WAR", container = "ek_overworld.map14_art1137", mapID = 14, x = 0.3818, y = 0.8998 }, -- Zidormi (Arathi in the Fourth War)
     -- Present Arathi is map 2372, an instance of its own the client gives no distance to; it covers exactly map 14's
     -- ground, so its Zidormi (2372 at 0.3798, 0.8320) is placed by map 14's coordinates, where the fly mesh reaches her.
     { id = "ARATHI_ZIDORMI_PRESENT", container = "ek_overworld.map2372", mapID = 14, x = 0.3798, y = 0.8320 }, -- Zidormi (Present Arathi)

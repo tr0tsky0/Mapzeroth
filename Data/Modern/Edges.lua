@@ -264,7 +264,8 @@ addon.Edges = {
     { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "blasted_lands" } },
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
-    -- Arathi has three times (before the war, the Fourth War, the present); taken to switch from any to any.
+    -- Arathi has three times (before the war, the Fourth War, the present). Before <-> war seen both ways (2026-10-19);
+    -- the present needs the Stromgarde reclamation (quest id not known yet), and which switches it offers is unchecked.
     { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_WAR", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
     { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
     { from = "ARATHI_ZIDORMI_WAR", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
