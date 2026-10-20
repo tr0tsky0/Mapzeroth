@@ -35,6 +35,7 @@ addon.Containers["undermine.map2346"] = { fly = false } -- Undermine (11.1)
 addon.Containers["broken_isles.map715.interior"] = { indoor = true } -- 9 interior node(s)
 addon.Containers["broken_isles.map734.interior"] = { indoor = true } -- 1 interior node(s)
 addon.Containers["ek_overworld.map35.interior"] = { indoor = true } -- 2 interior node(s)
+addon.Containers["ek_overworld.map87"] = { fly = false } -- Ironforge: under the mountain, in and out by the gate (Nodes_EK.lua)
 addon.Containers["ek_overworld.map84.interior"] = { indoor = true } -- 17 interior node(s)
 addon.Containers["ek_overworld.map84.mage_tower"] = { indoor = true } -- Mage Tower stairwell: street door up to the portal floor's teleport doorway
 addon.Containers["kalimdor_overworld.map85.interior"] = { indoor = true } -- 17 interior node(s)

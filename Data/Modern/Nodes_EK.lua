@@ -220,14 +220,17 @@ addon.Nodes.EK = {
     { id = "UNDERCITY_ELEVATOR_BOTTOM_3", container = "ek_overworld.map90", mapID = 90, x = 0.5940, y = 0.4402, city = "undercity" }, -- Undercity: west elevator, bottom
     { id = "TAXI_622", container = "ek_overworld.map47", mapID = 47, x = 0.2050, y = 0.5760 }, -- Raven Hill
     { id = "STORMWIND_DARK_PORTAL_BL_NPC", container = "ek_overworld.map84.mage_tower", mapID = 84, x = 0.4911, y = 0.8734, city = "stormwind" }, -- Honor Hold Mage
-    { id = "IRONFORGE_ENTRANCE", container = "ek_overworld.map87", mapID = 87, x = 0.1734, y = 0.8316, city = "ironforge" }, -- Entrance
+    -- Ironforge is walled: in and out only through its gate (the entrance pair, TravelGraph.lua), never flown into
+    -- (Containers.lua). Both sides captured in game (2026-10-19).
+    { id = "ENTRANCE_IRONFORGE_OUTER", container = "ek_overworld.map27", mapID = 27, x = 0.6054, y = 0.3323, kind = "entrance", city = "ironforge" }, -- Dun Morogh: Ironforge's gate, outside
+    { id = "ENTRANCE_IRONFORGE_INNER", container = "ek_overworld.map87", mapID = 87, x = 0.1497, y = 0.8601, kind = "entrance", city = "ironforge" }, -- Ironforge: the gate, inside
     { id = "TAXI_676", container = "ek_overworld.map36", mapID = 36, x = 0.4580, y = 0.4320 }, -- Chiselgrip
     { id = "TAXI_605", container = "ek_overworld.map205", mapID = 205, x = 0.5660, y = 0.7560 }, -- Voldrin's Hold
     { id = "TAXI_658", container = "ek_overworld.map241", mapID = 241, x = 0.2960, y = 0.2540 }, -- Vermillion Redoubt
     { id = "TAXI_598", container = "ek_overworld.map51", mapID = 51, x = 0.7020, y = 0.3520 }, -- Marshtide Watch
     { id = "STORMWIND_PORTAL_ROOM_UPPER", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4275, y = 0.9438, city = "stormwind" }, -- Portal Room (Upper)
     { id = "TAXI_3133", container = "ek_overworld.map2395", mapID = 2395, x = 0.4468, y = 0.4499 }, -- Fairbreeze Village Flightmaster
-    { id = "IRONFORGE", container = "ek_overworld.map87", mapID = 87, x = 0.2551, y = 0.0843, city = "ironforge" }, -- Hall of Mysteries
+    { id = "IRONFORGE", container = "ek_overworld.map87", mapID = 87, x = 0.2525, y = 0.0798, city = "ironforge" }, -- Hall of Mysteries: where portals into Ironforge land (captured 2026-10-19)
     { id = "TAXI_87", container = "ek_overworld.map23", mapID = 23, x = 0.3660, y = 0.6920 }, -- Crown Guard Tower
     { id = "TAXI_662", container = "ek_overworld.map241", mapID = 241, x = 0.8130, y = 0.7660 }, -- Highbank Flightmaster
     { id = "TAXI_68", container = "ek_overworld.map23", mapID = 23, x = 0.7488, y = 0.5360 }, -- Light's Hope Chapel

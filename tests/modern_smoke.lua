@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1808, "every node made it into the tree (1292 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1809, "every node made it into the tree (1293 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -623,6 +623,33 @@ do
     -- A leg on from there (a tour's next stop) starts in the past, where the waypoint is.
     local out = PF:FindPath(session.graph, "WAYPOINT_UNDERCITY", "ENTRANCE_UNDERCITY_OUTER", session.graph.phase)
     check(out and not switched(out), "out of Undercity from the waypoint: no Zidormi: " .. describe(out))
+end
+
+-- Ironforge (2026-10-19): walled too, in and out through its gate, never flown into or out of.
+do
+    local World, PF = addon.World, addon.Pathfinder
+    local function describe(r)
+        local out = {}
+        for _, step in ipairs(r and r.steps or {}) do out[#out + 1] = step.method .. ">" .. tostring(step.to) end
+        return table.concat(out, ",")
+    end
+    local function throughGate(r)
+        local gate, flew
+        for _, step in ipairs(r and r.steps or {}) do
+            if (step.from == "ENTRANCE_IRONFORGE_OUTER" and step.to == "ENTRANCE_IRONFORGE_INNER")
+                or (step.from == "ENTRANCE_IRONFORGE_INNER" and step.to == "ENTRANCE_IRONFORGE_OUTER") then gate = true end
+            local from, to = World:GetNode(step.from), World:GetNode(step.to)
+            if step.method == "fly" and ((from and from.mapID == 87) or (to and to.mapID == 87) or step.to == "WAYPOINT_FORGE") then flew = true end
+        end
+        return gate and not flew
+    end
+    local start = { id = "YOU_kharanos", mapID = 27, x = 0.54, y = 0.52 }
+    local forge = { id = "WAYPOINT_FORGE", mapID = 87, x = 0.56, y = 0.48, leave = true }
+    local session = addon.Journey:Build(makeCtx({ faction = "Alliance" }), start, { forge })
+    local into = PF:FindPath(session.graph, start.id, forge.id, session.graph.phase)
+    check(throughGate(into), "Kharanos to the Great Forge: in through the gate: " .. describe(into))
+    local out = PF:FindPath(session.graph, "IRONFORGE", "TAXI_619", session.graph.phase)
+    check(throughGate(out), "the Hall of Mysteries to Kharanos: out through the gate: " .. describe(out))
 end
 
 -- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build
