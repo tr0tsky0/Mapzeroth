@@ -287,9 +287,20 @@ local function readableSteps(result, session)
         end
         return addon:GetNodeName(id)
     end
+    -- A node named by a string of ours is a portal's own name (Forever's "Gate to Darnassus"); one named by its
+    -- area or kind is a place (Bel'ameth), whose portals are described by where they come out.
+    local function portalNamed(id) return addon:HasString("NODE_" .. id) end
+    -- The portal a walk or flight is heading for: the next leg's, past any more walking or flying, or nil.
+    local function portalAhead(legs, i)
+        for j = i + 1, #legs do
+            local method = legs[j].method
+            if method == "portal" then return legs[j] end
+            if method ~= "walk" and method ~= "fly" then return nil end
+        end
+    end
     local steps = {}
     local legs = addon.Pathfinder:CollapseSteps(result.steps)
-    for _, step in ipairs(legs) do
+    for i, step in ipairs(legs) do
         if not (step.method == "walk" and step.cost < TRIVIAL_WALK and #legs > 1) then
             -- A portal node is named for where it leads, so the step names the one you take
             -- (where you stand), not the one you come out of.
@@ -298,8 +309,20 @@ local function readableSteps(result, session)
             -- A "transition" (walking through Rut'theran's gate into Darnassus) reads the same way, as using the
             -- gate you stand at, so it isn't mistaken for another walk ("Go to Gate to Rut'theran Village").
             local usesPortal = step.method == "portal" or step.method == "transition"
-            local ownName = usesPortal and addon:HasNodeName(step.from)
+            local ownName = usesPortal and portalNamed(step.from)
             local name = ownName and addon:GetNodeName(step.from) or nameOf(step.to)
+            -- Walking or flying to a portal, to a spot with no name of its own (a portal room's door) or to a hub of
+            -- several (Bel'ameth), names the portal ("Walk to Stormwind Portal"), not the map you're already in.
+            local ahead = (step.method == "walk" or step.method == "fly") and portalAhead(legs, i)
+            if ahead and (ahead.from == step.to or not addon:HasNodeName(step.to)) then
+                local beyond = addon.World:GetNode(ahead.to)
+                local zone = beyond and addon:GetZoneName(beyond.mapID)
+                if portalNamed(ahead.from) then
+                    name = addon:GetNodeName(ahead.from)
+                elseif zone then
+                    name = L["NODE_PORTAL_ZONE"]:format(zone)
+                end
+            end
             -- A flight ticket that passes through other flight points names them.
             local via
             if step.method == "taxi" and #step.parts > 1 then

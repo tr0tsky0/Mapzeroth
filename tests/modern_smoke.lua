@@ -329,6 +329,33 @@ check(addon:GetNodeName("PORTAL_SILVERMOON_ORGRIMMAR") == "Orgrimmar Portal",
 check(addon:HasNodeName("PORTAL_SILVERMOON_ORGRIMMAR") == false, "though that isn't a name of its own, so the portal step still reads 'Take the portal to ...'")
 check(addon:GetNodeName("SILVERMOON_PORTAL_ROOM") == "Silvermoon City", "a portal room with no single destination keeps its map's name: " .. addon:GetNodeName("SILVERMOON_PORTAL_ROOM"))
 
+-- The way to a portal names the portal, not the map you're already in: the portal room's door has no name of its
+-- own, and Bel'ameth (named by its area) is a hub of several portals, so neither stands in for the portal.
+maps[84] = { name = "Stormwind City", mapType = 3, parentMapID = 13 }
+maps[198] = { name = "Mount Hyjal", mapType = 3, parentMapID = 12 }
+maps[2239] = { name = "Amirdrassil", mapType = 3, parentMapID = 2274 }
+local getAreaInfo = C_Map.GetAreaInfo
+C_Map.GetAreaInfo = function(area) if area == 15115 then return "Bel'ameth" end end
+addon:ClearNodeNameCache()
+local function texts(faction, from, to)
+    local trip = addon.Journey:Plan(addon.Journey:Build(makeCtx({ faction = faction, level = 80 }),
+        { id = "START_PORTALS", mapID = from[1], x = from[2], y = from[3] },
+        { { id = "WAYPOINT_PORTALS", mapID = to[1], x = to[2], y = to[3] } }), "WAYPOINT_PORTALS")
+    local list = {}
+    for _, step in ipairs(trip and trip.steps or {}) do list[#list + 1] = step.text end
+    return table.concat(list, " / ")
+end
+local toStormwind = texts("Alliance", { 2393, 0.45, 0.60 }, { 84, 0.60, 0.70 })
+check(toStormwind:find("^Go to Stormwind City Portal / Walk to Stormwind City Portal / Take the portal to Stormwind City"),
+    "Silvermoon to the Stormwind portal: " .. toStormwind)
+local toHyjal = texts("Alliance", { 2239, 0.50, 0.60 }, { 198, 0.60, 0.30 })
+check(toHyjal:find("Go to Mount Hyjal Portal / Take the portal to Mount Hyjal", 1, true), "Bel'ameth to the Hyjal portal: " .. toHyjal)
+local fromHyjal = texts("Alliance", { 84, 0.60, 0.70 }, { 2239, 0.50, 0.60 })
+check(fromHyjal:find("Take the portal to Bel'ameth", 1, true) and not fromHyjal:find("Use Bel'ameth", 1, true),
+    "a portal out of Hyjal reads by where it comes out, not 'Use Bel'ameth': " .. fromHyjal)
+C_Map.GetAreaInfo = getAreaInfo
+addon:ClearNodeNameCache()
+
 -- Silvermoon's portal room (Stormwind, Orgrimmar and where their portals arrive) is an interior with one door: in the
 -- open you can fly up to the door, not into the room.
 addon.World:Build()
