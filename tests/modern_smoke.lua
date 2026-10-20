@@ -1181,6 +1181,11 @@ do
         if step.method ~= "portal" and step.text:find("Portal", 1, true) then named = named + 1 end
     end
     check(toGromgol and named == 1, "one step on the way names the Grom'gol portal: " .. kinds(toGromgol))
+    -- The inn is a couple of seconds from the city's centre node: too short a walk to show, so the step before it ends
+    -- there instead, and the route's last step is the inn, not "Go to Undercity".
+    local toInn = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_ORG_INN", mapID = 85, x = 0.50, y = 0.60 }), "INN_6741")
+    local lastStep = toInn and toInn.steps[#toInn.steps]
+    check(lastStep and lastStep.nodeID == "INN_6741", "the last step goes to the inn itself: " .. kinds(toInn))
     useTestDistances()
 end
 

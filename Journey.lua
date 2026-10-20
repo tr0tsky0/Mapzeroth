@@ -307,7 +307,18 @@ local function readableSteps(result, session)
     local steps = {}
     local legs = addon.Pathfinder:CollapseSteps(result.steps)
     for i, step in ipairs(legs) do
-        if not (step.method == "walk" and step.cost < TRIVIAL_WALK and #legs > 1) then
+        local trivial = step.method == "walk" and step.cost < TRIVIAL_WALK and #legs > 1
+        local before = steps[#steps]
+        if trivial and i == #legs and before and (before.method == "walk" or before.method == "fly") then
+            -- The few yards from the last node to the destination (the city's centre to its inn): the step before goes
+            -- there instead, so the route ends by naming where it was asked to go.
+            before.nodeID = step.to
+            before.seconds = before.seconds + step.cost
+            before.name = nameOf(step.to)
+            before.text = stepText(before.method, before.name, nil, before.source)
+            local point = pointOf(session, step.to)
+            if point then before.path[#before.path + 1] = point end
+        elseif not trivial or i == #legs then
             -- A portal node is named for where it leads, so the step names the one you take
             -- (where you stand), not the one you come out of.
             -- A portal we have a name for is named for where it leads (Forever's "Stormwind Portal");

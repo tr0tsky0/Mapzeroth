@@ -27,6 +27,7 @@
 - Taking the wrong portal from a portal room no longer marks the route's portal step as done.
 - The portals to Undercity from Orgrimmar, Grom'gol and Vengeance Landing, and old Silvermoon's portal to Tirisfal, land by Zidormi in present Tirisfal, as they do in the game.
 - A portal step names where you come out ("Take the portal to Silvermoon City"), not the portal standing there ("Orgrimmar Portal").
+- A route's last step names where you asked to go ("Go to Undercity Inn"), not a spot a few steps short of it ("Go to Undercity").
 - After a portal or teleport puts you in present Tirisfal, routes can still use Zidormi to go back to the past, where Undercity is.
 
 ## 2.0.2 (Retail)
