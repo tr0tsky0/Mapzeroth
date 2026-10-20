@@ -73,6 +73,7 @@ Data\Modern\Movement.lua
 Data\Modern\Game.lua
 Data\Modern\Tours.lua
 Data\Modern\HolidayRoutes.lua
+Data\Modern\NodeNames_enUS.lua
 
 # Engine
 World.lua
