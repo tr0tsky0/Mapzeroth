@@ -226,12 +226,16 @@ local function nextPhaseState(state, step)
         return state
     end
 
-    if step.overridesPhase and not state[SWITCHED] then
+    -- Zidormi is the route's one switch. A teleport or portal that puts you on a side whatever it was (the ways into
+    -- Undercity land in the present) isn't a choice, so it doesn't spend it: Zidormi can still take you back.
+    local forced = step.method ~= "phaseswitch"
+    if step.overridesPhase and (forced or not state[SWITCHED]) then
         for _, g in ipairs(step.overridesPhase) do
             if g == group then
                 local copy = {}
                 for k, v in pairs(state) do copy[k] = v end
-                copy[group], copy[SWITCHED] = side, 1
+                copy[group] = side
+                if not forced then copy[SWITCHED] = 1 end
                 return copy
             end
         end

@@ -26,6 +26,7 @@
 - A cloak or other wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
 - Taking the wrong portal from a portal room no longer marks the route's portal step as done.
 - The portals to Undercity from Orgrimmar, Grom'gol and Vengeance Landing land by Zidormi in present Tirisfal, as they do in the game.
+- After a portal or teleport puts you in present Tirisfal, routes can still use Zidormi to go back to the past, where Undercity is.
 
 ## 2.0.2 (Retail)
 

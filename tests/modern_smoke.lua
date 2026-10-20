@@ -1160,7 +1160,14 @@ do
     end
     check(landing and landing.to == "TIRISFAL_ZIDORMI_PRESENT" and landing.overridesPhase and landing.overridesPhase[1] == "tirisfal",
         "Orgrimmar's portal lands by present Zidormi and puts you in the present: " .. tostring(landing and landing.to))
-    local described
+    -- Being put in the present isn't the route's one switch: Zidormi can still take you back to the past, where the city is.
+    local described = kinds(addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_ORG_UC", mapID = 85, x = 0.50, y = 0.60 }), "UNDERCITY"))
+    check(described:find("portal>TIRISFAL_ZIDORMI_PRESENT", 1, true) and described:find("phaseswitch", 1, true),
+        "from the past, Orgrimmar's portal then Zidormi: " .. described)
+    local mage = makeCtx({ faction = "Horde", class = "MAGE", spells = { 3563 }, mapArt = { [18] = 19 }, quests = { [50769] = true, [47098] = true } })
+    described = kinds(addon.Journey:Plan(addon.Journey:Build(mage, { id = "START_NAGRAND_UC2", mapID = 107, x = 0.5, y = 0.5 }), "UNDERCITY"))
+    check(described:find("TIRISFAL_ZIDORMI_PRESENT", 1, true) and described:find("phaseswitch", 1, true),
+        "and Teleport: Undercity then Zidormi, with the past known: " .. described)
     local outbound = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_UC_ORG", mapID = 90, x = 0.66, y = 0.44 }), "ORGRIMMAR_PORTAL_ROOM_UPPER")
     described = kinds(outbound)
     check(described:find("portal>ORGRIMMAR_PORTAL_ROOM_UPPER", 1, true), "back by the tower's portal: " .. described)
