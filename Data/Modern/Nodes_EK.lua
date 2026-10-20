@@ -209,7 +209,7 @@ addon.Nodes.EK = {
     -- Undercity is two levels, as in Forever (Data/Forever/Nodes_EasternKingdoms.lua): the gate opens from past Tirisfal
     -- into the Ruins of Lordaeron (map90.ruins, upper level), and the city is down one of three elevators (Edges.lua).
     -- The entrance pair walls the city (TravelGraph.lua); the ruins don't fly (Containers.lua). Positions are
-    -- Forever's captures, not yet captured on Retail (map 90 matches Forever's 1458 to within a few tenths).
+    -- Forever's captures, checked on Retail and the same (2026-10-19).
     { id = "ENTRANCE_UNDERCITY_OUTER", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6185, y = 0.6501, kind = "entrance", city = "undercity", area = 153 }, -- Past Tirisfal: Undercity's gate, outside (Ruins of Lordaeron)
     { id = "ENTRANCE_UNDERCITY_INNER", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6617, y = 0.0038, kind = "entrance", city = "undercity" }, -- Undercity: the gate, inside (the ruins, upper level)
     { id = "UNDERCITY_ELEVATOR_TOP_1", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6595, y = 0.5028, city = "undercity" }, -- Undercity: south elevator, top
