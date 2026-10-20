@@ -4,6 +4,7 @@
 
 ### Added
 - Deepholm's Temple of Earth candy bucket on the Eastern Kingdoms Hallow's End route.
+- Boralus's portal to Founder's Point (Alliance).
 
 ### Fixed
 - Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.
@@ -20,6 +21,7 @@
 - Steps on the way to a portal name the portal ("Walk to Stormwind City Portal"), not the city you're already in.
 - Portals out of Bel'ameth say where they go ("Take the portal to Val'sharah"), not "Use Bel'ameth".
 - A cloak or other wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
+- Taking the wrong portal from a portal room no longer marks the route's portal step as done.
 
 ## 2.0.2 (Retail)
 
