@@ -208,7 +208,7 @@ addon.Nodes.EK = {
     { id = "UNDERCITY", container = "ek_overworld.map90", mapID = 90, x = 0.6630, y = 0.3840, city = "undercity" }, -- Entrance
     -- Undercity is two levels, as in Forever (Data/Forever/Nodes_EasternKingdoms.lua): the gate opens from past Tirisfal
     -- into the Ruins of Lordaeron (map90.ruins, upper level), and the city is down one of three elevators (Edges.lua).
-    -- The entrance pair walls the city (TravelGraph.lua); nothing on map 90 flies (Containers.lua). Positions are
+    -- The entrance pair walls the city (TravelGraph.lua); the ruins don't fly (Containers.lua). Positions are
     -- Forever's captures, not yet captured on Retail (map 90 matches Forever's 1458 to within a few tenths).
     { id = "ENTRANCE_UNDERCITY_OUTER", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6185, y = 0.6501, kind = "entrance", city = "undercity", area = 153 }, -- Past Tirisfal: Undercity's gate, outside (Ruins of Lordaeron)
     { id = "ENTRANCE_UNDERCITY_INNER", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6617, y = 0.0038, kind = "entrance", city = "undercity" }, -- Undercity: the gate, inside (the ruins, upper level)
@@ -220,8 +220,8 @@ addon.Nodes.EK = {
     { id = "UNDERCITY_ELEVATOR_BOTTOM_3", container = "ek_overworld.map90", mapID = 90, x = 0.5940, y = 0.4402, city = "undercity" }, -- Undercity: west elevator, bottom
     { id = "TAXI_622", container = "ek_overworld.map47", mapID = 47, x = 0.2050, y = 0.5760 }, -- Raven Hill
     { id = "STORMWIND_DARK_PORTAL_BL_NPC", container = "ek_overworld.map84.mage_tower", mapID = 84, x = 0.4911, y = 0.8734, city = "stormwind" }, -- Honor Hold Mage
-    -- Ironforge is walled: in and out only through its gate (the entrance pair, TravelGraph.lua), never flown into
-    -- (Containers.lua). Both sides captured in game (2026-10-19).
+    -- Ironforge is walled: in and out only through its gate (the entrance pair, TravelGraph.lua); flying works inside,
+    -- but never across the wall. Both sides captured in game (2026-10-19).
     { id = "ENTRANCE_IRONFORGE_OUTER", container = "ek_overworld.map27", mapID = 27, x = 0.6054, y = 0.3323, kind = "entrance", city = "ironforge" }, -- Dun Morogh: Ironforge's gate, outside
     { id = "ENTRANCE_IRONFORGE_INNER", container = "ek_overworld.map87", mapID = 87, x = 0.1497, y = 0.8601, kind = "entrance", city = "ironforge" }, -- Ironforge: the gate, inside
     { id = "TAXI_676", container = "ek_overworld.map36", mapID = 36, x = 0.4580, y = 0.4320 }, -- Chiselgrip

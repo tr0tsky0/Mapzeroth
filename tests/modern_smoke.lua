@@ -589,7 +589,8 @@ do
 end
 
 -- Undercity (2026-10-19), as Forever's: walled, in through the gate to the ruins and down an elevator, never flown
--- into; and only in the past, so a waypoint there from present Tirisfal goes through Zidormi.
+-- across its wall or past the elevators (flying works in the city below); and only in the past, so a waypoint there
+-- from present Tirisfal goes through Zidormi.
 do
     local World, PF = addon.World, addon.Pathfinder
     check(World:GetPhase(World:GetNodeContainer("UNDERCITY_ELEVATOR_TOP_1")) == "tirisfal"
@@ -605,14 +606,15 @@ do
         return table.concat(out, ",")
     end
     local function walledIn(r)
-        local gate, lift, flewIn
+        local gate, lift, cheat
+        local function inside(id) local node = World:GetNode(id) return id == "WAYPOINT_UNDERCITY" or (node ~= nil and node.mapID == 90) end
+        local function ruins(id) local c = World:GetNodeContainer(id) return c and c.path == "ek_overworld.map90.ruins" end
         for _, step in ipairs(r and r.steps or {}) do
             if step.to == "ENTRANCE_UNDERCITY_INNER" then gate = true end
             if gate and tostring(step.from):find("^UNDERCITY_ELEVATOR_TOP_") and tostring(step.to):find("^UNDERCITY_ELEVATOR_BOTTOM_") then lift = true end
-            local to = World:GetNode(step.to)
-            if step.method == "fly" and (step.to == "WAYPOINT_UNDERCITY" or (to and to.mapID == 90)) then flewIn = true end
+            if step.method == "fly" and (inside(step.from) ~= inside(step.to) or ruins(step.from) or ruins(step.to)) then cheat = true end
         end
-        return gate and lift and not flewIn
+        return gate and lift and not cheat
     end
     local past = route({ [18] = 19 }, { id = "YOU_brill", mapID = 18, x = 0.60, y = 0.52 })
     check(walledIn(past), "past Tirisfal to the Trade Quarter: the gate, then an elevator: " .. describe(past))
@@ -627,7 +629,7 @@ do
     check(out and not switched(out), "out of Undercity from the waypoint: no Zidormi: " .. describe(out))
 end
 
--- Ironforge (2026-10-19): walled too, in and out through its gate, never flown into or out of.
+-- Ironforge (2026-10-19): walled too, in and out through its gate, never flown across its wall; flying inside works.
 do
     local World, PF = addon.World, addon.Pathfinder
     local function describe(r)
@@ -636,14 +638,14 @@ do
         return table.concat(out, ",")
     end
     local function throughGate(r)
-        local gate, flew
+        local gate, over
+        local function inside(id) local node = World:GetNode(id) return id == "WAYPOINT_FORGE" or (node ~= nil and node.mapID == 87) end
         for _, step in ipairs(r and r.steps or {}) do
             if (step.from == "ENTRANCE_IRONFORGE_OUTER" and step.to == "ENTRANCE_IRONFORGE_INNER")
                 or (step.from == "ENTRANCE_IRONFORGE_INNER" and step.to == "ENTRANCE_IRONFORGE_OUTER") then gate = true end
-            local from, to = World:GetNode(step.from), World:GetNode(step.to)
-            if step.method == "fly" and ((from and from.mapID == 87) or (to and to.mapID == 87) or step.to == "WAYPOINT_FORGE") then flew = true end
+            if step.method == "fly" and inside(step.from) ~= inside(step.to) then over = true end
         end
-        return gate and not flew
+        return gate and not over
     end
     local start = { id = "YOU_kharanos", mapID = 27, x = 0.54, y = 0.52 }
     local forge = { id = "WAYPOINT_FORGE", mapID = 87, x = 0.56, y = 0.48, leave = true }
@@ -652,6 +654,10 @@ do
     check(throughGate(into), "Kharanos to the Great Forge: in through the gate: " .. describe(into))
     local out = PF:FindPath(session.graph, "IRONFORGE", "TAXI_619", session.graph.phase)
     check(throughGate(out), "the Hall of Mysteries to Kharanos: out through the gate: " .. describe(out))
+    local across = PF:FindPath(session.graph, "IRONFORGE", forge.id, session.graph.phase)
+    local flew = false
+    for _, step in ipairs(across and across.steps or {}) do if step.method == "fly" then flew = true end end
+    check(flew, "the Hall of Mysteries to the Great Forge: flown, inside the city: " .. describe(across))
 end
 
 -- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build

@@ -224,7 +224,7 @@ local function buildStaticGeometry()
         end
     end
 
-    -- Flying: continent-wide, only between flyable, outdoor nodes, and never between two sides of a phase group.
+    -- Flying: continent-wide, only between flyable, outdoor nodes, never between two sides of a phase group or across a wall.
     local flyable = {}
     for _, list in pairs(addon.Nodes or {}) do
         for _, node in ipairs(list) do
@@ -247,6 +247,7 @@ local function buildStaticGeometry()
         for i = 1, #nodes - 1 do
             for j = i + 1, #nodes do
                 local dist = not otherSide(World:GetNodeContainer(nodes[i].id), World:GetNodeContainer(nodes[j].id))
+                    and insideCity(nodes[i]) == insideCity(nodes[j])   -- nor over a walled city's wall
                     and TravelGraph.DistanceProvider(nodes[i], nodes[j])
                 if dist and dist <= addon.MAX_AUTO_EDGE_DISTANCE then
                     local cost = dist / (addon.FLY_SPEED)
