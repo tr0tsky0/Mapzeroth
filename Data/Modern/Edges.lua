@@ -105,6 +105,7 @@ addon.Edges = {
     { from = "BORALUS", to = "NAZJATAR_ALLIANCE", method = "portal", cost = 0, requirements = { quest = 54972, faction = "Alliance" } },
     { from = "BORALUS", to = "IRONFORGE", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "BORALUS", to = "EXODAR", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
+    { from = "BORALUS", to = "FOUNDERS_POINT", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } }, -- lands with Stormwind's; no way back to Boralus
     { from = "DALARAN_BROKEN_ISLES", to = "VINDICAAR_ARGUS", method = "portal", cost = 0 },
     { from = "PORTAL_DALARAN_BROKEN_ISLES_ALLIANCE", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "PORTAL_DALARAN_BROKEN_ISLES_HORDE", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
