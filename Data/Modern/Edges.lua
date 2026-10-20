@@ -288,8 +288,8 @@ addon.Edges = {
     { from = "PORTAL_SHATTRATH_QUELDANAS", to = "QUELDANAS", method = "portal", cost = 0, oneway = true },
     { from = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", to = "PORTAL_BC_SILVERMOON_TIRISFAL", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
-    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 1136 }, requirements = { faction = "Horde" } },
-    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "PORTAL_TIRISFAL_PAST_BC_SILVERMOON", method = "portal", cost = 0, oneway = true, inPhase = { "tirisfal", 19 }, requirements = { faction = "Horde" } },
+    -- Lands by present Zidormi whatever your phase, like every way into Tirisfal (2026-10-20; it used to land in the ruins on your side).
+    { from = "PORTAL_BC_SILVERMOON_TIRISFAL", to = "TIRISFAL_ZIDORMI_PRESENT", method = "portal", cost = 0, oneway = true, overridesPhase = { "tirisfal" }, requirements = { faction = "Horde" } },
     { from = "LYCANEUM_ENTRANCE", to = "PORTAL_MAGISTERS_SILVERMOON", method = "walk" },
     { from = "PORTAL_MAGISTERS_SILVERMOON", to = "LYCANEUM_ENTRANCE", method = "walk" },
     { from = "ORIBOS_TRANSFERENCE_PAD", to = "ORIBOS_TRANSFERENCE_RING", method = "portal", cost = 3, loadingScreens = 0 },

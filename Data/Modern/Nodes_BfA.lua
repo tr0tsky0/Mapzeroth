@@ -90,5 +90,5 @@ addon.Nodes.BfA = {
     { id = "BORDER_EVERSONG_SILVERMOON_BC", container = "quelthalas.map94", mapID = 94, x = 0.5621, y = 0.4917 }, -- Old Eversong: outside old Silvermoon's gate
     { id = "BORDER_SILVERMOON_EVERSONG_BC", container = "quelthalas.map110", mapID = 110, x = 0.7054, y = 0.8903, city = "silvermoon_bc" }, -- Old Silvermoon: inside its gate
     { id = "PORTAL_GHOSTLANDS_EPL", container = "quelthalas.map95", mapID = 95, x = 0.5208, y = 0.9783 }, -- Old Ghostlands: the portal to the Eastern Plaguelands (Sanctum of the Sun)
-    { id = "PORTAL_BC_SILVERMOON_TIRISFAL", container = "quelthalas.map110", mapID = 110, x = 0.5068, y = 0.1643, city = "silvermoon_bc" }, -- Old Silvermoon: the portal to Tirisfal, and where the ways in from Tirisfal land
+    { id = "PORTAL_BC_SILVERMOON_TIRISFAL", container = "quelthalas.map110", mapID = 110, x = 0.5068, y = 0.1643, city = "silvermoon_bc" }, -- Old Silvermoon: the portal to Tirisfal (lands by present Zidormi), and where the ways in from Tirisfal land
 }
