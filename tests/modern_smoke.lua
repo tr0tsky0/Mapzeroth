@@ -425,11 +425,13 @@ do
     for _ in pairs(World:GetPhaseGroups()) do groups = groups + 1 end
     check(groups == 7, "seven phase groups, one per Zidormi: " .. groups)
 
-    -- The live side: one map's art decides it; past and present Tirisfal each always show their own art, so unknown.
-    local arts = { [62] = 1176, [17] = 628, [18] = 19, [2070] = 1136 }
+    -- The live side: one map's art decides it; past and present Vale each always show their own art, so unknown
+    -- (without quest flags to read).
+    local arts = { [62] = 1176, [17] = 628, [18] = 19, [390] = 402, [1530] = 1342 }
     local live = World:LivePhases(function(id) return arts[id] end)
     check(live.darkshore == 1176 and live.blasted_lands == 628, "Darkshore and Blasted Lands read as present")
-    check(live.tirisfal == nil and live.uldum == nil, "a group the client can't tell apart stays unknown")
+    check(live.tirisfal == 19, "Tirisfal by map 18's art: the past")
+    check(live.vale == nil and live.uldum == nil, "a group the client can't tell apart stays unknown")
 
     -- Routes, as an Alliance player standing in Stormwind.
     local start = { id = "YOU_phase", mapID = 84, x = 0.50, y = 0.60 }
@@ -512,14 +514,18 @@ do
         return set
     end
 
-    -- Tirisfal and the Vale: each map always shows its own art, so the flag decides.
-    local both = { [18] = 19, [2070] = 1136, [390] = 402, [1530] = 1342 }
+    -- The Vale: each map always shows its own art, so the flag decides. Tirisfal likewise when map 18 gives no answer.
+    local both = { [2070] = 1136, [390] = 402, [1530] = 1342 }
     check(live(both).tirisfal == 19 and live(both).vale == 402, "no Zidormi unlocked: held in the past")
     check(live(both, has(50769)).tirisfal == 1136 and live(both, has(47098)).tirisfal == 1136,
         "Tirisfal unlocked (either quest), no flag: the present")
     check(live(both, has(50769, 52758)).tirisfal == 19, "Tirisfal's flag 52758: the past")
     check(live(both, has(58506)).vale == 1342 and live(both, has(58506, 59024)).vale == 402,
         "the Vale: unlocked is the present, 59024 the past")
+    -- Map 18's art follows Tirisfal's time and wins over the flag: Teleport: Undercity lands in the present but leaves
+    -- 52758 set.
+    check(live({ [18] = 1136, [2070] = 1136 }, has(50769, 52758)).tirisfal == 1136, "map 18 says present: present, flag or not")
+    check(live({ [18] = 19, [2070] = 1136 }, has(50769)).tirisfal == 19, "map 18 says past: past, flag or not")
 
     -- Uldum and Silithus: one group, read by Silithus's map 81 (art first, then 50659).
     local g, s = phaseOf("ULDUM_ZIDORMI_PAST")

@@ -48,7 +48,8 @@ addon.Containers["ek_overworld.map30.upper"] = { indoor = true } -- interior
 addon.Containers["ek_overworld.map17_art18"] = { phaseGroup = "blasted_lands", phaseSide = 18, phaseMap = 17 }
 addon.Containers["ek_overworld.map17_art628"] = { phaseGroup = "blasted_lands", phaseSide = 628, phaseMap = 17 }
 addon.Containers["ek_overworld.map18_art19"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
-addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", phaseSide = 1136, phaseMap = 2070 }
+-- Map 18's art follows Tirisfal's time from outside the zone too (19 / 1136, seen 2026-10-19); 2070 always shows 1136
+addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", phaseSide = 1136, phaseMap = 18 }
 -- Undercity is only there in the past: its own map, on the past side (phaseMap stays 18, the map that tells the side)
 addon.Containers["ek_overworld.map90"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
 -- Uldum is Silithus's setting (switching either switches both): its sides are Silithus's, told by Silithus's map 81
