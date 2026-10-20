@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1809, "every node made it into the tree (1293 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1815, "every node made it into the tree (1299 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -634,18 +634,20 @@ do
         return table.concat(out, ",")
     end
     local function walledIn(r)
-        local gate, lift, cheat
+        -- In by the gate and an elevator, or by the sewer (2026-10-20, quicker from most of Tirisfal).
+        local gate, lift, sewer, cheat
         local function inside(id) local node = World:GetNode(id) return id == "WAYPOINT_UNDERCITY" or (node ~= nil and node.mapID == 90) end
         local function ruins(id) local c = World:GetNodeContainer(id) return c and c.path == "ek_overworld.map90.ruins" end
         for _, step in ipairs(r and r.steps or {}) do
             if step.to == "ENTRANCE_UNDERCITY_INNER" then gate = true end
             if gate and tostring(step.from):find("^UNDERCITY_ELEVATOR_TOP_") and tostring(step.to):find("^UNDERCITY_ELEVATOR_BOTTOM_") then lift = true end
+            if step.from == "UNDERCITY_SEWER_OUTER" and step.to == "UNDERCITY_SEWER_INNER" then sewer = true end
             if step.method == "fly" and (inside(step.from) ~= inside(step.to) or ruins(step.from) or ruins(step.to)) then cheat = true end
         end
-        return gate and lift and not cheat
+        return ((gate and lift) or sewer) and not cheat
     end
     local past = route({ [18] = 19 }, { id = "YOU_brill", mapID = 18, x = 0.60, y = 0.52 })
-    check(walledIn(past), "past Tirisfal to the Trade Quarter: the gate, then an elevator: " .. describe(past))
+    check(walledIn(past), "past Tirisfal to the Trade Quarter: the gate and an elevator, or the sewer: " .. describe(past))
     local function switched(r)
         for _, step in ipairs(r and r.steps or {}) do if step.method == "phaseswitch" then return true end end
         return false
@@ -1140,6 +1142,29 @@ do
         seen[#seen + 1] = tostring(step.method) .. ">" .. tostring(step.to or step.nodeID)
     end
     check(cast and zidormi, "Teleport: Undercity, then Zidormi to the past: " .. table.concat(seen, ", ") .. " " .. tostring(why))
+end
+
+-- Orgrimmar's portal to Undercity lands there too (2026-10-20), and the way back is past Tirisfal's tower portal.
+do
+    local horde = makeCtx({ faction = "Horde", level = 80, mapArt = { [18] = 19 }, quests = { [50769] = true, [47098] = true } })   -- in the past
+    useRetailDistances()
+    local function kinds(plan)
+        local seen = {}
+        for _, step in ipairs(plan and plan.steps or {}) do seen[#seen + 1] = step.method .. ">" .. tostring(step.nodeID) end
+        return table.concat(seen, ", ")
+    end
+    local session = addon.Journey:Build(horde, { id = "START_ORG_UC", mapID = 85, x = 0.51, y = 0.56 })
+    local landing
+    for _, e in ipairs(session.graph.adjacency["PORTAL_ORGRIMMAR_UNDERCITY"] or {}) do
+        if e.method == "portal" then landing = e end
+    end
+    check(landing and landing.to == "TIRISFAL_ZIDORMI_PRESENT" and landing.overridesPhase and landing.overridesPhase[1] == "tirisfal",
+        "Orgrimmar's portal lands by present Zidormi and puts you in the present: " .. tostring(landing and landing.to))
+    local described
+    local outbound = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_UC_ORG", mapID = 90, x = 0.66, y = 0.44 }), "ORGRIMMAR_PORTAL_ROOM_UPPER")
+    described = kinds(outbound)
+    check(described:find("portal>ORGRIMMAR_PORTAL_ROOM_UPPER", 1, true), "back by the tower's portal: " .. described)
+    useTestDistances()
 end
 
 -- Zephyr (Shattrath's World's End Tavern) ports to the Caverns of Time only at Revered with the Keepers of Time (989).

@@ -212,6 +212,15 @@ addon.Nodes.EK = {
     -- Forever's captures, checked on Retail and the same (2026-10-19).
     { id = "ENTRANCE_UNDERCITY_OUTER", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6185, y = 0.6501, kind = "entrance", city = "undercity", area = 153 }, -- Past Tirisfal: Undercity's gate, outside (Ruins of Lordaeron)
     { id = "ENTRANCE_UNDERCITY_INNER", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6617, y = 0.0038, kind = "entrance", city = "undercity" }, -- Undercity: the gate, inside (the ruins, upper level)
+    -- The sewer, a second way in that skips the ruins and elevators (you can fly through it): its mouth in past Tirisfal
+    -- and where it comes out in the city below, joined by one edge (Edges.lua). Captured 2026-10-20.
+    { id = "UNDERCITY_SEWER_OUTER", container = "ek_overworld.map18_art19", mapID = 18, x = 0.5092, y = 0.7236, area = 166 }, -- Past Tirisfal: the sewer's mouth (Cold Hearth Manor)
+    { id = "UNDERCITY_SEWER_INNER", container = "ek_overworld.map90", mapID = 90, x = 0.4972, y = 0.2956, city = "undercity" }, -- Undercity: where the sewer comes out
+    -- Past Tirisfal's old zeppelin tower (Balnir Farmstead) has portals now, one node each (Edges.lua). Captured 2026-10-20.
+    { id = "PORTAL_TIRISFAL_PAST_ORGRIMMAR", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6077, y = 0.5874 }, -- Past Tirisfal: portal to Orgrimmar
+    { id = "PORTAL_TIRISFAL_PAST_GROMGOL", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6186, y = 0.5903 }, -- Past Tirisfal: portal to Grom'gol
+    { id = "PORTAL_TIRISFAL_PAST_VENGEANCE_LANDING", container = "ek_overworld.map18_art19", mapID = 18, x = 0.5913, y = 0.5893 }, -- Past Tirisfal: portal to Vengeance Landing
+    { id = "PORTAL_GROMGOL_UNDERCITY", container = "ek_overworld.map50", mapID = 50, x = 0.3753, y = 0.5110, area = 117 }, -- Grom'gol: the portal to Undercity, and where the way from past Tirisfal lands (37.23 50.48)
     { id = "UNDERCITY_ELEVATOR_TOP_1", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6595, y = 0.5028, city = "undercity" }, -- Undercity: south elevator, top
     { id = "UNDERCITY_ELEVATOR_TOP_2", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.7010, y = 0.4413, city = "undercity" }, -- Undercity: east elevator, top
     { id = "UNDERCITY_ELEVATOR_TOP_3", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6177, y = 0.4407, city = "undercity" }, -- Undercity: west elevator, top

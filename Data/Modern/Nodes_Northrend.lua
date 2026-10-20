@@ -10,7 +10,7 @@ if addon.RULESET ~= "modern" then return end   -- one addon for both games: this
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Northrend = {
-    { id = "ZEPPELIN_VENGEANCE_LANDING", container = "northrend.map117", mapID = 117, x = 0.7770, y = 0.3029 }, -- Vengeance Hold (Zeppelin)
+    { id = "PORTAL_VENGEANCE_LANDING_UNDERCITY", container = "northrend.map117", mapID = 117, x = 0.7774, y = 0.2831, area = 4000 }, -- Vengeance Landing: the portal to Undercity (was the zeppelin), and where the way from past Tirisfal lands (79.00 28.92); 2026-10-20
     { id = "INSTANCE_THE_EYE_OF_ETERNITY", container = "northrend.map114", mapID = 114, x = 0.2800, y = 0.2900, kind = "instance", journal = 756 }, -- The Eye of Eternity
     { id = "TAXI_337", container = "northrend.map127", mapID = 127, x = 0.7759, y = 0.4813 }, -- Sunreaver's Command
     { id = "TAXI_191", container = "northrend.map117", mapID = 117, x = 0.7864, y = 0.2959 }, -- Vengeance Landing

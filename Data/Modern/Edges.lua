@@ -199,14 +199,21 @@ addon.Edges = {
     { from = "DAZARALOR_PET", to = "INSTANCE_DEADMINES", method = "portal", cost = 0, oneway = true, requirements = { quest = 46291, faction = "Horde" } },
     { from = "DAZARALOR_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Horde" } },
     { from = "BORALUS_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Alliance" } },
-    { from = "UNDERCITY", to = "ZEPPELIN_VENGEANCE_LANDING", method = "zeppelin", cost = 60 },
     -- Undercity's elevators, between the ruins and the city below (Nodes_EK.lua): Forever's 13 s (2T + D), the same lifts.
     { from = "UNDERCITY_ELEVATOR_TOP_1", to = "UNDERCITY_ELEVATOR_BOTTOM_1", method = "walk", cost = 13 },
     { from = "UNDERCITY_ELEVATOR_TOP_2", to = "UNDERCITY_ELEVATOR_BOTTOM_2", method = "walk", cost = 13 },
     { from = "UNDERCITY_ELEVATOR_TOP_3", to = "UNDERCITY_ELEVATOR_BOTTOM_3", method = "walk", cost = 13 },
+    { from = "UNDERCITY_SEWER_OUTER", to = "UNDERCITY_SEWER_INNER", method = "walk", cost = 15 },   -- the sewer, flown (2026-10-20); its length at ground speed would say 28 s
     { from = "ZEPPELIN_ORGRIMMAR_WARSONG", to = "ZEPPELIN_WARSONG_HOLD", method = "zeppelin", cost = 60 },
     { from = "ZEPPELIN_ORGRIMMAR_WAKING_SHORES", to = "ZEPPELIN_WAKING_SHORES_ORGRIMMAR", method = "zeppelin", cost = 350 },
-    { from = "PORTAL_ORGRIMMAR_UNDERCITY", to = "UNDERCITY", method = "portal", cost = 0, requirements = { faction = "Horde" } },
+    -- The portals to Undercity land by Zidormi in present Tirisfal, as Teleport: Undercity does, whatever your phase
+    -- (2026-10-20); the ways back are past Tirisfal's tower portals (Nodes_EK.lua).
+    { from = "PORTAL_ORGRIMMAR_UNDERCITY", to = "TIRISFAL_ZIDORMI_PRESENT", method = "portal", cost = 0, oneway = true, overridesPhase = { "tirisfal" }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_GROMGOL_UNDERCITY", to = "TIRISFAL_ZIDORMI_PRESENT", method = "portal", cost = 0, oneway = true, overridesPhase = { "tirisfal" }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_TIRISFAL_PAST_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
+    { from = "PORTAL_TIRISFAL_PAST_GROMGOL", to = "PORTAL_GROMGOL_UNDERCITY", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
+    { from = "PORTAL_VENGEANCE_LANDING_UNDERCITY", to = "TIRISFAL_ZIDORMI_PRESENT", method = "portal", cost = 0, oneway = true, overridesPhase = { "tirisfal" }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_TIRISFAL_PAST_VENGEANCE_LANDING", to = "PORTAL_VENGEANCE_LANDING_UNDERCITY", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "DOCK_ECHO_ISLES", to = "DOCK_DAZARALOR", method = "ship", cost = 60 },
     { from = "DOCK_DAZARALOR", to = "DOCK_WARFANG_HOLD", method = "portal", cost = 0, requirements = { quest = 51802, faction = "Horde" } },
     { from = "DOCK_DAZARALOR", to = "DOCK_PLUNDER_HARBOR", method = "portal", cost = 0, requirements = { quest = 51800, faction = "Horde" } },
