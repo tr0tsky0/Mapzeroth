@@ -563,6 +563,8 @@ do
     check(switches(route({ [14] = 15 }, has(84717), "ARATHI_ZIDORMI_WAR")) == 1, "from the present, the Fourth War is one switch")
     check(route({ [14] = 1137 }, nil, "ARATHI_ZIDORMI_PRESENT") == nil, "without the Stromgarde reclamation (84717), no present")
     check(switches(route({ [14] = 1137 }, has(84717), "ARATHI_ZIDORMI_PRESENT")) == 1, "with it, the present is one switch")
+    check(route({ [14] = 15 }, has(84717), "ARATHI_ZIDORMI_BEFORE") == nil,
+        "the present to before the war is two switches (through the war), more than a route takes")
 
     -- Holiday stops are on the past side: Hammerfall's bucket from the Fourth War goes through Zidormi; the same spot as
     -- a plain waypoint doesn't, nor the bucket from before the war.

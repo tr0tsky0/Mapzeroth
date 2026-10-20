@@ -53,8 +53,8 @@ addon.Nodes.EK = {
     { id = "ARATHI_ZIDORMI_BEFORE", container = "ek_overworld.map14_art15", mapID = 14, x = 0.3818, y = 0.8998 }, -- Zidormi (Arathi before the war)
     { id = "ARATHI_ZIDORMI_WAR", container = "ek_overworld.map14_art1137", mapID = 14, x = 0.3818, y = 0.8998 }, -- Zidormi (Arathi in the Fourth War)
     -- Present Arathi is map 2372, an instance of its own the client gives no distance to; it covers exactly map 14's
-    -- ground, so its Zidormi (2372 at 0.3798, 0.8320) is placed by map 14's coordinates, where the fly mesh reaches her.
-    { id = "ARATHI_ZIDORMI_PRESENT", container = "ek_overworld.map2372", mapID = 14, x = 0.3798, y = 0.8320 }, -- Zidormi (Present Arathi)
+    -- ground, so its Zidormi (2372 at 0.3796, 0.8320) is placed by map 14's coordinates, where the fly mesh reaches her.
+    { id = "ARATHI_ZIDORMI_PRESENT", container = "ek_overworld.map2372", mapID = 14, x = 0.3796, y = 0.8320 }, -- Zidormi (Present Arathi)
     { id = "STRATHOLME_DUNGEON", container = "ek_overworld.map23", mapID = 23, x = 0.2600, y = 0.1400, area = 2279 }, -- Stratholme
     { id = "INSTANCE_BLACKWING_DESCENT", container = "ek_overworld.map13", mapID = 13, x = 0.4754, y = 0.6893, kind = "instance", journal = 73 }, -- Blackwing Descent
     { id = "BLASTED_LANDS_ZIDORMI_PAST", container = "ek_overworld.map17_art18", mapID = 17, x = 0.4812, y = 0.0732 }, -- Zidormi (Past Blasted Lands)
