@@ -144,6 +144,16 @@ N:Update(at("TAXI_2", 0.2, 0, { now = 0 }))
 m = N:Update(at("TAXI_6", 0.3, 0, { now = 20 }))
 check(m.index == 2, "one jump ends one step, not two: " .. tostring(m.index))
 
+-- A portal lands where we have it: taking another one from the same room (somewhere far from this one's landing)
+-- doesn't end the step; landing at its own end does.
+local portalTrip = { steps = { step("portal", "YOU", "TAXI_4", 10), step("walk", "TAXI_4", "TAXI_8", 60) } }
+N:Start(entry, portalTrip)
+N:Update(at("TAXI_2", 0, 0, { now = 0 }))
+m = N:Update(at("TAXI_6", 0, 0, { now = 5 }))
+check(m.index == 1, "the wrong portal doesn't end the portal step: " .. tostring(m.index))
+m = N:Update(at("TAXI_4", 0, 0, { now = 10 }))
+check(m.index == 2, "arriving at its landing does: " .. tostring(m.index))
+
 -- A teleport into somewhere the client can't measure from where we were (an interior that is a map of its own): the
 -- map changing is what ends the step, not a distance.
 local realDistance = addon.TravelGraph.DistanceProvider

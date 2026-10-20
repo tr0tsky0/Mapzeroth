@@ -17,7 +17,7 @@ local addonName, addon = ...
 --   ability    (hearthstone, teleport) a button to use it; done when the player arrives;
 --   equip      the step before using an item that has to be worn: a button to put it on; done once
 --              it is worn (sample.equipped(itemID));
---   portal     walk into it; done when the player arrives.
+--   portal     walk into it; done when the player arrives (a jump counts only if it lands near there).
 -- A step is done when the player is within a small radius of its destination (a landing or a
 -- ship's arrival counts too; a teleport or portal also counts the moment the player is suddenly
 -- somewhere else, since a bind point can be well away from the inn node we have for it). If they get to a later step's destination, the steps between are
@@ -268,8 +268,18 @@ local function completed(step, sample)
         -- Done once the item is worn (the sample says: it needs the client).
         return sample.equipped ~= nil and step.source ~= nil and sample.equipped(step.source.itemID) == true
     end
-    if kind == "ability" or kind == "portal" then
+    if kind == "ability" then
         return arrived(step, sample) or active.jumped == true
+    end
+    if kind == "portal" then
+        -- A portal lands where we have it, so a jump ends the step only near there (or onto its map, when the client
+        -- can't measure to it): the room's other portal, taken by mistake, isn't this one.
+        if arrived(step, sample) then return true end
+        if not active.jumped then return false end
+        local node = nodeOf(step.nodeID)
+        local d = distance(sample, node)
+        if d then return d <= JUMP end
+        return node ~= nil and sample.mapID == node.mapID
     end
     return arrived(step, sample)
 end
