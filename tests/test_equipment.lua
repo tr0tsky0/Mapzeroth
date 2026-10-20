@@ -60,7 +60,7 @@ InCombatLockdown = function() return false end
 -- Retail 12.x's shape: the item functions only in C_Item, no globals.
 IsEquippedItem, EquipItemByName, IsEquippableItem = nil, nil, nil
 C_Item = {
-    GetItemInfoInstant = function(id) return id, "Armor", "Cloth", "INVTYPE_CLOAK" end,
+    GetItemInfoInstant = function(id) return id, "Armor", "Cloth", id ~= 9002 and "INVTYPE_CLOAK" or "" end,
     IsEquippedItem = function(id) for _, v in pairs(worn) do if v == id then return true end end return false end,
     IsEquippableItem = function(id) return id == 9001 end,
     EquipItemByName = function(id, slot) calls[#calls + 1] = "equip " .. id .. "@" .. slot; worn[slot] = id end,
@@ -68,6 +68,11 @@ C_Item = {
 local live = addon:GetPlayerContext()
 check(live.isEquippable(9001) and not live.isEquippable(9002), "the player's context finds wearable items through C_Item")
 check(not live.isEquipped(9001), "and whether they're worn")
+-- Right after a reload the client hasn't loaded the item, and IsEquippableItem says false: its slot still says.
+local loaded = C_Item.IsEquippableItem
+C_Item.IsEquippableItem = function() return false end
+check(live.isEquippable(9001), "an item the client hasn't loaded yet is still known to be wearable")
+C_Item.IsEquippableItem = loaded
 PickupInventoryItem = function(slot) calls[#calls + 1] = "pickup " .. slot; worn[slot] = nil end
 PutItemInBackpack = function() calls[#calls + 1] = "backpack" end
 

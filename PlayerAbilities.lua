@@ -194,7 +194,13 @@ function addon:GetPlayerContext()
             return data and data.reaction or nil
         end,
         holidayActive = isHolidayActive,
-        isEquippable = function(itemID) local f = addon.ItemFn("IsEquippableItem") return f ~= nil and f(itemID) and true or false end,
+        -- By its equip slot (GetItemInfoInstant): IsEquippableItem says false for an item the client hasn't loaded yet,
+        -- as everything is right after a reload.
+        isEquippable = function(itemID)
+            if addon.Equipment:SlotFor(itemID) then return true end
+            local f = addon.ItemFn("IsEquippableItem")
+            return f ~= nil and f(itemID) and true or false
+        end,
         isEquipped = function(itemID) local f = addon.ItemFn("IsEquippedItem") return f ~= nil and f(itemID) and true or false end,
         -- Every context carries both. flightUsable (can they fly to this point? FlightKnowledge.Usable) is the one
         -- routing predicate; flightNodeFound (true, false, or nil: no window has said) is the raw fact, for hints.
