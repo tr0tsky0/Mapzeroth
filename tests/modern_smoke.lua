@@ -160,7 +160,7 @@ do
         check(not (edge.requirements and edge.requirements.mapArtID), "no edge keeps a mapArtID requirement")
         if edge.inPhase then gated = gated + 1 end
     end
-    check(gated == 21, "21 edges are gated on a phase (18 from the old data, the old Silvermoon portal's two ways back, Azuremyst's portal to present Darkshore): " .. gated)
+    check(gated == 19, "19 edges are gated on a phase (18 from the old data, Azuremyst's portal to present Darkshore): " .. gated)
 end
 
 -- Abilities (Data/Modern/Abilities.lua): a real Mage teleport seeds the
@@ -354,6 +354,12 @@ local fromHyjal = texts("Alliance", { 84, 0.60, 0.70 }, { 2239, 0.50, 0.60 })
 check(fromHyjal:find("Take the portal to Bel'ameth", 1, true) and not fromHyjal:find("Use Bel'ameth", 1, true),
     "a portal out of Hyjal reads by where it comes out, not 'Use Bel'ameth': " .. fromHyjal)
 check(not fromHyjal:find("Amirdrassil Portal", 1, true), "the way to it names Bel'ameth too, not its map: " .. fromHyjal)
+-- Arriving where a portal on stands (old Silvermoon's arrival is its portal to Orgrimmar) names the map, not that portal.
+maps[110] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
+maps[18] = { name = "Tirisfal Glades", mapType = 3, parentMapID = 13 }
+local toOldSilvermoon = texts("Horde", { 85, 0.5478, 0.9032 }, { 110, 0.55, 0.30 })   -- at Orgrimmar's portal to it
+check(toOldSilvermoon:find("Take the portal to Silvermoon City", 1, true) and not toOldSilvermoon:find("Orgrimmar Portal", 1, true),
+    "the portal to old Silvermoon names Silvermoon, not the portal back: " .. toOldSilvermoon)
 C_Map.GetAreaInfo = getAreaInfo
 addon:ClearNodeNameCache()
 
@@ -938,9 +944,7 @@ do
         if step.from == "PORTAL_EPL_GHOSTLANDS" and step.to == "PORTAL_GHOSTLANDS_EPL" then byPortal = true end
     end
     check(byPortal, "from EPL, old Tranquillien is through the Quel'Lithien Lodge portal")
-    check(reaches({ id = "YOU_bcsm", mapID = 110, x = 0.58, y = 0.20 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"),
-        "the Ruins of Lordaeron portal goes both ways")
-    -- Old Silvermoon's portal back goes to whichever Tirisfal the player is in.
+    -- Old Silvermoon's portal back lands by present Zidormi from either time (2026-10-20), like every way into Tirisfal.
     local start = { id = "YOU_bcsm2", mapID = 110, x = 0.51, y = 0.17 }
     local session = addon.Journey:Build(makeCtx({ faction = "Horde" }), start)
     local function direct(phase, goal)
@@ -950,10 +954,8 @@ do
         end
         return false
     end
-    check(direct({ tirisfal = 1136 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON")
-        and not direct({ tirisfal = 1136 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON"), "present Tirisfal: back to the Ruins only")
-    check(direct({ tirisfal = 19 }, "PORTAL_TIRISFAL_PAST_BC_SILVERMOON")
-        and not direct({ tirisfal = 19 }, "PORTAL_RUINS_OF_LORDAERON_BC_SILVERMOON"), "past Tirisfal: back to Balnir Farmstead only")
+    check(direct({ tirisfal = 1136 }, "TIRISFAL_ZIDORMI_PRESENT") and direct({ tirisfal = 19 }, "TIRISFAL_ZIDORMI_PRESENT"),
+        "old Silvermoon's portal lands by present Zidormi from either time")
     -- The Tirisfal portals are the Horde's: an Alliance character goes in by EPL's portal and walks (the old zones are
     -- no-fly, joined by border pairs and old Silvermoon's gate).
     local ali = addon.Journey:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ali", mapID = 2393, x = 0.5, y = 0.6 })

@@ -290,6 +290,13 @@ local function readableSteps(result, session)
     -- A node named by a string of ours is a portal's own name (Forever's "Gate to Darnassus"); one named by its
     -- area or kind is a place (Bel'ameth), whose portals are described by where they come out.
     local function portalNamed(id) return addon:HasString("NODE_" .. id) end
+    -- Where a portal comes out: the place's own name (Bel'ameth), else its map's. A spot with no name of its own
+    -- that is also a portal on (old Silvermoon's arrival) would otherwise read as that portal ("Orgrimmar Portal").
+    local function arrivalName(id)
+        local node = addon.World:GetNode(id)
+        local zone = node and not addon:HasNodeName(id) and addon:GetZoneName(node.mapID)
+        return zone or nameOf(id)
+    end
     -- The portal a walk or flight is heading for: the next leg's, past any more walking or flying, or nil.
     local function portalAhead(legs, i)
         for j = i + 1, #legs do
@@ -310,19 +317,16 @@ local function readableSteps(result, session)
             -- gate you stand at, so it isn't mistaken for another walk ("Go to Gate to Rut'theran Village").
             local usesPortal = step.method == "portal" or step.method == "transition"
             local ownName = usesPortal and portalNamed(step.from)
-            local name = ownName and addon:GetNodeName(step.from) or nameOf(step.to)
+            local name = ownName and addon:GetNodeName(step.from) or (usesPortal and arrivalName(step.to)) or nameOf(step.to)
             -- Walking or flying to a portal, to a spot with no name of its own (a portal room's door) or to a hub of
             -- several (Bel'ameth), names the portal ("Walk to Stormwind Portal"), not the map you're already in.
             local ahead = (step.method == "walk" or step.method == "fly") and portalAhead(legs, i)
             if ahead and (ahead.from == step.to or not addon:HasNodeName(step.to)) then
                 -- Where it comes out, as the portal step itself will say it (Bel'ameth, not its map Amirdrassil).
-                local beyond = addon.World:GetNode(ahead.to)
-                local where = addon:HasNodeName(ahead.to) and nameOf(ahead.to)
-                    or (beyond and addon:GetZoneName(beyond.mapID))
                 if portalNamed(ahead.from) then
                     name = addon:GetNodeName(ahead.from)
-                elseif where then
-                    name = L["NODE_PORTAL_ZONE"]:format(where)
+                else
+                    name = L["NODE_PORTAL_ZONE"]:format(arrivalName(ahead.to))
                 end
             end
             -- A flight ticket that passes through other flight points names them.
