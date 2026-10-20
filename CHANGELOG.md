@@ -14,6 +14,9 @@
 - Uldum and Silithus share one Zidormi setting, as in the game: switching one switches both.
 - Arathi Highlands' three times (before the war, the Fourth War, the present) are known, with Zidormi to switch between them.
 - Hallow's End routes take you to the past side of Zidormi's zones (Hammerfall, Dreadmaul Hold, Uldum, Cenarion Hold and others), where the buckets are.
+- Steps on the way to a portal name the portal ("Walk to Stormwind City Portal"), not the city you're already in.
+- Portals out of Bel'ameth say where they go ("Take the portal to Val'sharah"), not "Use Bel'ameth".
+- A cloak or other wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
 
 ## 2.0.2 (Retail)
 
