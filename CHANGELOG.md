@@ -5,6 +5,7 @@
 ### Added
 - Deepholm's Temple of Earth candy bucket on the Eastern Kingdoms Hallow's End route.
 - Boralus's portal to Founder's Point (Alliance).
+- Dazar'alor's portal to Razorwind Shores (Horde).
 
 ### Fixed
 - Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.

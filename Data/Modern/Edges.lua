@@ -173,6 +173,7 @@ addon.Edges = {
     { from = "DAZARALOR_PORTAL_ROOM", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "DAZARALOR_PORTAL_ROOM", to = "THUNDER_BLUFF", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "DAZARALOR_PORTAL_ROOM", to = "SILVERMOON", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
+    { from = "DAZARALOR_PORTAL_ROOM", to = "RAZORWIND_SHORES", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } }, -- labelled "Founder's Point" in game; lands with Orgrimmar's
     { from = "DAZARALOR_PORTAL_ROOM", to = "NAZJATAR_HORDE", method = "portal", cost = 0, requirements = { quest = 55053, faction = "Horde" } },
     { from = "DAZARALOR_PORTAL_ROOM", to = "SILITHUS", method = "portal", cost = 0, requirements = { quest = 46931, faction = "Horde" } },
     { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, requirements = { quest = 25924, faction = "Horde" } },
