@@ -560,7 +560,9 @@ do
     check(switches(route({ [81] = 86 }, nil, "ULDUM_ZIDORMI_PAST")) == 0, "Silithus in the past: past Uldum without Zidormi")
     check(switches(route({ [81] = 962 }, nil, "ULDUM_ZIDORMI_PAST")) == 1, "Silithus in the present: past Uldum through Zidormi")
     check(switches(route({ [14] = 1137 }, nil, "ARATHI_ZIDORMI_BEFORE")) == 1, "from the Fourth War, before the war is one switch")
-    check(switches(route({ [14] = 15 }, nil, "ARATHI_ZIDORMI_WAR")) == 1, "from the present, the Fourth War is one switch")
+    check(switches(route({ [14] = 15 }, has(84717), "ARATHI_ZIDORMI_WAR")) == 1, "from the present, the Fourth War is one switch")
+    check(route({ [14] = 1137 }, nil, "ARATHI_ZIDORMI_PRESENT") == nil, "without the Stromgarde reclamation (84717), no present")
+    check(switches(route({ [14] = 1137 }, has(84717), "ARATHI_ZIDORMI_PRESENT")) == 1, "with it, the present is one switch")
 
     -- Holiday stops are on the past side: Hammerfall's bucket from the Fourth War goes through Zidormi; the same spot as
     -- a plain waypoint doesn't, nor the bucket from before the war.

@@ -269,10 +269,11 @@ addon.Edges = {
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
     -- Arathi has three times (before the war, the Fourth War, the present). Before <-> war seen both ways (2026-10-19);
-    -- the present needs the Stromgarde reclamation (quest id not known yet), and which switches it offers is unchecked.
+    -- the present needs the Stromgarde reclamation: 84717, its last quest for both factions (85529 after it is Alliance
+    -- only). Which switches the present's Zidormi offers is unchecked.
     { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_WAR", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
-    { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
-    { from = "ARATHI_ZIDORMI_WAR", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" } },
+    { from = "ARATHI_ZIDORMI_BEFORE", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" }, requirements = { quest = 84717 } },
+    { from = "ARATHI_ZIDORMI_WAR", to = "ARATHI_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "arathi" }, requirements = { quest = 84717 } },
     { from = "PORTAL_EPL_GHOSTLANDS", to = "PORTAL_GHOSTLANDS_EPL", method = "portal", cost = 0 },
     { from = "BORDER_GHOSTLANDS_EVERSONG_BC", to = "BORDER_EVERSONG_GHOSTLANDS_BC", method = "walk", cost = 3 },
     { from = "BORDER_EVERSONG_SILVERMOON_BC", to = "BORDER_SILVERMOON_EVERSONG_BC", method = "walk", cost = 3 },
