@@ -6,6 +6,8 @@
 - Deepholm's Temple of Earth candy bucket on the Eastern Kingdoms Hallow's End route.
 - Boralus's portal to Founder's Point (Alliance).
 - Dazar'alor's portal to Razorwind Shores (Horde).
+- Undercity's sewer, a quicker way in from Tirisfal than the gate and elevators.
+- Past Tirisfal's portals to Orgrimmar, Grom'gol and Vengeance Landing (the zeppelins there are gone).
 
 ### Fixed
 - Teleport: Undercity lands by Zidormi in present Tirisfal, so routes into Undercity now include talking to her.
@@ -23,6 +25,7 @@
 - Portals out of Bel'ameth say where they go ("Take the portal to Val'sharah"), not "Use Bel'ameth".
 - A cloak or other wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
 - Taking the wrong portal from a portal room no longer marks the route's portal step as done.
+- The portals to Undercity from Orgrimmar, Grom'gol and Vengeance Landing land by Zidormi in present Tirisfal, as they do in the game.
 
 ## 2.0.2 (Retail)
 
