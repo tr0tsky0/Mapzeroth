@@ -315,12 +315,14 @@ local function readableSteps(result, session)
             -- several (Bel'ameth), names the portal ("Walk to Stormwind Portal"), not the map you're already in.
             local ahead = (step.method == "walk" or step.method == "fly") and portalAhead(legs, i)
             if ahead and (ahead.from == step.to or not addon:HasNodeName(step.to)) then
+                -- Where it comes out, as the portal step itself will say it (Bel'ameth, not its map Amirdrassil).
                 local beyond = addon.World:GetNode(ahead.to)
-                local zone = beyond and addon:GetZoneName(beyond.mapID)
+                local where = addon:HasNodeName(ahead.to) and nameOf(ahead.to)
+                    or (beyond and addon:GetZoneName(beyond.mapID))
                 if portalNamed(ahead.from) then
                     name = addon:GetNodeName(ahead.from)
-                elseif zone then
-                    name = L["NODE_PORTAL_ZONE"]:format(zone)
+                elseif where then
+                    name = L["NODE_PORTAL_ZONE"]:format(where)
                 end
             end
             -- A flight ticket that passes through other flight points names them.

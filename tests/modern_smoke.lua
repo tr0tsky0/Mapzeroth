@@ -353,6 +353,7 @@ check(toHyjal:find("Go to Mount Hyjal Portal / Take the portal to Mount Hyjal", 
 local fromHyjal = texts("Alliance", { 84, 0.60, 0.70 }, { 2239, 0.50, 0.60 })
 check(fromHyjal:find("Take the portal to Bel'ameth", 1, true) and not fromHyjal:find("Use Bel'ameth", 1, true),
     "a portal out of Hyjal reads by where it comes out, not 'Use Bel'ameth': " .. fromHyjal)
+check(not fromHyjal:find("Amirdrassil Portal", 1, true), "the way to it names Bel'ameth too, not its map: " .. fromHyjal)
 C_Map.GetAreaInfo = getAreaInfo
 addon:ClearNodeNameCache()
 
