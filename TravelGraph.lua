@@ -520,12 +520,12 @@ end
 -- and, as for the start, by flying straight there where both are in the open and flying is allowed.
 -- A place marked `past` (a holiday stop: every one in a Zidormi zone is only there in the past) is on its map's past
 -- side, whatever the player's phase: every way in needs that side, and a leg from it starts there (graph.pinned,
--- which Pathfinder reads).
+-- which Pathfinder reads). So is any place on a map only the past has (`pastOnly`: Undercity).
 function TravelGraph:AddDestination(graph, ctx, dest, start, others)
     local World = addon.World
     local container = World:GetContainerForMap(dest.mapID, graph.phase)
     local inPhase
-    if dest.past then
+    if dest.past or (container and World:GetFlag(container, "pastOnly")) then
         local past, group, side = World:PastContainerForMap(dest.mapID)
         if past then
             container, inPhase = past, { group, side }

@@ -206,6 +206,18 @@ addon.Nodes.EK = {
     { id = "TAXI_596", container = "ek_overworld.map49", mapID = 49, x = 0.7760, y = 0.6490 }, -- Shalewind Canyon
     { id = "TAXI_195", container = "ek_overworld.map50", mapID = 50, x = 0.4790, y = 0.1180 }, -- Rebel Camp
     { id = "UNDERCITY", container = "ek_overworld.map90", mapID = 90, x = 0.6630, y = 0.3840, city = "undercity" }, -- Entrance
+    -- Undercity is two levels, as in Forever (Data/Forever/Nodes_EasternKingdoms.lua): the gate opens from past Tirisfal
+    -- into the Ruins of Lordaeron (map90.ruins, upper level), and the city is down one of three elevators (Edges.lua).
+    -- The entrance pair walls the city (TravelGraph.lua); nothing on map 90 flies (Containers.lua). Positions are
+    -- Forever's captures, not yet captured on Retail (map 90 matches Forever's 1458 to within a few tenths).
+    { id = "ENTRANCE_UNDERCITY_OUTER", container = "ek_overworld.map18_art19", mapID = 18, x = 0.6185, y = 0.6501, kind = "entrance", city = "undercity", area = 153 }, -- Past Tirisfal: Undercity's gate, outside (Ruins of Lordaeron)
+    { id = "ENTRANCE_UNDERCITY_INNER", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6617, y = 0.0038, kind = "entrance", city = "undercity" }, -- Undercity: the gate, inside (the ruins, upper level)
+    { id = "UNDERCITY_ELEVATOR_TOP_1", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6595, y = 0.5028, city = "undercity" }, -- Undercity: south elevator, top
+    { id = "UNDERCITY_ELEVATOR_TOP_2", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.7010, y = 0.4413, city = "undercity" }, -- Undercity: east elevator, top
+    { id = "UNDERCITY_ELEVATOR_TOP_3", container = "ek_overworld.map90.ruins", mapID = 90, x = 0.6177, y = 0.4407, city = "undercity" }, -- Undercity: west elevator, top
+    { id = "UNDERCITY_ELEVATOR_BOTTOM_1", container = "ek_overworld.map90", mapID = 90, x = 0.6593, y = 0.5425, city = "undercity" }, -- Undercity: south elevator, bottom
+    { id = "UNDERCITY_ELEVATOR_BOTTOM_2", container = "ek_overworld.map90", mapID = 90, x = 0.7274, y = 0.4425, city = "undercity" }, -- Undercity: east elevator, bottom
+    { id = "UNDERCITY_ELEVATOR_BOTTOM_3", container = "ek_overworld.map90", mapID = 90, x = 0.5940, y = 0.4402, city = "undercity" }, -- Undercity: west elevator, bottom
     { id = "TAXI_622", container = "ek_overworld.map47", mapID = 47, x = 0.2050, y = 0.5760 }, -- Raven Hill
     { id = "STORMWIND_DARK_PORTAL_BL_NPC", container = "ek_overworld.map84.mage_tower", mapID = 84, x = 0.4911, y = 0.8734, city = "stormwind" }, -- Honor Hold Mage
     { id = "IRONFORGE_ENTRANCE", container = "ek_overworld.map87", mapID = 87, x = 0.1734, y = 0.8316, city = "ironforge" }, -- Entrance

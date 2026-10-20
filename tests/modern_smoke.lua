@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1800, "every node made it into the tree (1284 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1808, "every node made it into the tree (1292 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -582,6 +582,45 @@ do
     local tour = addon.MultiRoute:Entry("Mine", { { mapID = 14, x = 0.69, y = 0.333 } })
     check(holiday.stops[1] and holiday.stops[1].place.past and tour.stops[1] and not tour.stops[1].place.past,
         "a holiday route's stops are marked for the past, a player's own tour's aren't")
+end
+
+-- Undercity (2026-10-19), as Forever's: walled, in through the gate to the ruins and down an elevator, never flown
+-- into; and only in the past, so a waypoint there from present Tirisfal goes through Zidormi.
+do
+    local World, PF = addon.World, addon.Pathfinder
+    check(World:GetPhase(World:GetNodeContainer("UNDERCITY_ELEVATOR_TOP_1")) == "tirisfal"
+        and World:GetPhase(World:GetNodeContainer("ENTRANCE_UNDERCITY_OUTER")) == "tirisfal", "Undercity and its gate are in past Tirisfal")
+    local function route(art, start)   -- Tirisfal's Zidormi unlocked (50769)
+        local tradeQuarter = { id = "WAYPOINT_UNDERCITY", mapID = 90, x = 0.677, y = 0.375, leave = true }
+        local session = addon.Journey:Build(makeCtx({ faction = "Alliance", mapArt = art, quests = { [50769] = true } }), start, { tradeQuarter })
+        return PF:FindPath(session.graph, start.id, tradeQuarter.id, session.graph.phase), session
+    end
+    local function describe(r)
+        local out = {}
+        for _, step in ipairs(r and r.steps or {}) do out[#out + 1] = step.method .. ">" .. tostring(step.to) end
+        return table.concat(out, ",")
+    end
+    local function walledIn(r)
+        local gate, lift, flewIn
+        for _, step in ipairs(r and r.steps or {}) do
+            if step.to == "ENTRANCE_UNDERCITY_INNER" then gate = true end
+            if gate and tostring(step.from):find("^UNDERCITY_ELEVATOR_TOP_") and tostring(step.to):find("^UNDERCITY_ELEVATOR_BOTTOM_") then lift = true end
+            local to = World:GetNode(step.to)
+            if step.method == "fly" and (step.to == "WAYPOINT_UNDERCITY" or (to and to.mapID == 90)) then flewIn = true end
+        end
+        return gate and lift and not flewIn
+    end
+    local past = route({ [18] = 19 }, { id = "YOU_brill", mapID = 18, x = 0.60, y = 0.52 })
+    check(walledIn(past), "past Tirisfal to the Trade Quarter: the gate, then an elevator: " .. describe(past))
+    local function switched(r)
+        for _, step in ipairs(r and r.steps or {}) do if step.method == "phaseswitch" then return true end end
+        return false
+    end
+    local present, session = route({ [18] = 1136, [2070] = 1136 }, { id = "YOU_ruins", mapID = 2070, x = 0.60, y = 0.52 })
+    check(switched(present) and walledIn(present), "present Tirisfal to the Trade Quarter: Zidormi first: " .. describe(present))
+    -- A leg on from there (a tour's next stop) starts in the past, where the waypoint is.
+    local out = PF:FindPath(session.graph, "WAYPOINT_UNDERCITY", "ENTRANCE_UNDERCITY_OUTER", session.graph.phase)
+    check(out and not switched(out), "out of Undercity from the waypoint: no Zidormi: " .. describe(out))
 end
 
 -- Finding 4a: a second build reuses the materialised geometry, and a route over it is the one the first build

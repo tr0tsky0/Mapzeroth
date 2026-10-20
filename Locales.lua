@@ -90,3 +90,13 @@ addon:RegisterLocale("enUS", {
     TRAINER_PET        = "Pet",
     TRAINER_DEMON      = "Demon",
 }, true)
+
+-- Names WE gave nodes both games share (each game's own are in its Data folder): node names, not interface text.
+addon:RegisterLocale("enUS", {
+    NODE_UNDERCITY_ELEVATOR_TOP_1  = "Undercity Elevator (top)",
+    NODE_UNDERCITY_ELEVATOR_TOP_2  = "Undercity Elevator (top)",
+    NODE_UNDERCITY_ELEVATOR_TOP_3  = "Undercity Elevator (top)",
+    NODE_UNDERCITY_ELEVATOR_BOTTOM_1 = "Undercity Elevator (bottom)",
+    NODE_UNDERCITY_ELEVATOR_BOTTOM_2 = "Undercity Elevator (bottom)",
+    NODE_UNDERCITY_ELEVATOR_BOTTOM_3 = "Undercity Elevator (bottom)",
+})

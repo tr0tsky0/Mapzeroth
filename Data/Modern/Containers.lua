@@ -1,6 +1,7 @@
 -- Containers.lua (Modern) -- hand-maintained. First converted from the 1.x addon's data (2026-09); edited here since 2026-10-16.
 -- Container flags: `fly = false` for no-fly zones (ground mounts only), `indoor = true` for interiors, and
--- `{ phaseGroup, phaseSide, phaseMap }` for the sides of a Zidormi zone. A changed fly flag changes
+-- `{ phaseGroup, phaseSide, phaseMap }` for the sides of a Zidormi zone, `pastOnly = true` for a map only the past
+-- has. A changed fly flag changes
 -- Geometry.lua: run /mzr dumpgeometry in Retail afterwards.
 
 local addonName, addon = ...
@@ -50,8 +51,10 @@ addon.Containers["ek_overworld.map17_art628"] = { phaseGroup = "blasted_lands", 
 addon.Containers["ek_overworld.map18_art19"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
 -- Map 18's art follows Tirisfal's time from outside the zone too (19 / 1136, seen 2026-10-19); 2070 always shows 1136
 addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", phaseSide = 1136, phaseMap = 18 }
--- Undercity is only there in the past: its own map, on the past side (phaseMap stays 18, the map that tells the side)
-addon.Containers["ek_overworld.map90"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18 }
+-- Undercity is only there in the past: its own map, on the past side (phaseMap stays 18, the map that tells the side).
+-- `pastOnly`: a waypoint on the map is pinned to the past, as a holiday stop is (TravelGraph:AddDestination). No flying:
+-- the way in is the gate and an elevator down from the ruins (map90.ruins, Nodes_EK.lua), as in Forever.
+addon.Containers["ek_overworld.map90"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18, pastOnly = true, fly = false }
 -- Uldum is Silithus's setting (switching either switches both): its sides are Silithus's, told by Silithus's map 81
 addon.Containers["kalimdor_overworld.map1527_art260"] = { phaseGroup = "silithus", phaseSide = 962, phaseMap = 81 }
 addon.Containers["kalimdor_overworld.map249_art289"] = { phaseGroup = "silithus", phaseSide = 86, phaseMap = 81 }

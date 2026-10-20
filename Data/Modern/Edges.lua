@@ -198,6 +198,10 @@ addon.Edges = {
     { from = "DAZARALOR_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Horde" } },
     { from = "BORALUS_PET", to = "INSTANCE_BLACKROCK_DEPTHS", method = "portal", cost = 0, oneway = true, requirements = { quest = 58457, faction = "Alliance" } },
     { from = "UNDERCITY", to = "ZEPPELIN_VENGEANCE_LANDING", method = "zeppelin", cost = 60 },
+    -- Undercity's elevators, between the ruins and the city below (Nodes_EK.lua): Forever's 13 s (2T + D), the same lifts.
+    { from = "UNDERCITY_ELEVATOR_TOP_1", to = "UNDERCITY_ELEVATOR_BOTTOM_1", method = "walk", cost = 13 },
+    { from = "UNDERCITY_ELEVATOR_TOP_2", to = "UNDERCITY_ELEVATOR_BOTTOM_2", method = "walk", cost = 13 },
+    { from = "UNDERCITY_ELEVATOR_TOP_3", to = "UNDERCITY_ELEVATOR_BOTTOM_3", method = "walk", cost = 13 },
     { from = "ZEPPELIN_ORGRIMMAR_WARSONG", to = "ZEPPELIN_WARSONG_HOLD", method = "zeppelin", cost = 60 },
     { from = "ZEPPELIN_ORGRIMMAR_WAKING_SHORES", to = "ZEPPELIN_WAKING_SHORES_ORGRIMMAR", method = "zeppelin", cost = 350 },
     { from = "PORTAL_ORGRIMMAR_UNDERCITY", to = "UNDERCITY", method = "portal", cost = 0, requirements = { faction = "Horde" } },
