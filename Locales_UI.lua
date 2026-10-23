@@ -133,6 +133,7 @@ addon:RegisterLocale("enUS", {
     NAV_WAIT_BOARD    = "Board and wait to depart",
     NAV_UNDERWAY      = "Underway",
     NAV_PORTAL        = "Walk into the portal",
+    NAV_PORTAL_CLICK  = "Click the portal",
     NAV_COMBAT        = "Can't be used in combat",
 
     -- What sort of place a search result is, shown under its name.

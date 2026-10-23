@@ -9,6 +9,7 @@
 - Hyjal's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
 - Orgrimmar's portal to Silvermoon City is pointed to where it stands, not at the Jade Forest portal.
 - The arrow points to the right portal in both Earthshrines and the Boralus and Dazar'alor portal rooms, and to Tol Barad's portals home, instead of the middle of the room or the camp. Dazar'alor's portal room is reached through the Great Seal's door.
+- At a portal you click, the navigator says "Click the portal", not "Walk into the portal".
 
 ## 2.0.3 (Retail)
 

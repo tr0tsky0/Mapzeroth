@@ -406,6 +406,7 @@ local function readableSteps(result, session)
                 method = step.method, nodeID = step.to, fromID = step.from, source = step.source,
                 iconSource = step.iconSource,
                 seconds = seconds, name = name, via = via, path = path,
+                clickPortal = game and true or nil,     -- a portal with a tooltip (its game name) is clicked, not walked into
                 text = (step.method == "portal" and not ownName)
                     and L["STEP_PORTAL_TO"]:format(name)
                     or stepText(ownName and "portal" or step.method, name, via, step.source),

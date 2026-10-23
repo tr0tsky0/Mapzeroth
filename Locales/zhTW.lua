@@ -125,6 +125,7 @@ addon:RegisterLocale("zhTW", {
     NAV_WAIT_BOARD    = "登船並等待出發",
     NAV_UNDERWAY      = "航行中",
     NAV_PORTAL        = "走進傳送門",
+    NAV_PORTAL_CLICK  = "點擊傳送門",
     NAV_COMBAT        = "戰鬥中無法使用",
     SECTION_TRAINERS  = "你最近的訓練師",
     SECTION_CITIES    = "主城",

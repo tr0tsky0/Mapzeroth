@@ -360,6 +360,8 @@ maps[18] = { name = "Tirisfal Glades", mapType = 3, parentMapID = 13 }
 -- Dazar'alor's portal room is the Great Seal (map 1163), in through its door: each portal is its own spot in it.
 -- Measured as the client does (map 1163 is a map of its own, so the test distances can't place it).
 do
+    maps[88] = { name = "Thunder Bluff", mapType = 3, parentMapID = 12 }
+    addon:ClearNodeNameCache()
     useRetailDistances()
     local session = addon.Journey:Build(makeCtx({ faction = "Horde", level = 80 }),
         { id = "START_DAZARALOR_SEAL", mapID = 1165, x = 0.4990, y = 0.4300 })
@@ -368,7 +370,10 @@ do
     local seen, viaPortal = {}, false
     for _, step in ipairs(plan and plan.steps or {}) do
         seen[#seen + 1] = step.method .. ":" .. tostring(step.fromID) .. ">" .. tostring(step.nodeID)
-        if step.method == "portal" and step.fromID == "PORTAL_DAZARALOR_THUNDER_BLUFF" then viaPortal = true end
+        if step.method == "portal" and step.fromID == "PORTAL_DAZARALOR_THUNDER_BLUFF" then
+            viaPortal = true
+            check(step.clickPortal, "a portal with a game name is one you click (the navigator says so), not walk into")
+        end
     end
     check(viaPortal, "Dazar'alor to Thunder Bluff uses the Great Seal's Thunder Bluff portal: " .. table.concat(seen, ", "))
 end

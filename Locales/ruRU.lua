@@ -127,6 +127,7 @@ addon:RegisterLocale("ruRU", {
     NAV_WAIT_BOARD    = "Поднимитесь на борт и ждите отправления",
     NAV_UNDERWAY      = "В пути",
     NAV_PORTAL        = "Войдите в портал",
+    NAV_PORTAL_CLICK  = "Нажмите на портал",
     NAV_COMBAT        = "Нельзя использовать в бою",
     SECTION_TRAINERS  = "Ваши ближайшие учителя",
     SECTION_CITIES    = "Города",

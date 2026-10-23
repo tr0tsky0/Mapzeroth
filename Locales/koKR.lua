@@ -126,6 +126,7 @@ addon:RegisterLocale("koKR", {
     NAV_WAIT_BOARD    = "탑승 후 출발을 기다리세요",
     NAV_UNDERWAY      = "이동 중",
     NAV_PORTAL        = "차원문으로 들어가세요",
+    NAV_PORTAL_CLICK  = "차원문을 클릭하세요",
     NAV_COMBAT        = "전투 중에는 사용할 수 없습니다",
     SECTION_TRAINERS  = "가장 가까운 내 상급자",
     SECTION_CITIES    = "도시",

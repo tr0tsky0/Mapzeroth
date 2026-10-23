@@ -127,6 +127,7 @@ addon:RegisterLocale("deDE", {
     NAV_WAIT_BOARD    = "Einsteigen und auf die Abfahrt warten",
     NAV_UNDERWAY      = "Unterwegs",
     NAV_PORTAL        = "Geht in das Portal",
+    NAV_PORTAL_CLICK  = "Klickt auf das Portal",
     NAV_COMBAT        = "Im Kampf nicht möglich",
     SECTION_TRAINERS  = "Eure nächsten Lehrer",
     SECTION_CITIES    = "Städte",

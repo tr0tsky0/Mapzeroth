@@ -126,6 +126,7 @@ addon:RegisterLocale("itIT", {
     NAV_WAIT_BOARD    = "Sali a bordo e attendi la partenza",
     NAV_UNDERWAY      = "In viaggio",
     NAV_PORTAL        = "Entra nel portale",
+    NAV_PORTAL_CLICK  = "Clicca sul portale",
     NAV_COMBAT        = "Non utilizzabile in combattimento",
     SECTION_TRAINERS  = "I tuoi istruttori più vicini",
     SECTION_CITIES    = "Città",

@@ -285,7 +285,7 @@ function Navigator:Render(model)
         local wait = itemID and model.step.method ~= "equip" and addon.Equipment:CooldownLeft(itemID) or 0
         if wait > 0.5 then status = L["NAV_ITEM_READY_IN"]:format(math.ceil(wait)) end
     elseif model.kind == "portal" then
-        status = L["NAV_PORTAL"]
+        status = model.step and model.step.clickPortal and L["NAV_PORTAL_CLICK"] or L["NAV_PORTAL"]
     end
     ui.status:SetText(status)
 

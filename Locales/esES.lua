@@ -126,6 +126,7 @@ local strings = {
     NAV_WAIT_BOARD    = "Sube a bordo y espera la salida",
     NAV_UNDERWAY      = "En camino",
     NAV_PORTAL        = "Entra en el portal",
+    NAV_PORTAL_CLICK  = "Haz clic en el portal",
     NAV_COMBAT        = "No se puede usar en combate",
     SECTION_TRAINERS  = "Tus instructores más cercanos",
     SECTION_CITIES    = "Ciudades",

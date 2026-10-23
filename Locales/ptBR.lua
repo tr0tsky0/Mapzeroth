@@ -125,6 +125,7 @@ addon:RegisterLocale("ptBR", {
     NAV_WAIT_BOARD    = "Embarque e aguarde a partida",
     NAV_UNDERWAY      = "A caminho",
     NAV_PORTAL        = "Entre no portal",
+    NAV_PORTAL_CLICK  = "Clique no portal",
     NAV_COMBAT        = "Não pode ser usado em combate",
     SECTION_TRAINERS  = "Seus instrutores mais próximos",
     SECTION_CITIES    = "Cidades",

@@ -125,6 +125,7 @@ addon:RegisterLocale("zhCN", {
     NAV_WAIT_BOARD    = "登船并等待出发",
     NAV_UNDERWAY      = "航行中",
     NAV_PORTAL        = "走进传送门",
+    NAV_PORTAL_CLICK  = "点击传送门",
     NAV_COMBAT        = "战斗中无法使用",
     SECTION_TRAINERS  = "你最近的训练师",
     SECTION_CITIES    = "主城",
