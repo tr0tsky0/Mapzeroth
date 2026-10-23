@@ -94,6 +94,7 @@ addon.Nodes.EK = {
     { id = "TAXI_4", container = "ek_overworld.map52", mapID = 52, x = 0.5600, y = 0.4910 }, -- Sentinel Hill
     { id = "PORTAL_STORMWIND_CAVERNS_OF_TIME", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4379, y = 0.8550, city = "stormwind" }, -- Portal to Caverns of Time
     { id = "TAXI_71", container = "ek_overworld.map36", mapID = 36, x = 0.7190, y = 0.6590 }, -- Morgan's Vigil
+    { id = "LABYRINTH_OF_KINDOJAN", container = "ek_overworld.map2395", mapID = 2395, x = 0.6289, y = 0.7198 }, -- Labyrinth of Kindo'jan
     { id = "INSTANCE_WINDRUNNER_SPIRE", container = "ek_overworld.map2395", mapID = 2395, x = 0.3548, y = 0.7883, kind = "instance", journal = 1299 }, -- Windrunner Spire
     { id = "INSTANCE_THRONE_OF_THE_TIDES", container = "ek_overworld.map204", mapID = 204, x = 0.7000, y = 0.3000, kind = "instance", journal = 65 }, -- Throne of the Tides
     { id = "PORTAL_STORMWIND_AZSUNA", container = "ek_overworld.map84.interior", mapID = 84, x = 0.4197, y = 0.9150, city = "stormwind" }, -- Portal to Bel'ameth

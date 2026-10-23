@@ -297,7 +297,8 @@ function addon:GetKnownTeleports(ctx)
     end
 
     for _, ability in ipairs(abilities.Teleports or {}) do
-        -- `requirements` (as on edges) picks between entries for one spell that lands in different places.
+        -- `requirements` (as on edges, and on items below) picks between entries for one spell that lands in
+        -- different places.
         if ability.spellID and factionOk(ability) and addon:MeetsRequirements(ability.requirements, ctx)
                 and ctx.knowsSpell(ability.spellID) and spellReady(ability) then
             addAll(ability, ability.to)
@@ -321,7 +322,8 @@ function addon:GetKnownTeleports(ctx)
     end
     for _, ability in ipairs(abilities.Items or {}) do
         local owns = ability.toy and ctx.hasToy and ctx.hasToy(ability.itemID) or ctx.hasItem(ability.itemID)
-        if ability.itemID and factionOk(ability) and owns and itemReady(ability) then
+        if ability.itemID and factionOk(ability) and addon:MeetsRequirements(ability.requirements, ctx)
+                and owns and itemReady(ability) then
             addAll(ability, ability.to)
         end
     end

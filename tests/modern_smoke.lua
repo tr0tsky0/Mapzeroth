@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1845, "every node made it into the tree (1329 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1846, "every node made it into the tree (1330 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 

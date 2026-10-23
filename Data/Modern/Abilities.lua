@@ -169,6 +169,7 @@ addon.Abilities.Items = {
     { itemID = 65360, to = "STORMWIND_PORTAL_ROOM_LOWER", cost = 10, cooldown = 7200 },
     { itemID = 110560, to = "FROSTWALL", cost = 10, cooldown = 1200, faction = "Horde", toy = true },
     { itemID = 140192, to = "DALARAN_BROKEN_ISLES", cost = 10, cooldown = 1200, toy = true },
+    { itemID = 230850, to = "LABYRINTH_OF_KINDOJAN", cost = 5, cooldown = 3600, toy = true, requirements = { quest = 99231 } },   -- Delve-O-Bot 7001: instant, but picked from a menu; only once its upgrade is applied (Flag Tracking spell 1320592 completes 99231)
 }
 
 addon.Abilities.Camps = {
