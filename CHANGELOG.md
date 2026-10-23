@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.4 (Retail)
 
 ### Fixed
 - Holiday Routes could stay missing for a whole session when the game's calendar was slow to load, or had been moved to another month.
