@@ -121,7 +121,7 @@ addon.Edges = {
     { from = "ACHERUS", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, oneway = true, requirements = { class = "DEATHKNIGHT" } },
     { from = "PORTAL_MONK_DALARAN", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },
     { from = "PORTAL_MONK_PEAK_OF_SERENITY", to = "PEAK_OF_SERENITY_PRESENT", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },   -- always the present (seen 2026-10-23)
-    -- Orgrimmar's lands in the portal room (seen 2026-10-23); Stormwind's is assumed to match.
+    -- Both land in their city's portal room (seen 2026-10-23).
     { from = "PORTAL_PEAK_OF_SERENITY_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK", faction = "Alliance" } },
     { from = "PORTAL_PEAK_OF_SERENITY_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK", faction = "Horde" } },
     { from = "PORTAL_DALARAN_PALADIN_HORDE", to = "SANCTUM_OF_LIGHT", method = "portal", cost = 0, requirements = { faction = "Horde", class = "PALADIN" } },
