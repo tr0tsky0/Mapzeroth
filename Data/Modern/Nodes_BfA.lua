@@ -49,6 +49,13 @@ addon.Nodes.BfA = {
     { id = "INSTANCE_FREEHOLD", container = "kul_tiras.map895", mapID = 895, x = 0.8500, y = 0.7900, kind = "instance", journal = 1001 }, -- Freehold
     { id = "TAXI_2095", container = "kul_tiras.map942", mapID = 942, x = 0.7759, y = 0.2383 }, -- Shrine of the Storm
     { id = "BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.7060, y = 0.1700, city = "boralus" }, -- Portal Room
+    -- Its portals, each where you stand to click it (hovered 2026-10-23); a small room by the door, so no interior
+    { id = "PORTAL_BORALUS_STORMWIND", container = "kul_tiras.map1161", mapID = 1161, x = 0.7015, y = 0.1666, city = "boralus" },
+    { id = "PORTAL_BORALUS_SILITHUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.6974, y = 0.1597, city = "boralus" },
+    { id = "PORTAL_BORALUS_NAZJATAR", container = "kul_tiras.map1161", mapID = 1161, x = 0.6994, y = 0.1537, city = "boralus" },
+    { id = "PORTAL_BORALUS_EXODAR", container = "kul_tiras.map1161", mapID = 1161, x = 0.7034, y = 0.1511, city = "boralus" },
+    { id = "PORTAL_BORALUS_IRONFORGE", container = "kul_tiras.map1161", mapID = 1161, x = 0.7083, y = 0.1547, city = "boralus" },
+    { id = "PORTAL_BORALUS_FOUNDERS_POINT", container = "kul_tiras.map1161", mapID = 1161, x = 0.7106, y = 0.1586, city = "boralus" },
     { id = "TAXI_2086", container = "kul_tiras.map942", mapID = 942, x = 0.5940, y = 0.7020 }, -- Brennadam
     { id = "DOCK_BORALUS", container = "kul_tiras.map1161", mapID = 1161, x = 0.6805, y = 0.2651, city = "boralus" }, -- Dock
     { id = "TAXI_2109", container = "kul_tiras.map896", mapID = 896, x = 0.2565, y = 0.1640 }, -- Whitegrove Chapel

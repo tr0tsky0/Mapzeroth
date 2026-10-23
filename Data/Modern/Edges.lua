@@ -53,15 +53,16 @@ addon.Edges = {
     { from = "PORTAL_STORMWIND_BELAMETH", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_AZSUNA", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_STORMSHIELD", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "PORTAL_DARKBREAK_COVE", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 14482, faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "HIGHBANK", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_VASHJIR", to = "PORTAL_DARKBREAK_COVE", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 14482, faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_TWILIGHT_HIGHLANDS", to = "HIGHBANK", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Alliance" } },
     -- The walk-in way back after Any Portal in a Storm, as the Horde's after Muddied Waters (the way out is open to all,
     -- seen 2026-10-23 on a character without the quest; the way back's gate is by the Horde side's, not seen itself)
     { from = "HIGHBANK", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, requirements = { quest = 27537, faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "TOL_BARAD_ALLIANCE", method = "portal", cost = 0, portal = { map = 244 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "PORTAL_DEEPHOLM_STORMWIND", method = "portal", cost = 0, portal = { map = 207 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Alliance" } },
-    { from = "EASTERN_EARTHSHRINE_SW", to = "MOUNT_HYJAL", method = "portal", cost = 0, portal = { map = 198 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_TOL_BARAD", to = "TOL_BARAD_ALLIANCE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_TOL_BARAD_STORMWIND", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, portal = { map = 84 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_DEEPHOLM", to = "PORTAL_DEEPHOLM_STORMWIND", method = "portal", cost = 0, portal = { map = 207 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, portal = { map = 198 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
     { from = "SW_EMBASSY", to = "VINDICAAR_AZEROTH", method = "portal", cost = 0, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_DARNASSUS", to = "PORTAL_RUTTHERAN_EXODAR", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
     { from = "PORTAL_RUTTHERAN_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
@@ -108,12 +109,12 @@ addon.Edges = {
     { from = "SILVERMOON", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
     { from = "ORGRIMMAR_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_BL", method = "portal", cost = 0, oneway = true, inPhase = { "blasted_lands", 628 }, requirements = { faction = "Horde" } },
     { from = "ORGRIMMAR_DARK_PORTAL_BL_NPC", to = "DARK_PORTAL_OUTLANDS", method = "portal", cost = 0, oneway = true, inPhase = { "blasted_lands", 18 }, requirements = { faction = "Horde" } },
-    { from = "BORALUS", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, portal = { map = 84 }, requirements = { faction = "Alliance" } },
-    { from = "BORALUS", to = "SILITHUS", method = "portal", cost = 0, portal = { map = 81 }, requirements = { quest = 47189, faction = "Alliance" } },
-    { from = "BORALUS", to = "NAZJATAR_ALLIANCE", method = "portal", cost = 0, portal = { map = 1355 }, requirements = { quest = 54972, faction = "Alliance" } },
-    { from = "BORALUS", to = "IRONFORGE", method = "portal", cost = 0, oneway = true, portal = { map = 87 }, requirements = { faction = "Alliance" } },
-    { from = "BORALUS", to = "EXODAR", method = "portal", cost = 0, oneway = true, portal = { map = 103 }, requirements = { faction = "Alliance" } },
-    { from = "BORALUS", to = "FOUNDERS_POINT", method = "portal", cost = 0, oneway = true, portal = { map = 2352 }, requirements = { faction = "Alliance" } }, -- lands with Stormwind's; no way back to Boralus
+    { from = "PORTAL_BORALUS_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, portal = { map = 84 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_BORALUS_SILITHUS", to = "SILITHUS", method = "portal", cost = 0, portal = { map = 81 }, requirements = { quest = 47189, faction = "Alliance" } },
+    { from = "PORTAL_BORALUS_NAZJATAR", to = "NAZJATAR_ALLIANCE", method = "portal", cost = 0, portal = { map = 1355 }, requirements = { quest = 54972, faction = "Alliance" } },
+    { from = "PORTAL_BORALUS_IRONFORGE", to = "IRONFORGE", method = "portal", cost = 0, oneway = true, portal = { map = 87 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_BORALUS_EXODAR", to = "EXODAR", method = "portal", cost = 0, oneway = true, portal = { map = 103 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_BORALUS_FOUNDERS_POINT", to = "FOUNDERS_POINT", method = "portal", cost = 0, oneway = true, portal = { map = 2352 }, requirements = { faction = "Alliance" } }, -- lands with Stormwind's; no way back to Boralus
     { from = "DALARAN_BROKEN_ISLES", to = "VINDICAAR_ARGUS", method = "portal", cost = 0 },
     { from = "PORTAL_DALARAN_BROKEN_ISLES_ALLIANCE", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Alliance" } },
     { from = "PORTAL_DALARAN_BROKEN_ISLES_HORDE", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
@@ -178,22 +179,30 @@ addon.Edges = {
     { from = "PORTAL_THUNDER_TOTEM_ORGRIMMAR", to = "ORGRIMMAR_EMBASSY", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "PORTAL_ORGRIMMAR_NIGHTHOLD", to = "THE_NIGHTHOLD", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "PORTAL_NIGHTHOLD_ORGRIMMAR", to = "ORGRIMMAR_EMBASSY", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
-    { from = "DAZARALOR_PORTAL_ROOM", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
-    { from = "DAZARALOR_PORTAL_ROOM", to = "THUNDER_BLUFF", method = "portal", cost = 0, oneway = true, portal = { map = 88 }, requirements = { faction = "Horde" } },
-    { from = "DAZARALOR_PORTAL_ROOM", to = "SILVERMOON", method = "portal", cost = 0, oneway = true, portal = { map = 110 }, requirements = { faction = "Horde" } },
-    { from = "DAZARALOR_PORTAL_ROOM", to = "RAZORWIND_SHORES", method = "portal", cost = 0, oneway = true, portal = { map = 2352 }, requirements = { faction = "Horde" } }, -- labelled "Founder's Point" in game (named so); lands with Orgrimmar's
+    -- The Great Seal: its door, and across the room to each portal
+    { from = "DAZARALOR_GREAT_SEAL_DOOR_OUTSIDE", to = "DAZARALOR_GREAT_SEAL_DOOR_INSIDE", method = "walk" },
+    { from = "DAZARALOR_GREAT_SEAL_DOOR_INSIDE", to = "DAZARALOR_PORTAL_ROOM", method = "walk" },
+    { from = "DAZARALOR_PORTAL_ROOM", to = "PORTAL_DAZARALOR_ORGRIMMAR", method = "walk" },
+    { from = "DAZARALOR_PORTAL_ROOM", to = "PORTAL_DAZARALOR_THUNDER_BLUFF", method = "walk" },
+    { from = "DAZARALOR_PORTAL_ROOM", to = "PORTAL_DAZARALOR_SILVERMOON", method = "walk" },
+    { from = "DAZARALOR_PORTAL_ROOM", to = "PORTAL_DAZARALOR_FOUNDERS_POINT", method = "walk" },
+    { from = "PORTAL_DAZARALOR_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_DAZARALOR_THUNDER_BLUFF", to = "THUNDER_BLUFF", method = "portal", cost = 0, oneway = true, portal = { map = 88 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_DAZARALOR_SILVERMOON", to = "SILVERMOON", method = "portal", cost = 0, oneway = true, portal = { map = 110 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_DAZARALOR_FOUNDERS_POINT", to = "RAZORWIND_SHORES", method = "portal", cost = 0, oneway = true, portal = { map = 2352 }, requirements = { faction = "Horde" } }, -- labelled "Founder's Point" in game (named so); lands with Orgrimmar's
     { from = "DAZARALOR_PORTAL_ROOM", to = "NAZJATAR_HORDE", method = "portal", cost = 0, portal = { map = 1355 }, requirements = { quest = 55053, faction = "Horde" } }, -- name as Boralus's (not hovered here)
     { from = "DAZARALOR_PORTAL_ROOM", to = "SILITHUS", method = "portal", cost = 0, portal = { map = 81 }, requirements = { quest = 46931, faction = "Horde" } }, -- name as Boralus's (not hovered here)
-    { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 25924, faction = "Horde" } }, -- name as Stormwind's (not hovered here)
-    { from = "WESTERN_EARTHSHRINE_OG", to = "DRAGONMAW_PORT", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_VASHJIR", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 25924, faction = "Horde" } }, -- name as Stormwind's (not hovered here)
+    { from = "PORTAL_ORGRIMMAR_TWILIGHT_HIGHLANDS", to = "DRAGONMAW_PORT", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Horde" } },
     -- The way back only shows after Muddied Waters (seen 2026-10-23: missing on a character without it; the way out is open)
     { from = "DRAGONMAW_PORT", to = "WESTERN_EARTHSHRINE_OG", method = "portal", cost = 0, oneway = true, requirements = { quest = 26784, faction = "Horde" } },
-    { from = "WESTERN_EARTHSHRINE_OG", to = "TOL_BARAD_HORDE", method = "portal", cost = 0, portal = { map = 244 }, portalBack = { map = 85 }, requirements = { faction = "Horde" } },
-    { from = "WESTERN_EARTHSHRINE_OG", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, oneway = true, portal = { map = 207 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_TOL_BARAD", to = "TOL_BARAD_HORDE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_TOL_BARAD_ORGRIMMAR", to = "WESTERN_EARTHSHRINE_OG", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_DEEPHOLM", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, oneway = true, portal = { map = 207 }, requirements = { faction = "Horde" } },
     -- Deepholm's portal home lands in the portal room's upper floor, not back at the Earthshrine (seen 2026-10-19)
     { from = "PORTAL_DEEPHOLM_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
-    { from = "WESTERN_EARTHSHRINE_OG", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Horde" } },
-    { from = "WESTERN_EARTHSHRINE_OG", to = "MOUNT_HYJAL", method = "portal", cost = 0, oneway = true, portal = { map = 198 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, oneway = true, portal = { map = 198 }, requirements = { faction = "Horde" } },
     -- Hyjal's portal to Orgrimmar lands in the portal room's upper floor too, like Deepholm's (seen 2026-10-23)
     { from = "MOUNT_HYJAL", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
     { from = "TAXI_296", to = "TAXI_294", method = "ship", cost = 45 },

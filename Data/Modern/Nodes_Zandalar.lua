@@ -13,7 +13,16 @@ addon.Nodes.Zandalar = {
     { id = "TAXI_2161", container = "zandalar.map863", mapID = 863, x = 0.5070, y = 0.2070 }, -- Redfield's Watch
     { id = "TAXI_2157", container = "zandalar.map862", mapID = 862, x = 0.4460, y = 0.3630 }, -- Veiled Grotto
     { id = "INSTANCE_THE_MOTHERLODE_ALLIANCE", container = "zandalar.map862", mapID = 862, x = 0.4000, y = 0.7200, kind = "instance", journal = 1012, faction = "Alliance" }, -- The MOTHERLODE!!
-    { id = "DAZARALOR_PORTAL_ROOM", container = "zandalar.map1165", mapID = 1165, x = 0.6572, y = 0.7433, city = "dazaralor" }, -- Portal Room
+    -- The Great Seal (map 1163), the portal room: in through its door, each portal where you stand to click it
+    -- (hovered 2026-10-23). The room's middle is where Portal: Dazar'alor lands, and Silithus's and Nazjatar's (not
+    -- hovered: quest-gated) leave from it.
+    { id = "DAZARALOR_PORTAL_ROOM", container = "zandalar.map1163.interior", mapID = 1163, x = 0.7100, y = 0.7200, city = "dazaralor" }, -- Portal Room
+    { id = "DAZARALOR_GREAT_SEAL_DOOR_INSIDE", container = "zandalar.map1163.interior", mapID = 1163, x = 0.4879, y = 0.1776, city = "dazaralor" },
+    { id = "DAZARALOR_GREAT_SEAL_DOOR_OUTSIDE", container = "zandalar.map1165", mapID = 1165, x = 0.4993, y = 0.4232, city = "dazaralor" },
+    { id = "PORTAL_DAZARALOR_ORGRIMMAR", container = "zandalar.map1163.interior", mapID = 1163, x = 0.7211, y = 0.6987, city = "dazaralor" },
+    { id = "PORTAL_DAZARALOR_THUNDER_BLUFF", container = "zandalar.map1163.interior", mapID = 1163, x = 0.7233, y = 0.7742, city = "dazaralor" },
+    { id = "PORTAL_DAZARALOR_SILVERMOON", container = "zandalar.map1163.interior", mapID = 1163, x = 0.7168, y = 0.6273, city = "dazaralor" },
+    { id = "PORTAL_DAZARALOR_FOUNDERS_POINT", container = "zandalar.map1163.interior", mapID = 1163, x = 0.6789, y = 0.8345, city = "dazaralor" },
     { id = "TAXI_2117", container = "zandalar.map864", mapID = 864, x = 0.5663, y = 0.4919 }, -- Vulpera Hideaway
     { id = "TAXI_1954", container = "zandalar.map863", mapID = 863, x = 0.4003, y = 0.4301 }, -- Zo'bal Ruins
     { id = "TAXI_2076", container = "zandalar.map862", mapID = 862, x = 0.7994, y = 0.4119 }, -- Atal'Gral

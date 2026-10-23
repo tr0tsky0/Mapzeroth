@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1815, "every node made it into the tree (1299 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1841, "every node made it into the tree (1325 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -357,6 +357,21 @@ check(not fromHyjal:find("Amirdrassil Portal", 1, true), "the way to it names Be
 -- Arriving where a portal on stands (old Silvermoon's arrival is its portal to Orgrimmar) names the map, not that portal.
 maps[110] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
 maps[18] = { name = "Tirisfal Glades", mapType = 3, parentMapID = 13 }
+-- Dazar'alor's portal room is the Great Seal (map 1163), in through its door: each portal is its own spot in it.
+-- Measured as the client does (map 1163 is a map of its own, so the test distances can't place it).
+do
+    useRetailDistances()
+    local session = addon.Journey:Build(makeCtx({ faction = "Horde", level = 80 }),
+        { id = "START_DAZARALOR_SEAL", mapID = 1165, x = 0.4990, y = 0.4300 })
+    local plan = addon.Journey:Plan(session, "THUNDER_BLUFF")
+    useTestDistances()
+    local seen, viaPortal = {}, false
+    for _, step in ipairs(plan and plan.steps or {}) do
+        seen[#seen + 1] = step.method .. ":" .. tostring(step.fromID) .. ">" .. tostring(step.nodeID)
+        if step.method == "portal" and step.fromID == "PORTAL_DAZARALOR_THUNDER_BLUFF" then viaPortal = true end
+    end
+    check(viaPortal, "Dazar'alor to Thunder Bluff uses the Great Seal's Thunder Bluff portal: " .. table.concat(seen, ", "))
+end
 -- Its game name is told from the new Silvermoon's by the client's expansion name ("Silvermoon (Burning Crusade)").
 EXPANSION_NAME1 = "The Burning Crusade"
 local toOldSilvermoon = texts("Horde", { 85, 0.5478, 0.9032 }, { 110, 0.55, 0.30 })   -- at Orgrimmar's portal to it

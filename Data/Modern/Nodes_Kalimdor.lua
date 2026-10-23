@@ -190,6 +190,14 @@ addon.Nodes.Kalimdor = {
     { id = "TAXI_49", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4760, y = 0.6690 }, -- Lake Elune'ara
     { id = "TAXI_595", container = "kalimdor_overworld.map77", mapID = 77, x = 0.4410, y = 0.6200 }, -- Wildheart Point
     { id = "WESTERN_EARTHSHRINE_OG", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5007, y = 0.3779, city = "orgrimmar" }, -- Western Earthshrine
+    -- Its portals, each where you stand to click it (hovered 2026-10-23; Vashj'ir's captured by position, as this
+    -- character can't use it yet)
+    { id = "PORTAL_ORGRIMMAR_VASHJIR", container = "kalimdor_overworld.map85", mapID = 85, x = 0.4934, y = 0.3668, city = "orgrimmar" },
+    { id = "PORTAL_ORGRIMMAR_DEEPHOLM", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5073, y = 0.3652, city = "orgrimmar" },
+    { id = "PORTAL_ORGRIMMAR_HYJAL", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5089, y = 0.3817, city = "orgrimmar" },
+    { id = "PORTAL_ORGRIMMAR_TWILIGHT_HIGHLANDS", container = "kalimdor_overworld.map85", mapID = 85, x = 0.5018, y = 0.3911, city = "orgrimmar" },
+    { id = "PORTAL_ORGRIMMAR_ULDUM", container = "kalimdor_overworld.map85", mapID = 85, x = 0.4915, y = 0.3837, city = "orgrimmar" },
+    { id = "PORTAL_ORGRIMMAR_TOL_BARAD", container = "kalimdor_overworld.map85", mapID = 85, x = 0.4755, y = 0.3906, city = "orgrimmar" },
     { id = "TAXI_62", container = "kalimdor_overworld.map80", mapID = 80, x = 0.4400, y = 0.4520 }, -- Nighthaven Flightmaster
     { id = "FLIGHT_GROVE_OF_THE_ANCIENTS_PAST", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.4360, y = 0.7540 }, -- Grove of the Ancients
     { id = "TAXI_616", container = "kalimdor_overworld.map198", mapID = 198, x = 0.7260, y = 0.7620 }, -- Gates of Sothann

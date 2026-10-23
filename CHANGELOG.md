@@ -8,6 +8,7 @@
 - The portals back from Twilight Highlands are only used once you've opened them (Any Portal in a Storm, Muddied Waters); the way in is open to everyone.
 - Hyjal's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
 - Orgrimmar's portal to Silvermoon City is pointed to where it stands, not at the Jade Forest portal.
+- The arrow points to the right portal in both Earthshrines and the Boralus and Dazar'alor portal rooms, and to Tol Barad's portals home, instead of the middle of the room or the camp. Dazar'alor's portal room is reached through the Great Seal's door.
 
 ## 2.0.3 (Retail)
 

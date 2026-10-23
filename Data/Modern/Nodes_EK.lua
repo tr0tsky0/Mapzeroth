@@ -137,6 +137,13 @@ addon.Nodes.EK = {
     { id = "AMANI_FOOTHOLD_FLIGHT_2", container = "ek_overworld.map2509", mapID = 2509, x = 0.4999, y = 0.6189, area = 17650 }, -- Amani Foothold Windcaller
     { id = "INSTANCE_KARAZHAN", container = "ek_overworld.map42", mapID = 42, x = 0.4688, y = 0.7468, kind = "instance", journal = 745 }, -- Karazhan (Burning Crusade)
     { id = "EASTERN_EARTHSHRINE_SW", container = "ek_overworld.map84", mapID = 84, x = 0.7240, y = 0.1640, city = "stormwind" }, -- Eastern Earthshrine
+    -- Its portals, each where you stand to click it (hovered 2026-10-23)
+    { id = "PORTAL_STORMWIND_TWILIGHT_HIGHLANDS", container = "ek_overworld.map84", mapID = 84, x = 0.7525, y = 0.1667, city = "stormwind" },
+    { id = "PORTAL_STORMWIND_VASHJIR", container = "ek_overworld.map84", mapID = 84, x = 0.7338, y = 0.1698, city = "stormwind" },
+    { id = "PORTAL_STORMWIND_TOL_BARAD", container = "ek_overworld.map84", mapID = 84, x = 0.7339, y = 0.1828, city = "stormwind" },
+    { id = "PORTAL_STORMWIND_DEEPHOLM", container = "ek_overworld.map84", mapID = 84, x = 0.7330, y = 0.1950, city = "stormwind" },
+    { id = "PORTAL_STORMWIND_ULDUM", container = "ek_overworld.map84", mapID = 84, x = 0.7518, y = 0.2034, city = "stormwind" },
+    { id = "PORTAL_STORMWIND_HYJAL", container = "ek_overworld.map84", mapID = 84, x = 0.7610, y = 0.1867, city = "stormwind" },
     { id = "TAXI_3106", container = "ek_overworld.map2437", mapID = 2437, x = 0.4729, y = 0.2550 }, -- Camp Stonewash Flightmaster
     { id = "TAXI_3129", container = "ek_overworld.map2437", mapID = 2437, x = 0.4402, y = 0.3367 }, -- Shadebasin Watch Flightmaster
     { id = "TAXI_75", container = "ek_overworld.map32", mapID = 32, x = 0.3721, y = 0.2772 }, -- Thorium Point
@@ -264,6 +271,9 @@ addon.Nodes.EK = {
     { id = "TAXI_3125", container = "ek_overworld.map2424", mapID = 2424, x = 0.5762, y = 0.3382 }, -- Terrace of the Sun
     { id = "TOL_BARAD_ALLIANCE", container = "tol_barad.map245", mapID = 245, x = 0.7240, y = 0.5620 }, -- Tol Barad Camp
     { id = "TOL_BARAD_HORDE", container = "tol_barad.map245", mapID = 245, x = 0.5310, y = 0.7600 }, -- Tol Barad Camp
+    -- Each camp's portal home, where you stand to click it (hovered 2026-10-23)
+    { id = "PORTAL_TOL_BARAD_STORMWIND", container = "tol_barad.map245", mapID = 245, x = 0.7504, y = 0.5894 },
+    { id = "PORTAL_TOL_BARAD_ORGRIMMAR", container = "tol_barad.map245", mapID = 245, x = 0.5608, y = 0.7983 },
     { id = "INSTANCE_BARADIN_HOLD", container = "tol_barad.map244", mapID = 244, x = 0.4500, y = 0.4700, kind = "instance", journal = 75 }, -- Baradin Hold
     { id = "FOUNDERS_POINT", container = "founders_point.map2352", mapID = 2352, x = 0.5740, y = 0.2680 }, -- Entrance Portal
     { id = "TAXI_3132", container = "ek_overworld.map2393", mapID = 2393, x = 0.6944, y = 0.6341, faction = "Horde", city = "silvermoon" }, -- Silvermoon City: the Royal Exchange flight master (Horde)

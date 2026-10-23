@@ -38,6 +38,7 @@ addon.Containers["ek_overworld.map35.interior"] = { indoor = true } -- 2 interio
 addon.Containers["ek_overworld.map84.interior"] = { indoor = true } -- 17 interior node(s)
 addon.Containers["ek_overworld.map84.mage_tower"] = { indoor = true } -- Mage Tower stairwell: street door up to the portal floor's teleport doorway
 addon.Containers["kalimdor_overworld.map85.interior"] = { indoor = true } -- 17 interior node(s)
+addon.Containers["zandalar.map1163.interior"] = { indoor = true } -- Dazar'alor's Great Seal: the Horde portal room
 addon.Containers["ek_overworld.map2649"] = { indoor = true } -- interior
 addon.Containers["deeprun_tram"] = { indoor = true } -- interior
 addon.Containers["ek_overworld.map2393.interior"] = { indoor = true } -- interior
