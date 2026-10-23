@@ -55,8 +55,8 @@ addon.Edges = {
     { from = "PORTAL_STORMWIND_STORMSHIELD", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_VASHJIR", to = "PORTAL_DARKBREAK_COVE", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 14482, faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_TWILIGHT_HIGHLANDS", to = "HIGHBANK", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Alliance" } },
-    -- The walk-in way back after Any Portal in a Storm, as the Horde's after Muddied Waters (the way out is open to all,
-    -- seen 2026-10-23 on a character without the quest; the way back's gate is by the Horde side's, not seen itself)
+    -- The walk-in way back after Any Portal in a Storm, as the Horde's after Muddied Waters (the way out is open to all;
+    -- the way back missing on a character without the quest and there on one with it, seen 2026-10-24)
     { from = "HIGHBANK", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, requirements = { quest = 27537, faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_TOL_BARAD", to = "TOL_BARAD_ALLIANCE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { faction = "Alliance" } },
     { from = "PORTAL_TOL_BARAD_STORMWIND", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, portal = { map = 84 }, requirements = { faction = "Alliance" } },
