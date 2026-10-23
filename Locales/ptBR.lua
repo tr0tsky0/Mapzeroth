@@ -240,6 +240,7 @@ addon:RegisterLocale("ptBR", {
     HINT_ONLY_FLIGHT_UNKNOWN = "O único caminho até lá usa um voo, e o Mapzeroth não sabe quais pontos de voo você já descobriu. Abra a janela de um mestre de voo para que ele possa ver.",
     NAV_ITEM_READY_IN = "Pronto para usar em %d s",
     NODE_PORTAL_ZONE = "Portal (%s)",
+    PORTAL_TO = "Portal para %s",
     OPT_ASSUME_FLIGHTS = "Presumir que os pontos de voo foram descobertos",
     OPT_ASSUME_FLIGHTS_DESC = "Até que a janela de um mestre de voo mostre quais pontos de voo você descobriu, planeja os voos como se você tivesse todos. Desligado: apenas voos para pontos que o Mapzeroth viu você descobrir.",
     OPT_STEP_MARKERS = "Marcadores das etapas",

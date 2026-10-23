@@ -4,6 +4,10 @@
 
 ### Fixed
 - Holiday Routes could stay missing for a whole session when the game's calendar was slow to load, or had been moved to another month.
+- Portal steps use the portal's own name from the game ("Use Portal to Twilight Highlands", not "Take the portal to Highbank"), in your language: the portal rooms in Stormwind, Orgrimmar, Boralus and Dazar'alor, both Earthshrines, and the portals back from where they go.
+- The portals back from Twilight Highlands are only used once you've opened them (Any Portal in a Storm, Muddied Waters); the way in is open to everyone.
+- Hyjal's portal to Orgrimmar lands in the portal room, not at the Earthshrine.
+- Orgrimmar's portal to Silvermoon City is pointed to where it stands, not at the Jade Forest portal.
 
 ## 2.0.3 (Retail)
 

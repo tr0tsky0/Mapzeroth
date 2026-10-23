@@ -257,7 +257,7 @@ addon.Nodes.EK = {
     { id = "KARAZHAN", container = "ek_overworld.map42", mapID = 42, x = 0.4730, y = 0.7530, area = 2562 }, -- Karazhan
     { id = "TAXI_599", container = "ek_overworld.map51", mapID = 51, x = 0.7120, y = 0.1240 }, -- Bogpaddle
     { id = "TAXI_384", container = "ek_overworld.map18", mapID = 18, x = 0.8241, y = 0.6985 }, -- The Bulwark
-    { id = "HIGHBANK", container = "ek_overworld.map1275", mapID = 1275, x = 0.8000, y = 0.7430, area = 5140 }, -- Highbank
+    { id = "HIGHBANK", container = "ek_overworld.map241", mapID = 241, x = 0.7946, y = 0.7781, area = 5140 }, -- Highbank (the walk-in portal to the Earthshrine, captured 2026-10-23)
     { id = "IRONFORGE_MOLE", container = "ek_overworld.map27", mapID = 27, x = 0.6130, y = 0.3720, area = 1537 }, -- Ironforge (Eastern Kingdoms)
     { id = "TAXI_85", container = "ek_overworld.map23", mapID = 23, x = 0.5110, y = 0.2080 }, -- Northpass Tower
     { id = "TAXI_657", container = "ek_overworld.map1275", mapID = 1275, x = 0.3827, y = 0.3806 }, -- The Gullet

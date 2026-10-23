@@ -297,6 +297,34 @@ local function readableSteps(result, session)
         local zone = node and not addon:HasNodeName(id) and addon:GetZoneName(node.mapID)
         return zone or nameOf(id)
     end
+    -- The game's own name for the portal a leg takes ("Portal to Twilight Highlands"), when the edge says how the game
+    -- names it: `portal` going from -> to, `portalBack` the other way, each { map = id } or { area = id } for the
+    -- client's (translated) name of the place it is named after, plus `zone` (a map id) for a name in two parts
+    -- ("Dalaran, Crystalsong Forest") and `expansion` (an EXPANSION_NAMEn number). nil otherwise, or when the client
+    -- doesn't say.
+    local function gamePortalName(leg)
+        local edge = leg.source
+        if type(edge) ~= "table" or not edge.from then return nil end
+        local spec
+        if leg.from == edge.from then spec = edge.portal elseif leg.from == edge.to then spec = edge.portalBack end
+        if not spec then return nil end
+        local place
+        if spec.map then
+            place = addon:GetZoneName(spec.map)
+        elseif spec.area and C_Map and C_Map.GetAreaInfo then
+            place = C_Map.GetAreaInfo(spec.area)
+        end
+        if not place or place == "" then return nil end
+        if spec.zone then
+            local zone = addon:GetZoneName(spec.zone)
+            if not zone then return nil end
+            place = place .. ", " .. zone
+        end
+        -- Old Silvermoon's portal is "(Burning Crusade)": the client's own expansion name, so it is told from the new one.
+        local expansion = spec.expansion and _G["EXPANSION_NAME" .. spec.expansion]
+        if expansion then place = place .. " (" .. expansion .. ")" end
+        return L["PORTAL_TO"]:format(place)
+    end
     -- The portal a walk or flight is heading for: the next leg's, or the one after a single walk (a portal room's door,
     -- then in to the portal), or nil. Not further: a way through (Undercity's sewer) is a stage of its own.
     local function portalAhead(legs, i)
@@ -325,15 +353,21 @@ local function readableSteps(result, session)
             -- one we only know by its map (Modern's) is described by where you come out.
             -- A "transition" (walking through Rut'theran's gate into Darnassus) reads the same way, as using the
             -- gate you stand at, so it isn't mistaken for another walk ("Go to Gate to Rut'theran Village").
+            -- Best of all, the game's own name for it ("Use Portal to Twilight Highlands"), where the edge gives one.
             local usesPortal = step.method == "portal" or step.method == "transition"
-            local ownName = usesPortal and portalNamed(step.from)
-            local name = ownName and addon:GetNodeName(step.from) or (usesPortal and arrivalName(step.to)) or nameOf(step.to)
+            local game = step.method == "portal" and gamePortalName(step)
+            local ownName = usesPortal and (game or portalNamed(step.from))
+            local name = game or ownName and addon:GetNodeName(step.from) or (usesPortal and arrivalName(step.to))
+                         or nameOf(step.to)
             -- Walking or flying to a portal, to a spot with no name of its own (a portal room's door) or to a hub of
             -- several (Bel'ameth), names the portal ("Walk to Stormwind Portal"), not the map you're already in.
             local ahead = (step.method == "walk" or step.method == "fly") and portalAhead(legs, i)
             if ahead and (ahead.from == step.to or not addon:HasNodeName(step.to)) then
                 -- Where it comes out, as the portal step itself will say it (Bel'ameth, not its map Amirdrassil).
-                if portalNamed(ahead.from) then
+                local game = gamePortalName(ahead)
+                if game then
+                    name = game
+                elseif portalNamed(ahead.from) then
                     name = addon:GetNodeName(ahead.from)
                 else
                     name = L["NODE_PORTAL_ZONE"]:format(arrivalName(ahead.to))

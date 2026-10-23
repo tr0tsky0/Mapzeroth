@@ -240,6 +240,7 @@ addon:RegisterLocale("zhTW", {
     HINT_ONLY_FLIGHT_UNKNOWN = "前往那裡的唯一方式是飛行，而Mapzeroth不知道你已發現哪些飛行點。請開啟飛行管理員的視窗，以便它查看。",
     NAV_ITEM_READY_IN = "%d秒後可使用",
     NODE_PORTAL_ZONE = "%s傳送門",
+    PORTAL_TO = "通往%s的傳送門",
     OPT_ASSUME_FLIGHTS = "假定飛行點已發現",
     OPT_ASSUME_FLIGHTS_DESC = "在飛行管理員的視窗顯示你已發現哪些飛行點之前，依你已發現全部飛行點來規劃飛行。關閉：只使用Mapzeroth見你發現過的飛行點。",
     OPT_STEP_MARKERS = "路線步驟標記",

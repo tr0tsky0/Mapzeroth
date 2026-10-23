@@ -74,7 +74,7 @@ addon.Nodes.Kalimdor = {
     { id = "TAXI_532", container = "kalimdor_overworld.map71", mapID = 71, x = 0.4000, y = 0.7740 }, -- Gunstan's Dig
     { id = "THERAMORE", container = "kalimdor_overworld.map70", mapID = 70, x = 0.6600, y = 0.4900 }, -- Theramore
     { id = "PORTAL_CAVERNS_OF_TIME_STORMWIND", container = "kalimdor_overworld.map74", mapID = 74, x = 0.5883, y = 0.2689 }, -- Portal to Stormwind
-    { id = "PORTAL_ORGRIMMAR_SILVERMOON", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5745, y = 0.9193, city = "orgrimmar" }, -- Portal to Silvermoon
+    { id = "PORTAL_ORGRIMMAR_SILVERMOON", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5616, y = 0.8844, city = "orgrimmar" }, -- Portal to Silvermoon (hovered 2026-10-23; had Honeydew's spot)
     { id = "TAXI_536", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5475, y = 0.7338 }, -- Sen'jin Village
     { id = "TAXI_362", container = "kalimdor_overworld.map65", mapID = 65, x = 0.6758, y = 0.6261 }, -- Krom'gar Fortress
     { id = "PORTAL_ORGRIMMAR_DAZARALOR", container = "kalimdor_overworld.map85.interior", mapID = 85, x = 0.5768, y = 0.8987, city = "orgrimmar" }, -- Portal to Dazar'alor

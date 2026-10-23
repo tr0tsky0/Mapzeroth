@@ -241,6 +241,7 @@ addon:RegisterLocale("koKR", {
     HINT_ONLY_FLIGHT_UNKNOWN = "그곳으로 가는 유일한 방법은 비행이며, Mapzeroth는 어떤 비행 지점을 발견했는지 알지 못합니다. 비행 조련사 창을 열어 확인할 수 있게 해 주세요.",
     NAV_ITEM_READY_IN = "%d초 후 사용 가능",
     NODE_PORTAL_ZONE = "%s 차원문",
+    PORTAL_TO = "차원문: %s",
     OPT_ASSUME_FLIGHTS = "비행 지점을 발견한 것으로 간주",
     OPT_ASSUME_FLIGHTS_DESC = "비행 조련사 창에서 발견한 비행 지점이 표시되기 전까지는 모든 지점을 발견한 것처럼 비행을 계획합니다. 끔: Mapzeroth가 발견하는 것을 확인한 지점으로 가는 비행만 사용합니다.",
     OPT_STEP_MARKERS = "경로 단계 표시",

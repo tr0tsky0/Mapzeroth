@@ -351,15 +351,25 @@ check(toStormwind:find("^Go to Stormwind City Portal / Walk to Stormwind City Po
 local toHyjal = texts("Alliance", { 2239, 0.50, 0.60 }, { 198, 0.60, 0.30 })
 check(toHyjal:find("Go to Mount Hyjal Portal / Take the portal to Mount Hyjal", 1, true), "Bel'ameth to the Hyjal portal: " .. toHyjal)
 local fromHyjal = texts("Alliance", { 84, 0.60, 0.70 }, { 2239, 0.50, 0.60 })
-check(fromHyjal:find("Take the portal to Bel'ameth", 1, true) and not fromHyjal:find("Use Bel'ameth", 1, true),
-    "a portal out of Hyjal reads by where it comes out, not 'Use Bel'ameth': " .. fromHyjal)
+check(fromHyjal:find("Use Portal to Bel'ameth", 1, true) and not fromHyjal:find("Use Bel'ameth", 1, true),
+    "a portal out of Hyjal reads by the game's name for it, not 'Use Bel'ameth': " .. fromHyjal)
 check(not fromHyjal:find("Amirdrassil Portal", 1, true), "the way to it names Bel'ameth too, not its map: " .. fromHyjal)
 -- Arriving where a portal on stands (old Silvermoon's arrival is its portal to Orgrimmar) names the map, not that portal.
 maps[110] = { name = "Silvermoon City", mapType = 3, parentMapID = 13 }
 maps[18] = { name = "Tirisfal Glades", mapType = 3, parentMapID = 13 }
+-- Its game name is told from the new Silvermoon's by the client's expansion name ("Silvermoon (Burning Crusade)").
+EXPANSION_NAME1 = "The Burning Crusade"
 local toOldSilvermoon = texts("Horde", { 85, 0.5478, 0.9032 }, { 110, 0.55, 0.30 })   -- at Orgrimmar's portal to it
-check(toOldSilvermoon:find("Take the portal to Silvermoon City", 1, true) and not toOldSilvermoon:find("Orgrimmar Portal", 1, true),
-    "the portal to old Silvermoon names Silvermoon, not the portal back: " .. toOldSilvermoon)
+check(toOldSilvermoon:find("Use Portal to Silvermoon City (The Burning Crusade)", 1, true)
+      and not toOldSilvermoon:find("Orgrimmar Portal", 1, true),
+    "the portal to old Silvermoon names Silvermoon and its expansion, not the portal back: " .. toOldSilvermoon)
+EXPANSION_NAME1 = nil
+-- A portal whose edge gives the game's name for it is called that, on the way to it and when used: the Earthshrine's
+-- portal to Highbank is "Portal to Twilight Highlands" in the game, not "Highbank" (a player looked for that, 2026-10-23).
+maps[1275] = { name = "Twilight Highlands", mapType = 3, parentMapID = 13 }
+local toHighbank = texts("Alliance", { 84, 0.6800, 0.3000 }, { 241, 0.7950, 0.7790 })
+check(toHighbank:find("Go to Portal to Twilight Highlands / Use Portal to Twilight Highlands", 1, true)
+      and not toHighbank:find("portal to Highbank", 1, true), "the Earthshrine's Twilight Highlands portal: " .. toHighbank)
 C_Map.GetAreaInfo = getAreaInfo
 addon:ClearNodeNameCache()
 

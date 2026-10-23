@@ -242,6 +242,7 @@ addon:RegisterLocale("deDE", {
     HINT_ONLY_FLIGHT_UNKNOWN = "Der einzige Weg dorthin führt über einen Flug, und Mapzeroth weiß nicht, welche Flugpunkte Ihr gefunden habt. Öffnet das Fenster eines Flugmeisters, damit es nachsehen kann.",
     NAV_ITEM_READY_IN = "Nutzbar in %d s",
     NODE_PORTAL_ZONE = "Portal (%s)",
+    PORTAL_TO = "Portal nach %s",
     OPT_ASSUME_FLIGHTS = "Flugpunkte als gefunden annehmen",
     OPT_ASSUME_FLIGHTS_DESC = "Bis das Fenster eines Flugmeisters zeigt, welche Flugpunkte Ihr gefunden habt, plant Mapzeroth Flüge, als hättet Ihr alle. Aus: nur Flüge zu Punkten, bei denen Mapzeroth gesehen hat, dass Ihr sie gefunden habt.",
     OPT_STEP_MARKERS = "Markierung der Routenschritte",

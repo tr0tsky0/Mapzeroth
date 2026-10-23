@@ -241,6 +241,7 @@ local strings = {
     HINT_ONLY_FLIGHT_UNKNOWN = "La única forma de llegar usa un vuelo, y Mapzeroth no sabe qué puntos de vuelo has descubierto. Abre la ventana de un maestro de vuelo para que pueda verlo.",
     NAV_ITEM_READY_IN = "Listo para usar en %d s",
     NODE_PORTAL_ZONE = "Portal (%s)",
+    PORTAL_TO = "Portal a %s",
     OPT_ASSUME_FLIGHTS = "Suponer que los puntos de vuelo están descubiertos",
     OPT_ASSUME_FLIGHTS_DESC = "Hasta que la ventana de un maestro de vuelo muestre qué puntos de vuelo has descubierto, planifica los vuelos como si los tuvieras todos. Desactivado: solo vuelos a puntos que Mapzeroth te ha visto descubrir.",
     OPT_STEP_MARKERS = "Marcadores de los pasos",

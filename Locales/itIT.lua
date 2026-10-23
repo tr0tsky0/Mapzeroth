@@ -241,6 +241,7 @@ addon:RegisterLocale("itIT", {
     HINT_ONLY_FLIGHT_UNKNOWN = "L'unico modo per arrivarci usa un volo, e Mapzeroth non sa quali punti di volo hai scoperto. Apri la finestra di un maestro di volo così può vedere.",
     NAV_ITEM_READY_IN = "Utilizzabile tra %d s",
     NODE_PORTAL_ZONE = "Portale (%s)",
+    PORTAL_TO = "Portale per %s",
     OPT_ASSUME_FLIGHTS = "Considera scoperti i punti di volo",
     OPT_ASSUME_FLIGHTS_DESC = "Finché la finestra di un maestro di volo non mostra quali punti di volo hai scoperto, pianifica i voli come se li avessi tutti. Disattivato: solo voli verso punti che Mapzeroth ti ha visto scoprire.",
     OPT_STEP_MARKERS = "Indicatori dei passaggi",

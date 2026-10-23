@@ -13,6 +13,7 @@ addon:RegisterLocale("enUS", {
     STEP_TRAM        = "Take the tram to %s",
     STEP_PORTAL      = "Use %s",
     NODE_PORTAL_ZONE = "%s Portal",
+    PORTAL_TO        = "Portal to %s",          -- a portal's own name in the game, after the place it's named for
     STEP_PORTAL_TO   = "Take the portal to %s",
     STEP_TELEPORT    = "Teleport to %s",
     STEP_CAST        = "Cast %s",
