@@ -11,7 +11,8 @@ addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.BrokenIsles = {
     { id = "PORTAL_MONK_DALARAN", container = "temple_of_five_dawns.map709", mapID = 709, x = 0.5236, y = 0.5722 }, -- Portal to Dalaran
-    { id = "PEAK_OF_SERENITY", container = "temple_of_five_dawns.map709", mapID = 709, x = 0.5145, y = 0.4865 }, -- Peak of Serenity
+    { id = "PORTAL_MONK_PEAK_OF_SERENITY", container = "temple_of_five_dawns.map709", mapID = 709, x = 0.5006, y = 0.5456 }, -- Portal to Peak of Serenity
+    { id = "ZEN_PILGRIMAGE_TEMPLE", container = "temple_of_five_dawns.map709", mapID = 709, x = 0.5146, y = 0.4865 }, -- Zen Pilgrimage landing (after The Dawning Light)
     { id = "TAXI_1870", container = "eye_of_azshara.map790", mapID = 790, x = 0.3816, y = 0.4567 }, -- Eye of Azshara Flightmaster
     { id = "TAXI_1863", container = "broken_isles.map634", mapID = 634, x = 0.5538, y = 0.8733 }, -- Hafr Fjall
     { id = "TAXI_1857", container = "broken_isles.map634", mapID = 634, x = 0.5205, y = 0.3465 }, -- Stormtorn Foothills

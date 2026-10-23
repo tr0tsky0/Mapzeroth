@@ -10,6 +10,9 @@ if addon.RULESET ~= "modern" then return end   -- one addon for both games: this
 addon.Nodes = addon.Nodes or {}
 
 addon.Nodes.Pandaria = {
+    { id = "PEAK_OF_SERENITY", container = "pandaria.map379", mapID = 379, x = 0.4869, y = 0.4312 }, -- Peak of Serenity (Zen Pilgrimage landing before The Dawning Light)
+    { id = "PORTAL_PEAK_OF_SERENITY_STORMWIND", container = "pandaria.map379", mapID = 379, x = 0.4895, y = 0.4335 }, -- Portal to Stormwind
+    { id = "PORTAL_PEAK_OF_SERENITY_ORGRIMMAR", container = "pandaria.map379", mapID = 379, x = 0.4854, y = 0.4354 }, -- Portal to Orgrimmar
     { id = "KIRIN_TOR_BASE", container = "isle_of_thunder.map504", mapID = 504, x = 0.6408, y = 0.7248 }, -- Kirin Tor Base
     { id = "SUNREAVER_BASE", container = "isle_of_thunder.map504", mapID = 504, x = 0.3262, y = 0.3425 }, -- Sunreaver Base
     { id = "INSTANCE_THRONE_OF_THUNDER", container = "isle_of_thunder.map504", mapID = 504, x = 0.6300, y = 0.3200, kind = "instance", journal = 362 }, -- Throne of Thunder

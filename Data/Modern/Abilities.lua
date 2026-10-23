@@ -11,7 +11,8 @@ addon.Abilities = addon.Abilities or {}
 
 addon.Abilities.Teleports = {
     { spellID = 1259190, to = "SILVERMOON_PORTAL_ROOM", cost = 10 },
-    { spellID = 126892, to = "PEAK_OF_SERENITY", cost = 10, cooldown = 60 },
+    { spellID = 126892, to = "ZEN_PILGRIMAGE_TEMPLE", cost = 10, cooldown = 60, requirements = { quest = 40236 } },     -- The Dawning Light moves it to the class hall
+    { spellID = 126892, to = "PEAK_OF_SERENITY", cost = 10, cooldown = 60, requirements = { notQuest = 40236 } },
     { spellID = 49359, to = "THERAMORE", cost = 10 },
     { spellID = 344587, to = "ORIBOS", cost = 10 },
     { spellID = 50977, to = "ACHERUS", cost = 10, cooldown = 60 },

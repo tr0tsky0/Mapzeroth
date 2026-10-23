@@ -179,6 +179,11 @@ function addon:ValidateData()
             if not ability.spellID and not ability.itemID then
                 add("error", ("ability %s[%d]: needs a spellID or itemID"):format(category, i))
             end
+            for key in pairs(ability.requirements or {}) do
+                if not addon.RequirementCheckers[key] then
+                    add("error", ("ability %s[%d]: unknown requirement '%s'"):format(category, i, key))
+                end
+            end
             if ability.to and not World:GetNode(ability.to) then
                 add("error", ("ability %s[%d]: unknown destination node %s"):format(category, i, tostring(ability.to)))
             end

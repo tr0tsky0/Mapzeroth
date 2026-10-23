@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1841, "every node made it into the tree (1325 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1845, "every node made it into the tree (1329 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -1019,6 +1019,19 @@ do
     check(listed("Horde") and not listed("Alliance"), "a Horde character is offered the Royal Exchange, an Alliance one isn't")
     C_Map.GetMapInfo = realMap
     addon:ClearNodeNameCache()
+end
+
+-- Zen Pilgrimage lands on the Peak of Serenity in Kun-Lai until The Dawning Light (40236), then in the class hall.
+do
+    local function lands(quests)
+        local to = {}
+        for _, entry in ipairs(addon:GetKnownTeleports(makeCtx({ class = "MONK", spells = { 126892 }, quests = quests }))) do
+            if entry.ability.spellID == 126892 then to[#to + 1] = entry.to end
+        end
+        return table.concat(to, ",")
+    end
+    check(lands({}) == "PEAK_OF_SERENITY", "Zen Pilgrimage before The Dawning Light: Kun-Lai (" .. lands({}) .. ")")
+    check(lands({ [40236] = true }) == "ZEN_PILGRIMAGE_TEMPLE", "Zen Pilgrimage after The Dawning Light: the class hall")
 end
 
 -- Midnight split the mage's Silvermoon teleport: 32272 (Burning Crusade) still goes to the old Silvermoon, 1259190 to
