@@ -53,9 +53,12 @@ frame:SetScript("OnEvent", function(_, event, ...)
         addon.Panel:OnWaypointChanged()
         return
     elseif event == "CALENDAR_UPDATE_EVENT_LIST" then
-        -- The calendar has loaded (or changed): what holidays are on can be asked now.
+        -- The calendar has loaded (or changed): what holidays are on can be asked now. The first answer can come after
+        -- the panel was filled without it: the panel shows the holiday routes then.
+        local first = not addon.calendarReady
         addon.calendarReady = true
         addon:ResetHolidayCache()
+        if first then addon.Panel:OnCalendarReady() end
         return
     elseif event == "UI_INFO_MESSAGE" then
         -- "New flight path discovered": we aren't told which, so forget the "not found"s.
@@ -82,7 +85,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
     end
     if event == "PLAYER_LOGIN" then
         -- Holiday portals need the calendar, which answers nothing until it has been opened once.
-        if C_Calendar and C_Calendar.OpenCalendar then pcall(C_Calendar.OpenCalendar) end
+        addon:RequestCalendar()
         addon.World:Build()
         addon.FlightKnowledge:Load()
         addon.Theme:Init(addon.Options:Default("theme"))

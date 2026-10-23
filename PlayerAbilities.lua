@@ -128,25 +128,40 @@ end
 -- (a snapshot is a snapshot; a holiday doesn't start or end mid-search). No holidays are
 -- gated on in Forever's own data yet, so this only does real work for Modern.
 -- The client's calendar has nothing to say until it has been opened and has answered (CALENDAR_UPDATE_EVENT_LIST,
--- Core.lua): until then nothing is live, and that is not cached, so the first real answer is the one kept.
+-- Core.lua): until then nothing is live, and that is not cached, so the first real answer is the one kept. Events
+-- already there count as an answer: after a /reload the calendar can hold its data without saying so again.
 local holidayCache = {}
 
 function addon:ResetHolidayCache()
     holidayCache = {}
 end
 
+-- Ask the calendar to load, until it has answered once: at login, and again each time the panel is filled, since a
+-- first ask can go unanswered (seen 2026-10-23: a player had no holiday routes until something else opened it).
+function addon:RequestCalendar()
+    if addon.calendarReady then return end
+    if C_Calendar and C_Calendar.OpenCalendar then pcall(C_Calendar.OpenCalendar) end
+end
+
 local function isHolidayActive(key)
     -- A holiday faked on or off for testing (MapzerothDataTools' /mzr holiday): nothing in the addon sets this.
     local faked = addon.HolidayOverrides and addon.HolidayOverrides[key]
     if faked ~= nil then return faked end
-    if not addon.calendarReady then return false end
     if holidayCache[key] ~= nil then return holidayCache[key] end
     local icons = addon.HOLIDAYS and addon.HOLIDAYS[key]
     local active = false
     if icons and C_DateAndTime and C_Calendar and C_Calendar.GetNumDayEvents then
         local today = C_DateAndTime.GetCurrentCalendarTime()
-        for i = 1, C_Calendar.GetNumDayEvents(0, today.monthDay) do
-            local event = C_Calendar.GetDayEvent(0, today.monthDay, i)
+        -- Day events are counted from the month the calendar shows, which the calendar window or another addon may
+        -- have moved off this one: find this month from there.
+        local shown = C_Calendar.GetMonthInfo and C_Calendar.GetMonthInfo(0)
+        local offset = shown and shown.year and shown.month
+                       and (today.year - shown.year) * 12 + today.month - shown.month or 0
+        local count = C_Calendar.GetNumDayEvents(offset, today.monthDay)
+        if count == 0 and not addon.calendarReady then return false end       -- not loaded yet: ask again later
+        addon.calendarReady = true
+        for i = 1, count do
+            local event = C_Calendar.GetDayEvent(offset, today.monthDay, i)
             if event and event.calendarType == "HOLIDAY" and event.iconTexture then
                 for _, icon in ipairs(icons) do
                     if event.iconTexture == icon then active = true end

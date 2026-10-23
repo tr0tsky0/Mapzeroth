@@ -35,16 +35,42 @@ do
     local holidayActive = addon:GetPlayerContext().holidayActive
 
     addon.calendarReady = nil
+    local loaded = events
+    events = {}
     check(holidayActive("test_fair") == false, "a holiday isn't live before the calendar has loaded")
-    check(queries == 0, "the calendar isn't asked before it is ready")
+    check(queries == 1 and not addon.calendarReady, "an empty calendar isn't taken as an answer")
 
-    addon.calendarReady = true
-    check(holidayActive("test_fair") == true, "live once the calendar is ready: the earlier no was not cached")
+    events = loaded
+    check(holidayActive("test_fair") == true,
+          "live once the calendar has events, even unannounced (after a /reload): the earlier no was not cached")
+    check(addon.calendarReady == true, "and events there count as the calendar's answer")
     events = {}
     check(holidayActive("test_fair") == true, "and the answer is kept for the session")
     addon:ResetHolidayCache()
     check(holidayActive("test_fair") == false, "until the calendar reports again (the cache is reset)")
     check(holidayActive("no_such_holiday") == false, "an unknown holiday is never live")
+
+    -- The calendar left showing another month (the calendar window, another addon): today is read at its offset.
+    C_DateAndTime.GetCurrentCalendarTime = function() return { year = 2026, month = 10, monthDay = 23 } end
+    local byOffset = { [-1] = { { calendarType = "HOLIDAY", iconTexture = 111 } }, [0] = {} }
+    C_Calendar = {
+        GetMonthInfo = function() return { year = 2026, month = 11 } end,
+        GetNumDayEvents = function(offset) return #(byOffset[offset] or {}) end,
+        GetDayEvent = function(offset, _, i) return byOffset[offset][i] end,
+    }
+    addon:ResetHolidayCache()
+    check(holidayActive("test_fair") == true, "today's events are found while the calendar shows next month")
+
+    -- An unanswered calendar is asked again (each time the panel is filled); an answered one is left alone.
+    local opens = 0
+    C_Calendar.OpenCalendar = function() opens = opens + 1 end
+    addon.calendarReady = nil
+    addon:RequestCalendar()
+    addon:RequestCalendar()
+    check(opens == 2, "the calendar is asked again while it hasn't answered")
+    addon.calendarReady = true
+    addon:RequestCalendar()
+    check(opens == 2, "and not once it has")
 
     addon.HOLIDAYS, C_DateAndTime, C_Calendar, addon.calendarReady = realHolidays, realDate, realCalendar, realReady
     addon:ResetHolidayCache()

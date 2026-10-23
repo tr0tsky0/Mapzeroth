@@ -1347,6 +1347,7 @@ end
 
 -- Re-read the player and the world when the map opens: who they are, and the places to offer.
 function Panel:Refresh()
+    addon:RequestCalendar()                      -- not answered yet: ask again (the answer refreshes us, OnCalendarReady)
     state.ctx = addon:GetPlayerContext()
     state.entries = addon.Destinations:Build(state.ctx)
     -- A new window: the sections start closed, and are priced from where the player is when one of places is opened.
@@ -1380,6 +1381,15 @@ end
 -- The player set or cleared their map waypoint.
 function Panel:OnWaypointChanged()
     self:RefreshTop()
+end
+
+-- The calendar answered for the first time: holidays can be on now. The open picker lists their routes straight away;
+-- anywhere else, the next window has them.
+function Panel:OnCalendarReady()
+    if ui and ui.frame:IsShown() and state.view == "list" and ui.search:GetText() == "" then
+        self:Refresh()
+        self:Query("")
+    end
 end
 
 -- What the window shows when it opens: fresh places, and the trip in progress if there is one, else the search page.
