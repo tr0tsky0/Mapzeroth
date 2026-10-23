@@ -39,7 +39,7 @@ addon.World:ForEachNode(function(node)
     check(c, "every node resolves to a container: " .. node.id)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
-check(total == 1846, "every node made it into the tree (1330 places + 24 city centres + 492 inns; a town is its inn): " .. total)
+check(total == 1849, "every node made it into the tree (1333 places + 24 city centres + 492 inns; a town is its inn): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
 
@@ -1032,6 +1032,31 @@ do
     end
     check(lands({}) == "PEAK_OF_SERENITY", "Zen Pilgrimage before The Dawning Light: Kun-Lai (" .. lands({}) .. ")")
     check(lands({ [40236] = true }) == "ZEN_PILGRIMAGE_TEMPLE", "Zen Pilgrimage after The Dawning Light: the class hall")
+end
+
+-- The Peak's city portals are only in its past: a monk standing on the peak reaches them through Zidormi, nobody else.
+do
+    local start = { id = "YOU_peak", mapID = 379, x = 0.487, y = 0.432 }
+    local function route(class)
+        local session = addon.Journey:Build(makeCtx({ faction = "Horde", class = class }), start)
+        local r = addon.Pathfinder:FindPath(session.graph, start.id, "PORTAL_PEAK_OF_SERENITY_ORGRIMMAR", session.graph.phase)
+        local methods = {}
+        for _, step in ipairs(r and r.steps or {}) do methods[#methods + 1] = step.method end
+        return r, table.concat(methods, ",")
+    end
+    local monk, how = route("MONK")
+    check(monk and how:find("phaseswitch"), "a monk on the peak reaches its Orgrimmar portal through Zidormi: " .. how)
+    check(not route("WARRIOR"), "a warrior can't reach the past peak")
+
+    -- Zen Pilgrimage (before The Dawning Light) lands in the past: straight to the portals, and still out to Kun-Lai.
+    local far = { id = "YOU_far", mapID = 85, x = 0.5, y = 0.5 }
+    local session = addon.Journey:Build(makeCtx({ faction = "Horde", class = "MONK", spells = { 126892 } }), far)
+    local r = addon.Pathfinder:FindPath(session.graph, far.id, "PORTAL_PEAK_OF_SERENITY_ORGRIMMAR", session.graph.phase)
+    local zidormi = false
+    for _, step in ipairs(r and r.steps or {}) do if step.method == "phaseswitch" then zidormi = true end end
+    check(r and r.steps[1].method == "teleport" and not zidormi, "Zen Pilgrimage lands by the past portals, no Zidormi")
+    r = addon.Pathfinder:FindPath(session.graph, "PEAK_OF_SERENITY", "TAXI_1018", session.graph.phase)
+    check(r, "from the past peak a monk can still fly on into Kun-Lai")
 end
 
 -- Midnight split the mage's Silvermoon teleport: 32272 (Burning Crusade) still goes to the old Silvermoon, 1259190 to

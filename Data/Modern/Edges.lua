@@ -53,16 +53,16 @@ addon.Edges = {
     { from = "PORTAL_STORMWIND_BELAMETH", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_AZSUNA", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_STORMSHIELD", to = "STORMWIND_PORTAL_ROOM_UPPER", method = "walk", requirements = { faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_VASHJIR", to = "PORTAL_DARKBREAK_COVE", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 14482, faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_TWILIGHT_HIGHLANDS", to = "HIGHBANK", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_VASHJIR", to = "PORTAL_DARKBREAK_COVE", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { minLevel = 30, quest = 14482, faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_TWILIGHT_HIGHLANDS", to = "HIGHBANK", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { minLevel = 30, faction = "Alliance" } },
     -- The walk-in way back after Any Portal in a Storm, as the Horde's after Muddied Waters (the way out is open to all;
     -- the way back missing on a character without the quest and there on one with it, seen 2026-10-24)
     { from = "HIGHBANK", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, requirements = { quest = 27537, faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_TOL_BARAD", to = "TOL_BARAD_ALLIANCE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_TOL_BARAD", to = "TOL_BARAD_ALLIANCE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { minLevel = 30, faction = "Alliance" } },
     { from = "PORTAL_TOL_BARAD_STORMWIND", to = "EASTERN_EARTHSHRINE_SW", method = "portal", cost = 0, oneway = true, portal = { map = 84 }, requirements = { faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_DEEPHOLM", to = "PORTAL_DEEPHOLM_STORMWIND", method = "portal", cost = 0, portal = { map = 207 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Alliance" } },
-    { from = "PORTAL_STORMWIND_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, portal = { map = 198 }, portalBack = { map = 84 }, requirements = { faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_DEEPHOLM", to = "PORTAL_DEEPHOLM_STORMWIND", method = "portal", cost = 0, portal = { map = 207 }, portalBack = { map = 84 }, requirements = { minLevel = 30, faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { minLevel = 30, faction = "Alliance" } },
+    { from = "PORTAL_STORMWIND_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, portal = { map = 198 }, portalBack = { map = 84 }, requirements = { minLevel = 30, faction = "Alliance" } },
     { from = "SW_EMBASSY", to = "VINDICAAR_AZEROTH", method = "portal", cost = 0, requirements = { faction = "Alliance" } },
     { from = "PORTAL_STORMWIND_DARNASSUS", to = "PORTAL_RUTTHERAN_EXODAR", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
     { from = "PORTAL_RUTTHERAN_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, inPhase = { "darkshore", 67 }, requirements = { faction = "Alliance" } },
@@ -120,7 +120,7 @@ addon.Edges = {
     { from = "PORTAL_DALARAN_BROKEN_ISLES_HORDE", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { faction = "Horde" } },
     { from = "ACHERUS", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, oneway = true, requirements = { class = "DEATHKNIGHT" } },
     { from = "PORTAL_MONK_DALARAN", to = "DALARAN_BROKEN_ISLES", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },
-    { from = "PORTAL_MONK_PEAK_OF_SERENITY", to = "PEAK_OF_SERENITY", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },
+    { from = "PORTAL_MONK_PEAK_OF_SERENITY", to = "PEAK_OF_SERENITY_PRESENT", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK" } },   -- always the present (seen 2026-10-23)
     -- Orgrimmar's lands in the portal room (seen 2026-10-23); Stormwind's is assumed to match.
     { from = "PORTAL_PEAK_OF_SERENITY_STORMWIND", to = "STORMWIND_PORTAL_ROOM_LOWER", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK", faction = "Alliance" } },
     { from = "PORTAL_PEAK_OF_SERENITY_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, requirements = { class = "MONK", faction = "Horde" } },
@@ -196,17 +196,17 @@ addon.Edges = {
     { from = "PORTAL_DAZARALOR_FOUNDERS_POINT", to = "RAZORWIND_SHORES", method = "portal", cost = 0, oneway = true, portal = { map = 2352 }, requirements = { faction = "Horde" } }, -- labelled "Founder's Point" in game (named so); lands with Orgrimmar's
     { from = "DAZARALOR_PORTAL_ROOM", to = "NAZJATAR_HORDE", method = "portal", cost = 0, portal = { map = 1355 }, requirements = { quest = 55053, faction = "Horde" } }, -- name as Boralus's (not hovered here)
     { from = "DAZARALOR_PORTAL_ROOM", to = "SILITHUS", method = "portal", cost = 0, portal = { map = 81 }, requirements = { quest = 46931, faction = "Horde" } }, -- name as Boralus's (not hovered here)
-    { from = "PORTAL_ORGRIMMAR_VASHJIR", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { quest = 25924, faction = "Horde" } }, -- name as Stormwind's (not hovered here)
-    { from = "PORTAL_ORGRIMMAR_TWILIGHT_HIGHLANDS", to = "DRAGONMAW_PORT", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_VASHJIR", to = "PORTAL_TENEBROUS_CAVERN", method = "portal", cost = 0, oneway = true, portal = { map = 203 }, requirements = { minLevel = 30, quest = 25924, faction = "Horde" } }, -- name as Stormwind's (not hovered here)
+    { from = "PORTAL_ORGRIMMAR_TWILIGHT_HIGHLANDS", to = "DRAGONMAW_PORT", method = "portal", cost = 0, oneway = true, portal = { map = 1275 }, requirements = { minLevel = 30, faction = "Horde" } },
     -- The way back only shows after Muddied Waters (seen 2026-10-23: missing on a character without it; the way out is open)
     { from = "DRAGONMAW_PORT", to = "WESTERN_EARTHSHRINE_OG", method = "portal", cost = 0, oneway = true, requirements = { quest = 26784, faction = "Horde" } },
-    { from = "PORTAL_ORGRIMMAR_TOL_BARAD", to = "TOL_BARAD_HORDE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_TOL_BARAD", to = "TOL_BARAD_HORDE", method = "portal", cost = 0, oneway = true, portal = { map = 244 }, requirements = { minLevel = 30, faction = "Horde" } },
     { from = "PORTAL_TOL_BARAD_ORGRIMMAR", to = "WESTERN_EARTHSHRINE_OG", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
-    { from = "PORTAL_ORGRIMMAR_DEEPHOLM", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, oneway = true, portal = { map = 207 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_DEEPHOLM", to = "PORTAL_DEEPHOLM_ORGRIMMAR", method = "portal", cost = 0, oneway = true, portal = { map = 207 }, requirements = { minLevel = 30, faction = "Horde" } },
     -- Deepholm's portal home lands in the portal room's upper floor, not back at the Earthshrine (seen 2026-10-19)
     { from = "PORTAL_DEEPHOLM_ORGRIMMAR", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
-    { from = "PORTAL_ORGRIMMAR_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { faction = "Horde" } },
-    { from = "PORTAL_ORGRIMMAR_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, oneway = true, portal = { map = 198 }, requirements = { faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_ULDUM", to = "ULDUM", method = "portal", cost = 0, oneway = true, portal = { map = 1527 }, requirements = { minLevel = 30, faction = "Horde" } },
+    { from = "PORTAL_ORGRIMMAR_HYJAL", to = "MOUNT_HYJAL", method = "portal", cost = 0, oneway = true, portal = { map = 198 }, requirements = { minLevel = 30, faction = "Horde" } },
     -- Hyjal's portal to Orgrimmar lands in the portal room's upper floor too, like Deepholm's (seen 2026-10-23)
     { from = "MOUNT_HYJAL", to = "ORGRIMMAR_PORTAL_ROOM_UPPER", method = "portal", cost = 0, oneway = true, portal = { map = 85 }, requirements = { faction = "Horde" } },
     { from = "TAXI_296", to = "TAXI_294", method = "ship", cost = 45 },
@@ -301,6 +301,8 @@ addon.Edges = {
     { from = "DARKSHORE_ZIDORMI_PAST", to = "DARKSHORE_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "darkshore" } },
     { from = "BLASTED_LANDS_ZIDORMI_PAST", to = "BLASTED_LANDS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "blasted_lands" } },
     { from = "SILITHUS_ZIDORMI_PAST", to = "SILITHUS_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "silithus" } },
+    { from = "PEAK_OF_SERENITY", to = "PEAK_OF_SERENITY_PRESENT", method = "walk", oneway = true },   -- in the past you still leave the peak as usual: only its portals differ
+    { from = "PEAK_OF_SERENITY_ZIDORMI_PRESENT", to = "PEAK_OF_SERENITY_ZIDORMI_PAST", method = "phaseswitch", cost = 10, oneway = true, requirements = { class = "MONK" } },   -- only monks get her option (Containers.lua: the pocket)
     { from = "DUSTWALLOW_ZIDORMI_PAST", to = "DUSTWALLOW_ZIDORMI_PRESENT", method = "phaseswitch", cost = 10, overridesPhase = { "dustwallow" } },
     -- Arathi has three times (before the war, the Fourth War, the present), and Zidormi only switches to or from the
     -- Fourth War: before the war and the present each offer only the war, the war offers both (seen 2026-10-19). The

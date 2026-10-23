@@ -58,6 +58,11 @@ addon.Containers["ek_overworld.map2070_art1136"] = { phaseGroup = "tirisfal", ph
 -- Forever. Flying works in the city below; the ruins are left out of the fly mesh so no flight skips the elevators.
 addon.Containers["ek_overworld.map90"] = { phaseGroup = "tirisfal", phaseSide = 19, phaseMap = 18, pastOnly = true }
 addon.Containers["ek_overworld.map90.ruins"] = { fly = false }
+-- The Peak of Serenity's past (the only side with its city portals) isn't a phase group: map art and quests don't
+-- change with it, only an aura while you stand there, so the side can't be read from elsewhere. A pocket only Zidormi
+-- leads into instead (or Zen Pilgrimage before The Dawning Light, which always lands in the past): a route talks to
+-- her, a wasted step if you're already in the past. A walk out to the present peak lets you leave as usual.
+addon.Containers["pandaria.map379.peak_past"] = { fly = false }
 -- Uldum is Silithus's setting (switching either switches both): its sides are Silithus's, told by Silithus's map 81
 addon.Containers["kalimdor_overworld.map1527_art260"] = { phaseGroup = "silithus", phaseSide = 962, phaseMap = 81 }
 addon.Containers["kalimdor_overworld.map249_art289"] = { phaseGroup = "silithus", phaseSide = 86, phaseMap = 81 }
