@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.5 (Retail)
+
+### Added
+- Delve-O-Bot 7001 to the Labyrinth of Kindo'jan, once its upgrade is applied.
+- Monks: the class hall's portal to the Peak of Serenity, and the Peak's portals to Stormwind and Orgrimmar (in the Peak's past, with Zidormi).
+
+### Fixed
+- An error when a waypoint was set before the world map had been opened since logging in, for example by WaypointUI or TomTom placing waypoints at login.
+- Zen Pilgrimage lands on the Peak of Serenity in Kun-Lai Summit until you've done The Dawning Light, and in the class hall after.
+- The Cataclysm portals in Stormwind and Orgrimmar are only used from level 30.
+
 ## 2.0.4 (Retail)
 
 ### Fixed
