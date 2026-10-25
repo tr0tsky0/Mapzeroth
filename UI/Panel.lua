@@ -1363,7 +1363,7 @@ end
 -- and the open ones stay open (priced again if they show times, since the waypoint is part of that search). On the list,
 -- it shows at once; on a route or a search, the list is up to date when it is gone back to.
 function Panel:RefreshTop()
-    if not state.entries then return end
+    if not state.ctx then return end             -- never filled yet (the map not opened): Refresh builds it all then
     local key, waypoint, tomtom = topKey()
     if key == state.topKey then return end
     state.topKey, state.waypoint = key, waypoint
