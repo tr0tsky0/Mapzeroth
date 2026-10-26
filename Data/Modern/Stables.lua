@@ -9,4 +9,27 @@ if addon.RULESET ~= "modern" then return end   -- one addon for both games: this
 
 addon.Nodes = addon.Nodes or {}
 addon.Nodes.Stables = {
+    { id = "STABLE_10055", container = "ek_overworld.map18", mapID = 18, x = 0.6180, y = 0.5200, kind = "stable", town = "brill", faction = "Horde", npcs = { { id = 10055 } } }, -- Morganus
+    { id = "STABLE_10057", container = "ek_overworld.map25", mapID = 25, x = 0.5680, y = 0.4680, kind = "stable", town = "tarren_mill", faction = "Horde", npcs = { { id = 10057 } } }, -- Theodore Mont Claire
+    { id = "STABLE_47934", container = "ek_overworld.map32", mapID = 32, x = 0.4050, y = 0.6850, kind = "stable", town = "iron_summit", npcs = { { id = 47934 } } }, -- Karn Cragcare
+    { id = "STABLE_9982", container = "ek_overworld.map49", mapID = 49, x = 0.2620, y = 0.4300, kind = "stable", town = "lakeshire", npcs = { { id = 9982 } } }, -- Penny
+    { id = "STABLE_11069", container = "ek_overworld.map84", mapID = 84, x = 0.6700, y = 0.3750, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 11069 } } }, -- Jenova Stoneshield
+    { id = "STABLE_44252", container = "ek_overworld.map84", mapID = 84, x = 0.7760, y = 0.6720, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 44252 } } }, -- Karin
+    { id = "STABLE_133408", container = "ek_overworld.map84", mapID = 84, x = 0.5350, y = 0.1250, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 133408 } } }, -- Ashlee Umberleaf
+    { id = "STABLE_133108", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3800, y = 0.8660, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 133108 } } }, -- Hern Cragfeather
+    { id = "STABLE_9984", container = "ek_overworld.map87", mapID = 87, x = 0.6920, y = 0.8400, kind = "stable", city = "ironforge", faction = "Alliance", npcs = { { id = 9984 } } }, -- Ulbrek Firehand
+    { id = "STABLE_16665", container = "quelthalas.map95", mapID = 95, x = 0.4840, y = 0.3130, kind = "stable", town = "tranquillien_95", faction = "Horde", npcs = { { id = 16665 } } }, -- Paniar
+    { id = "STABLE_96507_627", container = "broken_isles.map627", mapID = 627, x = 0.5880, y = 0.3820, kind = "stable", city = "dalaran_broken_isles", faction = "Alliance", npcs = { { id = 96507 } } }, -- Tassia Whisperglen
+    { id = "STABLE_96507_830", container = "argus_krokuun.map830", mapID = 830, x = 0.6220, y = 0.9080, kind = "stable", faction = "Alliance", npcs = { { id = 96507 } } }, -- Tassia Whisperglen
+    { id = "STABLE_133024", container = "kul_tiras.map895", mapID = 895, x = 0.7980, y = 0.3720, kind = "stable", npcs = { { id = 133024 } } }, -- Stablemaster Diana
+    { id = "STABLE_122696", container = "zandalar.map1165", mapID = 1165, x = 0.4580, y = 0.3620, kind = "stable", city = "dazaralor", faction = "Horde", npcs = { { id = 122696 } } }, -- Beast Handler Kalatak
+    { id = "STABLE_168082", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4900, y = 0.5300, kind = "stable", town = "refugee_camp", npcs = { { id = 168082 } } }, -- Tinybell
+    { id = "STABLE_186183", container = "dragon_isles.map2023", mapID = 2023, x = 0.8380, y = 0.2580, kind = "stable", town = "timberstep_outpost", npcs = { { id = 186183 } } }, -- Beastmaster Nuqut
+    { id = "STABLE_207760", container = "emerald_dream.map2200", mapID = 2200, x = 0.5020, y = 0.6180, kind = "stable", town = "central_encampment", npcs = { { id = 207760 } } }, -- Alassin
+    { id = "STABLE_219376", container = "khaz_algar.map2339", mapID = 2339, x = 0.5520, y = 0.6720, kind = "stable", city = "dornogal", npcs = { { id = 219376 } } }, -- Kargand
+    { id = "STABLE_243161", container = "ek_overworld.map2393", mapID = 2393, x = 0.4620, y = 0.5550, kind = "stable", city = "silvermoon", npcs = { { id = 243161 } } }, -- Seraphina Bloodheart
+    { id = "STABLE_251302", container = "ek_overworld.map2393", mapID = 2393, x = 0.2740, y = 0.7740, kind = "stable", city = "silvermoon", npcs = { { id = 251302 } } }, -- Shalenn
+    { id = "STABLE_255075", container = "ek_overworld.map2437", mapID = 2437, x = 0.4520, y = 0.6560, kind = "stable", town = "amani_zar_village", npcs = { { id = 255075 } } }, -- Beastminder Tak'za
+    { id = "STABLE_255187", container = "ek_overworld.map2437", mapID = 2437, x = 0.4720, y = 0.2600, kind = "stable", town = "camp_stonewash", npcs = { { id = 255187 } } }, -- Uki
+    { id = "STABLE_271157", container = "ek_overworld.map2512", mapID = 2512, x = 0.5760, y = 0.4750, kind = "stable", town = "tokka_s_landing", npcs = { { id = 271157 } } }, -- Beastminder Tak'za
 }
