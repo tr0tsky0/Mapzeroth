@@ -2,8 +2,9 @@
 // tools/gen_modern_pois.py and tools/gen_modern_stables.py read (tools/modern_source/*.tsv). Run it in the browser
 // console on a retail NPC list page, for example (stable masters):
 //
-//   https://www.wowhead.com/npcs?filter=27;1;0               (the Stable Master flag)
-//   https://www.wowhead.com/npcs/name-extended:stable-master  (NPCs titled Stable Master and the like)
+//   https://www.wowhead.com/npcs/name-extended:stable   (named or titled anything with "stable": the generator keeps
+//                                                        only stable masters)
+//   https://www.wowhead.com/npcs?filter=27;1;0          (the Stable Master flag: only a handful on retail)
 //
 // The list is capped at 1000 rows, so a big role takes several pages. Each run adds to what earlier runs found
 // (kept in localStorage under KEY, one row per NPC per map), so run it on each page in turn, then:
