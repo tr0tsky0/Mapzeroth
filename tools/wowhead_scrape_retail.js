@@ -23,6 +23,7 @@
 (async function () {
     const KEY = 'mzr_scrape';
     const source = [...document.scripts].map(s => s.textContent).find(t => t && t.includes('new Listview'));
+    if (!source) throw new Error('no Listview on this page: run it on an NPC list page (see the top of the script)');
     const start = source.indexOf('"data":') + 7;
     let depth = 0, end = start;
     for (let k = start; k < source.length; k++) {
@@ -31,6 +32,7 @@
         else if (c === ']') { depth--; if (depth === 0) { end = k + 1; break; } }
     }
     const npcs = JSON.parse(source.slice(start, end));
+    console.log(`mzr: ${npcs.length} NPCs on this page, about ${Math.ceil(npcs.length / 4 / 60)} min to fetch`);
 
     // The middle of the biggest group of spawns (single linkage, 2 map units).
     function middle(coords) {
@@ -59,7 +61,8 @@
         if (line) { const f = line.split('\t'); rows.set(f[0] + ':' + f[3] + ':' + f[4] + ':' + f[5], line); }
     }
     const before = rows.size;
-    for (const n of npcs) {
+    for (const [i, n] of npcs.entries()) {
+        if (i % 50 === 0) console.log(`mzr: ${i}/${npcs.length}`);
         const html = await (await fetch('/npc=' + n.id)).text();
         const m = html.match(/g_mapperData\s*=\s*(\{[\s\S]*?\});/);
         const data = m ? JSON.parse(m[1]) : {};
@@ -78,5 +81,6 @@
         await new Promise(r => setTimeout(r, 250));
     }
     localStorage.setItem(KEY, [...rows.values()].join('\n'));
+    console.log(`mzr: done, ${rows.size} rows kept (copy(localStorage.getItem('${KEY}')) to copy them)`);
     return { npcs: npcs.length, newRows: rows.size - before, rows: rows.size };
 })();
