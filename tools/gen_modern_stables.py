@@ -3,7 +3,7 @@
 
 Source: tools/modern_source/stablemasters.tsv, scraped from retail Wowhead with tools/wowhead_scrape_retail.js on
 https://www.wowhead.com/npcs?filter=27;1;0 (Wowhead's Stable Master flag: only 19 on retail) and from a list of NPC ids
-(the script's MZR_IDS: a list page can't find NPCs by title). The same columns as innkeepers.tsv (tools/gen_modern_pois.py), one row per NPC per map:
+(the script's MZR_IDS, from tools/stable_master_ids.py: a list page can't find NPCs by title). The same columns as innkeepers.tsv (tools/gen_modern_pois.py), one row per NPC per map:
 
     npcID  name  tag  zoneAreaID  uiMapID  floor  x,y (0-100: the middle of the biggest group of its spawns)  firstSeenPatch
     react ("a,h": 1 friendly to Alliance / Horde)
