@@ -1,10 +1,14 @@
 // wowhead_scrape_retail.js -- pulls NPC locations for one role out of retail Wowhead, in the columns
 // tools/gen_modern_pois.py and tools/gen_modern_stables.py read (tools/modern_source/*.tsv). Run it in the browser
-// console on a retail NPC list page, for example (stable masters):
+// console on a retail NPC list page, for example https://www.wowhead.com/npcs?filter=23;1;0 (the Innkeeper flag).
 //
-//   https://www.wowhead.com/npcs/name-extended:stable   (named or titled anything with "stable": the generator keeps
-//                                                        only stable masters)
-//   https://www.wowhead.com/npcs?filter=27;1;0          (the Stable Master flag: only a handful on retail)
+// Or, where no list page has them all (stable masters: the Stable Master flag, filter=27;1;0, has 19 on retail, and
+// name-extended: searches names, not titles), on any www.wowhead.com page with the NPC ids set first:
+//
+//   window.MZR_IDS = [11069, 44252, ...]; window.MZR_TAG = 'Stable Master';
+//
+// Each NPC's name and title then come from its own page (MZR_TAG when the page gives no title), and its reactions
+// aren't known (the generator takes the faction of the town or city it stands in).
 //
 // The list is capped at 1000 rows, so a big role takes several pages. Each run adds to what earlier runs found
 // (kept in localStorage under KEY, one row per NPC per map), so run it on each page in turn, then:
@@ -23,16 +27,21 @@
 
 (async function () {
     const KEY = 'mzr_scrape';
-    const source = [...document.scripts].map(s => s.textContent).find(t => t && t.includes('new Listview'));
-    if (!source) throw new Error('no Listview on this page: run it on an NPC list page (see the top of the script)');
-    const start = source.indexOf('"data":') + 7;
-    let depth = 0, end = start;
-    for (let k = start; k < source.length; k++) {
-        const c = source[k];
-        if (c === '[') depth++;
-        else if (c === ']') { depth--; if (depth === 0) { end = k + 1; break; } }
+    let npcs;
+    if (window.MZR_IDS) {
+        npcs = [...new Set(window.MZR_IDS.map(Number))].map(id => ({ id, fromPage: true }));
+    } else {
+        const source = [...document.scripts].map(s => s.textContent).find(t => t && t.includes('new Listview'));
+        if (!source) throw new Error('no Listview on this page: run it on an NPC list page, or set MZR_IDS (see the top of the script)');
+        const start = source.indexOf('"data":') + 7;
+        let depth = 0, end = start;
+        for (let k = start; k < source.length; k++) {
+            const c = source[k];
+            if (c === '[') depth++;
+            else if (c === ']') { depth--; if (depth === 0) { end = k + 1; break; } }
+        }
+        npcs = JSON.parse(source.slice(start, end));
     }
-    const npcs = JSON.parse(source.slice(start, end));
     console.log(`mzr: ${npcs.length} NPCs on this page, about ${Math.ceil(npcs.length / 4 / 60)} min to fetch`);
 
     // The middle of the biggest group of spawns (single linkage, 2 map units).
@@ -67,6 +76,15 @@
         const html = await (await fetch('/npc=' + n.id)).text();
         const m = html.match(/g_mapperData\s*=\s*(\{[\s\S]*?\});/);
         const data = m ? JSON.parse(m[1]) : {};
+        if (n.fromPage) {
+            // "Name <Title> - NPC - World of Warcraft"
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const title = (doc.querySelector('h1.heading-size-1') || {}).textContent || doc.title.split(' - ')[0] || '';
+            const t = title.trim().match(/^(.*?)\s*(?:<([^>]*)>)?$/);
+            n.name = t ? t[1] : title.trim();
+            n.tag = (t && t[2]) || (doc.title.match(/<([^>]*)>/) || [])[1] || window.MZR_TAG || '';
+            if (!Object.keys(data).length) console.log(`mzr: ${n.id} ${n.name}: no map data`);
+        }
         const react = (n.react || []).map(v => v == null ? '' : v).join(',');
         for (const zone in data) {
             // zone -> floor -> { coords, uiMapId }, or zone -> [ { coords, uiMapId } ]

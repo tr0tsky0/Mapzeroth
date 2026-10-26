@@ -2,9 +2,8 @@
 (Sections.lua), the same shape as Forever's stable nodes (Data/Forever/Pois.lua: kind "stable").
 
 Source: tools/modern_source/stablemasters.tsv, scraped from retail Wowhead with tools/wowhead_scrape_retail.js on
-https://www.wowhead.com/npcs/name-extended:stable (NPCs named or titled anything with "stable" in it: Wowhead's Stable
-Master flag, filter=27;1;0, has only a handful on retail), merged with that flag's list. The same columns as
-innkeepers.tsv (tools/gen_modern_pois.py), one row per NPC per map:
+https://www.wowhead.com/npcs?filter=27;1;0 (Wowhead's Stable Master flag: only 19 on retail) and from a list of NPC ids
+(the script's MZR_IDS: a list page can't find NPCs by title). The same columns as innkeepers.tsv (tools/gen_modern_pois.py), one row per NPC per map:
 
     npcID  name  tag  zoneAreaID  uiMapID  floor  x,y (0-100: the middle of the biggest group of its spawns)  firstSeenPatch
     react ("a,h": 1 friendly to Alliance / Horde)
@@ -17,7 +16,8 @@ Steps (the inns' rules, tools/gen_modern_pois.py, reused where they apply):
      nodes are in; on a phase-split map with no unsplit nodes, STABLE_PHASE says which side.
   3. A stable on a city's map belongs to that city (STABLE_CITIES by hand); anywhere else to the town (Pois.lua) whose
      inn is within TOWN_RADIUS, else to no town (it is named for its zone: "Durotar Stable Master").
-  4. Faction: whoever its stable masters are friendly to, left off when that is both.
+  4. Faction: whoever its stable masters are friendly to, left off when that is both; when none has reactions on
+     record (scraped by id), the faction of its town or city.
 
     python tools/gen_modern_stables.py
 """
@@ -62,6 +62,18 @@ def load_towns():
                                  body, re.M)}
 
 
+def load_factions():
+    """("city" | "town", key) -> its faction, from Settlements.lua's cities and Pois.lua's towns."""
+    out = {}
+    for kind, name, start, stop in (("city", "Settlements.lua", "addon.Cities", "addon.Towns"),
+                                    ("town", "Pois.lua", "addon.Towns", "addon.Nodes.Inns")):
+        text = (inns.DATA / name).read_text(encoding="utf-8")
+        body = text[text.index(start):text.index(stop)]
+        for m in re.finditer(r'^\s*(\w+)\s*=\s*\{[^\n]*faction\s*=\s*"(\w+)"', body, re.M):
+            out[(kind, m.group(1))] = m.group(2)
+    return out
+
+
 def main():
     path = SOURCE / "stablemasters.tsv"
     if not path.exists():
@@ -71,6 +83,7 @@ def main():
     city_maps = inns.load_city_maps()
     area_maps = inns.load_area_maps()
     towns = load_towns()
+    factions = load_factions()
     floors = getattr(manual, "INN_FLOORS", {})
     drop = set(getattr(manual, "STABLE_DROP", ()))
     phase = getattr(manual, "STABLE_PHASE", {})
@@ -163,7 +176,8 @@ def main():
             else:
                 report["no town near: named for its zone (check)"].append(
                     f"{lead['id']} {lead['name']} map {map_id} at {stable['pos'][0]:.1f},{stable['pos'][1]:.1f}")
-        faction = inns.faction_of([m["react"] for m in stable["members"]])
+        reacts = [m["react"] for m in stable["members"] if any(m["react"])]
+        faction = inns.faction_of(reacts) if reacts else (factions.get(owner, "Both") if owner else "Both")
         suffix = "" if npc_maps[lead["id"]] == 1 else f"_{map_id}"
         npc_list = ", ".join(f"{{ id = {m['id']} }}" for m in stable["members"])
         out.append(
