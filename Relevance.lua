@@ -16,6 +16,9 @@ function Relevance:IsRelevant(node, ctx)
     elseif node.kind == "convergence" then
         -- Horde Skyborne only: the ones with Skysight.
         return ctx.faction == "Horde" and addon.SkysightSpell ~= nil and ctx.knowsSpell(addon.SkysightSpell)
+    elseif node.kind == "stable" then
+        -- Hunters, at a stable master of their faction (or one who serves both: no `faction`).
+        return ctx.class == "HUNTER" and (not node.faction or not ctx.faction or node.faction == ctx.faction)
     end
     return true
 end

@@ -33,3 +33,10 @@ check(nearest and nearest.goal == "TAXI_6", "the nearer of two goals wins: " .. 
 local alone = route(ali, "TAXI_2", "TAXI_6")
 check(alone and alone.goal == "TAXI_6" and alone.cost == nearest.cost, "a single goal still works and costs the same")
 check(route(ali, "TAXI_2", { "NOT_A_NODE" }) == nil, "no reachable goal gives nil")
+
+-- Stable masters are for hunters, at their faction's (or one serving both: no faction).
+local stable = { kind = "stable" }
+check(addon.Relevance:IsRelevant(stable, makeCtx({ class = "HUNTER" })), "a hunter sees stable masters")
+check(not addon.Relevance:IsRelevant(stable, makeCtx({ class = "MAGE" })), "a mage doesn't")
+check(not addon.Relevance:IsRelevant({ kind = "stable", faction = "Horde" }, makeCtx({ class = "HUNTER", faction = "Alliance" })),
+    "nor does a hunter, at the other faction's")

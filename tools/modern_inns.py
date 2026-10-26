@@ -4,6 +4,8 @@
 NODE_KINDS  { node id: kind }: a node in Data/Modern that is itself an inn, standing for the innkeepers there.
 INN_FLOORS  { (zone area id, floor): map id, city key, or None }: innkeepers Wowhead gives as a zone and floor.
 CITY_ZONE_MAPS, INN_DROP, INN_PHASE, INN_TOWNS, INN_CITIES, INN_PLACES, CATACLYSM_ZONES: see each one's comment.
+STABLE_DROP, STABLE_PHASE, STABLE_CITIES: the same for stable masters (tools/gen_modern_stables.py), which also use
+INN_FLOORS and CITY_ZONE_MAPS.
 """
 
 NODE_KINDS = {
@@ -106,3 +108,9 @@ INN_PLACES = {
 }
 # The zones Cataclysm added to the old world (uiMap ids): a town in one is Cataclysm's, whatever its name.
 CATACLYSM_ZONES = [174, 194, 198, 201, 203, 204, 205, 207, 217, 241, 244, 245, 249, 1527]
+
+# Stable masters (tools/gen_modern_stables.py), as the inns' tables above: NPC ids (or (NPC id, map id)) to leave out,
+# which phase side a stable on a phase-split map is on, and stables that are a city's though on another map.
+STABLE_DROP = []
+STABLE_PHASE = {}
+STABLE_CITIES = {}

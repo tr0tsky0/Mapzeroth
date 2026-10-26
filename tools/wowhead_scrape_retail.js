@@ -1,0 +1,82 @@
+// wowhead_scrape_retail.js -- pulls NPC locations for one role out of retail Wowhead, in the columns
+// tools/gen_modern_pois.py and tools/gen_modern_stables.py read (tools/modern_source/*.tsv). Run it in the browser
+// console on a retail NPC list page, for example (stable masters):
+//
+//   https://www.wowhead.com/npcs?filter=27;1;0               (the Stable Master flag)
+//   https://www.wowhead.com/npcs/name-extended:stable-master  (NPCs titled Stable Master and the like)
+//
+// The list is capped at 1000 rows, so a big role takes several pages. Each run adds to what earlier runs found
+// (kept in localStorage under KEY, one row per NPC per map), so run it on each page in turn, then:
+//
+//   copy(localStorage.getItem('mzr_scrape'))    -> paste into tools/modern_source/stablemasters.tsv
+//   localStorage.removeItem('mzr_scrape')       -> start over
+//
+// It reads the NPC list out of the page, then fetches each NPC's own page (one every 250 ms) and reads
+// `g_mapperData`: per zone and floor, the uiMap and its spawns (0-100). Columns, tab-separated:
+//
+//   npcID  name  tag  zoneAreaID  uiMapID  floor  x,y  firstSeenPatch  react
+//
+// x,y is the middle of the biggest group of spawns on that map (spawns within 2 of one another); a floor Wowhead
+// gives no uiMap for (a multi-floor city) has the uiMap column empty. firstSeenPatch is left empty (the stables
+// don't use it); react is the list's "a,h" (1 friendly to Alliance / Horde).
+
+(async function () {
+    const KEY = 'mzr_scrape';
+    const source = [...document.scripts].map(s => s.textContent).find(t => t && t.includes('new Listview'));
+    const start = source.indexOf('"data":') + 7;
+    let depth = 0, end = start;
+    for (let k = start; k < source.length; k++) {
+        const c = source[k];
+        if (c === '[') depth++;
+        else if (c === ']') { depth--; if (depth === 0) { end = k + 1; break; } }
+    }
+    const npcs = JSON.parse(source.slice(start, end));
+
+    // The middle of the biggest group of spawns (single linkage, 2 map units).
+    function middle(coords) {
+        const left = coords.slice(), groups = [];
+        while (left.length) {
+            const group = [left.pop()];
+            let grew = true;
+            while (grew) {
+                grew = false;
+                for (let i = left.length - 1; i >= 0; i--) {
+                    if (group.some(g => Math.hypot(g[0] - left[i][0], g[1] - left[i][1]) <= 2)) {
+                        group.push(left.splice(i, 1)[0]);
+                        grew = true;
+                    }
+                }
+            }
+            groups.push(group);
+        }
+        const best = groups.sort((a, b) => b.length - a.length)[0];
+        const x = best.reduce((s, c) => s + c[0], 0) / best.length, y = best.reduce((s, c) => s + c[1], 0) / best.length;
+        return x.toFixed(1) + ',' + y.toFixed(1);
+    }
+
+    const rows = new Map();
+    for (const line of (localStorage.getItem(KEY) || '').split('\n')) {
+        if (line) { const f = line.split('\t'); rows.set(f[0] + ':' + f[3] + ':' + f[4] + ':' + f[5], line); }
+    }
+    const before = rows.size;
+    for (const n of npcs) {
+        const html = await (await fetch('/npc=' + n.id)).text();
+        const m = html.match(/g_mapperData\s*=\s*(\{[\s\S]*?\});/);
+        const data = m ? JSON.parse(m[1]) : {};
+        const react = (n.react || []).map(v => v == null ? '' : v).join(',');
+        for (const zone in data) {
+            // zone -> floor -> { coords, uiMapId }, or zone -> [ { coords, uiMapId } ]
+            const floors = Array.isArray(data[zone]) ? Object.assign({}, data[zone]) : data[zone];
+            for (const floor in floors) {
+                const e = floors[floor];
+                if (!e || !e.coords || !e.coords.length) continue;
+                const uiMap = e.uiMapId || '';
+                const fields = [n.id, n.name, n.tag || '', zone, uiMap, uiMap ? '' : floor, middle(e.coords), '', react];
+                rows.set(n.id + ':' + zone + ':' + uiMap + ':' + (uiMap ? '' : floor), fields.join('\t'));
+            }
+        }
+        await new Promise(r => setTimeout(r, 250));
+    }
+    localStorage.setItem(KEY, [...rows.values()].join('\n'));
+    return { npcs: npcs.length, newRows: rows.size - before, rows: rows.size };
+})();
