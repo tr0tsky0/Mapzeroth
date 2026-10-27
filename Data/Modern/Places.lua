@@ -27,4 +27,8 @@ addon.SEASONAL_DUNGEONS = {
 -- A dungeon or raid node's journal instance is a field on the node (`journal`, and `faction` for an entrance only one
 -- faction has), set in Nodes_*.lua.
 
+-- Hunters get "Nearest Stable Master" under Personally Relevant (Sections.lua), to the stable masters in
+-- Stables.lua. Turned off per character on the settings page's Picker page.
+addon.STABLE_PICK = true
+
 -- The cities are in Settlements.lua (Forever's addon.Cities shape).

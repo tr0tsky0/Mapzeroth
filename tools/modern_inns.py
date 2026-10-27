@@ -4,6 +4,8 @@
 NODE_KINDS  { node id: kind }: a node in Data/Modern that is itself an inn, standing for the innkeepers there.
 INN_FLOORS  { (zone area id, floor): map id, city key, or None }: innkeepers Wowhead gives as a zone and floor.
 CITY_ZONE_MAPS, INN_DROP, INN_PHASE, INN_TOWNS, INN_CITIES, INN_PLACES, CATACLYSM_ZONES: see each one's comment.
+STABLE_DROP, STABLE_PHASE, STABLE_CITIES: the same for stable masters (tools/gen_modern_stables.py), which also use
+INN_FLOORS and CITY_ZONE_MAPS.
 """
 
 NODE_KINDS = {
@@ -106,3 +108,28 @@ INN_PLACES = {
 }
 # The zones Cataclysm added to the old world (uiMap ids): a town in one is Cataclysm's, whatever its name.
 CATACLYSM_ZONES = [174, 194, 198, 201, 203, 204, 205, 207, 217, 241, 244, 245, 249, 1527]
+
+# Stable masters (tools/gen_modern_stables.py), as the inns' tables above: NPC ids (or (NPC id, map id)) to leave out,
+# which phase side a stable on a phase-split map is on, and stables that are a city's though on another map.
+STABLE_DROP = [
+    9983,                   # Kelsuwa <Former Stable Master>: Camp Taurajo, burnt
+    174599,                 # Stable Master Hail <House Briarbane>: hostile to both
+    # Places the Modern data has no nodes for (as INN_FLOORS): garrisons, Thunder Totem, Exile's Reach, Blackrock
+    # Depths, a Bastion scenario.
+    79860, 85963, 86052,    # Zagara (Frostwall), Orville Manfred and Ujia (the garrisons' stables)
+    97854,                  # Liza Galestride (Thunder Totem)
+    161666, 167215,         # Austin Huxworth, Mithdran Dawntracker (Exile's Reach)
+    144119,                 # Kasea Angerforge (Blackrock Depths)
+    (174580, 0),            # Beastkeeper Krista's second spawn, given only as a zone (her Bastion one stays)
+    136233,                 # Klause Fairwind <Former Stable Master> (his Tiragarde self, 136142, stays)
+    27236, 28555, 28683,    # Stable Masters Mercer and Kitrik: a Dragonblight quest NPC, the Scarlet Enclave's
+    86808, 87006,           # Keegan Firebeard, Tormak the Scarred: the garrison Stables' quest givers out in Draenor
+    # Spawns Wowhead gives only as a zone (garrisons, class halls, covenant sanctums, the Wandering Isle and Gilneas
+    # starts, scenarios): the other spawns of each, on a map, stay.
+    (68986, 0), (68993, 0), (70184, 0), (73632, 0), (77381, 0), (79816, 0), (86973, 0), (86979, 0), (113337, 0),
+    (151106, 0), (159000, 0), (161100, 0), (177489, 0), (180291, 0), (194778, 0), (222432, 0), (223027, 0),
+]
+STABLE_PHASE = {
+    10085: "kalimdor_overworld.map62_art67",       # Jaelysia (Lor'danel): Darkshore before the burning
+}
+STABLE_CITIES = {}

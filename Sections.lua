@@ -8,6 +8,8 @@ local addonName, addon = ...
 --   Your Nearest Trainers  their class trainer (and pet or demon trainer), a trainer for each profession they have that
 --                        still teaches them something, a weapon master that teaches a weapon they can learn and
 --                        don't have
+--                        (on a dataset without trainers (Modern) the same section is "Personally Relevant": the
+--                        nearest stable master, for a hunter, when the dataset sets addon.STABLE_PICK)
 --   Cities               their faction's (and neutral) cities
 --   Towns                the same for towns
 --   Dungeons             those at or below their level by the client's group finder (its suggested range, read live;
@@ -16,7 +18,7 @@ local addonName, addon = ...
 --
 -- Which page a dataset gets is declared by its addon.PICKER_LAYOUT: "settlements" (Forever, Data/Forever/Game.lua)
 -- is the page above. Modern's is "expansions" (Data/Modern/Places.lua): it has too many places for that, so the page
--- shows the current expansion and what is used every day:
+-- shows the current expansion and what is used every day (after Personally Relevant, above):
 --   Cities               the current expansion's, and the hub cities of any expansion
 --   Towns                the current expansion's
 --   Dungeons             the current expansion's, and the older ones in this season's Mythic+ pool
@@ -67,6 +69,9 @@ function Sections:PickChoices(class, faction, hasTomTom)
     end
     if hasTomTom then choices[#choices + 1] = { key = "tomtom", label = L["OPT_PICK_TOMTOM"] } end
     choices[#choices + 1] = { key = "paste", label = L["PICK_PASTE"] }
+    if addon.STABLE_PICK and class == "HUNTER" then
+        choices[#choices + 1] = { key = "stable", label = L["PICK_STABLE"] }
+    end
     if addon.Professions then                    -- a dataset with trainers (Forever)
         choices[#choices + 1] = { key = "class", label = L["PICK_CLASS"] }
         local pet = PET_CLASSES[class]
@@ -148,7 +153,7 @@ end
 -- place, and no time until they are planned.
 function Sections:Build(entries, ctx, waypoint, tomtomCount)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
-    local leylines, convergences, cities, towns, dungeons, raids = {}, {}, {}, {}, {}, {}
+    local leylines, convergences, stables, cities, towns, dungeons, raids = {}, {}, {}, {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
     for _, entry in ipairs(entries) do
@@ -157,6 +162,9 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
             index[entry.nodeID] = entry
         elseif entry.group == "convergence" and entry.relevant then
             convergences[#convergences + 1] = entry.nodeID
+            index[entry.nodeID] = entry
+        elseif entry.group == "stable" and entry.relevant and addon.STABLE_PICK then
+            stables[#stables + 1] = entry.nodeID
             index[entry.nodeID] = entry
         elseif entry.group == "trainer" and entry.relevant and entry.trainer then
             if not trainers[entry.trainer] then
@@ -203,6 +211,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
             "prof_" .. profession.token)
     end
     if trainers.WEAPON then picks[#picks + 1] = pick(L["PICK_WEAPON"], "trainer", trainers.WEAPON, "weapon") end
+    if #stables > 0 then picks[#picks + 1] = pick(L["PICK_STABLE"], "stable", stables, "stable") end
     -- What the player turned off on the settings page.
     local function shown(list)
         local out = {}
@@ -227,7 +236,8 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
     local function add(id, title, items)
         if #items > 0 then sections[#sections + 1] = { id = id, title = title, items = items } end
     end
-    add("trainers", L["SECTION_TRAINERS"], picks)
+    -- The picks for this character. Empty (no stable masters for a non-hunter, or theirs turned off): no section.
+    add("trainers", L[addon.Professions and "SECTION_TRAINERS" or "SECTION_PERSONAL"], picks)
     local holiday = Sections:HolidayRoutes(ctx)
     if holiday then sections[#sections + 1] = holiday end
     local routes = Sections:Routes()
