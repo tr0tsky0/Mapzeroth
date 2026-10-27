@@ -111,6 +111,18 @@ CATACLYSM_ZONES = [174, 194, 198, 201, 203, 204, 205, 207, 217, 241, 244, 245, 2
 
 # Stable masters (tools/gen_modern_stables.py), as the inns' tables above: NPC ids (or (NPC id, map id)) to leave out,
 # which phase side a stable on a phase-split map is on, and stables that are a city's though on another map.
-STABLE_DROP = []
-STABLE_PHASE = {}
+STABLE_DROP = [
+    9983,                   # Kelsuwa <Former Stable Master>: Camp Taurajo, burnt
+    174599,                 # Stable Master Hail <House Briarbane>: hostile to both
+    # Places the Modern data has no nodes for (as INN_FLOORS): garrisons, Thunder Totem, Exile's Reach, Blackrock
+    # Depths, a Bastion scenario.
+    79860, 85963, 86052,    # Zagara (Frostwall), Orville Manfred and Ujia (the garrisons' stables)
+    97854,                  # Liza Galestride (Thunder Totem)
+    161666, 167215,         # Austin Huxworth, Mithdran Dawntracker (Exile's Reach)
+    144119,                 # Kasea Angerforge (Blackrock Depths)
+    (174580, 0),            # Beastkeeper Krista's second spawn, given only as a zone (her Bastion one stays)
+]
+STABLE_PHASE = {
+    10085: "kalimdor_overworld.map62_art67",       # Jaelysia (Lor'danel): Darkshore before the burning
+}
 STABLE_CITIES = {}
