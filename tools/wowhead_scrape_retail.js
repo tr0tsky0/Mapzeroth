@@ -15,9 +15,13 @@
 // (kept in localStorage under KEY, one row per NPC per map), so run it on each page in turn, then:
 //
 //   copy(localStorage.getItem('mzr_scrape'))    -> paste into tools/modern_source/stablemasters.tsv
-//   localStorage.removeItem('mzr_scrape')       -> start over
+//   localStorage.removeItem('mzr_scrape'); localStorage.removeItem('mzr_scrape_done')   -> start over
 //
-// It reads the NPC list out of the page, then fetches each NPC's own page (one every 250 ms) and reads
+// Wowhead turns a quick run away after a hundred or so pages (403). The script stops at the first refusal, keeping
+// what it has, and a later run on the same page skips the NPCs already fetched: wait a while (several minutes) and
+// run it again until it says done. MZR_DELAY sets the wait between pages (ms, default 1500).
+//
+// It reads the NPC list out of the page, then fetches each NPC's own page (one every MZR_DELAY ms) and reads
 // `g_mapperData`: per zone and floor, the uiMap and its spawns (0-100). Columns, tab-separated:
 //
 //   npcID  name  tag  zoneAreaID  uiMapID  floor  x,y  firstSeenPatch  react
@@ -74,7 +78,7 @@
         npcs = npcLists();
         if (!npcs.length) throw new Error('no NPC list on this page: run it on an NPC list or search page, or set MZR_IDS (see the top of the script)');
     }
-    console.log(`mzr: ${npcs.length} NPCs on this page, about ${Math.ceil(npcs.length / 4 / 60)} min to fetch`);
+    console.log(`mzr: ${npcs.length} NPCs on this page`);
 
     // The middle of the biggest group of spawns (single linkage, 2 map units).
     function middle(coords) {
@@ -103,9 +107,26 @@
         if (line) { const f = line.split('\t'); rows.set(f[0] + ':' + f[3] + ':' + f[4] + ':' + f[5], line); }
     }
     const before = rows.size;
-    for (const [i, n] of npcs.entries()) {
-        if (i % 50 === 0) console.log(`mzr: ${i}/${npcs.length}`);
-        const html = await (await fetch('/npc=' + n.id)).text();
+    // NPCs fetched by an earlier run (with or without map data): not fetched again.
+    const done = new Set((localStorage.getItem(KEY + '_done') || '').split(',').filter(Boolean));
+    for (const key of rows.keys()) done.add(key.split(':')[0]);
+    const todo = npcs.filter(n => !done.has(String(n.id)));
+    const delay = window.MZR_DELAY || 1500;
+    const save = () => {
+        localStorage.setItem(KEY, [...rows.values()].join('\n'));
+        localStorage.setItem(KEY + '_done', [...done].join(','));
+    };
+    console.log(`mzr: ${npcs.length - todo.length} already fetched, ${todo.length} to go, about ${Math.ceil(todo.length * delay / 60000)} min`);
+    for (const [i, n] of todo.entries()) {
+        if (i % 25 === 0) console.log(`mzr: ${i}/${todo.length}`);
+        const response = await fetch('/npc=' + n.id);
+        if (!response.ok) {
+            save();
+            console.log(`mzr: Wowhead refused (${response.status}) at ${i}/${todo.length}: stopped, ${rows.size} rows kept. ` +
+                        'Wait several minutes and run it again on this page: it carries on from here.');
+            return { stopped: response.status, left: todo.length - i, rows: rows.size };
+        }
+        const html = await response.text();
         const m = html.match(/g_mapperData\s*=\s*(\{[\s\S]*?\});/);
         const data = m ? JSON.parse(m[1]) : {};
         if (n.fromPage) {
@@ -129,9 +150,11 @@
                 rows.set(n.id + ':' + zone + ':' + uiMap + ':' + (uiMap ? '' : floor), fields.join('\t'));
             }
         }
-        await new Promise(r => setTimeout(r, 250));
+        done.add(String(n.id));
+        if (i % 10 === 9) save();
+        await new Promise(r => setTimeout(r, delay));
     }
-    localStorage.setItem(KEY, [...rows.values()].join('\n'));
+    save();
     console.log(`mzr: done, ${rows.size} rows kept (copy(localStorage.getItem('${KEY}')) to copy them)`);
     return { npcs: npcs.length, newRows: rows.size - before, rows: rows.size };
 })();
