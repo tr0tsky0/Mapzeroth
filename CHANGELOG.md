@@ -3,7 +3,7 @@
 ## Unreleased (Retail)
 
 ### Fixed
-- Harandar: routes from the rootways and The Den's flight master go out through The Den's cave mouths instead of flying through the rock.
+- Harandar: routes from the rootways and The Den's flight master go out through The Den's cave mouths instead of flying through the rock. The Den's inn is inside the cave too.
 
 ## 2.0.5 (Retail)
 

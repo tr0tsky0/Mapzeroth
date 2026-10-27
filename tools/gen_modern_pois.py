@@ -187,14 +187,15 @@ def main():
             else:
                 report["only a zone and floor (add to INN_FLOORS)"].append(f"{npc} {name} zone {zone} floor {floor}")
                 continue
+            place = places.get(npc)
+            if place and (place[3] if len(place) > 3 else place[0]) == map_id:
+                map_id, x, y = place[:3]        # where they really stand (INN_PLACES), maybe on another map
             if map_id not in containers:
                 report["on a map the Modern data doesn't have"].append(f"{npc} {name} map {map_id}")
                 continue
             if (npc, map_id) in seen:
                 continue
             seen.add((npc, map_id))
-            if npc in places and places[npc][0] == map_id:
-                x, y = places[npc][1:]          # where they really stand (INN_PLACES)
             a, _, h = react.partition(",")
             npcs.append({"id": npc, "name": name, "map": map_id, "pos": (x, y), "patch": int(patch or 0), "react": (a, h)})
 

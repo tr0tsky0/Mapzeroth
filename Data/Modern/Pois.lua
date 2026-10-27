@@ -332,7 +332,7 @@ addon.Towns = {
     the_bulwark = { mapID = 18, x = 0.8300, y = 0.7180, taxi = "TAXI_384", faction = "Horde", expansion = 4 }, -- The Bulwark
     the_celestial_court = { mapID = 554, x = 0.3650, y = 0.4680, area = 6830, faction = "Both", expansion = 5 }, -- The Celestial Court
     the_crossroads = { mapID = 10, x = 0.4950, y = 0.5785, taxi = "TAXI_25", faction = "Horde", expansion = 1 }, -- The Crossroads
-    the_den = { mapID = 2413, x = 0.5080, y = 0.5550, area = 15921, faction = "Both", expansion = 12 }, -- The Den
+    the_den = { mapID = 2576, x = 0.4360, y = 0.7240, area = 15921, faction = "Both", expansion = 12 }, -- The Den
     the_draakorium = { mapID = 539, x = 0.5680, y = 0.5740, taxi = "TAXI_1467", faction = "Alliance", expansion = 6 }, -- The Draakorium
     the_harborage = { mapID = 51, x = 0.2900, y = 0.3250, taxi = "TAXI_600", faction = "Alliance", expansion = 4 }, -- The Harborage
     the_ingress = { mapID = 2405, x = 0.3560, y = 0.5860, taxi = "TAXI_3119", faction = "Both", expansion = 12 }, -- The Ingress
@@ -585,6 +585,7 @@ addon.Nodes.Inns = {
     { id = "INN_128233", container = "kul_tiras.map895", mapID = 895, x = 0.8520, y = 0.8040, kind = "inn", town = "castaway_point", npcs = { { id = 128233 } } }, -- Friendly Pete
     { id = "INN_90989", container = "draenor.map534", mapID = 534, x = 0.6140, y = 0.4600, kind = "inn", town = "vol_mar", npcs = { { id = 90989 } } }, -- Retho Quillmane
     { id = "INN_59582", container = "pandaria.map376", mapID = 376, x = 0.5510, y = 0.5050, kind = "inn", town = "halfhill", npcs = { { id = 59582 } } }, -- Innkeeper Lei Lan
+    { id = "INN_16553", container = "draenei_home.map97", mapID = 97, x = 0.4840, y = 0.4920, kind = "inn", town = "azure_watch", npcs = { { id = 16553 } } }, -- Caregiver Chellan
     { id = "INN_62874", container = "pandaria.map388", mapID = 388, x = 0.4880, y = 0.7080, kind = "inn", town = "shado_pan_garrison", npcs = { { id = 62874 } } }, -- Kali the Night Watcher
     { id = "INN_143328", container = "kul_tiras.map942", mapID = 942, x = 0.3150, y = 0.6720, kind = "inn", town = "millstone_hamlet", npcs = { { id = 143328 } } }, -- Carol Netley
     { id = "INN_167754", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6020, y = 0.3980, kind = "inn", town = "old_gate", npcs = { { id = 167754 } } }, -- Ima
@@ -662,7 +663,6 @@ addon.Nodes.Inns = {
     { id = "INN_11118", container = "kalimdor_overworld.map83", mapID = 83, x = 0.5980, y = 0.5120, kind = "inn", town = "everlook", npcs = { { id = 11118 } } }, -- Innkeeper Vizzie
     { id = "INN_18913", container = "outlands.map107", mapID = 107, x = 0.5660, y = 0.3450, kind = "inn", town = "garadar", npcs = { { id = 18913 } } }, -- Matron Tikkit
     { id = "INN_6747", container = "kalimdor_overworld.map7", mapID = 7, x = 0.4680, y = 0.6040, kind = "inn", town = "bloodhoof_village", npcs = { { id = 6747 } } }, -- Innkeeper Kauth
-    { id = "INN_16553", container = "draenei_home.map97", mapID = 97, x = 0.4840, y = 0.4920, kind = "inn", town = "azure_watch", npcs = { { id = 16553 } } }, -- Caregiver Chellan
     { id = "INN_89639", container = "broken_isles.map630", mapID = 630, x = 0.4300, y = 0.4250, kind = "inn", town = "illidari_stand", npcs = { { id = 89639 } } }, -- Belath Dawnblade
     { id = "INN_15433", container = "quelthalas.map94", mapID = 94, x = 0.4800, y = 0.4760, kind = "inn", town = "falconwing_square", npcs = { { id = 15433 } } }, -- Innkeeper Delaniel
     { id = "INN_1156", container = "ek_overworld.map48", mapID = 48, x = 0.8180, y = 0.6450, kind = "inn", town = "farstrider_lodge", npcs = { { id = 1156 } } }, -- Vyrin Swiftwind
@@ -860,6 +860,7 @@ addon.Nodes.Inns = {
     { id = "INN_62996_1530", container = "pandaria.map1530_art1342", mapID = 1530, x = 0.6300, y = 0.1200, kind = "inn", city = "shrine_of_two_moons", npcs = { { id = 62996 } } }, -- Madam Vee Luo
     { id = "INN_64149_1530", container = "pandaria.map1530_art1342", mapID = 1530, x = 0.8740, y = 0.6690, kind = "inn", city = "shrine_of_seven_stars", npcs = { { id = 64149 } } }, -- Matron Vi Vinh
     { id = "INN_156688", container = "sl_oribos.map1670", mapID = 1670, x = 0.6720, y = 0.5040, kind = "inn", city = "oribos", npcs = { { id = 156688 } } }, -- Host Ta'rela
+    { id = "INN_203293", container = "dragon_isles.map2133", mapID = 2133, x = 0.5640, y = 0.5580, kind = "inn", town = "loamm", npcs = { { id = 203293 } } }, -- Floressa
     { id = "INN_100746", container = "broken_isles.map650", mapID = 650, x = 0.5980, y = 0.8020, kind = "inn", npcs = { { id = 100746 }, { id = 110815 } } }, -- Folla Sternhoof
     { id = "INN_206947", container = "dragon_isles.map2239", mapID = 2239, x = 0.5380, y = 0.6060, kind = "inn", town = "bel_ameth", npcs = { { id = 206947 } } }, -- Willa Stronghinge
     { id = "INN_187412", container = "dragon_isles.map2022", mapID = 2022, x = 0.8120, y = 0.3180, kind = "inn", town = "wingrest_embassy", npcs = { { id = 187412 } } }, -- Happy Hal
@@ -888,10 +889,8 @@ addon.Nodes.Inns = {
     { id = "INN_49498", container = "ek_overworld.map241", mapID = 241, x = 0.7580, y = 0.5260, kind = "inn", town = "dragonmaw_port", npcs = { { id = 49498 } } }, -- Innkeeper Lutz
     { id = "INN_41618", container = "ek_overworld.map201", mapID = 201, x = 0.3880, y = 0.3150, kind = "inn", town = "legion_s_fate", npcs = { { id = 41618 } } }, -- Erunak Stonespeaker
     { id = "INN_164722", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6460, y = 0.1940, kind = "inn", npcs = { { id = 164722 } } }, -- Sanna
-    { id = "INN_240404", container = "harandar.map2413", mapID = 2413, x = 0.5080, y = 0.5550, kind = "inn", town = "the_den", npcs = { { id = 240404 } } }, -- Yinaa
     { id = "INN_44006", container = "ek_overworld.map56", mapID = 56, x = 0.2560, y = 0.2580, kind = "inn", town = "swiftgear_station", npcs = { { id = 44006 } } }, -- Innkeeper Daughny
     { id = "INN_49747", container = "ek_overworld.map241", mapID = 241, x = 0.4500, y = 0.7660, kind = "inn", town = "crushblow", npcs = { { id = 49747 } } }, -- Innkeeper Krum
-    { id = "INN_203293", container = "dragon_isles.map2133", mapID = 2133, x = 0.5640, y = 0.5580, kind = "inn", town = "loamm", npcs = { { id = 203293 } } }, -- Floressa
     { id = "INN_43946", container = "kalimdor_overworld.map10", mapID = 10, x = 0.5620, y = 0.4000, kind = "inn", town = "grol_dom_farm", npcs = { { id = 43946 } } }, -- Innkeeper Kerntis
     { id = "INN_29904", container = "northrend.map120", mapID = 120, x = 0.0960, y = 0.4640, kind = "inn", town = "k3", npcs = { { id = 29904 } } }, -- Smilin' Slirk Brassknob
     { id = "INN_85830", container = "draenor.map543", mapID = 543, x = 0.4000, y = 0.3640, kind = "inn", npcs = { { id = 85830 } } }, -- Aeden Summersky
@@ -899,6 +898,7 @@ addon.Nodes.Inns = {
     { id = "INN_23143", container = "outlands.map104", mapID = 104, x = 0.6620, y = 0.8700, kind = "inn", town = "netherwing_ledge", npcs = { { id = 23143 } } }, -- Horus
     { id = "INN_49783", container = "ek_overworld.map241", mapID = 241, x = 0.7540, y = 0.1650, kind = "inn", town = "the_krazzworks", npcs = { { id = 49783 } } }, -- Innkeeper Geno
     { id = "INN_44309", container = "ek_overworld.map17", mapID = 17, x = 0.4050, y = 0.1150, kind = "inn", town = "dreadmaul_hold", npcs = { { id = 44309 } } }, -- Innkeeper Grak
+    { id = "INN_240404", container = "harandar.map2576", mapID = 2576, x = 0.4360, y = 0.7240, kind = "inn", town = "the_den", npcs = { { id = 240404 } } }, -- Yinaa
     { id = "INN_21088", container = "outlands.map105", mapID = 105, x = 0.1360, y = 0.8680, kind = "inn", town = "mok_nathal_village", npcs = { { id = 21088 } } }, -- Matron Varah
     { id = "INN_217167", container = "ek_overworld.map217", mapID = 217, x = 0.5880, y = 0.5400, kind = "inn", town = "gilneas_city", npcs = { { id = 217167 } } }, -- Gwen Armstead
     { id = "INN_86994", container = "draenor.map543", mapID = 543, x = 0.6060, y = 0.2240, kind = "inn", npcs = { { id = 86994 } } }, -- Deadmeat

@@ -56,6 +56,7 @@ INN_PHASE = {
 INN_TOWNS = {
     5688: ("brill", 159),                       # Innkeeper Renee (past Tirisfal)
     15174: ("cenarion_hold", 3425),             # Calandrath
+    240404: ("the_den", 15921),                 # Yinaa (inside The Den, far from its flight master on the cave's map)
     18907: ("cenarion_refuge", 3565),           # Innkeeper Coryth Stoktron (not Swamprat Post)
     21088: ("mok_nathal_village", 3844),        # Matron Varah
     23143: ("netherwing_ledge", 3759),          # Horus
@@ -102,9 +103,13 @@ INN_CITIES = {
     64149: "shrine_of_seven_stars",     # Matron Vi Vinh, the same
     137331: "dazaralor",                # Shado, on Zuldazar's map (the Great Seal)
 }
-# Where an innkeeper really stands, when Wowhead has it wrong: NPC id -> (map id, x, y), 0-100.
+# Where an innkeeper really stands, when Wowhead has it wrong: NPC id -> (map id, x, y), 0-100, and Wowhead's map as
+# a fourth value when it lists them on another map.
 INN_PLACES = {
     46271: (18, 83.0, 71.8),            # Provisioner Elda: at the Bulwark (Wowhead puts her at 26.4, 59.2)
+    # Yinaa: inside The Den, a cave with its own map (user, 2026-10-27). Wowhead's 2413 (50.8, 55.5) carried onto 2576 by
+    # the two cave mouths' capture pairs (about 8x); not captured in game.
+    240404: (2576, 43.6, 72.4, 2413),
 }
 # The zones Cataclysm added to the old world (uiMap ids): a town in one is Cataclysm's, whatever its name.
 CATACLYSM_ZONES = [174, 194, 198, 201, 203, 204, 205, 207, 217, 241, 244, 245, 249, 1527]
