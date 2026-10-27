@@ -9,134 +9,339 @@ if addon.RULESET ~= "modern" then return end   -- one addon for both games: this
 
 addon.Nodes = addon.Nodes or {}
 addon.Nodes.Stables = {
-    { id = "STABLE_9987", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5200, y = 0.4180, kind = "stable", town = "razor_hill", faction = "Horde", npcs = { { id = 9987 } } }, -- Shoja'my
-    { id = "STABLE_44123", container = "ek_overworld.map14", mapID = 14, x = 0.4000, y = 0.4900, kind = "stable", town = "refuge_pointe", faction = "Alliance", npcs = { { id = 44123 } } }, -- Emily Jackson
+    { id = "STABLE_9987", container = "kalimdor_overworld.map1", mapID = 1, x = 0.5275, y = 0.4130, kind = "stable", town = "razor_hill", faction = "Horde", npcs = { { id = 9987 }, { id = 156988 } } }, -- Shoja'my
+    { id = "STABLE_10050", container = "kalimdor_overworld.map7", mapID = 7, x = 0.4700, y = 0.5960, kind = "stable", town = "bloodhoof_village", faction = "Horde", npcs = { { id = 10050 } } }, -- Seikwa
+    { id = "STABLE_9981", container = "kalimdor_overworld.map10", mapID = 10, x = 0.4925, y = 0.5825, kind = "stable", town = "the_crossroads", faction = "Horde", npcs = { { id = 9981 }, { id = 95609 } } }, -- Sikwa
+    { id = "STABLE_10063", container = "kalimdor_overworld.map10", mapID = 10, x = 0.6750, y = 0.7420, kind = "stable", town = "ratchet", npcs = { { id = 10063 } } }, -- Reggifuz
+    { id = "STABLE_43982", container = "kalimdor_overworld.map10", mapID = 10, x = 0.6240, y = 0.1680, kind = "stable", town = "nozzlepot_s_outpost", faction = "Horde", npcs = { { id = 43982 } } }, -- Vernon Soursprye
+    { id = "STABLE_43988", container = "kalimdor_overworld.map10", mapID = 10, x = 0.5650, y = 0.3980, kind = "stable", town = "grol_dom_farm", faction = "Horde", npcs = { { id = 43988 } } }, -- Carthok
+    { id = "STABLE_9976", container = "ek_overworld.map14", mapID = 14, x = 0.6833, y = 0.3470, kind = "stable", town = "hammerfall", faction = "Horde", npcs = { { id = 9976 }, { id = 144140 }, { id = 232030 } } }, -- Tharlidun
+    { id = "STABLE_44123", container = "ek_overworld.map14", mapID = 14, x = 0.3970, y = 0.4840, kind = "stable", town = "refuge_pointe", faction = "Alliance", npcs = { { id = 44123 }, { id = 141737 } } }, -- Emily Jackson
+    { id = "STABLE_10058", container = "ek_overworld.map15", mapID = 15, x = 0.1820, y = 0.4250, kind = "stable", town = "new_kargath", faction = "Horde", npcs = { { id = 10058 } } }, -- Greth
     { id = "STABLE_48055", container = "ek_overworld.map15", mapID = 15, x = 0.6550, y = 0.3650, kind = "stable", town = "fuselight", npcs = { { id = 48055 } } }, -- Deedee Dropbolt
+    { id = "STABLE_48095", container = "ek_overworld.map15", mapID = 15, x = 0.2090, y = 0.5640, kind = "stable", town = "dragon_s_mouth", faction = "Alliance", npcs = { { id = 48095 } } }, -- Katrina Lyons
+    { id = "STABLE_44310", container = "ek_overworld.map17", mapID = 17, x = 0.4150, y = 0.1280, kind = "stable", town = "dreadmaul_hold", faction = "Horde", npcs = { { id = 44310 } } }, -- Kroff
     { id = "STABLE_44330", container = "ek_overworld.map17", mapID = 17, x = 0.6020, y = 0.1600, kind = "stable", town = "nethergarde_keep", faction = "Alliance", npcs = { { id = 44330 } } }, -- Gina Gellar
+    { id = "STABLE_44335", container = "ek_overworld.map17", mapID = 17, x = 0.4600, y = 0.8550, kind = "stable", town = "surwich", faction = "Alliance", npcs = { { id = 44335 } } }, -- Willard C. Bennington
     { id = "STABLE_10055", container = "ek_overworld.map18", mapID = 18, x = 0.6180, y = 0.5200, kind = "stable", town = "brill", faction = "Horde", npcs = { { id = 10055 } } }, -- Morganus
+    { id = "STABLE_9979", container = "ek_overworld.map21", mapID = 21, x = 0.4600, y = 0.4250, kind = "stable", town = "the_sepulcher", faction = "Horde", npcs = { { id = 9979 } } }, -- Sarah Goode
+    { id = "STABLE_45498", container = "ek_overworld.map21", mapID = 21, x = 0.4450, y = 0.2080, kind = "stable", town = "forsaken_rear_guard", faction = "Horde", npcs = { { id = 45498 } } }, -- "Salty" Rocka
     { id = "STABLE_47761", container = "ek_overworld.map22", mapID = 22, x = 0.4720, y = 0.3180, kind = "stable", npcs = { { id = 47761 } } }, -- Hank Ford
     { id = "STABLE_47866", container = "ek_overworld.map22", mapID = 22, x = 0.4780, y = 0.6400, kind = "stable", town = "andorhal", faction = "Horde", npcs = { { id = 47866 } } }, -- Lois Henderson
     { id = "STABLE_10057", container = "ek_overworld.map25", mapID = 25, x = 0.5680, y = 0.4690, kind = "stable", town = "tarren_mill", faction = "Horde", npcs = { { id = 10057 }, { id = 110357 } } }, -- Theodore Mont Claire
+    { id = "STABLE_49395", container = "ek_overworld.map25", mapID = 25, x = 0.3620, y = 0.6150, kind = "stable", town = "southpoint_gate", faction = "Horde", npcs = { { id = 49395 }, { id = 110889 } } }, -- Shannon Lamb
+    { id = "STABLE_49431", container = "ek_overworld.map25", mapID = 25, x = 0.5960, y = 0.6480, kind = "stable", town = "eastpoint_tower", faction = "Horde", npcs = { { id = 49431 } } }, -- Ansel Tunsleworth
+    { id = "STABLE_10061", container = "ek_overworld.map26", mapID = 26, x = 0.1440, y = 0.4540, kind = "stable", town = "aerie_peak", faction = "Alliance", npcs = { { id = 10061 } } }, -- Killium Bouldertoe
+    { id = "STABLE_14741", container = "ek_overworld.map26", mapID = 26, x = 0.7900, y = 0.7950, kind = "stable", town = "revantusk_village", faction = "Horde", npcs = { { id = 14741 } } }, -- Huntsman Markhor
     { id = "STABLE_43766", container = "ek_overworld.map26", mapID = 26, x = 0.3190, y = 0.5750, kind = "stable", town = "hiri_watha_research_station", faction = "Horde", npcs = { { id = 43766 } } }, -- Roslyn Paxton
+    { id = "STABLE_43770", container = "ek_overworld.map26", mapID = 26, x = 0.6640, y = 0.4500, kind = "stable", town = "stormfeather_outpost", faction = "Alliance", npcs = { { id = 43770 } } }, -- Tathan Thunderstone
+    { id = "STABLE_9980", container = "ek_overworld.map27", mapID = 27, x = 0.5400, y = 0.5100, kind = "stable", town = "kharanos", faction = "Alliance", npcs = { { id = 9980 }, { id = 109178 } } }, -- Shelby Stoneflint
     { id = "STABLE_47934", container = "ek_overworld.map32", mapID = 32, x = 0.4050, y = 0.6850, kind = "stable", town = "iron_summit", npcs = { { id = 47934 } } }, -- Karn Cragcare
-    { id = "STABLE_107863", container = "ek_overworld.map47", mapID = 47, x = 0.7380, y = 0.4620, kind = "stable", town = "darkshire", faction = "Alliance", npcs = { { id = 107863 } } }, -- Steven Black
+    { id = "STABLE_6749", container = "ek_overworld.map37", mapID = 37, x = 0.4280, y = 0.6560, kind = "stable", town = "goldshire", faction = "Alliance", npcs = { { id = 6749 } } }, -- Erma
+    { id = "STABLE_113337", container = "ek_overworld.map42", mapID = 42, x = 0.5060, y = 0.7150, kind = "stable", npcs = { { id = 113337 } } }, -- Tassia Whisperglen
+    { id = "STABLE_10062", container = "ek_overworld.map47", mapID = 47, x = 0.7390, y = 0.4630, kind = "stable", town = "darkshire", faction = "Alliance", npcs = { { id = 10062 }, { id = 107863 } } }, -- Steven Black
+    { id = "STABLE_9989", container = "ek_overworld.map48", mapID = 48, x = 0.3450, y = 0.4800, kind = "stable", town = "thelsamar", faction = "Alliance", npcs = { { id = 9989 } } }, -- Lina Hearthstove
+    { id = "STABLE_43979", container = "ek_overworld.map48", mapID = 48, x = 0.8390, y = 0.6260, kind = "stable", town = "farstrider_lodge", faction = "Alliance", npcs = { { id = 43979 } } }, -- Gravin Steelbeard
     { id = "STABLE_9982", container = "ek_overworld.map49", mapID = 49, x = 0.2620, y = 0.4300, kind = "stable", town = "lakeshire", npcs = { { id = 9982 } } }, -- Penny
+    { id = "STABLE_16094", container = "ek_overworld.map50", mapID = 50, x = 0.3800, y = 0.5120, kind = "stable", town = "grom_gol", faction = "Horde", npcs = { { id = 16094 } } }, -- Durik
+    { id = "STABLE_10049", container = "ek_overworld.map51", mapID = 51, x = 0.4710, y = 0.5550, kind = "stable", town = "stonard", faction = "Horde", npcs = { { id = 10049 } } }, -- Hekkru
+    { id = "STABLE_47337", container = "ek_overworld.map51", mapID = 51, x = 0.7180, y = 0.1450, kind = "stable", town = "bogpaddle", npcs = { { id = 47337 } } }, -- Shecky Shrimpshoot
+    { id = "STABLE_47368", container = "ek_overworld.map51", mapID = 51, x = 0.2850, y = 0.3340, kind = "stable", town = "the_harborage", faction = "Alliance", npcs = { { id = 47368 } } }, -- Joran
+    { id = "STABLE_10045", container = "ek_overworld.map52", mapID = 52, x = 0.5650, y = 0.4750, kind = "stable", faction = "Alliance", npcs = { { id = 10045 } } }, -- Kirk Maxwell
+    { id = "STABLE_10046", container = "ek_overworld.map56", mapID = 56, x = 0.1050, y = 0.5950, kind = "stable", town = "menethil_harbor", faction = "Alliance", npcs = { { id = 10046 } } }, -- Bethaine Flinthammer
     { id = "STABLE_43994", container = "ek_overworld.map56", mapID = 56, x = 0.5750, y = 0.4040, kind = "stable", town = "greenwarden_s_grove", faction = "Alliance", npcs = { { id = 43994 } } }, -- Salustred
+    { id = "STABLE_44007", container = "ek_overworld.map56", mapID = 56, x = 0.2620, y = 0.2580, kind = "stable", town = "swiftgear_station", faction = "Alliance", npcs = { { id = 44007 } } }, -- Shep Goldtend
+    { id = "STABLE_10051", container = "teldrassil.map57_art67", mapID = 57, x = 0.5620, y = 0.5200, kind = "stable", town = "dolanaar", faction = "Alliance", npcs = { { id = 10051 } } }, -- Seriadne
     { id = "STABLE_10085", container = "kalimdor_overworld.map62_art67", mapID = 62, x = 0.5040, y = 0.1920, kind = "stable", town = "lor_danel", faction = "Alliance", npcs = { { id = 10085 } } }, -- Jaelysia
+    { id = "STABLE_10052", container = "kalimdor_overworld.map63", mapID = 63, x = 0.3685, y = 0.5115, kind = "stable", town = "astranaar", faction = "Alliance", npcs = { { id = 10052 }, { id = 134647 } } }, -- Maluressian
     { id = "STABLE_15131", container = "kalimdor_overworld.map63", mapID = 63, x = 0.7320, y = 0.6050, kind = "stable", town = "splintertree_post", faction = "Horde", npcs = { { id = 15131 } } }, -- Qeeju
+    { id = "STABLE_43617", container = "kalimdor_overworld.map63", mapID = 63, x = 0.1260, y = 0.3380, kind = "stable", town = "zoram_gar_outpost", faction = "Horde", npcs = { { id = 43617 } } }, -- Lursa
+    { id = "STABLE_43630", container = "kalimdor_overworld.map63", mapID = 63, x = 0.3860, y = 0.4250, kind = "stable", town = "hellscream_s_watch", faction = "Horde", npcs = { { id = 43630 } } }, -- Drek
+    { id = "STABLE_43634", container = "kalimdor_overworld.map63", mapID = 63, x = 0.5020, y = 0.6580, kind = "stable", town = "silverwind_refuge", faction = "Horde", npcs = { { id = 43634 } } }, -- Vorcha
+    { id = "STABLE_10048", container = "kalimdor_overworld.map65", mapID = 65, x = 0.5080, y = 0.6300, kind = "stable", town = "sun_rock_retreat", faction = "Horde", npcs = { { id = 10048 } } }, -- Gereck
     { id = "STABLE_41893", container = "kalimdor_overworld.map65", mapID = 65, x = 0.6620, y = 0.6400, kind = "stable", town = "krom_gar_fortress", faction = "Horde", npcs = { { id = 41893 } } }, -- Gelbin
+    { id = "STABLE_43017", container = "kalimdor_overworld.map65", mapID = 65, x = 0.3980, y = 0.3220, kind = "stable", town = "thal_darah_overlook", faction = "Alliance", npcs = { { id = 43017 } } }, -- Fahlestad
+    { id = "STABLE_43019", container = "kalimdor_overworld.map65", mapID = 65, x = 0.3170, y = 0.6150, kind = "stable", town = "farwatcher_s_glen", faction = "Alliance", npcs = { { id = 43019 } } }, -- Teldorae
+    { id = "STABLE_43021", container = "kalimdor_overworld.map65", mapID = 65, x = 0.5850, y = 0.5660, kind = "stable", town = "windshear_hold", faction = "Alliance", npcs = { { id = 43021 } } }, -- Adrius
+    { id = "STABLE_11104", container = "kalimdor_overworld.map66", mapID = 66, x = 0.6550, y = 0.0780, kind = "stable", town = "nijel_s_point", faction = "Alliance", npcs = { { id = 11104 } } }, -- Shelgrayn
+    { id = "STABLE_11105", container = "kalimdor_overworld.map66", mapID = 66, x = 0.2480, y = 0.6880, kind = "stable", town = "shadowprey_village", faction = "Horde", npcs = { { id = 11105 } } }, -- Aboda
     { id = "STABLE_43877", container = "kalimdor_overworld.map66", mapID = 66, x = 0.5700, y = 0.4950, kind = "stable", town = "karnum_s_glade", npcs = { { id = 43877 } } }, -- Fina Stillgrove
+    { id = "STABLE_9986", container = "kalimdor_overworld.map69", mapID = 69, x = 0.7450, y = 0.4320, kind = "stable", town = "camp_mojache", faction = "Horde", npcs = { { id = 9986 } } }, -- Shyrka Wolfrunner
+    { id = "STABLE_10059", container = "kalimdor_overworld.map69", mapID = 69, x = 0.4680, y = 0.4550, kind = "stable", town = "feathermoon", faction = "Alliance", npcs = { { id = 10059 } } }, -- Antarius
+    { id = "STABLE_44378", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5160, y = 0.4800, kind = "stable", town = "stonemaul_hold", faction = "Horde", npcs = { { id = 44378 } } }, -- Ajaye
+    { id = "STABLE_44382", container = "kalimdor_overworld.map69", mapID = 69, x = 0.5100, y = 0.1800, kind = "stable", town = "dreamer_s_rest", faction = "Alliance", npcs = { { id = 44382 } } }, -- Veir
+    { id = "STABLE_44384", container = "kalimdor_overworld.map69", mapID = 69, x = 0.4140, y = 0.1550, kind = "stable", town = "camp_ataya", faction = "Horde", npcs = { { id = 44384 } } }, -- Sora
     { id = "STABLE_10047", container = "kalimdor_overworld.map70", mapID = 70, x = 0.6580, y = 0.4550, kind = "stable", town = "theramore", faction = "Alliance", npcs = { { id = 10047 } } }, -- Michael
-    { id = "STABLE_98861", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5240, y = 0.2750, kind = "stable", town = "gadgetzan", faction = "Horde", npcs = { { id = 98861 } } }, -- Laziphus
+    { id = "STABLE_9985", container = "kalimdor_overworld.map71", mapID = 71, x = 0.5250, y = 0.2745, kind = "stable", town = "gadgetzan", faction = "Horde", npcs = { { id = 9985 }, { id = 98861 } } }, -- Laziphus
+    { id = "STABLE_43773", container = "kalimdor_overworld.map76", mapID = 76, x = 0.5680, y = 0.5000, kind = "stable", town = "bilgewater_harbor", faction = "Horde", npcs = { { id = 43773 } } }, -- Stella Boomboom
     { id = "STABLE_543", container = "kalimdor_overworld.map77", mapID = 77, x = 0.6150, y = 0.2540, kind = "stable", town = "talonbranch_glade", faction = "Alliance", npcs = { { id = 543 } } }, -- Nalesette Wildbringer
     { id = "STABLE_48216", container = "kalimdor_overworld.map77", mapID = 77, x = 0.4440, y = 0.2850, kind = "stable", town = "whisperwind_grove", npcs = { { id = 48216 } } }, -- Hurah
+    { id = "STABLE_15722", container = "kalimdor_overworld.map81", mapID = 81, x = 0.5320, y = 0.3450, kind = "stable", town = "cenarion_hold", npcs = { { id = 15722 } } }, -- Squire Leoren Mal'derath
     { id = "STABLE_11119", container = "kalimdor_overworld.map83", mapID = 83, x = 0.5860, y = 0.5020, kind = "stable", town = "everlook", npcs = { { id = 11119 } } }, -- Azzleby
     { id = "STABLE_9977", container = "ek_overworld.map84", mapID = 84, x = 0.4250, y = 0.6050, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 9977 } } }, -- Sylista
     { id = "STABLE_11069", container = "ek_overworld.map84", mapID = 84, x = 0.6700, y = 0.3750, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 11069 } } }, -- Jenova Stoneshield
     { id = "STABLE_44252", container = "ek_overworld.map84", mapID = 84, x = 0.7760, y = 0.6720, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 44252 } } }, -- Karin
     { id = "STABLE_133408", container = "ek_overworld.map84", mapID = 84, x = 0.5350, y = 0.1250, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 133408 } } }, -- Ashlee Umberleaf
+    { id = "STABLE_194423", container = "ek_overworld.map84", mapID = 84, x = 0.4070, y = 0.6240, kind = "stable", city = "stormwind", faction = "Alliance", npcs = { { id = 194423 } } }, -- Sylista
     { id = "STABLE_9988", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3240, y = 0.6480, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 9988 } } }, -- Xon'cha
+    { id = "STABLE_44788", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3950, y = 0.4910, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 44788 } } }, -- Lonto
     { id = "STABLE_45789", container = "kalimdor_overworld.map85", mapID = 85, x = 0.4060, y = 0.8050, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 45789 } } }, -- Bezzil
     { id = "STABLE_47764", container = "kalimdor_overworld.map85", mapID = 85, x = 0.6230, y = 0.3520, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 47764 } } }, -- Murog
-    { id = "STABLE_133108", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3800, y = 0.8660, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 133108 } } }, -- Hern Cragfeather
+    { id = "STABLE_133108", container = "kalimdor_overworld.map85", mapID = 85, x = 0.3800, y = 0.8650, kind = "stable", city = "orgrimmar", faction = "Horde", npcs = { { id = 133108 }, { id = 150981 } } }, -- Hern Cragfeather
     { id = "STABLE_9984", container = "ek_overworld.map87", mapID = 87, x = 0.6920, y = 0.8400, kind = "stable", city = "ironforge", faction = "Alliance", npcs = { { id = 9984 } } }, -- Ulbrek Firehand
     { id = "STABLE_10054", container = "kalimdor_overworld.map88", mapID = 88, x = 0.4460, y = 0.5990, kind = "stable", city = "thunder_bluff", faction = "Horde", npcs = { { id = 10054 } } }, -- Bulrug
+    { id = "STABLE_10056", container = "teldrassil.map89_art67", mapID = 89, x = 0.4350, y = 0.2910, kind = "stable", city = "darnassus", faction = "Alliance", npcs = { { id = 10056 } } }, -- Alassin
+    { id = "STABLE_10053", container = "ek_overworld.map90", mapID = 90, x = 0.6730, y = 0.3810, kind = "stable", city = "undercity", faction = "Horde", npcs = { { id = 10053 } } }, -- Anya Maulray
+    { id = "STABLE_16185", container = "quelthalas.map94", mapID = 94, x = 0.4750, y = 0.4720, kind = "stable", town = "falconwing_square", faction = "Horde", npcs = { { id = 16185 } } }, -- Anathos
     { id = "STABLE_16665", container = "quelthalas.map95", mapID = 95, x = 0.4840, y = 0.3130, kind = "stable", town = "tranquillien_95", faction = "Horde", npcs = { { id = 16665 } } }, -- Paniar
+    { id = "STABLE_17485", container = "draenei_home.map97", mapID = 97, x = 0.4900, y = 0.4980, kind = "stable", town = "azure_watch", faction = "Alliance", npcs = { { id = 17485 } } }, -- Esbina
     { id = "STABLE_16586", container = "outlands.map100", mapID = 100, x = 0.5450, y = 0.4100, kind = "stable", town = "thrallmar", faction = "Horde", npcs = { { id = 16586 } } }, -- Huntsman Torf Angerhoof
     { id = "STABLE_16824", container = "outlands.map100", mapID = 100, x = 0.5450, y = 0.6260, kind = "stable", town = "honor_hold", faction = "Alliance", npcs = { { id = 16824 } } }, -- Master Sergeant Lorin Thalmerok
+    { id = "STABLE_17896", container = "outlands.map102", mapID = 102, x = 0.7880, y = 0.6420, kind = "stable", town = "cenarion_refuge", npcs = { { id = 17896 } } }, -- Kameel Longstride
     { id = "STABLE_18244", container = "outlands.map102", mapID = 102, x = 0.3180, y = 0.4980, kind = "stable", town = "zabra_jin", faction = "Horde", npcs = { { id = 18244 } } }, -- Khalan
+    { id = "STABLE_18250", container = "outlands.map102", mapID = 102, x = 0.6760, y = 0.4950, kind = "stable", town = "telredor", faction = "Alliance", npcs = { { id = 18250 } } }, -- Joraal
+    { id = "STABLE_16764", container = "draenei_home.map103", mapID = 103, x = 0.5970, y = 0.2520, kind = "stable", city = "exodar", faction = "Alliance", npcs = { { id = 16764 } } }, -- Arthaid
+    { id = "STABLE_221780", container = "draenei_home.map103", mapID = 103, x = 0.6050, y = 0.6290, kind = "stable", city = "exodar", faction = "Alliance", npcs = { { id = 221780 } } }, -- Saranklei
+    { id = "STABLE_19368", container = "outlands.map104", mapID = 104, x = 0.3750, y = 0.5600, kind = "stable", town = "wildhammer_stronghold", faction = "Alliance", npcs = { { id = 19368 } } }, -- Crinn Pathfinder
     { id = "STABLE_21336", container = "outlands.map104", mapID = 104, x = 0.2920, y = 0.2940, kind = "stable", town = "shadowmoon_village", faction = "Horde", npcs = { { id = 21336 } } }, -- Gedrah
     { id = "STABLE_19476", container = "outlands.map105", mapID = 105, x = 0.5350, y = 0.5320, kind = "stable", town = "thunderlord_stronghold", faction = "Horde", npcs = { { id = 19476 } } }, -- Lor
+    { id = "STABLE_22468", container = "outlands.map105", mapID = 105, x = 0.7550, y = 0.6030, kind = "stable", faction = "Horde", npcs = { { id = 22468 } } }, -- Ogrin
+    { id = "STABLE_22469", container = "outlands.map105", mapID = 105, x = 0.3600, y = 0.6450, kind = "stable", town = "sylvanaar", faction = "Alliance", npcs = { { id = 22469 } } }, -- Fiskal Shadowsong
+    { id = "STABLE_23392", container = "outlands.map105", mapID = 105, x = 0.2750, y = 0.5250, kind = "stable", npcs = { { id = 23392 } } }, -- Skyguard Stable Master
+    { id = "STABLE_17666", container = "draenei_home.map106", mapID = 106, x = 0.5500, y = 0.5980, kind = "stable", town = "blood_watch", faction = "Alliance", npcs = { { id = 17666 } } }, -- Astur
     { id = "STABLE_19018", container = "outlands.map107", mapID = 107, x = 0.5680, y = 0.4080, kind = "stable", faction = "Horde", npcs = { { id = 19018 } } }, -- Wilda Bearmane
+    { id = "STABLE_19019", container = "outlands.map107", mapID = 107, x = 0.5580, y = 0.7450, kind = "stable", town = "telaar", faction = "Alliance", npcs = { { id = 19019 } } }, -- Luftasia
     { id = "STABLE_18984", container = "outlands.map108", mapID = 108, x = 0.4940, y = 0.4450, kind = "stable", town = "stonebreaker_hold", faction = "Horde", npcs = { { id = 18984 } } }, -- Trag
+    { id = "STABLE_24905", container = "outlands.map108", mapID = 108, x = 0.5680, y = 0.5380, kind = "stable", town = "allerian_stronghold", faction = "Alliance", npcs = { { id = 24905 } } }, -- Leassian
+    { id = "STABLE_24974", container = "outlands.map109", mapID = 109, x = 0.3200, y = 0.6480, kind = "stable", town = "area_52", npcs = { { id = 24974 } } }, -- Liza Cutlerflix
     { id = "STABLE_16656", container = "quelthalas.map110", mapID = 110, x = 0.8280, y = 0.3120, kind = "stable", city = "silvermoon_bc", faction = "Horde", npcs = { { id = 16656 } } }, -- Shalenn
+    { id = "STABLE_21517", container = "outlands.map111", mapID = 111, x = 0.5580, y = 0.7990, kind = "stable", city = "shattrath", npcs = { { id = 21517 } } }, -- Ilthuril
     { id = "STABLE_21518", container = "outlands.map111", mapID = 111, x = 0.2840, y = 0.4770, kind = "stable", city = "shattrath", npcs = { { id = 21518 } } }, -- Oruhe
     { id = "STABLE_26044", container = "northrend.map114", mapID = 114, x = 0.4020, y = 0.5500, kind = "stable", town = "warsong_hold", faction = "Horde", npcs = { { id = 26044 } } }, -- Durkot Wolfbrother
+    { id = "STABLE_26597", container = "northrend.map114", mapID = 114, x = 0.5700, y = 0.1900, kind = "stable", town = "fizzcrank_airstrip", faction = "Alliance", npcs = { { id = 26597 } } }, -- Toby "Mother Goose" Ironbolt
+    { id = "STABLE_26721", container = "northrend.map114", mapID = 114, x = 0.7700, y = 0.3720, kind = "stable", town = "taunka_le_village", faction = "Horde", npcs = { { id = 26721 } } }, -- Halona Stormwhisper
+    { id = "STABLE_27010", container = "northrend.map114", mapID = 114, x = 0.5840, y = 0.6850, kind = "stable", town = "valiance_keep", faction = "Alliance", npcs = { { id = 27010 } } }, -- Celidh Aletracker
+    { id = "STABLE_27065", container = "northrend.map114", mapID = 114, x = 0.4980, y = 0.1050, kind = "stable", town = "bor_gorok_outpost", faction = "Horde", npcs = { { id = 27065 } } }, -- Breka Wolfsister
+    { id = "STABLE_27194", container = "northrend.map114", mapID = 114, x = 0.7800, y = 0.4900, kind = "stable", town = "unu_pe", npcs = { { id = 27194 } } }, -- Trapper Saghani
+    { id = "STABLE_27385", container = "northrend.map114", mapID = 114, x = 0.5660, y = 0.7300, kind = "stable", town = "valiance_keep", faction = "Alliance", npcs = { { id = 27385 } } }, -- Ronald Anderson
+    { id = "STABLE_26504", container = "northrend.map115", mapID = 115, x = 0.3700, y = 0.4850, kind = "stable", town = "agmar_s_hammer", faction = "Horde", npcs = { { id = 26504 } } }, -- Soar Hawkfury
+    { id = "STABLE_27040", container = "northrend.map115", mapID = 115, x = 0.7740, y = 0.5080, kind = "stable", town = "wintergarde_keep", faction = "Alliance", npcs = { { id = 27040 } } }, -- Zybarus of Darnassus
+    { id = "STABLE_27056", container = "northrend.map115", mapID = 115, x = 0.2880, y = 0.5600, kind = "stable", town = "stars_rest", faction = "Alliance", npcs = { { id = 27056 } } }, -- Sentinel Sweetspring
+    { id = "STABLE_27183", container = "northrend.map115", mapID = 115, x = 0.4840, y = 0.7450, kind = "stable", town = "moa_ki", npcs = { { id = 27183 } } }, -- Trapper Tikaani
     { id = "STABLE_27948", container = "northrend.map115", mapID = 115, x = 0.6150, y = 0.5340, kind = "stable", town = "wyrmrest_temple", npcs = { { id = 27948 } } }, -- Risera
+    { id = "STABLE_28057", container = "northrend.map115", mapID = 115, x = 0.7680, y = 0.6250, kind = "stable", town = "venomspite", faction = "Horde", npcs = { { id = 28057 } } }, -- Garmin Herzog
     { id = "STABLE_26377", container = "northrend.map116", mapID = 116, x = 0.5900, y = 0.2650, kind = "stable", town = "westfall_brigade", faction = "Alliance", npcs = { { id = 26377 } } }, -- Squire Percy
+    { id = "STABLE_26944", container = "northrend.map116", mapID = 116, x = 0.6500, y = 0.4780, kind = "stable", town = "camp_oneqwah", faction = "Horde", npcs = { { id = 26944 } } }, -- Soulok Stormfury
+    { id = "STABLE_27068", container = "northrend.map116", mapID = 116, x = 0.3250, y = 0.5950, kind = "stable", town = "amberpine_lodge", faction = "Alliance", npcs = { { id = 27068 } } }, -- Matthew Ackerman
+    { id = "STABLE_29250", container = "northrend.map116", mapID = 116, x = 0.1380, y = 0.8470, kind = "stable", npcs = { { id = 29250 }, { id = 29251 } } }, -- Tim Street
     { id = "STABLE_29740", container = "northrend.map116", mapID = 116, x = 0.2160, y = 0.6400, kind = "stable", town = "conquest_hold", faction = "Horde", npcs = { { id = 29740 } } }, -- Craga Ironsting
+    { id = "STABLE_23733", container = "northrend.map117", mapID = 117, x = 0.5860, y = 0.6300, kind = "stable", town = "valgarde_port", faction = "Alliance", npcs = { { id = 23733 } } }, -- Horatio the Stable Boy
+    { id = "STABLE_24066", container = "northrend.map117", mapID = 117, x = 0.6060, y = 0.1600, kind = "stable", town = "fort_wildervar", faction = "Alliance", npcs = { { id = 24066 } } }, -- Artie Grizzlehand
+    { id = "STABLE_24067", container = "northrend.map117", mapID = 117, x = 0.4940, y = 0.1100, kind = "stable", town = "camp_winterhoof", faction = "Horde", npcs = { { id = 24067 } } }, -- Mahana Frosthoof
+    { id = "STABLE_24154", container = "northrend.map117", mapID = 117, x = 0.5200, y = 0.6650, kind = "stable", town = "new_agamand", faction = "Horde", npcs = { { id = 24154 } } }, -- Mary Darrow
+    { id = "STABLE_24350", container = "northrend.map117", mapID = 117, x = 0.7900, y = 0.3080, kind = "stable", town = "vengeance_landing", faction = "Horde", npcs = { { id = 24350 } } }, -- Robert Clarke
+    { id = "STABLE_27150", container = "northrend.map117", mapID = 117, x = 0.2540, y = 0.5900, kind = "stable", town = "kamagua", npcs = { { id = 27150 } } }, -- Trapper Shesh
+    { id = "STABLE_29658", container = "northrend.map117", mapID = 117, x = 0.3150, y = 0.4150, kind = "stable", town = "westguard_keep", faction = "Alliance", npcs = { { id = 29658 } } }, -- Chelsea Reese
     { id = "STABLE_30304", container = "northrend.map118", mapID = 118, x = 0.4420, y = 0.2240, kind = "stable", town = "the_shadow_vault", npcs = { { id = 30304 } } }, -- Imhadria
+    { id = "STABLE_33854", container = "northrend.map118", mapID = 118, x = 0.7063, y = 0.2227, kind = "stable", town = "argent_tournament_grounds", npcs = { { id = 33854 }, { id = 35344 }, { id = 167090 }, { id = 167547 } } }, -- Thomas Partridge
+    { id = "STABLE_35290", container = "northrend.map118", mapID = 118, x = 0.7560, y = 0.2350, kind = "stable", town = "argent_tournament_grounds", faction = "Horde", npcs = { { id = 35290 }, { id = 167112 } } }, -- Steen Horngrass
+    { id = "STABLE_35291", container = "northrend.map118", mapID = 118, x = 0.7580, y = 0.2020, kind = "stable", town = "argent_tournament_grounds", faction = "Alliance", npcs = { { id = 35291 } } }, -- Moonbell
+    { id = "STABLE_28047", container = "northrend.map119", mapID = 119, x = 0.2720, y = 0.5950, kind = "stable", town = "nesingwary_base_camp", npcs = { { id = 28047 } } }, -- Hadrius Harlowe
+    { id = "STABLE_29906", container = "northrend.map120", mapID = 120, x = 0.4080, y = 0.8600, kind = "stable", npcs = { { id = 29906 } } }, -- Heksi
+    { id = "STABLE_29948", container = "northrend.map120", mapID = 120, x = 0.2860, y = 0.7440, kind = "stable", town = "frosthold", faction = "Alliance", npcs = { { id = 29948 } } }, -- Boarmaster Bragh
     { id = "STABLE_29959", container = "northrend.map120", mapID = 120, x = 0.3050, y = 0.3680, kind = "stable", town = "bouldercrag_s_refuge", npcs = { { id = 29959 } } }, -- Andurg Slatechest
+    { id = "STABLE_29967", container = "northrend.map120", mapID = 120, x = 0.6740, y = 0.5020, kind = "stable", town = "camp_tunka_lo", faction = "Horde", npcs = { { id = 29967 } } }, -- Udoho Icerunner
+    { id = "STABLE_30008", container = "northrend.map120", mapID = 120, x = 0.4980, y = 0.6600, kind = "stable", town = "brunnhildar_village", npcs = { { id = 30008 } } }, -- Kari the Beastmaster
+    { id = "STABLE_151615", container = "northrend.map120", mapID = 120, x = 0.3300, y = 0.5800, kind = "stable", npcs = { { id = 151615 } } }, -- YZ-37 Biorearrangement Unit
+    { id = "STABLE_28790", container = "northrend.map121", mapID = 121, x = 0.4020, y = 0.6520, kind = "stable", town = "the_argent_stand", npcs = { { id = 28790 } } }, -- Fala Softhoof
     { id = "STABLE_30039", container = "northrend.map121", mapID = 121, x = 0.5900, y = 0.5760, kind = "stable", town = "zim_torga", npcs = { { id = 30039 } } }, -- Asgari
     { id = "STABLE_25037", container = "queldanas.map122", mapID = 122, x = 0.5030, y = 0.3550, kind = "stable", town = "shattered_sun_staging_area", npcs = { { id = 25037 } } }, -- Seraphina Bloodheart
-    { id = "STABLE_50069", container = "kalimdor_overworld.map198", mapID = 198, x = 0.4180, y = 0.4500, kind = "stable", town = "shrine_of_aviana", npcs = { { id = 50069 } } }, -- Oltarin Graycloud
+    { id = "STABLE_28690", container = "northrend.map125", mapID = 125, x = 0.5940, y = 0.3790, kind = "stable", city = "dalaran_northrend", npcs = { { id = 28690 } } }, -- Tassia Whisperglen
+    { id = "STABLE_43379", container = "kalimdor_overworld.map198", mapID = 198, x = 0.1950, y = 0.3635, kind = "stable", town = "grove_of_aessina", npcs = { { id = 43379 }, { id = 53780 } } }, -- Limiah Whitebranch
+    { id = "STABLE_43408", container = "kalimdor_overworld.map198", mapID = 198, x = 0.6320, y = 0.2300, kind = "stable", town = "nordrassil", npcs = { { id = 43408 } } }, -- Aili Greenwillow
+    { id = "STABLE_43494", container = "kalimdor_overworld.map198", mapID = 198, x = 0.4180, y = 0.4500, kind = "stable", town = "shrine_of_aviana", npcs = { { id = 43494 }, { id = 50069 } } }, -- Oltarin Graycloud
+    { id = "STABLE_44346", container = "kalimdor_overworld.map199", mapID = 199, x = 0.3900, y = 0.1120, kind = "stable", town = "honor_s_stand", faction = "Alliance", npcs = { { id = 44346 } } }, -- Brandon Merriweather
+    { id = "STABLE_44347", container = "kalimdor_overworld.map199", mapID = 199, x = 0.4900, y = 0.6820, kind = "stable", town = "fort_triumph", faction = "Alliance", npcs = { { id = 44347 } } }, -- Werner Eastbrook
+    { id = "STABLE_44348", container = "kalimdor_overworld.map199", mapID = 199, x = 0.6600, y = 0.4680, kind = "stable", town = "northwatch_hold", faction = "Alliance", npcs = { { id = 44348 } } }, -- Carey Willis
+    { id = "STABLE_44349", container = "kalimdor_overworld.map199", mapID = 199, x = 0.3920, y = 0.1980, kind = "stable", town = "hunter_s_hill", faction = "Horde", npcs = { { id = 44349 } } }, -- Munada
     { id = "STABLE_44354", container = "kalimdor_overworld.map199", mapID = 199, x = 0.4080, y = 0.6950, kind = "stable", town = "desolation_hold", faction = "Horde", npcs = { { id = 44354 } } }, -- Grantor
+    { id = "STABLE_42966", container = "ek_overworld.map204", mapID = 204, x = 0.5600, y = 0.7300, kind = "stable", town = "darkbreak_cove", faction = "Alliance", npcs = { { id = 42966 } } }, -- Chase Whithers
+    { id = "STABLE_43151", container = "ek_overworld.map204", mapID = 204, x = 0.5300, y = 0.5920, kind = "stable", town = "tenebrous_cavern", faction = "Horde", npcs = { { id = 43151 } } }, -- Shurrak
+    { id = "STABLE_41903", container = "ek_overworld.map205", mapID = 205, x = 0.4940, y = 0.4200, kind = "stable", npcs = { { id = 41903 } } }, -- Tender Aru
+    { id = "STABLE_42875", container = "ek_overworld.map205", mapID = 205, x = 0.4900, y = 0.5750, kind = "stable", town = "tranquil_wash", faction = "Alliance", npcs = { { id = 42875 } } }, -- Miriam Brassbomb
+    { id = "STABLE_42911", container = "ek_overworld.map205", mapID = 205, x = 0.5150, y = 0.6250, kind = "stable", town = "stygian_bounty", faction = "Horde", npcs = { { id = 42911 } } }, -- Larok
+    { id = "STABLE_45297", container = "deepholm.map207", mapID = 207, x = 0.5120, y = 0.5020, kind = "stable", town = "temple_of_earth", faction = "Horde", npcs = { { id = 45297 } } }, -- Beast-Handler Rustclamp
+    { id = "STABLE_45298", container = "deepholm.map207", mapID = 207, x = 0.4750, y = 0.5150, kind = "stable", town = "temple_of_earth", faction = "Alliance", npcs = { { id = 45298 } } }, -- Mule Driver Ironshod
     { id = "STABLE_10060", container = "ek_overworld.map210", mapID = 210, x = 0.4140, y = 0.7350, kind = "stable", town = "booty_bay", npcs = { { id = 10060 } } }, -- Grimestack
+    { id = "STABLE_44191", container = "ek_overworld.map210", mapID = 210, x = 0.3480, y = 0.2750, kind = "stable", town = "hardwrench_hideaway", faction = "Horde", npcs = { { id = 44191 } } }, -- Finzy Watchwoozle
     { id = "STABLE_217185", container = "ek_overworld.map217", mapID = 217, x = 0.5790, y = 0.5660, kind = "stable", town = "gilneas_city", faction = "Alliance", npcs = { { id = 217185 } } }, -- Fenegan Cobbler
     { id = "STABLE_49554", container = "ek_overworld.map241", mapID = 241, x = 0.7550, y = 0.5270, kind = "stable", town = "dragonmaw_port", faction = "Horde", npcs = { { id = 49554 } } }, -- Kanath
+    { id = "STABLE_49577", container = "ek_overworld.map241", mapID = 241, x = 0.5550, y = 0.1480, kind = "stable", town = "kirthaven", faction = "Alliance", npcs = { { id = 49577 } } }, -- Baird Darkfeather
+    { id = "STABLE_49593", container = "ek_overworld.map241", mapID = 241, x = 0.4860, y = 0.2950, kind = "stable", town = "thundermar", faction = "Alliance", npcs = { { id = 49593 } } }, -- Tarm Deepgale
+    { id = "STABLE_49600", container = "ek_overworld.map241", mapID = 241, x = 0.4360, y = 0.5740, kind = "stable", town = "victor_s_point", faction = "Alliance", npcs = { { id = 49600 } } }, -- Matthew Churchill
+    { id = "STABLE_49689", container = "ek_overworld.map241", mapID = 241, x = 0.8050, y = 0.7740, kind = "stable", town = "highbank", faction = "Alliance", npcs = { { id = 49689 } } }, -- Bonnie Hennigan
+    { id = "STABLE_49755", container = "ek_overworld.map241", mapID = 241, x = 0.4510, y = 0.7650, kind = "stable", town = "crushblow", faction = "Horde", npcs = { { id = 49755 } } }, -- Zay'hana
+    { id = "STABLE_49767", container = "ek_overworld.map241", mapID = 241, x = 0.5380, y = 0.4300, kind = "stable", town = "bloodgulch", faction = "Horde", npcs = { { id = 49767 } } }, -- Rukh Zumtarg
+    { id = "STABLE_49790", container = "ek_overworld.map241", mapID = 241, x = 0.7550, y = 0.1680, kind = "stable", town = "the_krazzworks", faction = "Horde", npcs = { { id = 49790 } } }, -- Kazz Fetchum
     { id = "STABLE_49803", container = "ek_overworld.map241", mapID = 241, x = 0.6020, y = 0.5800, kind = "stable", town = "firebeard_s_patrol", faction = "Alliance", npcs = { { id = 49803 } } }, -- Kennen
+    { id = "STABLE_48887", container = "kalimdor_overworld.map249", mapID = 249, x = 0.5460, y = 0.3380, kind = "stable", town = "ramkahen", npcs = { { id = 48887 } } }, -- Darwishi
+    { id = "STABLE_49408", container = "kalimdor_overworld.map249", mapID = 249, x = 0.2690, y = 0.0750, kind = "stable", town = "oasis_of_vir_sar", npcs = { { id = 49408 } } }, -- Farah Tamina
+    { id = "STABLE_66230", container = "pandaria.map371", mapID = 371, x = 0.2860, y = 0.1300, kind = "stable", town = "honeydew_village", faction = "Horde", npcs = { { id = 66230 } } }, -- Su Mi
+    { id = "STABLE_66241", container = "pandaria.map371", mapID = 371, x = 0.4650, y = 0.4380, kind = "stable", town = "dawn_s_blossom", npcs = { { id = 66241 } } }, -- Hong the Kindly
+    { id = "STABLE_66243", container = "pandaria.map371", mapID = 371, x = 0.5480, y = 0.6300, kind = "stable", town = "jade_temple_grounds", npcs = { { id = 66243 } } }, -- Pan the Kind Hand
+    { id = "STABLE_66266", container = "pandaria.map371", mapID = 371, x = 0.4460, y = 0.8480, kind = "stable", town = "paw_don_village", faction = "Alliance", npcs = { { id = 66266 } } }, -- Cheung
+    { id = "STABLE_66717", container = "pandaria.map371", mapID = 371, x = 0.2780, y = 0.4680, kind = "stable", faction = "Horde", npcs = { { id = 66717 } } }, -- Beast-Haver Chi Chi
+    { id = "STABLE_66244", container = "pandaria.map376", mapID = 376, x = 0.5520, y = 0.4950, kind = "stable", town = "halfhill", npcs = { { id = 66244 } } }, -- Su the Tamer
     { id = "STABLE_59413", container = "pandaria.map379", mapID = 379, x = 0.4220, y = 0.6920, kind = "stable", town = "kota_basecamp", npcs = { { id = 59413 } } }, -- Cousin Mountainmusk
+    { id = "STABLE_59509", container = "pandaria.map379", mapID = 379, x = 0.6540, y = 0.6150, kind = "stable", npcs = { { id = 59509 } } }, -- Herder Muskfree
     { id = "STABLE_66246", container = "pandaria.map388", mapID = 388, x = 0.7140, y = 0.5750, kind = "stable", town = "longying_outpost", npcs = { { id = 66246 } } }, -- Tigermaster Gai-Lin
+    { id = "STABLE_66247", container = "pandaria.map388", mapID = 388, x = 0.7480, y = 0.8120, kind = "stable", town = "gao_ran_battlefront", npcs = { { id = 66247 } } }, -- Tigermaster Liu-Do
+    { id = "STABLE_66248", container = "pandaria.map388", mapID = 388, x = 0.5000, y = 0.7150, kind = "stable", town = "shado_pan_garrison", npcs = { { id = 66248 } } }, -- Tigermistress Min-To
     { id = "STABLE_63986", container = "pandaria.map390", mapID = 390, x = 0.6050, y = 0.2270, kind = "stable", city = "shrine_of_two_moons", faction = "Horde", npcs = { { id = 63986 } } }, -- Tracker Lang
+    { id = "STABLE_63988", container = "pandaria.map390", mapID = 390, x = 0.8460, y = 0.6320, kind = "stable", city = "shrine_of_seven_stars", faction = "Alliance", npcs = { { id = 63988 } } }, -- Jaul Hsu
+    { id = "STABLE_66245", container = "pandaria.map390", mapID = 390, x = 0.3600, y = 0.7540, kind = "stable", town = "mistfall_village", npcs = { { id = 66245 } } }, -- Mount-Haver Nik Nik
     { id = "STABLE_59310", container = "pandaria.map418", mapID = 418, x = 0.6180, y = 0.1950, kind = "stable", town = "thunder_cleft", faction = "Horde", npcs = { { id = 59310 } } }, -- Teve Dawnchaser
+    { id = "STABLE_66251", container = "pandaria.map418", mapID = 418, x = 0.7040, y = 0.2800, kind = "stable", faction = "Alliance", npcs = { { id = 66251 } } }, -- Huntress Vael'yrie
+    { id = "STABLE_66249", container = "pandaria.map422", mapID = 422, x = 0.5580, y = 0.6950, kind = "stable", town = "soggy_s_gamble", npcs = { { id = 66249 } } }, -- Rough-rider Kim
     { id = "STABLE_66250", container = "pandaria.map422", mapID = 422, x = 0.5360, y = 0.3250, kind = "stable", town = "klaxxi_vess", npcs = { { id = 66250 } } }, -- Handler Kla'vik
     { id = "STABLE_62935", container = "pandaria.map433", mapID = 433, x = 0.5580, y = 0.7550, kind = "stable", town = "tavern_in_the_mists", npcs = { { id = 62935 } } }, -- Kama the Beast Tamer
+    { id = "STABLE_69252", container = "isle_of_thunder.map504", mapID = 504, x = 0.3280, y = 0.3250, kind = "stable", town = "dawnseeker_promontory", faction = "Horde", npcs = { { id = 69252 } } }, -- Ranger Shalan
+    { id = "STABLE_70184", container = "isle_of_thunder.map504", mapID = 504, x = 0.3520, y = 0.9050, kind = "stable", faction = "Alliance", npcs = { { id = 70184 } } }, -- Tassia Whisperglen
     { id = "STABLE_77455", container = "draenor.map525", mapID = 525, x = 0.3880, y = 0.5200, kind = "stable", town = "stonefang_outpost", faction = "Horde", npcs = { { id = 77455 } } }, -- Grimble the Pupmaster
+    { id = "STABLE_77461", container = "draenor.map525", mapID = 525, x = 0.2170, y = 0.5540, kind = "stable", town = "wor_gol", faction = "Horde", npcs = { { id = 77461 }, { id = 77475 } } }, -- Wolfhandler Ang'cha
     { id = "STABLE_78698", container = "draenor.map525", mapID = 525, x = 0.5240, y = 0.4020, kind = "stable", town = "darkspear_s_edge", faction = "Horde", npcs = { { id = 78698 } } }, -- Ko'ari
     { id = "STABLE_90992", container = "draenor.map534", mapID = 534, x = 0.5980, y = 0.4550, kind = "stable", town = "vol_mar", faction = "Horde", npcs = { { id = 90992 } } }, -- Dal Palesmoke
     { id = "STABLE_80833", container = "draenor.map535", mapID = 535, x = 0.7080, y = 0.2950, kind = "stable", town = "vol_jin_s_pride", faction = "Horde", npcs = { { id = 80833 } } }, -- Beastmaster Tagh
+    { id = "STABLE_80854", container = "draenor.map535", mapID = 535, x = 0.6950, y = 0.2110, kind = "stable", town = "fort_wrynn_alliance", faction = "Alliance", npcs = { { id = 80854 } } }, -- Patrick Messer
     { id = "STABLE_81830", container = "draenor.map539", mapID = 539, x = 0.2520, y = 0.0700, kind = "stable", faction = "Alliance", npcs = { { id = 81830 } } }, -- Dakaari
     { id = "STABLE_84730", container = "draenor.map539", mapID = 539, x = 0.5920, y = 0.2660, kind = "stable", town = "elodor_alliance", faction = "Alliance", npcs = { { id = 84730 } } }, -- Ertai
+    { id = "STABLE_82553", container = "draenor.map542", mapID = 542, x = 0.6080, y = 0.7180, kind = "stable", town = "pinchwhistle_gearworks", npcs = { { id = 82553 } } }, -- Villi Gobsplat
+    { id = "STABLE_81075", container = "draenor.map543", mapID = 543, x = 0.5260, y = 0.5960, kind = "stable", town = "highpass", faction = "Alliance", npcs = { { id = 81075 } } }, -- Rangari Kolaan
+    { id = "STABLE_82731", container = "draenor.map543", mapID = 543, x = 0.4580, y = 0.6980, kind = "stable", town = "beastwatch", faction = "Horde", npcs = { { id = 82731 } } }, -- Ribchewer
+    { id = "STABLE_73632", container = "timeless_isle.map554", mapID = 554, x = 0.3730, y = 0.4670, kind = "stable", town = "the_celestial_court", npcs = { { id = 73632 } } }, -- Cowardly Zue
     { id = "STABLE_96507_627", container = "broken_isles.map627", mapID = 627, x = 0.5880, y = 0.3820, kind = "stable", city = "dalaran_broken_isles", faction = "Alliance", npcs = { { id = 96507 } } }, -- Tassia Whisperglen
+    { id = "STABLE_117013", container = "broken_isles.map646", mapID = 646, x = 0.5340, y = 0.9140, kind = "stable", faction = "Alliance", npcs = { { id = 117013 } } }, -- Jolanna
+    { id = "STABLE_117014", container = "broken_isles.map646", mapID = 646, x = 0.5660, y = 0.8580, kind = "stable", faction = "Horde", npcs = { { id = 117014 } } }, -- Togra
+    { id = "STABLE_117813", container = "broken_isles.map646", mapID = 646, x = 0.4350, y = 0.6300, kind = "stable", town = "deliverance_point", npcs = { { id = 117813 } } }, -- Pan the Kind Hand
+    { id = "STABLE_97862", container = "broken_isles.map650", mapID = 650, x = 0.5280, y = 0.4520, kind = "stable", town = "skyhorn", npcs = { { id = 97862 } } }, -- Parek Splitfeather
+    { id = "STABLE_97874", container = "broken_isles.map650", mapID = 650, x = 0.5320, y = 0.6400, kind = "stable", town = "stonehoof_watch", npcs = { { id = 97874 } } }, -- Haren Stonepath
     { id = "STABLE_96507_830", container = "argus_krokuun.map830", mapID = 830, x = 0.6220, y = 0.9080, kind = "stable", faction = "Alliance", npcs = { { id = 96507 } } }, -- Tassia Whisperglen
     { id = "STABLE_126160", container = "argus_krokuun.map830", mapID = 830, x = 0.6440, y = 0.6250, kind = "stable", npcs = { { id = 126160 } } }, -- Lead Rider Jerek
     { id = "STABLE_127752", container = "argus_krokuun.map830", mapID = 830, x = 0.6250, y = 0.4760, kind = "stable", npcs = { { id = 127752 } } }, -- Raelaara the Kind
     { id = "STABLE_124455", container = "zandalar.map862", mapID = 862, x = 0.7680, y = 0.1650, kind = "stable", faction = "Horde", npcs = { { id = 124455 } } }, -- Beast Handler Kooley
+    { id = "STABLE_136004", container = "zandalar.map862", mapID = 862, x = 0.4450, y = 0.3650, kind = "stable", town = "veiled_grotto", faction = "Alliance", npcs = { { id = 136004 } } }, -- Johnathan Ebrills
+    { id = "STABLE_136064", container = "zandalar.map862", mapID = 862, x = 0.4480, y = 0.2720, kind = "stable", town = "mugamba_overlook", faction = "Alliance", npcs = { { id = 136064 } } }, -- Dianelle Shadeclaw
+    { id = "STABLE_136082", container = "zandalar.map862", mapID = 862, x = 0.5550, y = 0.2500, kind = "stable", town = "verdant_hollow", faction = "Alliance", npcs = { { id = 136082 } } }, -- Saranklei
     { id = "STABLE_137333", container = "zandalar.map862", mapID = 862, x = 0.5120, y = 0.5020, kind = "stable", faction = "Horde", npcs = { { id = 137333 } } }, -- Habradu
+    { id = "STABLE_138850", container = "zandalar.map862", mapID = 862, x = 0.7730, y = 0.5460, kind = "stable", town = "castaway_encampment", faction = "Alliance", npcs = { { id = 138850 } } }, -- Birgita
+    { id = "STABLE_140057", container = "zandalar.map862", mapID = 862, x = 0.6440, y = 0.4720, kind = "stable", town = "mistvine_ledge", faction = "Alliance", npcs = { { id = 140057 } } }, -- Mitzi Pawsprinkle
     { id = "STABLE_148168", container = "zandalar.map862", mapID = 862, x = 0.5340, y = 0.5720, kind = "stable", town = "the_mugambala", faction = "Horde", npcs = { { id = 148168 } } }, -- Tailmaster Tacklesnatz
     { id = "STABLE_129795", container = "zandalar.map863", mapID = 863, x = 0.3900, y = 0.4380, kind = "stable", town = "zo_bal_ruins", faction = "Horde", npcs = { { id = 129795 } } }, -- Zam'cha
     { id = "STABLE_131993", container = "zandalar.map863", mapID = 863, x = 0.6680, y = 0.4200, kind = "stable", town = "gloom_hollow", npcs = { { id = 131993 } } }, -- Yash
     { id = "STABLE_135750", container = "zandalar.map863", mapID = 863, x = 0.3940, y = 0.7930, kind = "stable", town = "zul_jan", faction = "Horde", npcs = { { id = 135750 } } }, -- Beastmaster Veayeka
+    { id = "STABLE_123730", container = "zandalar.map864", mapID = 864, x = 0.4330, y = 0.6030, kind = "stable", town = "atul_aman", faction = "Horde", npcs = { { id = 123730 } } }, -- Man'zul
+    { id = "STABLE_138701", container = "zandalar.map864", mapID = 864, x = 0.5720, y = 0.4920, kind = "stable", town = "vulpera_hideaway", npcs = { { id = 138701 } } }, -- Teego
     { id = "STABLE_139827", container = "zandalar.map864", mapID = 864, x = 0.2700, y = 0.5100, kind = "stable", town = "sanctuary_of_the_devoted", npcs = { { id = 139827 } } }, -- Vithur
-    { id = "STABLE_139840", container = "zandalar.map864", mapID = 864, x = 0.5250, y = 0.8950, kind = "stable", town = "temple_of_akunda", faction = "Horde", npcs = { { id = 139840 } } }, -- Janraja
+    { id = "STABLE_139840", container = "zandalar.map864", mapID = 864, x = 0.5250, y = 0.8950, kind = "stable", town = "temple_of_akunda", faction = "Horde", npcs = { { id = 139840 }, { id = 139841 } } }, -- Janraja
     { id = "STABLE_144121", container = "zandalar.map864", mapID = 864, x = 0.3850, y = 0.3440, kind = "stable", town = "vorrik_s_sanctum", faction = "Alliance", npcs = { { id = 144121 } } }, -- Orville Manfred
+    { id = "STABLE_125035", container = "kul_tiras.map895", mapID = 895, x = 0.5140, y = 0.2600, kind = "stable", town = "norwington_estate", faction = "Alliance", npcs = { { id = 125035 } } }, -- Dolan Northfield
     { id = "STABLE_133024", container = "kul_tiras.map895", mapID = 895, x = 0.7980, y = 0.3720, kind = "stable", npcs = { { id = 133024 } } }, -- Stablemaster Diana
     { id = "STABLE_138160", container = "kul_tiras.map895", mapID = 895, x = 0.8750, y = 0.5030, kind = "stable", town = "plunder_harbor", faction = "Horde", npcs = { { id = 138160 } } }, -- Tallelah Clearpath
+    { id = "STABLE_143463", container = "kul_tiras.map895", mapID = 895, x = 0.7595, y = 0.5100, kind = "stable", town = "bridgeport", faction = "Alliance", npcs = { { id = 143463 }, { id = 147727 } } }, -- Lionel Rowe
+    { id = "STABLE_136142", container = "kul_tiras.map896", mapID = 896, x = 0.1950, y = 0.4350, kind = "stable", town = "anyport", npcs = { { id = 136142 } } }, -- Klause Fairwind
+    { id = "STABLE_137010", container = "kul_tiras.map896", mapID = 896, x = 0.3875, y = 0.5250, kind = "stable", town = "arom_s_stand", faction = "Alliance", npcs = { { id = 137010 }, { id = 147677 } } }, -- Willow Tempest
+    { id = "STABLE_135386", container = "kul_tiras.map942", mapID = 942, x = 0.4320, y = 0.5460, kind = "stable", town = "deadwash", faction = "Alliance", npcs = { { id = 135386 } } }, -- Calik the Skinny
     { id = "STABLE_136674", container = "kul_tiras.map942", mapID = 942, x = 0.3150, y = 0.6720, kind = "stable", town = "millstone_hamlet", faction = "Alliance", npcs = { { id = 136674 } } }, -- Madeline Netley
+    { id = "STABLE_138108", container = "kul_tiras.map942", mapID = 942, x = 0.5080, y = 0.3300, kind = "stable", town = "warfang_hold", faction = "Horde", npcs = { { id = 138108 } } }, -- Beast Handler Khajuku
+    { id = "STABLE_138451", container = "kul_tiras.map942", mapID = 942, x = 0.4040, y = 0.3650, kind = "stable", town = "seekers_vista", npcs = { { id = 138451 } } }, -- Crabmaster Daijo
+    { id = "STABLE_140551", container = "kul_tiras.map942", mapID = 942, x = 0.3480, y = 0.4810, kind = "stable", town = "fort_daelin", faction = "Alliance", npcs = { { id = 140551 }, { id = 147610 } } }, -- Officer Reynald
+    { id = "STABLE_141309", container = "kul_tiras.map942", mapID = 942, x = 0.5330, y = 0.7820, kind = "stable", town = "hillcrest_pasture", faction = "Horde", npcs = { { id = 141309 } } }, -- Yoska Rainsinger
+    { id = "STABLE_141349", container = "kul_tiras.map942", mapID = 942, x = 0.5840, y = 0.7060, kind = "stable", town = "brennadam", faction = "Alliance", npcs = { { id = 141349 } } }, -- Hayworth
     { id = "STABLE_122696", container = "zandalar.map1165", mapID = 1165, x = 0.4580, y = 0.3620, kind = "stable", city = "dazaralor", faction = "Horde", npcs = { { id = 122696 } } }, -- Beast Handler Kalatak
     { id = "STABLE_132066", container = "zandalar.map1165", mapID = 1165, x = 0.4780, y = 0.8900, kind = "stable", city = "dazaralor", faction = "Horde", npcs = { { id = 132066 } } }, -- Beast Handler Sujani
     { id = "STABLE_132067", container = "zandalar.map1165", mapID = 1165, x = 0.5960, y = 0.0450, kind = "stable", city = "dazaralor", faction = "Horde", npcs = { { id = 132067 } } }, -- Beast Handler Tahno
     { id = "STABLE_133253", container = "zandalar.map1165", mapID = 1165, x = 0.5500, y = 0.1460, kind = "stable", city = "dazaralor", faction = "Horde", npcs = { { id = 133253 } } }, -- Beast Handler Sonaba
     { id = "STABLE_155941", container = "nazjatar.map1355", mapID = 1355, x = 0.3950, y = 0.5550, kind = "stable", town = "mezzamere", faction = "Alliance", npcs = { { id = 155941 } } }, -- Tamer Orami
     { id = "STABLE_150629", container = "mechagon.map1462", mapID = 1462, x = 0.6930, y = 0.3060, kind = "stable", town = "overspark_expedition_camp", npcs = { { id = 150629 } } }, -- Vera Lonelycog
+    { id = "STABLE_156234", container = "sl_revendreth.map1525", mapID = 1525, x = 0.4900, y = 0.7000, kind = "stable", town = "wanecrypt_hill", npcs = { { id = 156234 } } }, -- Horrormaster Damnik
     { id = "STABLE_156291", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6320, y = 0.6180, kind = "stable", town = "darkhaven", npcs = { { id = 156291 } } }, -- Shadowrider Neralva
+    { id = "STABLE_159000", container = "sl_revendreth.map1525", mapID = 1525, x = 0.7040, y = 0.4120, kind = "stable", town = "halls_of_atonement", npcs = { { id = 159000 } } }, -- Vasilica
+    { id = "STABLE_163163", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6040, y = 0.3920, kind = "stable", town = "old_gate", npcs = { { id = 163163 } } }, -- Ogburn
     { id = "STABLE_166092", container = "sl_revendreth.map1525", mapID = 1525, x = 0.3120, y = 0.4900, kind = "stable", town = "sanctuary_of_the_mad", npcs = { { id = 166092 } } }, -- Rasvan
+    { id = "STABLE_167819", container = "sl_revendreth.map1525", mapID = 1525, x = 0.4120, y = 0.4740, kind = "stable", town = "charred_ramparts", npcs = { { id = 167819 } } }, -- Lester
+    { id = "STABLE_171043", container = "sl_revendreth.map1525", mapID = 1525, x = 0.6360, y = 0.3500, kind = "stable", town = "old_gate", npcs = { { id = 171043 } } }, -- Armandei
     { id = "STABLE_163250", container = "kalimdor_overworld.map1527", mapID = 1527, x = 0.2680, y = 0.0750, kind = "stable", npcs = { { id = 163250 } } }, -- Farah Tamina
     { id = "STABLE_164249", container = "kalimdor_overworld.map1527", mapID = 1527, x = 0.5460, y = 0.3380, kind = "stable", town = "ramkahen_1527", npcs = { { id = 164249 } } }, -- Darwishi
+    { id = "STABLE_162859", container = "pandaria.map1530_art1342", mapID = 1530, x = 0.3600, y = 0.7350, kind = "stable", npcs = { { id = 162859 } } }, -- Mount-Haver Nik Nik
     { id = "STABLE_160178", container = "sl_bastion.map1533", mapID = 1533, x = 0.5240, y = 0.4800, kind = "stable", town = "hero_s_rest", npcs = { { id = 160178 } } }, -- Eumelia
     { id = "STABLE_160598", container = "sl_bastion.map1533", mapID = 1533, x = 0.4780, y = 0.7350, kind = "stable", town = "aspirant_s_rest", npcs = { { id = 160598 } } }, -- Klystere
+    { id = "STABLE_168760", container = "sl_bastion.map1533", mapID = 1533, x = 0.5810, y = 0.2990, kind = "stable", npcs = { { id = 168760 }, { id = 168778 } } }, -- Klystere
+    { id = "STABLE_174578", container = "sl_bastion.map1533", mapID = 1533, x = 0.4420, y = 0.3300, kind = "stable", town = "sagehaven", npcs = { { id = 174578 } } }, -- Beastkeeper Gaelus
     { id = "STABLE_174580", container = "sl_bastion.map1533", mapID = 1533, x = 0.6200, y = 0.1520, kind = "stable", town = "elysian_hold", npcs = { { id = 174580 } } }, -- Beastkeeper Krista
+    { id = "STABLE_175444", container = "sl_bastion.map1533", mapID = 1533, x = 0.3520, y = 0.2150, kind = "stable", npcs = { { id = 175444 } } }, -- Beastkeeper Ismene
+    { id = "STABLE_157677", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.3950, y = 0.7440, kind = "stable", npcs = { { id = 157677 } } }, -- Houndskeep Merrin
+    { id = "STABLE_161677", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.5500, y = 0.7020, kind = "stable", town = "bleak_redoubt", npcs = { { id = 161677 } } }, -- Plimpton
+    { id = "STABLE_161712", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.4980, y = 0.5400, kind = "stable", town = "theater_of_pain", npcs = { { id = 161712 } } }, -- Nana Redcap
     { id = "STABLE_174664", container = "sl_maldraxxus.map1536", mapID = 1536, x = 0.6720, y = 0.4580, kind = "stable", town = "renounced_bastille", npcs = { { id = 174664 } } }, -- Eggtender Ilven
-    { id = "STABLE_162434", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6260, y = 0.3520, kind = "stable", town = "tirna_vaal", npcs = { { id = 162434 } } }, -- Littlewing
+    { id = "STABLE_160353", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.3750, y = 0.3820, kind = "stable", town = "dreamsong_fenn", npcs = { { id = 160353 } } }, -- Calico Mapleray
+    { id = "STABLE_162433", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6040, y = 0.5400, kind = "stable", town = "hibernal_hollow", npcs = { { id = 162433 } } }, -- Finlar
+    { id = "STABLE_162434", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6260, y = 0.3535, kind = "stable", town = "tirna_vaal", npcs = { { id = 162434 }, { id = 169150 } } }, -- Littlewing
+    { id = "STABLE_164724", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.6460, y = 0.1920, kind = "stable", npcs = { { id = 164724 } } }, -- Surnol
     { id = "STABLE_168082", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.4900, y = 0.5300, kind = "stable", town = "refugee_camp", npcs = { { id = 168082 } } }, -- Tinybell
+    { id = "STABLE_170571", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5100, y = 0.3380, kind = "stable", town = "glitterfall_basin", npcs = { { id = 170571 } } }, -- Timaeron
     { id = "STABLE_170924", container = "sl_ardenweald.map1565", mapID = 1565, x = 0.5100, y = 0.7060, kind = "stable", npcs = { { id = 170924 } } }, -- Nortera
     { id = "STABLE_156791", container = "sl_oribos.map1670", mapID = 1670, x = 0.5900, y = 0.7470, kind = "stable", city = "oribos", npcs = { { id = 156791 } } }, -- Keeper Ta'saran
+    { id = "STABLE_177157", container = "sl_the_maw.map1961", mapID = 1961, x = 0.6050, y = 0.2300, kind = "stable", town = "keeper_s_respite", npcs = { { id = 177157 } } }, -- Caretaker Kah-Dee
+    { id = "STABLE_180920", container = "sl_zm.map1970", mapID = 1970, x = 0.3420, y = 0.6620, kind = "stable", town = "haven", npcs = { { id = 180920 } } }, -- Siloh
     { id = "STABLE_188107", container = "dragon_isles.map2022", mapID = 2022, x = 0.6280, y = 0.7120, kind = "stable", npcs = { { id = 188107 } } }, -- Tionistrasz
     { id = "STABLE_188445", container = "dragon_isles.map2022", mapID = 2022, x = 0.4320, y = 0.6720, kind = "stable", town = "obsidian_bulwark", npcs = { { id = 188445 } } }, -- Cireni
+    { id = "STABLE_189202", container = "dragon_isles.map2022", mapID = 2022, x = 0.2580, y = 0.5540, kind = "stable", town = "obsidian_throne", npcs = { { id = 189202 } } }, -- Uirreg Stoutbrow
+    { id = "STABLE_189738", container = "dragon_isles.map2022", mapID = 2022, x = 0.5400, y = 0.3840, kind = "stable", town = "uktulut_backwater", npcs = { { id = 189738 } } }, -- Ottukhandler Rutanko
     { id = "STABLE_193021", container = "dragon_isles.map2022", mapID = 2022, x = 0.6580, y = 0.5880, kind = "stable", town = "life_vault_ruins", npcs = { { id = 193021 } } }, -- Beast Handler Tunse
     { id = "STABLE_194605", container = "dragon_isles.map2022", mapID = 2022, x = 0.7380, y = 0.5440, kind = "stable", town = "skytop_observatory", npcs = { { id = 194605 } } }, -- Bron
+    { id = "STABLE_199701", container = "dragon_isles.map2022", mapID = 2022, x = 0.2450, y = 0.8350, kind = "stable", town = "apex_observatory", npcs = { { id = 199701 } } }, -- Pan the Kind Hand
     { id = "STABLE_186183", container = "dragon_isles.map2023", mapID = 2023, x = 0.8380, y = 0.2580, kind = "stable", town = "timberstep_outpost", npcs = { { id = 186183 } } }, -- Beastmaster Nuqut
+    { id = "STABLE_186492", container = "dragon_isles.map2023", mapID = 2023, x = 0.3020, y = 0.5850, kind = "stable", town = "shady_sanctuary", npcs = { { id = 186492 } } }, -- Clarysse
+    { id = "STABLE_190058", container = "dragon_isles.map2023", mapID = 2023, x = 0.6560, y = 0.2460, kind = "stable", town = "emberwatch", npcs = { { id = 190058 } } }, -- Kokoslah
     { id = "STABLE_191815", container = "dragon_isles.map2023", mapID = 2023, x = 0.4560, y = 0.4050, kind = "stable", town = "broadhoof_outpost", npcs = { { id = 191815 } } }, -- Beastmaster Oken
     { id = "STABLE_192002", container = "dragon_isles.map2023", mapID = 2023, x = 0.8060, y = 0.5800, kind = "stable", town = "pinewood_post", npcs = { { id = 192002 } } }, -- Ibuko
+    { id = "STABLE_193008", container = "dragon_isles.map2023", mapID = 2023, x = 0.7200, y = 0.7880, kind = "stable", town = "forkriver_crossing", npcs = { { id = 193008 } } }, -- Goru the Shepherd
+    { id = "STABLE_195471", container = "dragon_isles.map2023", mapID = 2023, x = 0.4180, y = 0.6020, kind = "stable", town = "teerakai", npcs = { { id = 195471 } } }, -- Beastmaster Thalmaa
     { id = "STABLE_195524", container = "dragon_isles.map2023", mapID = 2023, x = 0.6200, y = 0.4180, kind = "stable", town = "maruukai", faction = "Horde", npcs = { { id = 195524 } } }, -- Beastmaster Tirren
+    { id = "STABLE_196291", container = "dragon_isles.map2023", mapID = 2023, x = 0.8520, y = 0.3580, kind = "stable", town = "rusza_thar_reach", npcs = { { id = 196291 } } }, -- Marren
     { id = "STABLE_186462", container = "dragon_isles.map2024", mapID = 2024, x = 0.1350, y = 0.4920, kind = "stable", town = "iskaara", npcs = { { id = 186462 } } }, -- Tatto
     { id = "STABLE_186860", container = "dragon_isles.map2024", mapID = 2024, x = 0.6520, y = 0.1620, kind = "stable", town = "theron_s_watch", npcs = { { id = 186860 } } }, -- Aiwen Ironeye
+    { id = "STABLE_187020", container = "dragon_isles.map2024", mapID = 2024, x = 0.6320, y = 0.5840, kind = "stable", town = "camp_nowhere", npcs = { { id = 187020 } } }, -- Jenis
     { id = "STABLE_190892", container = "dragon_isles.map2024", mapID = 2024, x = 0.1900, y = 0.2400, kind = "stable", town = "three_falls_lookout", npcs = { { id = 190892 } } }, -- Zon'Wogi
+    { id = "STABLE_199688", container = "dragon_isles.map2024", mapID = 2024, x = 0.4700, y = 0.4040, kind = "stable", town = "camp_antonidas", npcs = { { id = 199688 } } }, -- Jens Vilgrove
+    { id = "STABLE_199691", container = "dragon_isles.map2024", mapID = 2024, x = 0.3800, y = 0.6080, kind = "stable", town = "azure_archives", npcs = { { id = 199691 } } }, -- Arcane Stabilizer
+    { id = "STABLE_187024", container = "dragon_isles.map2025", mapID = 2025, x = 0.6007, y = 0.8120, kind = "stable", town = "temporal_conflux", npcs = { { id = 187024 }, { id = 189560 }, { id = 189561 } } }, -- Warden Krizzik
     { id = "STABLE_189025", container = "dragon_isles.map2025", mapID = 2025, x = 0.5050, y = 0.6790, kind = "stable", town = "gelikyr_post", npcs = { { id = 189025 } } }, -- Lead Hostler Rhodani
+    { id = "STABLE_189353", container = "dragon_isles.map2025", mapID = 2025, x = 0.5100, y = 0.4300, kind = "stable", town = "algeth_era", npcs = { { id = 189353 } } }, -- Yerili
+    { id = "STABLE_185946", container = "ek_overworld.map2070_art1136", mapID = 2070, x = 0.5920, y = 0.5120, kind = "stable", npcs = { { id = 185946 }, { id = 185947 } } }, -- Morganus
+    { id = "STABLE_186074", container = "ek_overworld.map2070_art1136", mapID = 2070, x = 0.6480, y = 0.6680, kind = "stable", faction = "Horde", npcs = { { id = 186074 } } }, -- Anya Maulray
     { id = "STABLE_185561", container = "dragon_isles.map2112", mapID = 2112, x = 0.4670, y = 0.7870, kind = "stable", city = "valdrakken", npcs = { { id = 185561 } } }, -- Kaestrasz
+    { id = "STABLE_201102", container = "dragon_isles.map2133", mapID = 2133, x = 0.4320, y = 0.8180, kind = "stable", npcs = { { id = 201102 } } }, -- Uskogg
     { id = "STABLE_203294", container = "dragon_isles.map2133", mapID = 2133, x = 0.5760, y = 0.5780, kind = "stable", town = "loamm", npcs = { { id = 203294 } } }, -- Vanndual
     { id = "STABLE_207760", container = "emerald_dream.map2200", mapID = 2200, x = 0.5020, y = 0.6180, kind = "stable", town = "central_encampment", npcs = { { id = 207760 } } }, -- Alassin
+    { id = "STABLE_208302", container = "emerald_dream.map2200", mapID = 2200, x = 0.6950, y = 0.5390, kind = "stable", town = "verdant_landing", npcs = { { id = 208302 } } }, -- Arno
     { id = "STABLE_211355", container = "emerald_dream.map2200", mapID = 2200, x = 0.5300, y = 0.2420, kind = "stable", town = "eye_of_ysera", npcs = { { id = 211355 } } }, -- Darcia Dreamtongue
     { id = "STABLE_218416", container = "khaz_algar.map2214", mapID = 2214, x = 0.6220, y = 0.4600, kind = "stable", town = "shadowvein_point", npcs = { { id = 218416 } } }, -- Heissanik
+    { id = "STABLE_225220", container = "khaz_algar.map2214", mapID = 2214, x = 0.5860, y = 0.6550, kind = "stable", town = "camp_murroch", npcs = { { id = 225220 } } }, -- Wheat
+    { id = "STABLE_228136", container = "khaz_algar.map2214", mapID = 2214, x = 0.7200, y = 0.8320, kind = "stable", town = "gutterville", npcs = { { id = 228136 } } }, -- Ellowie
     { id = "STABLE_217645", container = "khaz_algar.map2215", mapID = 2215, x = 0.6920, y = 0.4380, kind = "stable", town = "dunelle_s_kindness", npcs = { { id = 217645 } } }, -- Torran Dellain
     { id = "STABLE_217990", container = "khaz_algar.map2215", mapID = 2215, x = 0.4220, y = 0.5650, kind = "stable", town = "mereldar", npcs = { { id = 217990 } } }, -- Vaedra Strayfend
     { id = "STABLE_216228", container = "dragon_isles.map2239", mapID = 2239, x = 0.4800, y = 0.5450, kind = "stable", town = "bel_ameth", faction = "Alliance", npcs = { { id = 216228 } } }, -- Alassin
+    { id = "STABLE_226813", container = "khaz_algar.map2248", mapID = 2248, x = 0.5940, y = 0.2800, kind = "stable", town = "rambleshire", npcs = { { id = 226813 } } }, -- Ramble Rider Enkor
     { id = "STABLE_214951", container = "khaz_algar.map2255", mapID = 2255, x = 0.5380, y = 0.5300, kind = "stable", npcs = { { id = 214951 } } }, -- Shellwrangler Viz'kall
+    { id = "STABLE_224069", container = "khaz_algar.map2255", mapID = 2255, x = 0.5850, y = 0.1920, kind = "stable", town = "faerin_s_advance", npcs = { { id = 224069 } } }, -- Keyrra Pyregard
+    { id = "STABLE_224510", container = "khaz_algar.map2255", mapID = 2255, x = 0.7790, y = 0.6450, kind = "stable", town = "mmarl", npcs = { { id = 224510 } } }, -- Olfii
     { id = "STABLE_224523", container = "khaz_algar.map2255", mapID = 2255, x = 0.4450, y = 0.6740, kind = "stable", town = "wildcamp_ul_ar", npcs = { { id = 224523 } } }, -- Maetild Saberkrags
     { id = "STABLE_219376", container = "khaz_algar.map2339", mapID = 2339, x = 0.5520, y = 0.6720, kind = "stable", city = "dornogal", npcs = { { id = 219376 } } }, -- Kargand
     { id = "STABLE_243161", container = "ek_overworld.map2393", mapID = 2393, x = 0.4620, y = 0.5550, kind = "stable", city = "silvermoon", npcs = { { id = 243161 } } }, -- Seraphina Bloodheart
     { id = "STABLE_251302", container = "ek_overworld.map2393", mapID = 2393, x = 0.2740, y = 0.7740, kind = "stable", city = "silvermoon", npcs = { { id = 251302 } } }, -- Shalenn
     { id = "STABLE_254366", container = "ek_overworld.map2393", mapID = 2393, x = 0.6720, y = 0.6600, kind = "stable", city = "silvermoon", faction = "Horde", npcs = { { id = 254366 } } }, -- Winaestra
+    { id = "STABLE_242914", container = "ek_overworld.map2395", mapID = 2395, x = 0.4700, y = 0.4520, kind = "stable", town = "fairbreeze_village_2395", npcs = { { id = 242914 } } }, -- Lucen Swiftmane
     { id = "STABLE_245770", container = "ek_overworld.map2395", mapID = 2395, x = 0.4880, y = 0.6680, kind = "stable", town = "tranquillien", npcs = { { id = 245770 } } }, -- Paniar
     { id = "STABLE_240489", container = "voidstorm.map2405", mapID = 2405, x = 0.3550, y = 0.5920, kind = "stable", town = "the_ingress", npcs = { { id = 240489 } } }, -- Thorenara Stargazer
     { id = "STABLE_242658", container = "voidstorm.map2405", mapID = 2405, x = 0.5220, y = 0.6750, kind = "stable", town = "howling_ridge", npcs = { { id = 242658 } } }, -- Callen Everfall
@@ -144,8 +349,11 @@ addon.Nodes.Stables = {
     { id = "STABLE_252679", container = "harandar.map2413", mapID = 2413, x = 0.5280, y = 0.5250, kind = "stable", town = "the_den", npcs = { { id = 252679 } } }, -- Taku
     { id = "STABLE_258671", container = "harandar.map2413", mapID = 2413, x = 0.6960, y = 0.5200, kind = "stable", town = "har_athir", npcs = { { id = 258671 } } }, -- Lu'ka
     { id = "STABLE_258677", container = "harandar.map2413", mapID = 2413, x = 0.3540, y = 0.2320, kind = "stable", town = "har_mara", npcs = { { id = 258677 } } }, -- Sa'rena
+    { id = "STABLE_258725", container = "harandar.map2413", mapID = 2413, x = 0.6580, y = 0.2320, kind = "stable", town = "har_kuai", npcs = { { id = 258725 } } }, -- Mawraw
+    { id = "STABLE_258726", container = "harandar.map2413", mapID = 2413, x = 0.3200, y = 0.6700, kind = "stable", town = "har_alnor", npcs = { { id = 258726 } } }, -- Mokili
     { id = "STABLE_253022", container = "ek_overworld.map2437", mapID = 2437, x = 0.3620, y = 0.2460, kind = "stable", town = "witherbark_bluffs", npcs = { { id = 253022 } } }, -- Vari
     { id = "STABLE_255075", container = "ek_overworld.map2437", mapID = 2437, x = 0.4520, y = 0.6560, kind = "stable", town = "amani_zar_village", npcs = { { id = 255075 } } }, -- Beastminder Tak'za
     { id = "STABLE_255187", container = "ek_overworld.map2437", mapID = 2437, x = 0.4720, y = 0.2600, kind = "stable", town = "camp_stonewash", npcs = { { id = 255187 } } }, -- Uki
+    { id = "STABLE_235254", container = "karesh.map2472", mapID = 2472, x = 0.4720, y = 0.2650, kind = "stable", npcs = { { id = 235254 } } }, -- Ba'simtal
     { id = "STABLE_271157", container = "ek_overworld.map2512", mapID = 2512, x = 0.5760, y = 0.4750, kind = "stable", town = "tokka_s_landing", npcs = { { id = 271157 } } }, -- Beastminder Tak'za
 }

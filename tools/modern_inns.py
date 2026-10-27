@@ -121,6 +121,13 @@ STABLE_DROP = [
     161666, 167215,         # Austin Huxworth, Mithdran Dawntracker (Exile's Reach)
     144119,                 # Kasea Angerforge (Blackrock Depths)
     (174580, 0),            # Beastkeeper Krista's second spawn, given only as a zone (her Bastion one stays)
+    136233,                 # Klause Fairwind <Former Stable Master> (his Tiragarde self, 136142, stays)
+    27236, 28555, 28683,    # Stable Masters Mercer and Kitrik: a Dragonblight quest NPC, the Scarlet Enclave's
+    86808, 87006,           # Keegan Firebeard, Tormak the Scarred: the garrison Stables' quest givers out in Draenor
+    # Spawns Wowhead gives only as a zone (garrisons, class halls, covenant sanctums, the Wandering Isle and Gilneas
+    # starts, scenarios): the other spawns of each, on a map, stay.
+    (68986, 0), (68993, 0), (70184, 0), (73632, 0), (77381, 0), (79816, 0), (86973, 0), (86979, 0), (113337, 0),
+    (151106, 0), (159000, 0), (161100, 0), (177489, 0), (180291, 0), (194778, 0), (222432, 0), (223027, 0),
 ]
 STABLE_PHASE = {
     10085: "kalimdor_overworld.map62_art67",       # Jaelysia (Lor'danel): Darkshore before the burning
