@@ -1,6 +1,7 @@
 // wowhead_scrape_retail.js -- pulls NPC locations for one role out of retail Wowhead, in the columns
 // tools/gen_modern_pois.py and tools/gen_modern_stables.py read (tools/modern_source/*.tsv). Run it in the browser
-// console on a retail NPC list page, for example https://www.wowhead.com/npcs?filter=23;1;0 (the Innkeeper flag).
+// console on a retail NPC list page, for example https://www.wowhead.com/npcs?filter=23;1;0 (the Innkeeper flag), or
+// on a search page (https://www.wowhead.com/search?q=stable+master: its NPC tab).
 //
 // Or, where no list page has them all (stable masters: the Stable Master flag, filter=27;1;0, has 19 on retail, and
 // name-extended: searches names, not titles), on any www.wowhead.com page with the NPC ids set first:
@@ -27,20 +28,51 @@
 
 (async function () {
     const KEY = 'mzr_scrape';
+
+    // The NPC lists on this page, merged by id. A list page has one Listview; a search page has one per tab (NPCs,
+    // items, ...), so only the NPC tab's are kept: from the page's own Listview objects when it keeps them
+    // (g_listviews), else read out of its scripts.
+    function npcLists() {
+        const isNpc = lv => lv && (lv.id === 'npcs' || lv.template === 'npc' || (lv.template && lv.template.id === 'npc'));
+        let lists = Object.values(window.g_listviews || {}).filter(isNpc).map(lv => lv.data || []);
+        if (!lists.length) {
+            lists = [];
+            for (const text of [...document.scripts].map(s => s.textContent || '')) {
+                let at = 0;
+                while ((at = text.indexOf('new Listview(', at)) >= 0) {
+                    const from = at;
+                    at += 13;
+                    const m = /["']?data["']?\s*:\s*\[/g;
+                    m.lastIndex = at;
+                    if (!m.exec(text)) continue;
+                    const start = m.lastIndex - 1;
+                    // This Listview's own options, up to its data: is it the NPC tab?
+                    if (!/template["']?\s*:\s*["']npc["']|\bid["']?\s*:\s*["']npcs["']/.test(text.slice(from, start))) continue;
+                    let depth = 0, end = -1, quote = null;
+                    for (let k = start; k < text.length; k++) {
+                        const c = text[k];
+                        if (quote) { if (c === '\\') k++; else if (c === quote) quote = null; continue; }
+                        if (c === '"' || c === "'") quote = c;
+                        else if (c === '[') depth++;
+                        else if (c === ']' && --depth === 0) { end = k + 1; break; }
+                    }
+                    if (end < 0) continue;
+                    const literal = text.slice(start, end);
+                    try { lists.push(JSON.parse(literal)); }
+                    catch (e) { lists.push(Function('return ' + literal)()); }    // the page's own script, not JSON
+                }
+            }
+        }
+        const byId = new Map();
+        for (const list of lists) for (const n of list) if (n && n.id) byId.set(n.id, n);
+        return [...byId.values()];
+    }
     let npcs;
     if (window.MZR_IDS) {
         npcs = [...new Set(window.MZR_IDS.map(Number))].map(id => ({ id, fromPage: true }));
     } else {
-        const source = [...document.scripts].map(s => s.textContent).find(t => t && t.includes('new Listview'));
-        if (!source) throw new Error('no Listview on this page: run it on an NPC list page, or set MZR_IDS (see the top of the script)');
-        const start = source.indexOf('"data":') + 7;
-        let depth = 0, end = start;
-        for (let k = start; k < source.length; k++) {
-            const c = source[k];
-            if (c === '[') depth++;
-            else if (c === ']') { depth--; if (depth === 0) { end = k + 1; break; } }
-        }
-        npcs = JSON.parse(source.slice(start, end));
+        npcs = npcLists();
+        if (!npcs.length) throw new Error('no NPC list on this page: run it on an NPC list or search page, or set MZR_IDS (see the top of the script)');
     }
     console.log(`mzr: ${npcs.length} NPCs on this page, about ${Math.ceil(npcs.length / 4 / 60)} min to fetch`);
 
