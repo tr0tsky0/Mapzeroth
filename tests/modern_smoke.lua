@@ -40,7 +40,7 @@ addon.World:ForEachNode(function(node)
     containers[c.path] = (containers[c.path] or 0) + 1
 end)
 local stables = #addon.Nodes.Stables
-check(total == 1849 + stables, "every node made it into the tree (1333 places + 24 city centres + 492 inns, a town is its inn; + "
+check(total == 1853 + stables, "every node made it into the tree (1337 places + 24 city centres + 492 inns, a town is its inn; + "
     .. stables .. " stables): " .. total)
 check(#addon.World:GetDuplicateNodeIDs() == 0, "no id collided going into the flat node table: "
     .. table.concat(addon.World:GetDuplicateNodeIDs(), ", "))
@@ -1256,6 +1256,18 @@ do
     local toInn = addon.Journey:Plan(addon.Journey:Build(horde, { id = "START_ORG_INN", mapID = 85, x = 0.50, y = 0.60 }), "INN_6741")
     local lastStep = toInn and toInn.steps[#toInn.steps]
     check(lastStep and lastStep.nodeID == "INN_6741", "the last step goes to the inn itself: " .. kinds(toInn))
+    useTestDistances()
+end
+
+-- The Den (Harandar's rootways and flight master) is a cave: out of it by a cave mouth, never flown straight out.
+do
+    local ctx = makeCtx({ faction = "Horde", level = 90 })
+    useRetailDistances()
+    local seen = {}
+    local plan = addon.Journey:Plan(addon.Journey:Build(ctx, { id = "START_DEN", mapID = 2576, x = 0.6450, y = 0.7084 }), "TAXI_3192")
+    for _, step in ipairs(plan and plan.steps or {}) do seen[#seen + 1] = step.method .. ">" .. tostring(step.nodeID) end
+    local described = table.concat(seen, ", ")
+    check(described:find("BORDER_DEN_HARANDAR_", 1, true), "out of the Den by a cave mouth: " .. described)
     useTestDistances()
 end
 

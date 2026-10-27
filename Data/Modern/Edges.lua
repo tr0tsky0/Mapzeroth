@@ -359,5 +359,7 @@ addon.Edges = {
     { from = "BORDER_OHNAHRAN_ZARALEK_EAST", to = "BORDER_ZARALEK_OHNAHRAN_EAST", method = "walk", cost = 3 },
     { from = "BORDER_OHNAHRAN_ZARALEK_WEST", to = "BORDER_ZARALEK_OHNAHRAN_WEST", method = "walk", cost = 3 },
     { from = "BORDER_AZURE_SPAN_ZARALEK", to = "BORDER_ZARALEK_AZURE_SPAN", method = "walk", cost = 3 },
+    { from = "BORDER_HARANDAR_DEN_NORTH", to = "BORDER_DEN_HARANDAR_NORTH", method = "walk", cost = 3 },
+    { from = "BORDER_HARANDAR_DEN_EAST", to = "BORDER_DEN_HARANDAR_EAST", method = "walk", cost = 3 },
     { from = "BORDER_TOL_BARAD_PENINSULA_ISLAND", to = "BORDER_TOL_BARAD_ISLAND_PENINSULA", method = "walk", cost = 3 },
 }

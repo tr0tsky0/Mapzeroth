@@ -18,6 +18,8 @@ addon.Containers["darkmoon_faire.map407"] = { fly = false } -- Darkmoon Island
 addon.Containers["draenei_home.map103"] = { fly = false } -- Exodar
 addon.Containers["draenei_home.map106"] = { fly = false } -- Bloodmyst Isle
 addon.Containers["draenei_home.map97"] = { fly = false } -- Azuremyst Isle
+addon.Containers["harandar.map2576"] = { fly = false } -- The Den: a cave under Harandar (rootways, flight master); out by its two mouths. You can fly in it, but
+-- off the fly mesh is what keeps routes from flying through the rock; inside it's a few seconds either way
 addon.Containers["ek_overworld.map2509"] = { fly = false } -- Coiled Isle / Vaults of Atal'Utek (12.1) -- mount-only, no flying
 addon.Containers["queldanas.map122"] = { fly = false } -- Isle of Quel'Danas
 addon.Containers["quelthalas.map110"] = { fly = false } -- Silvermoon City

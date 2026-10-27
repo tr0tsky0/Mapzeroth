@@ -24,15 +24,19 @@ addon.Nodes.IsolatedMaps = {
     { id = "DARKMOON_ENTRANCE", container = "darkmoon_faire.map407", mapID = 407, x = 0.5129, y = 0.2386 }, -- Entrance
     { id = "DARKMOON_DOCK_EXIT", container = "darkmoon_faire.map407", mapID = 407, x = 0.5056, y = 0.9055 }, -- Dock
     { id = "PORTAL_HARANDAR_EVERSONG", container = "harandar.map2413", mapID = 2413, x = 0.7589, y = 0.5477 }, -- Rootway to Eversong
-    { id = "PORTAL_HARANDAR_SILVERMOON", container = "harandar.map2576", mapID = 2576, x = 0.6413, y = 0.7066 }, -- Rootway to Silvermoon City
+    { id = "PORTAL_HARANDAR_SILVERMOON", container = "harandar.map2576", mapID = 2576, x = 0.6450, y = 0.7084 }, -- Rootway to Silvermoon City
     { id = "TAXI_3192", container = "harandar.map2413", mapID = 2413, x = 0.6940, y = 0.5257 }, -- Har'athir Flightmaster
     { id = "TAXI_3195", container = "harandar.map2413", mapID = 2413, x = 0.3175, y = 0.6737 }, -- Har'alnor Flightmaster
-    { id = "PORTAL_HARANDAR_VOIDSTORM", container = "harandar.map2405", mapID = 2405, x = 0.6186, y = 0.7318 }, -- Portal to Voidstorm
+    { id = "PORTAL_HARANDAR_VOIDSTORM", container = "harandar.map2576", mapID = 2576, x = 0.6178, y = 0.7348 }, -- Portal to Voidstorm
     { id = "TAXI_3196", container = "harandar.map2413", mapID = 2413, x = 0.3552, y = 0.2375 }, -- Har'mara Flightmaster
     { id = "INSTANCE_THE_DREAMRIFT", container = "harandar.map2413", mapID = 2413, x = 0.6102, y = 0.6266, kind = "instance", journal = 1314 }, -- The Dreamrift
     { id = "TAXI_3193", container = "harandar.map2576", mapID = 2576, x = 0.7090, y = 0.5321 }, -- The Den Flightmaster
     { id = "INSTANCE_THE_BLINDING_VALE", container = "harandar.map2413", mapID = 2413, x = 0.2659, y = 0.7804, kind = "instance", journal = 1309 }, -- The Blinding Vale
     { id = "TAXI_3194", container = "harandar.map2413", mapID = 2413, x = 0.6461, y = 0.2319 }, -- Har'kuai Flightmaster
+    { id = "BORDER_HARANDAR_DEN_NORTH", container = "harandar.map2413", mapID = 2413, x = 0.5182, y = 0.4913, area = 15925 }, -- Harandar: The Den's northern cave mouth (Blooming Lattice)
+    { id = "BORDER_DEN_HARANDAR_NORTH", container = "harandar.map2576", mapID = 2576, x = 0.5175, y = 0.1943 }, -- The Den: the northern way out
+    { id = "BORDER_HARANDAR_DEN_EAST", container = "harandar.map2413", mapID = 2413, x = 0.5423, y = 0.5300, area = 15921 }, -- Harandar: The Den's eastern cave mouth
+    { id = "BORDER_DEN_HARANDAR_EAST", container = "harandar.map2576", mapID = 2576, x = 0.7098, y = 0.5159 }, -- The Den: the eastern way out, by the flight master
     { id = "TAXI_3035", container = "karesh.map2472", mapID = 2472, x = 0.5415, y = 0.6277 }, -- Hosaas Rest
     { id = "KARESH", container = "karesh.map2472", mapID = 2472, x = 0.5970, y = 0.8400 }, -- Tazavesh Entrance Portal
     { id = "TAXI_3031", container = "karesh.map2472", mapID = 2472, x = 0.7655, y = 0.3481 }, -- The Oasis
