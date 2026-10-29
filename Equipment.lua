@@ -61,23 +61,53 @@ function Equipment:Equip(itemID)
     return true
 end
 
--- Puts back what the item replaced. Only when our item is still the one in the slot (if the player has changed
--- it since, it isn't ours to undo). In combat it waits for the next call. True once nothing is left to restore.
-function Equipment:Restore()
-    local saved = self.saved
-    if not saved then return true end
-    if InCombatLockdown and InCombatLockdown() then return false end
-    if GetInventoryItemID("player", saved.slot) == saved.itemID then
+-- One go at putting things back. True once they are, or once the slot holds something else (the player has
+-- changed it since: it isn't ours to undo).
+local function putBack(saved)
+    local worn = GetInventoryItemID("player", saved.slot)
+    if worn == saved.itemID then
         if saved.previous then
             addon.ItemFn("EquipItemByName")(saved.previous, saved.slot)
         else
             PickupInventoryItem(saved.slot)             -- the slot was empty: the item goes to the backpack
             PutItemInBackpack()
         end
-        if saved.twoHand and saved.previousOffhand then addon.ItemFn("EquipItemByName")(saved.previousOffhand, OFFHAND) end
+        worn = GetInventoryItemID("player", saved.slot)
+        if worn == saved.itemID then return false end   -- not taken yet (the swap lands later, or was refused)
     end
-    self.saved = nil
+    if worn ~= saved.previous then return true end
+    -- The two-hander is off: the offhand back in its empty slot.
+    if saved.twoHand and saved.previousOffhand and GetInventoryItemID("player", OFFHAND) == nil then
+        addon.ItemFn("EquipItemByName")(saved.previousOffhand, OFFHAND)
+        return GetInventoryItemID("player", OFFHAND) ~= nil
+    end
     return true
+end
+
+-- Tries a second apart while putting back hasn't taken: just out of a loading screen the client refuses gear
+-- swaps for a moment, and the navigator (which calls Restore on every update) may be closed by then.
+-- With the navigator's updates as well, 30 tries is some 10-30 seconds.
+local RETRY_SECONDS, TRIES = 1, 30
+
+-- Puts back what the item replaced. In combat it waits. True once nothing is left to restore.
+function Equipment:Restore()
+    local saved = self.saved
+    if not saved then return true end
+    if not (InCombatLockdown and InCombatLockdown()) then
+        saved.tries = (saved.tries or 0) + 1
+        if putBack(saved) or saved.tries >= TRIES then
+            self.saved = nil
+            return true
+        end
+    end
+    if not saved.retrying and C_Timer and C_Timer.After then
+        saved.retrying = true
+        C_Timer.After(RETRY_SECONDS, function()
+            saved.retrying = false
+            if self.saved == saved then self:Restore() end
+        end)
+    end
+    return false
 end
 
 -- Called on every update of the trip with its model (nil once it is stopped): once the trip is on a step that

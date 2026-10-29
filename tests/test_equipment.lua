@@ -106,6 +106,20 @@ InCombatLockdown = function() return false end
 E:Sync(nil)
 check(E.saved == nil and worn[15] == 555, "and puts things back after it")
 
+-- Just out of a loading screen the client refuses the swap: it keeps trying, on its own timer once the trip is closed.
+local timers = {}
+local savedTimer = C_Timer
+C_Timer = { After = function(_, fn) timers[#timers + 1] = fn end }
+E:Equip(9001)
+local equip = C_Item.EquipItemByName
+C_Item.EquipItemByName = function() end          -- refused
+E:Sync(nil)
+check(E.saved ~= nil and worn[15] == 9001 and #timers == 1, "a refused swap isn't forgotten: it tries again")
+C_Item.EquipItemByName = equip
+table.remove(timers, 1)()
+check(E.saved == nil and worn[15] == 555, "and the next try puts the old item back")
+C_Timer = savedTimer
+
 -- The panel's "You're already here" is for a few seconds of moving yourself, not a quick teleport.
 local quick = planFor({ items = { 9002 }, equippable = { 9002 } })
 quick.cost = 10
