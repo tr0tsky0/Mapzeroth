@@ -23,7 +23,7 @@ local ADDONS = {
         id = "mapzeroth",
         title = "Mapzeroth",
         notes = "Routes to anywhere by portal, flight, ship and hearthstone.",
-        folders = { "Mapzeroth", "Mapzeroth-Rebuild" },
+        folders = { "Mapzeroth", "Mapzeroth-Dev" },
         url = "https://www.curseforge.com/wow/addons/mapzeroth",
         forever = true, retail = true,
     },

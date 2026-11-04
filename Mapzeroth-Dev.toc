@@ -4,7 +4,7 @@
 ## Author: tr0tsky
 ## Version: 2.0.0-dev
 ## SavedVariables: MapzerothRebuildDB
-## IconTexture: Interface\AddOns\Mapzeroth-Rebuild\Media\Logo
+## IconTexture: Interface\AddOns\Mapzeroth-Dev\Media\Logo
 ## Category: Map
 
 # Dev-only TOC: the unsuffixed name is used for every client flavor. The

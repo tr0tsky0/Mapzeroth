@@ -7,7 +7,7 @@ local GUARD = {
     Forever = 'if addon.RULESET ~= "forever" then return end',
     Modern = 'if addon.RULESET ~= "modern" then return end',
 }
-local toc = assert(io.open(ADDON_ROOT .. "/Mapzeroth-Rebuild.toc", "r"))
+local toc = assert(io.open(ADDON_ROOT .. "/Mapzeroth-Dev.toc", "r"))
 local checked = { Forever = 0, Modern = 0 }
 for line in toc:lines() do
     line = line:gsub("\r$", "")

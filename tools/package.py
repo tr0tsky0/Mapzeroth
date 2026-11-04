@@ -3,7 +3,7 @@
     python tools/package.py --ruleset forever|modern [--version 2.0.0] [--out dist]
 
 The zip holds one folder, Mapzeroth/, with Mapzeroth.toc and exactly the files the development .toc
-(Mapzeroth-Rebuild.toc) lists for that game -- nothing else can get in (no tests, tools, docs, the other game's data).
+(Mapzeroth-Dev.toc) lists for that game -- nothing else can get in (no tests, tools, docs, the other game's data).
 The .toc is rewritten for the release:
 
 - `## Interface:` that game's only (Forever 16001, Modern 120105), so CurseForge files it under the one flavour;
@@ -24,7 +24,7 @@ import sys
 import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DEV_TOC = ROOT / "Mapzeroth-Rebuild.toc"
+DEV_TOC = ROOT / "Mapzeroth-Dev.toc"
 NAME = "Mapzeroth"
 RULESETS = {
     "forever": {

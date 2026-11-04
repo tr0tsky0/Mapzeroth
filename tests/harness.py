@@ -16,8 +16,8 @@ import sys
 from lupa.lua51 import LuaRuntime
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-TOC = ROOT / "Mapzeroth-Rebuild.toc"
-ADDON_NAME = "Mapzeroth-Rebuild"    # what the client passes each file: the dev folder's name
+TOC = ROOT / "Mapzeroth-Dev.toc"
+ADDON_NAME = "Mapzeroth-Dev"    # what the client passes each file: the dev junction's name
 
 STUBS = r"""
 function GetLocale() return "enUS" end
