@@ -6,6 +6,7 @@
 ## SavedVariables: MapzerothRebuildDB
 ## IconTexture: Interface\AddOns\Mapzeroth-Dev\Media\Logo
 ## Category: Map
+## OptionalDeps: DaylightUI
 
 # Dev-only TOC: the unsuffixed name is used for every client flavor. The
 # shipped addon will use per-ruleset TOCs (see the design doc, section 1).
@@ -107,6 +108,7 @@ UI\Theme.lua
 UI\Themes\Classic.lua
 UI\Themes\ModernDark.lua
 UI\Themes\Cartographer.lua
+UI\Themes\Daylight.lua
 UI\RouteLines.lua
 UI\TaxiMark.lua
 UI\MinimapLines.lua

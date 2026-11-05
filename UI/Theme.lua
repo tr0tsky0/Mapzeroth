@@ -24,6 +24,12 @@ local addonName, addon = ...
 --                has winning; a method it leaves out uses STEP_ICONS below
 --   stepIcon     (optional) { size = pixels, crop = fraction trimmed off each edge (an icon's own frame) }
 --   buttonIcons  (optional) pictures for icon buttons by name (edit, ...); one it leaves out uses BUTTON_ICONS below
+--   shell        (optional) function(holder, opts): draws a panel's frame on `holder`, a plain child laid over the
+--                panel, in place of the backdrop (another addon's look). Called again when the panel changes size;
+--                the holder is hidden under any other theme. opts.menu is set for a dropdown's list.
+--   refresh      (optional) function(def): rewrites the theme's own tables (colours, fonts) from where they live, for a
+--                theme that follows another addon's settings. Runs before every re-skin (Theme:Set, Theme:Refresh).
+--   preferred    (optional) true: the theme chosen when the player has never picked one.
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
 local Theme = {}
@@ -194,7 +200,26 @@ end
 -- ---------------------------------------------------------------------------------------
 -- Skinning: one function per role, each reading the current theme.
 
-skin.panel = function(frame)
+skin.panel = function(frame, opts)
+    if current.shell then
+        frame:SetBackdrop(nil)
+        if frame.mzFill then frame.mzFill:Hide() end
+        local holder = frame.mzShell
+        if not holder then
+            holder = CreateFrame("Frame", nil, frame)
+            holder:SetAllPoints(frame)
+            holder:SetFrameLevel(frame:GetFrameLevel())
+            holder:EnableMouse(false)
+            holder:SetScript("OnSizeChanged", function(self)
+                if current and current.shell and self:IsShown() then current.shell(self, opts) end
+            end)
+            frame.mzShell = holder
+        end
+        holder:Show()
+        current.shell(holder, opts)
+        return
+    end
+    if frame.mzShell then frame.mzShell:Hide() end
     local def = current.panel
     frame:SetBackdrop(def.backdrop)
     frame:SetBackdropColor(Theme:Color("panel"))
@@ -435,14 +460,26 @@ function Theme:Set(id)
     if not themes[id] then return false end
     current = themes[id]
     addon.Options:Store("theme", id)
-    self:Apply()
+    self:Refresh()
     return true
 end
 
--- Choose the saved theme, or the default.
+-- Re-read a theme that follows another addon's settings (its `refresh`), then re-skin everything.
+function Theme:Refresh()
+    if current and current.refresh then current.refresh(current) end
+    self:Apply()
+end
+
+-- Choose the saved theme, else a theme marked `preferred`, else the default.
 function Theme:Init(default)
-    local saved = addon.Options:Get("theme")
-    self:Set(themes[saved] and saved or default or order[1])
+    local saved = MapzerothRebuildDB and MapzerothRebuildDB.settings and MapzerothRebuildDB.settings.theme
+    if not themes[saved] then
+        saved = nil
+        for _, id in ipairs(order) do
+            if themes[id].preferred then saved = id end
+        end
+    end
+    self:Set(saved or (themes[default] and default) or order[1])
     if not self.listening then
         self.listening = true
         -- Picking a theme on the settings page changes it live.
@@ -455,8 +492,9 @@ end
 -- ---------------------------------------------------------------------------------------
 -- Widget makers. These are what the panel uses.
 
-function Theme:Panel(parent, name)
-    return register(CreateFrame("Frame", name, parent, "BackdropTemplate"), "panel")
+-- opts (optional): { menu = true } for a dropdown's list (a theme with a `shell` keeps it solid).
+function Theme:Panel(parent, name, opts)
+    return register(CreateFrame("Frame", name, parent, "BackdropTemplate"), "panel", opts)
 end
 
 -- style: "title", "body", "small", "dim", "accent", "good" or "warn".
@@ -566,7 +604,7 @@ local DISABLED_ALPHA = 0.4     -- how far a disabled control fades
 function Theme:Dropdown(parent, width, options, onSelect, menuParent)
     local dropdown = { options = options, rows = {} }
     dropdown.button = Theme:Button(parent, "", width, 24)
-    dropdown.menu = Theme:Panel(menuParent or dropdown.button, nil)
+    dropdown.menu = Theme:Panel(menuParent or dropdown.button, nil, { menu = true })
     if menuParent then dropdown.button:HookScript("OnHide", function() dropdown.menu:Hide() end) end
     dropdown.menu:SetFrameStrata("FULLSCREEN_DIALOG")
     dropdown.menu:SetSize(width, #options * 24 + 8)
