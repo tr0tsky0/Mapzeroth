@@ -1,9 +1,33 @@
 # Changelog
 
-## Unreleased (Retail)
+## 1.0.0 (Forever)
+
+One download for both games: Mapzeroth now ships a single package for WoW: Forever and Retail, and each game loads only its own data.
+
+### Added
+- **Daylight theme:** if you use DaylightUI, Mapzeroth can take on its look (window frames, accent colour and font), and starts in it if you've never picked a theme.
+
+### Fixed
+- Farholde Keep's flights to Lakeshire, Thelsamar and Morgan's Vigil, with their real flight times.
+- The Powderfuse to Steamwheedle Port boat leaves from the right docks, with its real crossing time. The flight master that routes thought was at Powderfuse isn't there, so routes no longer use it.
+- Redridge Mountains: routes cross into Burning Steppes, the Riverglades and the Swamp of Sorrows at the real crossings.
+- A teleport item you swapped on for a route is swapped back off even when the game refuses the first try just after the loading screen.
+- A wearable teleport item gets its "Equip" step on the first route after logging in or reloading, too.
+- A route's last step names where you asked to go, not a spot a few steps short of it.
+- An error when a waypoint was set before the world map had been opened since logging in, for example by TomTom at login.
+- Ley line sharing asks the channel less often: no repeat questions after a reload, or for a phase someone else just asked about.
+
+## 2.0.6 (Retail)
+
+One download for both games: Mapzeroth now ships a single package for WoW: Forever and Retail, and each game loads only its own data.
+
+### Added
+- **Nearest Stable Master** for hunters, under Personally Relevant.
+- **Daylight theme:** if you use DaylightUI, Mapzeroth can take on its look (window frames, accent colour and font), and starts in it if you've never picked a theme.
 
 ### Fixed
 - Harandar: routes from the rootways and The Den's flight master go out through The Den's cave mouths instead of flying through the rock. The Den's inn is inside the cave too.
+- A teleport item you swapped on for a route is swapped back off even when the game refuses the first try just after the loading screen (the Blessed Medallion of Karabor could stay on).
 
 ## 2.0.5 (Retail)
 
