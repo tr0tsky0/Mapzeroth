@@ -19,9 +19,16 @@ and hearth binds: renaming it would wipe them.
 Checks before writing: every listed file exists, neither .toc lists the other game's data, and each data file starts
 with its guard (Constants.lua's addon.RULESET; redundant now that each .toc lists only its own data, kept until the
 guards are retired). The zip goes to dist/ (ignored by git) as Mapzeroth-<modern>-forever-<forever>.zip.
+
+Versions and tags: each game is tagged on its own, `forever-<version>` and `modern-<version>`, on the commit that was
+packaged; a release tags only the games whose version went up. Before the 2026-11-04 dual package the tags were bare
+versions, so LEGACY_TAGS names each game's last one. A game's version must go up whenever any file its .toc lists
+(or Media/) differs from its last tag, shared engine files included; the packager refuses otherwise, and prints the
+tags to make. Uncommitted changes to shipped files are refused too, so the tag matches what was packaged.
 """
 import argparse
 import pathlib
+import subprocess
 import sys
 import zipfile
 
@@ -43,6 +50,35 @@ RULESETS = {
     },
 }
 ASSETS = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / "Media").glob("*.tga"))            # shipped as they are: pictures the Lua names, which the .toc does not list
+LEGACY_TAGS = {"forever": "0.8.2", "modern": "2.0.5"}                                               # each game's last release before per-game tags
+
+
+def git(*args):
+    return subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True, text=True)
+
+
+def last_tag(ruleset):
+    """(tag, version) of this game's latest release."""
+    tags = git("tag", "-l", f"{ruleset}-*", "--sort=-v:refname").stdout.split()
+    if tags:
+        return tags[0], tags[0][len(ruleset) + 1:]
+    return LEGACY_TAGS[ruleset], LEGACY_TAGS[ruleset]
+
+
+def check_version(ruleset, version, paths, problems):
+    """Refuses a changed game whose version didn't go up; returns the tag to make, or None if the game is unchanged."""
+    tag, last = last_tag(ruleset)
+    changed = git("diff", "--name-only", tag, "HEAD", "--", *paths).stdout.split()
+    if version == last:
+        if changed:
+            problems.append(f"{ruleset}: {len(changed)} shipped file(s) changed since {tag} but --{ruleset} is still {version}"
+                            f" (e.g. {', '.join(changed[:3])})")
+        return None
+    if git("rev-parse", "-q", "--verify", f"refs/tags/{ruleset}-{version}").returncode == 0:
+        problems.append(f"{ruleset}: tag {ruleset}-{version} already exists")
+    if not changed:
+        print(f"note: {ruleset} {version} has no shipped changes since {tag}")
+    return f"{ruleset}-{version}"
 
 
 def read_dev_toc():
@@ -99,12 +135,20 @@ def main():
     versions = {"forever": args.forever, "modern": args.modern}
 
     header, files = read_dev_toc()
-    problems, tocs, union = [], {}, []
+    problems, tocs, union, new_tags = [], {}, [], []
     for ruleset in RULESETS:
         toc, shipped = build_toc(ruleset, versions[ruleset], header, files, problems)
         tocs[ruleset] = toc
         union += [f for f in shipped if f not in union]
+        paths = [f.replace("\\", "/") for f in shipped] + ["Media"]
+        tag = check_version(ruleset, versions[ruleset], paths, problems)
+        if tag:
+            new_tags.append(tag)
     problems += [f"asset missing: {a}" for a in ASSETS if not (ROOT / a).is_file()]
+    dirty = git("status", "--porcelain", "--", *[f.replace("\\", "/") for f in union], "Media").stdout.splitlines()
+    problems += [f"uncommitted: {line[3:]}" for line in dirty]
+    if not new_tags:
+        problems.append("neither version went up: nothing to release")
     if problems:
         sys.exit("not packaged:\n  " + "\n  ".join(problems))
 
@@ -123,6 +167,8 @@ def main():
     print(f"wrote {zip_path} ({len(union) + len(tocs) + len(ASSETS)} files, {size / 1024:.0f} KB)")
     for ruleset, rules in RULESETS.items():
         print(f"  {NAME}_{rules['suffix']}.toc: {NAME} {versions[ruleset]}, Interface {rules['interface']}")
+    head = git("rev-parse", "--short", "HEAD").stdout.strip()
+    print(f"tag {head} with: " + ", ".join(new_tags))
 
 
 if __name__ == "__main__":
