@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (Forever)
+
+### Fixed
+- **The Skyborne Portal is one way for now.** The portal in Stormwind's Wizard's Sanctum back to Dalaran has been removed in game, so routes no longer send you to it. Dalaran to Stormwind still works.
+
 ## 1.0.0 (Forever)
 
 One download for both games: Mapzeroth now ships a single package for WoW: Forever and Retail, and each game loads only its own data.
