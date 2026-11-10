@@ -137,13 +137,15 @@ for _, edge in ipairs({
     -- Alliance: T = 115, D = 60 -> best 115, worst 465, average 290.
     { from = "DOCK_ZEPHRAS_ALLIANCE", to = "DOCK_DALARAN", method = "ship", cost = 290, ride = 115, requirements = { faction = "Alliance" } }, -- Zephras Isle <-> Dalaran (Alterac Mountains), new in Forever
 
-    -- Dalaran <-> Stormwind "Skyborne Portal" (bidirectional, portals at both ends).
+    -- Dalaran -> Stormwind "Skyborne Portal". It used to run both ways, but the Stormwind side's portal back to
+    -- Dalaran has been removed in game (bug or intended, unclear as of 2026-11), so for now it's one way: restore
+    -- the reverse by dropping `oneway` if it comes back.
     -- Confirmed live: restricted to the Skyborne race, and it does NOT go away
     -- after the "Welcome to Azeroth" intro quest (94947), so no quest requirement.
     -- Race value is the confirmed UnitRace raceFile token ("Skyborne", raceID 95;
     -- the display name is "High Order Skyborne"). One loading screen (confirmed live).
     -- Cost is just the base portal cost; loading tax is added separately.
-    { from = "PORTAL_DALARAN_STORMWIND", to = "PORTAL_STORMWIND_DALARAN", method = "portal", cost = 2, loadingScreens = 1, requirements = { faction = "Alliance", race = "Skyborne" } },
+    { from = "PORTAL_DALARAN_STORMWIND", to = "PORTAL_STORMWIND_DALARAN", method = "portal", cost = 2, loadingScreens = 1, oneway = true, requirements = { faction = "Alliance", race = "Skyborne" } },
 
     -- The Wizard's Sanctum's door: its own nested container has no walking edges to the rest of
     -- Stormwind's (see Nodes_EasternKingdoms.lua), so this authored zero-cost step is the only way

@@ -56,6 +56,9 @@ local sky = makeCtx({ faction = "Alliance", race = "Skyborne" })
 check(route(sky, "PORTAL_DALARAN_STORMWIND", "PORTAL_STORMWIND_DALARAN"), "Skyborne can use the portal")
 local plain = route(ali, "PORTAL_DALARAN_STORMWIND", "PORTAL_STORMWIND_DALARAN")
 check(not plain or methods(plain):find("portal") == nil, "non-Skyborne must not use the Skyborne portal")
+-- The Stormwind side's portal back to Dalaran was removed in game, so it's one way now.
+local back = route(sky, "PORTAL_STORMWIND_DALARAN", "PORTAL_DALARAN_STORMWIND")
+check(not back or methods(back):find("portal") == nil, "the Skyborne portal no longer runs Stormwind -> Dalaran")
 
 -- 8. Item-based teleports (Modern's addon.Abilities.Items: a toy/trinket to a fixed spot,
 -- as opposed to a spell or the hearthstone-to-wherever-bound). Carrying the item and it
