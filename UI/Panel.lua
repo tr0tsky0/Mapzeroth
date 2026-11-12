@@ -1209,7 +1209,8 @@ function Panel:StartRoute()
     ui.start:SetShown(false)
     showTripChoice()
     self:MarkCurrentStep()
-    addon.Navigator:Show()
+    addon.Navigator:Show()              -- first: with nowhere saved, the navigator is placed under the panel
+    self:PutAway()                      -- standing on its own, the panel goes; the navigator follows the trip now
 end
 
 function Panel:Escape()
@@ -1308,6 +1309,20 @@ local function attachToScreen()
     ui.frame:SetParent(UIParent)
     ui.frame:SetFrameStrata("HIGH")
     ui.frame:SetFrameLevel(20)
+end
+
+-- Put the panel away if it is up on its own: popped out, or docked and stood up with the map closed. Beside the open
+-- map it stays (it goes when the map does). Reopening it shows the trip in progress, if there is one (ShowContent).
+function Panel:PutAway()
+    if not ui then return end
+    if not state.docked then
+        state.floatShown = false
+        ui.frame:Hide()
+    elseif state.detached then
+        state.detached = false
+        ui.frame:Hide()
+        if WorldMapFrame then attachToMap() end
+    end
 end
 
 -- Toggle between docked (beside the map, Reanchor decides where) and free-floating (the player
@@ -1434,9 +1449,7 @@ function Panel:Toggle()
         end
         if not ui then build(map or UIParent) end
         if state.detached then
-            state.detached = false
-            ui.frame:Hide()
-            if map then attachToMap() end
+            self:PutAway()
             return false
         end
         state.detached = true

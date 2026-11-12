@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased (both games)
+
+### Changed
+- **Starting a route closes the Mapzeroth window when it's up on its own** (popped out, or opened with the map closed); the navigator follows the trip from there. Open the window again and it shows the route in progress, not the search page. Docked beside the open map, the window still goes when the map does.
+
 ## 1.0.1 (Forever)
 
 ### Fixed

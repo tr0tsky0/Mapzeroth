@@ -598,6 +598,43 @@ check(state.view == "list" and not state.pinned and addon.Navigation:IsActive(),
 WorldMapFrame._hooks.OnShow()
 check(state.view == "list", "and it stays there when the map is reopened")
 
+-- Started from a panel up on its own, the panel goes (the navigator is enough), and reopening it shows the trip.
+addon.Navigator:Stop()
+do
+    local frame = addon.Panel:GetFrame()
+    local mapShown = WorldMapFrame._shown
+    WorldMapFrame._shown = false
+    addon.Panel:SetDocked(false)
+    check(frame:IsShown(), "popped out, the panel is up")
+    startTrip()
+    check(not frame:IsShown() and not state.floatShown and addon.Navigation:IsActive(),
+        "popped out, Start puts the panel away and the trip goes on")
+    tripEntry, tripPlan = state.entry, state.plan
+    check(addon.Panel:Toggle() == true and frame:IsShown() and state.view == "route" and state.entry == tripEntry
+        and state.plan == tripPlan and state.pinned, "opening it again shows the route in progress, not the search page")
+    addon.Panel:Toggle()
+    addon.Navigator:Stop()
+
+    -- Docked, but stood up by itself with the map closed: the same.
+    addon.Panel:SetDocked(true)
+    check(addon.Panel:Toggle() == true and state.detached, "docked with the map closed, the panel stands up by itself")
+    startTrip()
+    check(not frame:IsShown() and not state.detached and addon.Navigation:IsActive(), "and Start puts it away too")
+    tripEntry, tripPlan = state.entry, state.plan
+    check(addon.Panel:Toggle() == true and state.view == "route" and state.entry == tripEntry and state.plan == tripPlan,
+        "opening it again shows the route in progress")
+    addon.Panel:Toggle()
+    addon.Navigator:Stop()
+
+    -- Beside the open map it stays: it goes when the map does.
+    WorldMapFrame._shown = true
+    WorldMapFrame._hooks.OnShow()
+    startTrip()
+    check(frame:IsShown() and addon.Navigation:IsActive(), "beside the open map, Start leaves the panel up")
+    addon.Navigator:Stop()
+    WorldMapFrame._shown = mapShown
+end
+
 -- Stop returns to the search page, and a search does too.
 startTrip()
 addon.Navigator:Stop()
