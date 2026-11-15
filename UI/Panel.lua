@@ -1253,17 +1253,38 @@ local function mapChromeOverhang(map)
     return overhang
 end
 
+local STRATA_ORDER = { BACKGROUND = 1, LOW = 2, MEDIUM = 3, HIGH = 4, DIALOG = 5, FULLSCREEN = 6,
+                       FULLSCREEN_DIALOG = 7, TOOLTIP = 8 }
+
+-- The strata and level the docked panel draws at: the map's, just above the map's own frames. Inside the map's edge it
+-- also covers the map's quest panel, which a client can draw above the map itself (WoW: Forever's is HIGH over the
+-- map's MEDIUM, and a narrow screen like the Steam Deck's 1280 has no room beside the map): then it goes above that.
+local function dockedLayer(map, inside)
+    local strata, level = map:GetFrameStrata() or "HIGH", (map:GetFrameLevel() or 1) + 20
+    local questMap = inside and QuestMapFrame
+    local questStrata = questMap and questMap.GetFrameStrata and questMap:GetFrameStrata()
+    if questStrata and (STRATA_ORDER[questStrata] or 0) >= (STRATA_ORDER[strata] or 0) then
+        level = math.max(questStrata == strata and level or 0, (questMap:GetFrameLevel() or 1) + 20)
+        strata = questStrata
+    end
+    return strata, level
+end
+
 function Panel:Reanchor()
     if not state.docked or state.detached then return end
     local frame, map = ui.frame, WorldMapFrame
     frame:ClearAllPoints()
     local overhang = mapChromeOverhang(map)
     local room = (UIParent:GetRight() or 0) - (map:GetRight() or 0) - overhang
-    if room >= WIDTH + 4 then
-        frame:SetPoint("TOPLEFT", map, "TOPRIGHT", 2 + overhang, 0)
-    else
+    local inside = room < WIDTH + 4
+    if inside then
         frame:SetPoint("TOPRIGHT", map, "TOPRIGHT", -8, -68)
+    else
+        frame:SetPoint("TOPLEFT", map, "TOPRIGHT", 2 + overhang, 0)
     end
+    local strata, level = dockedLayer(map, inside)
+    frame:SetFrameStrata(strata)
+    frame:SetFrameLevel(level)
 end
 
 -- Where a free-floating panel was left, read back by RestorePosition. Account-wide, same as
