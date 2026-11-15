@@ -158,6 +158,32 @@ box.pop._scripts.OnClick()
 check(state.docked == true and addon.Options:Get("docked") == true, "clicking it again re-docks")
 check(box.pop.label:GetText() == "Pop out", "and the label flips back")
 
+-- Docked inside the map's edge (no room beside it), the panel covers the map's quest panel, which WoW: Forever draws in
+-- HIGH over the map's MEDIUM: it goes above the quest panel there, and stays in the map's strata beside the map.
+do
+    local frame = addon.Panel:GetFrame()
+    frame.SetFrameStrata = function(self, s) self._strata = s end
+    frame.SetFrameLevel = function(self, l) self._level = l end
+    WorldMapFrame.GetFrameStrata = function() return "MEDIUM" end
+    WorldMapFrame.GetFrameLevel = function() return 1 end
+    QuestMapFrame = {}                                           -- Forever's: no Quests / Events tabs hanging off it
+    QuestMapFrame.GetFrameStrata = function() return "HIGH" end
+    QuestMapFrame.GetFrameLevel = function() return 2 end
+    addon.Panel:Reanchor()                                       -- the mocks' screen and map both end at 1000: no room
+    check(frame._strata == "HIGH" and frame._level == 22, "inside the map, above Forever's quest panel: "
+          .. tostring(frame._strata) .. " " .. tostring(frame._level))
+    UIParent.GetRight = function() return 2000 end              -- room beside the map
+    addon.Panel:Reanchor()
+    check(frame._strata == "MEDIUM" and frame._level == 21, "beside the map, the map's strata: "
+          .. tostring(frame._strata) .. " " .. tostring(frame._level))
+    QuestMapFrame.GetFrameStrata = function() return "MEDIUM" end   -- a quest panel in the map's own strata
+    UIParent.GetRight = nil
+    addon.Panel:Reanchor()
+    check(frame._strata == "MEDIUM" and frame._level == 22, "a quest panel in the map's strata: just above it")
+    QuestMapFrame, WorldMapFrame.GetFrameStrata, WorldMapFrame.GetFrameLevel = nil, nil, nil
+    frame.SetFrameStrata, frame.SetFrameLevel = nil, nil
+end
+
 -- Choosing a result shows its route.
 addon.Panel:Query("ironforge flight")
 local flightMaster
