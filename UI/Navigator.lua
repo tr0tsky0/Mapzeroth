@@ -24,6 +24,12 @@ local LINGER = 5                -- seconds "arrived" stays up before the window 
 
 local ui
 
+-- Each update of the trip goes to the panel, and to the Daylight UI plugin when that is loaded (nil: no trip now).
+local function tripUpdate(model)
+    addon.Panel:OnTripUpdate(model)
+    if addon.DaylightPlugin then addon.DaylightPlugin:OnTrip(model) end
+end
+
 function Navigator:ApplyScale()
     if ui then ui.frame:SetScale(addon.Options:Get("scale")) end
 end
@@ -222,11 +228,15 @@ function Navigator:Render(model)
     addon.Equipment:Sync(model)             -- put back what an equip step replaced, once the trip is past using it
     if not model then
         ui.frame:Hide()
-        addon.Panel:OnTripUpdate(nil)
+        tripUpdate(nil)
         return
     end
 
     local combat = InCombatLockdown()
+    -- A new step, or the end: a theme that can draws the eye to the window (not as the trip first shows).
+    local moment = model.finished and "end" or model.index
+    if ui.moment ~= nil and moment ~= ui.moment then Theme:Pulse(ui.frame) end
+    ui.moment = moment
     ui.title:SetText(model.destination or "")
     -- Planning again only makes sense standing on the ground: not once there, nor in the air or at sea.
     ui.recalc:SetShown(not (model.finished or model.offRoute or model.phase == "flying" or model.phase == "underway"))
@@ -246,7 +256,7 @@ function Navigator:Render(model)
         ui.arrow:Hide()
         if not combat then ui.use:Hide() end
         ui.stop.label:SetText(L["NAV_CLOSE"])
-        addon.Panel:OnTripUpdate(model)
+        tripUpdate(model)
         return
     end
 
@@ -260,7 +270,7 @@ function Navigator:Render(model)
         ui.bar:Hide()
         ui.arrow:Hide()
         if not combat then ui.use:Hide() end
-        addon.Panel:OnTripUpdate(model)
+        tripUpdate(model)
         return
     end
     ui.step:SetText(model.step.text)
@@ -304,7 +314,7 @@ function Navigator:Render(model)
     if showBar then ui.bar:SetValue(model.progress or 0) end
     if not combat then ui.use:SetShown(showUse) end
     if showUse then configureUse(model.step) end
-    addon.Panel:OnTripUpdate(model)
+    tripUpdate(model)
 end
 
 -- Between updates on foot: turn the arrow and count the yards down from where the player is now, nothing else.
@@ -363,6 +373,7 @@ function Navigator:Show()
     if not ui then build() end
     ui.useStep = nil
     ui.arrivedAt = nil
+    ui.moment = nil
     self:Place()
     ui.frame:Show()
     self:Tick()
@@ -380,5 +391,5 @@ function Navigator:Stop()
     if addon.RouteLines then addon.RouteLines:Follow(nil) end
     if addon.MinimapLines then addon.MinimapLines:Follow(nil) end
     self:Hide()
-    addon.Panel:OnTripUpdate(nil)
+    tripUpdate(nil)
 end

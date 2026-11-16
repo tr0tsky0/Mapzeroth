@@ -1008,12 +1008,14 @@ function Panel:MarkCurrentStep()
     state.followedRow = current
     if moved and current and (current <= state.stepOffset or current > state.stepOffset + state.stepRows) then
         state.stepOffset = math.max(0, math.min(#(state.plan.shown or state.plan.steps) - state.stepRows, current - 1))
-        self:RenderSteps()
-        return
+        self:RenderSteps()                  -- marks the row again, as not moved
+    else
+        for i, row in ipairs(ui.steps) do
+            row:SetSelected(current == state.stepOffset + i)
+        end
     end
-    for i, row in ipairs(ui.steps) do
-        row:SetSelected(current == state.stepOffset + i)
-    end
+    -- The trip moved on: a theme that can draws the eye to the step's row.
+    if moved and current then Theme:Pulse(ui.steps[current - state.stepOffset]) end
 end
 
 -- The navigator's word on the trip, each update: move the highlight along, and when the trip

@@ -30,6 +30,11 @@ local addonName, addon = ...
 --   refresh      (optional) function(def): rewrites the theme's own tables (colours, fonts) from where they live, for a
 --                theme that follows another addon's settings. Runs before every re-skin (Theme:Set, Theme:Refresh).
 --   preferred    (optional) true: the theme chosen when the player has never picked one.
+--   glow         (optional) function(button, on): lights a main button (primary, or the navigator's action button)
+--                while it is enabled, and puts the light out again; called only when that changes, and with false
+--                for every lit button when another theme takes over.
+--   pulse        (optional) function(frame): a short light round a frame to draw the eye (Theme:Pulse): the trip
+--                window when the step changes, the step's row in the panel.
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
 local Theme = {}
@@ -91,6 +96,10 @@ function Theme:Current() return current end
 -- set in under them), methodTimes (step times in the colour of how the step travels).
 function Theme:Has(flag) return current ~= nil and current[flag] == true end
 function Theme:List() return order end
+-- Draws the eye to a frame for a moment, in a theme that can (its `pulse`); does nothing otherwise.
+function Theme:Pulse(frame)
+    if frame and current and current.pulse then current.pulse(frame) end
+end
 function Theme:Label(id) return themes[id] and themes[id].label or id end
 
 -- r, g, b, a for a named colour of the current theme (white if the theme lacks it).
@@ -334,9 +343,19 @@ local BUTTON_SLOTS = {
     { "SetHighlightTexture", "GetHighlightTexture", "Highlight" },
 }
 
+-- A main button under a theme with `glow` is lit while enabled; the theme that lit it puts it out (mzGlowBy).
+local function glowButton(button, on)
+    local fn = on and current.glow or nil
+    if button.mzGlowBy == fn then return end
+    if button.mzGlowBy then button.mzGlowBy(button, false) end
+    button.mzGlowBy = fn
+    if fn then fn(button, true) end
+end
+
 skin.button = function(button, opts)
     local state = button.mzState or "normal"
     button:SetAlpha(button.mzDisabled and DISABLED_ALPHA or 1)       -- every look: a disabled button fades
+    glowButton(button, (opts.primary or opts.action) and not button.mzDisabled)
     -- The client won't clear a button texture (it wants an asset), so a flat button just hides
     -- whichever of the three exist, and a Blizzard one sets them and shows them.
     if current.button == "blizzard" then

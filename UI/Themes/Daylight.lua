@@ -71,7 +71,28 @@ local function refresh(def)
     refreshFonts()
 end
 
+-- Moving light round the main buttons and a short one round what just changed (API 1.9's GlowAround: the player's
+-- motion setting keeps it away). Older DaylightUI: none.
+local glow, pulse
+if type(API.GlowAround) == "function" then
+    local PULSE_SECONDS = 3
+    glow = function(button, on) API.GlowAround(button, on) end
+    local pulses = setmetatable({}, { __mode = "k" })       -- frame -> the pulse running on it
+    pulse = function(frame)
+        local token = {}
+        pulses[frame] = token
+        API.GlowAround(frame, true)
+        C_Timer.After(PULSE_SECONDS, function()
+            if pulses[frame] ~= token then return end            -- a newer pulse is running: it puts the light out
+            pulses[frame] = nil
+            API.GlowAround(frame, false)
+        end)
+    end
+end
+
 addon.Theme:Register("daylight", {
+    glow = glow,
+    pulse = pulse,
     label = "Daylight",
     preferred = true,                            -- the theme a new player starts on when DaylightUI is there
     colors = {

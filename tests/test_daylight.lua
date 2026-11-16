@@ -29,7 +29,7 @@ check(not (function() for _, id in ipairs(Theme:List()) do if id == "daylight" t
 
 -- The stand-in API: what API.md promises, recording what we ask of it.
 local accent = { 0.2, 0.6, 0.9 }
-local skins, handlers = {}, {}
+local skins, handlers, glowing = {}, {}, {}
 local function textSample()
     local fs = mock()
     fs.GetFont = function() return "Fonts\\Sample.ttf", 13, "OUTLINE" end
@@ -48,7 +48,10 @@ DaylightUI = { API = {
     Accent = function() return accent[1], accent[2], accent[3] end,
     Font = function() return "Fonts\\Daylight.ttf" end,
     On = function(event, fn, name) handlers[event] = fn; return #handlers end,
+    GlowAround = function(frame, on) glowing[frame] = on ~= false or nil; return true end,
 } }
+local timers = {}
+C_Timer = { After = function(_, fn) timers[#timers + 1] = fn end }
 
 local f = assert(io.open(ADDON_ROOT .. "/UI/Themes/Daylight.lua", "r"))
 local src = f:read("*a")
@@ -99,6 +102,37 @@ handlers.StyleChanged()
 check(#skins == before and Theme:Current().id == "moderndark", "DaylightUI changes don't touch another theme")
 Theme:Set("daylight")
 check(holder:IsShown(), "back on Daylight the shell shows again")
+
+-- Main buttons glow under Daylight while enabled; plain ones never; another theme puts the light out.
+local main = Theme:Button(nil, "Go", 80, 22, true)
+local plain = Theme:Button(nil, "Back", 80, 22)
+local use = Theme:ActionButton(nil, 200, 30)
+check(glowing[main] and glowing[use], "the main button and the navigator's action button glow")
+check(not glowing[plain], "an ordinary button doesn't")
+main:Disable()
+check(not glowing[main], "a disabled main button goes dark")
+main:Enable()
+check(glowing[main], "and lights again when enabled")
+Theme:Set("moderndark")
+check(not glowing[main] and not glowing[use], "Modern Dark puts the lights out")
+main:Disable(); main:Enable()
+check(not glowing[main], "and keeps them out")
+Theme:Set("daylight")
+check(glowing[main], "back on Daylight they light again")
+
+-- A pulse lights a frame for a moment; a second one on the same frame outlasts the first's timer.
+local row = CreateFrame()
+Theme:Pulse(row)
+check(glowing[row] and #timers == 1, "a pulse lights the frame and sets a timer")
+Theme:Pulse(row)
+timers[1]()
+check(glowing[row], "the first pulse's timer leaves the second's light on")
+timers[2]()
+check(not glowing[row], "the last timer puts it out")
+Theme:Set("moderndark")
+Theme:Pulse(row)
+check(not glowing[row] and #timers == 2, "other themes don't pulse")
+Theme:Set("daylight")
 
 -- A saved choice wins over Daylight.
 MapzerothRebuildDB.settings.theme = "classic"
