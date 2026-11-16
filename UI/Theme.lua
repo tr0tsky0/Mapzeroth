@@ -326,6 +326,8 @@ skin.split = function(bar)
     end
 end
 
+local DISABLED_ALPHA = 0.4
+
 local BUTTON_SLOTS = {
     { "SetNormalTexture", "GetNormalTexture", "Up" },
     { "SetPushedTexture", "GetPushedTexture", "Down" },
@@ -334,6 +336,7 @@ local BUTTON_SLOTS = {
 
 skin.button = function(button, opts)
     local state = button.mzState or "normal"
+    button:SetAlpha(button.mzDisabled and DISABLED_ALPHA or 1)       -- every look: a disabled button fades
     -- The client won't clear a button texture (it wants an asset), so a flat button just hides
     -- whichever of the three exist, and a Blizzard one sets them and shows them.
     if current.button == "blizzard" then
@@ -520,6 +523,21 @@ function Theme:Button(parent, text, width, height, primary, template)
     button:SetScript("OnLeave", function() state("normal") end)
     button:SetScript("OnMouseDown", function() state("pressed") end)
     button:SetScript("OnMouseUp", function() state("hover") end)
+    -- Disabled, it fades (skin.button). Not for a templated button: the navigator's secure one is left as the game
+    -- makes it, so our own functions never sit on it.
+    if not template then
+        local enable, disable = button.Enable, button.Disable
+        function button:Enable()
+            enable(self)
+            self.mzDisabled = nil
+            if current then skin.button(self, widgets[self].opts) end
+        end
+        function button:Disable()
+            disable(self)
+            self.mzDisabled = true
+            if current then skin.button(self, widgets[self].opts) end
+        end
+    end
     local action = primary == "action"
     return register(button, "button", { primary = primary and not action, action = action })
 end
