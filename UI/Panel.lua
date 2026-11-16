@@ -30,6 +30,9 @@ local STEPS_TOP = LIST_TOP + 86           -- where the steps start, or lower if 
 local BADGE = 20                          -- a tour stop's numbered disc (themes with stopBadges)
 local STEPS_BOTTOM = HEIGHT - PAD - 28    -- and where they must end: above Start and the "more" note
 local PASTE_ROWS = 6                      -- list rows the open paste box takes, under "Multi-stop Route"
+local STOPS_TOP = LIST_TOP + 78           -- the stop picker's ticked rows (Panel:PickStops) start here
+local STOP_H = 26
+local STOP_ROWS = math.floor((HEIGHT - PAD - 30 - STOPS_TOP) / STOP_H)   -- as many as fit above its Route button
 
 local ui                                  -- the widgets, once built
 local state = {
@@ -258,6 +261,40 @@ local function build(parent)
     ui.editDelete:SetPoint("BOTTOMLEFT", 0, 0)
     ui.editDelete:SetScript("OnClick", function() Panel:DeleteEditor() end)
 
+    -- The stop picker (Panel:PickStops): a tour's stops, each ticked or not, before it is planned. Back (the route
+    -- view's) goes to the list; All/None at the right ticks every stop or none; Route plans the ticked ones.
+    ui.stopsAll = Theme:Button(frame, L["STOPS_NONE"], 70, 22)
+    ui.stopsAll:SetPoint("TOPRIGHT", -PAD, -LIST_TOP)
+    ui.stopsAll:SetScript("OnClick", function() Panel:SetAllStops(not Panel:AllStopsOn()) end)
+    ui.stopsTitle = Theme:Text(frame, "title")
+    ui.stopsTitle:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 30))
+    ui.stopsTitle:SetWidth(INNER)
+    ui.stopsTitle:SetWordWrap(false)
+    ui.stopsHint = Theme:Text(frame, "dim")
+    ui.stopsHint:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 54))
+    ui.stopsHint:SetWidth(INNER)
+    ui.stopsHint:SetWordWrap(false)
+    ui.stopsHint:SetText(L["STOPS_HINT"])
+    ui.stopRows = {}
+    for i = 1, STOP_ROWS do
+        local check = Theme:Checkbox(frame, "", function() Panel:ToggleStop(i) end)
+        check:SetPoint("TOPLEFT", PAD + 4, -(STOPS_TOP + (i - 1) * STOP_H))
+        check:SetSize(INNER - 4, STOP_H - 4)
+        check.label:SetWidth(INNER - 4 - 30 - 110)
+        check.label:SetWordWrap(false)
+        check.zone = Theme:Text(check, "small")
+        check.zone:SetPoint("RIGHT", -4, 0)
+        check.zone:SetWidth(106)
+        check.zone:SetJustifyH("RIGHT")
+        check.zone:SetWordWrap(false)
+        ui.stopRows[i] = check
+    end
+    ui.stopsMore = Theme:Text(frame, "dim")
+    ui.stopsMore:SetPoint("BOTTOMLEFT", PAD + 4, PAD + 4)
+    ui.stopsGo = Theme:Button(frame, "", 100, 22, true)
+    ui.stopsGo:SetPoint("BOTTOMRIGHT", -PAD, PAD)
+    ui.stopsGo:SetScript("OnClick", function() Panel:RouteStops() end)
+
     ui.routeTitle = Theme:Text(frame, "title")
     ui.routeTitle:SetPoint("TOPLEFT", PAD, -(LIST_TOP + 30))
     ui.routeTitle:SetWidth(INNER)
@@ -303,10 +340,20 @@ end
 -- ---------------------------------------------------------------------------------------
 -- Showing things
 
+local function showStopsWidgets(show)
+    for _, widget in ipairs({ ui.stopsAll, ui.stopsTitle, ui.stopsHint, ui.stopsMore, ui.stopsGo }) do
+        widget:SetShown(show)
+    end
+    if not show then
+        for _, row in ipairs(ui.stopRows) do row:Hide() end
+    end
+end
+
 local function hideList()
     for _, row in ipairs(ui.rows) do row:Hide() end
     ui.paste:Hide()
     ui.editor:Hide()
+    showStopsWidgets(false)
 end
 
 local function showRouteWidgets(show)
@@ -321,6 +368,7 @@ local function showRouteWidgets(show)
         ui.roundTrip:Hide()
         ui.routeEdit:Hide()
         ui.editor:Hide()
+        showStopsWidgets(false)
     end
 end
 
@@ -726,6 +774,12 @@ function Panel:Scroll(delta)
         self:RenderSteps()
         return
     end
+    if state.view == "stops" and state.stops then
+        local max = math.max(0, #state.stops.points - STOP_ROWS)
+        state.stops.offset = math.max(0, math.min(max, state.stops.offset + delta))
+        self:RenderStops()
+        return
+    end
     if state.view ~= "list" then return end
     local max = math.max(0, #state.results - ROWS)
     state.offset = math.max(0, math.min(max, state.offset + delta))
@@ -993,12 +1047,12 @@ function Panel:Choose(index)
     elseif entry.action == "sllcm" then
         self:ShowSllcmLink()
     elseif entry.action == "tomtom" then
-        self:RouteTour(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {})
+        self:PickStops(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {}, nil, true)
     elseif entry.action == "holidayroute" then
         self:RouteTour(entry.name, entry.points, nil, nil, entry.holiday)   -- not a saved route: its view offers Save
     elseif entry.action == "route" then
         local route = addon.MultiRoute:FindRoute(entry.routeID)
-        if route then self:RouteTour(route.name, addon.MultiRoute:RoutePoints(route), nil, route.id) end
+        if route then self:PickStops(route.name, addon.MultiRoute:RoutePoints(route), route.id) end
     else
         self:ShowRoute(entry)
     end
@@ -1044,11 +1098,109 @@ end
 
 -- A tour through points ({ mapID, x, y, name }: pasted /way lines, TomTom's waypoints, a saved route), planned and
 -- shown like any route. unread: how many pasted lines couldn't be read (a note under the route says so). routeID: the
--- saved route it is (its route view then offers Edit, not Save).
-function Panel:RouteTour(name, points, unread, routeID, holiday)
+-- saved route it is (its route view then offers Edit, not Save). tomtom: TomTom's waypoints (a trip of them can drop
+-- the stops deleted in TomTom: Navigator:CheckTomTom).
+function Panel:RouteTour(name, points, unread, routeID, holiday, tomtom)
     local entry = addon.MultiRoute:Entry(name, points, holiday ~= nil)    -- a holiday's stops are in the past
     entry.unread, entry.routeID, entry.holiday = unread, routeID, holiday     -- holiday: drawn in its look (Theme)
+    entry.tomtom = tomtom or nil
     self:ShowRoute(entry)
+end
+
+-- ---------------------------------------------------------------------------------------
+-- The stop picker: a tour's stops (TomTom's waypoints, a saved route), all ticked to start with, so some can be left
+-- out this time without deleting them. Only this once: the saved route and TomTom's waypoints stay as they are. A tour
+-- of one stop has nothing to pick, and is planned straight away.
+
+-- A stop's zone, for the right of its row ("" when the client doesn't know the map).
+local function zoneName(mapID)
+    local info = mapID and C_Map and C_Map.GetMapInfo and C_Map.GetMapInfo(mapID)
+    return info and info.name or ""
+end
+
+function Panel:PickStops(name, points, routeID, tomtom)
+    if #points <= 1 then return self:RouteTour(name, points, nil, routeID, nil, tomtom) end
+    local on = {}
+    for i = 1, #points do on[i] = true end
+    state.stops = { name = name, points = points, routeID = routeID, tomtom = tomtom, on = on, offset = 0 }
+    state.view, state.entry, state.plan = "stops", nil, nil
+    hideList()
+    showRouteWidgets(false)
+    setStatus(nil)
+    ui.back:Show()
+    showStopsWidgets(true)
+    ui.stopsTitle:SetText(name)
+    self:RenderStops()
+end
+
+function Panel:AllStopsOn()
+    for _, on in ipairs(state.stops and state.stops.on or {}) do
+        if not on then return false end
+    end
+    return true
+end
+
+-- How many stops are ticked.
+local function stopsTicked()
+    local n = 0
+    for _, on in ipairs(state.stops.on) do if on then n = n + 1 end end
+    return n
+end
+
+function Panel:RenderStops()
+    local stops = state.stops
+    if not stops then return end
+    for i, row in ipairs(ui.stopRows) do
+        local k = stops.offset + i
+        local point = stops.points[k]
+        if point then
+            row.label:SetText(point.name or L["ROUTE_STOP_UNNAMED"]:format(k))
+            row.zone:SetText(zoneName(point.mapID))
+            row:SetChecked(stops.on[k])
+            row:Show()
+        else
+            row:Hide()
+        end
+    end
+    local below = #stops.points - stops.offset - STOP_ROWS
+    local notes = {}
+    if stops.offset > 0 then notes[#notes + 1] = L["ROUTE_MORE_ABOVE"]:format(stops.offset) end
+    if below > 0 then notes[#notes + 1] = L["ROUTE_MORE_BELOW"]:format(below) end
+    ui.stopsMore:SetText(table.concat(notes, "   "))
+    local ticked = stopsTicked()
+    ui.stopsAll.label:SetText(L[self:AllStopsOn() and "STOPS_NONE" or "STOPS_ALL"])
+    ui.stopsGo.label:SetText(L["STOPS_ROUTE"]:format(ticked))
+    if ticked > 0 then ui.stopsGo:Enable() else ui.stopsGo:Disable() end
+end
+
+-- The i-th row (of those showing) was clicked: its tick has flipped.
+function Panel:ToggleStop(i)
+    local stops = state.stops
+    if not stops then return end
+    local k = stops.offset + i
+    if stops.points[k] then stops.on[k] = not stops.on[k] end
+    self:RenderStops()
+end
+
+function Panel:SetAllStops(on)
+    local stops = state.stops
+    if not stops then return end
+    for k in ipairs(stops.points) do stops.on[k] = on and true or false end
+    self:RenderStops()
+end
+
+-- Plans the tour through the ticked stops. A saved route stays itself (its view offers Edit, which edits all of it).
+function Panel:RouteStops()
+    local stops = state.stops
+    if not stops then return end
+    local points = {}
+    for k, point in ipairs(stops.points) do
+        if stops.on[k] then points[#points + 1] = point end
+    end
+    if #points == 0 then return end
+    state.stops = nil
+    showStopsWidgets(false)
+    self:RouteTour(stops.name, points, nil, stops.routeID, nil, stops.tomtom)
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -1179,7 +1331,7 @@ end
 function Panel:Escape()
     if state.view == "edit" then
         self:CloseEditor()
-    elseif state.view == "route" then
+    elseif state.view == "route" or state.view == "stops" then
         self:Query(ui.search:GetText())
     elseif ui.search:GetText() ~= "" then
         ui.search:SetText("")

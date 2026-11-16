@@ -319,6 +319,43 @@ end
 -- One update: read where the player is, move the trip on, redraw.
 function Navigator:Tick()
     Navigator:Render(Navigation:Update(Navigation:Sample()))
+    Navigator:CheckTomTom()
+end
+
+-- With the setting on, a tour of TomTom's waypoints drops the stops whose waypoint was deleted in TomTom, and the rest
+-- is planned again from here (spread over frames, as the panel plans a tour). TomTom has no event for it: looked at once
+-- a second, and not in the air or at sea (it waits for the landing). A rest that can't be planned leaves the trip as it
+-- was, and isn't tried again for that trip.
+local TOMTOM_CHECK_SECONDS = 1
+function Navigator:CheckTomTom()
+    if not (ui and addon.Options:Get("dropRemovedTomTom")) or ui.dropping then return end
+    local now = GetTime and GetTime() or 0
+    if ui.tomtomAt and now - ui.tomtomAt < TOMTOM_CHECK_SECONDS then return end
+    ui.tomtomAt = now
+    local plan = Navigation:CurrentPlan()
+    if not plan or plan == ui.dropFailed then return end
+    local model = Navigation:Model()
+    if not model or model.finished or model.offRoute or model.phase == "flying" or model.phase == "underway" then return end
+    local points = addon:GetTomTomPoints()
+    local gone = points and Navigation:StopsGone(addon.MultiRoute.PlaceIDs(points))
+    if gone then self:DropStops(gone) end
+end
+
+-- The trip without the stops in `gone` (a set of place ids): none left ends it.
+function Navigator:DropStops(gone)
+    local entry, returnTo = Navigation:ReplanTarget(gone)
+    if not (entry and entry.stops) then return end
+    if #entry.stops == 0 then
+        self:Stop()
+        return
+    end
+    local before = Navigation:CurrentPlan()
+    ui.dropping = true
+    addon.MultiRoute:Run(function(yield) return Journey:PlanFromHere(entry, returnTo, yield) end, function(plan)
+        ui.dropping = nil
+        if Navigation:CurrentPlan() ~= before then return end          -- the trip changed or stopped meanwhile
+        if not restart(entry, plan) then ui.dropFailed = before end
+    end)
 end
 
 -- Begin showing the trip that Navigation has been started on.

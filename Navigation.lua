@@ -405,27 +405,54 @@ destinationName = function()
     return entry and entry.name
 end
 
+local function legStopID(leg)
+    return leg.stop and leg.stop.place and leg.stop.place.id
+end
+
 -- The rest of a tour from the leg the trip is on, as an entry to plan again (MultiRoute:Plan with `keep`): its stop
--- first, then the later legs as they were.
-local function restOfTour()
+-- first, then the later legs as they were. gone (optional): stop place ids to leave out; with any of them among the
+-- stops left, the rest is a tour of its own (no `keep`), its order found afresh.
+local function restOfTour(gone)
     local entry = active.entry
     local k = active.legOf[active.index] or #active.legs
-    local rest = { name = entry.name, stops = {}, keep = {}, holiday = entry.holiday }
+    local rest = { name = entry.name, stops = {}, keep = {}, holiday = entry.holiday, tomtom = entry.tomtom }
+    local dropped = false
     for i = k, #active.legs do
         local leg = active.legs[i]
-        rest.stops[#rest.stops + 1] = leg.stop
-        if i > k then rest.keep[#rest.keep + 1] = leg end
+        if gone and gone[legStopID(leg) or false] then
+            dropped = true
+        else
+            rest.stops[#rest.stops + 1] = leg.stop
+            if i > k then rest.keep[#rest.keep + 1] = leg end
+        end
     end
+    if dropped then rest.keep = nil end
     return rest
 end
 
 -- What to plan again from where the player is now, to carry on the trip: the destination entry (for a tour, the stops
--- still to come) and where a round trip goes back to. Nil when no trip is being followed. Leaves the trip as it is.
-function Navigation:ReplanTarget()
+-- still to come, less any whose place id is in `gone`) and where a round trip goes back to. Nil when no trip is being
+-- followed. Leaves the trip as it is.
+function Navigation:ReplanTarget(gone)
     if not active or active.finished then return nil end
     local entry = active.entry
-    if entry and entry.stops and active.legs then entry = restOfTour() end
+    if entry and entry.stops and active.legs then entry = restOfTour(gone) end
     return entry, active.returnTo
+end
+
+-- For a tour of TomTom's waypoints (entry.tomtom): the place ids of its stops still to come that are not in `present`
+-- (a set of place ids, the waypoints TomTom has now), or nil when none are gone or the trip is no such tour.
+function Navigation:StopsGone(present)
+    if not (active and not active.finished and active.legs and active.entry and active.entry.tomtom) then return nil end
+    local gone
+    for i = active.legOf[active.index] or #active.legs, #active.legs do
+        local id = legStopID(active.legs[i])
+        if id and not present[id] then
+            gone = gone or {}
+            gone[id] = true
+        end
+    end
+    return gone
 end
 
 -- A flight was chosen at a flight master: stops = the node ids the ticket lands at, the last being where

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **Pick which stops to visit.** Choosing your TomTom waypoints or a saved route now lists its stops first, all ticked. Untick any you don't want this time (or use All/None), then Route. Your waypoints and the saved route aren't changed.
+- **New setting: Drop stops removed from TomTom** (off by default). While you follow a route through your TomTom waypoints, deleting one in TomTom takes it off the route and plans the rest again. Left off, the route keeps it, so you can clear waypoints from your map once you're on your way.
+
 ## 1.1.0 (Forever) and 2.0.7 (Retail)
 
 ### Added

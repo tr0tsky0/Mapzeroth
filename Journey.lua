@@ -663,12 +663,12 @@ function Journey:FareText(plan)
     end
 end
 
--- The route to a destination entry from where the player is now (nil if there is none).
-function Journey:PlanFromHere(entry, returnTo)
+-- The route to a destination entry from where the player is now (nil if there is none). yield: as for PlanEntry.
+function Journey:PlanFromHere(entry, returnTo, yield)
     local start = addon:GetPlayerStart()
     local session = start and self:Build(addon:GetPlayerContext(), start, self:ExtrasOf(entry))
     if session then session.returnTo = returnTo end
-    return session and self:PlanEntry(session, entry) or nil
+    return session and self:PlanEntry(session, entry, yield) or nil
 end
 
 -- A line for a route that flies to points nobody has confirmed the player found, or nil.

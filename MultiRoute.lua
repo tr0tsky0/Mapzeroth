@@ -549,6 +549,16 @@ function MultiRoute:Entry(name, points, past)
     return { name = name, stops = stops, unplaced = unplaced, points = points }, unplaced
 end
 
+-- The place ids Entry gives these points' stops, as a set (points on maps we can't place are left out).
+function MultiRoute.PlaceIDs(points)
+    local ids = {}
+    for _, point in ipairs(points or {}) do
+        local place = addon:PlaceAt(point.mapID, point.x, point.y, "STOP")
+        if place then ids[place.id] = true end
+    end
+    return ids
+end
+
 -- ---------------------------------------------------------------------------------------
 -- Saved routes: the player's own tours, kept for every character (MapzerothRebuildDB.routes), offered in the picker and
 -- edited in the panel. Each is { id, name, way }: its stops as /way lines, each naming its map, so they read the same

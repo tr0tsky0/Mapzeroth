@@ -1279,8 +1279,66 @@ do
     local tomtom = pickRow("tomtom")
     check(tomtom and state.results[tomtom].name == addon.L["PICK_TOMTOM"]:format(2), "with two waypoints, a pick for them")
     addon.Panel:Choose(tomtom)
-    check(state.plan and state.plan.legs and #state.plan.legs == 2 and state.entry.name == addon.L["TOUR_TOMTOM"],
-        "choosing it plans the way through both")
+    check(state.view == "stops" and state.stops and #state.stops.points == 2 and not state.plan,
+        "choosing it lists the waypoints to pick from, nothing planned yet")
+    check(box.stopRows[1]._shown and box.stopRows[2]._shown and not box.stopRows[3]._shown
+        and box.stopRows[1]:GetChecked() and box.stopRows[2]:GetChecked(), "one ticked row each")
+    check(box.stopsGo.label:GetText() == addon.L["STOPS_ROUTE"]:format(2) and box.stopsAll.label:GetText() == addon.L["STOPS_NONE"],
+        "Route counts them, and the toggle offers None")
+    addon.Panel:SetAllStops(false)
+    check(not box.stopRows[1]:GetChecked() and box.stopsGo.label:GetText() == addon.L["STOPS_ROUTE"]:format(0)
+        and box.stopsAll.label:GetText() == addon.L["STOPS_ALL"], "None unticks them all; the toggle offers All")
+    addon.Panel:RouteStops()
+    check(state.view == "stops" and not state.plan, "with none ticked, Route does nothing")
+    addon.Panel:SetAllStops(true)
+    box.stopRows[2]._scripts.OnClick(box.stopRows[2])
+    check(not box.stopRows[2]:GetChecked() and box.stopsGo.label:GetText() == addon.L["STOPS_ROUTE"]:format(1)
+        and box.stopsAll.label:GetText() == addon.L["STOPS_ALL"], "clicking a row unticks it")
+    addon.Panel:RouteStops()
+    check(state.plan and state.plan.legs and #state.plan.legs == 1 and state.entry.name == addon.L["TOUR_TOMTOM"]
+        and state.entry.stops[1].name == "Goldshire Inn" and state.entry.tomtom, "Route plans only the ticked one")
+    check(not box.stopRows[1]._shown and not box.stopsGo._shown, "and the picker is gone")
+    addon.Panel:Choose(tomtom)
+    addon.Panel:RouteStops()
+    check(state.plan and #state.plan.legs == 2, "chosen again, all are ticked again: the way through both")
+    -- Following it: a waypoint deleted in TomTom stays on the route, unless the setting says to drop it. (Two stops
+    -- away from the player, who stands at Goldshire: a stop where they are is reached at once.)
+    TomTom = { waypoints = { [1429] = {
+        b = { 1429, 0.84, 0.69, title = "Eastvale" },
+        c = { 1429, 0.242, 0.74, title = "Westbrook" },
+    } } }
+    addon.Panel:Choose(pickRow("tomtom"))
+    addon.Panel:RouteStops()
+    addon.Panel:StartRoute()
+    check(addon.Navigation:IsActive() and #addon.Navigation:CurrentPlan().legs == 2, "the tour through both is being followed")
+    local first = addon.Navigation:CurrentPlan().legs[1].stop.name
+    local other = first == "Eastvale" and "Westbrook" or "Eastvale"
+    TomTom.waypoints[1429][first == "Eastvale" and "b" or "c"] = nil
+    addon.Navigator:CheckTomTom()
+    check(#addon.Navigation:CurrentPlan().legs == 2, "setting off (the default): the deleted waypoint stays on the route")
+    addon.Options:Set("dropRemovedTomTom", true)
+    addon.Navigator.widgets.tomtomAt = nil
+    addon.Navigator:CheckTomTom()
+    local plan = addon.Navigation:CurrentPlan()
+    check(plan and #plan.legs == 1 and plan.legs[1].stop.name == other,
+        "setting on: the stop it was heading for is dropped and the rest planned again")
+    TomTom.waypoints[1429] = {}
+    addon.Navigator.widgets.tomtomAt = nil
+    addon.Navigator:CheckTomTom()
+    check(not addon.Navigation:IsActive(), "every waypoint deleted: the trip ends")
+    addon.Options:Set("dropRemovedTomTom", false)
+    TomTom = { waypoints = { [1429] = {
+        a = { 1429, 0.417, 0.656, title = "Goldshire Inn" },
+        b = { 1429, 0.84, 0.69, title = "Eastvale" },
+    } } }
+    addon.Panel:Query("")
+
+    addon.Panel:Choose(pickRow("tomtom"))
+    addon.Panel:Escape()
+    check(state.view == "list" and not box.stopsGo._shown, "Escape on the picker goes back to the list")
+    TomTom = { waypoints = { [1429] = { a = { 1429, 0.417, 0.656, title = "Goldshire Inn" } } } }
+    addon.Panel:Choose(pickRow("tomtom"))
+    check(state.view == "route" and state.plan and #state.plan.legs == 1, "a single waypoint has nothing to pick: planned straight away")
     TomTom = nil
 end
 
@@ -1331,7 +1389,11 @@ do
     local rows = routeRows()
     check(#rows == 1 and rows[1].name == "Elwynn loop" and rows[1].sub == addon.L["TOUR_STOPS"]:format(2), "listed by name, with its stops")
     for i, entry in ipairs(state.results) do if entry.action == "route" then addon.Panel:Choose(i) break end end
-    check(state.view == "route" and state.entry.stops and #state.entry.stops == 2, "choosing it plans the tour")
+    check(state.view == "stops" and #state.stops.points == 2 and state.stops.routeID == MapzerothRebuildDB.routes[1].id,
+        "choosing it lists its stops to pick from")
+    addon.Panel:RouteStops()
+    check(state.view == "route" and state.entry.stops and #state.entry.stops == 2 and state.entry.routeID == MapzerothRebuildDB.routes[1].id,
+        "Route plans the tour, still that saved route")
 
     -- Edit: change the name and stops; Cancel leaves it as it was.
     addon.Panel:OpenEditor()
