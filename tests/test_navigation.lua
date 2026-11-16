@@ -194,6 +194,34 @@ N:Start(entry, { steps = { step("walk", "YOU", "TAXI_2", 60) } })
 m = N:Update(player(0, 0.1, WEST))
 check(m.kind == "walk" and near(m.heading, -math.pi / 2), "a walk step carries its heading")
 
+-- A walk drawn along a road (RoadNet): the arrow points along the road, and the yards are those left along it. The
+-- road here goes north 0.1 (170 yd) from the start to a corner due west of the target, then east 0.1 (250 yd) to it.
+do
+    local realExpand, realRoadData = addon.RoadNet.Expand, addon.RoadData
+    addon.RoadData = addon.RoadData or {}
+    local start = { mapID = target.mapID, x = target.x - 0.1, y = target.y + 0.1 }
+    local corner = { mapID = target.mapID, x = target.x - 0.1, y = target.y }
+    addon.RoadNet.Expand = function(_, path) return { path[1], corner, path[2] } end
+    local roadWalk = step("walk", "YOU", "TAXI_2", 60)
+    roadWalk.path = { start, target }
+    N:Start(entry, { steps = { roadWalk } })
+    m = N:Update(player(-0.1, 0.1, NORTH))
+    check(near(m.heading, 0) and math.abs(m.distance - 420) < 1,
+        "at the start, facing up the road: straight ahead, 420 yd along it: " .. m.heading .. ", " .. m.distance)
+    m = N:Update(player(-0.1, 0.05, NORTH))
+    check(near(m.heading, 0) and math.abs(m.distance - 335) < 1, "half way up the first stretch: 335 yd left: " .. m.distance)
+    m = N:Update(player(-0.1, 0.005, NORTH))
+    check(m.heading < -0.5, "near the corner it already points round it, to the right: " .. m.heading)
+    m = N:Update(player(-0.05, 0, NORTH))
+    check(near(m.heading, -math.pi / 2) and math.abs(m.distance - 125) < 1,
+        "round the corner: due east, 125 yd left: " .. m.heading .. ", " .. m.distance)
+    local off = player(0.3, 0.3, NORTH)
+    m = N:Update(off)
+    check(near(m.heading, N:Heading(off, target)), "well off the road: straight at the end")
+    addon.RoadNet.Expand, addon.RoadData = realExpand, realRoadData
+    N:Stop()
+end
+
 -- Which flight was chosen. Two flights on the route, Stormwind > Ironforge > Sentinel Hill.
 local twoFlights = { steps = { step("taxi", "TAXI_2", "TAXI_6", 200), step("taxi", "TAXI_6", "TAXI_4", 100) } }
 local far = { x = 0.5, y = 0.5 }

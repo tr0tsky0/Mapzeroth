@@ -128,18 +128,126 @@ end
 -- The turn needed to face a node, in radians: 0 is straight ahead, positive is to the left
 -- (counter-clockwise, as the game measures facing), negative to the right. Needs sample.facing.
 -- North is up the map, so a target's north-ness is minus its y difference.
+-- The turn to face a spot `east` and `north` yards from the player, who faces `facing`.
+local function turnToward(east, north, facing)
+    local bearing = math.atan2(-east, north)           -- counter-clockwise from north
+    local turn = bearing - facing
+    while turn > math.pi do turn = turn - 2 * math.pi end
+    while turn <= -math.pi do turn = turn + 2 * math.pi end
+    return turn
+end
+
 function Navigation:Heading(sample, node)
     if not (sample and sample.facing and sample.mapID and node) then return nil end
     local tx, ty = Navigation.MapPoint(node, sample.mapID)
     local xScale, yScale = yardsPerUnit(sample.mapID)
     if not (tx and xScale) then return nil end
-    local east = (tx - sample.x) * xScale
-    local north = -(ty - sample.y) * yScale
-    local bearing = math.atan2(-east, north)           -- counter-clockwise from north
-    local turn = bearing - sample.facing
-    while turn > math.pi do turn = turn - 2 * math.pi end
-    while turn <= -math.pi do turn = turn + 2 * math.pi end
-    return turn
+    return turnToward((tx - sample.x) * xScale, -(ty - sample.y) * yScale, sample.facing)
+end
+
+-- ---------------------------------------------------------------------------------------
+-- A walk along the road: where it is drawn (RoadNet, on a dataset with roads), the arrow points a little way ahead
+-- along that line instead of straight at the step's end, and the yards are those left along it. The line is put on the
+-- player's map once per step (and again if they cross onto another map), in yards; each reading looks for the player
+-- on it from where they were last time, a few segments either way, so a road that doubles back doesn't pull them
+-- ahead. Well off the line (cutting across), it's the straight way, as on a dataset without roads.
+
+local LOOK_AHEAD = 35        -- yards along the road the arrow points to
+local OFF_ROAD = 60          -- yards from the road beyond which the arrow points straight at the step's end
+local SEARCH_BACK, SEARCH_AHEAD = 2, 25      -- segments looked at around the last spot, before the whole line
+
+local function clampUnit(t)
+    if t < 0 then return 0 elseif t > 1 then return 1 end
+    return t
+end
+
+-- The step's road line on map `mapID`, in yards: { x = {}, y = {}, along = {} (yards from its start), n, at }, or false
+-- when it can't be placed (or there is no road line).
+local function roadLine(step, mapID)
+    local cache = step.mzRoad
+    if cache and cache.mapID == mapID then return cache.line end
+    local line = false
+    local RoadNet = addon.RoadNet
+    local xScale, yScale = yardsPerUnit(mapID)
+    if RoadNet and addon.RoadData and step.path and #step.path >= 2 and xScale then
+        local points = RoadNet:Expand(step.path)
+        if #points > #step.path then                   -- a road went in somewhere: there is a line to follow
+            line = { x = {}, y = {}, along = {}, n = 0, at = 1 }
+            for _, point in ipairs(points) do
+                local px, py = Navigation.MapPoint(point, mapID)
+                if not px then
+                    line = false
+                    break
+                end
+                local n = line.n + 1
+                line.x[n], line.y[n] = px * xScale, py * yScale
+                line.along[n] = n == 1 and 0
+                    or line.along[n - 1] + math.sqrt((line.x[n] - line.x[n - 1]) ^ 2 + (line.y[n] - line.y[n - 1]) ^ 2)
+                line.n = n
+            end
+            if line and line.n < 2 then line = false end
+        end
+    end
+    step.mzRoad = { mapID = mapID, line = line }
+    return line
+end
+
+-- The nearest spot on segments first..last of the line to (px, py): segment, fraction along it, squared yards off.
+local function nearestOn(line, px, py, first, last)
+    local bestI, bestT, bestD
+    for i = first, last do
+        local ax, ay = line.x[i], line.y[i]
+        local dx, dy = line.x[i + 1] - ax, line.y[i + 1] - ay
+        local len2 = dx * dx + dy * dy
+        local t = len2 > 0 and clampUnit(((px - ax) * dx + (py - ay) * dy) / len2) or 0
+        local ox, oy = ax + t * dx - px, ay + t * dy - py
+        local d = ox * ox + oy * oy
+        if not bestD or d < bestD then bestI, bestT, bestD = i, t, d end
+    end
+    return bestI, bestT, bestD
+end
+
+-- The spot `s` yards along the line.
+local function pointAlong(line, s, from)
+    for i = from, line.n - 1 do
+        if line.along[i + 1] >= s then
+            local len = line.along[i + 1] - line.along[i]
+            local t = len > 0 and (s - line.along[i]) / len or 0
+            return line.x[i] + t * (line.x[i + 1] - line.x[i]), line.y[i] + t * (line.y[i + 1] - line.y[i])
+        end
+    end
+    return line.x[line.n], line.y[line.n]
+end
+
+-- For a walk step: the yards left along its road and the turn toward a spot LOOK_AHEAD yards on (nil when it has
+-- no road line here, or the player is off it).
+local function roadPointer(step, sample)
+    if not (sample and sample.mapID and sample.x) then return nil end
+    local line = roadLine(step, sample.mapID)
+    if not line then return nil end
+    local xScale, yScale = yardsPerUnit(sample.mapID)
+    local px, py = sample.x * xScale, sample.y * yScale
+    local last = line.n - 1
+    local i, t, d = nearestOn(line, px, py, math.max(1, line.at - SEARCH_BACK), math.min(last, line.at + SEARCH_AHEAD))
+    if d > OFF_ROAD * OFF_ROAD then i, t, d = nearestOn(line, px, py, 1, last) end
+    if d > OFF_ROAD * OFF_ROAD then return nil end
+    line.at = i
+    local s = line.along[i] + t * (line.along[i + 1] - line.along[i])
+    local left = line.along[line.n] - s + math.sqrt(d)
+    local heading
+    if sample.facing then
+        local tx, ty = pointAlong(line, s + LOOK_AHEAD, i)
+        heading = turnToward(tx - px, -(ty - py), sample.facing)
+    end
+    return left, heading
+end
+
+-- A walk step's yards left and turn: along its road where there is one, else straight to its end.
+local function walkPointer(step, sample)
+    local left, heading = roadPointer(step, sample)
+    if left then return left, heading end
+    local node = nodeOf(step.nodeID)
+    return distance(sample, node), Navigation:Heading(sample, node)
 end
 
 -- Between updates, for the arrow: the yards to the current step's destination and which way to turn, read from
@@ -148,9 +256,7 @@ function Navigation:Pointer()
     if not active or active.finished or active.offRoute then return nil end
     local step = active.steps[active.index]
     if not step or kindOf(step.method) ~= "walk" then return nil end
-    local sample = self:Sample()
-    local node = nodeOf(step.nodeID)
-    return distance(sample, node), self:Heading(sample, node)
+    return walkPointer(step, self:Sample())
 end
 
 -- Time aboard a boat or zeppelin, from leaving the dock: the edge's `ride` where it has one. The step's own time
@@ -189,8 +295,11 @@ end
 local function beginStep(sample)
     local step = active.steps[active.index]
     local node = nodeOf(step.nodeID)
-    local state = { startedAt = sample.now, startDistance = distance(sample, node) }
     local kind = kindOf(step.method)
+    step.mzRoad = nil                                  -- the road line is found afresh, from its start (roadLine)
+    -- A walk's time left is scaled by the yards left, so it starts from the yards it shows (along the road, if any).
+    local state = { startedAt = sample.now,
+                    startDistance = kind == "walk" and (walkPointer(step, sample)) or distance(sample, node) }
     if kind == "transport" then
         state.origin = nodeOf(step.fromID)
         state.routeLength = state.origin and node and addon.TravelGraph.DistanceProvider(state.origin, node)
@@ -312,8 +421,7 @@ local function buildModel(sample)
     if state.seconds then left = state.seconds end        -- a flight that covers several steps
 
     if kind == "walk" then
-        model.distance = distance(sample, node)
-        model.heading = Navigation:Heading(sample, node)
+        model.distance, model.heading = walkPointer(step, sample)
         if model.distance and state.startDistance and state.startDistance > 0 then
             left = step.seconds * clamp(model.distance / state.startDistance, 0, 1)
         end

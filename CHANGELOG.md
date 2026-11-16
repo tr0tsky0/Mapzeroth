@@ -5,6 +5,7 @@
 ### Added
 - **Pick which stops to visit.** Choosing your TomTom waypoints or a saved route now lists its stops first, all ticked. Untick any you don't want this time (or use All/None), then Route. Your waypoints and the saved route aren't changed.
 - **New setting: Drop stops removed from TomTom** (off by default). While you follow a route through your TomTom waypoints, deleting one in TomTom takes it off the route and plans the rest again. Left off, the route keeps it, so you can clear waypoints from your map once you're on your way.
+- **Forever: the navigator's arrow follows the road.** On a walk drawn along roads or city streets, the arrow points a little way ahead along the road instead of straight at the end, and the yards shown are those left along it. Cut across country and it points straight at the end again.
 
 ## 1.1.0 (Forever) and 2.0.7 (Retail)
 
