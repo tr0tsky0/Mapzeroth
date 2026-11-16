@@ -58,8 +58,15 @@ local DONE_ALPHA = 0.35            -- steps already done fade
 local SHRINK = { [0] = 0.5, [1] = 0.5, [2] = 0.7 }
 local NO_CASING = { [0] = true, [1] = true }
 local MIN_THICKNESS = 4            -- screen pixels: shrunk below this, a dot is a smudge
+-- The step being followed: its dots or dashes march toward where it ends, this many repeats of the pattern a second,
+-- and a beacon (Theme:Beacon) swells round its end, this big at rest (screen pixels, before SHRINK). Both sit still
+-- while motion is off (Theme:MotionOn).
+local MARCH_RATE = 1
+local BEACON = 30
+RouteLines.MARCH_RATE = MARCH_RATE
 
-local state = { plan = nil, current = nil, lines = {}, linesUsed = 0, casings = {}, casingsUsed = 0, badges = {}, badgesUsed = 0 }
+local state = { plan = nil, current = nil, lines = {}, linesUsed = 0, casings = {}, casingsUsed = 0, badges = {}, badgesUsed = 0,
+                marching = {}, phase = 0 }
 RouteLines.state = state            -- for tests
 
 local function canvas()
@@ -117,29 +124,36 @@ end
 
 -- One straight run of a line in `look`, its edge (casing) picture if `edge`, from (x1, y1) to (x2, y2) off `anchor`
 -- of `frame`. `from` and `to` are how far along the whole line it starts and ends, so the pattern carries on across
--- a bend; they and `thickness` (the tile's) are in the frame's units. The minimap draws with this too.
-function RouteLines.PlaceRun(line, look, edge, frame, anchor, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha)
+-- a bend; they and `thickness` (the tile's) are in the frame's units. `shift` (optional) moves the pattern that many
+-- repeats on toward the end (the marching step). The minimap draws with this too.
+function RouteLines.PlaceRun(line, look, edge, frame, anchor, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha, shift)
     line:SetTexture(MEDIA .. look.tile .. (edge and "Edge" or ""), "REPEAT", "CLAMP", "TRILINEAR")
     local period = thickness * look.period / look.thickness
-    line:SetTexCoord(from / period, to / period, 0, 1)
+    shift = shift or 0
+    line:SetTexCoord(from / period - shift, to / period - shift, 0, 1)
     line:SetThickness(thickness)
     line:SetVertexColor(r, g, b, alpha)
     line:SetStartPoint(anchor, frame, x1, y1)
     line:SetEndPoint(anchor, frame, x2, y2)
 end
-local function place(line, frame, look, edge, ax, ay, bx, by, from, to, thickness, r, g, b, alpha)
-    RouteLines.PlaceRun(line, look, edge, frame, "TOPLEFT", ax, -ay, bx, -by, from, to, thickness, r, g, b, alpha)
+local function place(line, frame, look, edge, ax, ay, bx, by, from, to, thickness, r, g, b, alpha, shift)
+    RouteLines.PlaceRun(line, look, edge, frame, "TOPLEFT", ax, -ay, bx, -by, from, to, thickness, r, g, b, alpha, shift)
 end
 
--- One run, on its casing (unless the map has none: state.noCasing).
-local function run(frame, look, ax, ay, bx, by, from, to, thickness, r, g, b, alpha)
+-- One run, on its casing (unless the map has none: state.noCasing). `march`: it is the step being followed, so its
+-- lines are listed for the marching (each with where it runs along the line, in repeats of its pattern).
+local function run(frame, look, ax, ay, bx, by, from, to, thickness, r, g, b, alpha, march)
+    local shift = march and state.phase or 0
+    local period = thickness * look.period / look.thickness
     if not state.noCasing then
         local cr, cg, cb, ca = Theme:MapColor("casing", state.holiday)
-        place(acquire(frame, "casings", "casingsUsed", "ARTWORK"), frame, look, true, ax, ay, bx, by, from, to,
-            thickness, cr, cg, cb, ca * alpha)
+        local casing = acquire(frame, "casings", "casingsUsed", "ARTWORK")
+        place(casing, frame, look, true, ax, ay, bx, by, from, to, thickness, cr, cg, cb, ca * alpha, shift)
+        if march then state.marching[#state.marching + 1] = { casing, from / period, to / period } end
     end
-    place(acquire(frame, "lines", "linesUsed", "OVERLAY"), frame, look, false, ax, ay, bx, by, from, to,
-        thickness, r, g, b, alpha)
+    local line = acquire(frame, "lines", "linesUsed", "OVERLAY")
+    place(line, frame, look, false, ax, ay, bx, by, from, to, thickness, r, g, b, alpha, shift)
+    if march then state.marching[#state.marching + 1] = { line, from / period, to / period } end
 end
 
 -- A marker: its picture on a dark edge. The minimap makes its markers with this too.
@@ -167,6 +181,10 @@ local function drawPiece(frame, piece, unit, shrink, W, H)
     local thickness = math.max(look.thickness * shrink, MIN_THICKNESS) * unit
     local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", state.holiday)
     local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
+    -- The step being followed: in the theme's colour for it (a holiday route keeps its own look), and marching.
+    local now = state.following and piece.step == state.current
+    if now and not state.holiday and Theme:CurrentStepColor() then r, g, b = Theme:CurrentStepColor() end
+    local march = now and state.moving and not look.solid
     -- A solid line's runs reach half its width past each end, so a bend has no notch on its outside.
     local reach = look.solid and thickness / 2 or 0
     local along = 0
@@ -178,7 +196,7 @@ local function drawPiece(frame, piece, unit, shrink, W, H)
         if length > 0 then
             local ux, uy = dx / length * reach, dy / length * reach
             run(frame, look, ax - ux, ay - uy, bx + ux, by + uy, along - reach, along + length + reach,
-                thickness, r, g, b, alpha)
+                thickness, r, g, b, alpha, march)
             along = along + length
         end
     end
@@ -219,6 +237,26 @@ function RouteLines.StyleBadge(badge, marker, current, holiday)
     badge.fill:SetVertexColor(r, g, b, alpha)
 end
 
+-- Whether `marker` (MapRoute's) is where step `current` of `total` ends: the next step's dot, the teleport that
+-- starts the next step, this step's landing or tour stop, or the route's end after its last step.
+function RouteLines.EndsStep(marker, current, total)
+    local kind = marker.kind
+    if kind == "step" then return marker.index == current + 1 end
+    if kind == "portOut" then return marker.step == current + 1 end
+    if kind == "portIn" or kind == "stop" then return marker.step == current end
+    if kind == "dest" then return current == total end
+    return false
+end
+
+-- The colour of the step being followed (and its beacon): the theme's colour for it, else its travel style's.
+function RouteLines.CurrentColor(plan, current)
+    local holiday = plan.holiday
+    if not holiday and Theme:CurrentStepColor() then return Theme:CurrentStepColor() end
+    local step = plan.steps[current]
+    local style = step and MapRoute:StyleOf(step.method)
+    return Theme:MapColor(LOOK[style] and style or "foot", holiday)
+end
+
 local function drawMarker(frame, marker, unit, W, H)
     local badge = acquireBadge(frame)
     badge:SetScale(unit)
@@ -241,9 +279,39 @@ local function draw(frame, plan, mapID)
     local unit = unitOf(frame)
     state.noCasing = noCasing
     state.holiday = plan.holiday           -- a holiday route's look (Theme:MapColor, HOLIDAY_STOP)
+    -- Only a trip being followed has a step on now (not a route the panel is only showing).
+    state.following = plan == state.plan and state.current ~= nil
+    state.moving = state.following and Theme:MotionOn()
     local pieces, markers = MapRoute:Pieces(plan, mapID)
     for _, piece in ipairs(pieces) do drawPiece(frame, piece, unit, shrink, W, H) end
     for _, marker in ipairs(markers) do drawMarker(frame, marker, unit * shrink, W, H) end
+    -- The beacon, on the first marker where the step being followed ends (none on this map: none shown).
+    if state.following then
+        local scale = unit * shrink
+        for _, marker in ipairs(markers) do
+            if RouteLines.EndsStep(marker, state.current, #plan.steps) then
+                local beacon = state.beacon or Theme:Beacon(frame)
+                state.beacon = beacon
+                beacon:SetSize(BEACON, BEACON)
+                beacon:SetScale(scale)
+                beacon:ClearAllPoints()
+                beacon:SetPoint("CENTER", frame, "TOPLEFT", (marker.x * W) / scale, (-marker.y * H) / scale)
+                beacon:Paint(RouteLines.CurrentColor(plan, state.current))
+                beacon:Show()
+                beacon:SetMoving(state.moving)
+                break
+            end
+        end
+    end
+    -- March: move the step's pattern on every frame while the map is open (this frame is hidden with it).
+    frame:SetScript("OnUpdate", #state.marching > 0 and RouteLines.March or nil)
+end
+
+-- One frame of the marching: every line of the step being followed, its pattern moved on toward the step's end.
+function RouteLines.March(_, elapsed)
+    state.phase = (state.phase + (elapsed or 0) * MARCH_RATE) % 1
+    local shift = state.phase
+    for _, m in ipairs(state.marching) do m[1]:SetTexCoord(m[2] - shift, m[3] - shift, 0, 1) end
 end
 
 -- Take down everything drawn (the pieces stay pooled for next time).
@@ -252,6 +320,12 @@ function RouteLines:Hide()
     for i = 1, state.casingsUsed do state.casings[i]:Hide() end
     for i = 1, state.badgesUsed do state.badges[i]:Hide() end
     state.linesUsed, state.casingsUsed, state.badgesUsed = 0, 0, 0
+    state.marching = {}
+    if state.beacon then
+        state.beacon:SetMoving(false)
+        state.beacon:Hide()
+    end
+    if state.frame then state.frame:SetScript("OnUpdate", nil) end
 end
 
 -- Draw the plan again on the map that is open.

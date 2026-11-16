@@ -10,6 +10,8 @@
   - When a step has you use your Hearthstone or cast a teleport, its button on your Daylight action bars lights up.
   - A **Mapzeroth** data text (pick it in any Daylight data text slot) shows the step you're on and the time left. Hover it for the steps still to come; left-click it to show or hide the window.
   - With the Daylight theme on, light circles the main buttons, and the trip window and the step's row light up briefly when you move on to the next step. Turning off motion in Daylight UI turns these lights off too.
+  - With the Daylight theme on, the step you're on is drawn in your Daylight accent colour on the map and minimap (brightened if needed, so it stays easy to see).
+- **The step you're on comes alive on the map and minimap.** Its dots or dashes now flow toward where it ends, and a ring slowly pulses there. With Daylight UI's motion turned off, both stay still.
 
 ### Fixed
 - Stopping a route in combat no longer causes an error. The trip window fades out at once and closes when combat ends. A route started in combat opens its window once combat ends, and moving the window or changing its scale in combat waits for combat to end too.

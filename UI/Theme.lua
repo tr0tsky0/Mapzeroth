@@ -17,8 +17,9 @@ local addonName, addon = ...
 --   styles       colours by route style (foot, flight, boat, ability; addon.METHODS gives each method its style)
 --   map          (optional) colours for the route drawn on the world map and minimap: foot, flight, boat, ability
 --                (the route styles), casing (the dark edge under every line and marker, so it shows on any map
---                art), stop (a tour's stops), dest (the end). The map is pale parchment and sepia whatever the
---                theme, so these are brighter than the panel's styles; a colour left out falls back to styles.
+--                art), stop (a tour's stops), dest (the end), current (optional: the step being followed, and the
+--                beacon where it ends; left out, it keeps its style's colour). The map is pale parchment and sepia
+--                whatever the theme, so these are brighter than the panel's styles; a colour left out falls back to styles.
 --   markers      colours by kind of place (place, flight, transport, instance, ...)
 --   icons        (optional) pictures for route steps by method, each a list of texture paths, the first the client
 --                has winning; a method it leaves out uses STEP_ICONS below
@@ -133,6 +134,22 @@ function Theme:MapColor(name, holiday)
     if name == "dest" then return self:Color("accent") end
     if name == "stop" then return 1, 1, 1, 1 end
     return self:StyleColor(name)
+end
+
+-- The colour the step being followed is drawn in on the map and minimap (map.current), or nil when the theme draws it
+-- in its travel style's colour like the rest.
+function Theme:CurrentStepColor()
+    local c = current and current.map and current.map.current
+    if c then return c[1], c[2], c[3] end
+    return nil
+end
+
+-- Whether to animate the map's route (the marching dots, the beacon). Another addon can say no: Theme.motionOff, a
+-- function, is set by the Daylight UI plugin to follow its player's motion setting.
+function Theme:MotionOn()
+    if not self.motionOff then return true end
+    local ok, off = pcall(self.motionOff)
+    return not (ok and off)
 end
 
 function Theme:MethodColor(method)
@@ -752,6 +769,45 @@ function Theme:TaxiMark(parent)
     mark:SetScript("OnHide", function(self) self.pulse:Stop() end)
     mark:Hide()          -- a new frame starts shown, and its first Show would then never start the pulse
     return register(mark, "taximark")
+end
+
+-- The ring where the step being followed ends, on the map and the minimap: it swells and fades, over and over, or
+-- sits still while motion is off. beacon:Paint(r, g, b) colours it over the casing; beacon:SetMoving(on) starts or
+-- stops the swelling. Takes no clicks.
+local BEACON_SECONDS = 1.6
+function Theme:Beacon(parent)
+    local beacon = CreateFrame("Frame", nil, parent)
+    beacon:EnableMouse(false)
+    beacon.edge = beacon:CreateTexture(nil, "ARTWORK", nil, 1)
+    beacon.edge:SetAllPoints()
+    beacon.edge:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Media\\HaloEdge", "CLAMP", "CLAMP", "TRILINEAR")
+    beacon.ring = beacon:CreateTexture(nil, "ARTWORK", nil, 2)
+    beacon.ring:SetAllPoints()
+    beacon.ring:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Media\\Halo", "CLAMP", "CLAMP", "TRILINEAR")
+    local pulse = beacon:CreateAnimationGroup()
+    pulse:SetLooping("REPEAT")
+    local grow = pulse:CreateAnimation("Scale")
+    grow:SetScaleFrom(0.5, 0.5)
+    grow:SetScaleTo(1.4, 1.4)
+    grow:SetDuration(BEACON_SECONDS)
+    grow:SetSmoothing("OUT")
+    local fade = pulse:CreateAnimation("Alpha")
+    fade:SetFromAlpha(1)
+    fade:SetToAlpha(0)
+    fade:SetDuration(BEACON_SECONDS)
+    fade:SetSmoothing("IN")
+    beacon.pulse = pulse
+    function beacon:Paint(r, g, b, holiday)
+        local cr, cg, cb, ca = Theme:MapColor("casing", holiday)
+        self.edge:SetVertexColor(cr, cg, cb, math.max(ca, 0.9))
+        self.ring:SetVertexColor(r, g, b, 1)
+    end
+    function beacon:SetMoving(on)
+        local playing = self.pulse:IsPlaying()
+        if on and not playing then self.pulse:Play() elseif not on and playing then self.pulse:Stop() end
+    end
+    beacon:Hide()
+    return beacon
 end
 
 -- A number in a disc (a tour stop's): badge:SetNumber(n).

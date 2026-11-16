@@ -32,9 +32,10 @@ local SCALE = 0.7              -- lines and markers, against their size on a zon
 local MARGIN = 3               -- keep the route off the rim
 local INTERVAL = 0.1           -- seconds between redraws
 local DONE_ALPHA = 0.35        -- steps already done fade
+local BEACON = 30              -- the beacon round where the step ends (RouteLines'), at rest, before SCALE
 
 local state = { plan = nil, current = nil, lines = {}, used = 0, casings = {}, casingsUsed = 0, badges = {}, badgesUsed = 0,
-                indoors = false, built = nil, pieces = {}, markers = {} }
+                indoors = false, built = nil, pieces = {}, markers = {}, phase = 0 }
 MinimapLines.state = state     -- for tests and tools
 
 -- Can this client draw on the minimap? (The settings page says so when it can't.)
@@ -101,6 +102,7 @@ local function ensureFrame()
     frame:SetAllPoints(Minimap)
     frame:SetFrameLevel((Minimap:GetFrameLevel() or 1) + 2)
     frame:SetScript("OnUpdate", function(_, elapsed)
+        state.phase = (state.phase + elapsed * addon.RouteLines.MARCH_RATE) % 1     -- the marching step's pattern
         state.since = (state.since or 0) + elapsed
         if state.since >= INTERVAL then
             state.since = 0
@@ -125,14 +127,14 @@ local function acquire(frame, pool, used, layer)
     return line
 end
 
--- One run, on its casing.
-local function run(frame, look, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha)
+-- One run, on its casing; `shift` moves its pattern on (the marching step).
+local function run(frame, look, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha, shift)
     local place = addon.RouteLines.PlaceRun
     local cr, cg, cb, ca = Theme:MapColor("casing", state.plan and state.plan.holiday)
     place(acquire(frame, "casings", "casingsUsed", "ARTWORK"), look, true, frame, "CENTER", x1, y1, x2, y2, from, to,
-        thickness, cr, cg, cb, ca * alpha)
+        thickness, cr, cg, cb, ca * alpha, shift)
     place(acquire(frame, "lines", "used", "OVERLAY"), look, false, frame, "CENTER", x1, y1, x2, y2, from, to,
-        thickness, r, g, b, alpha)
+        thickness, r, g, b, alpha, shift)
 end
 
 local function acquireBadge(frame)
@@ -146,11 +148,13 @@ local function acquireBadge(frame)
     return badge
 end
 
-local function hideAll()
+-- keepBeacon: the 0.1 s redraw, which moves the beacon or hides it itself (hiding it each time would start its swell over).
+local function hideAll(keepBeacon)
     for i = 1, state.used do state.lines[i]:Hide() end
     for i = 1, state.casingsUsed do state.casings[i]:Hide() end
     for i = 1, state.badgesUsed do state.badges[i]:Hide() end
     state.used, state.casingsUsed, state.badgesUsed = 0, 0, 0
+    if state.beacon and not keepBeacon then state.beacon:Hide() end
 end
 
 -- The route in yards on map `mapID` (x east, y south): each piece's points with how far along it they are, and the
@@ -211,12 +215,19 @@ local function draw(frame)
     local mine, ui = frame:GetEffectiveScale(), UIParent and UIParent:GetEffectiveScale()
     if mine and ui and mine > 0 then unit = ui / mine end
 
-    local LOOK = addon.RouteLines.LOOK
+    local RouteLines = addon.RouteLines
+    local LOOK = RouteLines.LOOK
+    local holiday = state.plan.holiday
+    local moving = state.current ~= nil and Theme:MotionOn()
     for _, piece in ipairs(state.pieces) do
         local look = LOOK[piece.style] or LOOK.foot
         local thickness = look.thickness * SCALE * unit
-        local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", state.plan and state.plan.holiday)
+        local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", holiday)
         local alpha = (state.current and piece.step < state.current) and DONE_ALPHA or 1
+        -- The step being followed: in the theme's colour for it (not on a holiday route), its pattern marching.
+        local now = state.current ~= nil and piece.step == state.current
+        if now and not holiday and Theme:CurrentStepColor() then r, g, b = Theme:CurrentStepColor() end
+        local shift = (now and moving and not look.solid) and state.phase or 0
         for i = 1, #piece.points - 1 do
             local p, q = piece.points[i], piece.points[i + 1]
             local ax, ay = toPixels(p.x, p.y)
@@ -228,12 +239,13 @@ local function draw(frame)
                     local start = p.along / ypp
                     local from = start + math.sqrt((x1 - ax) ^ 2 + (y1 - ay) ^ 2)
                     local to = start + math.sqrt((x2 - ax) ^ 2 + (y2 - ay) ^ 2)
-                    run(frame, look, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha)
+                    run(frame, look, x1, y1, x2, y2, from, to, thickness, r, g, b, alpha, shift)
                 end
             end
         end
     end
 
+    local beaconAt
     for _, marker in ipairs(state.markers) do
         local x, y = toPixels(marker.x, marker.y)
         if MapRoute.InsideShape(x, y, radius, quarters) then
@@ -241,20 +253,43 @@ local function draw(frame)
             badge:SetScale(unit * SCALE)
             badge:ClearAllPoints()
             badge:SetPoint("CENTER", frame, "CENTER", x / (unit * SCALE), y / (unit * SCALE))
-            addon.RouteLines.StyleBadge(badge, marker, state.current, state.plan and state.plan.holiday)
+            RouteLines.StyleBadge(badge, marker, state.current, holiday)
+            if not beaconAt and state.current and RouteLines.EndsStep(marker, state.current, #state.plan.steps) then
+                beaconAt = { x, y }
+            end
         end
+    end
+    -- The beacon where the step ends, while that is on the minimap.
+    if beaconAt then
+        local beacon = state.beacon or Theme:Beacon(frame)
+        state.beacon = beacon
+        beacon:SetSize(BEACON, BEACON)
+        beacon:SetScale(unit * SCALE)
+        beacon:ClearAllPoints()
+        beacon:SetPoint("CENTER", frame, "CENTER", beaconAt[1] / (unit * SCALE), beaconAt[2] / (unit * SCALE))
+        beacon:Paint(RouteLines.CurrentColor(state.plan, state.current))
+        beacon:Show()
+        beacon:SetMoving(moving)
+        state.beaconPlaced = true
     end
 end
 
 -- Draw the route for where the player is now. Never raises an error into the minimap.
 function MinimapLines:Update()
-    hideAll()
-    if not (state.plan and enabled() and self:IsAvailable()) then return end
+    hideAll(true)
+    if not (state.plan and enabled() and self:IsAvailable()) then
+        hideAll()
+        return
+    end
     local frame = ensureFrame()
+    state.beaconPlaced = false
     local ok, err = pcall(draw, frame)
     if not ok then
         state.error = err
         hideAll()
+    elseif state.beacon and not state.beaconPlaced then
+        state.beacon:SetMoving(false)
+        state.beacon:Hide()
     end
 end
 

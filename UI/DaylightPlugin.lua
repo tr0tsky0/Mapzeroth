@@ -23,6 +23,11 @@ local my = API.For(PLUGIN)
 local Plugin = {}
 addon.DaylightPlugin = Plugin
 
+-- The route's animations on the map (marching dots, the beacon) follow the player's Daylight motion setting.
+if type(API.MotionOn) == "function" then
+    addon.Theme.motionOff = function() return API.MotionOn() == false end
+end
+
 -- What the step on now asks the player to cast or use, as an action bar slot holds it: "item", itemID or
 -- "spell", spellID. Nil for any other step (and for putting an item on, which no bar button does).
 function Plugin.ActionOf(model)

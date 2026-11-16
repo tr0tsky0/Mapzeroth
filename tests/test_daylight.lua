@@ -94,6 +94,15 @@ handlers.StyleChanged()
 r = Theme:Color("accent")
 check(r == 0.9, "a new DaylightUI accent is picked up")
 
+-- The step being followed on the map takes the accent, lifted when it is too dark to read over the route's casing.
+local cr, cg, cb = Theme:CurrentStepColor()
+local function light(a, b2, c) return 0.299 * a + 0.587 * b2 + 0.114 * c end
+check(cr and light(cr, cg, cb) >= 0.6 - 1e-9, "the current step's colour is bright enough: " .. tostring(cr))
+local bright = Theme.Legible(1, 0.9, 0.2)
+check(bright[1] == 1 and bright[2] == 0.9 and bright[3] == 0.2, "a bright accent is used as it is")
+local navy = Theme.Legible(0.1, 0.15, 0.5)
+check(math.abs(light(navy[1], navy[2], navy[3]) - 0.6) < 1e-9 and navy[3] > navy[1], "a navy accent is lifted, still blue")
+
 -- Another theme hides the shell and puts the backdrop back; the next DaylightUI change leaves it alone.
 Theme:Set("moderndark")
 check(not holder:IsShown() and panel._backdrop ~= nil, "Modern Dark hides the shell and has its backdrop")

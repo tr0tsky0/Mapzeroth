@@ -49,6 +49,18 @@ local function refreshFonts()
     end
 end
 
+-- The step being followed is drawn on the map in the accent. Every route line sits on a near-black casing, over
+-- parchment on the world map and terrain on the minimap, so a dark accent (a deep blue) would sink into its casing:
+-- lift it toward white until it is at least this bright (perceived luminance, 0-1), keeping its hue.
+local MIN_LIGHT = 0.6
+local function legible(r, g, b)
+    local light = 0.299 * r + 0.587 * g + 0.114 * b
+    if light >= MIN_LIGHT then return { r, g, b, 1 } end
+    local t = (MIN_LIGHT - light) / (1 - light)
+    return { r + (1 - r) * t, g + (1 - g) * t, b + (1 - b) * t, 1 }
+end
+addon.Theme.Legible = legible                  -- for tests
+
 -- DaylightUI gives text colours and an accent; the fills between (buttons, boxes, rows) are near-blacks under its
 -- window background, so the accent and the text carry the look.
 local function refresh(def)
@@ -68,6 +80,7 @@ local function refresh(def)
     c.rowSelected = copy(accent, 0.18)
     c.rowHover = copy(ink.TEXT, 0.06)
     def.markers.place, def.markers.waypoint = accent, accent
+    def.map.current = legible(ar, ag, ab)
     refreshFonts()
 end
 

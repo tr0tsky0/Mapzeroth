@@ -24,6 +24,18 @@ local function newFrame()
         return t
     end
     f.SetFrameLevel = function() end
+    f.EnableMouse = function() end
+    -- The beacon's swelling (Theme:Beacon): records whether it is playing.
+    f.CreateAnimationGroup = function(self)
+        local group = { _playing = false }
+        local anim = setmetatable({}, { __index = function() return function() end end })
+        group.SetLooping = function() end
+        group.CreateAnimation = function() return anim end
+        group.Play = function(g) g._playing = true end
+        group.Stop = function(g) g._playing = false end
+        group.IsPlaying = function(g) return g._playing end
+        return group
+    end
     f.RegisterEvent = function() end
     f.SetScript = function(self, name, fn) self._scripts[name] = fn end
     f.Show = function(self) self._shown = true end
@@ -83,7 +95,9 @@ end
 local function markers()
     local out = {}
     for _, badge in ipairs(badges) do
-        if badge._shown and badge._scale then out[#out + 1] = { x = badge._x * badge._scale, y = badge._y * badge._scale } end
+        if badge._shown and badge._scale and badge ~= MinimapLines.state.beacon then
+            out[#out + 1] = { x = badge._x * badge._scale, y = badge._y * badge._scale }
+        end
     end
     return out
 end
@@ -126,6 +140,22 @@ local shownMarkers = markers()
 check(#shownMarkers == 1 and math.abs(shownMarkers[1].x) < 1e-6 and math.abs(shownMarkers[1].y - 51) < 0.5,
     "with the end marked where the route ends, 51 pixels up: " .. #shownMarkers)
 check(casings() == #visible(), "each on a dark casing")
+local beacon = MinimapLines.state.beacon
+check(beacon and beacon._shown and math.abs(beacon._y * beacon._scale - 51) < 0.5 and beacon.pulse:IsPlaying(),
+      "a beacon swells where the step being followed ends")
+
+-- The step being followed marches: a moment later its dots have moved on toward the end (the pattern shifted back).
+local before = visible()[1]._u[1]
+MinimapLines.state.frame._scripts.OnUpdate(nil, 0.25)
+local after = visible()[1]._u[1]
+check(math.abs((before - after) - 0.25) < 1e-6, "the dots march on a quarter repeat in a quarter second: " .. (before - after))
+addon.Theme.motionOff = function() return true end
+MinimapLines:Update()
+check(not beacon.pulse:IsPlaying() and beacon._shown, "with motion off the beacon sits still")
+local still = visible()[1]._u[1]
+MinimapLines.state.frame._scripts.OnUpdate(nil, 0.25)
+check(visible()[1]._u[1] == still, "and the dots don't march")
+addon.Theme.motionOff = nil
 local minX, maxX, minY, maxY, farthest = extent()
 check(math.abs(minX) < 1e-6 and math.abs(maxX) < 1e-6, "straight up from the player")
 check(minY >= -0.01 and maxY > 50 and maxY <= 51.01, "as far as the route goes (51 pixels): " .. maxY)
@@ -137,7 +167,8 @@ MinimapLines:Update()
 minX, maxX, minY, maxY = extent()
 check(math.abs(minY + 25.5) < 0.5 and maxY > 25 and maxY <= 25.51, "walked half way: the route is half behind, half ahead: " .. minY .. " to " .. maxY)
 local u = visible()[1]._u
-check(u and math.abs(u[1]) < 1e-6, "and its dots stay on the ground: the pattern still starts where the route does")
+check(u and math.abs(u[1] + MinimapLines.state.phase) < 1e-6,
+      "and its dots stay on the ground: the pattern still starts where the route does (less the march)")
 playerY = 0.5
 
 -- Turned with the player when the minimap rotates: facing east, north is on their left.

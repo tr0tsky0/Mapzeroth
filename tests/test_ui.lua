@@ -962,6 +962,20 @@ local faded = 0
 for _, line in ipairs(drawn) do if line._shown and line._alpha and line._alpha < 1 and line._alpha > 0.2 then faded = faded + 1 end end
 RouteLines:SetCurrent(2)
 check(shown() > 0, "moving on to the next step redraws it")
+check(RouteLines.state.error == nil, "drawn without an error: " .. tostring(RouteLines.state.error))
+RouteLines:SetCurrent(1)                       -- the trip's one step (a flight: dashes)
+check(#RouteLines.state.marching > 0 and RouteLines.state.frame._scripts.OnUpdate == RouteLines.March,
+      "the step being followed marches: " .. #RouteLines.state.marching)
+check(RouteLines.state.beacon and RouteLines.state.beacon._shown, "with a beacon where it ends")
+local march = RouteLines.state.marching[1]
+RouteLines.March(nil, 0.5)
+check(march[1]._u[1] < march[2], "its pattern moves on toward the end")
+addon.Theme.motionOff = function() return true end
+RouteLines:Redraw()
+check(#RouteLines.state.marching == 0 and RouteLines.state.frame._scripts.OnUpdate == nil and RouteLines.state.beacon._shown,
+      "with motion off it stands still, the beacon still shown")
+addon.Theme.motionOff = nil
+RouteLines:SetCurrent(2)
 addon.Options:Set("showRouteOnMap", false)
 check(shown() == 0, "switched off in the settings, the route leaves the map")
 addon.Options:Set("showRouteOnMap", true)
