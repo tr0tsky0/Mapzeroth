@@ -82,5 +82,7 @@ then checked by eye. Lava, cliff edges and riverbanks are thin too, so that chec
 
 - `/mzr roads` shows the nearest road to you (a few yards when you stand on one) and every road and city graph.
 - `/mzr roads <nodeA> <nodeB>` shows the road way between two nodes.
+- In a capital, a walk joins the street nearest each end and keeps to the streets: they are the only ways through, so
+  neither open-ground shortcuts nor the Walking routes setting apply there.
 - The **Walking routes** setting (from across country to roads) only changes how walks are drawn. Their shown times
   follow the drawn line; routes are still chosen on the shipped times.

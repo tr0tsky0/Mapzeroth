@@ -76,7 +76,20 @@ do
     local len, straight, points, continent = RoadNet:Between(inA, inB)
     check(len and continent == 7 and #points == 3 and points[2].x == 900 and points[2].y == 500,
         "a walk in the city goes by its streets, round the corner")
-    check(near(points[1].y, 500) and points[1].x > 100, "joining its street, not the terrain road at y 0")
+    check(points[1].x == 100 and points[1].y == 500 and points[3].x == 900 and points[3].y == 100,
+        "joining the street nearest each end, not the terrain road at y 0")
+    -- Streets only: the two ends of a U are close across its gap (a harbour wall, say), but the walk goes round it.
+    addon.CityPaths[9999] = { { 0.1, 0.5, 0.9, 0.5 }, { 0.9, 0.5, 0.9, 0.9 }, { 0.9, 0.9, 0.2, 0.9 } }
+    RoadNet:Reset()
+    local uLen, uStraight, uPoints = RoadNet:Between({ mapID = 9999, x = 0.1, y = 0.52 }, { mapID = 9999, x = 0.2, y = 0.88 })
+    check(uLen and near(uLen, 20 + 800 + 400 + 700 + 20, 1e-6) and #uPoints == 4 and uPoints[2].x == 900 and uPoints[3].y == 900,
+        ("round the U by its streets, not across the gap: %s yd for a %.0f yd straight line"):format(tostring(uLen), uStraight or 0))
+    addon.Options:Set("roadPreference", 1)
+    check(near(RoadNet:Between({ mapID = 9999, x = 0.1, y = 0.52 }, { mapID = 9999, x = 0.2, y = 0.88 }), uLen, 1e-6),
+        "the Walking routes setting doesn't change a city's walk")
+    addon.Options:Set("roadPreference", 3)
+    addon.CityPaths[9999] = streets
+    RoadNet:Reset()
     -- An unmeasured city's streets time its walks; a measured one's (Stormwind, PathFactors.lua) are only drawn.
     local _, _, _, _, drawOnly = RoadNet:Between(inA, inB)
     check(drawOnly == false, "an unmeasured city is timed by its streets")

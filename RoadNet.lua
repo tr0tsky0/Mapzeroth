@@ -163,7 +163,7 @@ end
 
 -- The nearest point of road to (x, y), within MAX_SNAP: distance and the point.
 local function nearest(g, x, y)
-    local best, bx, by
+    local best, bx, by, bs
     for _, s in ipairs(segmentsNear(g, x, y, RoadNet.MAX_SNAP)) do
         local ax, ay = g.vx[g.sa[s]], g.vy[g.sa[s]]
         local dx, dy = g.vx[g.sb[s]] - ax, g.vy[g.sb[s]] - ay
@@ -172,16 +172,17 @@ local function nearest(g, x, y)
         if t < 0 then t = 0 elseif t > 1 then t = 1 end
         local px, py = ax + dx * t, ay + dy * t
         local d = math.sqrt((x - px) ^ 2 + (y - py) ^ 2)
-        if d <= RoadNet.MAX_SNAP and (not best or d < best) then best, bx, by = d, px, py end
+        if d <= RoadNet.MAX_SNAP and (not best or d < best) then best, bx, by, bs = d, px, py, s end
     end
-    return best, bx, by
+    return best, bx, by, bs
 end
 
 -- The nearest road to a world point: distance and the point on the road, or nil (none within MAX_SNAP).
 function RoadNet:Nearest(continent, x, y)
     local g = graphFor(continent)
     if not g then return nil end
-    return nearest(g, x, y)
+    local d, px, py = nearest(g, x, y)
+    return d, px, py
 end
 
 -- Each continent's graph size, building them all (for /mzr roads).
@@ -229,16 +230,67 @@ local function pop(h)
     return top[1], top[2]
 end
 
+-- A city's walk: its streets are the only ways through (walls, water and buildings lie between them), so each end
+-- joins the street nearest to it, and the walk keeps to the streets between: no open-ground shortcuts, and the
+-- Walking routes setting doesn't come into it. Returns as Route does; nil when the streets don't join the two.
+local function streetsOnly(g, ax, ay, bx, by, straight)
+    local vx, vy, adj, sa, sb = g.vx, g.vy, g.adj, g.sa, g.sb
+    local d1, p1x, p1y, s1 = nearest(g, ax, ay)
+    local d2, p2x, p2y, s2 = nearest(g, bx, by)
+    if not (d1 and d2) then return nil end
+    local function from(px, py, v) return math.sqrt((vx[v] - px) ^ 2 + (vy[v] - py) ^ 2) end
+    local best, bestPoints, bestVia
+    if s1 == s2 then
+        best = d1 + math.sqrt((p1x - p2x) ^ 2 + (p1y - p2y) ^ 2) + d2
+        bestPoints = { { x = p1x, y = p1y }, { x = p2x, y = p2y } }
+    end
+    local goal = { [sa[s2]] = from(p2x, p2y, sa[s2]) + d2, [sb[s2]] = from(p2x, p2y, sb[s2]) + d2 }
+    local dist, prev, heap, closed = {}, {}, {}, {}
+    local function h(v) return math.sqrt((vx[v] - p2x) ^ 2 + (vy[v] - p2y) ^ 2) end
+    for _, v in ipairs({ sa[s1], sb[s1] }) do
+        local c = d1 + from(p1x, p1y, v)
+        if not dist[v] or c < dist[v] then dist[v] = c; push(heap, c + h(v), v) end
+    end
+    while #heap > 0 do
+        local f, u = pop(heap)
+        if best and f >= best then break end
+        if not closed[u] then
+            closed[u] = true
+            local du = dist[u]
+            if goal[u] and (not best or du + goal[u] < best) then best, bestVia, bestPoints = du + goal[u], u, nil end
+            local list = adj[u]
+            for n = 1, #list, 2 do
+                local v, w = list[n], list[n + 1]
+                local nd = du + w
+                if not closed[v] and (not dist[v] or nd < dist[v]) then
+                    dist[v], prev[v] = nd, u
+                    push(heap, nd + h(v), v)
+                end
+            end
+        end
+    end
+    if not best then return nil end
+    if not bestPoints then
+        local chain, v = {}, bestVia
+        while v do table.insert(chain, 1, v); v = prev[v] end
+        bestPoints = { { x = p1x, y = p1y } }
+        for _, c in ipairs(chain) do bestPoints[#bestPoints + 1] = { x = vx[c], y = vy[c] } end
+        bestPoints[#bestPoints + 1] = { x = p2x, y = p2y }
+    end
+    return best, straight, bestPoints
+end
+
 -- The way from world point A to B on one continent when some road scores better than straight across: its length in
 -- yards (A onto the road, along it, off it to B), the straight line's length, and the points to draw between A and
 -- B ({ x, y } each: where it joins the road, along it, where it leaves). nil when no road helps.
--- `continent`: which graph, a continent or "city:<mapID>".
+-- `continent`: which graph, a continent or "city:<mapID>" (a city's walk keeps to its streets: streetsOnly).
 function RoadNet:Route(continent, ax, ay, bx, by, k)
     k = k or self:Offroad()
     local straight = math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
     if straight < self.MIN_WALK then return nil end
     local g = graphFor(continent)
     if not g then return nil end
+    if type(continent) == "string" then return streetsOnly(g, ax, ay, bx, by, straight) end
     local vx, vy, adj, sa, sb = g.vx, g.vy, g.adj, g.sa, g.sb
     local direct = k * straight
     local best, bestPoints, bestVia, bestExit = direct, nil, nil, nil
