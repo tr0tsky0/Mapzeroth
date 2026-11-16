@@ -74,9 +74,8 @@ function Plugin.RouteText()
     local model = addon.Navigation:Model()
     if not model then return nil, L["PANEL_TITLE"] end
     if model.finished then return nil, L["NAV_ARRIVED"] end
-    local label = ("%d/%d"):format(model.index, model.total)
-    if model.offRoute then return label, L["NAV_OFFROUTE"]:format(addon:GetNodeName(model.flyingTo)) end
-    return label, model.step.text .. " · " .. addon.Journey:FormatTime(model.remaining)
+    -- Short, for a narrow strip: the step itself (and an off-route flight) is in the tooltip.
+    return ("%d/%d"):format(model.index, model.total), addon.Journey:FormatTime(model.remaining)
 end
 
 local function routeTooltip(tip)
@@ -84,6 +83,7 @@ local function routeTooltip(tip)
     local plan = addon.Navigation:CurrentPlan()
     if model and not model.finished and plan then
         if model.destination then tip.Text(model.destination) end
+        if model.offRoute then tip.Text(L["NAV_OFFROUTE"]:format(addon:GetNodeName(model.flyingTo))) end
         local steps, last = plan.steps, math.min(#plan.steps, model.index + TIP_STEPS - 1)
         for i = model.index, last do
             tip.Line(steps[i].text, addon.Journey:FormatTime(steps[i].seconds))

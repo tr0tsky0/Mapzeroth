@@ -61,7 +61,8 @@ Plugin:OnTrip(model)
 check(glows[hearth] and glows[hearth2], "a hearthstone step lights every button holding the hearthstone")
 check(not glows[macro] and not glows[teleport] and not glows[empty], "and no other button (a macro isn't the item)")
 local label, value = Plugin.RouteText()
-check(label == "1/4" and value:find("Use Hearthstone", 1, true), "the data text says the step: " .. tostring(value))
+check(label == "1/4" and value == addon.Journey:FormatTime(model.remaining),
+      "the data text is short: the step number and the time left: " .. tostring(value))
 local before = redraws
 Plugin:OnTrip(model)
 check(redraws == before, "the same text isn't redrawn")
