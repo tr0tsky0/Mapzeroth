@@ -43,6 +43,11 @@ Orgrimmar, Thunder Bluff, Undercity). To change one:
    - Lines join only where they share a point. Crossings without one don't join, which suits a bridge over a path or
      two levels of a city. They show as magenta rings (the Crossings box toggles them); in Edit mode, click a ring to
      join the two lines there.
+   - A yellow ring marks a place that's almost as near a second street (dashed line) as its nearest one, where the two
+     streets only meet a long way round. A walk could start on the wrong side of a wall, so draw a spoke from the street
+     you'd really reach it by.
+   - Grey markers are places whose walks don't use the streets (Undercity's ruins entrance and lift tops); they're never
+     ringed, and nothing needs drawing to them.
    - Mapzeroth's own places on that map show as markers (the Nodes box toggles them): orange for entrances, lifts,
      flight masters, docks and portals, blue for the rest. Lines should reach them. A lift goes straight up, so its top
      is at its marker too: join the lift marker to the path it arrives on.

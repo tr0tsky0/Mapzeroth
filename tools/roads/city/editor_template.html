@@ -25,7 +25,7 @@
   <button id="mEdit" class="on">Edit (E)</button>
   <button id="mDraw">Draw (D)</button>
   <button id="undo">Undo</button>
-  <label>Zoom <select id="zoom"><option>1</option><option selected>1.5</option><option>2</option><option>3</option><option>4</option></select></label>
+  <label>Zoom <select id="zoom"><option>1</option><option>1.25</option><option selected>1.5</option><option>2</option><option>2.5</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
   <label>Map <input id="dim" type="range" min="20" max="100" value="70"></label>
   <label><input id="nodes" type="checkbox" checked> Nodes</label>
   <label><input id="cross" type="checkbox" checked> Crossings</label>
@@ -38,7 +38,8 @@
   <b>Edit:</b> drag a point to move it · click a line to select it, Delete removes it · right-click a point to remove it · click on a line while holding Shift to add a point there.
   <b>Draw:</b> click to place points (starting or ending on an existing point or line joins them) · Enter or double-click finishes · Esc cancels.
   Magenta rings are crossings without a shared point: the lines don't join there (a bridge); click one in Edit mode to join them.
-  Orange dots are Mapzeroth's entrances, lifts, flight masters, docks and portals; blue ones its other places (for reference, not editable).
+  A yellow ring is a place almost as near a second street (dashed) as its nearest, where the two only meet a long way round: draw a spoke from the street you'd really reach it by.
+  Orange dots are Mapzeroth's entrances, lifts, flight masters, docks and portals; blue ones its other places, grey ones places whose walks don't use the streets (Undercity's ruins and lift tops); all for reference, not editable.
   Saved automatically.
 </div>
 <script>
@@ -75,6 +76,48 @@ function findCrossings() {
   }
   crossings = out;
 }
+// Places that could join the wrong street: a walk joins the street nearest a place, so a place almost as near another
+// street, one that only meets the nearest a long way round, may start on the wrong side of a wall. A spoke from the
+// right street settles it. Each: { m (the marker), q (the other street's nearest point) }.
+let ambiguous = [];
+function findAmbiguous() {
+  const key = p => p[0] + ":" + p[1], adj = new Map(), segs = [];
+  const link = (a, b) => {
+    const w = Math.hypot(a[0] - b[0], a[1] - b[1]);
+    for (const [u, v] of [[a, b], [b, a]]) { if (!adj.has(key(u))) adj.set(key(u), []); adj.get(key(u)).push([key(v), w]); }
+  };
+  lines.forEach(l => { for (let k = 1; k < l.length; k++) { link(l[k - 1], l[k]); segs.push([l[k - 1], l[k]]); } });
+  const foot = (p, a, b) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
+    const q = [a[0] + dx * t, a[1] + dy * t], L = Math.sqrt(L2);
+    return { a, b, q, d: Math.hypot(p[0] - q[0], p[1] - q[1]), ta: t * L, tb: (1 - t) * L };
+  };
+  const out = [];
+  MARKERS.forEach(m => {
+    if (m.skip) return;                                    // walks there don't use the streets (Undercity's ruins)
+    const P = [m.x, m.y];
+    const c = segs.map(([a, b]) => foot(P, a, b)).sort((x, y) => x.d - y.d);
+    const best = c[0];
+    if (!best || best.d < 4) return;                      // on a street already
+    // Along the streets from the nearest point, everywhere (the graphs are small).
+    const dist = new Map([[key(best.a), best.ta], [key(best.b), best.tb]]), done = new Set();
+    for (;;) {
+      let u = null, du = Infinity;
+      dist.forEach((d, k) => { if (!done.has(k) && d < du) { u = k; du = d; } });
+      if (u === null) break;
+      done.add(u);
+      (adj.get(u) || []).forEach(([v, w]) => { if (du + w < (dist.get(v) ?? Infinity)) dist.set(v, du + w); });
+    }
+    for (const o of c.slice(1)) {
+      if (o.d > best.d * 1.5) break;
+      const straight = Math.hypot(best.q[0] - o.q[0], best.q[1] - o.q[1]);
+      const net = Math.min((dist.get(key(o.a)) ?? Infinity) + o.ta, (dist.get(key(o.b)) ?? Infinity) + o.tb);
+      if (net > straight * 2 + 15) { out.push({ m, q: o.q }); return; }
+    }
+  });
+  ambiguous = out;
+}
 function joinCrossing(c) {
   snapshot();
   const q = [Math.round(c.x * 2) / 2, Math.round(c.y * 2) / 2];
@@ -88,8 +131,10 @@ function load() { try { const s = localStorage.getItem(KEY); return s ? JSON.par
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(lines)); } catch (e) {}
   findCrossings();
+  findAmbiguous();
   document.getElementById("status").textContent = lines.length + " lines, " + lines.reduce((n, l) => n + l.length, 0) + " points, "
-    + crossings.length + " unjoined crossings";
+    + crossings.length + " unjoined crossings, " + ambiguous.length + " places to check";
+  draw();
 }
 function snapshot() { history.push(JSON.stringify(lines)); if (history.length > 200) history.shift(); }
 function undo() { if (history.length) { lines = JSON.parse(history.pop()); sel = -1; draw(); save(); } }
@@ -109,10 +154,17 @@ function draw() {
     crossings.forEach(c => { ctx.beginPath(); ctx.arc(c.x, c.y, 6 / zoom * 1.5, 0, 7); ctx.stroke(); });
   }
   if (document.getElementById("nodes").checked) {
+    ctx.strokeStyle = "#ffd60a"; ctx.lineWidth = 3 / zoom * 1.5;
+    ambiguous.forEach(({ m, q }) => {
+      ctx.beginPath(); ctx.arc(m.x, m.y, 10 / zoom * 1.5, 0, 7); ctx.stroke();
+      ctx.setLineDash([4 / zoom * 1.5, 3 / zoom * 1.5]);
+      ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(q[0], q[1]); ctx.stroke();
+      ctx.setLineDash([]);
+    });
     ctx.font = (10 / zoom * 1.5) + "px system-ui, sans-serif";
     MARKERS.forEach(m => {
       const key = /ENTRANCE|ELEVATOR|TRAM|DOCK|PORTAL|TAXI/.test(m.id);
-      ctx.fillStyle = key ? "#ff9f1c" : "#5ac8fa";
+      ctx.fillStyle = m.skip ? "#8e8e93" : key ? "#ff9f1c" : "#5ac8fa";
       ctx.beginPath(); ctx.arc(m.x, m.y, (key ? 4 : 3) / zoom * 1.5, 0, 7); ctx.fill();
       ctx.fillStyle = "#ffffff"; ctx.fillText(m.id, m.x + 5 / zoom * 1.5, m.y - 3 / zoom * 1.5);
     });
@@ -199,6 +251,20 @@ document.getElementById("mEdit").onclick = () => setMode("edit");
 document.getElementById("mDraw").onclick = () => setMode("draw");
 document.getElementById("undo").onclick = undo;
 document.getElementById("zoom").onchange = e => { zoom = +e.target.value; resize(); };
+// Ctrl + mouse wheel zooms a step at a time, keeping the spot under the pointer where it is.
+document.getElementById("wrap").addEventListener("wheel", e => {
+  if (!e.ctrlKey) return;
+  e.preventDefault();
+  const sel = document.getElementById("zoom"), steps = [...sel.options].map(o => +o.value);
+  let i = steps.indexOf(zoom); if (i < 0) i = steps.findIndex(s => s >= zoom);
+  const next = steps[Math.max(0, Math.min(steps.length - 1, i + (e.deltaY < 0 ? 1 : -1)))];
+  if (next === zoom) return;
+  const wrap = document.getElementById("wrap"), r = c.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+  const px = (e.clientX - r.left) / zoom, py = (e.clientY - r.top) / zoom;   // the art pixel under the pointer
+  zoom = next; sel.value = String(next); resize();
+  wrap.scrollLeft = px * zoom - (e.clientX - w.left);
+  wrap.scrollTop = py * zoom - (e.clientY - w.top);
+}, { passive: false });
 document.getElementById("dim").oninput = draw;
 document.getElementById("nodes").onchange = draw;
 document.getElementById("cross").onchange = draw;

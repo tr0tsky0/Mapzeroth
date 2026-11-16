@@ -862,7 +862,7 @@ addon.Nodes.Pois = {
     { id = "INSTANCE_SCARLET_MONASTERY", container = "easternkingdoms.tirisfal_glades", mapID = 1420, x = 0.8500, y = 0.3140, kind = "instance", area = 796, lfg = { 17 }, instanceMap = 189 },
     { id = "INSTANCE_SCHOLOMANCE", container = "easternkingdoms.western_plaguelands", mapID = 1422, x = 0.6900, y = 0.7300, kind = "instance", area = 2057, lfg = { 2 }, instanceMap = 289 },
     { id = "INSTANCE_SHADOWFANG_KEEP", container = "easternkingdoms.silverpine_forest", mapID = 1421, x = 0.4470, y = 0.6780, kind = "instance", area = 209, lfg = { 7 }, instanceMap = 33 },
-    { id = "INSTANCE_STORMWIND_STOCKADE", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5873, y = 0.7575, kind = "instance", area = 717, lfg = { 11 }, instanceMap = 34 },
+    { id = "INSTANCE_STORMWIND_STOCKADE", container = "easternkingdoms.elwynn_forest", mapID = 1453, x = 0.5080, y = 0.6860, kind = "instance", area = 717, lfg = { 11 }, instanceMap = 34 },
     { id = "INSTANCE_STRATHOLME", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.2600, y = 0.1050, kind = "instance", area = 2017, lfg = { 39 }, instanceMap = 329 },
     { id = "INSTANCE_SUNKEN_TEMPLE", container = "easternkingdoms.swamp_of_sorrows", mapID = 1435, x = 0.7730, y = 0.3590, kind = "instance", area = 1417, lfg = { 27 }, instanceMap = 109 },
     { id = "INSTANCE_THE_HALL_OF_THANES", container = "easternkingdoms.dun_morogh", mapID = 1455, x = 0.1520, y = 0.8570, kind = "instance", lfg = { 3273 }, instanceMap = 3065 },

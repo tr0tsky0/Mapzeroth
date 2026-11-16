@@ -28,7 +28,9 @@ ruins_of_lordaeron	dungeon	1458	64.8	35.7	Ruins of Lordaeron		3272	2999
 scarlet_monastery	dungeon	1420	85.0	31.4	Scarlet Monastery	796	17	189
 scholomance	dungeon	1422	69.0	73.0	Scholomance	2057	2	289
 shadowfang_keep	dungeon	1421	44.7	67.8	Shadowfang Keep	209	7	33
-stormwind_stockade	dungeon	1453	50.4	66.1	Stormwind Stockade	717	11	34
+# Stockade: measured in Forever at 50.8, 68.6 (world map cursor, 2026-11-15); stored as its Classic equivalent, which
+# map_frames.tsv turns back into that (the old 50.4, 66.1 came out in the wrong place).
+stormwind_stockade	dungeon	1453	39.95	56.63	Stormwind Stockade	717	11	34
 stratholme	dungeon	1423	26.0	10.5	Stratholme	2017	39	329
 sunken_temple	dungeon	1435	77.3	35.9	Sunken Temple	1417	27	109
 the_hall_of_thanes	dungeon	1455	15.2	85.7	The Hall of Thanes		3273	3065

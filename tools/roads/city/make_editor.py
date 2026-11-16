@@ -14,7 +14,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from cities import CITIES, ART, EDITORS, ART_W, ART_H   # noqa: E402
+from cities import CITIES, ART, EDITORS, ART_W, ART_H, SKIP_CONTAINERS   # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 
@@ -27,8 +27,11 @@ def markers(ui_map):
         for line in open(path, encoding="utf-8"):
             m = pattern.search(line)
             if m:
+                container = re.search(r'container = "([^"]+)"', line)
                 out.append({"id": m.group(1), "x": round(float(m.group(2)) * ART_W, 1),
-                            "y": round(float(m.group(3)) * ART_H, 1)})
+                            "y": round(float(m.group(3)) * ART_H, 1),
+                            # Not for the streets (Undercity's ruins): shown grey, never checked.
+                            "skip": bool(container and container.group(1) in SKIP_CONTAINERS)})
     return sorted(out, key=lambda m: m["id"])
 
 
