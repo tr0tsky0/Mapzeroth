@@ -46,6 +46,11 @@ end
 
 local function isNodeText(text)
     if type(text) ~= "string" then return false end
+    -- Tooltip text from other addons (DaylightUI's minimap) can be secret: indexing it errors.
+    if issecretvalue then
+        local ok, secret = pcall(issecretvalue, text)
+        if not ok or secret then return false end
+    end
     text = strip(text)
     for _, name in ipairs(NAMES) do
         if text:find(name, 1, true) then return true end

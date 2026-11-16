@@ -13,7 +13,8 @@ local addonName, addon = ...
 --   XM:1:fac:phase:mapID:x:y:t         "not there": a known node was in someone's minimap range with no blip, at t
 --   XS:1:fac:phase:mapID,x,y,t;...     the "not there"s someone holds, in reply to a Q
 -- fac is A or H; phase is the zoneUID of creature GUIDs (digits). XM and XS come from Skyborne Compass; like SLLCM, we
--- take them in and never send them. Per node and phase the newest report wins, sighting or "not there".
+-- take them in and never send them. Per node and phase the newest report wins, sighting or "not there". SLLCM's F / L
+-- (locations missing from its Data.lua, no phase field) are ignored here.
 --
 -- Rules: off until the player says yes (Options "shareSightings", asked once per account by UI/SharePrompt.lua);
 -- Skyborne characters only; and when SLLCM itself is loaded, Mapzeroth sends nothing and joins nothing, reading
@@ -29,12 +30,22 @@ local VERSION = "1"
 local TTL = 90 * 60                  -- a sighting is dropped this many seconds after it was made (a node was seen up 58+ min)
 local FUTURE = 60                    -- a sighting stamped further ahead than this is refused
 local SAME_YARDS = 60                -- two sightings closer than this (same phase, same map) are the same node
-local REPLY_MINE = { 1, 3 }          -- seconds to wait before answering a Q, holding a sighting of our own for its phase
-local REPLY_OTHERS = { 4, 12 }       -- and holding only others' (so the one who saw it usually answers first)
+local REPLY_MINE = { 1, 8 }          -- seconds to wait before answering a Q, holding a sighting of our own for its phase
+local REPLY_OTHERS = { 9, 15 }       -- and holding only others' (so the one who saw it usually answers first)
 local MAX_PER_REPLY = 9              -- entries per S message, keeps it under 255 bytes
 -- Forever's channel allowance is about 10 at once, then ~0.8 a second, and retrying while refused keeps it refusing.
 local SEND_GAP = 1.25
 local THROTTLE_PAUSE = 5
+local CHANNEL_RETRIES = 3            -- InvalidChannel just after joining (the join not through yet): retry this often
+local WHO_WAIT = 4                   -- a greyed-out channel: /chatwho it, and look again this many seconds later...
+local FRESHEN_WAIT = 2               -- ...still listed: leave it, and join again this many seconds later...
+local FRESHEN_QUICK, FRESHEN_QUICK_GAP = 2, 15   -- ...the first 2 a session at most 15 s apart...
+local FRESHEN_GAP = 120              -- ...the rest at most this often...
+local FRESHEN_MAX = 6                -- ...and this many a session
+local PAUSE_SECONDS = 600            -- refused: nothing is sent this long, then the next message goes as a probe
+local ECHO_SECONDS = 15              -- the server echoes our channel messages back: none this long after, it was dropped
+local RECHECK_SECONDS = 3            -- after a notice that we may be out of the channel, look again this much later
+local JOIN_GAP = 5                   -- a join is never sent again sooner than this (a notice and a rejoin racing)
 local CONFIRMATIONS = 2              -- NPC kinds agreeing before a confirmed phase is replaced
 local SCAN_SECONDS = 60              -- re-read nameplates this often (the shard can change while standing still)
 local RESTORE_SECONDS = 300          -- a phase saved at logout or /reload is picked up again only this soon after
@@ -45,7 +56,7 @@ local REORDER_SECONDS = 60           -- after joining, game channels arriving ab
 local MAX_SWAPS = 10                 -- channel swaps allowed per join (the game has about 10 channels)
 -- The racials, and the buff each gives: 15 minutes standing on a node, 15-30 s anywhere else.
 local RACIALS = { [1259705] = true, [1259686] = true }   -- Read Ley Line (Alliance), Skysight (Horde)
-local BUFFS = { 1259691, 1270893 }                        -- Energized (Alliance), Elemental Blessing (Horde)
+local BUFFS = { 1259691, 1270893 }                        -- Attuned (Alliance), Charged (Horde): 60 min
 local MIN_BUFF = 60
 local CHECK_TRIES, CHECK_GAP = 4, 0.5
 -- A minimap blip isn't sent when the node has a sighting from anyone in this phase this recently: a scan passes the
@@ -60,8 +71,17 @@ local waiting            -- an own sighting made before the phase was known
 local pending            -- a racial whose buff couldn't be read (combat): checked when combat ends
 local asked = {}         -- asked[phase] = true: a Q for it, ours or one heard, has gone out this session
 local joinedAt           -- GetTime() of first joining the channel this session: no Q after TTL seconds on it
-local answering = {}     -- answering[phase] = a token while an answer to a Q for it waits (an S for it cancels)
+local covering = {}      -- covering[phase] = { mapID, x, y, t, ... } while our answer to a Q for it waits or goes out:
+                         -- what other answers, and our own parts already sent, have covered
+local replying = {}      -- replying[phase] = true while our answer goes out, part by part
 local queue, sending = {}, false
+local channelRetries = 0 -- InvalidChannel retries spent on queue[1]
+local pausedUntil        -- GetTime() until which nothing is sent: the server refused our messages on the channel
+local awaitingEcho       -- GetTime() of the oldest send whose echo hasn't come back yet
+local freshened, freshenedAt, freshening = 0, nil, nil    -- channel revives this session, the last one's time, one under way
+local whoUntil           -- GetTime() until which a /chatwho answer about our channel is ours, kept out of chat
+local lastJoinAt         -- GetTime() of the last join sent
+local recheckPending     -- a channel notice's look again is due
 local me = {}            -- our own name as senders show it (the server echoes our messages back)
 local nodeMaps           -- mapID -> true where our faction has nodes (built once)
 local worldCache = {}    -- node id -> { x, y, continent }
@@ -450,9 +470,78 @@ local function channelIndex()
     return type(id) == "number" and id > 0 and id or nil
 end
 
+-- A chat channel call made the way the game's own UI makes it (securecall: the chat system stays untainted), errors
+-- caught. True if it ran.
+local function chatCall(fn, ...)
+    if type(fn) ~= "function" then return false end
+    if type(securecall) == "function" then return (pcall(securecall, fn, ...)) end
+    return (pcall(fn, ...))
+end
+
+-- The client's channel list as { name lowercased = disabled flag } (GetChannelList: id, name, disabled, ...).
+local function channelList()
+    local list, out = { pcall(GetChannelList) }, {}
+    if not list[1] then return out end
+    for i = 2, #list, 3 do
+        local n = clean(list[i + 1])
+        if type(n) == "string" then out[n:lower()] = clean(list[i + 2]) == true end
+    end
+    return out
+end
+
+-- Forever greys custom channels out: still listed and numbered, but the server refuses everything on it (sends answer
+-- InvalidChannel, /leave NOT_ALLOWED_IN_CHANNEL, /chatwho INVALID_NAME). It's per channel, not custom channels as a
+-- whole (SLLCM, 11 Nov 2026), and a /chatwho cleared it: the client dropped the channel, and a fresh join carried.
+local function greyedOut()
+    return channelList()[channelName():lower()] == true
+end
+
+local join -- (below, with the channel)
+
+-- Revive the channel: /chatwho it, which on a greyed-out one makes the client drop it, then join fresh. Still listed
+-- after that: leave it and join again. Rate-limited; true if it went out.
+local function freshen(why)
+    local now = GetTime()
+    local gap = freshened < FRESHEN_QUICK and FRESHEN_QUICK_GAP or FRESHEN_GAP
+    if freshened >= FRESHEN_MAX or (freshenedAt and now - freshenedAt < gap) then return false end
+    freshened, freshenedAt, freshening = freshened + 1, now, true
+    whoUntil = now + WHO_WAIT + 2
+    chatCall(ListChannelByName, channelName())
+    C_Timer.After(WHO_WAIT, function()
+        freshening = nil
+        if not LeyShare:Networking() then return end
+        if not channelIndex() then
+            join()
+        elseif greyedOut() or why ~= "greyed out" then
+            chatCall(LeaveChannelByName, channelName())
+            C_Timer.After(FRESHEN_WAIT, function() join(true) end)
+        end
+    end)
+    return true
+end
+
+local function paused()
+    return pausedUntil ~= nil and GetTime() < pausedUntil
+end
+
+-- Forever's servers refuse addon messages on custom channels at times (since launch, 4 Nov 2026; other addons see it
+-- too): a send returns Success, then NOT_ALLOWED_IN_CHANNEL comes, and no echo. Nothing client side changes that, so
+-- nothing is sent for PAUSE_SECONDS and the next message after is the probe. Only a message heard on the channel (our
+-- echo or anyone's) proves it carries again.
+local function refused()
+    awaitingEcho = nil
+    pausedUntil = GetTime() + PAUSE_SECONDS
+    wipe(queue)
+end
+
+-- Something came in on the channel: it carries.
+function LeyShare:OnHeard()
+    awaitingEcho, pausedUntil = nil, nil
+end
+
 local function drain()
     local msg, id = queue[1], channelIndex()
-    if not msg or not id or not LeyShare:Networking() then
+    if not msg or not id or not LeyShare:Networking() or paused() then
         sending = false
         return
     end
@@ -460,17 +549,37 @@ local function drain()
     -- Older clients return a boolean, newer ones Enum.SendAddonMessageResult (0 = success).
     if ok and (r == nil or r == true or r == 0) then
         table.remove(queue, 1)
+        channelRetries = 0
+        -- Taken, not delivered: wait for the echo.
+        if not awaitingEcho then
+            local sentAt = GetTime()
+            awaitingEcho = sentAt
+            C_Timer.After(ECHO_SECONDS, function()
+                if awaitingEcho == sentAt then refused() end
+            end)
+        end
         C_Timer.After(SEND_GAP, drain)
     elseif ok and (r == 3 or r == 8) then          -- AddonMessageThrottle, ChannelThrottle: wait it out
         C_Timer.After(THROTTLE_PAUSE, drain)
+    elseif ok and r == 7 and channelRetries < CHANNEL_RETRIES then     -- InvalidChannel: the join may not be through
+        channelRetries = channelRetries + 1
+        C_Timer.After(THROTTLE_PAUSE, drain)
+    elseif ok and r == 7 and freshen(greyedOut() and "greyed out" or "refused") then
+        -- The client still lists the channel, so joining again does nothing: revive it, then try this one again.
+        channelRetries = 0
+        C_Timer.After(WHO_WAIT + FRESHEN_WAIT + THROTTLE_PAUSE, drain)
+    elseif ok and r == 7 then                       -- still invalid after reviving
+        channelRetries, sending = 0, false
+        refused()
     else
         table.remove(queue, 1)
+        channelRetries = 0
         C_Timer.After(SEND_GAP, drain)
     end
 end
 
 local function send(msg)
-    if not LeyShare:Networking() then return end
+    if not LeyShare:Networking() or paused() then return end
     queue[#queue + 1] = msg
     if not sending then
         sending = true
@@ -526,26 +635,56 @@ end
 -- Receiving
 ---------------------------------------------------------------------------
 
+-- Whether an answer heard while ours waited, or a part of ours already sent, has this sighting: the same node, at
+-- least as recent (a newer sighting of it still goes out after an older answer).
+local function covers(covered, mapID, x, y, t)
+    for i = 1, #covered, 4 do
+        if covered[i] == mapID and covered[i + 3] >= t and near(mapID, covered[i + 1], covered[i + 2], x, y) then
+            return true
+        end
+    end
+    return false
+end
+
+local function cover(covered, mapID, x, y, t)
+    local n = #covered
+    covered[n + 1], covered[n + 2], covered[n + 3], covered[n + 4] = mapID, x, y, t
+end
+
+-- One S at a time, each built just before it goes: what another answer had by then is left out, so two answerers
+-- starting together don't both send every part, and a first answer holding only some of the phase's nodes doesn't
+-- hide the rest. Our own entries go on the covered list too.
 local function sendReply(p)
+    local covered = covering[p]
+    if not covered then return end
     local entries = {}
     for mapID, list in pairs(ownReports()) do
         prune(list)
         for _, r in ipairs(list) do
-            if r.phase == p then
+            if #entries < MAX_PER_REPLY and r.phase == p and not covers(covered, mapID, r.x, r.y, r.t) then
                 entries[#entries + 1] = ("%d,%d,%d,%d"):format(mapID, coord(r.x), coord(r.y), r.t)
+                cover(covered, mapID, r.x, r.y, r.t)
             end
         end
     end
-    for i = 1, #entries, MAX_PER_REPLY do
-        send(("S:%s:%s:%s:%s"):format(VERSION, factionTag(), p,
-            table.concat(entries, ";", i, math.min(i + MAX_PER_REPLY - 1, #entries))))
+    if #entries == 0 then
+        covering[p], replying[p] = nil, nil
+        return
     end
+    replying[p] = true
+    send(("S:%s:%s:%s:%s"):format(VERSION, factionTag(), p, table.concat(entries, ";")))
+    C_Timer.After(SEND_GAP, function() sendReply(p) end)
 end
 
--- One entry of an R / S (keep = add) or an XM / XS (keep = addGone).
-local function addFields(keep, p, mapID, x, y, t)
+-- One entry of an R / S (keep = add) or an XM / XS (keep = addGone); an S entry also goes on `covered`, if given.
+local function addFields(keep, p, mapID, x, y, t, covered)
     mapID, x, y, t = tonumber(mapID), tonumber(x), tonumber(y), tonumber(t)
-    if mapID and x and y and t then keep(p, mapID, x / 10000, y / 10000, t) end
+    if not (mapID and x and y and t) then return end
+    keep(p, mapID, x / 10000, y / 10000, t)
+    if covered then
+        local m, cx, cy = valid(mapID, x / 10000, y / 10000, t)
+        if m then cover(covered, m, cx, cy, t) end
+    end
 end
 
 -- One message from the channel (sender already known not to be us).
@@ -553,14 +692,20 @@ function LeyShare:OnMessage(text)
     local kind, v, fac, p, rest = strsplit(":", text, 5)
     if v ~= VERSION or fac ~= factionTag() or not (p and p:match("^%d+$")) then return end
     if (kind == "R" or kind == "XM") and rest then
-        addFields(kind == "R" and add or addGone, p, strsplit(":", rest))
+        local mapID, x, y, t = strsplit(":", rest)
+        addFields(kind == "R" and add or addGone, p, mapID, x, y, t)
     elseif kind == "Q" then
         -- We'll hear the answers to it, so we needn't ask about this phase ourselves.
         asked[p] = true
         ownQueries()[p] = GetServerTime()
-        -- Answer after a random wait, unless someone else answers first: a short one when we saw a node there
-        -- ourselves, a longer one when we only heard of it. One wait per phase.
-        if answering[p] then return end
+        -- Answer after a random wait, leaving out what others' answers have by then: a short one when we saw a node
+        -- there ourselves, a longer one when we only heard of it. One answer per phase; a new asker while ours goes
+        -- out missed the parts already sent, so the rest of ours starts over.
+        if replying[p] then
+            wipe(covering[p])
+            return
+        end
+        if covering[p] then return end
         local held, mine = false, false
         for _, list in pairs(ownReports()) do
             for _, r in ipairs(list) do
@@ -572,16 +717,15 @@ function LeyShare:OnMessage(text)
         end
         if not held then return end
         local wait = mine and REPLY_MINE or REPLY_OTHERS
-        local token = {}
-        answering[p] = token
-        C_Timer.After(wait[1] + math.random() * (wait[2] - wait[1]), function()
-            if answering[p] ~= token then return end        -- someone else answered (and maybe a new Q came since)
-            answering[p] = nil
-            sendReply(p)
-        end)
+        covering[p] = {}
+        C_Timer.After(wait[1] + math.random() * (wait[2] - wait[1]), function() sendReply(p) end)
     elseif (kind == "S" or kind == "XS") and rest then
-        if kind == "S" then answering[p] = nil end          -- an XS isn't an answer about sightings: ours still goes out
-        for entry in rest:gmatch("[^;]+") do addFields(kind == "S" and add or addGone, p, strsplit(",", entry)) end
+        -- An XS isn't an answer about sightings: it covers nothing of ours.
+        local covered = kind == "S" and covering[p] or nil
+        for entry in rest:gmatch("[^;]+") do
+            local mapID, x, y, t = strsplit(",", entry)
+            addFields(kind == "S" and add or addGone, p, mapID, x, y, t, covered)
+        end
     end
 end
 
@@ -622,8 +766,20 @@ function LeyShare:ReadGUID(guid)
     end
 end
 
+-- Players' companions, guardians, totems and battle pets keep the zoneUID they were summoned in, so after their owner
+-- changes layer they read as another phase.
+local function petLike(unit)
+    for _, fn in ipairs({ UnitPlayerControlled, UnitIsBattlePetCompanion, UnitIsOtherPlayersBattlePet }) do
+        if type(fn) == "function" then
+            local ok, v = pcall(fn, unit)
+            if ok and clean(v) then return true end
+        end
+    end
+    return false
+end
+
 local function readUnit(unit)
-    if not tracking() then return end
+    if not tracking() or petLike(unit) then return end
     local ok, guid = pcall(UnitGUID, unit)
     LeyShare:ReadGUID(ok and clean(guid) or nil)
 end
@@ -765,9 +921,9 @@ local function hideFromChat()
     for i = 1, NUM_CHAT_WINDOWS or 10 do
         local frame = _G["ChatFrame" .. i]
         if frame and frame.RemoveChannel then
-            pcall(frame.RemoveChannel, frame, name)
+            chatCall(frame.RemoveChannel, frame, name)
         elseif frame and ChatFrame_RemoveChannel then
-            pcall(ChatFrame_RemoveChannel, frame, name)
+            chatCall(ChatFrame_RemoveChannel, frame, name)
         end
     end
 end
@@ -815,22 +971,68 @@ function LeyShare:KeepChannelLast()
     if not swap or not ours then return end
     for _, n in ipairs(chatChannelNumbers()) do
         if n > ours then
-            if swapsLeft <= 0 or not pcall(swap, ours, n) then return end
+            if swapsLeft <= 0 or not chatCall(swap, ours, n) then return end
             swapsLeft = swapsLeft - 1
             ours = n
         end
     end
 end
 
-local function join()
+-- force: join even though the client lists the channel (just left it, and the client may not have caught up).
+join = function(force)
     if not joinedAt and channelIndex() then joinedAt = GetTime() end      -- on it since about now (joining takes a moment)
-    if not LeyShare:Networking() or channelIndex() or clean(IsInInstance()) then return end
-    reorderUntil, swapsLeft = GetTime() + REORDER_SECONDS, MAX_SWAPS
-    pcall(JoinTemporaryChannel, channelName())
+    if not LeyShare:Networking() or clean(IsInInstance()) then return end
+    if channelIndex() and not force then
+        if greyedOut() then freshen("greyed out") end
+        return
+    end
+    local now = GetTime()
+    if lastJoinAt and now - lastJoinAt < JOIN_GAP then return end
+    -- GetChannelName has missed a channel SLLCM was on and hearing (11 Nov 2026): trust the channel list too.
+    if not force and channelList()[channelName():lower()] ~= nil then return end
+    lastJoinAt = now
+    reorderUntil, swapsLeft = now + REORDER_SECONDS, MAX_SWAPS
+    chatCall(JoinTemporaryChannel, channelName())
     -- The chat frames pick the channel up a moment after joining.
     C_Timer.After(1, hideFromChat)
     C_Timer.After(5, hideFromChat)
     C_Timer.After(2, query)
+end
+
+-- The server's word on our channel. NOT_ALLOWED_IN_CHANNEL is it refusing a message we sent (see refused): rejoining
+-- doesn't help. The rest mean we may be out of it, or in a greyed-out one: look again a moment later and rejoin, or
+-- revive it. (Leaving it ourselves sends YOU_LEFT too: with sharing off, or the revive's join already sent, nothing
+-- more happens.)
+local RECHECK_NOTICES = { YOU_LEFT = true, INVALID_NAME = true, SUSPENDED = true, NOT_MEMBER = true }
+function LeyShare:OnChannelNotice(notice)
+    if not self:Networking() then return end
+    if notice == "NOT_ALLOWED_IN_CHANNEL" then
+        if not paused() then refused() end
+        return
+    end
+    if not RECHECK_NOTICES[notice] or recheckPending then return end
+    recheckPending = true
+    C_Timer.After(RECHECK_SECONDS, function()
+        recheckPending = nil
+        if not LeyShare:Networking() then return end
+        if not channelIndex() then
+            join()
+        elseif greyedOut() and not freshening then        -- a revive under way looks again itself
+            freshen("greyed out")
+        end
+    end)
+end
+
+-- A revive's /chatwho is ours, not the player's: its answer about our channel (the member list, or "invalid channel
+-- name") stays out of chat for a few seconds after it goes out. A /chatwho of their own later shows.
+local function oursToHide(_, _, ...)
+    if not (whoUntil and GetTime() < whoUntil) then return false end
+    local base = clean(select(9, ...))
+    return type(base) == "string" and base:lower() == channelName():lower()
+end
+if ChatFrame_AddMessageEventFilter then
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_LIST", oursToHide)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_NOTICE_USER", oursToHide)
 end
 
 -- Start once, the first time sharing is on for a Skyborne. At login the game's own channels (General, Trade...) come
@@ -847,7 +1049,9 @@ local function start(atLogin)
         swapsLeft = MAX_SWAPS
         LeyShare:KeepChannelLast()                     -- still on it from before a /reload, perhaps as /1
         join()
-        C_Timer.NewTicker(REJOIN_SECONDS, join)        -- rejoin if kicked, /left, or lost to a client hiccup
+        -- Rejoin if kicked, /left, or lost to a client hiccup. (Not NewTicker(..., join): the ticker is passed in, and
+        -- join would take it as force.)
+        C_Timer.NewTicker(REJOIN_SECONDS, function() join() end)
     end
     if not atLogin then
         begin()
@@ -877,12 +1081,14 @@ end
 -- The player turned sharing on or off (the settings page or the first-run question).
 function LeyShare:OnSettingChanged(on)
     addon.Options:Store("shareAsked", true)
+    -- A fresh start either way: turning sharing back on is how a player says "try again now".
+    pausedUntil, awaitingEcho, freshened, freshenedAt, freshening, lastJoinAt = nil, nil, 0, nil, nil, nil
     if on then
         start(false)
         startScanning()
     else
         wipe(queue)
-        if channelIndex() then pcall(LeaveChannelByName, channelName()) end
+        if channelIndex() then chatCall(LeaveChannelByName, channelName()) end
     end
 end
 
@@ -903,7 +1109,8 @@ function LeyShare:Stats()
     for _, list in pairs(goneReports()) do gone = gone + #list end
     return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(), phase = phase,
              tentative = tentativeNpc ~= nil, held = count, here = here, gone = gone, queued = #queue,
-             shared = #self:SharedPlaces() }
+             shared = #self:SharedPlaces(), greyed = channelIndex() ~= nil and greyedOut(), paused = paused(),
+             revives = freshened }
 end
 
 -- Tests only: forget everything held in memory, and allow this many channel swaps (none if omitted).
@@ -912,10 +1119,13 @@ function LeyShare:ResetForTests(swaps)
     phase, phaseMap, tentativeNpc, waiting, pending, joinedAt, nodeMaps = nil, nil, nil, nil, nil, nil, nil
     wipe(candidates)
     wipe(asked)
-    wipe(answering)
+    wipe(covering)
+    wipe(replying)
     wipe(queue)
     wipe(worldCache)
     sending = false
+    channelRetries, pausedUntil, awaitingEcho, whoUntil, lastJoinAt, recheckPending = 0, nil, nil, nil, nil, nil
+    freshened, freshenedAt, freshening = 0, nil, nil
     known, sharedPruned, placesCache = nil, nil, nil
 end
 
@@ -931,6 +1141,8 @@ events:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
 events:RegisterEvent("CHAT_MSG_ADDON")
 events:RegisterEvent("CHANNEL_UI_UPDATE")
+events:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
+events:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE_USER")
 events:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 events:RegisterEvent("PLAYER_TARGET_CHANGED")
 events:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
@@ -938,13 +1150,20 @@ events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 events:SetScript("OnEvent", function(_, event, ...)
     if event == "CHAT_MSG_ADDON" then
         if not LeyShare:Networking() then return end
-        local prefix, text, _, sender = ...
-        prefix, text, sender = clean(prefix), clean(text), clean(sender)
+        local prefix, text, kind, sender = ...
+        prefix, text, kind, sender = clean(prefix), clean(text), clean(kind), clean(sender)
         if prefix ~= PREFIX or type(text) ~= "string" or type(sender) ~= "string" then return end
+        if kind == "CHANNEL" then LeyShare:OnHeard() end   -- our echo or anyone's: the channel carries
         sender = Ambiguate(sender, "none")
         if not me[sender] then LeyShare:OnMessage(text) end
     elseif event == "CHANNEL_UI_UPDATE" then             -- a channel joined or left (our own swaps fire it too)
         if reorderUntil and GetTime() < reorderUntil then LeyShare:KeepChannelLast() end
+    elseif event == "CHAT_MSG_CHANNEL_NOTICE" or event == "CHAT_MSG_CHANNEL_NOTICE_USER" then
+        local notice, _, _, _, _, _, _, _, baseName = ...
+        notice, baseName = clean(notice), clean(baseName)
+        if type(baseName) == "string" and baseName:lower() == channelName():lower() then
+            LeyShare:OnChannelNotice(notice)
+        end
     elseif event == "NAME_PLATE_UNIT_ADDED" then
         readUnit((...))
     elseif event == "PLAYER_TARGET_CHANGED" then

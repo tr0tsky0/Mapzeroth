@@ -38,7 +38,8 @@ end
 function wipe(t) for k in pairs(t) do t[k] = nil end return t end
 local loaded = {}
 C_AddOns = { IsAddOnLoaded = function(name) return loaded[name] or false end }
-C_Timer = { After = function(_, fn) fn() end }      -- the send queue drains at once
+-- The send queue drains at once; the 15 s echo check never fires (the server always echoes here).
+C_Timer = { After = function(delay, fn) if delay ~= 15 then fn() end end }
 local sent = {}
 C_ChatInfo = { SendAddonMessage = function(_, msg) sent[#sent + 1] = msg return 0 end }
 function GetChannelName(name) return name == "SLLCMShareA" and 5 or 0 end

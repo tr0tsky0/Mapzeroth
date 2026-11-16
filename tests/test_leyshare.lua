@@ -24,6 +24,7 @@ function strsplit(sep, text, limit)
     return unpack(out)
 end
 function wipe(t) for k in pairs(t) do t[k] = nil end return t end
+function IsInInstance() return false end
 local loaded = {}
 C_AddOns = { IsAddOnLoaded = function(name) return loaded[name] or false end }
 local mapNow = 1417
@@ -44,9 +45,11 @@ local function runTimers()
     end
 end
 local sent = {}
+local echo = true          -- the server echoes what we send back (false: it drops it)
 C_ChatInfo = { SendAddonMessage = function(prefix, msg, kind, id)
     check(prefix == "SLLCM" and kind == "CHANNEL" and id == 5, "sent on SLLCM's prefix to the channel")
     sent[#sent + 1] = msg
+    if echo then C_Timer.After(0.3, function() addon.LeyShare:OnHeard() end) end
     return 0
 end }
 function GetChannelName(name) return name == "SLLCMShareA" and 5 or 0 end
@@ -215,16 +218,44 @@ local _, entries = sent[1]:match("^S:1:A:3104:(.*)$"):gsub(";", ";")
 check(sent[1]:find("^S:1:A:3104:1417,") and entries == 8 and sent[2]:find("^S:1:A:3104:[^;]+$"),
     "nine in the first, one in the second: " .. sent[1])
 sent = {}
+local function sEntries(from, to, age)
+    local list = {}
+    for i = from, to do list[#list + 1] = ("1417,%d,1000,%d"):format(500 + i * 400, now - i - (age or 0)) end
+    return table.concat(list, ";")
+end
+LS:OnMessage("Q:1:A:3104")
+LS:OnMessage("S:1:A:3104:" .. sEntries(1, 9))
+LS:OnMessage("S:1:A:3104:" .. sEntries(10, 10))
+runTimers()
+check(#sent == 0, "someone else's answers had all of ours: we stay quiet: " .. tostring(sent[1]))
+LS:OnMessage("Q:1:A:3104")
+LS:OnMessage("S:1:A:3104:" .. sEntries(1, 7))
+runTimers()
+check(#sent == 1 and select(2, sent[1]:gsub(";", ";")) == 2 and sent[1]:find("4100,1000", 1, true),
+    "an answer with only some of them: we send the other three: " .. tostring(sent[1]))
+sent = {}
+LS:OnMessage("Q:1:A:3104")
+LS:OnMessage("S:1:A:3104:" .. sEntries(1, 9, 100) .. ";1417,4500,1000," .. (now - 10))
+runTimers()
+check(#sent == 1 and select(2, sent[1]:gsub(";", ";")) == 8,
+    "an older answer for the same nodes doesn't cover our newer sightings: " .. tostring(sent[1]))
+sent = {}
 LS:OnMessage("Q:1:A:3104")
 LS:OnMessage("S:1:A:3104:1417,2530,3000," .. (now - 5))
-runTimers()
-check(#sent == 0, "someone else answered first: we stay quiet")
 LS:OnMessage("Q:1:A:5555")
 runTimers()
-check(#sent == 0, "a phase we hold nothing for isn't answered")
+check(#sent == 2 and not sent[1]:find("2530", 1, true), "a phase we hold nothing for isn't answered: " .. #sent)
 check(#MapzerothRebuildDB.sightings.A[1417] == 11, "the S's entry was kept as a new node")
+-- A new Q while ours goes out: that asker missed the parts already sent, so the rest starts over.
+sent = {}
+LS:OnMessage("Q:1:A:3104")
+local first = table.remove(timers)
+first()                                                   -- the wait is over: the first part goes out
+LS:OnMessage("Q:1:A:3104")
+runTimers()
+check(#sent == 3, "nine, then all eleven again for the new asker: " .. #sent)
 
--- How long before answering: 4-12 s holding only others' sightings, 1-3 s holding one of our own (so whoever saw it
+-- How long before answering: 9-15 s holding only others' sightings, 1-8 s holding one of our own (so whoever saw it
 -- usually answers). One wait per phase: a Q for another phase doesn't replace it, an S for another doesn't cancel it.
 reset()
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
@@ -233,7 +264,7 @@ LS:OnMessage("R:1:A:5555:1417:2530:3000:" .. (now - 60))               -- and in
 runTimers()
 sent, delays = {}, {}
 LS:OnMessage("Q:1:A:3104")
-check(#delays == 1 and delays[1] >= 4 and delays[1] <= 12, "only others' sightings: a 4-12 s wait: " .. tostring(delays[1]))
+check(#delays == 1 and delays[1] >= 9 and delays[1] <= 15, "only others' sightings: a 9-15 s wait: " .. tostring(delays[1]))
 LS:OnMessage("Q:1:A:3104")
 check(#delays == 1, "a second Q for the same phase while waiting adds no second answer")
 LS:OnMessage("Q:1:A:5555")
@@ -245,7 +276,7 @@ LS:OnConfirmed(1417, 0.48, 0.605, now)                                  -- our o
 runTimers()
 sent, delays = {}, {}
 LS:OnMessage("Q:1:A:3104")
-check(#delays == 1 and delays[1] >= 1 and delays[1] <= 3, "holding our own: a 1-3 s wait: " .. tostring(delays[1]))
+check(#delays == 1 and delays[1] >= 1 and delays[1] <= 8, "holding our own: a 1-8 s wait: " .. tostring(delays[1]))
 runTimers()
 check(#sent == 1 and sent[1]:find("4800,6050", 1, true), "and the answer carries it: " .. tostring(sent[1]))
 
@@ -317,7 +348,49 @@ LS:OnConfirmed(1417, 0.3, 0.3, now)
 check(#sent == 0, "refused by the channel throttle")
 runTimers()
 check(#sent == 1 and sent[1]:find("^R:"), "sent after the pause")
+
+-- InvalidChannel just after joining: retried; still invalid, the channel is revived (/chatwho, then a fresh join).
+reset()
+LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
+runTimers()
+sent = {}
+refuse = 4
+local listed, joins = 0, 0
+function ListChannelByName() listed = listed + 1 end
+function JoinTemporaryChannel() joins = joins + 1 end
+C_ChatInfo.SendAddonMessage = function(...)
+    if refuse > 0 then refuse = refuse - 1 return 7 end
+    return realSend(...)
+end
+LS:OnConfirmed(1417, 0.3, 0.3, now)
+runTimers()
+check(listed == 1 and #sent == 1 and sent[1]:find("^R:"), "three retries, a revive, then it goes: " .. listed .. " " .. #sent)
 C_ChatInfo.SendAddonMessage = realSend
+ListChannelByName, JoinTemporaryChannel = nil, nil
+
+-- Forever's refusal: no echo within 15 s, or NOT_ALLOWED_IN_CHANNEL, pauses sending for 10 minutes; then the next
+-- message is the probe, and anything heard on the channel ends the pause.
+reset()
+LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
+runTimers()
+sent, echo = {}, false
+LS:OnConfirmed(1417, 0.3, 0.3, now)
+runTimers()
+check(LS:Stats().paused, "no echo: paused")
+LS:OnConfirmed(1417, 0.4, 0.4, now)
+runTimers()
+check(#sent == 1, "nothing goes while paused")
+clock = clock + 601
+LS:OnConfirmed(1417, 0.5, 0.5, now)
+check(#sent == 2, "ten minutes on, the next is the probe")
+echo = true
+LS:OnHeard()
+check(not LS:Stats().paused, "heard: not paused")
+LS:OnChannelNotice("NOT_ALLOWED_IN_CHANNEL")
+check(LS:Stats().paused, "the server's refusal notice pauses too")
+LS:OnHeard()
+runTimers()
+clock = clock - 601
 
 -- With SLLCM loaded, Mapzeroth sends nothing and reads SLLCM's sightings instead.
 reset()

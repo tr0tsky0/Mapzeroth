@@ -5,6 +5,12 @@
 ### Added
 - **Forever: walks follow the roads.** On the map and minimap, a walking step is drawn along the road instead of a straight line across the zone, wherever the road isn't a long way round. Walking times use the real road distance too, so routes that walk are timed more accurately. Roads come from the game's own terrain for Eastern Kingdoms, Kalimdor and Zephras Isle, and inside the six capitals walks follow their streets, bridges and tunnels. A new **Walking routes** setting picks how closely walks keep to the roads, from across country to roads wherever they go.
 
+### Fixed
+- **Forever: leyline sharing copes with the server refusing the sharing channel.** When WoW: Forever's servers turn away addon messages on the channel, Mapzeroth now stops sending for a while and checks again on its own, and revives a greyed-out channel instead of staying stuck on it until a relog.
+- Forever: a player's pet or companion no longer makes leyline sharing think you've changed phase.
+- Forever: answers about the leylines seen in your phase share the work with Skyborne Leyline & Convergence Marker's users the way it now does, so fewer duplicate answers go out.
+- Forever: an error in the minimap leyline check with some UI addons (DaylightUI) is gone.
+
 ### Changed
 - **Starting a route closes the Mapzeroth window when it's up on its own** (popped out, or opened with the map closed); the navigator follows the trip from there. Open the window again and it shows the route in progress, not the search page. Docked beside the open map, the window still goes when the map does.
 
