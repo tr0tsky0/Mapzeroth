@@ -40,6 +40,12 @@ Orgrimmar, Thunder Bluff, Undercity). To change one:
      line to add a point.
    - Ctrl+Z undoes.
    - Edits save in that browser by themselves.
+   - Lines join only where they share a point. Crossings without one don't join, which suits a bridge over a path or
+     two levels of a city. They show as magenta rings (the Crossings box toggles them); in Edit mode, click a ring to
+     join the two lines there.
+   - Mapzeroth's own places on that map show as markers (the Nodes box toggles them): orange for entrances, lifts,
+     flight masters, docks and portals, blue for the rest. Lines should reach them. A lift goes straight up, so its top
+     is at its marker too: join the lift marker to the path it arrives on.
 4. **Save.** Press **Save .json** and put the file in `tools/roads/city/` as `<city>.json`, replacing the old one.
    Or ask Claude to read the lines straight from the open page.
 5. **Regenerate**, then do the geometry dump in game:

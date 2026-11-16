@@ -27,6 +27,8 @@
   <button id="undo">Undo</button>
   <label>Zoom <select id="zoom"><option>1</option><option selected>1.5</option><option>2</option><option>3</option><option>4</option></select></label>
   <label>Map <input id="dim" type="range" min="20" max="100" value="70"></label>
+  <label><input id="nodes" type="checkbox" checked> Nodes</label>
+  <label><input id="cross" type="checkbox" checked> Crossings</label>
   <button id="save">Save .json</button>
   <button id="reset">Reset to seed</button>
   <span id="status"></span>
@@ -35,11 +37,14 @@
 <div id="help">
   <b>Edit:</b> drag a point to move it · click a line to select it, Delete removes it · right-click a point to remove it · click on a line while holding Shift to add a point there.
   <b>Draw:</b> click to place points (starting or ending on an existing point or line joins them) · Enter or double-click finishes · Esc cancels.
+  Magenta rings are crossings without a shared point: the lines don't join there (a bridge); click one in Edit mode to join them.
+  Orange dots are Mapzeroth's entrances, lifts, flight masters, docks and portals; blue ones its other places (for reference, not editable).
   Saved automatically.
 </div>
 <script>
 const NAME = "__NAME__";
 const SEED = __SEED__;
+const MARKERS = __MARKERS__;   // Mapzeroth's own places on this map (art pixels), for reference only
 const KEY = "mzr-city-" + NAME;
 const img = new Image();
 img.src = "__IMG__";
@@ -48,10 +53,43 @@ let lines = load() || JSON.parse(JSON.stringify(SEED));
 let zoom = 1.5, mode = "edit", sel = -1, drag = null, draft = null, history = [];
 window.MZR_LINES = () => JSON.parse(JSON.stringify(lines));
 
+// Where two lines cross without a shared point: they don't join there (a bridge over a path, say). Shown as rings;
+// clicking one in Edit mode puts the same point into both lines, joining them.
+let crossings = [];
+function findCrossings() {
+  const segs = [];
+  lines.forEach((l, i) => { for (let k = 1; k < l.length; k++) segs.push([i, k, l[k - 1], l[k]]); });
+  const out = [], eps = 1e-6;
+  for (let a = 0; a < segs.length; a++) for (let b = a + 1; b < segs.length; b++) {
+    const [ia, ka, p1, p2] = segs[a], [ib, kb, q1, q2] = segs[b];
+    if (ia === ib && Math.abs(ka - kb) <= 1) continue;
+    const same = (u, v) => u[0] === v[0] && u[1] === v[1];
+    if (same(p1, q1) || same(p1, q2) || same(p2, q1) || same(p2, q2)) continue;
+    const rx = p2[0] - p1[0], ry = p2[1] - p1[1], sx = q2[0] - q1[0], sy = q2[1] - q1[1];
+    const den = rx * sy - ry * sx;
+    if (Math.abs(den) < eps) continue;
+    const t = ((q1[0] - p1[0]) * sy - (q1[1] - p1[1]) * sx) / den;
+    const u = ((q1[0] - p1[0]) * ry - (q1[1] - p1[1]) * rx) / den;
+    if (t <= 0.001 || t >= 0.999 || u <= 0.001 || u >= 0.999) continue;
+    out.push({ x: p1[0] + rx * t, y: p1[1] + ry * t, ia, ka, ib, kb });
+  }
+  crossings = out;
+}
+function joinCrossing(c) {
+  snapshot();
+  const q = [Math.round(c.x * 2) / 2, Math.round(c.y * 2) / 2];
+  // Insert at the later spot first when both are on one line, so the earlier index still holds.
+  const spots = [[c.ia, c.ka], [c.ib, c.kb]].sort((m, n) => m[0] === n[0] ? n[1] - m[1] : 0);
+  spots.forEach(([i, k]) => lines[i].splice(k, 0, q.slice()));
+  sel = -1; save(); draw();
+}
+
 function load() { try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(lines)); } catch (e) {}
-  document.getElementById("status").textContent = lines.length + " lines, " + lines.reduce((n, l) => n + l.length, 0) + " points";
+  findCrossings();
+  document.getElementById("status").textContent = lines.length + " lines, " + lines.reduce((n, l) => n + l.length, 0) + " points, "
+    + crossings.length + " unjoined crossings";
 }
 function snapshot() { history.push(JSON.stringify(lines)); if (history.length > 200) history.shift(); }
 function undo() { if (history.length) { lines = JSON.parse(history.pop()); sel = -1; draw(); save(); } }
@@ -66,6 +104,19 @@ function draw() {
   ctx.setTransform(zoom, 0, 0, zoom, 0, 0);
   lines.forEach((l, i) => stroke(l, i === sel ? "#ffe14d" : "#ff3b30"));
   if (draft) stroke(draft, "#4cd964");
+  if (document.getElementById("cross").checked) {
+    ctx.strokeStyle = "#ff2bd6"; ctx.lineWidth = 2 / zoom * 1.5;
+    crossings.forEach(c => { ctx.beginPath(); ctx.arc(c.x, c.y, 6 / zoom * 1.5, 0, 7); ctx.stroke(); });
+  }
+  if (document.getElementById("nodes").checked) {
+    ctx.font = (10 / zoom * 1.5) + "px system-ui, sans-serif";
+    MARKERS.forEach(m => {
+      const key = /ENTRANCE|ELEVATOR|TRAM|DOCK|PORTAL|TAXI/.test(m.id);
+      ctx.fillStyle = key ? "#ff9f1c" : "#5ac8fa";
+      ctx.beginPath(); ctx.arc(m.x, m.y, (key ? 4 : 3) / zoom * 1.5, 0, 7); ctx.fill();
+      ctx.fillStyle = "#ffffff"; ctx.fillText(m.id, m.x + 5 / zoom * 1.5, m.y - 3 / zoom * 1.5);
+    });
+  }
 }
 function stroke(l, color) {
   ctx.strokeStyle = color; ctx.lineWidth = 2.2 / zoom * 1.5; ctx.lineJoin = "round";
@@ -116,6 +167,10 @@ c.addEventListener("mousedown", e => {
     if (findPoint(p) || findSegment(p)) q.join = true;
     draft = draft || []; draft.push(q); draw(); return;
   }
+  if (document.getElementById("cross").checked) {
+    const c = crossings.find(c => near(p, [c.x, c.y]) < R());
+    if (c) { joinCrossing(c); return; }
+  }
   const hit = findPoint(p);
   if (hit && !e.shiftKey) { snapshot(); drag = hit; sel = hit.i; draw(); return; }
   const seg = findSegment(p);
@@ -145,6 +200,8 @@ document.getElementById("mDraw").onclick = () => setMode("draw");
 document.getElementById("undo").onclick = undo;
 document.getElementById("zoom").onchange = e => { zoom = +e.target.value; resize(); };
 document.getElementById("dim").oninput = draw;
+document.getElementById("nodes").onchange = draw;
+document.getElementById("cross").onchange = draw;
 document.getElementById("reset").onclick = () => { if (confirm("Throw away your edits and go back to the seed lines?")) { snapshot(); lines = JSON.parse(JSON.stringify(SEED)); sel = -1; draw(); save(); } };
 document.getElementById("save").onclick = () => {
   const a = document.createElement("a");
