@@ -4,7 +4,7 @@ local addonName, addon = ...
 -- player's other addon) on its hidden channel. When a Skyborne character's racial confirms a node, where it is and
 -- the phase (shard) the player is in go out to everyone on the channel; what others send is kept for 90 minutes, and
 -- the "Nearest Ley Line" / "Nearest Elemental Convergence" picks go to a node seen in the player's phase when there
--- is one (Journey:PlanEntry asks SeenAmong).
+-- is one (Journey:PlanEntry asks SeenAmong). Those picks need SLLCM loaded: the nodes come from its SLLCM_GetNodes.
 --
 -- SLLCM's Comm.lua is the reference; both addons must stay wire-compatible (protocol version "1"):
 --   R:1:fac:phase:mapID:x:y:t          one sighting (x, y = map position x 10000, 0-9999; t = GetServerTime())
@@ -83,7 +83,6 @@ local whoUntil           -- GetTime() until which a /chatwho answer about our ch
 local lastJoinAt         -- GetTime() of the last join sent
 local recheckPending     -- a channel notice's look again is due
 local me = {}            -- our own name as senders show it (the server echoes our messages back)
-local nodeMaps           -- mapID -> true where our faction has nodes (built once)
 local worldCache = {}    -- node id -> { x, y, continent }
 local joinStarted, scanning
 local reorderUntil       -- GetTime() until which our channel is kept numbered after the game's
@@ -193,6 +192,8 @@ end
 -- Drop expired sightings and "not there"s, maps left empty, and a whole table once nothing is held (keeps the saved
 -- file small).
 local function pruneAll()
+    -- Before SLLCM_GetNodes, sightings at places our data lacked were kept here; SLLCM keeps those now.
+    if MapzerothRebuildDB then MapzerothRebuildDB.sharedNodes = nil end
     for _, key in ipairs({ "sightings", "sightingsGone" }) do
         local all = MapzerothRebuildDB and MapzerothRebuildDB[key]
         if type(all) == "table" then
@@ -250,124 +251,117 @@ local function near(mapID, x1, y1, x2, y2)
 end
 
 ---------------------------------------------------------------------------
--- Shared nodes: places a sighting confirmed that our data doesn't have yet (a node found since the last release).
--- MapzerothRebuildDB.sharedNodes[fac][mapID] = { { x, y }, ... }, kept whatever the phase, as SLLCM keeps its own.
--- Each is a place the nearest-node pick can go to (SharedPlaces, Journey). One that a release has since added to the
--- data is dropped (pruneShared), so nothing is held twice.
+-- Nodes: Mapzeroth has no list of its own. Skyborne Leyline & Convergence Marker's SLLCM_GetNodes gives every place it
+-- knows (its data, self-found, and learned from sightings), so the "Nearest" pick is only offered while SLLCM is
+-- loaded. A pick goes to the PLACE_COUNT nodes nearest the player on their continent, plus any seen up in their phase
+-- lately, wherever they are. They are put in the graph only when that pick is planned (Journey:ExtrasOf), and held on
+-- the pick's entry, so a plan and its replans keep to the same ones (the picker builds a new entry each time it opens).
 ---------------------------------------------------------------------------
 
-local known              -- world positions of our faction's nodes in the data: { { x, y, continent }, ... }
-local sharedPruned       -- shared nodes checked against the data this session
-local placesCache        -- SharedPlaces' list, until a node is learned
+local PLACE_COUNT = 25
+local placeByID = {}     -- every place made this session, by id (ids are the same for the same spot)
 
-local function nodeKind()
-    return factionTag() == "H" and "convergence" or "leyline"
+local function sllcmNodes()
+    return type(SLLCM_GetNodes) == "function"
 end
 
-local function knownWorld()
-    if known then return known end
-    local list, kind = {}, nodeKind()
-    addon.World:ForEachNode(function(node)
-        if node.kind == kind and node.mapID then
-            local x, y, c = worldPos(node.mapID, node.x, node.y)
-            if x then list[#list + 1] = { x, y, c } end
-        end
-    end)
-    if #list > 0 then known = list end      -- an empty list: the world isn't built yet, so look again next time
-    return list
+-- What the picker offers a Skyborne (Sections asks Relevance who is one): "route" with SLLCM loaded, "hint" without it
+-- (the row offers its link instead) until the player dismisses that, else nil. forceHint: /mzr sllcm (MapzerothDataTools).
+function LeyShare:PickMode()
+    if sllcmNodes() and not self.forceHint then return "route" end
+    if addon.Options:Get("hideSllcmHint") and not self.forceHint then return nil end
+    return "hint"
 end
 
-local function nearAny(list, x, y, c)
-    for _, p in ipairs(list) do
-        local d = yardsApart(x, y, c, p[1], p[2], p[3])
-        if d and d < SAME_YARDS then return true end
-    end
-    return false
-end
-
-local function sharedStore()
-    MapzerothRebuildDB = MapzerothRebuildDB or {}
-    local all = MapzerothRebuildDB.sharedNodes
-    if type(all) ~= "table" then
-        all = {}
-        MapzerothRebuildDB.sharedNodes = all
-    end
+local function placeAt(mapID, x, y)
     local tag = factionTag()
-    all[tag] = type(all[tag]) == "table" and all[tag] or {}
-    return all[tag]
+    local id = ("LEY_%s_%d_%d_%d"):format(tag, mapID, math.floor(x * 10000 + 0.5), math.floor(y * 10000 + 0.5))
+    local place = placeByID[id]
+    if not place then
+        local kindKey = tag == "H" and "NODE_KIND_CONVERGENCE" or "NODE_KIND_LEYLINE"
+        place = {
+            id = id, mapID = mapID, x = x, y = y,
+            leave = true,          -- somewhere to leave as well as reach (Journey:Build), for a round trip's way back
+            name = addon.L[kindKey]:format(addon:GetZoneName(mapID) or ""),
+        }
+        placeByID[id] = place
+    end
+    return place
 end
 
--- Drop shared nodes the data now has (once a session, when the data is there to compare with).
-local function pruneShared()
-    if sharedPruned then return end
-    local list = knownWorld()
-    if #list == 0 then return end
-    sharedPruned = true
-    local all = MapzerothRebuildDB and MapzerothRebuildDB.sharedNodes
-    if type(all) ~= "table" then return end
-    local byMap = all[factionTag()]
-    if type(byMap) ~= "table" then return end
-    for mapID, nodes in pairs(byMap) do
-        for i = #nodes, 1, -1 do
-            local x, y, c = worldPos(mapID, nodes[i][1], nodes[i][2])
-            if x and nearAny(list, x, y, c) then table.remove(nodes, i) end
+-- The places a pick can go to, chosen now: { { id, mapID, x, y, name, leave }, ... } (see above).
+function LeyShare:NearbyPlaces()
+    if not (skyborne() and sllcmNodes()) then return {} end
+    local ok, byMap = pcall(SLLCM_GetNodes, factionTag() == "H" and "Horde" or "Alliance")
+    if not ok or type(byMap) ~= "table" then return {} end
+    local here = playerMap()
+    local okPos, pos = pcall(C_Map.GetPlayerMapPosition, here or 0, "player")
+    local px, py, pc
+    if here and okPos and pos then px, py, pc = worldPos(here, pos.x, pos.y) end
+
+    local nearby = {}
+    if px then
+        for mapID, list in pairs(byMap) do
+            if type(mapID) == "number" and type(list) == "table" then
+                for _, p in ipairs(list) do
+                    local x, y = p[1], p[2]
+                    if type(x) == "number" and type(y) == "number" then
+                        local wx, wy, wc = worldPos(mapID, x, y)
+                        if wx and wc == pc then
+                            nearby[#nearby + 1] = { (wx - px) ^ 2 + (wy - py) ^ 2, mapID, x, y, wx, wy, wc }
+                        end
+                    end
+                end
+            end
         end
-        if #nodes == 0 then byMap[mapID] = nil end
+        table.sort(nearby, function(a, b) return a[1] < b[1] end)
     end
-    placesCache = nil
-end
 
--- A sighting's place, kept as a shared node unless the data or the shared list has it already.
-local function learn(mapID, x, y)
-    local wx, wy, wc = worldPos(mapID, x, y)
-    if not wx or nearAny(knownWorld(), wx, wy, wc) then return end
-    local byMap = sharedStore()
-    local nodes = byMap[mapID] or {}
-    for _, n in ipairs(nodes) do
-        if near(mapID, n[1], n[2], x, y) then return end
+    local places, taken = {}, {}
+    local function take(mapID, x, y, wx, wy, wc)
+        if not wx then wx, wy, wc = worldPos(mapID, x, y) end
+        if not wx then return end
+        for _, w in ipairs(taken) do
+            local d = yardsApart(wx, wy, wc, w[1], w[2], w[3])
+            if d and d < SAME_YARDS then return end
+        end
+        taken[#taken + 1] = { wx, wy, wc }
+        places[#places + 1] = placeAt(mapID, x, y)
     end
-    nodes[#nodes + 1] = { x, y }
-    byMap[mapID] = nodes
-    placesCache = nil
-end
-
--- The shared nodes as places to go: { id, mapID, x, y, name, leave }, ids stable for the same spot.
-function LeyShare:SharedPlaces()
-    if not skyborne() then return {} end
-    pruneShared()
-    -- SLLCM's sightings never pass through add(): the places they found are learned here.
-    if self:SllcmLoaded() then
+    for i = 1, math.min(PLACE_COUNT, #nearby) do
+        local n = nearby[i]
+        take(n[2], n[3], n[4], n[5], n[6], n[7])
+    end
+    -- Seen up in the player's phase lately: worth going to, however far.
+    if phase then
+        local now = GetServerTime()
         for mapID, list in pairs(reports()) do
-            for _, r in ipairs(list) do
-                if type(r.x) == "number" and type(r.y) == "number" then learn(mapID, r.x, r.y) end
+            for _, r in ipairs(type(list) == "table" and list or {}) do
+                local age = now - (r.t or 0)
+                if r.phase == phase and age <= TTL and age >= -FUTURE and type(r.x) == "number" and type(r.y) == "number" then
+                    take(mapID, r.x, r.y)
+                end
             end
         end
     end
-    if placesCache then return placesCache end
-    local places, tag = {}, factionTag()
-    local all = MapzerothRebuildDB and MapzerothRebuildDB.sharedNodes
-    local kindKey = nodeKind() == "convergence" and "NODE_KIND_CONVERGENCE" or "NODE_KIND_LEYLINE"
-    for mapID, nodes in pairs(type(all) == "table" and type(all[tag]) == "table" and all[tag] or {}) do
-        for _, n in ipairs(nodes) do
-            places[#places + 1] = {
-                id = ("SHARED_%s_%d_%d_%d"):format(tag, mapID, math.floor(n[1] * 10000 + 0.5), math.floor(n[2] * 10000 + 0.5)),
-                mapID = mapID, x = n[1], y = n[2],
-                leave = true,          -- somewhere to leave as well as reach (Journey:Build), for a round trip's way back
-                name = addon.L[kindKey]:format(addon:GetZoneName(mapID) or ""),
-            }
-        end
-    end
-    table.sort(places, function(a, b) return a.id < b.id end)
-    placesCache = places
     return places
 end
 
--- A pick's node ids and the shared nodes' together.
-function LeyShare:WithShared(nodeIDs)
+-- A pick's places, chosen the first time they are asked for and then kept on the entry (a round trip's copy shares them).
+function LeyShare:PlacesFor(entry)
+    if not entry.leyPlaces then entry.leyPlaces = self:NearbyPlaces() end
+    return entry.leyPlaces
+end
+
+-- Their ids, for the pick's goals.
+function LeyShare:PlaceIDs(entry)
     local ids = {}
-    for _, id in ipairs(nodeIDs) do ids[#ids + 1] = id end
-    for _, place in ipairs(self:SharedPlaces()) do ids[#ids + 1] = place.id end
+    for _, place in ipairs(self:PlacesFor(entry)) do ids[#ids + 1] = place.id end
     return ids
+end
+
+function LeyShare:GetPlace(id)
+    return placeByID[id]
 end
 
 -- Reports belong on zone maps. Skyborne Compass has been seen sending continent coordinates (Kalimdor, 1414): those
@@ -406,7 +400,6 @@ end
 local function add(p, mapID, x, y, t, mine)
     mapID, x, y = valid(mapID, x, y, t)
     if not mapID then return false end
-    learn(mapID, x, y)                                      -- the place is real, whatever happened to it since
     local gone = ownGone()
     local gi, g = find(gone[mapID], p, mapID, x, y)
     if g then
@@ -447,18 +440,12 @@ local function addGone(p, mapID, x, y, t)
     end
 end
 
--- Only zones with nodes of ours (or a sighting of one) are worth asking about: the channel holds the whole faction.
+-- Only zones with a sighting held are worth asking about: the channel holds the whole faction. (Mapzeroth only
+-- networks without SLLCM, so it has no node list to go by, and with no pick then it has little use for an answer.)
 local function hasNodes(mapID)
     if not mapID then return false end
-    if not nodeMaps then
-        nodeMaps = {}
-        local kind = factionTag() == "H" and "convergence" or "leyline"
-        addon.World:ForEachNode(function(node)
-            if node.kind == kind and node.mapID then nodeMaps[node.mapID] = true end
-        end)
-    end
     local list = ownReports()[mapID]
-    return nodeMaps[mapID] or (list ~= nil and #list > 0)
+    return list ~= nil and #list > 0
 end
 
 ---------------------------------------------------------------------------
@@ -874,11 +861,9 @@ end
 
 -- { [nodeID] = seconds since the newest report } for those of `nodeIDs` with a report from `byMap` (sightings or "not
 -- there"s) in the player's current phase within TTL, and how many; nil when there are none (or the phase isn't known).
--- nodeIDs may name shared nodes (WithShared).
+-- nodeIDs are a pick's places (PlaceIDs) or nodes of ours.
 local function reportedAmong(byMap, nodeIDs)
     if not (phase and tracking()) then return nil end
-    local shared = {}
-    for _, place in ipairs(LeyShare:SharedPlaces()) do shared[place.id] = place end
     local now, seen, count = GetServerTime(), {}, 0
     for mapID, list in pairs(byMap) do
         for _, r in ipairs(list) do
@@ -886,7 +871,7 @@ local function reportedAmong(byMap, nodeIDs)
             if r.phase == phase and age <= TTL and age >= -FUTURE then
                 local rx, ry, rc = worldPos(mapID, r.x, r.y)
                 for _, id in ipairs(nodeIDs) do
-                    local node = addon.World:GetNode(id) or shared[id]
+                    local node = placeByID[id] or addon.World:GetNode(id)
                     local w = node and node.mapID and nodeWorld(node)
                     local d = w and yardsApart(rx, ry, rc, w[1], w[2], w[3])
                     if d and d < SAME_YARDS and (seen[id] == nil or age < seen[id]) then
@@ -1109,14 +1094,14 @@ function LeyShare:Stats()
     for _, list in pairs(goneReports()) do gone = gone + #list end
     return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(), phase = phase,
              tentative = tentativeNpc ~= nil, held = count, here = here, gone = gone, queued = #queue,
-             shared = #self:SharedPlaces(), greyed = channelIndex() ~= nil and greyedOut(), paused = paused(),
+             greyed = channelIndex() ~= nil and greyedOut(), paused = paused(),
              revives = freshened }
 end
 
 -- Tests only: forget everything held in memory, and allow this many channel swaps (none if omitted).
 function LeyShare:ResetForTests(swaps)
     reorderUntil, swapsLeft = nil, swaps or 0
-    phase, phaseMap, tentativeNpc, waiting, pending, joinedAt, nodeMaps = nil, nil, nil, nil, nil, nil, nil
+    phase, phaseMap, tentativeNpc, waiting, pending, joinedAt = nil, nil, nil, nil, nil, nil
     wipe(candidates)
     wipe(asked)
     wipe(covering)
@@ -1126,7 +1111,6 @@ function LeyShare:ResetForTests(swaps)
     sending = false
     channelRetries, pausedUntil, awaitingEcho, whoUntil, lastJoinAt, recheckPending = 0, nil, nil, nil, nil, nil
     freshened, freshenedAt, freshening = 0, nil, nil
-    known, sharedPruned, placesCache = nil, nil, nil
 end
 
 ---------------------------------------------------------------------------

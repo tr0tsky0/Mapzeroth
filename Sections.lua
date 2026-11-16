@@ -153,17 +153,11 @@ end
 -- place, and no time until they are planned.
 function Sections:Build(entries, ctx, waypoint, tomtomCount)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
-    local leylines, convergences, stables, cities, towns, dungeons, raids = {}, {}, {}, {}, {}, {}, {}
+    local stables, cities, towns, dungeons, raids = {}, {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
     for _, entry in ipairs(entries) do
-        if entry.group == "leyline" and entry.relevant then
-            leylines[#leylines + 1] = entry.nodeID
-            index[entry.nodeID] = entry
-        elseif entry.group == "convergence" and entry.relevant then
-            convergences[#convergences + 1] = entry.nodeID
-            index[entry.nodeID] = entry
-        elseif entry.group == "stable" and entry.relevant and addon.STABLE_PICK then
+        if entry.group == "stable" and entry.relevant and addon.STABLE_PICK then
             stables[#stables + 1] = entry.nodeID
             index[entry.nodeID] = entry
         elseif entry.group == "trainer" and entry.relevant and entry.trainer then
@@ -190,8 +184,16 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
             relevant = true, pick = true, dest = waypoint, key = "waypoint",
         }
     end
-    if #leylines > 0 then top[#top + 1] = pick(L["PICK_LEYLINE"], "leyline", leylines, "leyline") end
-    if #convergences > 0 then top[#top + 1] = pick(L["PICK_CONVERGENCE"], "convergence", convergences, "leyline") end
+    -- The nearest ley line or convergence (Skyborne): its places come from SLLCM when it is planned (LeyShare:PlacesFor).
+    -- Without SLLCM the row points to it instead (action "sllcm"), until the player dismisses that.
+    local horde = ctx.faction == "Horde"
+    local leyKind = horde and "convergence" or "leyline"
+    local leyMode = addon.LeyShare and addon.Relevance:IsRelevant({ kind = leyKind }, ctx) and addon.LeyShare:PickMode()
+    if leyMode then
+        local ley = pick(L[horde and "PICK_CONVERGENCE" or "PICK_LEYLINE"], leyKind, {}, "leyline")
+        if leyMode == "hint" then ley.action = "sllcm" end
+        top[#top + 1] = ley
+    end
     if tomtomCount and tomtomCount > 0 then
         top[#top + 1] = { name = L["PICK_TOMTOM"]:format(tomtomCount), group = "waypoint",
                           relevant = true, pick = true, action = "tomtom", key = "tomtom" }

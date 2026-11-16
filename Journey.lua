@@ -42,16 +42,16 @@ function Journey:Build(ctx, start, extras)
     return { ctx = ctx, start = start, graph = graph, extras = extras }
 end
 
--- A "nearest ley line / convergence" pick.
+-- A "nearest ley line / convergence" pick (not the row that points to SLLCM instead, which has an action).
 local function leyPick(entry)
-    return entry.pick and entry.nodeIDs and (entry.group == "leyline" or entry.group == "convergence") and addon.LeyShare
+    return entry.pick and not entry.action and (entry.group == "leyline" or entry.group == "convergence") and addon.LeyShare
 end
 
 -- The places that aren't nodes of ours a destination entry needs in the graph: a waypoint, a tour's stops, or for a
--- ley line or convergence pick, the ones other players' sightings found that our data doesn't have (LeyShare.lua).
+-- ley line or convergence pick, the nodes near the player that SLLCM knows (LeyShare:PlacesFor).
 function Journey:ExtrasOf(entry)
     if leyPick(entry) then
-        local places = addon.LeyShare:SharedPlaces()
+        local places = addon.LeyShare:PlacesFor(entry)
         return #places > 0 and places or nil
     end
     if entry.stops then
@@ -112,9 +112,9 @@ function Journey:Cost(session, nodeID)
     return costs(session)[nodeID]
 end
 
--- A ley line or convergence pick can go to the shared nodes too, until a round trip has chosen one place (`placeChosen`).
+-- A ley line or convergence pick goes to any of its places, until a round trip has chosen one (`placeChosen`).
 local function goalsOf(entry)
-    if leyPick(entry) and not entry.placeChosen then return addon.LeyShare:WithShared(entry.nodeIDs) end
+    if leyPick(entry) and not entry.placeChosen then return addon.LeyShare:PlaceIDs(entry) end
     return entry.nodeIDs or { entry.nodeID }
 end
 

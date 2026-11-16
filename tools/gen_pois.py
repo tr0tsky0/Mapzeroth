@@ -49,12 +49,10 @@ TRAINER_FILES = ["class_trainers.tsv", "class_trainers_towns.tsv", "class_traine
                  "weapon_riding_trainers.tsv", "pet_trainers.tsv", "demon_trainers.tsv",
                  "profession_trainers.tsv"]
 PREFIX = {"inn": "INN", "bank": "BANK", "auction": "AUCTION", "trainer": "TRAINER",
-          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE",
-          "leyline": "LEYLINE", "convergence": "CONVERGENCE"}
-# Places that are out in the world and never join a settlement, whatever is nearby, so
-# they are named after their zone ("Zephras Isle Ley Line"). Ley lines are for Alliance
-# Skyborne (Read Ley Line), elemental convergences their Horde counterpart (Skysight).
-WORLD_KINDS = {"leyline", "convergence"}
+          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE"}
+# Ley lines and elemental convergences aren't Mapzeroth data any more: the "Nearest" pick reads them
+# from Skyborne Leyline & Convergence Marker (SLLCM_GetNodes, LeyShare.lua). A capture of one is refused.
+NOT_OURS = {"leyline", "convergence"}
 
 CLASS_TOKENS = ["WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "SHAMAN", "MAGE", "WARLOCK", "DRUID"]
 # Wowhead's title for an NPC ("<Mage Trainer>") -> what it trains. Class trainers use
@@ -350,6 +348,8 @@ def load_captured(settlements):
         kind, _, trainer = kind.partition(":")     # "trainer:MAGE" for a class trainer
         kind = kind.lower()
         kind = CAPTURE_KINDS.get(kind, kind)
+        if kind in NOT_OURS:
+            sys.exit(f"captured.tsv: {kind} rows aren't used any more (SLLCM has them): {line}")
         trainer = trainer.upper().replace(" ", "").replace("_", "")
         key, tier, default_name = parse_capture_key(key)
         if name.strip().lower() == cols[4].strip().lower():
@@ -522,7 +522,7 @@ def main():
     unassigned, out_nodes, counts = [], [], collections.Counter()
     used_ids = set()
     for p in sorted(places, key=lambda p: (p["map"], p["kind"], p["label"])):
-        if p["kind"] in WORLD_KINDS or p["standalone"]:
+        if p["standalone"]:
             key = None
         elif p["settlement"]:
             key = p["settlement"]

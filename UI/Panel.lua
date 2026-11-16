@@ -288,21 +288,6 @@ local function build(parent)
         row.name:SetMaxLines(2)
         ui.steps[i] = row
     end
-    -- The pointer to Skyborne Ley Line & Convergence Marker, under the last step of a ley line or convergence route
-    -- (placed by RenderSteps, and only when there is room).
-    ui.tip = makeRow(frame, 0, 1, ROW_H, false)
-    ui.tip.name:SetPoint("TOPLEFT", 14, -5)
-    ui.tip.name:SetText(L["SLLCM_TIP"])
-    ui.tip.sub = Theme:Text(ui.tip, "small")
-    ui.tip.sub:SetPoint("BOTTOMLEFT", 14, 5)
-    ui.tip.sub:SetWidth(INNER - 14 - 8)
-    ui.tip.sub:SetWordWrap(false)
-    ui.tip.sub:SetText(addon.SLLCM_NAME)
-    ui.tip.markerGroup = "hint"
-    Theme:Restyle(ui.tip)
-    ui.tip:SetScript("OnClick", function() Panel:ShowSllcmLink() end)
-    ui.tip:Hide()
-
     ui.more = Theme:Text(frame, "dim")
     ui.more:SetPoint("BOTTOMLEFT", PAD + 14, PAD + 4)      -- beside Start, never under it
 
@@ -332,7 +317,6 @@ local function showRouteWidgets(show)
     addon.RouteLines:Preview(show and state.plan or nil)
     if not show then
         for _, row in ipairs(ui.steps) do row:Hide() end
-        ui.tip:Hide()
         ui.oneWay:Hide()
         ui.roundTrip:Hide()
         ui.routeEdit:Hide()
@@ -606,12 +590,14 @@ function Panel.TooltipLines(entry, ctx)
     if not entry or entry.header then return nil end
     if entry.action == "tomtom" or entry.action == "paste" then
         return { { entry.name, "title" }, { L[entry.action == "tomtom" and "TIP_TOUR_TOMTOM" or "TIP_TOUR_PASTE"], "body" } }
+    elseif entry.action == "sllcm" then
+        return { { entry.name, "title" }, { L["TIP_NEEDS_SLLCM"]:format(addon.SLLCM_NAME), "body" } }
     elseif entry.group == "leyline" or entry.group == "convergence" then
         local lines = { { entry.pick and entry.where or entry.name, "title" },
                         { L[entry.group == "leyline" and "TIP_LEYLINE" or "TIP_CONVERGENCE"], "body" } }
         -- Seen up in the player's phase lately (LeyShare.lua): the pick goes to the nearest of those.
         local seen, count
-        if entry.pick and entry.nodeIDs and addon.LeyShare then seen, count = addon.LeyShare:SeenAmong(addon.LeyShare:WithShared(entry.nodeIDs)) end
+        if entry.pick and addon.LeyShare then seen, count = addon.LeyShare:SeenAmong(addon.LeyShare:PlaceIDs(entry)) end
         if count then lines[#lines + 1] = { L["TIP_SEEN"]:format(count), "good" } end
         return lines
     elseif entry.group == "trainer" then
@@ -631,25 +617,13 @@ local function setStatus(text)
     ui.status:SetShown(text ~= nil and text ~= "")
 end
 
--- Whether to point the player to Skyborne Ley Line & Convergence Marker (it shows where ley lines and convergences
--- have been found, which a "Nearest Potential ..." pick can't know): not once they have it, or said they don't want to see this.
-local function sllcmHintWanted()
-    if addon.Options:Get("hideSllcmHint") then return false end
-    if Panel.ignoreSllcmInstall then return true end          -- set by /mzr sllcm (MapzerothDataTools), to see the pointer with the addon installed
-    local isLoaded = (C_AddOns and C_AddOns.IsAddOnLoaded) or IsAddOnLoaded
-    if isLoaded then
-        for _, folder in ipairs(addon.SLLCM_FOLDERS) do
-            if isLoaded(folder) then return false end
-        end
-    end
-    return true
-end
-
--- Choosing the pointer offers the address to copy, and a way to stop being shown it.
+-- Without Skyborne Leyline & Convergence Marker the ley line pick points to it (LeyShare:PickMode): choosing it offers
+-- the address to copy, and a way to stop being shown it (the row goes).
 function Panel:ShowSllcmLink()
     addon.LinkPopup:Show(addon.SLLCM_NAME, addon.SLLCM_URL, function()
         addon.Options:Set("hideSllcmHint", true)
-        if ui and state.view == "route" and state.plan then Panel:RenderSteps() end
+        state.topKey = nil                      -- the top picks are built again, without the row
+        Panel:RefreshTop()
     end)
 end
 
@@ -773,7 +747,6 @@ function Panel:ShowRoute(entry, onReady)
     ui.routeHint:SetText("")
     ui.more:SetText("")
     for _, row in ipairs(ui.steps) do row:Hide() end
-    ui.tip:Hide()
     ui.start:SetShown(false)
 
     local ctx = addon:GetPlayerContext()
@@ -965,18 +938,6 @@ function Panel:RenderSteps()
     if above > 0 then notes[#notes + 1] = L["ROUTE_MORE_ABOVE"]:format(above) end
     if below > 0 then notes[#notes + 1] = L["ROUTE_MORE_BELOW"]:format(below) end
     ui.more:SetText(table.concat(notes, "   "))
-    -- A ley line or convergence is where spawns vary: point to the addon that shows where they've been found, in
-    -- the room under the last step (a route that fills the list has none).
-    local entry, shown = state.entry, math.min(state.stepRows, #list - state.stepOffset)
-    ui.tip:Hide()
-    if entry and (entry.group == "leyline" or entry.group == "convergence") and sllcmHintWanted() then
-        local tipTop = state.stepsTop + shown * STEP_H + 12
-        if tipTop + ROW_H <= STEPS_BOTTOM then
-            ui.tip:ClearAllPoints()
-            ui.tip:SetPoint("TOPLEFT", PAD, -tipTop)
-            ui.tip:Show()
-        end
-    end
     self:MarkCurrentStep()
 end
 
@@ -1029,6 +990,8 @@ function Panel:Choose(index)
         self:ToggleSection(entry.id)
     elseif entry.action == "paste" then
         self:TogglePaste()
+    elseif entry.action == "sllcm" then
+        self:ShowSllcmLink()
     elseif entry.action == "tomtom" then
         self:RouteTour(L["TOUR_TOMTOM"], addon:GetTomTomPoints() or {})
     elseif entry.action == "holidayroute" then

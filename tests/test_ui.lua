@@ -771,12 +771,14 @@ check(not pickNamed("Nearest Ley Line"), "no ley line pick for a character who c
 check(pickNamed("Class Trainer"), "but their class trainer is there")
 addon.Panel:Choose(trainers)
 IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
+SLLCM_GetNodes = function() return {} end                    -- with SLLCM loaded: its nodes are the pick's places
 WorldMapFrame._hooks.OnShow()
 addon.Panel:Query("")
 local leyline = pickNamed("Nearest Ley Line")
-check(leyline and leyline.group == "leyline" and #leyline.nodeIDs >= 4 and leyline.depth == 0,
-    "a Skyborne is offered the nearest ley line on top, over every one we know")
+check(leyline and leyline.group == "leyline" and not leyline.action and leyline.depth == 0,
+    "a Skyborne is offered the nearest ley line on top")
 check(not state.priced and leyline.eta == nil, "with no time, so opening the window searched no routes")
+SLLCM_GetNodes = nil
 IsPlayerSpell = function() return false end
 
 -- A waypoint set on the map is the first pick, on top, and the list follows it being set or cleared.
@@ -1182,60 +1184,46 @@ do
     Theme:Set(saved)
 end
 
--- The pointer to Skyborne Ley Line & Convergence Marker: under the steps of a ley line route, gone once they have
--- the addon or dismiss it, and choosing it offers the address to copy.
+-- Without Skyborne Ley Line & Convergence Marker, a Skyborne's ley line row points to it: choosing it offers the
+-- address to copy, and "Don't show this again" takes the row away. With SLLCM it is the pick.
 do
-    local realIsLoaded = IsAddOnLoaded
-    IsAddOnLoaded = function() return false end
+    local realSpell = IsPlayerSpell
+    IsPlayerSpell = function(id) return id == 1259705 end
     addon.Options:Set("hideSllcmHint", false)
-    local widgets = addon.Panel.widgets
-    local function leyRoute(group)
-        addon.Panel:ShowRoute({ name = "Nearest", nodeID = "TOWN_BOOTY_BAY", nodeIDs = { "TOWN_BOOTY_BAY" }, group = group, pick = true })
+    WorldMapFrame._hooks.OnShow()
+    addon.Panel:Query("")
+    local row = pickNamed("Nearest Ley Line")
+    check(row and row.action == "sllcm", "without SLLCM the row points to it")
+    local lines = addon.Panel.TooltipLines(row, addon:GetPlayerContext())
+    check(lines and lines[2][1]:find("Skyborne Ley Line & Convergence Marker", 1, true), "its tooltip says it needs the addon: " .. tostring(lines and lines[2][1]))
+    local function rowIndex()
+        for i, r in ipairs(state.results) do if r.pick and r.name == "Nearest Ley Line" then return i end end
     end
-    leyRoute("leyline")
-    check(state.plan and widgets.tip._shown, "a ley line route has the pointer")
-    check(widgets.tip.name:GetText() == "See where they can spawn", "it says what it is for: " .. tostring(widgets.tip.name:GetText()))
-    check(widgets.tip.sub:GetText() == "Skyborne Ley Line & Convergence Marker", "and names the addon in full")
-    leyRoute("convergence")
-    check(widgets.tip._shown, "so does a convergence route")
-    leyRoute("place")
-    check(not widgets.tip._shown, "another place's route doesn't")
-    leyRoute("leyline")
-
-    widgets.tip._scripts.OnClick()
+    addon.Panel:Choose(rowIndex())
     local popup = addon.LinkPopup.widgets
     check(addon.LinkPopup:IsShown() and popup.box:GetText() == "https://www.curseforge.com/wow/addons/sllcm", "choosing it offers the address to copy")
     check(popup.title:GetText() == "Skyborne Ley Line & Convergence Marker" and popup.hide:IsShown(), "under the addon's name, with a way to dismiss it")
+    check(state.view == "list", "and doesn't plan a route")
     popup.box._scripts.OnTextChanged(popup.box, true)
     check(popup.box:GetText() == "https://www.curseforge.com/wow/addons/sllcm", "the address can't be edited")
     popup.close._scripts.OnClick()
-    check(not addon.LinkPopup:IsShown() and widgets.tip._shown and not addon.Options:Get("hideSllcmHint"), "Close puts it away and the pointer stays")
-
-    widgets.tip._scripts.OnClick()
+    check(not addon.LinkPopup:IsShown() and pickNamed("Nearest Ley Line") and not addon.Options:Get("hideSllcmHint"), "Close puts it away and the row stays")
+    addon.Panel:Choose(rowIndex())
     popup.hide._scripts.OnClick()
     check(not addon.LinkPopup:IsShown() and addon.Options:Get("hideSllcmHint") == true, "Don't show again closes it and saves that")
-    check(not widgets.tip._shown, "and the pointer goes from the route at once")
-    leyRoute("leyline")
-    check(not widgets.tip._shown, "and stays away")
-
-    addon.Options:Set("hideSllcmHint", false)
-    IsAddOnLoaded = function(folder) return folder == "SkyborneLeyLineConvergenceMarker" end
-    leyRoute("leyline")
-    check(not widgets.tip._shown, "with the addon already loaded there is no pointer")
-    addon.Panel.ignoreSllcmInstall = true
-    leyRoute("leyline")
-    check(widgets.tip._shown, "unless the dev switch ignores the install")
-    addon.Panel.ignoreSllcmInstall = nil
-
-    -- A route that fills the list has no room for it.
-    IsAddOnLoaded = function() return false end
-    local steps = {}
-    for i = 1, 12 do steps[i] = { text = "Step " .. i, seconds = 5, method = "walk" } end
-    addon.Panel:DisplayPlan({ name = "Nearest", group = "leyline", pick = true }, { steps = steps, cost = 60 })
-    check(not widgets.tip._shown, "a route that fills the list has no room for it")
+    check(not pickNamed("Nearest Ley Line"), "and the row goes from the list at once")
+    WorldMapFrame._hooks.OnShow()
     addon.Panel:Query("")
-    check(not widgets.tip._shown, "and going back to the list hides it")
-    IsAddOnLoaded = realIsLoaded
+    check(not pickNamed("Nearest Ley Line"), "and stays away")
+    addon.LeyShare.forceHint = true
+    WorldMapFrame._hooks.OnShow()
+    addon.Panel:Query("")
+    check(pickNamed("Nearest Ley Line") and pickNamed("Nearest Ley Line").action == "sllcm", "unless the dev switch asks for it")
+    addon.LeyShare.forceHint = nil
+    addon.Options:Set("hideSllcmHint", false)
+    IsPlayerSpell = realSpell
+    WorldMapFrame._hooks.OnShow()
+    addon.Panel:Query("")
 end
 
 -- Tours from the panel (MultiRoute.lua): the last pick opens a box in the list to paste /way lines into, and Route plans the

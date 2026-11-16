@@ -58,9 +58,14 @@ addon.Options:Set("shareSightings", true)
 
 local function reset()
     LS:ResetForTests()
-    MapzerothRebuildDB.sightings, MapzerothRebuildDB.sightingsGone, MapzerothRebuildDB.sharedNodes = nil, nil, nil
+    MapzerothRebuildDB.sightings, MapzerothRebuildDB.sightingsGone = nil, nil
     MapzerothRebuildDB.sightingQueries = nil
     sent, timers, delays = {}, {}, {}
+end
+
+-- A sighting held in Arathi (another phase): a Q goes out only for a zone with one.
+local function holdOne()
+    MapzerothRebuildDB.sightings = { A = { [1417] = { { phase = "1", x = 0.1, y = 0.1, t = now } } } }
 end
 
 check(LS:Networking(), "a Skyborne with sharing on joins in")
@@ -74,12 +79,16 @@ addon.Options:Set("shareSightings", true)
 -- Phase: the first creature read is used at once; a second kind agreeing confirms it; then a new phase needs two
 -- kinds of NPC agreeing; players and pets don't count.
 reset()
+LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
+check(LS:Phase() == "3104" and #sent == 0, "no Q in a zone where nothing has been seen (no node list of our own)")
+reset()
+holdOne()
 LS:ReadGUID("Player-1-0ABC")
 check(LS:Phase() == nil, "a player's GUID says nothing")
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 local p, tentative = LS:Phase()
 check(p == "3104" and tentative, "the first creature gives the phase, tentatively")
-check(#sent == 1 and sent[1] == "Q:1:A:3104", "and it asks what's known there (Arathi has ley lines): " .. tostring(sent[1]))
+check(#sent == 1 and sent[1] == "Q:1:A:3104", "and it asks what's known there (a sighting is held in Arathi): " .. tostring(sent[1]))
 LS:ReadGUID("Creature-0-1-2-3104-5678-0002")
 p, tentative = LS:Phase()
 check(p == "3104" and not tentative, "a second kind agreeing confirms it")
@@ -110,21 +119,42 @@ local held = MapzerothRebuildDB.sightings.A[1417]
 check(#held == 1 and held[1].t == now - 60, "one sighting kept, the newer of the two: " .. #held)
 check(math.abs(held[1].x - 0.254) < 1e-9, "at the newer position")
 
--- Step two: the pick goes to the node seen up, not the nearer one that wasn't.
-local seen, count = LS:SeenAmong({ "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" })
-check(count == 1 and seen["LEYLINE_C1417_253_300"] == 60, "SeenAmong finds the sighted node and its age")
+-- Step two: the pick's places come from SLLCM (SLLCM_GetNodes): two in Arathi. It goes to the node seen up, not the
+-- nearer one that wasn't.
+local sllcmNodes = { [1417] = { { 0.253, 0.300 }, { 0.480, 0.605 } } }
+local askedFaction
+function SLLCM_GetNodes(faction)
+    askedFaction = faction
+    local out = {}
+    for mapID, list in pairs(sllcmNodes) do
+        out[mapID] = {}
+        for i, q in ipairs(list) do out[mapID][i] = { q[1], q[2] } end
+    end
+    return out
+end
+C_Spell = { GetSpellInfo = function(id) return { name = "Profession " .. id } end }   -- a route's steps may name a trainer
+local playerAt = { 0.47, 0.60 }
+C_Map.GetPlayerMapPosition = function() return CreateVector2D(playerAt[1], playerAt[2]) end
+local WEST, CLOSE = "LEY_A_1417_2530_3000", "LEY_A_1417_4800_6050"
 local J = addon.Journey
-local session = J:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ley", mapID = 1417, x = 0.47, y = 0.60 })
-local pick = { name = "Nearest Ley Line", pick = true, group = "leyline",
-               nodeID = "LEYLINE_C1417_253_300", nodeIDs = { "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" } }
+local pick = { name = "Nearest Ley Line", pick = true, group = "leyline", nodeIDs = {} }
+local both = LS:PlaceIDs(pick)
+check(#both == 2 and both[1] == CLOSE and both[2] == WEST and askedFaction == "Alliance",
+    "the pick's places are SLLCM's nodes for our faction, nearest first: " .. table.concat(both, " "))
+check(LS:GetPlace(WEST).name == "map 1417 Ley Line", "named like a ley line")
+local seen, count = LS:SeenAmong(both)
+check(count == 1 and seen[WEST] == 60, "SeenAmong finds the sighted node and its age")
+local session = J:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ley", mapID = 1417, x = 0.47, y = 0.60 }, J:ExtrasOf(pick))
 local plan = J:PlanEntry(session, pick)
-check(plan and plan.goal == "LEYLINE_C1417_253_300" and plan.seenAge == 60, "the route goes to the one seen: " .. tostring(plan and plan.goal))
-local round = J:PlanRoundTrip(session, pick)
-check(round and round.goal == "LEYLINE_C1417_253_300" and round.seenAge == 60, "a round trip too")
+check(plan and plan.goal == WEST and plan.seenAge == 60, "the route goes to the one seen: " .. tostring(plan and plan.goal))
+check(plan.steps[#plan.steps].text:find("map 1417 Ley Line", 1, true), "and the step names it: " .. plan.steps[#plan.steps].text)
+local round, trip = J:PlanRoundTrip(session, pick)
+check(round and round.goal == WEST and round.seenAge == 60 and trip.placeChosen, "a round trip too, and keeps to it")
+check(#J:ExtrasOf(trip) == 2, "the chosen trip still carries the pick's places, for planning again part way")
 LS:ReadGUID("Creature-0-1-2-9999-1-1")
 LS:ReadGUID("Creature-0-1-2-9999-2-1")
 plan = J:PlanEntry(session, pick)
-check(plan.goal == "LEYLINE_C1417_480_605" and plan.seenAge == nil, "in another phase, the nearest of them all")
+check(plan.goal == CLOSE and plan.seenAge == nil, "in another phase, the nearest of them all")
 
 -- "Not there" (Skyborne Compass's XM / XS): per node and phase the newest report wins, and the pick skips a node
 -- reported not there in the player's phase.
@@ -133,27 +163,26 @@ LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 runTimers()
 sent = {}
 local function xm(x, y, t) return ("XM:1:A:3104:1417:%d:%d:%d"):format(x, y, t) end
-local both = { "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" }
 LS:OnMessage(xm(4800, 6050, now - 30))
 local gone, goneCount = LS:GoneAmong(both)
-check(goneCount == 1 and gone["LEYLINE_C1417_480_605"] == 30, "an XM marks the node not there")
+check(goneCount == 1 and gone[CLOSE] == 30, "an XM marks the node not there")
 check(LS:SeenAmong(both) == nil, "and it isn't seen")
 plan = J:PlanEntry(session, pick)
-check(plan.goal == "LEYLINE_C1417_253_300" and plan.seenAge == nil, "the pick skips it for the next nearest: " .. tostring(plan.goal))
+check(plan.goal == WEST and plan.seenAge == nil, "the pick skips it for the next nearest: " .. tostring(plan.goal))
 LS:OnMessage(r(4800, 6050, now - 100))
 check(LS:SeenAmong(both) == nil and LS:GoneAmong(both), "a sighting older than the XM changes nothing")
 LS:OnMessage(r(4800, 6050, now - 10))
 seen = LS:SeenAmong(both)
-check(seen and seen["LEYLINE_C1417_480_605"] == 10 and LS:GoneAmong(both) == nil, "a newer sighting ends the not there")
+check(seen and seen[CLOSE] == 10 and LS:GoneAmong(both) == nil, "a newer sighting ends the not there")
 plan = J:PlanEntry(session, pick)
-check(plan.goal == "LEYLINE_C1417_480_605" and plan.seenAge == 10, "and the pick goes there again")
+check(plan.goal == CLOSE and plan.seenAge == 10, "and the pick goes there again")
 LS:OnMessage(("XS:1:A:3104:1417,4800,6050,%d;1417,2530,3000,%d"):format(now, now))
 gone, goneCount = LS:GoneAmong(both)
 check(goneCount == 2 and LS:SeenAmong(both) == nil, "an XS's entries are not-theres too, and a newer one ends the sighting")
 plan = J:PlanEntry(session, pick)
-check(plan.goal == "LEYLINE_C1417_480_605", "with every node not there, the nearest of them all")
+check(plan.goal == CLOSE, "with every node not there, the nearest of them all")
 LS:OnMessage(xm(9000, 9000, now))
-check(#LS:SharedPlaces() == 0, "an XM never teaches a place")
+check(#LS:NearbyPlaces() == 2, "an XM never adds a place")
 LS:OnMessage(("XM:1:A:3104:1417:4800:6050:%d"):format(now - 5500))
 check(#MapzerothRebuildDB.sightingsGone.A[1417] == 3, "a stale XM isn't kept (two nodes, and the far spot)")
 -- An XS doesn't answer a Q's sightings part: our S still goes out.
@@ -178,33 +207,51 @@ check(MapzerothRebuildDB.sightings.A[1415] == nil and #MapzerothRebuildDB.sighti
 C_Map.GetMapInfo, Enum, C_Map.GetMapInfoAtPosition, C_Map.GetMapPosFromWorldPos = savedInfo, savedEnum, nil, nil
 MapzerothRebuildDB.sightingsGone = nil
 
--- Shared nodes: a sighting where our data has no node is kept as one (whatever the phase), and the pick can go there.
+-- The places: SLLCM's 25 nodes nearest the player on their continent, and any seen up in their phase however far;
+-- chosen once for a pick.
 reset()
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-check(#LS:SharedPlaces() == 0, "nothing shared yet")
-LS:OnMessage(r(2540, 3010, now - 60))             -- at a node we have: not a shared one
-check(#LS:SharedPlaces() == 0, "a sighting at a node in our data adds nothing")
-LS:OnMessage(r(4500, 5800, now - 120))            -- 0.45, 0.58: no node of ours there
-LS:OnMessage(("R:1:A:7777:1417:%d:%d:%d"):format(4510, 5805, now - 30))   -- the same spot, another phase
-local places = LS:SharedPlaces()
-check(#places == 1 and places[1].id == "SHARED_A_1417_4500_5800" and places[1].name == "map 1417 Ley Line",
-    "an unknown spot is kept once, named like a ley line: " .. tostring(places[1] and places[1].id))
-local ids = LS:WithShared(pick.nodeIDs)
-check(#ids == 3 and ids[3] == "SHARED_A_1417_4500_5800", "the pick's places and the shared one")
-session = J:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ley2", mapID = 1417, x = 0.47, y = 0.60 }, J:ExtrasOf(pick))
-plan = J:PlanEntry(session, pick)
-check(plan and plan.goal == "SHARED_A_1417_4500_5800" and plan.seenAge == 120,
-    "both seen in this phase: the route goes to the nearer, the shared one: " .. tostring(plan and plan.goal))
-check(plan.steps[#plan.steps].text:find("map 1417 Ley Line", 1, true), "and the step names it: " .. plan.steps[#plan.steps].text)
-local trip
-round, trip = J:PlanRoundTrip(session, pick)
-check(round and round.goal == "SHARED_A_1417_4500_5800" and trip.placeChosen, "a round trip chooses it too, and keeps to it: " .. tostring(round) .. " " .. tostring(round and round.goal) .. " " .. tostring(trip and trip.placeChosen))
-check(#J:ExtrasOf(trip) == 1, "the chosen trip still carries the shared place, for planning again part way")
--- The next release adds that node to the data: the shared one is dropped.
-LS:ResetForTests()
-addon.World:GetNode("LEYLINE_C1417_480_605").x, addon.World:GetNode("LEYLINE_C1417_480_605").y = 0.4502, 0.5801
-check(#LS:SharedPlaces() == 0 and MapzerothRebuildDB.sharedNodes.A[1417] == nil, "a shared node the data now has is dropped")
-addon.World:GetNode("LEYLINE_C1417_480_605").x, addon.World:GetNode("LEYLINE_C1417_480_605").y = 0.48, 0.605
+local savedNodes = sllcmNodes
+sllcmNodes = { [1417] = {}, [1418] = { { 0.5, 0.5 } } }      -- 1418 is another continent (each test map is one)
+for i = 1, 30 do sllcmNodes[1417][i] = { 0.02 + i * 0.03, 0.60 } end   -- 75 yards apart, along the player's row
+local places = LS:NearbyPlaces()
+local onOther, farthest = false, 0
+for _, place in ipairs(places) do
+    if place.mapID ~= 1417 then onOther = true end
+    farthest = math.max(farthest, math.abs(place.x - 0.47))
+end
+check(#places == 25 and not onOther, "the 25 nearest on the player's continent: " .. #places)
+check(farthest < 0.40, "and not the farthest five: " .. farthest)
+LS:OnMessage(("R:1:A:3104:1418:5000:5000:%d"):format(now - 120))
+LS:OnMessage(("R:1:A:7777:1417:%d:%d:%d"):format(9800, 9800, now - 30))           -- another phase
+LS:OnMessage(r(4700, 6000, now - 30))                                               -- at one of the 25
+places = LS:NearbyPlaces()
+check(#places == 26 and places[26].id == "LEY_A_1418_5000_5000",
+    "a node seen up in our phase joins them, however far; not one in another phase, nor a second of one there: " .. #places)
+local pick2 = { name = "Nearest Ley Line", pick = true, group = "leyline", nodeIDs = {} }
+local kept = LS:PlacesFor(pick2)
+playerAt = { 0.9, 0.9 }
+check(LS:PlacesFor(pick2) == kept and #LS:PlaceIDs(pick2) == 26, "a pick keeps the places it was given")
+playerAt = { 0.47, 0.60 }
+sllcmNodes = savedNodes
+UnitFactionGroup = function() return "Horde" end
+check(LS:NearbyPlaces()[1].id:find("^LEY_H_") and askedFaction == "Horde", "a Horde player asks for and gets convergences")
+UnitFactionGroup = function() return "Alliance" end
+-- What the picker offers.
+check(LS:PickMode() == "route", "a Skyborne with SLLCM: the pick")
+local getNodes = SLLCM_GetNodes
+SLLCM_GetNodes = nil
+check(LS:PickMode() == "hint" and #LS:NearbyPlaces() == 0, "without it: the row pointing to SLLCM, and no places")
+addon.Options:Set("hideSllcmHint", true)
+check(LS:PickMode() == nil, "nothing once that's dismissed")
+LS.forceHint = true
+check(LS:PickMode() == "hint", "unless /mzr sllcm asks for it")
+LS.forceHint = nil
+addon.Options:Set("hideSllcmHint", false)
+SLLCM_GetNodes = getNodes
+UnitRace = function() return "Human", "Human", 1 end
+check(#LS:NearbyPlaces() == 0, "anyone not Skyborne: no places")
+UnitRace = function() return "Skyborne", "Skyborne", 99 end
 
 -- Q and S: a Q for a phase we hold is answered after a wait, unless someone else's S comes first.
 reset()
@@ -282,6 +329,7 @@ check(#sent == 1 and sent[1]:find("4800,6050", 1, true), "and the answer carries
 
 -- Asking: once a session per phase, and not after the first 90 minutes on the channel.
 reset()
+holdOne()
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 runTimers()
 check(#sent == 1 and sent[1] == "Q:1:A:3104", "a new phase is asked about")
@@ -301,6 +349,7 @@ check(LS:Phase() == "6000" and #sent == 2, "after 90 minutes on the channel noth
 
 -- Someone else's Q for a phase does for ours: we hear its answers. So does one from just before a /reload, for 5 min.
 reset()
+holdOne()
 LS:OnMessage("Q:1:A:3104")
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 runTimers()
@@ -351,6 +400,7 @@ check(#sent == 1 and sent[1]:find("^R:"), "sent after the pause")
 
 -- InvalidChannel just after joining: retried; still invalid, the channel is revived (/chatwho, then a fresh join).
 reset()
+holdOne()                                           -- so the Q goes out first, as before
 LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 runTimers()
 sent = {}
@@ -404,20 +454,20 @@ SkyborneMarkerDB = { crowdReports = {
     A = { [1417] = { { phase = "3104", x = 0.48, y = 0.605, t = now - 300 } } },
     H = { [1417] = { { phase = "3104", x = 0.253, y = 0.30, t = now - 30 } } },
 } }
-seen, count = LS:SeenAmong({ "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" })
-check(count == 1 and seen["LEYLINE_C1417_480_605"] == 300, "SLLCM's sightings for this faction are what the pick uses")
+seen, count = LS:SeenAmong({ WEST, CLOSE })
+check(count == 1 and seen[CLOSE] == 300, "SLLCM's sightings for this faction are what the pick uses")
 SkyborneMarkerDB = { crowdReports = { A = {} } }
-check(LS:SeenAmong({ "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" }) == nil, "none held for this faction: none seen")
+check(LS:SeenAmong({ WEST, CLOSE }) == nil, "none held for this faction: none seen")
 -- 0.3.0: one list for both factions, by map.
 SkyborneMarkerDB = { crowdReports = { [1417] = { { phase = "3104", x = 0.48, y = 0.605, t = now - 300 } } } }
-seen, count = LS:SeenAmong({ "LEYLINE_C1417_253_300", "LEYLINE_C1417_480_605" })
-check(count == 1 and seen["LEYLINE_C1417_480_605"] == 300, "SLLCM 0.3.0's single list is still read")
+seen, count = LS:SeenAmong({ WEST, CLOSE })
+check(count == 1 and seen[CLOSE] == 300, "SLLCM 0.3.0's single list is still read")
 check(not LS:ShouldAsk(), "and Mapzeroth doesn't ask: SLLCM asks its own question")
-MapzerothRebuildDB.sharedNodes = nil
 SkyborneMarkerDB = { crowdReports = { A = { [1417] = { { phase = "3104", x = 0.45, y = 0.58, t = now - 30 } } } } }
-seen, count = LS:SeenAmong(LS:WithShared({ "LEYLINE_C1417_253_300" }))
-check(#LS:SharedPlaces() == 1 and count == 1 and seen["SHARED_A_1417_4500_5800"] == 30,
-    "a place only SLLCM's sightings know is learned too, and counts as seen")
+local pick3 = { name = "Nearest Ley Line", pick = true, group = "leyline", nodeIDs = {} }
+seen, count = LS:SeenAmong(LS:PlaceIDs(pick3))
+check(#LS:PlaceIDs(pick3) == 3 and count == 1 and seen["LEY_A_1417_4500_5800"] == 30,
+    "a spot only SLLCM's sightings know is one of the pick's places too, and counts as seen")
 loaded.SkyborneLeyLineConvergenceMarker = nil
 
 -- The question is asked once per account, of Skyborne only; either answer settles it.

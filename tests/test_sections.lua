@@ -47,7 +47,7 @@ check(mage["Class Trainer"] and #mage["Class Trainer"].nodeIDs >= 2, "a mage has
 check(mage["Weapon Trainer"], "and a weapon master that teaches something they can learn")
 check(not mage["Pet Trainer"] and not mage["Demon Trainer"] and not mage["Nearest Ley Line"], "no pet or demon trainers, no ley lines")
 for _, item in ipairs(allPicks(sections)) do
-    if not item.action then
+    if not item.action and item.group ~= "leyline" and item.group ~= "convergence" then  -- those get their places when planned
         check(item.nodeIDs and #item.nodeIDs > 0 and item.nodeID == item.nodeIDs[1], "each pick can be routed to: " .. item.name)
     end
 end
@@ -111,18 +111,28 @@ check(picks((sectionsFor({ class = "HUNTER", faction = "Alliance" })))["Pet Trai
 check(picks((sectionsFor({ class = "WARLOCK", faction = "Alliance" })))["Demon Trainer"], "a warlock has a demon trainer")
 check(not picks((sectionsFor({ class = "WARRIOR", faction = "Alliance" })))["Pet Trainer"], "a warrior has neither")
 
--- Ley lines for Skyborne (whoever can read them).
+-- Ley lines for Skyborne (whoever can read them). The places come from SLLCM when the pick is planned
+-- (LeyShare:PlacesFor), so the pick holds none; without SLLCM the row points to it instead (action "sllcm").
 local skyborne = picks((sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })))
-check(skyborne["Nearest Ley Line"] and #skyborne["Nearest Ley Line"].nodeIDs >= 4, "a Skyborne has the nearest ley line, over all of them")
+check(skyborne["Nearest Ley Line"] and skyborne["Nearest Ley Line"].action == "sllcm", "without SLLCM a Skyborne's row points to it")
+addon.Options:Set("hideSllcmHint", true)
+skyborne = picks((sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })))
+check(not skyborne["Nearest Ley Line"], "and once that's dismissed, there is no row")
+addon.Options:Set("hideSllcmHint", false)
+SLLCM_GetNodes = function() return {} end
+skyborne = picks((sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })))
+check(skyborne["Nearest Ley Line"] and not skyborne["Nearest Ley Line"].action and #skyborne["Nearest Ley Line"].nodeIDs == 0
+    and skyborne["Nearest Ley Line"].group == "leyline", "with SLLCM, a Skyborne has the nearest ley line pick")
 
 -- Horde Skyborne get the nearest elemental convergence instead, and no ley line.
 local hordeSky = picks((sectionsFor({ class = "DRUID", faction = "Horde", spells = { 1259686 } })))
-check(hordeSky["Nearest Elemental Convergence"] and #hordeSky["Nearest Elemental Convergence"].nodeIDs >= 4, "a Horde Skyborne has the nearest convergence, over all of them")
+check(hordeSky["Nearest Elemental Convergence"] and hordeSky["Nearest Elemental Convergence"].group == "convergence", "a Horde Skyborne has the nearest convergence")
 check(not hordeSky["Nearest Ley Line"] and not skyborne["Nearest Elemental Convergence"], "each faction gets only its own")
 do
     local top = (sectionsFor({ class = "DRUID", faction = "Alliance", spells = { 1259705 } })).top
     check(top[1].group == "leyline", "the ley line pick is a top pick, first without a waypoint")
 end
+SLLCM_GetNodes = nil
 
 -- Weapons already known aren't offered again: a character who knows all of a weapon master's skills gets no pick.
 local knowsAll = {}
