@@ -15,6 +15,7 @@
 
 ### Fixed
 - Stopping a route in combat no longer causes an error. The trip window fades out at once and closes when combat ends. A route started in combat opens its window once combat ends, and moving the window or changing its scale in combat waits for combat to end too.
+- The route could be missing from the world map when you opened it after moving on a step, until you zoomed or changed maps.
 
 ## 1.1.0 (Forever) and 2.0.7 (Retail)
 

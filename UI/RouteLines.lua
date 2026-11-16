@@ -374,12 +374,13 @@ function RouteLines:SetCurrent(index)
     self:Redraw()
 end
 
--- Redraw when the map changes what it shows (another map, a zoom). (Opening the map is the panel's: it
--- shows the route again, or clears it.)
+-- Redraw when the map opens or changes what it shows (another map, a zoom). Nothing is drawn while the map is
+-- closed, so a step reached then has to be drawn on opening, when the map may come up with no change of its own.
 function RouteLines:Init()
     if state.hooked or not WorldMapFrame then return end
     state.hooked = true
     addon.Options:OnChange(function(key) if key == "showRouteOnMap" or key == "roadPreference" then RouteLines:Redraw() end end)
+    WorldMapFrame:HookScript("OnShow", function() RouteLines:Redraw() end)
     for _, method in ipairs({ "OnMapChanged", "OnCanvasScaleChanged" }) do
         if WorldMapFrame[method] then
             hooksecurefunc(WorldMapFrame, method, function() RouteLines:Redraw() end)

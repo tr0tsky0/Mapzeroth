@@ -25,7 +25,10 @@ local function mock(isFontString)
             SetShown = function(self, v) self._shown = v and true or false end,
             IsShown = function(self) return self._shown end,
             SetScript = function(self, name, fn) self._scripts[name] = fn end,
-            HookScript = function(self, name, fn) self._hooks[name] = fn end,
+            HookScript = function(self, name, fn)
+                local before = self._hooks[name]
+                self._hooks[name] = before and function(...) before(...); fn(...) end or fn
+            end,
             SetAttribute = function(self, k, v) self._attrs = self._attrs or {}; self._attrs[k] = v end,
             SetAtlas = function(self, a) self._atlas = a end,
             SetValue = function(self, v) self._value = v end,
@@ -975,7 +978,12 @@ RouteLines:Redraw()
 check(#RouteLines.state.marching == 0 and RouteLines.state.frame._scripts.OnUpdate == nil and RouteLines.state.beacon._shown,
       "with motion off it stands still, the beacon still shown")
 addon.Theme.motionOff = nil
+-- The trip moves on with the map closed: opening it again on the same map (no map change) draws the route.
+WorldMapFrame._shown = false
 RouteLines:SetCurrent(2)
+WorldMapFrame._shown = true
+WorldMapFrame._hooks.OnShow()
+check(shown() > 0, "opening the map draws the step the trip moved on to while it was closed")
 addon.Options:Set("showRouteOnMap", false)
 check(shown() == 0, "switched off in the settings, the route leaves the map")
 addon.Options:Set("showRouteOnMap", true)
