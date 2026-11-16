@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (both games)
+## 1.1.0 (Forever) and 2.0.7 (Retail)
 
 ### Added
 - **Forever: walks follow the roads.** On the map and minimap, a walking step is drawn along the road instead of a straight line across the zone, wherever the road isn't a long way round. Walking times use the real road distance too, so routes that walk are timed more accurately. Roads come from the game's own terrain for Eastern Kingdoms, Kalimdor and Zephras Isle, and inside the six capitals walks follow their streets, bridges and tunnels. A new **Walking routes** setting picks how closely walks keep to the roads, from across country to roads wherever they go.
