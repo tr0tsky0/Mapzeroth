@@ -261,6 +261,7 @@ local function assemble(session, legs, dropped)
     local Journey = addon.Journey
     local plan = { cost = 0, fare = 0, steps = {}, raw = {}, legs = legs, dropped = dropped, money = session.ctx.money }
     for _, leg in ipairs(legs) do
+        leg.cost = leg.cost + Journey:RetimeWalks(leg.steps)      -- timed as the walks are drawn (once per step)
         plan.cost = plan.cost + leg.cost
         plan.fare = plan.fare + (leg.fare or 0)
         for _, step in ipairs(leg.steps) do plan.steps[#plan.steps + 1] = step end

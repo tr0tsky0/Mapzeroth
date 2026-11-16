@@ -14,6 +14,7 @@ local definitions = {
     loadingScreenTax = { default = addon.DEFAULT_LOADING_SCREEN_TAX, min = 0, max = 20, step = 1 },   -- seconds a loading screen costs a route
     maxCooldown = { default = 8, min = 1, max = 8, step = 1 },          -- hours: a longer cooldown isn't routed through; the top (8+) is no limit
     scale = { default = 1, min = 0.7, max = 1.5, step = 0.05 },           -- size of our windows
+    roadPreference = { default = 3, min = 1, max = 5, step = 1 },          -- walks drawn: 1 across country ... 5 on roads (RoadNet.LEVELS)
     theme = { default = "moderndark" },
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip

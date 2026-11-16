@@ -1,0 +1,59 @@
+{
+  "_how": "autopick.py scores each ground texture per continent (closing r=5 then erosion r=5 thinness, painted >= 0.2). Shortlist: thinC5 >= 0.5 and area >= 2000 px. review.py sheets reviewed by eye 2026-11-15; kept only textures painted as road lines. Rejected thin-but-not-road: lava, cliff edges, riverbanks, ring walls, speckle patches, city interiors.",
+  "775971": {
+    "name": "Azeroth (Eastern Kingdoms)",
+    "roads": [
+      186839,
+      188572,
+      189026,
+      186962,
+      186766,
+      188796,
+      188610,
+      188727,
+      186802,
+      188564,
+      188911,
+      187100,
+      187074,
+      188763,
+      188964,
+      188982,
+      188818,
+      189071,
+      187073,
+      188729,
+      186994,
+      304640
+    ]
+  },
+  "782779": {
+    "name": "Kalimdor",
+    "roads": [
+      186883,
+      188598,
+      186975,
+      188478,
+      188859,
+      187066,
+      188584,
+      188665,
+      186962,
+      186918,
+      188542,
+      187098,
+      188508,
+      187074,
+      189030,
+      188964,
+      188363,
+      187035
+    ]
+  },
+  "7198644": {
+    "name": "Zephras Isle (instance 2991; WDT from Map.db2, file 1349477)",
+    "roads": [
+      186975
+    ]
+  }
+}

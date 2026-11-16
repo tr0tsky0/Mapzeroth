@@ -305,7 +305,7 @@ end
 function RouteLines:Init()
     if state.hooked or not WorldMapFrame then return end
     state.hooked = true
-    addon.Options:OnChange(function(key) if key == "showRouteOnMap" then RouteLines:Redraw() end end)
+    addon.Options:OnChange(function(key) if key == "showRouteOnMap" or key == "roadPreference" then RouteLines:Redraw() end end)
     for _, method in ipairs({ "OnMapChanged", "OnCanvasScaleChanged" }) do
         if WorldMapFrame[method] then
             hooksecurefunc(WorldMapFrame, method, function() RouteLines:Redraw() end)

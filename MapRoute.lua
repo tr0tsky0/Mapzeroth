@@ -24,6 +24,19 @@ function MapRoute:Project(point, mapID)
     return addon.Navigation.MapPoint(point, mapID)
 end
 
+-- The points a step's line goes through: a walk's own path with the road's way put in between (RoadNet), worked out
+-- once per step and kept on it (the minimap redraws its lines as the player moves), until the player changes how
+-- much walks keep to roads; anything else, its path.
+function MapRoute:DrawnPath(step)
+    local path = step.path or {}
+    if step.method ~= "walk" or not addon.RoadNet then return path end
+    local k = addon.RoadNet:Offroad()
+    if step.drawnPath and step.drawnFrom == path and step.drawnCount == #path and step.drawnK == k then return step.drawnPath end
+    local drawn = addon.RoadNet:Expand(path)
+    step.drawnPath, step.drawnFrom, step.drawnCount, step.drawnK = drawn, path, #path, k
+    return drawn
+end
+
 -- What to draw on map `mapID` for a plan: pieces = { { style, step, points = { {x, y}, ... } }, ... } in the
 -- order of the route, and markers, drawn in this order (later on top):
 --   { kind = "step", index, style, x, y }  where each step after the first starts (a small dot, unnumbered:
@@ -64,7 +77,7 @@ function MapRoute:Pieces(plan, mapID)
                 elseif #run == 1 then lone[#lone + 1] = run[1] end
                 run = {}
             end
-            for _, point in ipairs(step.path or {}) do
+            for _, point in ipairs(self:DrawnPath(step)) do
                 local x, y = self:Project(point, mapID)
                 if x then run[#run + 1] = { x = x, y = y } else offMap = true flush() end
             end

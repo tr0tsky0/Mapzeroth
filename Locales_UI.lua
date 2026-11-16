@@ -103,6 +103,13 @@ addon:RegisterLocale("enUS", {
     OPT_MINIMAP_UNAVAILABLE = "This client's minimap can't show the route.",
     OPT_HIDE_MINIMAP  = "Hide minimap button",
     OPT_HIDE_MINIMAP_DESC = "Hides the Mapzeroth button on the minimap. /mapzeroth still opens the window.",
+    OPT_ROADS         = "Walking routes",
+    OPT_ROADS_DESC    = "How closely a walk drawn on the map keeps to the roads: from across country, the shortest way, to roads wherever they go. Walking times don't change.",
+    OPT_ROADS_1       = "Across country",
+    OPT_ROADS_2       = "Mostly across country",
+    OPT_ROADS_3       = "Balanced",
+    OPT_ROADS_4       = "Mostly roads",
+    OPT_ROADS_5       = "Roads",
     OPT_PICKS_TITLE   = "Picker",
     OPT_PICKS_DESC    = "What the list offers before you type: the picks at the top, and your nearest trainers. Untick what you don't need. A pick for something you don't have (a profession, TomTom waypoints) only shows when you do.",
     -- The "About" page (UI/OptionsPanel.lua). %s: the version, then the author; the author again in OPT_ABOUT_MORE.

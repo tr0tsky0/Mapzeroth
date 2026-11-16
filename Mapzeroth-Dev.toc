@@ -42,6 +42,8 @@ Data\Forever\WeaponSkills.lua
 Data\Forever\ClassSpells.lua
 Data\Forever\Game.lua
 Data\Forever\PathFactors.lua
+Data\Forever\Roads.lua
+Data\Forever\CityPaths.lua
 Data\Forever\NodeNames_enUS.lua
 Data\Forever\TownNames_enUS.lua
 Data\Forever\InstanceNames_enUS.lua
@@ -90,6 +92,7 @@ Equipment.lua
 MovementSpeed.lua
 EdgeRequirements.lua
 TravelGraph.lua
+RoadNet.lua
 Pathfinder.lua
 Search.lua
 Destinations.lua

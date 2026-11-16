@@ -22,6 +22,7 @@ local CONTENT_HEIGHT = 864      -- how tall the settings are laid out; the page 
 local SHARE_ROW = 104           -- and the extra rows for sharing ley line sightings, on a dataset with ley lines (Forever):
                                 -- sharing, with its "How it works" link between its title and description,
 local DETECT_ROW = 80           -- and finding nodes on the minimap
+local ROAD_ROW = 104            -- and how much walks keep to roads, on a dataset with roads (Forever)
 local widgets = {}
 local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
@@ -293,7 +294,8 @@ function OptionsPanel:Build()
     frame.name = L["OPT_TITLE"]
     self.frame = frame
 
-    local panel, box, fit, scroll = scrolledPage(frame, CONTENT_HEIGHT + (addon.LeyLineSpell and SHARE_ROW + DETECT_ROW or 0))
+    local roadRow = addon.RoadData and ROAD_ROW or 0
+    local panel, box, fit, scroll = scrolledPage(frame, CONTENT_HEIGHT + roadRow + (addon.LeyLineSpell and SHARE_ROW + DETECT_ROW or 0))
     menuHost = panel
     widgets.scroll = scroll
 
@@ -333,14 +335,20 @@ function OptionsPanel:Build()
 
     widgets.hideMinimap = toggleRow(box, 776, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
 
+    if addon.RoadData then
+        widgets.roads = sliderRow(box, 856, "roadPreference", L["OPT_ROADS"], L["OPT_ROADS_DESC"],
+            function(v) return L["OPT_ROADS_" .. v] or tostring(v) end)
+    end
+    local shareTop = 856 + roadRow
+
     if addon.LeyLineSpell then
-        widgets.share = toggleRow(box, 856, "shareSightings", L["OPT_SHARE"], L["OPT_SHARE_DESC"])
+        widgets.share = toggleRow(box, shareTop, "shareSightings", L["OPT_SHARE"], L["OPT_SHARE_DESC"])
         widgets.shareHow = Theme:Link(box, L["SHARE_HOW"], function() return addon.SharePrompt:HowItWorksLines() end)
         -- Under the sharing title, ahead of its description: it covers both sharing rows.
-        widgets.shareHow:SetPoint("TOPLEFT", box, "TOPLEFT", PAD, -(856 + 20))
+        widgets.shareHow:SetPoint("TOPLEFT", box, "TOPLEFT", PAD, -(shareTop + 20))
         widgets.share.hint:ClearAllPoints()
         widgets.share.hint:SetPoint("TOPLEFT", widgets.shareHow, "BOTTOMLEFT", 0, -6)
-        widgets.detect = toggleRow(box, 856 + SHARE_ROW, "detectMinimapNodes", L["OPT_DETECT"], L["OPT_DETECT_DESC"])
+        widgets.detect = toggleRow(box, shareTop + SHARE_ROW, "detectMinimapNodes", L["OPT_DETECT"], L["OPT_DETECT_DESC"])
         if addon.LeyShare:SllcmLoaded() then
             -- That addon shares and scans instead (and has its own settings): say so in the titles, grey the rows out.
             widgets.share.title:SetText(L["OPT_SHARE_SLLCM_TITLE"])
@@ -367,6 +375,10 @@ function OptionsPanel:Sync()
     widgets.cooldown.value:SetText(widgets.cooldown.format(Options:Get("maxCooldown")))
     widgets.scale.slider:SetValue(Options:Get("scale"))
     widgets.scale.value:SetText(widgets.scale.format(Options:Get("scale")))
+    if widgets.roads then
+        widgets.roads.slider:SetValue(Options:Get("roadPreference"))
+        widgets.roads.value:SetText(widgets.roads.format(Options:Get("roadPreference")))
+    end
     widgets.theme:SetValue(Options:Get("theme"))
     widgets.routeMap:SetValue(Options:Get("showRouteOnMap"))
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))

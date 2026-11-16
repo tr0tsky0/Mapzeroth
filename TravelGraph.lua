@@ -18,7 +18,7 @@ local worldPosCache = {}
 -- The player's own spots (start, map waypoint) are one-off ids: caching them would only grow the cache.
 local function uncached(node)
     local id = node.id
-    return node.nocache or (type(id) == "string" and (id:find("^YOU_") or id:find("^WAYPOINT_")))
+    return node.nocache or id == nil or (type(id) == "string" and (id:find("^YOU_") or id:find("^WAYPOINT_")))
 end
 
 local function worldPos(node)
@@ -28,11 +28,17 @@ local function worldPos(node)
     local nocache = uncached(node)
     local cached = not nocache and worldPosCache[node.id]
     if cached then return cached[1], cached[2], cached[3] end
+    if not (C_Map and C_Map.GetWorldPosFromMapPos) then return nil end   -- headless tests
     local continent, pos = C_Map.GetWorldPosFromMapPos(node.mapID, CreateVector2D(node.x, node.y))
     if not pos then return nil end
     local x, y = pos:GetXY()
     if not nocache then worldPosCache[node.id] = { x, y, continent } end   -- the player moves: never cache
     return x, y, continent
+end
+
+-- A node's (or a route point's) world position as x, y, continent, or nil. Replaceable for tests.
+function TravelGraph.WorldPosition(node)
+    return worldPos(node)
 end
 
 -- Yards between two nodes. Uses the client's world-space projection, so nodes
@@ -48,13 +54,19 @@ function TravelGraph.DistanceProvider(a, b)
 end
 
 -- How much longer the real walk is than the straight line, averaged over the
--- two ends (a city and open country differ a lot).
-local function pathFactor(a, b)
-    local factors = addon.PathFactors or {}
-    local fa = factors[a.mapID] or addon.DEFAULT_PATH_FACTOR
-    local fb = factors[b.mapID] or addon.DEFAULT_PATH_FACTOR
-    return (fa + fb) / 2
+-- two ends (a city and open country differ a lot). A map's own measured factor (PathFactors.lua) comes first,
+-- then the one /mzr dumpgeometry worked out from its roads (Geometry.lua's mapFactors), then the default.
+local function mapFactor(mapID)
+    local measured = addon.PathFactors and addon.PathFactors[mapID]
+    if measured then return measured end
+    local roads = addon.GeometryPacked and addon.GeometryPacked.mapFactors
+    return roads and roads[mapID] or addon.DEFAULT_PATH_FACTOR
 end
+
+local function pathFactor(a, b)
+    return (mapFactor(a.mapID) + mapFactor(b.mapID)) / 2
+end
+TravelGraph.MapFactor = mapFactor
 
 local function loadingCost(edge, ctx)
     local screens = edge.loadingScreens
@@ -176,12 +188,21 @@ end
 -- below, not a reason to redo the O(n^2) distance pass), 0 for a "gate" edge (no time at any
 -- speed), or the already-finished cost for a "fly" edge (FLY_SPEED is a flat constant, no
 -- ctx-dependent piece at all).
+--
+-- opts (only /mzr dumpgeometry passes it): `roads` prices a walk by its road (RoadNet:Between) when it has one
+-- worth taking: dtf is then the road's length, with no path factor (the road is the real way), and the road's
+-- length over the straight line is noted per map in opts.ratios (both ends on that map), for the dump's
+-- mapFactors. `yieldEvery` yields the running coroutine after that many walk pairs: thousands of A* searches are
+-- too long for one frame.
 local staticGeometry, staticGeneration
 
 TravelGraph.staticBuildCount = 0    -- for tests: how many times the expensive geometry pass actually ran
 
-local function buildStaticGeometry()
+local function buildStaticGeometry(opts)
     TravelGraph.staticBuildCount = TravelGraph.staticBuildCount + 1
+    opts = opts or {}
+    local roads = opts.roads and addon.RoadNet
+    local done = 0
     local World = addon.World
     local geometry = {}
 
@@ -202,6 +223,19 @@ local function buildStaticGeometry()
                 local dist = not (leafA and leafB) and insideCity(a) == insideCity(b) and TravelGraph.DistanceProvider(a, b)
                 if dist then
                     local dtf = dist * pathFactor(a, b)
+                    if roads then
+                        local road, straight, _, _, drawOnly = roads:Between(a, b, roads:DefaultOffroad())
+                        if road and not drawOnly then
+                            dtf = road
+                            if a.mapID == b.mapID and opts.ratios then
+                                local list = opts.ratios[a.mapID] or {}
+                                opts.ratios[a.mapID] = list
+                                list[#list + 1] = road / straight
+                            end
+                        end
+                        done = done + 1
+                        if opts.yieldEvery and done % opts.yieldEvery == 0 then coroutine.yield(done) end
+                    end
                     if not leafA then link(a.id, b.id, dtf, "walk") end
                     if not leafB then link(b.id, a.id, dtf, "walk") end
                 end
@@ -324,10 +358,27 @@ local function staticGeometryFor()
     return staticGeometry
 end
 
+-- The yards a walk between two places was priced at: the geometry's own figure for two nodes it joins (the road's
+-- way, in a road-priced dump), else the straight line times the path factor (as a walk from the player's spot is).
+-- `a` and `b` are nodes or route points ({ id, mapID, x, y }). nil when they can't be measured.
+function TravelGraph:WalkYards(a, b)
+    local geometry = a.id and b.id and staticGeometryFor()
+    if geometry then
+        for _, pair in ipairs({ { a.id, b.id }, { b.id, a.id } }) do
+            for _, e in ipairs(geometry[pair[1]] or {}) do
+                if e[1] == pair[2] and e[3] == "walk" then return e[2] end
+            end
+        end
+    end
+    local dist = TravelGraph.DistanceProvider(a, b)
+    return dist and dist * pathFactor(a, b)
+end
+TravelGraph.PathFactor = pathFactor
+
 -- For /mzr dumpgeometry: always computes fresh (never the shipped file, even if one is loaded),
 -- since the whole point of that command is to regenerate it.
-function TravelGraph:BuildFreshGeometry()
-    return buildStaticGeometry()
+function TravelGraph:BuildFreshGeometry(opts)
+    return buildStaticGeometry(opts)
 end
 
 -- The static geometry as finished edge tables, per (World.generation, outdoor ground speed, indoor ground

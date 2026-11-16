@@ -1,0 +1,19 @@
+Eastern Kingdoms (WDT 775971, instance 0)
+  736 tiles, 238 with road (52s)
+  skeleton 76486 px (228s)
+  traced 1672 edges
+  joined 94 facing ends, 132 ends to nearby road
+  1078 polylines, 5806 points, 159196 yd of road
+Kalimdor (WDT 782779, instance 1)
+  988 tiles, 222 with road (69s)
+  skeleton 48952 px (164s)
+  traced 732 edges
+  joined 90 facing ends, 98 ends to nearby road
+  374 polylines, 3202 points, 103140 yd of road
+Zephras Isle (WDT 7198644, instance 2991)
+  72 tiles, 16 with road (2s)
+  skeleton 4338 px (8s)
+  traced 132 edges
+  joined 5 facing ends, 19 ends to nearby road
+  80 polylines, 357 points, 9351 yd of road
+wrote Data\Forever\Roads.lua (122 KB) in 405s

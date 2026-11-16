@@ -80,10 +80,16 @@ local function distance(sample, node)
 end
 
 -- Where a node is on the map the player is on, as x, y (0 to 1), or nil. Same map: as it is;
--- another (a city and its zone): carried across through world coordinates. Replaceable for tests.
+-- another (a city and its zone): carried across through world coordinates. A point known only in the world
+-- ({ world = { x, y, continent } }, a road's way: RoadNet) is placed from there. Replaceable for tests.
 function Navigation.MapPoint(node, mapID)
     if node.mapID == mapID then return node.x, node.y end
-    local ok, continent, world = pcall(C_Map.GetWorldPosFromMapPos, node.mapID, CreateVector2D(node.x, node.y))
+    local ok, continent, world
+    if node.mapID then
+        ok, continent, world = pcall(C_Map.GetWorldPosFromMapPos, node.mapID, CreateVector2D(node.x, node.y))
+    elseif node.world then
+        ok, continent, world = true, node.world.continent, CreateVector2D(node.world.x, node.world.y)
+    end
     if not (ok and world) then return nil end
     local ok2, _, pos = pcall(C_Map.GetMapPosFromWorldPos, continent, world, mapID)
     if not (ok2 and pos) then return nil end

@@ -275,7 +275,41 @@ local function pointOf(session, id)
             if place.id == id then node = place end
         end
     end
-    return node and { mapID = node.mapID, x = node.x, y = node.y } or nil
+    return node and { id = id, mapID = node.mapID, x = node.x, y = node.y } or nil
+end
+
+-- A walk's time as it is drawn. A route is chosen on the walking times shipped in Geometry.lua, which follow the roads
+-- at the middle "Walking routes" setting; the player may have it keep to roads more or less than that, and the map
+-- draws the walk their way (RoadNet). So once a plan is chosen, each walk step is timed again for the way drawn: its
+-- seconds scaled by the yards drawn over the yards it was priced at. Returns the seconds added to the steps (less
+-- than 0 when shorter), to put on the plan's total. A step is only timed again once.
+function Journey:RetimeWalks(steps)
+    local RoadNet, TravelGraph = addon.RoadNet, addon.TravelGraph
+    if not (RoadNet and addon.RoadData) then return 0 end
+    local added = 0
+    for _, step in ipairs(steps or {}) do
+        local path = step.path
+        if step.method == "walk" and not step.retimed and path and #path >= 2 and (step.seconds or 0) > 0 then
+            step.retimed = true
+            local priced, drawn = 0, 0
+            for i = 2, #path do
+                local a, b = path[i - 1], path[i]
+                local was = TravelGraph:WalkYards(a, b)
+                if not was then priced = nil break end
+                local road, _, _, _, drawOnly = RoadNet:Between(a, b)
+                if drawOnly then road = was end           -- a measured city's walk keeps its measured time
+                local dist = not road and TravelGraph.DistanceProvider(a, b)
+                priced = priced + was
+                drawn = drawn + (road or (dist and dist * TravelGraph.PathFactor(a, b)) or was)
+            end
+            if priced and priced > 0 then
+                local seconds = step.seconds * drawn / priced
+                added = added + seconds - step.seconds
+                step.seconds = seconds
+            end
+        end
+    end
+    return added
 end
 
 local function readableSteps(result, session)
@@ -541,6 +575,9 @@ function Journey:Plan(session, goalID, banned, backBanned)
         if back then plan.back = { cost = back.cost, steps = readableSteps(back, session), fare = back.fare } end
     end
     plan.assumed = assumedFlights(session.ctx, plan.raw)
+    -- Chosen (and compared, above) on the shipped walking times: now timed as the walks are drawn.
+    plan.cost = plan.cost + self:RetimeWalks(plan.steps)
+    if plan.back then plan.back.cost = plan.back.cost + self:RetimeWalks(plan.back.steps) end
     return plan
 end
 

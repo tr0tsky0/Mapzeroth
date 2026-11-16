@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ Streets</title>
+<style>
+  :root { --bg: #16130f; --panel: #221d17; --text: #eee3cf; --dim: #a89a83; --accent: #f2c14e; --line: #ff3b30; --sel: #ffe14d; --new: #4cd964; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, sans-serif; display: flex; flex-direction: column; height: 100vh; }
+  header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid #3a3128; }
+  header h1 { font-size: 16px; margin: 0 12px 0 0; }
+  button, select { background: #2f281f; color: var(--text); border: 1px solid #4a3f33; border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button.on { background: var(--accent); color: #1b1610; border-color: var(--accent); }
+  label { color: var(--dim); display: inline-flex; gap: 6px; align-items: center; }
+  #wrap { flex: 1; overflow: auto; position: relative; }
+  canvas { display: block; cursor: crosshair; }
+  #help { color: var(--dim); font-size: 12px; padding: 6px 16px; background: var(--panel); border-top: 1px solid #3a3128; }
+  #status { margin-left: auto; color: var(--dim); }
+</style>
+</head>
+<body>
+<header>
+  <h1>__TITLE__ streets</h1>
+  <button id="mEdit" class="on">Edit (E)</button>
+  <button id="mDraw">Draw (D)</button>
+  <button id="undo">Undo</button>
+  <label>Zoom <select id="zoom"><option>1</option><option selected>1.5</option><option>2</option><option>3</option><option>4</option></select></label>
+  <label>Map <input id="dim" type="range" min="20" max="100" value="70"></label>
+  <button id="save">Save .json</button>
+  <button id="reset">Reset to seed</button>
+  <span id="status"></span>
+</header>
+<div id="wrap"><canvas id="c"></canvas></div>
+<div id="help">
+  <b>Edit:</b> drag a point to move it · click a line to select it, Delete removes it · right-click a point to remove it · click on a line while holding Shift to add a point there.
+  <b>Draw:</b> click to place points (starting or ending on an existing point or line joins them) · Enter or double-click finishes · Esc cancels.
+  Saved automatically.
+</div>
+<script>
+const NAME = "__NAME__";
+const SEED = __SEED__;
+const KEY = "mzr-city-" + NAME;
+const img = new Image();
+img.src = "__IMG__";
+const c = document.getElementById("c"), ctx = c.getContext("2d");
+let lines = load() || JSON.parse(JSON.stringify(SEED));
+let zoom = 1.5, mode = "edit", sel = -1, drag = null, draft = null, history = [];
+window.MZR_LINES = () => JSON.parse(JSON.stringify(lines));
+
+function load() { try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(lines)); } catch (e) {}
+  document.getElementById("status").textContent = lines.length + " lines, " + lines.reduce((n, l) => n + l.length, 0) + " points";
+}
+function snapshot() { history.push(JSON.stringify(lines)); if (history.length > 200) history.shift(); }
+function undo() { if (history.length) { lines = JSON.parse(history.pop()); sel = -1; draw(); save(); } }
+
+function resize() { c.width = img.width * zoom; c.height = img.height * zoom; draw(); }
+function draw() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, c.width, c.height);
+  ctx.globalAlpha = document.getElementById("dim").value / 100;
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  ctx.globalAlpha = 1;
+  ctx.setTransform(zoom, 0, 0, zoom, 0, 0);
+  lines.forEach((l, i) => stroke(l, i === sel ? "#ffe14d" : "#ff3b30"));
+  if (draft) stroke(draft, "#4cd964");
+}
+function stroke(l, color) {
+  ctx.strokeStyle = color; ctx.lineWidth = 2.2 / zoom * 1.5; ctx.lineJoin = "round";
+  ctx.beginPath(); l.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+  ctx.fillStyle = color;
+  l.forEach(p => { ctx.beginPath(); ctx.arc(p[0], p[1], 2.4 / zoom * 1.5, 0, 7); ctx.fill(); });
+}
+function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / zoom, (e.clientY - r.top) / zoom]; }
+function near(p, q) { return Math.hypot(p[0] - q[0], p[1] - q[1]); }
+const R = () => 7 / zoom * 1.5;
+function findPoint(p) {
+  let best = null;
+  lines.forEach((l, i) => l.forEach((q, k) => { const d = near(p, q); if (d < R() && (!best || d < best.d)) best = { i, k, d }; }));
+  return best;
+}
+function findSegment(p) {
+  let best = null;
+  lines.forEach((l, i) => { for (let k = 1; k < l.length; k++) {
+    const a = l[k - 1], b = l[k], dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
+    const q = [a[0] + dx * t, a[1] + dy * t], d = near(p, q);
+    if (d < R() && (!best || d < best.d)) best = { i, k, q, d };
+  } });
+  return best;
+}
+// A point on an existing line to join to: an existing point, or a new one put into the line where it was clicked.
+function joinAt(p) {
+  const hit = findPoint(p); if (hit) return lines[hit.i][hit.k].slice();
+  const seg = findSegment(p); if (seg) { const q = seg.q.map(v => Math.round(v * 2) / 2); lines[seg.i].splice(seg.k, 0, q); return q.slice(); }
+  return null;
+}
+function round(p) { return p.map(v => Math.round(v * 2) / 2); }
+function finishDraft() {
+  if (draft && draft.length >= 2) { snapshot(); const d = draft; draft = null; d.forEach((p, k) => { if (p.join) { const j = joinAt(p); if (j) d[k] = j; } delete p.join; }); lines.push(d.map(p => [p[0], p[1]])); save(); }
+  draft = null; draw();
+}
+c.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  if (mode !== "edit") return;
+  const hit = findPoint(pos(e)); if (!hit) return;
+  snapshot(); lines[hit.i].splice(hit.k, 1); if (lines[hit.i].length < 2) lines.splice(hit.i, 1); sel = -1; draw(); save();
+});
+c.addEventListener("mousedown", e => {
+  if (e.button !== 0) return;
+  const p = pos(e);
+  if (mode === "draw") {
+    const q = round(p);
+    if (findPoint(p) || findSegment(p)) q.join = true;
+    draft = draft || []; draft.push(q); draw(); return;
+  }
+  const hit = findPoint(p);
+  if (hit && !e.shiftKey) { snapshot(); drag = hit; sel = hit.i; draw(); return; }
+  const seg = findSegment(p);
+  if (seg && e.shiftKey) { snapshot(); lines[seg.i].splice(seg.k, 0, round(seg.q)); sel = seg.i; draw(); save(); return; }
+  sel = seg ? seg.i : -1; draw();
+});
+c.addEventListener("mousemove", e => {
+  if (!drag) return;
+  const p = round(pos(e)), old = lines[drag.i][drag.k];
+  // Joined points move together.
+  lines.forEach(l => l.forEach(q => { if (q !== old && q[0] === old[0] && q[1] === old[1]) { q[0] = p[0]; q[1] = p[1]; } }));
+  old[0] = p[0]; old[1] = p[1]; draw();
+});
+addEventListener("mouseup", () => { if (drag) { drag = null; save(); } });
+c.addEventListener("dblclick", () => { if (mode === "draw") { if (draft) draft.pop(); finishDraft(); } });
+addEventListener("keydown", e => {
+  if (e.key === "Enter") finishDraft();
+  else if (e.key === "Escape") { draft = null; draw(); }
+  else if ((e.key === "Delete" || e.key === "Backspace") && sel >= 0 && mode === "edit") { snapshot(); lines.splice(sel, 1); sel = -1; draw(); save(); }
+  else if (e.key === "z" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); undo(); }
+  else if (e.key === "d" || e.key === "D") setMode("draw");
+  else if (e.key === "e" || e.key === "E") setMode("edit");
+});
+function setMode(m) { if (m !== "draw") finishDraft(); mode = m; document.getElementById("mEdit").classList.toggle("on", m === "edit"); document.getElementById("mDraw").classList.toggle("on", m === "draw"); }
+document.getElementById("mEdit").onclick = () => setMode("edit");
+document.getElementById("mDraw").onclick = () => setMode("draw");
+document.getElementById("undo").onclick = undo;
+document.getElementById("zoom").onchange = e => { zoom = +e.target.value; resize(); };
+document.getElementById("dim").oninput = draw;
+document.getElementById("reset").onclick = () => { if (confirm("Throw away your edits and go back to the seed lines?")) { snapshot(); lines = JSON.parse(JSON.stringify(SEED)); sel = -1; draw(); save(); } };
+document.getElementById("save").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(lines)], { type: "application/json" }));
+  a.download = NAME + ".json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+img.onload = () => { resize(); save(); };
+</script>
+</body>
+</html>

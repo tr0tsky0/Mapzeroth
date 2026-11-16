@@ -281,6 +281,10 @@ end
 
 -- The settings: switching it on or off takes effect at once.
 addon.Options:OnChange(function(key)
+    if key == "roadPreference" then
+        if enabled() and state.plan and MinimapLines:IsAvailable() then MinimapLines:Update() end
+        return
+    end
     if key ~= "showRouteOnMinimap" then return end
     if enabled() and state.plan and MinimapLines:IsAvailable() then
         ensureFrame():Show()
