@@ -11,6 +11,9 @@
   - A **Mapzeroth** data text (pick it in any Daylight data text slot) shows the step you're on and the time left. Hover it for the steps still to come; left-click it to show or hide the window.
   - With the Daylight theme on, light circles the main buttons, and the trip window and the step's row light up briefly when you move on to the next step. Turning off motion in Daylight UI turns these lights off too.
 
+### Fixed
+- Stopping a route in combat no longer causes an error. The trip window fades out at once and closes when combat ends. A route started in combat opens its window once combat ends, and moving the window or changing its scale in combat waits for combat to end too.
+
 ## 1.1.0 (Forever) and 2.0.7 (Retail)
 
 ### Added

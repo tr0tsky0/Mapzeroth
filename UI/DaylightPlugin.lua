@@ -98,7 +98,8 @@ if type(my.AddDataText) == "function" then
         tooltip = routeTooltip,
         click = function(button) if button == "LeftButton" then addon.Panel:Toggle() end end,
         icon = "Interface\\AddOns\\" .. addonName .. "\\Media\\Logo",
-        sample = "2/5",
+        -- No `sample`: DaylightUI 1.9.0 shows it whenever test mode's "datatexts" box is ticked (the default), test
+        -- mode on or not, so the slot would never show the real text.
     })
 end
 

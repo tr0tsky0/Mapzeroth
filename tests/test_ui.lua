@@ -545,7 +545,35 @@ InCombatLockdown = function() return true end
 addon.Navigation:Start({ name = "X" }, usePlan)
 addon.Navigator:Show()
 check(w.use._attrs.spell == 18960 and w.status._text == "Can't be used in combat", "in combat it leaves the button alone and says so")
+
+-- The window holds a secure button, so in combat the game blocks showing, hiding, placing and scaling it, as here.
+local nav = w.frame
+for _, name in ipairs({ "Show", "Hide", "SetShown", "ClearAllPoints", "SetScale", "StartMoving" }) do
+    local plain = getmetatable(nav).__index(nav, name)
+    rawset(nav, name, function(self, ...)
+        if InCombatLockdown() then error("ADDON_ACTION_BLOCKED: " .. name, 2) end
+        return plain(self, ...)
+    end)
+end
+rawset(nav, "SetAlpha", function(self, a) self._alpha = a end)
+addon.Navigator:Stop()
+check(nav._shown and nav._alpha == 0, "Stop in combat fades the window out without hiding it")
+addon.Navigator:ApplyScale()
+nav._scripts.OnDragStart(nav)
+addon.Navigation:Start({ name = "X" }, usePlan)
+addon.Navigator:Show()
+check(nav._alpha == 1, "a trip started in the same fight brings it back")
+addon.Navigator:Stop()
 InCombatLockdown = function() return false end
+w.events._scripts.OnEvent(w.events, "PLAYER_REGEN_ENABLED")
+check(not nav._shown and nav._alpha == 1, "once combat ends it is hidden for real")
+InCombatLockdown = function() return true end
+addon.Navigation:Start({ name = "X" }, usePlan)
+addon.Navigator:Show()
+check(not nav._shown, "a trip started in combat with the window hidden waits")
+InCombatLockdown = function() return false end
+w.events._scripts.OnEvent(w.events, "PLAYER_REGEN_ENABLED")
+check(nav._shown and nav._scale ~= nil, "and shows (placed and scaled) once combat ends")
 
 -- A flight shows a bar once flying; arriving shows the end message.
 addon.Navigation:Start({ name = "Ironforge" }, { steps = { { method = "taxi", fromID = "TAXI_2", nodeID = "TAXI_6", seconds = 200, text = "Fly" } } })

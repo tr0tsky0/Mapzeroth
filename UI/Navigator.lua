@@ -30,8 +30,42 @@ local function tripUpdate(model)
     if addon.DaylightPlugin then addon.DaylightPlugin:OnTrip(model) end
 end
 
+-- The window holds a secure button (ui.use), so in combat the game counts the whole window as protected: it can't be
+-- shown, hidden, moved or scaled until combat ends (ADDON_ACTION_BLOCKED). In combat a hide only fades it out (SetAlpha
+-- is allowed), and the real hide, a show of a hidden window, its placing and its scale wait for PLAYER_REGEN_ENABLED.
+local function setShown(on)
+    local frame = ui.frame
+    if InCombatLockdown() then
+        ui.pending = on
+        if on and not frame:IsShown() then return end          -- shown and placed once combat ends
+        frame:SetAlpha(on and 1 or 0)
+        return
+    end
+    ui.pending = nil
+    frame:SetAlpha(1)
+    frame:SetShown(on)
+end
+
 function Navigator:ApplyScale()
-    if ui then ui.frame:SetScale(addon.Options:Get("scale")) end
+    if not ui then return end
+    if InCombatLockdown() then
+        ui.rescale = true
+        return
+    end
+    ui.frame:SetScale(addon.Options:Get("scale"))
+end
+
+-- Combat is over: do what it held back.
+local function afterCombat()
+    if ui.rescale then
+        ui.rescale = nil
+        Navigator:ApplyScale()
+    end
+    local pending = ui.pending
+    if pending == nil then return end
+    if pending and not ui.frame:IsShown() then Navigator:Place() end
+    setShown(pending)
+    if pending then Navigator:Tick() end
 end
 
 -- Where the window sits. Where the player last dragged it, kept in the saved variables; until they have, just
@@ -75,7 +109,9 @@ local function build()
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    frame:SetScript("OnDragStart", function(self)
+        if not InCombatLockdown() then self:StartMoving() end      -- protected in combat (setShown)
+    end)
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
         Navigator:SavePosition()
@@ -93,6 +129,9 @@ local function build()
     end)
     frame:Hide()
     ui.frame = frame
+    ui.events = CreateFrame("Frame")
+    ui.events:RegisterEvent("PLAYER_REGEN_ENABLED")
+    ui.events:SetScript("OnEvent", afterCombat)
 
     ui.title = Theme:Text(frame, "title")
     ui.title:SetPoint("TOPLEFT", PAD, -12)
@@ -227,7 +266,7 @@ function Navigator:Render(model)
     end
     addon.Equipment:Sync(model)             -- put back what an equip step replaced, once the trip is past using it
     if not model then
-        ui.frame:Hide()
+        setShown(false)
         tripUpdate(nil)
         return
     end
@@ -374,13 +413,13 @@ function Navigator:Show()
     ui.useStep = nil
     ui.arrivedAt = nil
     ui.moment = nil
-    self:Place()
-    ui.frame:Show()
+    if not InCombatLockdown() then self:Place() end        -- in combat, a hidden window is placed when it ends
+    setShown(true)
     self:Tick()
 end
 
 function Navigator:Hide()
-    if ui then ui.frame:Hide() end
+    if ui then setShown(false) end
 end
 
 -- Stop following the trip and close the window.
