@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 (Forever) and 2.0.8 (Retail)
 
 ### Added
 - **Pick which stops to visit.** Choosing your TomTom waypoints or a saved route now lists its stops first, all ticked. Untick any you don't want this time (or use All/None), then Route. Your waypoints and the saved route aren't changed.
@@ -8,7 +8,7 @@
 - **Forever: the navigator's arrow follows the road.** On a walk drawn along roads or city streets, the arrow points a little way ahead along the road instead of straight at the end, and the yards shown are those left along it. Cut across country and it points straight at the end again.
 - **Forever: more Daylight UI.** If you use Daylight UI:
   - When a step has you use your Hearthstone or cast a teleport, its button on your Daylight action bars lights up.
-  - A **Mapzeroth** data text (pick it in any Daylight data text slot) shows the step you're on and the time left. Hover it for the steps still to come; left-click it to show or hide the window.
+  - A **Mapzeroth** data text (pick it in any Daylight data text slot) shows which step you're on (such as 2/5) and the time left. Hover it for the steps still to come; left-click it to show or hide the window.
   - With the Daylight theme on, light circles the main buttons, and the trip window and the step's row light up briefly when you move on to the next step. Turning off motion in Daylight UI turns these lights off too.
   - With the Daylight theme on, the step you're on is drawn in your Daylight accent colour on the map and minimap (brightened if needed, so it stays easy to see).
 - **The step you're on comes alive on the map and minimap.** Its dots or dashes now flow toward where it ends, and a ring slowly pulses there. With Daylight UI's motion turned off, both stay still.
