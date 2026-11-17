@@ -5,6 +5,7 @@
 ### Added
 - **Route to your quest.** The quest you're following (the one the game's arrow points to) is a pick at the top of the list, after Your Waypoint: Mapzeroth plans the way to it from wherever you are. It can be hidden on the settings page like the other picks.
 - **Your waypoint clears itself on arrival.** Following a route to the waypoint you set on the map now removes it when you get there (unless you've set a different one meanwhile).
+- **Forever: the Mapzeroth data text shows in Daylight UI's test mode.** While you lay out your data text slots, it shows a sample (2/5) so you can see where it goes. Update Daylight UI to 1.9.1 or later.
 
 ### Fixed
 - The route behind you could come back on the map and minimap partway along a step, all of it at once. The part you've walked now stays gone, also when you step off the line for a moment.
