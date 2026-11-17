@@ -55,6 +55,23 @@ function Navigator:ApplyScale()
     ui.frame:SetScale(addon.Options:Get("scale"))
 end
 
+local function onUpdate(_, elapsed)
+    ui.timer = (ui.timer or 0) + elapsed
+    ui.pointerTimer = (ui.pointerTimer or 0) + elapsed
+    if ui.timer >= INTERVAL then
+        ui.timer, ui.pointerTimer = 0, 0
+        Navigator:Tick()
+    elseif ui.pointerTimer >= POINTER_INTERVAL then
+        ui.pointerTimer = 0
+        Navigator:Point()
+    end
+end
+Navigator.OnUpdate = onUpdate           -- for tests
+
+local function running(on)
+    ui.events:SetScript("OnUpdate", on and onUpdate or nil)
+end
+
 -- Combat is over: do what it held back.
 local function afterCombat()
     if ui.rescale then
@@ -116,19 +133,9 @@ local function build()
         self:StopMovingOrSizing()
         Navigator:SavePosition()
     end)
-    frame:SetScript("OnUpdate", function(_, elapsed)
-        ui.timer = (ui.timer or 0) + elapsed
-        ui.pointerTimer = (ui.pointerTimer or 0) + elapsed
-        if ui.timer >= INTERVAL then
-            ui.timer, ui.pointerTimer = 0, 0
-            Navigator:Tick()
-        elseif ui.pointerTimer >= POINTER_INTERVAL then
-            ui.pointerTimer = 0
-            Navigator:Point()
-        end
-    end)
     frame:Hide()
     ui.frame = frame
+    -- The trip's clock runs on this frame, never hidden, so a trip goes on with the window put away; only while one runs.
     ui.events = CreateFrame("Frame")
     ui.events:RegisterEvent("PLAYER_REGEN_ENABLED")
     ui.events:SetScript("OnEvent", afterCombat)
@@ -266,6 +273,7 @@ function Navigator:Render(model)
     end
     addon.Equipment:Sync(model)             -- put back what an equip step replaced, once the trip is past using it
     if not model then
+        running(false)
         setShown(false)
         tripUpdate(nil)
         return
@@ -413,8 +421,10 @@ function Navigator:Show()
     ui.useStep = nil
     ui.arrivedAt = nil
     ui.moment = nil
-    if not InCombatLockdown() then self:Place() end        -- in combat, a hidden window is placed when it ends
-    setShown(true)
+    ui.away = not addon.Options:Get("showNavigator")       -- the setting off: the trip starts with the window put away
+    if not (ui.away or InCombatLockdown()) then self:Place() end   -- in combat, a hidden window is placed when it ends
+    setShown(not ui.away)
+    running(true)
     self:Tick()
 end
 
@@ -422,9 +432,27 @@ function Navigator:Hide()
     if ui then setShown(false) end
 end
 
+-- Whether the trip's window is put away (the panel's button, or the setting at the start).
+function Navigator:IsAway()
+    return ui ~= nil and ui.away == true
+end
+
+-- The panel's button: put the window away for this trip, or bring it back. Returns whether it is away now.
+function Navigator:ToggleWindow()
+    if not (ui and Navigation:IsActive()) then return false end
+    ui.away = not ui.away
+    if not (ui.away or ui.frame:IsShown() or InCombatLockdown()) then self:Place() end
+    setShown(not ui.away)
+    if not ui.away then self:Tick() end
+    return ui.away
+end
+
 -- Stop following the trip and close the window.
 function Navigator:Stop()
-    if ui then ui.arrivedAt = nil end
+    if ui then
+        ui.arrivedAt = nil
+        running(false)
+    end
     Navigation:Stop()
     addon.Equipment:Sync(nil)
     if addon.RouteLines then addon.RouteLines:Follow(nil) end

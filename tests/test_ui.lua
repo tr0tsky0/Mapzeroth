@@ -480,6 +480,30 @@ check(model and model.step and model.total == #state.plan.steps, "a tick reads t
 check(w.step._text == model.step.text, "the navigator shows the step: " .. tostring(w.step._text))
 check(w.count._text == "Step 1 of " .. model.total or w.count._text:find("Step"), "and where in the trip: " .. tostring(w.count._text))
 
+-- The trip runs on its own clock, so the window can be put away from the panel's button and the trip goes on.
+local toggle = addon.Panel.widgets.navToggle
+check(toggle._shown and toggle.label._text == addon.L["NAV_HIDE_WINDOW"], "on the trip the panel offers to hide the navigator")
+check(w.events._scripts.OnUpdate == addon.Navigator.OnUpdate, "the trip's clock is running")
+toggle._scripts.OnClick(toggle)
+check(not w.frame._shown and addon.Navigation:IsActive(), "hidden, the trip goes on without its window")
+check(toggle.label._text == addon.L["NAV_SHOW_WINDOW"], "and the button offers it back")
+local ticks, realTick = 0, addon.Navigator.Tick
+addon.Navigator.Tick = function(...) ticks = ticks + 1; return realTick(...) end
+w.events._scripts.OnUpdate(w.events, 1)
+addon.Navigator.Tick = realTick
+check(ticks == 1, "the hidden trip still ticks")
+toggle._scripts.OnClick(toggle)
+check(w.frame._shown and toggle.label._text == addon.L["NAV_HIDE_WINDOW"], "a second click brings it back")
+-- The setting off: a trip starts with the window away (still followed on the map), and the button brings it up.
+addon.Options:Set("showNavigator", false)
+addon.Navigator:Show()
+check(not w.frame._shown and addon.Navigator:IsAway(), "with the setting off a trip starts without its window")
+addon.Panel:ShowNavToggle()
+check(toggle.label._text == addon.L["NAV_SHOW_WINDOW"], "and the panel offers to show it")
+addon.Navigator:ToggleWindow()
+check(w.frame._shown, "which brings it up")
+addon.Options:Set("showNavigator", true)
+
 -- The trip window: under the panel until the player has moved it, then wherever they left it (kept in the saved
 -- variables). (The mock frames have no geometry, so give the two frames some and record where the window is put.)
 local nav = addon.Navigator.widgets.frame
@@ -523,6 +547,7 @@ check(addon.Navigator.widgets.frame._shown and addon.Navigation:IsActive(), "sti
 clock = 105.5
 addon.Navigator:Render(arrivedModel)
 check(not addon.Navigator.widgets.frame._shown and not addon.Navigation:IsActive(), "and after five seconds it clears itself")
+check(addon.Navigator.widgets.events._scripts.OnUpdate == nil, "with no trip the clock stops")
 clock = 200
 addon.Navigation:Start({ name = "Again" }, { steps = { { method = "walk", fromID = "YOU", nodeID = "TAXI_4", seconds = 5, text = "Walk" } } })
 addon.Navigator:Show()

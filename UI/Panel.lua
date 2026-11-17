@@ -331,6 +331,14 @@ local function build(parent)
     ui.start = Theme:Button(frame, L["ROUTE_START"], 90, 22, true)
     ui.start:SetPoint("BOTTOMRIGHT", -PAD, PAD)
     ui.start:SetScript("OnClick", function() Panel:StartRoute() end)
+    -- On a trip, where Start was: put the navigator window away, or bring it back.
+    ui.navToggle = Theme:Button(frame, "", 120, 22)
+    ui.navToggle:SetPoint("BOTTOMRIGHT", -PAD, PAD)
+    ui.navToggle:SetScript("OnClick", function()
+        addon.Navigator:ToggleWindow()
+        Panel:ShowNavToggle()
+    end)
+    ui.navToggle:Hide()
 
     Panel:ApplyScale()
     state.dockedHidden = addon.Options:Get("dockedHidden")
@@ -363,6 +371,7 @@ local function showRouteWidgets(show)
     -- The route on show is drawn on the map once it is planned, started or not (none while it is being planned).
     addon.RouteLines:Preview(show and state.plan or nil)
     if not show then
+        ui.navToggle:Hide()
         for _, row in ipairs(ui.steps) do row:Hide() end
         ui.oneWay:Hide()
         ui.roundTrip:Hide()
@@ -389,6 +398,14 @@ local function showTripChoice()
     local tour = state.view == "route" and entry ~= nil and entry.stops ~= nil and not state.pinned
     ui.routeEdit:SetShown(tour)
     if tour then ui.routeEdit.label:SetText(L[entry.routeID and "ROUTE_EDIT" or "ROUTE_SAVE"]) end
+    Panel:ShowNavToggle()
+end
+
+-- The navigator button: on the trip's route only, saying what a click does.
+function Panel:ShowNavToggle()
+    local shown = state.view == "route" and state.pinned and addon.Navigation:IsActive()
+    ui.navToggle:SetShown(shown)
+    if shown then ui.navToggle.label:SetText(L[addon.Navigator:IsAway() and "NAV_SHOW_WINDOW" or "NAV_HIDE_WINDOW"]) end
 end
 
 -- Chosen on the route: one way or a round trip, kept for the next route, and this one planned again that way.
@@ -1327,6 +1344,7 @@ function Panel:StartRoute()
     showTripChoice()
     self:MarkCurrentStep()
     addon.Navigator:Show()              -- first: with nowhere saved, the navigator is placed under the panel
+    self:ShowNavToggle()                -- the window may start put away (the setting)
     self:PutAway()                      -- standing on its own, the panel goes; the navigator follows the trip now
 end
 

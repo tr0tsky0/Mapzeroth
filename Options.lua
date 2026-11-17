@@ -29,6 +29,9 @@ local definitions = {
     -- A TomTom waypoints tour being followed drops a stop whose waypoint was deleted in TomTom (UI/Navigator.lua). Off:
     -- players also delete waypoints just to tidy the map once they're on their way.
     dropRemovedTomTom = { default = false, boolean = true },
+    -- A started trip opens the navigator window (UI/Navigator.lua). Off: the trip runs on the map, minimap and Daylight
+    -- data text only, until the button on the panel brings the window up.
+    showNavigator = { default = true, boolean = true },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.

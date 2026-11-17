@@ -18,7 +18,7 @@ local Theme = addon.Theme
 local Options = addon.Options
 
 local PAD = 20
-local CONTENT_HEIGHT = 944     -- how tall the settings are laid out; the page scrolls when the window is shorter
+local CONTENT_HEIGHT = 1024    -- how tall the settings are laid out; the page scrolls when the window is shorter
 local SHARE_ROW = 104           -- and the extra rows for sharing ley line sightings, on a dataset with ley lines (Forever):
                                 -- sharing, with its "How it works" link between its title and description,
 local DETECT_ROW = 80           -- and finding nodes on the minimap
@@ -335,12 +335,13 @@ function OptionsPanel:Build()
 
     widgets.hideMinimap = toggleRow(box, 776, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
     widgets.dropTomTom = toggleRow(box, 856, "dropRemovedTomTom", L["OPT_DROP_TOMTOM"], L["OPT_DROP_TOMTOM_DESC"])
+    widgets.showNavigator = toggleRow(box, 936, "showNavigator", L["OPT_SHOW_NAVIGATOR"], L["OPT_SHOW_NAVIGATOR_DESC"])
 
     if addon.RoadData then
-        widgets.roads = sliderRow(box, 936, "roadPreference", L["OPT_ROADS"], L["OPT_ROADS_DESC"],
+        widgets.roads = sliderRow(box, 1016, "roadPreference", L["OPT_ROADS"], L["OPT_ROADS_DESC"],
             function(v) return L["OPT_ROADS_" .. v] or tostring(v) end)
     end
-    local shareTop = 936 + roadRow
+    local shareTop = 1016 + roadRow
 
     if addon.LeyLineSpell then
         widgets.share = toggleRow(box, shareTop, "shareSightings", L["OPT_SHARE"], L["OPT_SHARE_DESC"])
@@ -387,6 +388,7 @@ function OptionsPanel:Sync()
     widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
     widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
     widgets.dropTomTom:SetValue(Options:Get("dropRemovedTomTom"))
+    widgets.showNavigator:SetValue(Options:Get("showNavigator"))
     -- Off while SLLCM is loaded, whatever is saved: Mapzeroth isn't sharing then.
     if widgets.share then widgets.share:SetValue(not widgets.share.disabled and Options:Get("shareSightings")) end
     if widgets.detect then widgets.detect:SetValue(not widgets.detect.disabled and Options:Get("detectMinimapNodes")) end
