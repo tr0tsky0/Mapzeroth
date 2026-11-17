@@ -2,13 +2,13 @@ local addonName, addon = ...
 
 -- The settings page, in the game's own Settings window (Game Menu > Options > AddOns >
 -- Mapzeroth, or /mapzeroth settings): how long a loading screen counts for in a route, the size of
--- our windows, the theme, whether the route is drawn on the map and on the minimap, icons or colour bars beside route steps, and (Forever) sharing ley line sightings. The page is built from our own themed widgets and handed to the
+-- our windows, the theme, whether the route is drawn on the map and on the minimap, icons or colour bars beside route steps. The page is built from our own themed widgets and handed to the
 -- game as a canvas, so it follows the theme like everything else. What the settings mean and
 -- how they are kept is Options.lua's; this file only draws them.
 --
--- A second page under it, "Picker", has a checkbox for each pick the picker can offer above its places
--- (Sections:PickChoices), to leave out the ones a player doesn't want. A third, "About", has the version, the Discord
--- invite and the author's other addons.
+-- The main page is in sections (planning routes, following one, the look). Pages under it: "Picker", a checkbox
+-- for each pick the picker can offer above its places (Sections:PickChoices); "Ley line sharing" (Forever); and
+-- "About", the version, the Discord invite and the author's other addons.
 
 local OptionsPanel = {}
 addon.OptionsPanel = OptionsPanel
@@ -18,11 +18,8 @@ local Theme = addon.Theme
 local Options = addon.Options
 
 local PAD = 20
-local CONTENT_HEIGHT = 1024    -- how tall the settings are laid out; the page scrolls when the window is shorter
-local SHARE_ROW = 104           -- and the extra rows for sharing ley line sightings, on a dataset with ley lines (Forever):
-                                -- sharing, with its "How it works" link between its title and description,
-local DETECT_ROW = 80           -- and finding nodes on the minimap
-local ROAD_ROW = 104            -- and how much walks keep to roads, on a dataset with roads (Forever)
+local START_HEIGHT = 400       -- a page's height until its rows are laid out (it scrolls when the window is shorter)
+local SHARE_ROW = 104           -- the sharing row, with its "How it works" link between its title and description
 local widgets = {}
 local menuHost                  -- where the dropdowns' lists go: outside the scrolled part, so they aren't clipped
 
@@ -133,7 +130,32 @@ local function scrolledPage(frame, height)
     scroll:SetScript("OnMouseWheel", function(_, delta)
         bar:SetValue((bar:GetValue() or 0) - delta * 40)
     end)
-    return panel, box, fit, { frame = scroll, bar = bar, fit = fit }
+    -- For a page laid out row by row: its height once the last row is placed.
+    local function setHeight(h)
+        height = h
+        box:SetHeight(h)
+    end
+    return panel, box, fit, { frame = scroll, bar = bar, fit = fit, setHeight = setHeight }
+end
+
+local TOGGLE_ROW = 80               -- how tall a row with a dropdown is, title and description
+local SLIDER_ROW = 104              -- and one with a slider under its description
+local HEADING_ROW = 40              -- a section's heading, above its first row
+local FIRST_ROW = 64                -- where a page's rows start, under its title
+
+-- A section heading at `top`, as a page lays out its rows. Returns how much room it takes.
+local function heading(parent, top, text)
+    local fs = Theme:Text(parent, "accent")
+    fs:SetPoint("TOPLEFT", PAD, -top)
+    fs:SetText(text)
+    return HEADING_ROW
+end
+
+-- A page's title, at its top.
+local function pageTitle(box, text)
+    local title = Theme:Text(box, "title")
+    title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
+    title:SetText(text)
 end
 
 -- The hooks the game's Settings window calls on a canvas page. onShow (optional): more to do as the page is shown.
@@ -294,77 +316,142 @@ function OptionsPanel:Build()
     frame.name = L["OPT_TITLE"]
     self.frame = frame
 
-    local roadRow = addon.RoadData and ROAD_ROW or 0
-    local panel, box, fit, scroll = scrolledPage(frame, CONTENT_HEIGHT + roadRow + (addon.LeyLineSpell and SHARE_ROW + DETECT_ROW or 0))
+    local panel, box, fit, scroll = scrolledPage(frame, START_HEIGHT)
     menuHost = panel
     widgets.scroll = scroll
+    pageTitle(box, L["OPT_TITLE"])
 
-    local title = Theme:Text(box, "title")
-    title:SetPoint("TOPLEFT", PAD, -(PAD - 8))
-    title:SetText(L["OPT_TITLE"])
-
-    widgets.tax = sliderRow(box, 64, "loadingScreenTax", L["OPT_TAX"], L["OPT_TAX_DESC"],
-        function(v) return L["OPT_SECONDS"]:format(v) end)
-    widgets.cooldown = sliderRow(box, 168, "maxCooldown", L["OPT_MAX_COOLDOWN"], L["OPT_MAX_COOLDOWN_DESC"],
-        function(v)
-            local _, top = Options:Range("maxCooldown")
-            return (v >= top and L["OPT_HOURS_PLUS"] or L["OPT_HOURS"]):format(v)
-        end)
-    widgets.scale = sliderRow(box, 272, "scale", L["OPT_SCALE"], L["OPT_SCALE_DESC"],
-        function(v) return L["OPT_PERCENT"]:format(math.floor(v * 100 + 0.5)) end)
-
-    optionRow(box, 376, L["OPT_THEME"], L["OPT_THEME_DESC"])
-    local choices = {}
-    for _, id in ipairs(Theme:List()) do choices[#choices + 1] = { id = id, label = Theme:Label(id) } end
-    widgets.theme = Theme:Dropdown(box, CONTROL_WIDTH, choices, function(id) Options:Set("theme", id) end, menuHost)
-    widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -378)
-
-    widgets.routeMap = toggleRow(box, 456, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
-    widgets.routeMinimap = toggleRow(box, 536, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
-    if not (addon.MinimapLines and addon.MinimapLines:IsAvailable()) then
-        widgets.routeMinimap.hint:SetText(L["OPT_MINIMAP_UNAVAILABLE"])       -- it can't be done here: say so
-        widgets.routeMinimap.button:Disable()
+    -- The settings in their sections, top to bottom. Each row is drawn at y and returns how tall it is; a new
+    -- setting goes into the section it belongs to.
+    local function dropdownRow(y, key, label, description, choices)
+        optionRow(box, y, label, description)
+        local dropdown = Theme:Dropdown(box, CONTROL_WIDTH, choices, function(id) Options:Set(key, id) end, menuHost)
+        dropdown.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -(y + 2))
+        return dropdown
     end
-    widgets.assumeFlights = toggleRow(box, 616, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
-
-    optionRow(box, 696, L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"])
-    widgets.stepMarkers = Theme:Dropdown(box, CONTROL_WIDTH,
-        { { id = "icon", label = L["OPT_MARKERS_ICON"] }, { id = "chip", label = L["OPT_MARKERS_CHIP"] } },
-        function(id) Options:Set("stepMarkers", id) end, menuHost)
-    widgets.stepMarkers.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -698)
-
-    widgets.hideMinimap = toggleRow(box, 776, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
-    widgets.dropTomTom = toggleRow(box, 856, "dropRemovedTomTom", L["OPT_DROP_TOMTOM"], L["OPT_DROP_TOMTOM_DESC"])
-    widgets.showNavigator = toggleRow(box, 936, "showNavigator", L["OPT_SHOW_NAVIGATOR"], L["OPT_SHOW_NAVIGATOR_DESC"])
-
-    if addon.RoadData then
-        widgets.roads = sliderRow(box, 1016, "roadPreference", L["OPT_ROADS"], L["OPT_ROADS_DESC"],
-            function(v) return L["OPT_ROADS_" .. v] or tostring(v) end)
+    local themes = {}
+    for _, id in ipairs(Theme:List()) do themes[#themes + 1] = { id = id, label = Theme:Label(id) } end
+    local sections = {
+        { L["OPT_SECTION_PLANNING"], {
+            function(y)
+                widgets.tax = sliderRow(box, y, "loadingScreenTax", L["OPT_TAX"], L["OPT_TAX_DESC"],
+                    function(v) return L["OPT_SECONDS"]:format(v) end)
+                return SLIDER_ROW
+            end,
+            function(y)
+                widgets.cooldown = sliderRow(box, y, "maxCooldown", L["OPT_MAX_COOLDOWN"], L["OPT_MAX_COOLDOWN_DESC"],
+                    function(v)
+                        local _, top = Options:Range("maxCooldown")
+                        return (v >= top and L["OPT_HOURS_PLUS"] or L["OPT_HOURS"]):format(v)
+                    end)
+                return SLIDER_ROW
+            end,
+            function(y)
+                widgets.assumeFlights = toggleRow(box, y, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
+                return TOGGLE_ROW
+            end,
+            function(y)
+                if not addon.RoadData then return 0 end              -- Forever: walks drawn along roads
+                widgets.roads = sliderRow(box, y, "roadPreference", L["OPT_ROADS"], L["OPT_ROADS_DESC"],
+                    function(v) return L["OPT_ROADS_" .. v] or tostring(v) end)
+                return SLIDER_ROW
+            end,
+        } },
+        { L["OPT_SECTION_FOLLOWING"], {
+            function(y)
+                widgets.showNavigator = toggleRow(box, y, "showNavigator", L["OPT_SHOW_NAVIGATOR"], L["OPT_SHOW_NAVIGATOR_DESC"])
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.routeMap = toggleRow(box, y, "showRouteOnMap", L["OPT_ROUTE_MAP"], L["OPT_ROUTE_MAP_DESC"])
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.routeMinimap = toggleRow(box, y, "showRouteOnMinimap", L["OPT_ROUTE_MINIMAP"], L["OPT_ROUTE_MINIMAP_DESC"])
+                if not (addon.MinimapLines and addon.MinimapLines:IsAvailable()) then
+                    widgets.routeMinimap.hint:SetText(L["OPT_MINIMAP_UNAVAILABLE"])   -- it can't be done here: say so
+                    widgets.routeMinimap.button:Disable()
+                end
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.dropTomTom = toggleRow(box, y, "dropRemovedTomTom", L["OPT_DROP_TOMTOM"], L["OPT_DROP_TOMTOM_DESC"])
+                return TOGGLE_ROW
+            end,
+        } },
+        { L["OPT_SECTION_LOOK"], {
+            function(y)
+                widgets.theme = dropdownRow(y, "theme", L["OPT_THEME"], L["OPT_THEME_DESC"], themes)
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.scale = sliderRow(box, y, "scale", L["OPT_SCALE"], L["OPT_SCALE_DESC"],
+                    function(v) return L["OPT_PERCENT"]:format(math.floor(v * 100 + 0.5)) end)
+                return SLIDER_ROW
+            end,
+            function(y)
+                widgets.stepMarkers = dropdownRow(y, "stepMarkers", L["OPT_STEP_MARKERS"], L["OPT_STEP_MARKERS_DESC"],
+                    { { id = "icon", label = L["OPT_MARKERS_ICON"] }, { id = "chip", label = L["OPT_MARKERS_CHIP"] } })
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.hideMinimap = toggleRow(box, y, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
+                return TOGGLE_ROW
+            end,
+        } },
+    }
+    local y = FIRST_ROW
+    for _, section in ipairs(sections) do
+        y = y + heading(box, y, section[1])
+        for _, row in ipairs(section[2]) do y = y + row(y) end
     end
-    local shareTop = 1016 + roadRow
-
-    if addon.LeyLineSpell then
-        widgets.share = toggleRow(box, shareTop, "shareSightings", L["OPT_SHARE"], L["OPT_SHARE_DESC"])
-        widgets.shareHow = Theme:Link(box, L["SHARE_HOW"], function() return addon.SharePrompt:HowItWorksLines() end)
-        -- Under the sharing title, ahead of its description: it covers both sharing rows.
-        widgets.shareHow:SetPoint("TOPLEFT", box, "TOPLEFT", PAD, -(shareTop + 20))
-        widgets.share.hint:ClearAllPoints()
-        widgets.share.hint:SetPoint("TOPLEFT", widgets.shareHow, "BOTTOMLEFT", 0, -6)
-        widgets.detect = toggleRow(box, shareTop + SHARE_ROW, "detectMinimapNodes", L["OPT_DETECT"], L["OPT_DETECT_DESC"])
-        if addon.LeyShare:SllcmLoaded() then
-            -- That addon shares and scans instead (and has its own settings): say so in the titles, grey the rows out.
-            widgets.share.title:SetText(L["OPT_SHARE_SLLCM_TITLE"])
-            widgets.detect.title:SetText(L["OPT_DETECT_SLLCM_TITLE"])
-            for _, row in ipairs({ widgets.share, widgets.detect }) do
-                Theme:SetTextStyle(row.title, "dim")
-                row:SetEnabled(false)
-            end
-        end
-    end
+    scroll.setHeight(y + PAD)
 
     settingsHooks(frame, fit)
 
     self.widgets = widgets
+    return frame
+end
+
+-- The "Ley line sharing" page (Forever, where there are ley lines): its own use, apart from planning routes. Sharing
+-- sightings with Skyborne Ley Line & Convergence Marker's users, with How it works under its title, and finding nodes
+-- on the minimap. With that addon loaded it does both instead (with its own settings): the rows say so, greyed out.
+function OptionsPanel:BuildSharing()
+    if not addon.LeyLineSpell then return nil end
+    local frame = CreateFrame("Frame", "MapzerothRebuildOptionsSharing", UIParent)
+    frame:Hide()                                      -- a new frame is shown, and OnShow (which fits it) only runs on a change
+    frame.name = L["OPT_SHARING_TITLE"]
+    frame.parent = L["OPT_TITLE"]                     -- older clients' options window files it under ours by this
+    self.sharingFrame = frame
+
+    local panel, box, fit, scroll = scrolledPage(frame, START_HEIGHT)
+    local mainHost = menuHost
+    menuHost = panel                                  -- this page's dropdowns open on this page
+    widgets.sharingScroll = scroll
+    pageTitle(box, L["OPT_SHARING_TITLE"])
+
+    local y = FIRST_ROW
+    widgets.share = toggleRow(box, y, "shareSightings", L["OPT_SHARE"], L["OPT_SHARE_DESC"])
+    widgets.shareHow = Theme:Link(box, L["SHARE_HOW"], function() return addon.SharePrompt:HowItWorksLines() end)
+    -- Under the sharing title, ahead of its description: it covers both rows.
+    widgets.shareHow:SetPoint("TOPLEFT", box, "TOPLEFT", PAD, -(y + 20))
+    widgets.share.hint:ClearAllPoints()
+    widgets.share.hint:SetPoint("TOPLEFT", widgets.shareHow, "BOTTOMLEFT", 0, -6)
+    y = y + SHARE_ROW
+    widgets.detect = toggleRow(box, y, "detectMinimapNodes", L["OPT_DETECT"], L["OPT_DETECT_DESC"])
+    y = y + TOGGLE_ROW
+    if addon.LeyShare:SllcmLoaded() then
+        widgets.share.title:SetText(L["OPT_SHARE_SLLCM_TITLE"])
+        widgets.detect.title:SetText(L["OPT_DETECT_SLLCM_TITLE"])
+        for _, row in ipairs({ widgets.share, widgets.detect }) do
+            Theme:SetTextStyle(row.title, "dim")
+            row:SetEnabled(false)
+        end
+    end
+    scroll.setHeight(y + PAD)
+    menuHost = mainHost
+
+    settingsHooks(frame, fit)
     return frame
 end
 
@@ -400,17 +487,22 @@ function OptionsPanel:Register()
     if self.registered then return true end
     if not self.frame then self:Build() end
     if not self.picksFrame then self:BuildPicks() end
+    if not self.sharingFrame then self:BuildSharing() end
     if not self.aboutFrame then self:BuildAbout() end
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
         self.category = Settings.RegisterCanvasLayoutCategory(self.frame, self.frame.name)
         if Settings.RegisterCanvasLayoutSubcategory then
             self.picksCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.picksFrame, self.picksFrame.name)
+            if self.sharingFrame then
+                self.sharingCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.sharingFrame, self.sharingFrame.name)
+            end
             self.aboutCategory = Settings.RegisterCanvasLayoutSubcategory(self.category, self.aboutFrame, self.aboutFrame.name)
         end
         Settings.RegisterAddOnCategory(self.category)
     elseif InterfaceOptions_AddCategory then
         InterfaceOptions_AddCategory(self.frame)            -- older clients
         InterfaceOptions_AddCategory(self.picksFrame)
+        if self.sharingFrame then InterfaceOptions_AddCategory(self.sharingFrame) end
         InterfaceOptions_AddCategory(self.aboutFrame)
     else
         return false

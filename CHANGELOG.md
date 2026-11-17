@@ -5,6 +5,9 @@
 ### Added
 - **Hide the navigator, keep the route.** On a route, the Mapzeroth window has a **Hide navigator** button. The trip goes on without the step-by-step window, on the map, the minimap and (Forever) the Daylight data text; **Show navigator** brings it back. **New setting: Show the navigator when a route starts** (on by default): turn it off to start every route with the window hidden.
 
+### Changed
+- **Tidier settings.** The settings page is now in sections: Planning routes, Following a route, and Appearance. Forever: ley line sharing has its own page, under Mapzeroth's settings beside Picker and About.
+
 ## 1.2.0 (Forever) and 2.0.8 (Retail)
 
 ### Added
