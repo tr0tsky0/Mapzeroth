@@ -503,6 +503,7 @@ check(toggle.label._text == addon.L["NAV_SHOW_WINDOW"], "and the panel offers to
 addon.Navigator:ToggleWindow()
 check(w.frame._shown, "which brings it up")
 addon.Options:Set("showNavigator", true)
+check(addon.Panel.widgets.navStop._shown, "on the trip the panel has a Stop too")
 
 -- The trip window: under the panel until the player has moved it, then wherever they left it (kept in the saved
 -- variables). (The mock frames have no geometry, so give the two frames some and record where the window is put.)

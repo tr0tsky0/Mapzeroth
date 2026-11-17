@@ -339,6 +339,11 @@ local function build(parent)
         Panel:ShowNavToggle()
     end)
     ui.navToggle:Hide()
+    -- And Stop beside it: with the navigator put away, the trip can still be ended here.
+    ui.navStop = Theme:Button(frame, L["NAV_STOP"], 70, 22)
+    ui.navStop:SetPoint("RIGHT", ui.navToggle, "LEFT", -8, 0)
+    ui.navStop:SetScript("OnClick", function() addon.Navigator:Stop() end)
+    ui.navStop:Hide()
 
     Panel:ApplyScale()
     state.dockedHidden = addon.Options:Get("dockedHidden")
@@ -372,6 +377,7 @@ local function showRouteWidgets(show)
     addon.RouteLines:Preview(show and state.plan or nil)
     if not show then
         ui.navToggle:Hide()
+        ui.navStop:Hide()
         for _, row in ipairs(ui.steps) do row:Hide() end
         ui.oneWay:Hide()
         ui.roundTrip:Hide()
@@ -405,6 +411,7 @@ end
 function Panel:ShowNavToggle()
     local shown = state.view == "route" and state.pinned and addon.Navigation:IsActive()
     ui.navToggle:SetShown(shown)
+    ui.navStop:SetShown(shown)
     if shown then ui.navToggle.label:SetText(L[addon.Navigator:IsAway() and "NAV_SHOW_WINDOW" or "NAV_HIDE_WINDOW"]) end
 end
 
