@@ -161,15 +161,24 @@ check(math.abs(minX) < 1e-6 and math.abs(maxX) < 1e-6, "straight up from the pla
 check(minY >= -0.01 and maxY > 50 and maxY <= 51.01, "as far as the route goes (51 pixels): " .. maxY)
 check(farthest <= 67 + 1e-6, "never past the rim")
 
--- The dots stay put on the ground as the player walks: moving north brings the start behind them.
+-- Walking the step takes the part behind the player away, and the dots ahead stay put on the ground.
 playerY = 0.45
 MinimapLines:Update()
 minX, maxX, minY, maxY = extent()
-check(math.abs(minY + 25.5) < 0.5 and maxY > 25 and maxY <= 25.51, "walked half way: the route is half behind, half ahead: " .. minY .. " to " .. maxY)
-local u = visible()[1]._u
-check(u and math.abs(u[1] + MinimapLines.state.phase) < 1e-6,
-      "and its dots stay on the ground: the pattern still starts where the route does (less the march)")
-playerY = 0.5
+check(math.abs(minY) < 0.5 and maxY > 25 and maxY <= 25.51, "walked half way: the step starts at the player, half of it left: " .. minY .. " to " .. maxY)
+local line = visible()[1]
+local perPixel = (line._u[2] - line._u[1]) / math.sqrt((line._x2 - line._x1) ^ 2 + (line._y2 - line._y1) ^ 2)
+check(math.abs((line._u[1] + MinimapLines.state.phase) - 25.5 * perPixel) < 0.02,
+      "and its dots stay on the ground: the pattern goes on from half way, not from the start again")
+-- Far off the line (more than 60 yards), nothing is taken off: they aren't on it, or went another way.
+MinimapLines.state.walked = {}
+playerX = 0.55                                  -- about 85 yards east of the line
+MinimapLines:Update()
+check(math.abs(visible()[1]._u[1] + MinimapLines.state.phase) < 1e-6, "off the line, the whole step shows from its start")
+playerX, playerY = 0.5, 0.5
+MinimapLines:Update()
+minX, maxX, minY, maxY = extent()
+check(math.abs(minY) < 0.5 and maxY > 50, "back at the start the whole step shows")
 
 -- Turned with the player when the minimap rotates: facing east, north is on their left.
 cvars.rotateMinimap, facing = "1", -math.pi / 2

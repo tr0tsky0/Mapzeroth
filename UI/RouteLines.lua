@@ -66,7 +66,7 @@ local BEACON = 30
 RouteLines.MARCH_RATE = MARCH_RATE
 
 local state = { plan = nil, current = nil, lines = {}, linesUsed = 0, casings = {}, casingsUsed = 0, badges = {}, badgesUsed = 0,
-                marching = {}, phase = 0 }
+                marching = {}, phase = 0, walked = {} }
 RouteLines.state = state            -- for tests
 
 local function canvas()
@@ -176,7 +176,21 @@ local function acquireBadge(frame)
     return badge
 end
 
-local function drawPiece(frame, piece, unit, shrink, W, H)
+-- The step being followed starts where the player is on it (MapRoute.Walked): the segment and fraction to start from,
+-- or nil to draw it all. `player` is { x, y, xs, ys } in yards on this map; `key` names the piece for next time.
+local function walkedPart(piece, player, key)
+    local points, along = {}, 0
+    for i, p in ipairs(piece.points) do
+        local x, y = p.x * player.xs, p.y * player.ys
+        if i > 1 then along = along + math.sqrt((x - points[i - 1].x) ^ 2 + (y - points[i - 1].y) ^ 2) end
+        points[i] = { x = x, y = y, along = along }
+    end
+    local seg, t = addon.MapRoute.Walked(points, player.x, player.y, state.walked[key])
+    if seg then state.walked[key] = seg end
+    return seg, t
+end
+
+local function drawPiece(frame, piece, unit, shrink, W, H, seg, cut)
     local look = LOOK[piece.style] or LOOK.foot
     local thickness = math.max(look.thickness * shrink, MIN_THICKNESS) * unit
     local r, g, b = Theme:MapColor(LOOK[piece.style] and piece.style or "foot", state.holiday)
@@ -193,12 +207,15 @@ local function drawPiece(frame, piece, unit, shrink, W, H)
         local ax, ay, bx, by = p.x * W, p.y * H, q.x * W, q.y * H
         local dx, dy = bx - ax, by - ay
         local length = math.sqrt(dx * dx + dy * dy)
-        if length > 0 then
+        if length > 0 and not (seg and i < seg) then
+            -- From the player's spot on their segment, measured from the piece's start so the pattern stays put.
+            local skip = (seg and i == seg) and cut * length or 0
+            local sx, sy = ax + dx * (skip / length), ay + dy * (skip / length)
             local ux, uy = dx / length * reach, dy / length * reach
-            run(frame, look, ax - ux, ay - uy, bx + ux, by + uy, along - reach, along + length + reach,
+            run(frame, look, sx - ux, sy - uy, bx + ux, by + uy, along + skip - reach, along + length + reach,
                 thickness, r, g, b, alpha, march)
-            along = along + length
         end
+        along = along + length
     end
 end
 
@@ -283,7 +300,25 @@ local function draw(frame, plan, mapID)
     state.following = plan == state.plan and state.current ~= nil
     state.moving = state.following and Theme:MotionOn()
     local pieces, markers = MapRoute:Pieces(plan, mapID)
-    for _, piece in ipairs(pieces) do drawPiece(frame, piece, unit, shrink, W, H) end
+    -- Where the player is on this map, in yards, to leave out the part of the step behind them (none on a map with
+    -- no scale, or one they aren't on).
+    local player
+    if state.following then
+        local xs, ys = addon.Navigation.YardsPerUnit(mapID)
+        local pos = xs and C_Map.GetPlayerMapPosition and C_Map.GetPlayerMapPosition(mapID, "player")
+        local px, py
+        if pos then px, py = pos:GetXY() end
+        if px and not (px == 0 and py == 0) then player = { x = px * xs, y = py * ys, xs = xs, ys = ys } end
+    end
+    local count = {}
+    for _, piece in ipairs(pieces) do
+        local seg, t
+        if player and piece.step == state.current then
+            count[piece.step] = (count[piece.step] or 0) + 1
+            seg, t = walkedPart(piece, player, piece.step .. ":" .. count[piece.step])
+        end
+        drawPiece(frame, piece, unit, shrink, W, H, seg, t)
+    end
     for _, marker in ipairs(markers) do drawMarker(frame, marker, unit * shrink, W, H) end
     -- The beacon, on the first marker where the step being followed ends (none on this map: none shown).
     if state.following then
@@ -315,13 +350,14 @@ function RouteLines.March(_, elapsed)
 end
 
 -- Take down everything drawn (the pieces stay pooled for next time).
-function RouteLines:Hide()
+-- (`keepBeacon`: a redraw as the player moves, where the beacon stays put and keeps swelling.)
+function RouteLines:Hide(keepBeacon)
     for i = 1, state.linesUsed do state.lines[i]:Hide() end
     for i = 1, state.casingsUsed do state.casings[i]:Hide() end
     for i = 1, state.badgesUsed do state.badges[i]:Hide() end
     state.linesUsed, state.casingsUsed, state.badgesUsed = 0, 0, 0
     state.marching = {}
-    if state.beacon then
+    if state.beacon and not keepBeacon then
         state.beacon:SetMoving(false)
         state.beacon:Hide()
     end
@@ -329,8 +365,8 @@ function RouteLines:Hide()
 end
 
 -- Draw the plan again on the map that is open.
-function RouteLines:Redraw()
-    self:Hide()
+function RouteLines:Redraw(keepBeacon)
+    self:Hide(keepBeacon)
     local plan = state.plan or state.preview      -- the trip being followed comes first
     if not plan or not addon.Options:Get("showRouteOnMap") then return end
     local map = WorldMapFrame
@@ -352,10 +388,14 @@ end
 function RouteLines:Follow(plan, current)
     if plan ~= state.plan then
         state.plan, state.current = plan, current
+        state.walked = {}
         self:Redraw()
     elseif state.current ~= current then
         state.current = current
+        state.walked = {}
         self:Redraw()
+    elseif plan and WorldMapFrame and WorldMapFrame:IsShown() then
+        self:Redraw(true)               -- the same step, the player further along it: the part behind them goes
     end
 end
 

@@ -1010,6 +1010,33 @@ RouteLines:SetCurrent(2)
 WorldMapFrame._shown = true
 WorldMapFrame._hooks.OnShow()
 check(shown() > 0, "opening the map draws the step the trip moved on to while it was closed")
+-- Walking the step being followed takes the part behind the player off the map (the canvas is 1000 x 500).
+do
+    local tripPlan, tripStep = RouteLines.state.plan, RouteLines.state.current
+    local realPos = C_Map.GetPlayerMapPosition
+    local walkPlan = { steps = { { method = "walk", seconds = 60, text = "Walk",
+        path = { { mapID = 1453, x = 0.5, y = 0.5 }, { mapID = 1453, x = 0.5, y = 0.4 } } } } }
+    local function start()
+        local first
+        for _, line in ipairs(drawn) do
+            if line._shown and line._from and (not first or line._from[2] < first) then first = line._from[2] end
+        end
+        return first
+    end
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.5, 0.5 end } end
+    RouteLines:Follow(walkPlan, 1)
+    check(start() and math.abs(start() + 250) < 1, "at the start of a walk the whole step is drawn: " .. tostring(start()))
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.5, 0.45 end } end
+    local pulse, stops, playing = RouteLines.state.beacon.pulse, 0, true
+    pulse.IsPlaying = function() return playing end
+    pulse.Play = function() playing = true end
+    pulse.Stop = function() stops, playing = stops + 1, false end
+    RouteLines:Follow(walkPlan, 1)              -- the navigator's next update: the same step
+    check(start() and math.abs(start() + 225) < 1, "half way along, it starts where the player is: " .. tostring(start()))
+    check(RouteLines.state.beacon._shown and stops == 0, "the beacon carries on without starting its swell again")
+    C_Map.GetPlayerMapPosition = realPos
+    RouteLines:Follow(tripPlan, tripStep)
+end
 addon.Options:Set("showRouteOnMap", false)
 check(shown() == 0, "switched off in the settings, the route leaves the map")
 addon.Options:Set("showRouteOnMap", true)

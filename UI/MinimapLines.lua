@@ -161,6 +161,7 @@ end
 -- markers.
 local function rebuild(mapID)
     state.pieces, state.markers = {}, {}
+    state.walked = {}                  -- piece -> the segment the player was last on (MapRoute.Walked)
     state.built = { mapID = mapID, plan = state.plan }
     local xScale, yScale = addon.Navigation.YardsPerUnit(mapID)
     if not xScale then return end
@@ -228,8 +229,20 @@ local function draw(frame)
         local now = state.current ~= nil and piece.step == state.current
         if now and not holiday and Theme:CurrentStepColor() then r, g, b = Theme:CurrentStepColor() end
         local shift = (now and moving and not look.solid) and state.phase or 0
-        for i = 1, #piece.points - 1 do
+        -- The step being followed starts where the player is on it: the part behind them is gone.
+        local first, cut = 1, nil
+        if now then
+            local seg, t = MapRoute.Walked(piece.points, playerX, playerY, state.walked[piece])
+            if seg then
+                state.walked[piece] = seg
+                local a, b = piece.points[seg], piece.points[seg + 1]
+                first = seg
+                cut = { x = a.x + t * (b.x - a.x), y = a.y + t * (b.y - a.y), along = a.along + t * (b.along - a.along) }
+            end
+        end
+        for i = first, #piece.points - 1 do
             local p, q = piece.points[i], piece.points[i + 1]
+            if i == first and cut then p = cut end
             local ax, ay = toPixels(p.x, p.y)
             local bx, by = toPixels(q.x, q.y)
             if bx ~= ax or by ~= ay then

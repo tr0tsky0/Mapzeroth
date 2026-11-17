@@ -212,3 +212,30 @@ function MapRoute.Rotate(east, north, angle)
     local cos, sin = math.cos(angle), math.sin(angle)
     return east * cos - north * sin, east * sin + north * cos
 end
+
+-- How far the player has come along the step being followed, so the part behind them can go. `points` is a piece's
+-- line in yards ({ x, y, along }); the player at (px, py), yards. Looks from segment `from` (where they were last
+-- time) up to WALKED_AHEAD yards on, so a road that doubles back past them can't pull the spot ahead. Returns the
+-- segment and the fraction along it nearest the player, or nil when they are more than WALKED_NEAR yards off the line
+-- (not on it yet, or gone another way): then nothing is taken off.
+local WALKED_AHEAD = 150
+local WALKED_NEAR = 60
+function MapRoute.Walked(points, px, py, from)
+    if #points < 2 then return nil end
+    from = math.max(1, math.min(from or 1, #points - 1))
+    local limit = points[from].along + WALKED_AHEAD
+    local best, segment, fraction
+    for i = from, #points - 1 do
+        local a, b = points[i], points[i + 1]
+        if i > from and a.along > limit then break end
+        local dx, dy = b.x - a.x, b.y - a.y
+        local length2 = dx * dx + dy * dy
+        local t = length2 > 0 and ((px - a.x) * dx + (py - a.y) * dy) / length2 or 0
+        t = math.max(0, math.min(1, t))
+        local ex, ey = a.x + t * dx - px, a.y + t * dy - py
+        local d = ex * ex + ey * ey
+        if not best or d < best then best, segment, fraction = d, i, t end
+    end
+    if best > WALKED_NEAR * WALKED_NEAR then return nil end
+    return segment, fraction
+end
