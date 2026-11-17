@@ -1,17 +1,9 @@
 # Changelog
 
-## Unreleased
-
-### Added
-- **Hide the navigator, keep the route.** On a route, the Mapzeroth window has a **Hide navigator** button. The trip goes on without the step-by-step window, on the map, the minimap and (Forever) the Daylight data text; **Show navigator** brings it back, and **Stop** beside it ends the route. **New setting: Show the navigator when a route starts** (on by default): turn it off to start every route with the window hidden.
-
-### Changed
-- **The route clears behind you.** On the map and minimap, the step you're on now starts where you are: the dots you've already walked past go, and the ones ahead stay put.
-- **Tidier settings.** The settings page is now in sections: Planning routes, Following a route, and Appearance. Forever: ley line sharing has its own page, under Mapzeroth's settings beside Picker and About.
-
 ## 1.2.0 (Forever) and 2.0.8 (Retail)
 
 ### Added
+- **Hide the navigator, keep the route.** On a route, the Mapzeroth window has a **Hide navigator** button. The trip goes on without the step-by-step window, on the map, the minimap and (Forever) the Daylight data text; **Show navigator** brings it back, and **Stop** beside it ends the route. **New setting: Show the navigator when a route starts** (on by default): turn it off to start every route with the window hidden.
 - **Pick which stops to visit.** Choosing your TomTom waypoints or a saved route now lists its stops first, all ticked. Untick any you don't want this time (or use All/None), then Route. Your waypoints and the saved route aren't changed.
 - **New setting: Drop stops removed from TomTom** (off by default). While you follow a route through your TomTom waypoints, deleting one in TomTom takes it off the route and plans the rest again. Left off, the route keeps it, so you can clear waypoints from your map once you're on your way.
 - **Forever: the navigator's arrow follows the road.** On a walk drawn along roads or city streets, the arrow points a little way ahead along the road instead of straight at the end, and the yards shown are those left along it. Cut across country and it points straight at the end again.
@@ -21,6 +13,10 @@
   - With the Daylight theme on, light circles the main buttons, and the trip window and the step's row light up briefly when you move on to the next step. Turning off motion in Daylight UI turns these lights off too.
   - With the Daylight theme on, the step you're on is drawn in your Daylight accent colour on the map and minimap (brightened if needed, so it stays easy to see).
 - **The step you're on comes alive on the map and minimap.** Its dots or dashes now flow toward where it ends, and a ring slowly pulses there. With Daylight UI's motion turned off, both stay still.
+- **The route clears behind you.** On the map and minimap, the step you're on now starts where you are: the dots you've already walked past go, and the ones ahead stay put.
+
+### Changed
+- **Tidier settings.** The settings page is now in sections: Planning routes, Following a route, and Appearance. Forever: ley line sharing has its own page, under Mapzeroth's settings beside Picker and About.
 
 ### Fixed
 - Stopping a route in combat no longer causes an error. The trip window fades out at once and closes when combat ends. A route started in combat opens its window once combat ends, and moving the window or changing its scale in combat waits for combat to end too.
