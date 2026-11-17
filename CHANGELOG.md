@@ -21,6 +21,7 @@
 - **The route clears behind you.** On the map and minimap, the step you're on now starts where you are: the dots you've already walked past go, and the ones ahead stay put.
 
 ### Changed
+- **Forever: Nearest Ley Line and Nearest Elemental Convergence now use Skyborne Ley Line & Convergence Marker (SLLCM).** With SLLCM installed, they pick from its much larger list of known locations, and still go to one seen in your phase in the last 90 minutes when there is one. Without SLLCM, choosing either pick shows a link to it instead. Mapzeroth's own fixed list of ley lines and convergences is gone, and SLLCM now keeps the locations players have found.
 - **Tidier settings.** The settings page is now in sections: Planning routes, Following a route, and Appearance. Forever: ley line sharing has its own page, under Mapzeroth's settings beside Picker and About.
 
 ### Fixed
