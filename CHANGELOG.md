@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- The route behind you could come back on the map and minimap partway along a step, all of it at once. The part you've walked now stays gone, also when you step off the line for a moment.
+
 ## 1.2.0 (Forever) and 2.0.8 (Retail)
 
 ### Added
