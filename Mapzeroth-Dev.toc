@@ -120,6 +120,7 @@ UI\Panel.lua
 UI\MinimapButton.lua
 UI\Navigator.lua
 UI\SharePrompt.lua
+UI\WaypointPrompt.lua
 UI\OptionsPanel.lua
 UI\DaylightPlugin.lua
 

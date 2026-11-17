@@ -32,6 +32,9 @@ local definitions = {
     -- A started trip opens the navigator window (UI/Navigator.lua). Off: the trip runs on the map, minimap and Daylight
     -- data text only, until the button on the panel brings the window up.
     showNavigator = { default = true, boolean = true },
+    -- A waypoint newly set on the map (placed, or from a map pin link in chat) brings up the question whether to route
+    -- there (UI/WaypointPrompt.lua). Off: never asked; Your Waypoint is still the top pick.
+    askWaypointRoute = { default = true, boolean = true },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.

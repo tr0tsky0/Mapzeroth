@@ -359,6 +359,10 @@ function OptionsPanel:Build()
         } },
         { L["OPT_SECTION_FOLLOWING"], {
             function(y)
+                widgets.askWaypoint = toggleRow(box, y, "askWaypointRoute", L["OPT_ASK_WAYPOINT"], L["OPT_ASK_WAYPOINT_DESC"])
+                return TOGGLE_ROW
+            end,
+            function(y)
                 widgets.showNavigator = toggleRow(box, y, "showNavigator", L["OPT_SHOW_NAVIGATOR"], L["OPT_SHOW_NAVIGATOR_DESC"])
                 return TOGGLE_ROW
             end,
@@ -471,6 +475,7 @@ function OptionsPanel:Sync()
     widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
     widgets.dropTomTom:SetValue(Options:Get("dropRemovedTomTom"))
     widgets.showNavigator:SetValue(Options:Get("showNavigator"))
+    widgets.askWaypoint:SetValue(Options:Get("askWaypointRoute"))
     -- Off while SLLCM is loaded, whatever is saved: Mapzeroth isn't sharing then.
     if widgets.share then widgets.share:SetValue(not widgets.share.disabled and Options:Get("shareSightings")) end
     for _, check in ipairs(widgets.picks or {}) do check:SetChecked(Options:ShowsPick(check.key)) end

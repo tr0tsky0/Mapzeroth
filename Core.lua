@@ -53,6 +53,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
         return
     elseif event == "USER_WAYPOINT_UPDATED" or event == "SUPER_TRACKING_CHANGED" then
         addon.Panel:OnWaypointChanged()
+        addon.WaypointPrompt:OnWaypointChanged()
         return
     elseif event == "QUEST_LOG_UPDATE" then
         addon.Panel:OnQuestLogUpdate()

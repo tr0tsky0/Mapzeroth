@@ -1541,6 +1541,18 @@ function Panel:OnWaypointChanged()
     self:RefreshTop()
 end
 
+-- The answer to the question on a new map waypoint (UI/WaypointPrompt.lua): the window comes up with the route to it,
+-- and the trip starts when there is one (when there isn't, the window says why). False when there is no waypoint.
+function Panel:RouteToWaypoint()
+    local waypoint = addon:GetWaypoint()
+    if not waypoint then return false end
+    if not (ui and ui.frame:IsShown()) then self:Toggle() end      -- not up: Toggle brings it up
+    self:ShowRoute(addon.Sections.WaypointPick(waypoint), function(plan)
+        if plan then Panel:StartRoute() end
+    end)
+    return true
+end
+
 -- The quest log changed (an objective done can move the quest's spot): only looked at while the window is up, since
 -- opening it reads everything afresh.
 function Panel:OnQuestLogUpdate()

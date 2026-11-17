@@ -105,6 +105,8 @@ addon:RegisterLocale("enUS", {
     OPT_HIDE_MINIMAP_DESC = "Hides the Mapzeroth button on the minimap. /mapzeroth still opens the window.",
     OPT_DROP_TOMTOM   = "Drop stops removed from TomTom",
     OPT_DROP_TOMTOM_DESC = "While you follow a route through your TomTom waypoints, deleting one of them in TomTom takes it off the route and plans the rest again. Off: the route keeps it, so you can tidy your map once you're on your way.",
+    OPT_ASK_WAYPOINT  = "Offer a route to new map waypoints",
+    OPT_ASK_WAYPOINT_DESC = "When you place a waypoint on the world map, or click a map pin link in chat, Mapzeroth asks whether to route you there. Off: Your Waypoint is still at the top of the list.",
     OPT_SECTION_PLANNING = "Planning routes",
     OPT_SECTION_FOLLOWING = "Following a route",
     OPT_SECTION_LOOK  = "Appearance",
@@ -242,6 +244,12 @@ addon:RegisterLocale("enUS", {
     SHARE_LATER       = "You can change this later in Mapzeroth's settings.",
     SHARE_ENABLE      = "Share",
     SHARE_DECLINE     = "Leave Off",
+    -- Asked when a new waypoint is set on the map (UI/WaypointPrompt.lua). %s: the zone it is in.
+    WAYPOINT_ASK_TITLE = "Route to your waypoint?",
+    WAYPOINT_ASK_TEXT = "Mapzeroth can plan the quickest way to the waypoint you just set in %s and start you on it.",
+    WAYPOINT_ASK_ROUTE = "Route",
+    WAYPOINT_ASK_LATER = "Not Now",
+    WAYPOINT_ASK_NEVER = "Don't Ask Again",
     -- The "How it works" link on the prompt and the settings page, and the tooltip it shows (UI/SharePrompt.lua).
     -- An example message sits between SHARE_HOW_SENT and SHARE_HOW_SENT_KEY; it is the wire format, not translated.
     SHARE_HOW         = "How it works",

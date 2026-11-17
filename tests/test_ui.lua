@@ -1618,3 +1618,85 @@ do
     FK.WindowNodes = windowNodes
     Nav:Stop()
 end
+
+-- A new map waypoint brings up the question (UI/WaypointPrompt.lua): not the one already set at login, once per
+-- waypoint, never while the trip goes there, and not at all once turned off.
+do
+    local WP, Nav = addon.WaypointPrompt, addon.Navigation
+    Nav:Stop()
+    local spot = { 0.4, 0.3 }
+    C_Map.HasUserWaypoint = function() return spot ~= nil end
+    C_Map.GetUserWaypoint = function()
+        return spot and { uiMapID = 1453, position = { GetXY = function() return spot[1], spot[2] end } }
+    end
+    WP:Settle()
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "the waypoint there at login isn't asked about")
+    spot = { 0.5, 0.5 }
+    WP:OnWaypointChanged()
+    check(WP:IsShown(), "a new one is")
+    check(WP.widgets.text:GetText():find(addon:GetZoneName(1453), 1, true), "naming its zone")
+    WP:Answer("later")
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "Not Now: that waypoint isn't asked about again")
+    spot = { 0.6, 0.6 }
+    WP:OnWaypointChanged()
+    check(WP:IsShown(), "the next one is")
+    local mapShown = WorldMapFrame._shown
+    WorldMapFrame._shown = false
+    spot = { 0.62, 0.62 }
+    WP:OnWaypointChanged()
+    check(WP.widgets.frame._anchor == UIParent, "with the map closed it sits near the top of the screen")
+    WorldMapFrame._shown = true
+    spot = { 0.63, 0.63 }
+    WP:OnWaypointChanged()
+    check(WP.widgets.frame._anchor == WorldMapFrame, "with the map open, under it")
+    -- A map near the bottom of the screen: no room under it, so the prompt goes over it.
+    local frame, point = WP.widgets.frame, nil
+    local realSetPoint = frame.SetPoint
+    frame.SetPoint = function(self, p, rel) point = p; self._anchor = rel end
+    frame.GetHeight = function() return 120 end
+    WorldMapFrame.GetEffectiveScale = function() return 1 end
+    WorldMapFrame.GetBottom = function() return 400 end
+    spot = { 0.64, 0.64 }
+    WP:OnWaypointChanged()
+    check(point == "TOP" and frame._anchor == WorldMapFrame, "room below the map: under it")
+    WorldMapFrame.GetBottom = function() return 60 end
+    spot = { 0.65, 0.65 }
+    WP:OnWaypointChanged()
+    check(point == "BOTTOM" and frame._anchor == WorldMapFrame, "no room below: above it")
+    frame.SetPoint, frame.GetHeight = realSetPoint, nil
+    WorldMapFrame.GetBottom, WorldMapFrame.GetEffectiveScale = nil, nil
+    WorldMapFrame._shown = mapShown
+    spot = nil
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "clearing it takes the question away")
+
+    spot = { 0.45, 0.35 }
+    WP:OnWaypointChanged()
+    WP:Answer("route")
+    check(state.view == "route" and state.entry and state.entry.dest and state.entry.dest.mapID == 1453,
+        "Route: the window shows the route to it")
+    check(Nav:IsActive(), "and the trip starts")
+    spot = nil
+    WP:OnWaypointChanged()
+    spot = { 0.45, 0.35 }                                -- set again (a pin link to the same spot): new to the prompt
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "no question about where the trip is going")
+    Nav:Stop()
+
+    spot = { 0.7, 0.7 }
+    WP:OnWaypointChanged()
+    WP:Answer("never")
+    check(Options:Get("askWaypointRoute") == false, "Don't Ask Again turns the setting off")
+    spot = { 0.71, 0.71 }
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "and nothing is asked then")
+    Options:Set("askWaypointRoute", true)
+    check(addon.OptionsPanel.widgets.askWaypoint, "the settings page has the switch")
+
+    spot = nil
+    WP:OnWaypointChanged()
+    addon.Panel:OnWaypointChanged()
+    C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+end

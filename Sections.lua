@@ -45,6 +45,14 @@ local function pick(name, group, nodeIDs, key)
     return { name = name, nodeID = nodeIDs[1], nodeIDs = nodeIDs, group = group, relevant = true, pick = true, key = key }
 end
 
+-- The "Your Waypoint" pick for the map waypoint `waypoint` (addon:GetWaypoint): on the list, and what the question on
+-- a new waypoint routes to (UI/WaypointPrompt.lua).
+function Sections.WaypointPick(waypoint)
+    local entry = pick(L["PICK_WAYPOINT"], "waypoint", { waypoint.id }, "waypoint")
+    entry.dest = waypoint
+    return entry
+end
+
 local PET_PICKS = { PET = "PICK_PET", DEMON = "PICK_DEMON" }
 local PET_CLASSES = { HUNTER = "PET", WARLOCK = "DEMON" }
 
@@ -180,10 +188,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     -- The waypoint they set on the map, when they have one: where they are heading, so first.
     if waypoint then
         index[waypoint.id] = { name = addon:GetZoneName(waypoint.mapID) or "" }
-        top[#top + 1] = {
-            name = L["PICK_WAYPOINT"], nodeID = waypoint.id, nodeIDs = { waypoint.id }, group = "waypoint",
-            relevant = true, pick = true, dest = waypoint, key = "waypoint",
-        }
+        top[#top + 1] = Sections.WaypointPick(waypoint)
     end
     -- The quest the game's arrow points to, named by its title.
     if quest then
