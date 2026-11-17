@@ -154,6 +154,8 @@ addon:RegisterLocale("frFR", {
 
     PICK_CONVERGENCE = "Convergence élémentaire la plus proche",
     PICK_WAYPOINT     = "Votre point de repère",
+    PICK_QUEST        = "Votre quête",
+    PICK_QUEST_NAMED  = "Quête : %s",
     PICK_PASTE        = "Itinéraire à plusieurs étapes",
     PICK_TOMTOM       = "Vos points TomTom (%d)",
     PASTE_PROMPT      = "Collez des lignes /way, un point par ligne : /way #1 43.8 28.8 Zunta, ou avec le nom de la zone : /way Durotar 43.8 28.8 Zunta. Mapzeroth trouve l'ordre le plus rapide.",
@@ -180,6 +182,7 @@ addon:RegisterLocale("frFR", {
     TOUR_TOMTOM       = "Points TomTom",
     ROUTE_TOUR_UNREAD = "%d lignes collées n'ont pas pu être lues.",
     WAYPOINT_NAME     = "Votre point de repère",
+    QUEST_NAME        = "Votre quête",
     PICK_CLASS        = "Entraîneur de classe",
     PICK_PET          = "Dresseur de familiers",
     PICK_DEMON        = "Dresseur de démons",

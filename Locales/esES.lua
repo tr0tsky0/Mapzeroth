@@ -154,6 +154,8 @@ local strings = {
 
     PICK_CONVERGENCE = "Convergencia elemental más cercana",
     PICK_WAYPOINT     = "Tu punto de ruta",
+    PICK_QUEST        = "Tu misión",
+    PICK_QUEST_NAMED  = "Misión: %s",
     PICK_PASTE        = "Ruta con varias paradas",
     PICK_TOMTOM       = "Tus puntos de TomTom (%d)",
     PASTE_PROMPT      = "Pega líneas /way, un punto por línea: /way #1 43.8 28.8 Zunta, o con el nombre de la zona: /way Durotar 43.8 28.8 Zunta. Mapzeroth encuentra el orden más rápido.",
@@ -180,6 +182,7 @@ local strings = {
     TOUR_TOMTOM       = "Puntos de TomTom",
     ROUTE_TOUR_UNREAD = "No se pudieron leer %d líneas pegadas.",
     WAYPOINT_NAME     = "Tu punto de ruta",
+    QUEST_NAME        = "Tu misión",
     PICK_CLASS        = "Instructor de clase",
     PICK_PET          = "Instructor de mascotas",
     PICK_DEMON        = "Instructor de demonios",

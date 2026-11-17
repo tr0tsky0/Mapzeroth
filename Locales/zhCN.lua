@@ -153,6 +153,8 @@ addon:RegisterLocale("zhCN", {
 
     PICK_CONVERGENCE = "最近的元素汇聚点",
     PICK_WAYPOINT     = "你的地图标记",
+    PICK_QUEST        = "你的任务",
+    PICK_QUEST_NAMED  = "任务：%s",
     PICK_PASTE        = "多站路线",
     PICK_TOMTOM       = "你的 TomTom 路径点（%d）",
     PASTE_PROMPT      = "粘贴 /way 行，每行一个点：/way #1 43.8 28.8 Zunta，或使用区域名称：/way Durotar 43.8 28.8 Zunta。Mapzeroth 会找出最快的顺序。",
@@ -179,6 +181,7 @@ addon:RegisterLocale("zhCN", {
     TOUR_TOMTOM       = "TomTom 路点",
     ROUTE_TOUR_UNREAD = "有 %d 行无法读取。",
     WAYPOINT_NAME     = "你的地图标记",
+    QUEST_NAME        = "你的任务",
     PICK_CLASS        = "职业训练师",
     PICK_PET          = "宠物训练师",
     PICK_DEMON        = "恶魔训练师",

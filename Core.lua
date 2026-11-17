@@ -27,6 +27,8 @@ frame:RegisterEvent("FACTION_STANDING_CHANGED")
 frame:RegisterEvent("SPELLS_CHANGED")
 frame:RegisterEvent("UI_INFO_MESSAGE")
 pcall(frame.RegisterEvent, frame, "USER_WAYPOINT_UPDATED")
+pcall(frame.RegisterEvent, frame, "SUPER_TRACKING_CHANGED")
+frame:RegisterEvent("QUEST_LOG_UPDATE")
 pcall(frame.RegisterEvent, frame, "CALENDAR_UPDATE_EVENT_LIST")
 frame:SetScript("OnEvent", function(_, event, ...)
     if event == "ADDON_LOADED" then
@@ -49,8 +51,11 @@ frame:SetScript("OnEvent", function(_, event, ...)
         -- Frequent Flier unlocked (or gone): fares learned on the other side of it are off by half.
         addon.FlightKnowledge:OnSpellsChanged()
         return
-    elseif event == "USER_WAYPOINT_UPDATED" then
+    elseif event == "USER_WAYPOINT_UPDATED" or event == "SUPER_TRACKING_CHANGED" then
         addon.Panel:OnWaypointChanged()
+        return
+    elseif event == "QUEST_LOG_UPDATE" then
+        addon.Panel:OnQuestLogUpdate()
         return
     elseif event == "CALENDAR_UPDATE_EVENT_LIST" then
         -- The calendar has loaded (or changed): what holidays are on can be asked now. The first answer can come after

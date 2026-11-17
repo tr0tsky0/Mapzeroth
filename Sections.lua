@@ -3,7 +3,7 @@ local addonName, addon = ...
 -- What the main window offers before anything is typed: a few picks of their own at the top, then sections that open
 -- like an accordion.
 --
---   (top, no heading)    the waypoint they have set on the map, if any; the nearest ley line or convergence
+--   (top, no heading)    the waypoint they have set on the map, if any; the quest they follow; the nearest ley line or convergence
 --                        (Skyborne); tours: TomTom's waypoints when there are any, and pasted coordinates
 --   Your Nearest Trainers  their class trainer (and pet or demon trainer), a trainer for each profession they have that
 --                        still teaches them something, a weapon master that teaches a weapon they can learn and
@@ -63,7 +63,7 @@ end
 -- { { key, label }, ... }. class and faction are this character's (a pet or demon trainer only for the classes
 -- that have one, and the ley line or convergence pick by faction); TomTom only when it is loaded.
 function Sections:PickChoices(class, faction, hasTomTom)
-    local choices = { { key = "waypoint", label = L["PICK_WAYPOINT"] } }
+    local choices = { { key = "waypoint", label = L["PICK_WAYPOINT"] }, { key = "quest", label = L["PICK_QUEST"] } }
     if addon.LeyLineSpell then
         choices[#choices + 1] = { key = "leyline", label = L[faction == "Horde" and "PICK_CONVERGENCE" or "PICK_LEYLINE"] }
     end
@@ -151,7 +151,8 @@ end
 -- tomtomCount: how many waypoints TomTom has (nil when it isn't loaded). The last top picks are tours (MultiRoute.lua):
 -- TomTom's waypoints when there are any, and coordinates pasted in. They have an `action` for the panel instead of a
 -- place, and no time until they are planned.
-function Sections:Build(entries, ctx, waypoint, tomtomCount)
+-- quest: the quest they follow (addon:GetQuestTarget), or nil.
+function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
     local stables, cities, towns, dungeons, raids = {}, {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
@@ -182,6 +183,14 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount)
         top[#top + 1] = {
             name = L["PICK_WAYPOINT"], nodeID = waypoint.id, nodeIDs = { waypoint.id }, group = "waypoint",
             relevant = true, pick = true, dest = waypoint, key = "waypoint",
+        }
+    end
+    -- The quest the game's arrow points to, named by its title.
+    if quest then
+        index[quest.id] = { name = addon:GetZoneName(quest.mapID) or "" }
+        top[#top + 1] = {
+            name = quest.title and L["PICK_QUEST_NAMED"]:format(quest.title) or L["PICK_QUEST"], nodeID = quest.id,
+            nodeIDs = { quest.id }, group = "waypoint", relevant = true, pick = true, dest = quest, key = "quest",
         }
     end
     -- The nearest ley line or convergence (Skyborne): its places come from SLLCM when it is planned (LeyShare:PlacesFor).

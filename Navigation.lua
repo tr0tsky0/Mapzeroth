@@ -407,7 +407,8 @@ end
 local function buildModel(sample)
     local steps = active.steps
     if active.finished then
-        return { finished = true, total = #steps, destination = active.entry and active.entry.name }
+        return { finished = true, total = #steps, destination = active.entry and active.entry.name,
+                 dest = active.entry and active.entry.dest }
     end
 
     local step, state = steps[active.index], active.state

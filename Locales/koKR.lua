@@ -154,6 +154,8 @@ addon:RegisterLocale("koKR", {
 
     PICK_CONVERGENCE = "가장 가까운 원소 융합점",
     PICK_WAYPOINT     = "내 지도 표시",
+    PICK_QUEST        = "내 퀘스트",
+    PICK_QUEST_NAMED  = "퀘스트: %s",
     PICK_PASTE        = "여러 목적지 경로",
     PICK_TOMTOM       = "내 TomTom 웨이포인트 (%d)",
     PASTE_PROMPT      = "/way 줄을 한 줄에 하나씩 붙여넣으세요: /way #1 43.8 28.8 Zunta 또는 지역 이름으로: /way Durotar 43.8 28.8 Zunta. Mapzeroth가 가장 빠른 순서를 찾습니다.",
@@ -180,6 +182,7 @@ addon:RegisterLocale("koKR", {
     TOUR_TOMTOM       = "TomTom 웨이포인트",
     ROUTE_TOUR_UNREAD = "붙여넣은 %d줄을 읽을 수 없습니다.",
     WAYPOINT_NAME     = "내 지도 표시",
+    QUEST_NAME        = "내 퀘스트",
     PICK_CLASS        = "직업 상급자",
     PICK_PET          = "소환수 조련사",
     PICK_DEMON        = "악마 상급자",

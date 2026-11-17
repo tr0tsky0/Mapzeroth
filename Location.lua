@@ -67,6 +67,50 @@ function addon:GetWaypoint()
     return addon:PlaceAt(point.uiMapID, x, y, "WAYPOINT")
 end
 
+-- Where a quest is on the map: mapID, x, y, or nil. A world quest has its own spot; a log quest its map pin (the
+-- objective area, or the turn-in once it is done); failing both, the game's next waypoint for it (on the way there,
+-- such as a portal), as its arrow shows.
+local function questSpot(questID)
+    local task = C_TaskQuest
+    if task and task.GetQuestZoneID and task.GetQuestLocation then
+        local mapID = task.GetQuestZoneID(questID)
+        if mapID and mapID > 0 then
+            local x, y = task.GetQuestLocation(questID, mapID)
+            if x and y then return mapID, x, y end
+        end
+    end
+    local log = C_QuestLog
+    if not log then return nil end
+    local maps = {}
+    if type(GetQuestUiMapID) == "function" then maps[#maps + 1] = GetQuestUiMapID(questID) end
+    maps[#maps + 1] = C_Map.GetBestMapForUnit("player")
+    for _, mapID in ipairs(maps) do
+        if mapID and mapID > 0 and log.GetQuestsOnMap then
+            for _, info in ipairs(log.GetQuestsOnMap(mapID) or {}) do
+                if info.questID == questID and info.x and info.y then return mapID, info.x, info.y end
+            end
+        end
+    end
+    if log.GetNextWaypoint then
+        local mapID, x, y = log.GetNextWaypoint(questID)
+        if mapID and x and y then return mapID, x, y end
+    end
+end
+
+-- The quest the player is following (the one the game's arrow points to) as a destination node
+-- { id, mapID, x, y, questID, title }, or nil when none is followed or it has no spot we can place.
+function addon:GetQuestTarget()
+    local track = C_SuperTrack
+    local questID = track and track.GetSuperTrackedQuestID and track.GetSuperTrackedQuestID()
+    if not questID or questID == 0 then return nil end
+    local mapID, x, y = questSpot(questID)
+    local place = mapID and addon:PlaceAt(mapID, x, y, "QUEST")
+    if not place then return nil end
+    place.questID = questID
+    place.title = C_QuestLog and C_QuestLog.GetTitleForQuestID and C_QuestLog.GetTitleForQuestID(questID) or nil
+    return place
+end
+
 -- A position (a map and 0-1 coordinates) as a place the planner can route to, { id, mapID, x, y }, or nil when it is on
 -- a map we can't place (no nodes on it or any map above it). The id is `prefix` and the spot, rounded, so the same spot
 -- always has the same id (distances are cached by id).

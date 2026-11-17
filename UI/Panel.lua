@@ -1495,11 +1495,12 @@ function Panel:SetDocked(docked, initial)
     end
 end
 
--- What the top picks depend on: the map waypoint and how many TomTom waypoints there are, as a string that changes
--- when either does, and the two themselves.
+-- What the top picks depend on: the map waypoint, the quest followed and how many TomTom waypoints there are, as a
+-- string that changes when any does, and the three themselves.
 local function topKey()
-    local waypoint, tomtom = addon:GetWaypoint(), addon:GetTomTomPoints()
-    return (waypoint and waypoint.id or "-") .. "|" .. (tomtom and #tomtom or "-"), waypoint, tomtom
+    local waypoint, tomtom, quest = addon:GetWaypoint(), addon:GetTomTomPoints(), addon:GetQuestTarget()
+    local key = (waypoint and waypoint.id or "-") .. "|" .. (tomtom and #tomtom or "-") .. "|" .. (quest and quest.id or "-")
+    return key, waypoint, tomtom, quest
 end
 
 -- Re-read the player and the world when the map opens: who they are, and the places to offer.
@@ -1508,10 +1509,10 @@ function Panel:Refresh()
     state.ctx = addon:GetPlayerContext()
     state.entries = addon.Destinations:Build(state.ctx)
     -- A new window: the sections start closed, and are priced from where the player is when one of places is opened.
-    local waypoint, tomtom
-    state.topKey, waypoint, tomtom = topKey()
+    local waypoint, tomtom, quest
+    state.topKey, waypoint, tomtom, quest = topKey()
     state.waypoint = waypoint
-    state.sections = addon.Sections:Build(state.entries, state.ctx, state.waypoint, tomtom and #tomtom)
+    state.sections = addon.Sections:Build(state.entries, state.ctx, state.waypoint, tomtom and #tomtom, quest)
     state.open, state.priced, state.session = {}, false, nil
     state.pasteOpen = nil
 end
@@ -1521,10 +1522,10 @@ end
 -- it shows at once; on a route or a search, the list is up to date when it is gone back to.
 function Panel:RefreshTop()
     if not state.ctx then return end             -- never filled yet (the map not opened): Refresh builds it all then
-    local key, waypoint, tomtom = topKey()
+    local key, waypoint, tomtom, quest = topKey()
     if key == state.topKey then return end
     state.topKey, state.waypoint = key, waypoint
-    state.sections = addon.Sections:Build(state.entries, state.ctx, waypoint, tomtom and #tomtom)
+    state.sections = addon.Sections:Build(state.entries, state.ctx, waypoint, tomtom and #tomtom, quest)
     state.priced, state.session = false, nil
     for id, open in pairs(state.open) do
         if open and addon.Sections:NeedsPricing(state.sections, id) then
@@ -1535,9 +1536,15 @@ function Panel:RefreshTop()
     if ui and ui.frame:IsShown() and state.view == "list" and ui.search:GetText() == "" then self:ShowMenu() end
 end
 
--- The player set or cleared their map waypoint.
+-- The player set or cleared their map waypoint, or followed another quest.
 function Panel:OnWaypointChanged()
     self:RefreshTop()
+end
+
+-- The quest log changed (an objective done can move the quest's spot): only looked at while the window is up, since
+-- opening it reads everything afresh.
+function Panel:OnQuestLogUpdate()
+    if ui and ui.frame:IsShown() then self:RefreshTop() end
 end
 
 -- The calendar answered for the first time: holidays can be on now. The open picker lists their routes straight away;

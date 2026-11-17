@@ -83,7 +83,39 @@ local m = N:Update({ mapID = 1453, x = 0.60, y = 0.60, now = 0 })
 check(m.kind == "walk" and m.distance and m.distance > 100, "on the way: a distance to it: " .. tostring(m.distance))
 m = N:Update({ mapID = 1453, x = dest.x + 0.001, y = dest.y, now = 5 })
 check(m.finished, "arriving at the waypoint ends the trip")
+check(m.dest == dest, "and the finished trip says where it went (so the navigator can clear the waypoint)")
 N:Stop()
+
+-- The quest the game's arrow points to: its map pin, else a world quest's spot, else the game's next waypoint.
+C_SuperTrack = { GetSuperTrackedQuestID = function() return 0 end }
+check(addon:GetQuestTarget() == nil, "no quest followed: nothing")
+local pins = {}
+C_SuperTrack.GetSuperTrackedQuestID = function() return 123 end
+C_QuestLog = {
+    GetQuestsOnMap = function(mapID) return pins[mapID] end,
+    GetTitleForQuestID = function() return "The Defias" end,
+    GetNextWaypoint = function() return nil end,
+}
+GetQuestUiMapID = function() return 1453 end
+C_Map.GetBestMapForUnit = function() return 1455 end
+check(addon:GetQuestTarget() == nil, "a quest with no spot anywhere: nothing")
+C_QuestLog.GetNextWaypoint = function() return 1455, 0.2, 0.2 end
+local q = addon:GetQuestTarget()
+check(q and q.mapID == 1455 and q.id:find("^QUEST_1455_"), "no pin: the game's next waypoint for it")
+pins[1453] = { { questID = 999, x = 0.1, y = 0.1 }, { questID = 123, x = 0.45, y = 0.35 } }
+q = addon:GetQuestTarget()
+check(q and q.mapID == 1453 and math.abs(q.x - 0.45) < 1e-9 and q.questID == 123 and q.title == "The Defias",
+    "its map pin when it has one: " .. tostring(q and q.id))
+C_TaskQuest = { GetQuestZoneID = function() return 1455 end, GetQuestLocation = function() return 0.7, 0.7 end }
+q = addon:GetQuestTarget()
+check(q and q.mapID == 1455 and math.abs(q.x - 0.7) < 1e-9, "a world quest's own spot first")
+C_TaskQuest = nil
+q = addon:GetQuestTarget()
+local withQuest = addon.Sections:Build(entries, ctx, dest, nil, q)
+check(withQuest.top[1].key == "waypoint" and withQuest.top[2].key == "quest" and withQuest.top[2].dest == q
+    and withQuest.top[2].name == "Quest: The Defias", "the quest is the pick after the waypoint: " .. tostring(withQuest.top[2].name))
+check(addon:GetNodeName(q.id) == "Your quest", "its spot is named for the player")
+C_SuperTrack, C_QuestLog, GetQuestUiMapID, C_Map.GetBestMapForUnit = nil, nil, nil, nil
 
 -- Where flying is allowed a waypoint can be flown to from nodes in range, not only walked to: so a
 -- route can end "fly to your waypoint" (Forever has no flying, so its waypoints stay walk-only, above).

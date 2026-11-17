@@ -155,6 +155,8 @@ addon:RegisterLocale("ruRU", {
 
     PICK_CONVERGENCE = "Ближайшее слияние стихий",
     PICK_WAYPOINT     = "Ваша метка",
+    PICK_QUEST        = "Ваше задание",
+    PICK_QUEST_NAMED  = "Задание: %s",
     PICK_PASTE        = "Маршрут с остановками",
     PICK_TOMTOM       = "Ваши точки TomTom (%d)",
     PASTE_PROMPT      = "Вставьте строки /way, по одной точке в строке: /way #1 43.8 28.8 Zunta или с названием зоны: /way Durotar 43.8 28.8 Zunta. Mapzeroth найдёт самый быстрый порядок.",
@@ -181,6 +183,7 @@ addon:RegisterLocale("ruRU", {
     TOUR_TOMTOM       = "Точки TomTom",
     ROUTE_TOUR_UNREAD = "Не удалось прочитать строк: %d.",
     WAYPOINT_NAME     = "Ваша метка",
+    QUEST_NAME        = "Ваше задание",
     PICK_CLASS        = "Учитель класса",
     PICK_PET          = "Учитель питомцев",
     PICK_DEMON        = "Учитель демонов",

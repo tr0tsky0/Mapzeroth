@@ -154,6 +154,8 @@ addon:RegisterLocale("itIT", {
 
     PICK_CONVERGENCE = "Convergenza elementale più vicina",
     PICK_WAYPOINT     = "Il tuo punto di riferimento",
+    PICK_QUEST        = "La tua missione",
+    PICK_QUEST_NAMED  = "Missione: %s",
     PICK_PASTE        = "Percorso a più tappe",
     PICK_TOMTOM       = "I tuoi punti TomTom (%d)",
     PASTE_PROMPT      = "Incolla righe /way, un punto per riga: /way #1 43.8 28.8 Zunta, o con il nome della zona: /way Durotar 43.8 28.8 Zunta. Mapzeroth trova l'ordine più rapido.",
@@ -180,6 +182,7 @@ addon:RegisterLocale("itIT", {
     TOUR_TOMTOM       = "Waypoint TomTom",
     ROUTE_TOUR_UNREAD = "Impossibile leggere %d righe incollate.",
     WAYPOINT_NAME     = "Il tuo punto di riferimento",
+    QUEST_NAME        = "La tua missione",
     PICK_CLASS        = "Istruttore di classe",
     PICK_PET          = "Istruttore di animali",
     PICK_DEMON        = "Istruttore di demoni",

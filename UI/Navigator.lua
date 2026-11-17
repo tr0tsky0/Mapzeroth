@@ -258,6 +258,13 @@ function Navigator:Recalculate()
     if entry then restart(entry, Journey:PlanFromHere(entry, returnTo)) end
 end
 
+-- A trip to the map waypoint has got there: the waypoint goes, unless the player has set another one meanwhile.
+local function clearReachedWaypoint(dest)
+    if not (dest and dest.id and dest.id:find("^WAYPOINT_")) then return end
+    local now = addon:GetWaypoint()
+    if now and now.id == dest.id and C_Map.ClearUserWaypoint then C_Map.ClearUserWaypoint() end
+end
+
 -- Show the current model of the trip.
 function Navigator:Render(model)
     if not ui then return end
@@ -290,6 +297,7 @@ function Navigator:Render(model)
 
     if model.finished then
         -- Arrived: leave it up for a moment, then clear the trip (the same as pressing Close).
+        if not ui.arrivedAt then clearReachedWaypoint(model.dest) end
         ui.arrivedAt = ui.arrivedAt or GetTime()
         if GetTime() - ui.arrivedAt >= LINGER then
             self:Stop()

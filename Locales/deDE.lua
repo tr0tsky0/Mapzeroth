@@ -155,6 +155,8 @@ addon:RegisterLocale("deDE", {
 
     PICK_CONVERGENCE = "Nächste Elementarkonvergenz",
     PICK_WAYPOINT     = "Euer Wegpunkt",
+    PICK_QUEST        = "Eure Quest",
+    PICK_QUEST_NAMED  = "Quest: %s",
     PICK_PASTE        = "Route mit mehreren Zielen",
     PICK_TOMTOM       = "Eure TomTom-Wegpunkte (%d)",
     PASTE_PROMPT      = "Füge /way-Zeilen ein, ein Punkt pro Zeile: /way #1 43.8 28.8 Zunta oder mit Zonenname: /way Durotar 43.8 28.8 Zunta. Mapzeroth findet die schnellste Reihenfolge.",
@@ -181,6 +183,7 @@ addon:RegisterLocale("deDE", {
     TOUR_TOMTOM       = "TomTom-Wegpunkte",
     ROUTE_TOUR_UNREAD = "%d eingefügte Zeilen konnten nicht gelesen werden.",
     WAYPOINT_NAME     = "Euer Wegpunkt",
+    QUEST_NAME        = "Eure Quest",
     PICK_CLASS        = "Klassenlehrer",
     PICK_PET          = "Tierausbilder",
     PICK_DEMON        = "Dämonenausbilder",
