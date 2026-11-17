@@ -35,7 +35,7 @@ local DONE_ALPHA = 0.35        -- steps already done fade
 local BEACON = 30              -- the beacon round where the step ends (RouteLines'), at rest, before SCALE
 
 local state = { plan = nil, current = nil, lines = {}, used = 0, casings = {}, casingsUsed = 0, badges = {}, badgesUsed = 0,
-                indoors = false, built = nil, pieces = {}, markers = {}, phase = 0 }
+                indoors = false, built = nil, pieces = {}, markers = {}, phase = 0, walked = {} }
 MinimapLines.state = state     -- for tests and tools
 
 -- Can this client draw on the minimap? (The settings page says so when it can't.)
@@ -161,7 +161,6 @@ end
 -- markers.
 local function rebuild(mapID)
     state.pieces, state.markers = {}, {}
-    state.walked = {}                  -- piece -> the segment the player was last on (MapRoute.Walked)
     state.built = { mapID = mapID, plan = state.plan }
     local xScale, yScale = addon.Navigation.YardsPerUnit(mapID)
     if not xScale then return end
@@ -220,6 +219,7 @@ local function draw(frame)
     local LOOK = RouteLines.LOOK
     local holiday = state.plan.holiday
     local moving = state.current ~= nil and Theme:MotionOn()
+    local ordinal = {}
     for _, piece in ipairs(state.pieces) do
         local look = LOOK[piece.style] or LOOK.foot
         local thickness = look.thickness * SCALE * unit
@@ -232,9 +232,12 @@ local function draw(frame)
         -- The step being followed starts where the player is on it: the part behind them is gone.
         local first, cut = 1, nil
         if now then
-            local seg, t = MapRoute.Walked(piece.points, playerX, playerY, state.walked[piece])
+            -- Kept by step (and which of its pieces), so a rebuild on another map doesn't forget how far they came.
+            ordinal[piece.step] = (ordinal[piece.step] or 0) + 1
+            local key = piece.step .. ":" .. ordinal[piece.step]
+            local seg, t = MapRoute.Walked(piece.points, playerX, playerY, state.walked[key])
             if seg then
-                state.walked[piece] = seg
+                state.walked[key] = { seg = seg, t = t }
                 local a, b = piece.points[seg], piece.points[seg + 1]
                 first = seg
                 cut = { x = a.x + t * (b.x - a.x), y = a.y + t * (b.y - a.y), along = a.along + t * (b.along - a.along) }
@@ -315,6 +318,7 @@ function MinimapLines:Follow(plan, current)
     end
     state.plan = plan
     state.built = nil
+    state.walked = {}                  -- "step:piece" -> where the player was last on it, { seg, t } (MapRoute.Walked)
     watchIndoors(plan ~= nil)
     if not plan then
         hideAll()

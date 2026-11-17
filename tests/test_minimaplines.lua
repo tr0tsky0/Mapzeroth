@@ -170,15 +170,35 @@ local line = visible()[1]
 local perPixel = (line._u[2] - line._u[1]) / math.sqrt((line._x2 - line._x1) ^ 2 + (line._y2 - line._y1) ^ 2)
 check(math.abs((line._u[1] + MinimapLines.state.phase) - 25.5 * perPixel) < 0.02,
       "and its dots stay on the ground: the pattern goes on from half way, not from the start again")
--- Far off the line (more than 60 yards), nothing is taken off: they aren't on it, or went another way.
-MinimapLines.state.walked = {}
+-- Stepping off the line after walking part of it (a corner cut) keeps what was taken off.
 playerX = 0.55                                  -- about 85 yards east of the line
 MinimapLines:Update()
-check(math.abs(visible()[1]._u[1] + MinimapLines.state.phase) < 1e-6, "off the line, the whole step shows from its start")
+check(math.abs((visible()[1]._u[1] + MinimapLines.state.phase) - 25.5 * perPixel) < 0.02, "off the line, the walked part stays off")
+playerX = 0.5
+-- Never on it yet, and far off it: nothing is taken off.
+MinimapLines.state.walked = {}
+playerX = 0.55
+MinimapLines:Update()
+check(math.abs(visible()[1]._u[1] + MinimapLines.state.phase) < 1e-6, "off the line from the start, the whole step shows")
 playerX, playerY = 0.5, 0.5
 MinimapLines:Update()
 minX, maxX, minY, maxY = extent()
-check(math.abs(minY) < 0.5 and maxY > 50, "back at the start the whole step shows")
+check(math.abs(minY) < 0.5 and maxY > 50, "at the start the whole step shows")
+
+-- A long walk in many short pieces of road: with where they were forgotten (the trip planned again, a rebuild),
+-- a player far along it still has the walked part taken off, not the whole step back.
+do
+    local path = {}
+    for i = 0, 20 do path[#path + 1] = { mapID = 1453, x = 0.5, y = 0.5 - i * 0.01 } end    -- 340 yards north in 17s
+    MinimapLines:Follow({ steps = { { method = "walk", path = path } } }, 1)
+    playerY = 0.38                                                                           -- 204 yards along
+    MinimapLines.state.walked = {}
+    MinimapLines:Update()
+    minX, maxX, minY, maxY = extent()
+    check(math.abs(minY) < 0.5, "far along a long step with nothing remembered, it still starts at the player: " .. minY)
+    playerY = 0.5
+    MinimapLines:Follow(plan, 1)
+end
 
 -- Turned with the player when the minimap rotates: facing east, north is on their left.
 cvars.rotateMinimap, facing = "1", -math.pi / 2

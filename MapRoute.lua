@@ -214,16 +214,14 @@ function MapRoute.Rotate(east, north, angle)
 end
 
 -- How far the player has come along the step being followed, so the part behind them can go. `points` is a piece's
--- line in yards ({ x, y, along }); the player at (px, py), yards. Looks from segment `from` (where they were last
--- time) up to WALKED_AHEAD yards on, so a road that doubles back past them can't pull the spot ahead. Returns the
--- segment and the fraction along it nearest the player, or nil when they are more than WALKED_NEAR yards off the line
--- (not on it yet, or gone another way): then nothing is taken off.
+-- line in yards ({ x, y, along }); the player at (px, py), yards; `last` = { seg, t } from last time, or nil.
+-- From `last` it looks only WALKED_AHEAD yards on, so a road that doubles back past the player can't pull the spot
+-- ahead; when that finds nothing within WALKED_NEAR yards (no `last` yet, a minimap rebuilt on another map, or the
+-- player ahead of the window) the whole line is searched. The spot never moves back, and off the line (a corner cut,
+-- a detour) the last one is kept. Returns the segment and the fraction along it, or nil while nothing is walked yet.
 local WALKED_AHEAD = 150
 local WALKED_NEAR = 60
-function MapRoute.Walked(points, px, py, from)
-    if #points < 2 then return nil end
-    from = math.max(1, math.min(from or 1, #points - 1))
-    local limit = points[from].along + WALKED_AHEAD
+local function nearestOnLine(points, px, py, from, limit)
     local best, segment, fraction
     for i = from, #points - 1 do
         local a, b = points[i], points[i + 1]
@@ -236,6 +234,18 @@ function MapRoute.Walked(points, px, py, from)
         local d = ex * ex + ey * ey
         if not best or d < best then best, segment, fraction = d, i, t end
     end
-    if best > WALKED_NEAR * WALKED_NEAR then return nil end
-    return segment, fraction
+    return best, segment, fraction
+end
+
+function MapRoute.Walked(points, px, py, last)
+    if #points < 2 then return nil end
+    local near = WALKED_NEAR * WALKED_NEAR
+    local lastSeg = last and math.max(1, math.min(last.seg, #points - 1))
+    local d, seg, t
+    if lastSeg then d, seg, t = nearestOnLine(points, px, py, lastSeg, points[lastSeg].along + WALKED_AHEAD) end
+    if not d or d > near then d, seg, t = nearestOnLine(points, px, py, 1, math.huge) end
+    local ahead = not last or seg > lastSeg or (seg == lastSeg and t >= last.t)
+    if d <= near and ahead then return seg, t end
+    if last then return lastSeg, last.t end
+    return nil
 end

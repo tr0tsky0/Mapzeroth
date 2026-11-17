@@ -186,7 +186,7 @@ local function walkedPart(piece, player, key)
         points[i] = { x = x, y = y, along = along }
     end
     local seg, t = addon.MapRoute.Walked(points, player.x, player.y, state.walked[key])
-    if seg then state.walked[key] = seg end
+    if seg then state.walked[key] = { seg = seg, t = t } end
     return seg, t
 end
 
