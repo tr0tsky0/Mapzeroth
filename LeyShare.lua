@@ -19,7 +19,8 @@ local addonName, addon = ...
 -- Rules: off until the player says yes (Options "shareSightings", asked once per account by UI/SharePrompt.lua);
 -- Skyborne characters only; and when SLLCM itself is loaded, Mapzeroth sends nothing and joins nothing, reading
 -- SLLCM's sightings instead (its SavedVariables table, live), so no sighting goes out twice. Nothing here prints.
--- Besides the racial, a node blip found on the minimap (LeyScan.lua) is a sighting too (OnMinimapNode).
+-- Sightings come from the racial only. OnMinimapNode is for LeyScan.lua, which is out of the .toc since 2026-11-16:
+-- Forever gives addons minimap tooltips as secret values, so it finds nothing. Kept in case Blizzard reverts.
 
 local LeyShare = {}
 addon.LeyShare = LeyShare
@@ -29,7 +30,8 @@ local CHANNEL_BASE = "SLLCMShare"    -- + A / H
 local VERSION = "1"
 local TTL = 90 * 60                  -- a sighting is dropped this many seconds after it was made (a node was seen up 58+ min)
 local FUTURE = 60                    -- a sighting stamped further ahead than this is refused
-local SAME_YARDS = 60                -- two sightings closer than this (same phase, same map) are the same node
+local SAME_YARDS = 70                -- two sightings closer than this (same phase, same map) are the same node: the
+                                     -- racial works from up to ~30 yd, so two casts at one node can be 60 yd apart
 local REPLY_MINE = { 1, 8 }          -- seconds to wait before answering a Q, holding a sighting of our own for its phase
 local REPLY_OTHERS = { 9, 15 }       -- and holding only others' (so the one who saw it usually answers first)
 local MAX_PER_REPLY = 9              -- entries per S message, keeps it under 255 bytes

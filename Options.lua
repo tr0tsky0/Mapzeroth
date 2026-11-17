@@ -38,6 +38,7 @@ local definitions = {
     shareSightings = { default = false, boolean = true },
     shareAsked = { default = false, boolean = true },
     -- While sharing: ley line and convergence blips on the minimap are found without hovering them and shared (LeyScan.lua).
+    -- No control since 2026-11-16: LeyScan.lua is out of the .toc (Forever's minimap tooltips are secret to addons).
     detectMinimapNodes = { default = true, boolean = true },
 }
 

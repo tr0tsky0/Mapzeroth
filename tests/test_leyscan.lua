@@ -2,7 +2,15 @@
 -- A fake minimap draws blips with its own forward model (world -> minimap), written apart from LeyScan's inverse,
 -- including a rotating minimap where the player's facing is up instead of north. Ported from SLLCM's
 -- tools/test_scan.py.
+-- LeyScan.lua is out of the .toc since 2026-11-16 (Forever's minimap tooltips are secret to addons), so it's loaded
+-- here by hand, to keep it working in case Blizzard reverts.
 
+do
+    local f = assert(io.open(ADDON_ROOT .. "/LeyScan.lua", "rb"))
+    local src = f:read("*a")
+    f:close()
+    assert(loadstring(src, "@LeyScan.lua"))("Mapzeroth-Dev", addon)
+end
 useTestDistances()
 addon.World:Build()
 

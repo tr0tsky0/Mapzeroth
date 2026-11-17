@@ -110,7 +110,7 @@ local function r(x, y, t, fac, v)
     return ("R:%s:%s:3104:1417:%d:%d:%d"):format(v or "1", fac or "A", x, y, t)
 end
 LS:OnMessage(r(2530, 3000, now - 600))
-LS:OnMessage(r(2540, 3010, now - 60))            -- 25 x 17 yards off: the same node
+LS:OnMessage(r(2540, 3010, now - 60))            -- 2.5 x 1.7 yards off: the same node
 LS:OnMessage(r(4800, 6050, now - 5500))          -- older than 90 minutes
 LS:OnMessage(r(4800, 6050, now + 120))           -- two minutes in the future
 LS:OnMessage(r(4800, 6050, now, "H"))
@@ -118,6 +118,18 @@ LS:OnMessage(r(4800, 6050, now, "A", "2"))
 local held = MapzerothRebuildDB.sightings.A[1417]
 check(#held == 1 and held[1].t == now - 60, "one sighting kept, the newer of the two: " .. #held)
 check(math.abs(held[1].x - 0.254) < 1e-9, "at the newer position")
+
+-- Same node is under 70 yards (SLLCM 1.4.0): the racial works from up to ~30 yd, so two casts at one node can be 60
+-- apart. On another map, so the checks below keep to 1417's sightings.
+local function r2(x, y, t) return ("R:1:A:3104:1418:%d:%d:%d"):format(x, y, t) end
+LS:OnMessage(r2(5000, 5000, now - 50))
+LS:OnMessage(r2(5260, 5000, now - 40))           -- 65 yards east: the same node, the newer kept
+local other = MapzerothRebuildDB.sightings.A[1418]
+check(#other == 1 and other[1].t == now - 40, "sightings 65 yards apart are one node: " .. #other)
+LS:OnMessage(r2(5560, 5000, now - 30))           -- 75 yards on from that: another node
+other = MapzerothRebuildDB.sightings.A[1418]
+check(#other == 2, "75 yards apart are two: " .. #other)
+MapzerothRebuildDB.sightings.A[1418] = nil
 
 -- Step two: the pick's places come from SLLCM (SLLCM_GetNodes): two in Arathi. It goes to the node seen up, not the
 -- nearer one that wasn't.

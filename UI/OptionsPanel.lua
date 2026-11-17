@@ -438,15 +438,10 @@ function OptionsPanel:BuildSharing()
     widgets.share.hint:ClearAllPoints()
     widgets.share.hint:SetPoint("TOPLEFT", widgets.shareHow, "BOTTOMLEFT", 0, -6)
     y = y + SHARE_ROW
-    widgets.detect = toggleRow(box, y, "detectMinimapNodes", L["OPT_DETECT"], L["OPT_DETECT_DESC"])
-    y = y + TOGGLE_ROW
     if addon.LeyShare:SllcmLoaded() then
         widgets.share.title:SetText(L["OPT_SHARE_SLLCM_TITLE"])
-        widgets.detect.title:SetText(L["OPT_DETECT_SLLCM_TITLE"])
-        for _, row in ipairs({ widgets.share, widgets.detect }) do
-            Theme:SetTextStyle(row.title, "dim")
-            row:SetEnabled(false)
-        end
+        Theme:SetTextStyle(widgets.share.title, "dim")
+        widgets.share:SetEnabled(false)
     end
     scroll.setHeight(y + PAD)
     menuHost = mainHost
@@ -478,7 +473,6 @@ function OptionsPanel:Sync()
     widgets.showNavigator:SetValue(Options:Get("showNavigator"))
     -- Off while SLLCM is loaded, whatever is saved: Mapzeroth isn't sharing then.
     if widgets.share then widgets.share:SetValue(not widgets.share.disabled and Options:Get("shareSightings")) end
-    if widgets.detect then widgets.detect:SetValue(not widgets.detect.disabled and Options:Get("detectMinimapNodes")) end
     for _, check in ipairs(widgets.picks or {}) do check:SetChecked(Options:ShowsPick(check.key)) end
 end
 

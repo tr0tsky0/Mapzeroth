@@ -103,7 +103,6 @@ MultiRoute.lua
 Navigation.lua
 MapRoute.lua
 LeyShare.lua
-LeyScan.lua
 ChatShare.lua
 
 # UI

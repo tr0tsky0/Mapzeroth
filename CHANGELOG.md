@@ -10,6 +10,9 @@
 ### Fixed
 - The route behind you could come back on the map and minimap partway along a step, all of it at once. The part you've walked now stays gone, also when you step off the line for a moment.
 
+### Changed
+- **Forever: ley line sharing matches Skyborne Ley Line & Convergence Marker 1.4.0.** The "Detect nodes on the minimap" setting is gone: since a recent game update, addons can no longer read the minimap's node dots, so only your racial finds nodes now. Two sightings within 70 yards count as the same node (was 60), since the racial reaches about 30 yards either side of one.
+
 ## 1.2.0 (Forever) and 2.0.8 (Retail)
 
 ### Added
