@@ -94,3 +94,42 @@ do
         end
     end
 end
+
+-- 8. A rune costs money, so a teleport that spends one has to save REAGENT_MIN_SAVING over the best route without
+-- it (a player in Stormwind isn't told to teleport to Stormwind). With the Reagent Economy perk it's free: no rune
+-- needed, and any saving will do. The route's time is the real one either way.
+do
+    local function plan(from, to, extra)
+        local o = { faction = "Alliance", class = "MAGE" }
+        for k, v in pairs(extra or {}) do o[k] = v end
+        return route(makeCtx(o), from, to)
+    end
+    local MIN = addon.REAGENT_MIN_SAVING
+    check(MIN and MIN > 0, "a reagent teleport has a minimum saving")
+    local withRune = { spells = { 3561 }, items = { 17031 } }
+    local perk = { spells = { 3561 }, reagentFree = true }
+
+    -- Across Stormwind: walking is far less than the cast, a loading screen and the minimum saving.
+    local walk = plan("TAXI_2", "CITY_STORMWIND")
+    local tele = 10 + 15
+    check(walk and walk.cost < tele + MIN, "the Stormwind walk is short enough for this check: " .. tostring(walk and walk.cost))
+    local r = plan("TAXI_2", "CITY_STORMWIND", withRune)
+    check(r and r.steps[1].method ~= "teleport", "no rune spent teleporting across Stormwind: " .. (r and methods(r) or "nil"))
+    check(r and math.abs(r.cost - walk.cost) < 1e-6, "and its time is the walk's")
+    if walk.cost > tele then
+        local free = plan("TAXI_2", "CITY_STORMWIND", perk)
+        check(free and free.steps[1].method == "teleport", "with the perk the free teleport wins: " .. (free and methods(free) or "nil"))
+    end
+
+    -- From far away the saving is easily worth a rune, and the time shown has no minimum saving in it.
+    local far = plan("TAXI_23", "CITY_STORMWIND", withRune)
+    check(far and far.steps[1].method == "teleport", "from far off the mage teleports: " .. (far and methods(far) or "nil"))
+    check(far and far.cost < tele + MIN, "the time shown is the teleport's own: " .. tostring(far and far.cost))
+
+    -- The perk: no rune in the bags, still offered.
+    local known = addon:GetKnownTeleports(makeCtx({ class = "MAGE", spells = { 3561 }, reagentFree = true }))
+    local found = false
+    for _, e in ipairs(known) do if e.ability.spellID == 3561 then found = e.bias < 1 end end
+    check(found, "with Reagent Economy Teleport: Stormwind needs no rune and carries no minimum saving")
+    check(addon.REAGENT_ECONOMY and #addon.REAGENT_ECONOMY > 0, "Forever knows the Reagent Economy perk's spells")
+end

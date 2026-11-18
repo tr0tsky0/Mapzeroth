@@ -72,6 +72,7 @@ function makeCtx(overrides)
         reputationReaction = function(id) return (overrides.reps or {})[id] end,   -- reps = { [factionID] = reaction }
         holidayActive = function(key) return (overrides.holidays or {})[key] or false end,
         loadingScreenTax = overrides.loadingScreenTax or 15,
+        reagentFree = overrides.reagentFree,       -- the Reagent Economy perk: spells need no reagents
         maxCooldown = overrides.maxCooldown,                 -- seconds; nil is no limit
         mapArtID = function(id) return (overrides.mapArt or {})[id] end,     -- which side of Zidormi's zones
     }

@@ -17,5 +17,11 @@ addon.CLASS_TOKENS = {
 -- addon:GetFlightSpeedMultiplier (MovementSpeed.lua). Optional: a dataset without it has no such perk.
 addon.FREQUENT_FLIER = { spellID = 1225490, speedBonus = 0.20 }
 
+-- The "Reagent Economy" legacy perk: class abilities no longer need reagents bought from vendors, so a mage
+-- teleports without a Rune of Teleportation, and for free. Knowing either spell counts: 1225503 is the perk,
+-- 1262638 the mage's own effect of it (both from Wowhead, 2026-11-17; which one the client reports as known
+-- is UNCONFIRMED in game).
+addon.REAGENT_ECONOMY = { 1225503, 1262638 }
+
 -- The picker's main page lists cities and towns (Sections.lua), not Modern's expansions.
 addon.PICKER_LAYOUT = "settlements"

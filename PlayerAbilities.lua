@@ -17,6 +17,13 @@ local function isSpellKnown(spellID)
 end
 addon.IsSpellKnown = isSpellKnown
 
+local function knowsAny(spellIDs)
+    for _, id in ipairs(spellIDs or {}) do
+        if isSpellKnown(id) then return true end
+    end
+    return false
+end
+
 -- The player's current skill in a profession (a key of addon.Professions), or nil when the client can't say.
 -- The client names a profession as its first-rank spell does.
 local function professionSkill(token)
@@ -197,6 +204,7 @@ function addon:GetPlayerContext()
         talentRank = talentRank,
         hasItem = hasItem,
         hasToy = hasToy,
+        reagentFree = knowsAny(addon.REAGENT_ECONOMY),     -- Forever's Reagent Economy perk: no reagents needed
         cooldownRemaining = cooldownRemaining,
         itemCooldownRemaining = itemCooldownRemaining,
         hearthNode = inn or (hearthPlace and hearthPlace.id),   -- where the hearthstone lands
@@ -263,9 +271,10 @@ function addon:GetKnownTeleports(ctx)
     local function spellReady(ability)
         return not ability.spellID or (ctx.cooldownRemaining(ability.spellID) or 0) <= 0
     end
-    -- A spell that uses up an item (Forever's mage teleports: a Rune of Teleportation) needs one in the bags.
+    -- A spell that uses up an item (Forever's mage teleports: a Rune of Teleportation) needs one in the bags,
+    -- unless a perk does away with reagents (ctx.reagentFree).
     local function hasReagent(ability)
-        return not ability.reagent or ctx.hasItem(ability.reagent)
+        return not ability.reagent or ctx.reagentFree or ctx.hasItem(ability.reagent)
     end
     local function itemReady(ability)
         return not ability.itemID or not ctx.itemCooldownRemaining
@@ -283,6 +292,10 @@ function addon:GetKnownTeleports(ctx)
         if ctx.maxCooldown and (ability.cooldown or 0) > ctx.maxCooldown then return end
         local wait = equipSeconds(ability)
         local source = ability
+        local bias = addon:AbilityBias(ability)
+        if ability.reagent and not ctx.reagentFree then
+            bias = bias + (addon.REAGENT_MIN_SAVING or 0)     -- spending a reagent has to be worth it
+        end
         if wait then
             source = {}
             for k, v in pairs(ability) do source[k] = v end
@@ -290,7 +303,7 @@ function addon:GetKnownTeleports(ctx)
         end
         known[#known + 1] = {
             to = to, cost = (ability.cost or 0) + (wait or 0), method = ability.method or defaultMethod or "teleport",
-            loadingScreens = ability.loadingScreens, ability = source, bias = addon:AbilityBias(ability),
+            loadingScreens = ability.loadingScreens, ability = source, bias = bias,
         }
     end
     local function addAll(ability, to)

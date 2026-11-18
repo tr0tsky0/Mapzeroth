@@ -60,6 +60,11 @@ addon.MIN_FLY_SECONDS = 3
 -- (checked in game for the ones we have), so 0; the odd one has a cooldown after equipping.
 addon.DEFAULT_EQUIP_SECONDS = 0
 
+-- A spell that uses up a reagent (Forever's mage teleports: a Rune of Teleportation) costs money, so it is only
+-- taken when it saves at least this many seconds over the best route without it: no rune spent teleporting to
+-- Stormwind from Stormwind. Rides on the ability's bias (PlayerAbilities.lua), so the route's time stays true.
+addon.REAGENT_MIN_SAVING = 120
+
 -- What an authored walk edge with no cost of its own takes when the distance between its ends can't be
 -- measured (two maps the client won't project onto one another: Oribos and its Ring). The edge says the
 -- walk exists, so it is kept at a plausible price, not dropped and the places beyond it cut off.
