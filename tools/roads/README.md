@@ -11,6 +11,27 @@ both Forever only:
 After changing either one, run `/mzr dumpgeometry` in game and paste the export over `Data/Forever/Geometry.lua`,
 because walking times between nodes are worked out from the roads.
 
+## Adding a missing road link in a zone
+
+Some ways aren't painted on the terrain: bridges and paths that are models. Draw them by hand and `gen_roads.py`
+adds them to that continent's roads. Zones with an editor are listed in `links/zones.py` (Zephras Isle so far).
+
+1. Build the editor: `python tools/roads/links/make_editor.py zephras`. The picture is the zone's minimap, with
+   today's roads in cyan; they're only shown, not edited.
+2. Open it: ask Claude to start the "road-links" preview, or serve `tools/roads/links/editors` on any port.
+3. Draw the missing links in red, the same way as city streets. A line's end within 25 yd of a cyan road joins it
+   there, so start and end each link on the road it joins.
+4. Save `.json` to `tools/roads/links/zephras.json` (or ask Claude to read it from the page), then run
+   `python tools/roads/gen_roads.py --only 2991`, which rebuilds Zephras alone in a few seconds.
+
+### Big water
+
+A big lake that walks shouldn't run straight across: build the water page with
+`python tools/roads/links/make_editor.py zephras --water`, trace each shore round and back to its first point, and
+save as `tools/roads/links/zephras_water.json`. `gen_roads.py` writes the shapes into `Roads.lua` (`addon.RoadWater`).
+Open ground through water scores `RoadNet.WATER` (3) times normal open ground in choosing the way, and a swum yard
+counts `RoadNet.SWIM` (1.5) yards of time. Leave rivers and streams out: they're crossed in a moment.
+
 ## Fixing a city's streets
 
 The six capitals' streets were drawn by hand over each city's world map art (Stormwind, Ironforge, Darnassus,

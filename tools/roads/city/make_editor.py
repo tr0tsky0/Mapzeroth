@@ -43,7 +43,7 @@ data = "data:image/png;base64," + base64.b64encode(open(art, "rb").read()).decod
 seed_path = os.path.join(HERE, name + ".json")
 seed = open(seed_path, encoding="utf-8").read() if os.path.exists(seed_path) else "[]"
 html = (html.replace("__TITLE__", title).replace("__NAME__", name)
-        .replace("__SEED__", seed).replace("__MARKERS__", json.dumps(markers(ui_map)))
+        .replace("__SEED__", seed).replace("__MARKERS__", json.dumps(markers(ui_map))).replace("__BASE__", "[]")
         .replace("__IMG__", data))
 os.makedirs(EDITORS, exist_ok=True)
 out = os.path.join(EDITORS, "editor_%s.html" % name)

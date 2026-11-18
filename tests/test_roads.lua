@@ -46,6 +46,35 @@ road = RoadNet:Route(7, 200, 0, 1800, 0)
 check(near(road, 1600), "straight along two lines that meet: " .. tostring(road))
 check(near((RoadNet:Nearest(7, 500, 30)), 30), "the nearest road is 30 yd off")
 
+-- Big water (RoadWater, a hand-drawn shore): a lake inside the L, x and y 200 to 800, and a pond out east. Across
+-- it a yard scores WATER (3) times open ground, and takes SWIM (1.5) times as long.
+do
+    local shippedWater = addon.RoadWater
+    addon.RoadWater = { [7] = { { 200, 200, 800, 200, 800, 800, 200, 800 }, { 4900, 4900, 5100, 4900, 5100, 5100, 4900, 5100 } } }
+    RoadNet:Reset()
+    check(near(RoadNet:WetYards(7, 0, 500, 1000, 500), 600), "600 yd of the line across the lake is water")
+    check(near(RoadNet:WetYards(7, 500, 500, 1000, 500), 300), "from the middle: 300 yd")
+    check(RoadNet:WetYards(7, 0, 900, 1000, 900) == 0, "past the shore, none")
+    -- From the lake's far side to the road's corner arm: without the lake straight across (1000 yd, scoring 1800)
+    -- beats the road round; with it the walk goes onto the bottom road, round the corner and up.
+    addon.RoadWater = { [7] = {} }
+    RoadNet:Reset()
+    check(RoadNet:Route(7, 0, 500, 1000, 500) == nil, "no lake: straight across")
+    addon.RoadWater = { [7] = { { 200, 200, 800, 200, 800, 800, 200, 800 } } }
+    RoadNet:Reset()
+    local around, straight, points = RoadNet:Route(7, 0, 500, 1000, 500)
+    check(around and straight == 1000 and #points >= 2 and points[#points].x == 1000,
+        "the lake sends it round by the road: " .. tostring(around))
+    check(around < 1000 * 1.5 + 600 * 0.5 + 1000, "timed by its real length: " .. tostring(around))
+    -- No road near enough: straight across, swimming, timed slower, nothing to draw.
+    addon.RoadWater = { [7] = { { 4900, 4900, 5100, 4900, 5100, 5100, 4900, 5100 } } }
+    RoadNet:Reset()
+    local swim, flat, none = RoadNet:Route(7, 4500, 5000, 5500, 5000)
+    check(near(swim, 1000 + 0.5 * 200) and flat == 1000 and #none == 0, "swum straight: " .. tostring(swim))
+    addon.RoadWater = shippedWater
+    RoadNet:Reset()
+end
+
 -- Two places, through their world positions (stubbed here: x, y as given, all on continent 7).
 local realWorld = TravelGraph.WorldPosition
 TravelGraph.WorldPosition = function(p) return p.wx, p.wy, p.continent end

@@ -11,6 +11,8 @@
 - **Forever: the Mapzeroth data text shows in Daylight UI's test mode.** While you lay out your data text slots, it shows a sample (2/5) so you can see where it goes. Update Daylight UI to 1.9.1 or later.
 
 ### Fixed
+- **Forever: walks on Zephras Isle follow its roads.** The island's roads now join over its two bridges (the river south of Shen'dar Village and the lake on the north-south road), so walks between its villages and the airship docks go along the road instead of straight across. A few paths the terrain doesn't show were added by hand, and walks no longer run straight across the island's big lake: they go round by road unless that's far longer, and any swimming is timed slower.
+- Mapzeroth's window no longer sits on top of other addons' panels and side tabs docked beside the map (such as Spoken: Places' Place Story). It now docks to the right of whatever is shown against the map's edge, and moves back when that closes.
 - The route behind you could come back on the map and minimap partway along a step, all of it at once. The part you've walked now stays gone, also when you step off the line for a moment.
 - **Forever: mage teleports need a Rune of Teleportation.** Routes no longer offer a city teleport when you have no rune in your bags, and only spend one when it saves enough time (no more teleporting to Stormwind while you're in Stormwind): 2 minutes by default, set by the new setting **Least time saved to spend a reagent** (1 second to 5 minutes), beside Longest cooldown to use. With the Reagent Economy legacy perk no rune is needed.
 

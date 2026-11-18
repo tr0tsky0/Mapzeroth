@@ -46,6 +46,9 @@
 const NAME = "__NAME__";
 const SEED = __SEED__;
 const MARKERS = __MARKERS__;   // Mapzeroth's own places on this map (art pixels), for reference only
+// Fixed lines under the editable ones (a zone's generated roads, when drawing links to them): drawn cyan, never
+// edited, but counted as streets for the yellow rings, and a new line's point snaps onto them. Empty for cities.
+const BASE = __BASE__;
 const KEY = "mzr-city-" + NAME;
 const img = new Image();
 img.src = "__IMG__";
@@ -86,13 +89,19 @@ function findAmbiguous() {
     const w = Math.hypot(a[0] - b[0], a[1] - b[1]);
     for (const [u, v] of [[a, b], [b, a]]) { if (!adj.has(key(u))) adj.set(key(u), []); adj.get(key(u)).push([key(v), w]); }
   };
-  lines.forEach(l => { for (let k = 1; k < l.length; k++) { link(l[k - 1], l[k]); segs.push([l[k - 1], l[k]]); } });
   const foot = (p, a, b) => {
     const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1;
     const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
     const q = [a[0] + dx * t, a[1] + dy * t], L = Math.sqrt(L2);
     return { a, b, q, d: Math.hypot(p[0] - q[0], p[1] - q[1]), ta: t * L, tb: (1 - t) * L };
   };
+  BASE.concat(lines).forEach(l => { for (let k = 1; k < l.length; k++) { link(l[k - 1], l[k]); segs.push([l[k - 1], l[k]]); } });
+  // A drawn line's point snapped onto a fixed line partway along a segment joins it there.
+  const baseSegs = [];
+  BASE.forEach(l => { for (let k = 1; k < l.length; k++) baseSegs.push([l[k - 1], l[k]]); });
+  lines.forEach(l => l.forEach(p => baseSegs.forEach(([a, b]) => {
+    if (foot(p, a, b).d < 0.6) { link(p, a); link(p, b); }
+  })));
   const out = [];
   MARKERS.forEach(m => {
     if (m.skip) return;                                    // walks there don't use the streets (Undercity's ruins)
@@ -147,6 +156,8 @@ function draw() {
   ctx.drawImage(img, 0, 0, c.width, c.height);
   ctx.globalAlpha = 1;
   ctx.setTransform(zoom, 0, 0, zoom, 0, 0);
+  ctx.strokeStyle = "#00dcff"; ctx.lineWidth = 2 / zoom * 1.5; ctx.lineJoin = "round";
+  BASE.forEach(l => { ctx.beginPath(); l.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); });
   lines.forEach((l, i) => stroke(l, i === sel ? "#ffe14d" : "#ff3b30"));
   if (draft) stroke(draft, "#4cd964");
   if (document.getElementById("cross").checked) {
@@ -201,6 +212,20 @@ function joinAt(p) {
   return null;
 }
 function round(p) { return p.map(v => Math.round(v * 2) / 2); }
+// The nearest spot on a fixed line within reach: one of its points, else the foot on a segment. Not rounded, so it
+// stays on the line.
+function baseSnap(p) {
+  let best = null;
+  BASE.forEach(l => l.forEach(q => { const d = near(p, q); if (d < R() && (!best || d < best.d - 0.5)) best = { q: q.slice(), d }; }));
+  if (best) return best.q;
+  BASE.forEach(l => { for (let k = 1; k < l.length; k++) {
+    const a = l[k - 1], b = l[k], dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
+    const q = [a[0] + dx * t, a[1] + dy * t], d = near(p, q);
+    if (d < R() && (!best || d < best.d)) best = { q, d };
+  } });
+  return best && best.q;
+}
 function finishDraft() {
   if (draft && draft.length >= 2) { snapshot(); const d = draft; draft = null; d.forEach((p, k) => { if (p.join) { const j = joinAt(p); if (j) d[k] = j; } delete p.join; }); lines.push(d.map(p => [p[0], p[1]])); save(); }
   draft = null; draw();
@@ -215,8 +240,9 @@ c.addEventListener("mousedown", e => {
   if (e.button !== 0) return;
   const p = pos(e);
   if (mode === "draw") {
-    const q = round(p);
+    let q = round(p);
     if (findPoint(p) || findSegment(p)) q.join = true;
+    else { const b = baseSnap(p); if (b) q = b; }
     draft = draft || []; draft.push(q); draw(); return;
   }
   if (document.getElementById("cross").checked) {

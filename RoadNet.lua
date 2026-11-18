@@ -14,7 +14,8 @@ local addonName, addon = ...
 -- straight across open ground onto the road wherever it pays to join it, along the road, and off it again where it
 -- pays to leave for the goal (at the angle that scores best, not square to the road); or, when no road helps,
 -- straight there. So a goal off the road is walked to along the road as far as it goes the right way, then across.
--- What the walk costs in time is its real length, road and open ground alike: OFFROAD only picks the way.
+-- What the walk costs in time is its real length, road and open ground alike: OFFROAD only picks the way. Water
+-- (addon.RoadWater) is the exception: it scores WATER times open ground, and a swum yard counts SWIM yards of time.
 -- The player picks OFFROAD on the settings page ("roadPreference", LEVELS below, from across country to roads);
 -- the middle one, 1.8, follows Westfall's road from the Elwynn bridge through Sentinel Hill to Duskwood, 1.57 times
 -- the straight line, where 1.4 walked straight down the river. Walk times shipped in Geometry.lua are always
@@ -31,6 +32,12 @@ RoadNet.LEVELS = { 1.25, 1.5, 1.8, 2.4, 3.5 }
 RoadNet.DEFAULT_LEVEL = 3
 RoadNet.MIN_WALK = 60        -- yards: a shorter walk is a straight line
 RoadNet.MAX_SNAP = 600       -- yards: road farther than this from either end isn't joined
+-- Water: a big lake (addon.RoadWater, hand-drawn shores) is swum, not run across. In choosing the way a yard of it
+-- scores WATER times a yard of open ground, so a walk goes round by road unless that is far longer; a yard swum
+-- takes SWIM times a yard run (swimming about 4.7 yd/s against running 7). Streams and rivers aren't drawn: they're
+-- crossed in a moment.
+RoadNet.WATER = 3
+RoadNet.SWIM = 1.5
 
 local CELL = 250             -- grid cell, yards
 
@@ -121,8 +128,81 @@ end
 
 function RoadNet:DefaultOffroad() return self.LEVELS[self.DEFAULT_LEVEL] end
 
--- For tests (a different RoadData): forget the built graphs.
-function RoadNet:Reset() graphs = {} end
+-- Each continent's water shapes, with their boxes, the first time they are asked for (false: none).
+local waters = {}
+local function waterFor(continent)
+    local w = waters[continent]
+    if w == nil then
+        w = false
+        local data = addon.RoadWater and addon.RoadWater[continent]
+        if data then
+            w = {}
+            for _, poly in ipairs(data) do
+                local x0, y0, x1, y1 = math.huge, math.huge, -math.huge, -math.huge
+                for k = 1, #poly - 1, 2 do
+                    local x, y = poly[k], poly[k + 1]
+                    if x < x0 then x0 = x end
+                    if x > x1 then x1 = x end
+                    if y < y0 then y0 = y end
+                    if y > y1 then y1 = y end
+                end
+                w[#w + 1] = { pts = poly, x0 = x0, y0 = y0, x1 = x1, y1 = y1 }
+            end
+        end
+        waters[continent] = w
+    end
+    return w
+end
+
+local function inside(pts, x, y)
+    local hit, n = false, #pts
+    local jx, jy = pts[n - 1], pts[n]
+    for k = 1, n - 1, 2 do
+        local ix, iy = pts[k], pts[k + 1]
+        if (iy > y) ~= (jy > y) and x < (jx - ix) * (y - iy) / (jy - iy) + ix then hit = not hit end
+        jx, jy = ix, iy
+    end
+    return hit
+end
+
+-- Yards of the straight line from (ax, ay) to (bx, by) that run through water: cut where it crosses each shore,
+-- each piece in or out by its middle.
+local function wetYards(w, ax, ay, bx, by)
+    if not w then return 0 end
+    local wet = 0
+    local dx, dy = bx - ax, by - ay
+    for _, p in ipairs(w) do
+        if math.max(ax, bx) >= p.x0 and math.min(ax, bx) <= p.x1 and math.max(ay, by) >= p.y0 and math.min(ay, by) <= p.y1 then
+            local ts, pts, n = { 0, 1 }, p.pts, #p.pts
+            local jx, jy = pts[n - 1], pts[n]
+            for k = 1, n - 1, 2 do
+                local ix, iy = pts[k], pts[k + 1]
+                local ex, ey = jx - ix, jy - iy
+                local den = dx * ey - dy * ex
+                if den ~= 0 then
+                    local t = ((ix - ax) * ey - (iy - ay) * ex) / den
+                    local u = ((ix - ax) * dy - (iy - ay) * dx) / den
+                    if t > 0 and t < 1 and u >= 0 and u <= 1 then ts[#ts + 1] = t end
+                end
+                jx, jy = ix, iy
+            end
+            table.sort(ts)
+            for k = 2, #ts do
+                local m = (ts[k - 1] + ts[k]) / 2
+                if ts[k] > ts[k - 1] and inside(pts, ax + dx * m, ay + dy * m) then wet = wet + (ts[k] - ts[k - 1]) end
+            end
+        end
+    end
+    return wet * math.sqrt(dx * dx + dy * dy)
+end
+
+-- Yards of water between two world points on a continent (for tests and /mzr).
+function RoadNet:WetYards(continent, ax, ay, bx, by)
+    return wetYards(waterFor(continent), ax, ay, bx, by)
+end
+
+-- For tests (a different RoadData or RoadWater): forget the built graphs.
+function RoadNet:Reset() graphs = {}; waters = {} end
 
 -- Every segment with some part within `radius` of (x, y) (by grid cell: a few more, never fewer).
 local function segmentsNear(g, x, y, radius)
@@ -292,7 +372,11 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
     if not g then return nil end
     if type(continent) == "string" then return streetsOnly(g, ax, ay, bx, by, straight) end
     local vx, vy, adj, sa, sb = g.vx, g.vy, g.adj, g.sa, g.sb
-    local direct = k * straight
+    -- Open ground through water scores WATER times more: the extra for a stretch across country.
+    local water = waterFor(continent)
+    local extra = k * (self.WATER - 1)
+    local function wet(x1, y1, x2, y2) return water and extra * wetYards(water, x1, y1, x2, y2) or 0 end
+    local direct = k * straight + wet(ax, ay, bx, by)
     local best, bestPoints, bestVia, bestExit = direct, nil, nil, nil
 
     -- Onto the road: every segment near A, joined towards each of its ends. A segment can also be joined and left
@@ -306,18 +390,20 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
             local from, to = i, j
             if pass == 2 then from, to = j, i end
             local qx, qy, cost, along = join(k, ax, ay, vx[from], vy[from], vx[to], vy[to])
+            local L = cost - k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2)     -- road from the join to `to`
+            local wetIn = wet(ax, ay, qx, qy)
+            cost = cost + wetIn
             if cost < direct and (not dist[to] or cost < dist[to]) then
                 dist[to], entry[to], prev[to] = cost, { x = qx, y = qy }, nil
                 push(heap, cost + h(to), to)
             end
             -- Left again on the same stretch, further along it towards `to`.
             local ox, oy, back, outAlong = join(k, bx, by, vx[to], vy[to], vx[from], vy[from])
-            local L = cost - k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2)     -- road from the join to `to`
             local segLen = along + L
             local outFromStart = segLen - outAlong
             if outFromStart > along then
-                local total = k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2) + (outFromStart - along)
-                    + k * math.sqrt((bx - ox) ^ 2 + (by - oy) ^ 2)
+                local total = k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2) + wetIn + (outFromStart - along)
+                    + k * math.sqrt((bx - ox) ^ 2 + (by - oy) ^ 2) + wet(ox, oy, bx, by)
                 if total < best then
                     best, bestVia, bestExit = total, nil, nil
                     bestPoints = { { x = qx, y = qy }, { x = ox, y = oy } }
@@ -333,13 +419,14 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
         if not closed[u] then
             closed[u] = true
             local du = dist[u]
-            local off = du + k * h(u)
+            local off = du + k * h(u) + wet(vx[u], vy[u], bx, by)
             if off < best then best, bestVia, bestExit, bestPoints = off, u, nil, nil end
             local list = adj[u]
             for n = 1, #list, 2 do
                 local v, w = list[n], list[n + 1]
                 -- Leaving part way along u -> v.
                 local ox, oy, cost = join(k, bx, by, vx[v], vy[v], vx[u], vy[u])
+                cost = cost + wet(ox, oy, bx, by)
                 if du + cost < best then best, bestVia, bestExit, bestPoints = du + cost, u, { x = ox, y = oy }, nil end
                 local nd = du + w
                 if not closed[v] and (not dist[v] or nd < dist[v]) and nd < best then
@@ -349,7 +436,12 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
             end
         end
     end
-    if best >= direct then return nil end
+    if best >= direct then
+        -- Straight there, but swimming part of it: the straight line, timed with the swim, and nothing to draw.
+        local swum = water and wetYards(water, ax, ay, bx, by) or 0
+        if swum > 0 then return straight + (self.SWIM - 1) * swum, straight, {} end
+        return nil
+    end
     if not bestPoints then
         local chain = {}
         local v = bestVia
@@ -368,6 +460,12 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
         px, py = p.x, p.y
     end
     length = length + math.sqrt((bx - px) ^ 2 + (by - py) ^ 2)
+    -- The stretches onto and off the road may be swum in part: timed slower.
+    if water then
+        local first, last = bestPoints[1], bestPoints[#bestPoints]
+        local swum = wetYards(water, ax, ay, first.x, first.y) + wetYards(water, last.x, last.y, bx, by)
+        length = length + (self.SWIM - 1) * swum
+    end
     return length, straight, bestPoints
 end
 
