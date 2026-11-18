@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- **Nearest places, grouped.** The list's "Your Nearest Trainers" section is now **Nearest**, in three parts: **Trainers** (class, pet or demon, riding, weapon, professions), **Vendors** (innkeeper) and **Other** (auction house, bank, stable master for Hunters, flight master). Each routes to the nearest one you can use: your faction's or a neutral one. Hide any of them on the settings page's Picker page, like the other picks. Retail has the innkeeper, stable master and flight master.
 - **Route to your quest.** The quest you're following (the one the game's arrow points to) is a pick at the top of the list, after Your Waypoint: Mapzeroth plans the way to it from wherever you are. It can be hidden on the settings page like the other picks.
 - **Route to a new waypoint in one click.** When you place a waypoint on the world map, or click a map pin link in chat, Mapzeroth asks whether to route you there; **Route** plans it and starts you off. **Don't Ask Again** turns it off, and the new setting **Offer a route to new map waypoints** turns it back on.
 - **Your waypoint clears itself on arrival.** Following a route to the waypoint you set on the map now removes it when you get there (unless you've set a different one meanwhile).

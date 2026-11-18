@@ -1243,7 +1243,7 @@ function Panel:RefreshRoutes()
     if routes then
         local at = 1
         for i, section in ipairs(sections) do
-            if section.id == "trainers" or section.id == "holiday_routes" then at = i + 1 end
+            if section.id == "nearest" or section.id == "holiday_routes" then at = i + 1 end
         end
         table.insert(sections, at, routes)
     end

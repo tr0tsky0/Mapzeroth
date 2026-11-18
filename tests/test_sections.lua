@@ -18,11 +18,19 @@ end
 local function section(sections, id)
     for _, s in ipairs(sections) do if s.id == id then return s end end
 end
--- Every pick, by name: the top ones and the trainers.
+-- One of Nearest's groups ("nearest_trainers", ...), or nil.
+local function group(sections, id)
+    local nearest = section(sections, "nearest")
+    for _, child in ipairs(nearest and nearest.children or {}) do if child.id == id then return child end end
+end
+-- Every pick, by name: the top ones and Nearest's.
 local function allPicks(sections)
     local list = {}
     for _, item in ipairs(sections.top or {}) do list[#list + 1] = item end
-    for _, item in ipairs(section(sections, "trainers") and section(sections, "trainers").items or {}) do list[#list + 1] = item end
+    local nearest = section(sections, "nearest")
+    for _, child in ipairs(nearest and nearest.children or {}) do
+        for _, item in ipairs(child.items) do list[#list + 1] = item end
+    end
     return list
 end
 local function picks(sections)
@@ -33,14 +41,20 @@ end
 
 -- A mage: their class trainer and a weapon master (they can learn weapons), no pets, no ley lines.
 local sections, entries = sectionsFor({ class = "MAGE", faction = "Alliance" })
-check(#sections == 3 and sections[1].id == "trainers" and sections[2].id == "cities" and sections[3].id == "towns",
-    "their nearest trainers, cities, towns, in that order")
-check(sections[1].title == addon.L["SECTION_TRAINERS"], "under its own heading")
+check(#sections == 3 and sections[1].id == "nearest" and sections[2].id == "cities" and sections[3].id == "towns",
+    "Nearest, cities, towns, in that order")
+check(sections[1].title == addon.L["SECTION_NEAREST"] and #sections[1].items == 0, "Nearest holds sections, not places")
+do
+    local ids = {}
+    for _, child in ipairs(sections[1].children) do ids[#ids + 1] = child.id end
+    check(table.concat(ids, ",") == "nearest_trainers,nearest_vendors,nearest_other", "Trainers, Vendors, Other: " .. table.concat(ids, ","))
+    check(group(sections, "nearest_trainers").title == addon.L["SECTION_NEAREST_TRAINERS"], "each under its own heading")
+end
 for _, item in ipairs(sections.top) do
     check(item.group ~= "trainer", "no trainer among the top picks: " .. item.name)
 end
-for _, item in ipairs(sections[1].items) do
-    check(item.group == "trainer", "and only trainers under the heading: " .. item.name)
+for _, item in ipairs(group(sections, "nearest_trainers").items) do
+    check(item.group == "trainer", "and only trainers under Trainers: " .. item.name)
 end
 local mage = picks(sections)
 check(mage["Class Trainer"] and #mage["Class Trainer"].nodeIDs >= 2, "a mage has a class trainer pick over every mage trainer")
@@ -92,12 +106,112 @@ do
     end
     local mageChoices = keys(addon.Sections:PickChoices("MAGE", "Alliance", false))
     check(mageChoices.waypoint and mageChoices.class and mageChoices.weapon and mageChoices.paste, "the waypoint, class, weapon and paste picks")
+    check(mageChoices.riding == addon.L["PICK_RIDING"] and mageChoices.inn == addon.L["PICK_INN"] and mageChoices.auction
+        and mageChoices.bank and mageChoices.flight == addon.L["PICK_FLIGHT"] and not mageChoices.stable,
+        "riding, innkeeper, auction house, bank, flight master; no stable master for a mage")
+    local order = {}
+    for _, c in ipairs(addon.Sections:PickChoices("HUNTER", "Alliance", false)) do order[#order + 1] = c.key end
+    order = table.concat(order, ","):gsub("prof_[A-Z]+,", "")
+    check(order:find("paste,class,pet,riding,weapon,inn,auction,bank,stable,flight", 1, true),
+        "listed in the picker's order: " .. order)
     check(mageChoices.prof_ALCHEMY == "Alchemy Trainer" and mageChoices.prof_MINING, "every profession, had or not")
     check(mageChoices.leyline == addon.L["PICK_LEYLINE"] and not mageChoices.pet and not mageChoices.tomtom,
         "the ley line pick, no pet trainer for a mage, no TomTom without it")
     local hunter = keys(addon.Sections:PickChoices("HUNTER", "Horde", true))
     check(hunter.pet == addon.L["PICK_PET"] and hunter.leyline == addon.L["PICK_CONVERGENCE"] and hunter.tomtom,
         "a Horde hunter with TomTom: a pet trainer, convergences, and TomTom's waypoints")
+end
+
+-- Trainers in order: class, pet or demon, riding, weapon, then professions.
+do
+    local list = group((sectionsFor({ class = "HUNTER", faction = "Alliance", spells = { addon.Professions.ALCHEMY } })), "nearest_trainers")
+    local keys = {}
+    for _, item in ipairs(list.items) do keys[#keys + 1] = item.key end
+    check(table.concat(keys, ",") == "class,pet,riding,weapon,prof_ALCHEMY", "trainers in order: " .. table.concat(keys, ","))
+end
+
+-- A riding instructor while they have a riding rank to learn; once they know them all, none.
+do
+    check(mage["Riding Trainer"] and #mage["Riding Trainer"].nodeIDs > 0 and mage["Riding Trainer"].key == "riding",
+        "a character who can't ride has a riding trainer pick")
+    local ranks = {}
+    for _, skill in ipairs(addon.RidingSkills) do ranks[#ranks + 1] = skill.spellID end
+    check(not picks((sectionsFor({ class = "MAGE", faction = "Alliance", spells = ranks })))["Riding Trainer"],
+        "and one who knows every rank has none")
+    for _, id in ipairs(mage["Riding Trainer"].nodeIDs) do
+        local npc = addon.World:GetNode(id).npcs[1]
+        check(not npc.faction or npc.faction == "Alliance", "only their faction's riding instructors: " .. id)
+    end
+end
+
+-- Vendors: the innkeeper. Other: the auction house, the bank, the flight master (and stable master, below). Inns,
+-- banks and auction houses of their faction's settlements and neutral ones; flight masters of theirs or neutral.
+do
+    local function whose(node)
+        local s = (node.city and addon.Cities[node.city]) or (node.town and addon.Towns[node.town])
+        return s and s.faction
+    end
+    local vendors = group(sections, "nearest_vendors").items
+    check(#vendors == 1 and vendors[1].name == addon.L["PICK_INN"] and vendors[1].key == "inn" and vendors[1].group == "inn",
+        "Vendors holds the innkeeper pick")
+    local other = group(sections, "nearest_other").items
+    local keys = {}
+    for _, item in ipairs(other) do keys[#keys + 1] = item.key end
+    check(table.concat(keys, ",") == "auction,bank,flight", "a mage's Other: auction house, bank, flight master: " .. table.concat(keys, ","))
+    for _, item in ipairs({ vendors[1], other[1], other[2] }) do
+        local kinds, sawNeutral = {}, false
+        for _, id in ipairs(item.nodeIDs) do
+            local node = addon.World:GetNode(id)
+            kinds[node.kind] = true
+            local owner = whose(node)
+            check(owner ~= "Horde", item.key .. ": no Horde settlement's: " .. id)
+            if owner == "Both" then sawNeutral = true end
+        end
+        check(kinds[item.group] and next(kinds, next(kinds)) == nil, item.key .. ": only places of its kind")
+        check(sawNeutral, item.key .. ": neutral ones included (Booty Bay, Gadgetzan and the like)")
+    end
+    local flight = other[3]
+    check(flight.name == addon.L["PICK_FLIGHT"] and #flight.nodeIDs > 10, "the flight master pick, over many flight masters")
+    for _, id in ipairs(flight.nodeIDs) do
+        local owner = addon:GetFlightOwner(id)
+        check(not owner or owner == "Alliance", "only flight masters they can talk to: " .. id)
+    end
+    local hordeInns = picks((sectionsFor({ class = "WARRIOR", faction = "Horde" })))[addon.L["PICK_INN"]]
+    local hordeSet = {}
+    for _, id in ipairs(hordeInns.nodeIDs) do hordeSet[id] = true end
+    for _, id in ipairs(vendors[1].nodeIDs) do
+        if whose(addon.World:GetNode(id)) == "Alliance" then check(not hordeSet[id], "a Horde player has no Alliance inn: " .. id) end
+    end
+end
+
+-- Stable masters for hunters only, of their faction (or both's).
+do
+    local hunter = picks((sectionsFor({ class = "HUNTER", faction = "Horde" })))
+    local stable = hunter[addon.L["PICK_STABLE"]]
+    check(stable and stable.group == "stable" and #stable.nodeIDs > 5, "a hunter has a stable master pick")
+    for _, id in ipairs(stable.nodeIDs) do
+        local node = addon.World:GetNode(id)
+        check(node.kind == "stable" and node.faction ~= "Alliance", "a Horde hunter's stables aren't the Alliance's: " .. id)
+    end
+    check(not mage[addon.L["PICK_STABLE"]], "a mage has none")
+end
+
+-- Each Nearest pick can be turned off on its own; a group left with none isn't there.
+do
+    addon.Options:SetShowsPick("inn", false)
+    addon.Options:SetShowsPick("bank", false)
+    local s = sectionsFor({ class = "MAGE", faction = "Alliance" })
+    local p = picks(s)
+    check(not group(s, "nearest_vendors") and not p[addon.L["PICK_BANK"]] and p[addon.L["PICK_AUCTION"]],
+        "no innkeeper (so no Vendors) and no bank, the auction house stays")
+    addon.Options:SetShowsPick("inn", true)
+    addon.Options:SetShowsPick("bank", true)
+    for _, key in ipairs({ "class", "riding", "weapon", "auction", "bank", "flight" }) do addon.Options:SetShowsPick(key, false) end
+    s = sectionsFor({ class = "MAGE", faction = "Alliance" })
+    check(group(s, "nearest_vendors") and not group(s, "nearest_trainers") and not group(s, "nearest_other"), "only Vendors left")
+    addon.Options:SetShowsPick("inn", false)
+    check(not section(sectionsFor({ class = "MAGE", faction = "Alliance" }), "nearest"), "and with every pick off, no Nearest")
+    for _, key in ipairs({ "class", "riding", "weapon", "auction", "flight", "inn" }) do addon.Options:SetShowsPick(key, true) end
 end
 
 -- Only the professions they have, by the client's name for each.
@@ -171,8 +285,13 @@ check(session, "a session builds where the player stands")
 addon.Sections:Price(sections, session)
 local classPick = picks(sections)["Class Trainer"]
 check(classPick.eta == nil and classPick.nearest == nil and classPick.where == nil, "a pick has no time or place")
-check(not addon.Sections:NeedsPricing(sections, "trainers") and addon.Sections:NeedsPricing(sections, "cities"),
-    "so opening the trainers needs no route search, and opening cities does")
+check(not addon.Sections:NeedsPricing(sections, "nearest") and not addon.Sections:NeedsPricing(sections, "nearest_other")
+    and addon.Sections:NeedsPricing(sections, "cities"), "so opening Nearest needs no route search, and opening cities does")
+do
+    local keys = {}
+    for _, item in ipairs(group(sections, "nearest_other").items) do keys[#keys + 1] = item.key end
+    check(table.concat(keys, ",") == "auction,bank,flight", "and pricing leaves the picks in their order")
+end
 local last = -1
 for _, item in ipairs(section(sections, "cities").items) do
     if item.eta then

@@ -1,6 +1,5 @@
--- Stable masters (Data/Modern/Stables.lua): a hunter's "Nearest Stable Master" pick under Personally Relevant
--- (Sections.lua), of their faction's stables, turned off on the settings page's Picker page; no hunter, or the pick
--- off, and the section isn't there at all.
+-- Stable masters (Data/Modern/Stables.lua): a hunter's "Stable Master" pick under Nearest's Other (Sections.lua), of
+-- their faction's stables, turned off on the settings page's Picker page; no hunter, or the pick off, and it isn't there.
 --   python tests/harness.py --modern modern_stables
 -- Stand-in stables, so the test doesn't follow the scraped data: one in Stormwind, one in Orgrimmar, one for both.
 addon.Nodes.Stables = {
@@ -20,7 +19,6 @@ addon.GetZoneName = function(_, mapID) return "Zone " .. tostring(mapID) end
 addon.GetCityName = function(_, key) return key end
 EJ_GetInstanceInfo = function(id) return "Instance " .. id end
 
-check(addon.STABLE_PICK, "Modern offers the stable master pick (Data/Modern/Places.lua)")
 check(addon:GetNodeName("STABLE_TEST_SW") == "stormwind Stable Master", "a city's stable is named for the city: "
     .. tostring(addon:GetNodeName("STABLE_TEST_SW")))
 check(addon:GetNodeName("STABLE_TEST_BOTH") == "Zone 84 Stable Master", "one of no town for its zone: "
@@ -30,8 +28,17 @@ local function build(class, faction)
     local ctx = makeCtx({ class = class, faction = faction })
     return addon.Sections:Build(addon.Destinations:Build(ctx), ctx)
 end
+-- The stable master pick, or nil.
 local function personal(sections)
-    for _, s in ipairs(sections) do if s.id == "trainers" then return s end end
+    for _, s in ipairs(sections) do
+        if s.id == "nearest" then
+            for _, child in ipairs(s.children) do
+                for _, item in ipairs(child.id == "nearest_other" and child.items or {}) do
+                    if item.key == "stable" then return item end
+                end
+            end
+        end
+    end
 end
 local function set(list)
     local out = {}
@@ -39,37 +46,34 @@ local function set(list)
     return out
 end
 
--- An Alliance hunter: the section, titled Personally Relevant, with the nearest of their faction's and the shared one.
+-- An Alliance hunter: the pick under Nearest, with the nearest of their faction's and the shared one.
 local sections = build("HUNTER", "Alliance")
-local section = personal(sections)
-check(section and section.title == "Personally Relevant", "a hunter gets Personally Relevant")
-check(sections[1] == section, "first, above the expansion's places")
-local stable = section.items[1]
-check(#section.items == 1 and stable.name == "Nearest Stable Master" and stable.group == "stable" and stable.pick,
-    "holding Nearest Stable Master")
+local stable = personal(sections)
+check(stable and sections[1].id == "nearest", "a hunter gets the pick, under Nearest, above the expansion's places")
+check(stable.name == "Stable Master" and stable.group == "stable" and stable.pick, "named Stable Master")
 local ids = set(stable.nodeIDs)
 check(ids.STABLE_TEST_SW and ids.STABLE_TEST_BOTH and not ids.STABLE_TEST_ORG,
     "to their faction's stables and the shared one, not the Horde's")
-check(not addon.Sections:NeedsPricing(sections, "trainers"), "a pick: no route search to open it")
-local horde = set(personal(build("HUNTER", "Horde")).items[1].nodeIDs)
+check(not addon.Sections:NeedsPricing(sections, "nearest"), "a pick: no route search to open it")
+local horde = set(personal(build("HUNTER", "Horde")).nodeIDs)
 check(horde.STABLE_TEST_ORG and horde.STABLE_TEST_BOTH and not horde.STABLE_TEST_SW, "and the Horde's for a Horde hunter")
 
--- Anyone else: no stables, so no section at all. Searching still finds them, after what is relevant.
-check(not personal(build("MAGE", "Alliance")), "a mage has no Personally Relevant")
+-- Anyone else: no stables. Searching still finds them, after what is relevant.
+check(not personal(build("MAGE", "Alliance")), "a mage has no stable master pick")
 local entries = addon.Destinations:Build(makeCtx({ class = "MAGE" }))
 local found = addon.Destinations:Find(entries, "STABLE_TEST_SW")
 check(found and found.group == "stable" and found.relevant == false, "a mage still finds stable masters by searching")
 
--- The pick is a setting on the Picker page, for hunters only; off, and the section goes with it.
+-- The pick is a setting on the Picker page, for hunters only.
 local function choices(class)
     local keys = {}
     for _, choice in ipairs(addon.Sections:PickChoices(class, "Alliance")) do keys[choice.key] = choice.label end
     return keys
 end
-check(choices("HUNTER").stable == "Nearest Stable Master", "the Picker page offers it to a hunter")
+check(choices("HUNTER").stable == "Stable Master", "the Picker page offers it to a hunter")
 check(not choices("MAGE").stable, "and not to a mage")
 addon.Options:SetShowsPick("stable", false)
-check(not personal(build("HUNTER", "Alliance")), "turned off: no Personally Relevant")
+check(not personal(build("HUNTER", "Alliance")), "turned off: not there")
 addon.Options:SetShowsPick("stable", true)
 check(personal(build("HUNTER", "Alliance")), "on again: back")
 

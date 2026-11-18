@@ -45,7 +45,7 @@ local definitions = {
     detectMinimapNodes = { default = true, boolean = true },
 }
 
--- "showPick_<key>": whether the picker offers that pick (a top pick or one of the trainers) (Sections.lua names the
+-- "showPick_<key>": whether the picker offers that pick (a top pick or one of Nearest's) (Sections.lua names the
 -- keys; the profession ones depend on the dataset, so they aren't listed above). All shown until turned off.
 local PICK_PREFIX = "showPick_"
 local pickDefinition = { default = true, boolean = true }

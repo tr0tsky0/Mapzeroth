@@ -5,11 +5,15 @@ local addonName, addon = ...
 --
 --   (top, no heading)    the waypoint they have set on the map, if any; the quest they follow; the nearest ley line or convergence
 --                        (Skyborne); tours: TomTom's waypoints when there are any, and pasted coordinates
---   Your Nearest Trainers  their class trainer (and pet or demon trainer), a trainer for each profession they have that
---                        still teaches them something, a weapon master that teaches a weapon they can learn and
---                        don't have
---                        (on a dataset without trainers (Modern) the same section is "Personally Relevant": the
---                        nearest stable master, for a hunter, when the dataset sets addon.STABLE_PICK)
+--   Nearest              picks in three sections of their own (one with nothing in it isn't there):
+--     Trainers           their class trainer (and pet or demon trainer), a riding instructor that teaches a rank they
+--                        don't know, a weapon master that teaches a weapon they can learn and don't have, a trainer
+--                        for each profession they have that still teaches them something
+--     Vendors            an innkeeper
+--     Other              an auction house, a bank, a stable master (hunters), a flight master
+--                        Inns, banks and auction houses are their faction's settlements' and neutral ones; each pick
+--                        is there only when the dataset has places of its kind (Modern: no trainers, banks or
+--                        auction houses)
 --   Cities               their faction's (and neutral) cities
 --   Towns                the same for towns
 --   Dungeons             those at or below their level by the client's group finder (its suggested range, read live;
@@ -67,9 +71,27 @@ local function professionList(only)
     return list
 end
 
+-- The service picks (Nearest's Vendors and Other): node kind -> { key, label, group }, in the order listed.
+local SERVICE_PICKS = {
+    { kind = "inn", key = "inn", label = "PICK_INN", group = "vendors" },
+    { kind = "auction", key = "auction", label = "PICK_AUCTION", group = "other" },
+    { kind = "bank", key = "bank", label = "PICK_BANK", group = "other" },
+    { kind = "stable", key = "stable", label = "PICK_STABLE", group = "other", class = "HUNTER" },
+}
+
+-- Whether this dataset has a node of `kind` (and `trainer`, for a trainer).
+local function hasKind(kind, trainer)
+    local found = false
+    addon.World:ForEachNode(function(node)
+        if node.kind == kind and (not trainer or node.trainer == trainer) then found = true end
+    end)
+    return found
+end
+
 -- The picks a player can show or hide on the settings page, in the order the picker lists them:
 -- { { key, label }, ... }. class and faction are this character's (a pet or demon trainer only for the classes
--- that have one, and the ley line or convergence pick by faction); TomTom only when it is loaded.
+-- that have one, a stable master for hunters, and the ley line or convergence pick by faction); TomTom only when it
+-- is loaded; the Nearest picks only when the dataset has places of their kind.
 function Sections:PickChoices(class, faction, hasTomTom)
     local choices = { { key = "waypoint", label = L["PICK_WAYPOINT"] }, { key = "quest", label = L["PICK_QUEST"] } }
     if addon.LeyLineSpell then
@@ -77,19 +99,32 @@ function Sections:PickChoices(class, faction, hasTomTom)
     end
     if hasTomTom then choices[#choices + 1] = { key = "tomtom", label = L["OPT_PICK_TOMTOM"] } end
     choices[#choices + 1] = { key = "paste", label = L["PICK_PASTE"] }
-    if addon.STABLE_PICK and class == "HUNTER" then
-        choices[#choices + 1] = { key = "stable", label = L["PICK_STABLE"] }
-    end
     if addon.Professions then                    -- a dataset with trainers (Forever)
         choices[#choices + 1] = { key = "class", label = L["PICK_CLASS"] }
         local pet = PET_CLASSES[class]
         if pet then choices[#choices + 1] = { key = "pet", label = L[PET_PICKS[pet]] } end
+        if hasKind("trainer", "RIDING") then choices[#choices + 1] = { key = "riding", label = L["PICK_RIDING"] } end
+        choices[#choices + 1] = { key = "weapon", label = L["PICK_WEAPON"] }
         for _, profession in ipairs(professionList()) do
             choices[#choices + 1] = { key = "prof_" .. profession.token, label = L["PICK_PROFESSION"]:format(profession.name) }
         end
-        choices[#choices + 1] = { key = "weapon", label = L["PICK_WEAPON"] }
     end
+    for _, service in ipairs(SERVICE_PICKS) do
+        if (not service.class or service.class == class) and hasKind(service.kind) then
+            choices[#choices + 1] = { key = service.key, label = L[service.label] }
+        end
+    end
+    choices[#choices + 1] = { key = "flight", label = L["PICK_FLIGHT"] }
     return choices
+end
+
+-- Whose settlement a place (an inn, bank, auction house) stands in: true when it is theirs, both factions', or no
+-- one's on record (a place in no settlement too).
+local function oursAt(node, faction)
+    local settlement = (node.city and addon.Cities and addon.Cities[node.city])
+        or (node.town and addon.Towns and addon.Towns[node.town])
+    local owner = settlement and settlement.faction
+    return not owner or owner == "Both" or not faction or owner == faction
 end
 
 local function expansionName(rev)
@@ -162,12 +197,12 @@ end
 -- quest: the quest they follow (addon:GetQuestTarget), or nil.
 function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
-    local stables, cities, towns, dungeons, raids = {}, {}, {}, {}, {}
+    local flights, cities, towns, dungeons, raids = {}, {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
     local index = {}
     for _, entry in ipairs(entries) do
-        if entry.group == "stable" and entry.relevant and addon.STABLE_PICK then
-            stables[#stables + 1] = entry.nodeID
+        if entry.group == "flight" then
+            flights[#flights + 1] = entry.nodeID   -- the other faction's aren't entries (Destinations:Build)
             index[entry.nodeID] = entry
         elseif entry.group == "trainer" and entry.relevant and entry.trainer then
             if not trainers[entry.trainer] then
@@ -215,19 +250,45 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     top[#top + 1] = { name = L["PICK_PASTE"], group = "waypoint",
                       relevant = true, pick = true, action = "paste", key = "paste" }
 
-    if trainers[ctx.class] then picks[#picks + 1] = pick(L["PICK_CLASS"], "trainer", trainers[ctx.class], "class") end
+    local trainerPicks, vendorPicks, otherPicks = {}, {}, {}
+    local function push(list, item) list[#list + 1] = item end
+    if trainers[ctx.class] then push(trainerPicks, pick(L["PICK_CLASS"], "trainer", trainers[ctx.class], "class")) end
     for token, key in pairs(PET_PICKS) do
-        if trainers[token] then picks[#picks + 1] = pick(L[key], "trainer", trainers[token], "pet") end
+        if trainers[token] then push(trainerPicks, pick(L[key], "trainer", trainers[token], "pet")) end
     end
+    if trainers.RIDING then push(trainerPicks, pick(L["PICK_RIDING"], "trainer", trainers.RIDING, "riding")) end
+    if trainers.WEAPON then push(trainerPicks, pick(L["PICK_WEAPON"], "trainer", trainers.WEAPON, "weapon")) end
     -- One pick per profession they have, in alphabetical order of the client's name for it.
     local have = {}
     for _, token in ipairs(tokens) do have[token] = true end
     for _, profession in ipairs(professionList(have)) do
-        picks[#picks + 1] = pick(L["PICK_PROFESSION"]:format(profession.name), "trainer", trainers[profession.token],
-            "prof_" .. profession.token)
+        push(trainerPicks, pick(L["PICK_PROFESSION"]:format(profession.name), "trainer", trainers[profession.token],
+            "prof_" .. profession.token))
     end
-    if trainers.WEAPON then picks[#picks + 1] = pick(L["PICK_WEAPON"], "trainer", trainers.WEAPON, "weapon") end
-    if #stables > 0 then picks[#picks + 1] = pick(L["PICK_STABLE"], "stable", stables, "stable") end
+    -- Inns, banks, auction houses of their faction's settlements and neutral ones; stable masters for hunters, of
+    -- their faction (Relevance). Read from the nodes, not the entries: Modern's inns are their towns' entries.
+    local services = {}                         -- kind -> node ids, sorted so the pick is the same each time
+    addon.World:ForEachNode(function(node)
+        local kind = node.kind
+        local wanted
+        if kind == "stable" then wanted = addon.Relevance:IsRelevant(node, ctx)
+        elseif kind == "inn" or kind == "bank" or kind == "auction" then wanted = oursAt(node, ctx.faction) end
+        if wanted then
+            services[kind] = services[kind] or {}
+            table.insert(services[kind], node.id)
+        end
+    end)
+    for _, service in ipairs(SERVICE_PICKS) do
+        local ids = services[service.kind]
+        if ids then
+            table.sort(ids)
+            push(service.group == "vendors" and vendorPicks or otherPicks, pick(L[service.label], service.kind, ids, service.key))
+        end
+    end
+    if #flights > 0 then
+        table.sort(flights)
+        push(otherPicks, pick(L["PICK_FLIGHT"], "flight", flights, "flight"))
+    end
     -- What the player turned off on the settings page.
     local function shown(list)
         local out = {}
@@ -236,7 +297,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
         end
         return out
     end
-    top, picks = shown(top), shown(picks)
+    top = shown(top)
 
     local byName = function(a, b) return a.name < b.name end
     table.sort(cities, byName)
@@ -252,8 +313,18 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     local function add(id, title, items)
         if #items > 0 then sections[#sections + 1] = { id = id, title = title, items = items } end
     end
-    -- The picks for this character. Empty (no stable masters for a non-hunter, or theirs turned off): no section.
-    add("trainers", L[addon.Professions and "SECTION_TRAINERS" or "SECTION_PERSONAL"], picks)
+    -- The picks for this character, under Nearest. A group with none (or all turned off) isn't there, nor is Nearest
+    -- without any.
+    local nearest = {}
+    for _, group in ipairs({ { "nearest_trainers", "SECTION_NEAREST_TRAINERS", trainerPicks },
+                             { "nearest_vendors", "SECTION_NEAREST_VENDORS", vendorPicks },
+                             { "nearest_other", "SECTION_NEAREST_OTHER", otherPicks } }) do
+        local items = shown(group[3])
+        if #items > 0 then nearest[#nearest + 1] = { id = group[1], title = L[group[2]], items = items, picks = true } end
+    end
+    if #nearest > 0 then
+        sections[#sections + 1] = { id = "nearest", title = L["SECTION_NEAREST"], items = {}, children = nearest, picks = true }
+    end
     local holiday = Sections:HolidayRoutes(ctx)
     if holiday then sections[#sections + 1] = holiday end
     local routes = Sections:Routes()
@@ -332,7 +403,7 @@ function Sections:Price(sections, session)
                 item.eta = select(2, addon.Journey:Nearest(session, item.nodeIDs or { item.nodeID }))
             end
         end
-        if section.id ~= "trainers" and not section.untimed then
+        if not section.picks and not section.untimed then
             table.sort(section.items, function(a, b)
                 if section.seasonalFirst and (a.seasonal ~= nil) ~= (b.seasonal ~= nil) then return a.seasonal ~= nil end
                 if (a.eta ~= nil) ~= (b.eta ~= nil) then return a.eta ~= nil end

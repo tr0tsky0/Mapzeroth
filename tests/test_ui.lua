@@ -821,12 +821,17 @@ addon.Panel:Query("")
 
 
 -- A character who can't read ley lines has no such pick; a Skyborne does, on top, timed as the window opens.
-local trainers = headerIndex("trainers")
-check(trainers and state.results[trainers].name == addon.L["SECTION_TRAINERS"], "there is a section for their nearest trainers")
-addon.Panel:Choose(trainers)
+local nearest = headerIndex("nearest")
+check(nearest and state.results[nearest].name == addon.L["SECTION_NEAREST"], "there is a Nearest section")
+addon.Panel:Choose(nearest)
+local inner = headerIndex("nearest_trainers")
+check(inner and state.results[inner].depth == 1 and state.results[inner].name == addon.L["SECTION_NEAREST_TRAINERS"]
+    and headerIndex("nearest_vendors") and headerIndex("nearest_other"), "opened, it holds Trainers, Vendors and Other a step in")
+addon.Panel:Choose(inner)
 check(not pickNamed("Nearest Ley Line"), "no ley line pick for a character who can't read them")
-check(pickNamed("Class Trainer"), "but their class trainer is there")
-addon.Panel:Choose(trainers)
+local classRow = pickNamed("Class Trainer")
+check(classRow and classRow.depth == 2, "but their class trainer is there, under Trainers")
+addon.Panel:Choose(headerIndex("nearest"))
 IsPlayerSpell = function(id) return id == 1259705 end       -- Read Ley Line: a Skyborne
 SLLCM_GetNodes = function() return {} end                    -- with SLLCM loaded: its nodes are the pick's places
 WorldMapFrame._hooks.OnShow()
@@ -853,15 +858,15 @@ C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
 -- were open stay open.
 do
     addon.Panel:Query("")
-    addon.Panel:Choose(headerIndex("trainers"))
-    check(state.open.trainers, "a section is open")
+    addon.Panel:Choose(headerIndex("nearest"))
+    check(state.open.nearest, "a section is open")
     addon.Panel:ShowRoute({ name = "Booty Bay", nodeID = "TOWN_BOOTY_BAY" })
     C_Map.HasUserWaypoint = function() return true end
     C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.4, 0.3 end } } end
     addon.Panel:OnWaypointChanged()
     check(state.view == "route", "the route stays up")
     addon.Panel:Query("")
-    check(pickNamed("Your Waypoint") and state.open.trainers, "back on the list: the waypoint is there, and the section still open")
+    check(pickNamed("Your Waypoint") and state.open.nearest, "back on the list: the waypoint is there, and the section still open")
 
     -- TomTom gives no event: the window looks once a second (RefreshTop), and the pick appears.
     TomTom = { waypoints = { [1453] = { a = { 1453, 0.5, 0.5, title = "A" }, b = { 1453, 0.6, 0.6, title = "B" } } } }
@@ -886,13 +891,14 @@ do
     addon.Panel:OnWaypointChanged()
     C_Map.HasUserWaypoint = nil
     addon.Panel:Query("")
-    addon.Panel:Choose(headerIndex("trainers"))          -- closed again, as the tests below expect
+    addon.Panel:Choose(headerIndex("nearest"))          -- closed again, as the tests below expect
 end
 
 -- Picks are one line with no time; chosen, the route is one way or a round trip, as picked on the route itself.
 do
     addon.Panel:Query("")
-    addon.Panel:Choose(headerIndex("trainers"))
+    addon.Panel:Choose(headerIndex("nearest"))
+    if not state.open.nearest_trainers then addon.Panel:Choose(headerIndex("nearest_trainers")) end
     local idx
     for i, row in ipairs(state.results) do if row.name == "Class Trainer" then idx = i end end
     local row = state.results[idx]

@@ -65,9 +65,34 @@ end
 local sections = build("Alliance")
 local order = {}
 for _, s in ipairs(sections) do order[#order + 1] = s.id end
--- Above them the top picks, always there with pasting coordinates for a tour; no trainers section on Modern (Sections:Build).
--- First the player's saved routes: on a first run, Modern's starters (Data/Modern/Tours.lua, MultiRoute:SavedRoutes).
-check(table.concat(order, ",") == "routes,cities,dungeons,raids,older", "routes, cities, dungeons, raids, older content: " .. table.concat(order, ","))
+-- Above them the top picks, always there with pasting coordinates for a tour. First Nearest: no trainers, banks or
+-- auction houses on Modern, so an innkeeper and a flight master (Sections:Build). Then the player's saved routes: on a
+-- first run, Modern's starters (Data/Modern/Tours.lua, MultiRoute:SavedRoutes).
+check(table.concat(order, ",") == "nearest,routes,cities,dungeons,raids,older",
+    "nearest, routes, cities, dungeons, raids, older content: " .. table.concat(order, ","))
+do
+    local nearest = find(sections, "nearest")
+    local groups, keys = {}, {}
+    for _, child in ipairs(nearest.children) do
+        groups[#groups + 1] = child.id
+        for _, item in ipairs(child.items) do keys[#keys + 1] = item.key end
+    end
+    check(table.concat(groups, ",") == "nearest_vendors,nearest_other" and table.concat(keys, ",") == "inn,flight",
+        "Nearest: Vendors (innkeeper) and Other (flight master): " .. table.concat(groups, ",") .. " / " .. table.concat(keys, ","))
+    local inn = find(nearest.children, "nearest_vendors").items[1]
+    local horde = 0
+    for _, id in ipairs(inn.nodeIDs) do
+        local node = addon.World:GetNode(id)
+        check(node.kind == "inn", "the innkeeper pick goes to inns: " .. id)
+        local s = (node.city and addon.Cities[node.city]) or (node.town and addon.Towns[node.town])
+        if s and s.faction == "Horde" then horde = horde + 1 end
+    end
+    check(#inn.nodeIDs > 100 and horde == 0, "Modern's inns (towns' own, too), none of them Horde: " .. #inn.nodeIDs .. ", " .. horde)
+    local choices = {}
+    for _, c in ipairs(addon.Sections:PickChoices("MAGE", "Alliance")) do choices[c.key] = true end
+    check(choices.inn and choices.flight and not choices.bank and not choices.auction and not choices.class,
+        "the Picker page offers what Modern has: innkeeper, flight master; no bank, auction house or trainers")
+end
 do
     local routes = find(sections, "routes")
     check(#routes.items == #addon.SampleRoutes and routes.items[1].name == addon.SampleRoutes[1].name and routes.untimed,
@@ -80,14 +105,14 @@ do
 end
 check(sections.top and sections.top[#sections.top].action == "paste", "with the paste pick on top")
 
--- During Hallow's End, its routes are a section before the saved ones.
+-- During Hallow's End, its routes are a section before the saved ones (after Nearest, as on Forever).
 do
     local ctx = makeCtx({ faction = "Horde", holidays = { hallows_end = true } })
     local during = addon.Sections:Build(addon.Destinations:Build(ctx), ctx)
     local ids = {}
     for _, s in ipairs(during) do ids[#ids + 1] = s.id end
-    check(table.concat(ids, ","):find("^holiday_routes,routes,") and #find(during, "holiday_routes").items == #addon.HolidayRoutes,
-        "holiday routes come first while the holiday is on: " .. table.concat(ids, ","))
+    check(table.concat(ids, ","):find("^nearest,holiday_routes,routes,") and #find(during, "holiday_routes").items == #addon.HolidayRoutes,
+        "holiday routes come first after Nearest while the holiday is on: " .. table.concat(ids, ","))
     check(find(during, "holiday_routes").items[1].action == "holidayroute" and find(during, "holiday_routes").untimed, "one line each, planned when chosen")
 end
 
