@@ -1395,11 +1395,107 @@ local function mapChromeOverhang(map)
     return overhang
 end
 
+-- Other frames hanging off the map's right edge: another addon's panel docked there (Spoken: Places' Place Story),
+-- its side tab, the game's own tabs. No list of names: whatever is shown against that edge is read off the screen,
+-- as Spoken finds side tabs, and ours docks past the right-most of them rather than over them. Looked for among the
+-- map's children (and its border's and quest log's) and the screen's (an addon's panel can stand on UIParent beside
+-- the map, as Spoken's does under the gamepad UI).
+local EDGE_IN, EDGE_OUT = 16, 40          -- how far a frame's left edge may sit inside / past the map's right edge
+
+-- Each frame is watched once seen, so ours moves when one opens, closes or collapses: every child of the map's own
+-- frames (few, and a tab can show without its parent doing so), and on the screen only those found at the edge.
+local watched = setmetatable({}, { __mode = "k" })
+local reanchorPending = false
+local function reanchorSoon()
+    if reanchorPending or not (C_Timer and C_Timer.After) then return end
+    reanchorPending = true
+    C_Timer.After(0, function()
+        reanchorPending = false
+        if ui and ui.frame:IsShown() then Panel:Reanchor() end
+    end)
+end
+local function watch(f)
+    if watched[f] or not f.HookScript then return end
+    watched[f] = true
+    f:HookScript("OnShow", reanchorSoon)
+    f:HookScript("OnHide", reanchorSoon)
+end
+
+-- In screen units, so frames of different scales compare.
+local function screenRect(f)
+    local left, right, top, bottom = f:GetLeft(), f:GetRight(), f:GetTop(), f:GetBottom()
+    if not (left and right and top and bottom) then return end
+    local s = f:GetEffectiveScale() or 1
+    return left * s, right * s, top * s, bottom * s
+end
+
+-- Whether `f` is placed from ours, however indirectly (an addon docked past us): anchoring to it would be a loop.
+local function hangsFrom(f, target)
+    local seen = {}
+    local function walk(region, depth)
+        if region == target then return true end
+        if not region or depth > 12 or seen[region] or not region.GetNumPoints then return false end
+        seen[region] = true
+        for i = 1, region:GetNumPoints() or 0 do
+            local _, rel = region:GetPoint(i)
+            if rel and walk(rel, depth + 1) then return true end
+        end
+        return walk(region.GetParent and region:GetParent() or nil, depth + 1)
+    end
+    return walk(f, 0)
+end
+
+-- The right-most frame shown against the map's right edge: the frame, and its right edge in screen units.
+local function mapNeighbour(map)
+    local _, mapRight, mapTop, mapBottom = screenRect(map)
+    if not mapRight then return end
+    local best, bestRight
+    local function consider(f, watchAll)
+        if f == ui.frame or type(f) ~= "table" or not f.IsVisible then return end
+        if watchAll then watch(f) end
+        if not f:IsVisible() then return end
+        -- Not our own windows (the navigator may be left beside the map), nor tooltips and menus passing by.
+        local name = f.GetName and f:GetName()
+        if name and name:find("^MapzerothRebuild") then return end
+        if (f.GetObjectType and f:GetObjectType() == "GameTooltip")
+            or (f.GetFrameStrata and f:GetFrameStrata() == "TOOLTIP") then return end
+        local left, right, top, bottom = screenRect(f)
+        -- Against the map's edge (a little gap, or tucked a little under it), level with the map, reaching past it.
+        if left and left >= mapRight - EDGE_IN and left <= mapRight + EDGE_OUT and right > mapRight + 4
+            and top > mapBottom and bottom < mapTop and (not bestRight or right > bestRight)
+            and not hangsFrom(f, ui.frame) then
+            watch(f)
+            best, bestRight = f, right
+        end
+    end
+    for _, parent in ipairs({ map, map.BorderFrame or false, map.MiniBorderFrame or false, QuestMapFrame or false }) do
+        if type(parent) == "table" and parent.GetChildren then
+            for _, child in ipairs({ parent:GetChildren() }) do consider(child, true) end
+        end
+    end
+    for _, child in ipairs({ UIParent:GetChildren() }) do consider(child, false) end
+    return best, bestRight
+end
+
 function Panel:Reanchor()
     if not state.docked or state.detached then return end
     local frame, map = ui.frame, WorldMapFrame
     frame:ClearAllPoints()
     local overhang = mapChromeOverhang(map)
+    local neighbour, neighbourRight = mapNeighbour(map)
+    local scale = frame:GetEffectiveScale() or 1
+    local screenRight = (UIParent:GetRight() or 0) * (UIParent:GetEffectiveScale() or 1)
+    if neighbour then
+        if (screenRight - neighbourRight) / scale >= WIDTH + 4 then
+            frame:SetPoint("TOP", map, "TOP", 0, 0)
+            -- The game refuses an anchor that loops back to us (an addon that started docking past ours the same
+            -- frame): then the map's edge, as with no neighbour.
+            if pcall(frame.SetPoint, frame, "LEFT", neighbour, "RIGHT", 2, 0) then return end
+            frame:ClearAllPoints()
+        else
+            overhang = math.huge                        -- no room past it: inside the map's edge, as below
+        end
+    end
     local room = (UIParent:GetRight() or 0) - (map:GetRight() or 0) - overhang
     if room >= WIDTH + 4 then
         frame:SetPoint("TOPLEFT", map, "TOPRIGHT", 2 + overhang, 0)
@@ -1589,6 +1685,7 @@ function Panel:OnMapShown()
         attachToMap()
     end
     self:Reanchor()
+    reanchorSoon()                                    -- again once other addons have laid out their frames beside it
     ui.frame:SetShown(not state.dockedHidden)
     if not state.dockedHidden then self:ShowContent() end
 end

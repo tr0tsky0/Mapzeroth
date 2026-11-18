@@ -1710,3 +1710,47 @@ do
     addon.Panel:OnWaypointChanged()
     C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
 end
+
+-- Docked beside the map, the panel goes past any other frame hanging off the map's right edge (another addon's panel
+-- docked there, a side tab), found on the screen rather than by name; not past one elsewhere, nor our own windows.
+do
+    local function rect(f, l, r, t, b)
+        f.GetLeft, f.GetRight = function() return l end, function() return r end
+        f.GetTop, f.GetBottom = function() return t end, function() return b end
+        f.GetEffectiveScale = function() return 1 end
+        f.IsVisible = function(self) return self._shown end
+        f.GetNumPoints = function() return 0 end
+    end
+    local map, screen = WorldMapFrame, UIParent
+    local mapShown = map._shown
+    map._shown = true
+    rect(map, 100, 1000, 800, 200)
+    rect(screen, 0, 2400, 1200, 0)
+    local other = mock()            -- another addon's panel, docked against the map's edge
+    rect(other, 1002, 1300, 800, 200)
+    local far = mock()              -- a window off on its own
+    rect(far, 1500, 1800, 800, 200)
+    local nav = mock()              -- our navigator, left beside the map
+    rect(nav, 1001, 1400, 700, 600)
+    nav.GetName = function() return "MapzerothRebuildNavigator" end
+    map.GetChildren = function() return other end
+    screen.GetChildren = function() return far, nav end
+    local frame = addon.Panel:GetFrame()
+    frame.GetEffectiveScale = function() return 1 end
+    local anchors = {}
+    local realSetPoint = frame.SetPoint
+    frame.SetPoint = function(self, p, rel) anchors[p] = rel end
+    addon.Panel:Reanchor()
+    check(anchors.LEFT == other and anchors.TOP == map, "docks past another addon's panel at the map's edge")
+    other._shown = false
+    anchors = {}
+    addon.Panel:Reanchor()
+    check(anchors.TOPLEFT == map and not anchors.LEFT, "back against the map when it closes (the far window and our navigator don't count)")
+    other._shown = true
+    frame.SetPoint = realSetPoint
+    map.GetChildren, screen.GetChildren = nil, nil
+    for _, f in ipairs({ map, screen, frame }) do
+        f.GetLeft, f.GetRight, f.GetTop, f.GetBottom, f.GetEffectiveScale, f.IsVisible, f.GetNumPoints = nil, nil, nil, nil, nil, nil, nil
+    end
+    map._shown = mapShown
+end
