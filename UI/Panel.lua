@@ -119,10 +119,16 @@ local function build(parent)
     ui.hint = Theme:Text(ui.search, "dim")
     ui.hint:SetPoint("LEFT", 10, 0)
     ui.hint:SetText(L["SEARCH_HINT"])
+    -- The client also fires OnTextChanged when the box is first shown, with the text unchanged: that one must not
+    -- query, or a route asked for as the window first opens (API, quest arrow, waypoint prompt) is replaced by the list.
+    local lastText = ""
     local function textChanged(self)
-        ui.hint:SetShown(self:GetText() == "")
-        ui.clear:SetShown(self:GetText() ~= "")
-        Panel:Query(self:GetText())
+        local text = self:GetText()
+        ui.hint:SetShown(text == "")
+        ui.clear:SetShown(text ~= "")
+        if text == lastText and state.view == "route" then return end
+        lastText = text
+        Panel:Query(text)
     end
     -- An X at the right end to empty the box (shown only when there is something to clear).
     ui.clear = Theme:Button(ui.search, "x", 22, 22)
