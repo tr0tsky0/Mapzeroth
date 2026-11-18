@@ -271,11 +271,13 @@ local function isSteep(s, x, y)
     return c < row[2 * lo]
 end
 
--- Yards of the straight line from (ax, ay) to (bx, by) over steep ground, sampled every half cell.
+-- Yards of the straight line from (ax, ay) to (bx, by) over steep ground: sampled every cell, and on a long line at
+-- most STEEP_SAMPLES times (a thin cliff band can slip between them, a mountain can't).
+local STEEP_SAMPLES = 100
 local function steepYards(s, ax, ay, bx, by)
     if not s then return 0 end
     local len = math.sqrt((bx - ax) ^ 2 + (by - ay) ^ 2)
-    local n = math.ceil(len / (s.cell / 2))
+    local n = math.min(math.ceil(len / s.cell), STEEP_SAMPLES)
     if n < 1 then return 0 end
     local hits = 0
     local dx, dy = (bx - ax) / n, (by - ay) / n

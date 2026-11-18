@@ -6,9 +6,9 @@
 
 How: each root ADT's MCNK/MCVT outer heights (9x9 per chunk, ~4.17 yd apart) -> each quad's slope, the steepest of
 its edges and diagonals -> steep where over LIMIT degrees -> 2x2 quads to one cell (~8.33 yd, 64 per tile) ->
-closing (fills one-cell gaps in a cliff band) -> enclosed flat pockets up to FILL cells filled (a hilltop ringed by
-cliffs can't be reached) -> pieces under MIN_CELLS dropped (rocks, banks) -> a corridor along every road in
-Roads.lua cleared (a road is walkable whatever its banks).
+optional closing (CLOSE; off: at one cell it sealed trails up gullies, as to Wetlands' Excavation Site) -> enclosed
+flat pockets up to FILL cells filled (a hilltop ringed by cliffs can't be reached) -> pieces under MIN_CELLS dropped
+(rocks, banks) -> a corridor along every road in Roads.lua cleared (a road is walkable whatever its banks).
 
 Output: per continent { r0 = first row, "row", "row", ... }: row r covers world X from 32*TILE - r*CELL down by one
 cell (southward); column c likewise world Y from 32*TILE - c*CELL (eastward). A row string is its steep runs as
@@ -40,9 +40,9 @@ CPT = 64                # cells per tile side
 CELL = TILE / CPT       # ~8.33 yd
 ORIGIN = 32 * TILE
 LIMIT = 50              # degrees: steeper ground can't be walked up
-CLOSE = 1               # cells
-FILL = 200              # cells (~14,000 sq yd): enclosed pockets up to this are filled
-MIN_CELLS = 4
+CLOSE = 0               # cells
+FILL = 60               # cells (~4,200 sq yd): enclosed pockets up to this are filled (200 also sealed small valleys)
+MIN_CELLS = 10          # steep pieces smaller than this go (4-20 made little difference to size or routes)
 ROAD_CLEAR = 6.0        # yd either side of a road's centre-line
 
 CONTINENTS = [          # (WDT file id, instance map id, name)
