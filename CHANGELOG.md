@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **For addon authors: route to points from your addon.** `MapzerothAPI.RouteTo(points, name, options)` opens Mapzeroth with a route through one or more spots (`{ mapID = 1453, x = 0.45, y = 0.62, name = "Copper Vein" }`, x and y from 0 to 1), visiting several in the quickest order. The player presses Start to begin, or pass `{ start = true }` to start right away. It returns true, or false and the reason. Check `if MapzerothAPI then` first; no dependency needed.
+
 ## 1.3.0 (Forever) and 2.0.9 (Retail)
 
 ### Added

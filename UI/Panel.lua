@@ -1666,6 +1666,16 @@ function Panel:RouteToQuest(questID)
     return true
 end
 
+-- Another addon's points (MapzerothAPI.RouteTo, API.lua): the window comes up with the route through them, in the
+-- quickest order, as for pasted /way lines. start: the trip starts once it is planned; otherwise it waits for Start.
+function Panel:RouteToPoints(name, points, start)
+    if not (ui and ui.frame:IsShown()) then self:Toggle() end
+    local entry = addon.MultiRoute:Entry(name, points)
+    self:ShowRoute(entry, start and function(plan)
+        if plan then Panel:StartRoute() end
+    end or nil)
+end
+
 -- The quest log changed (an objective done can move the quest's spot): only looked at while the window is up, since
 -- opening it reads everything afresh.
 function Panel:OnQuestLogUpdate()

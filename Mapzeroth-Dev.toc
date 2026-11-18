@@ -124,5 +124,6 @@ UI\WaypointPrompt.lua
 UI\OptionsPanel.lua
 UI\QuestArrow.lua
 UI\DaylightPlugin.lua
+API.lua
 
 Core.lua
