@@ -121,6 +121,8 @@ local function stubRegion()
     function r:SetRotation(a) self.rotation = a end
     function r:SetVertexColor(...) self.color = { ... } end
     function r:CreateTexture() return stubRegion() end
+    function r:IsMouseOver() return self.over == true end
+    function r:HookScript(k, fn) self.hooks = self.hooks or {}; self.hooks[k] = fn end
     return r
 end
 local realCreateFrame = CreateFrame
@@ -131,9 +133,21 @@ CreateFrame = function(kind, name, parent)
     return b
 end
 local line = { GetFont = function() return "font", 12 end }
-local rowA = { isRow = true }
+local rowA = stubRegion()
+rowA.isRow = true
 paintRow(rowA, { objectives = { line } }, { questID = 42 })
 local arrow = made[1]
+-- Lit while the mouse is on the row, like the quest icon; moving onto the arrow keeps it lit.
+local dim = arrow.alpha
+check(dim < 1, "dim until the mouse is on its quest")
+rowA.over = true; rowA.hooks.OnEnter()
+check(arrow.alpha == 1, "the mouse on the row lights it")
+arrow.over = true; rowA.hooks.OnLeave(); arrow.scripts.OnEnter(arrow)
+check(arrow.alpha == 1, "and it stays lit going from the row onto the arrow")
+arrow.over = false; arrow.scripts.OnLeave(arrow)
+check(arrow.alpha == 1, "and back onto the row")
+rowA.over = false; rowA.hooks.OnLeave()
+check(arrow.alpha == dim, "off the row it dims again")
 check(#made == 1 and arrow.kind == "Button" and arrow.parent == holders[rowA], "the arrow goes on the row's holder")
 check(arrow.questID == 42 and arrow.shown and arrow.points[1][2] == line and arrow.points[1][3] == "TOPLEFT",
       "beside the first line below the title, for that row's quest")

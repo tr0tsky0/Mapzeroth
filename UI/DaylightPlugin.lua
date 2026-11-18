@@ -126,7 +126,7 @@ local QUEST_ARROW = 12              -- the arrow's size, in pixels: about the qu
 local QUEST_ARROW_HIT = 16          -- the button around it, a little bigger to hit
 local QUEST_ARROW_GAP = 17          -- the arrow's centre, left of where the line's text starts: under the quest icon
                                     -- (the tracker's lines start 24 px in, its icon is 13 wide)
-local QUEST_ARROW_DIM = 0.55        -- its alpha until the mouse is on it
+local QUEST_ARROW_DIM = 0.55        -- its alpha until the mouse is on its quest, as the quest icon lights then
 local ARROW_TEXTURE = "Interface\\AddOns\\" .. addonName .. "\\Media\\Arrow"
 
 local arrows = setmetatable({}, { __mode = "k" })    -- quest row -> our arrow button on it
@@ -138,8 +138,16 @@ function Plugin.RouteQuest(questID)
     if UIErrorsFrame then UIErrorsFrame:AddMessage(L["QUEST_NO_SPOT"], 1, 0.1, 0.1) end
 end
 
-local function makeArrow(holder)
+-- Lit while the mouse is anywhere on its quest's row (the arrow included), dim otherwise. Moving between the row and
+-- the arrow leaves one and enters the other, but the mouse is still over the row, so it stays lit.
+local function light(b)
+    local over = b.row:IsMouseOver() or b:IsMouseOver()
+    b:SetAlpha(over and 1 or QUEST_ARROW_DIM)
+end
+
+local function makeArrow(row, holder)
     local b = CreateFrame("Button", nil, holder)
+    b.row = row
     b:SetSize(QUEST_ARROW_HIT, QUEST_ARROW_HIT)
     b.tex = b:CreateTexture(nil, "OVERLAY")
     b.tex:SetSize(QUEST_ARROW, QUEST_ARROW)
@@ -150,7 +158,7 @@ local function makeArrow(holder)
     b:RegisterForClicks("LeftButtonUp")
     b:SetScript("OnClick", function(self) Plugin.RouteQuest(self.questID) end)
     b:SetScript("OnEnter", function(self)
-        self:SetAlpha(1)
+        light(self)
         if not GameTooltip then return end
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:SetText(L["PANEL_TITLE"])
@@ -158,9 +166,12 @@ local function makeArrow(holder)
         GameTooltip:Show()
     end)
     b:SetScript("OnLeave", function(self)
-        self:SetAlpha(QUEST_ARROW_DIM)
+        light(self)
         if GameTooltip then GameTooltip:Hide() end
     end)
+    -- The row's own hover, added after Daylight UI's (HookScript keeps theirs; they set these once per row).
+    row:HookScript("OnEnter", function() light(b) end)
+    row:HookScript("OnLeave", function() light(b) end)
     return b
 end
 
@@ -177,7 +188,7 @@ function Plugin.PaintQuestRow(row, parts, info)
     if not b then
         local holder = API.Attach(row)
         if not holder then return end
-        b = makeArrow(holder)
+        b = makeArrow(row, holder)
         arrows[row] = b
     end
     b.questID = questID
