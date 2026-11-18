@@ -92,15 +92,36 @@ blocks[1].rightEdgeFrame = item
 QuestObjectiveTracker:EndLayout()
 p = arrow.points[1]
 check(p[2] == item and p[3] == "BOTTOMRIGHT" and p[5] == -2, "under the quest's item button")
-QuestOverlayUI = { ShowsTrackerButton = function(_, id) return id == 101 end }
+-- Spoken_Quests keeps its quest part on the VoiceOver table (its files run in that environment), not as a global.
+QuestOverlayUI = { ShowsTrackerButton = function() return true end }
 QuestObjectiveTracker:EndLayout()
+check(arrow.points[1][4] == 0, "a global QuestOverlayUI isn't Spoken's: Spoken's is on VoiceOver")
+QuestOverlayUI = nil
+local packsLoaded = false
+local overlay = { ShowsTrackerButton = function(_, id) return packsLoaded and id == 101 end }
+local sweeps = 0
+overlay.UpdateTrackerButtons = function() sweeps = sweeps + 1 end
+VoiceOver = { QuestOverlayUI = overlay }
+local callbacks = {}
+Spoken = { RegisterCallback = function(_, event, fn) callbacks[event] = fn end }
+QA.FollowSpoken()
+check(callbacks.VOICE_PACKS_LOADED and callbacks.PART_SWITCHED, "it follows Spoken's packs loading and its part switching")
+check(arrow.points[1][4] == 0, "before Spoken's packs load, Spoken shows no box: ours takes the place")
+packsLoaded = true
+callbacks.VOICE_PACKS_LOADED()
 p = arrow.points[1]
-check(p[2] == item and p[4] == -(QA.SPOKEN + QA.SPOKEN_GAP), "left of Spoken's box when it has one for the quest")
-check(made[2].points[1][4] == 0, "in its place when it has none")
-QuestOverlayUI.ShowsTrackerButton = function() error("Spoken changed") end
+check(p[2] == item and p[4] == -(QA.SPOKEN + QA.SPOKEN_GAP),
+      "once they load, without the tracker laying out again, ours moves left of Spoken's box")
+check(made[2].points[1][4] == 0, "a quest Spoken has no box for keeps ours in the place")
+packsLoaded = false
+overlay.UpdateTrackerButtons()
+check(sweeps == 1 and arrow.points[1][4] == 0, "Spoken's own redraw (its settings) moves ours too, after its own")
+packsLoaded = true
+QuestObjectiveTracker:EndLayout()
+overlay.ShowsTrackerButton = function() error("Spoken changed") end
 QuestObjectiveTracker:EndLayout()
 check(arrow.points[1][4] == 0, "a Spoken that errors is taken as no box")
-QuestOverlayUI = nil
+VoiceOver, Spoken = nil, nil
 
 -- The block is reused for another quest, or stops being used.
 blocks[1].id = 205

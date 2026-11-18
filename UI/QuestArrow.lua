@@ -132,11 +132,19 @@ QuestArrow.MODULES = { "QuestObjectiveTracker", "CampaignQuestObjectiveTracker" 
 local blockArrows = setmetatable({}, { __mode = "k" })    -- a quest's block -> our arrow on it
 local hooked = {}                                         -- module -> true once hooked
 
+-- Spoken_Quests' quest part. Its files run in their own environment (setfenv to the global VoiceOver), so its
+-- QuestOverlayUI is on that table, not a global.
+local function spokenUI()
+    local vo = _G.VoiceOver
+    local ui = type(vo) == "table" and vo.QuestOverlayUI or nil
+    return type(ui) == "table" and ui or nil
+end
+
 -- Whether Spoken (Spoken_Quests) puts its Play box on this quest in the tracker: it does for a quest it has a voice
 -- line for, while its tracker button is on. Its own answer, read safely; no Spoken, no box.
 function QuestArrow.SpokenShows(questID)
-    local ui = _G.QuestOverlayUI
-    if type(ui) ~= "table" or type(ui.ShowsTrackerButton) ~= "function" then return false end
+    local ui = spokenUI()
+    if not ui or type(ui.ShowsTrackerButton) ~= "function" then return false end
     local ok, shows = pcall(ui.ShowsTrackerButton, ui, questID)
     return ok and shows == true
 end
@@ -184,8 +192,35 @@ function QuestArrow.HookTracker()
     end
 end
 
+-- Every arrow placed again, outside a layout of the tracker.
+function QuestArrow.Refresh()
+    for module in pairs(hooked) do onLayout(module) end
+end
+
+-- Spoken puts its boxes on or takes them off without the tracker laying out again: when its voice packs load after
+-- login, when its quest part is switched, when its settings change. Ours move with them. It loads after us (its name
+-- sorts later), so this waits for login.
+function QuestArrow.FollowSpoken()
+    local S = _G.Spoken
+    if type(S) == "table" and type(S.RegisterCallback) == "function" then
+        pcall(S.RegisterCallback, S, "VOICE_PACKS_LOADED", QuestArrow.Refresh)
+        pcall(S.RegisterCallback, S, "PART_SWITCHED", QuestArrow.Refresh)
+    end
+    local ui = spokenUI()
+    if ui and type(ui.UpdateTrackerButtons) == "function" then
+        hooksecurefunc(ui, "UpdateTrackerButtons", QuestArrow.Refresh)
+    end
+    QuestArrow.Refresh()
+end
+
 if EventUtil and EventUtil.ContinueOnAddOnLoaded then
     EventUtil.ContinueOnAddOnLoaded("Blizzard_ObjectiveTracker", QuestArrow.HookTracker)
 else
     QuestArrow.HookTracker()
 end
+local login = CreateFrame("Frame")
+login:RegisterEvent("PLAYER_LOGIN")
+login:SetScript("OnEvent", function(self)
+    self:UnregisterEvent("PLAYER_LOGIN")
+    QuestArrow.FollowSpoken()
+end)
