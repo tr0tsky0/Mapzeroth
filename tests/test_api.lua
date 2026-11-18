@@ -26,6 +26,8 @@ ok = MapzerothAPI.RouteTo({ { mapID = 1453, x = 0.4, y = 0.3 }, { mapID = 1455, 
 check(ok and calls[2].name == "Ore run" and #calls[2].points == 2 and calls[2].start, "a list, its name and start")
 MapzerothAPI.RouteTo({ { mapID = 1453, x = 0.4, y = 0.3 }, { mapID = 1455, x = 0.5, y = 0.5 } })
 check(calls[3].name == addon.L["TOUR_STOPS"]:format(2), "unnamed list: \"2 stops\"")
+MapzerothAPI.RouteTo({ mapID = 1453, x = 0.4, y = 0.3 }, "Test")
+check(calls[4].points[1].name == "Test", "an unnamed single point's stop takes the route's name")
 
 -- The panel side: the window comes up, the tour's entry is shown, and the trip starts only with start.
 Panel.RouteToPoints = realRoute

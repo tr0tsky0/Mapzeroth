@@ -37,6 +37,7 @@ function API.RouteTo(points, name, options)
     if type(name) ~= "string" or name == "" then
         name = #list == 1 and (list[1].name or L["ROUTE_STOP_UNNAMED"]:format(1)) or L["TOUR_STOPS"]:format(#list)
     end
+    if #list == 1 and not list[1].name then list[1].name = name end     -- its stop reads as the route, not "Stop 1"
     local start = type(options) == "table" and options.start
     addon.Panel:RouteToPoints(name, list, start)
     return true

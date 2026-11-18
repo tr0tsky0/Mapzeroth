@@ -938,7 +938,7 @@ function Panel:DisplayPlan(entry, plan)
         if plan.back then
             total = L["ROUTE_ROUND_TOTAL"]:format(Journey:FormatTime(plan.cost), Journey:FormatTime(plan.back.cost),
                 Journey:FormatTime(plan.cost + plan.back.cost))
-        else
+        elseif #legs > 1 then                         -- a tour of one stop (another addon's single point) keeps the plain total
             total = L["ROUTE_TOUR_TOTAL"]:format(#legs, Journey:FormatTime(plan.cost))
         end
         plan.shown, plan.rowOf = {}, {}
