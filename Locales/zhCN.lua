@@ -192,6 +192,7 @@ addon:RegisterLocale("zhCN", {
     QUEST_NAME        = "你的任务",
     QUEST_ROUTE_TIP   = "点击：规划前往此任务的路线",
     QUEST_NO_SPOT     = "此任务没有可前往的地点。",
+    QUEST_ROUTE_MENU  = "使用 Mapzeroth 规划路线",
     PICK_CLASS        = "职业训练师",
     PICK_PET          = "宠物训练师",
     PICK_DEMON        = "恶魔训练师",

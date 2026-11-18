@@ -5,6 +5,9 @@
 ### Added
 - **For addon authors: route to points from your addon.** `MapzerothAPI.RouteTo(points, name, options)` opens Mapzeroth with a route through one or more spots (`{ mapID = 1453, x = 0.45, y = 0.62, name = "Copper Vein" }`, x and y from 0 to 1), visiting several in the quickest order. The player presses Start to begin, or pass `{ start = true }` to start right away. It returns true, or false and the reason. Check `if MapzerothAPI then` first; no dependency needed.
 
+### Changed
+- **Forever: Daylight UI's quest tracker routes from the quest's right-click menu.** The arrow under each quest's icon is gone; right-click a quest in Daylight UI's tracker or quest journal and choose **Route with Mapzeroth** instead. It's listed only for quests with a spot to route to. Update Daylight UI to 1.9.4.1 or later.
+
 ## 1.3.0 (Forever) and 2.0.9 (Retail)
 
 ### Added

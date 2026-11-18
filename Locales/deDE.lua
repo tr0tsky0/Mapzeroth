@@ -194,6 +194,7 @@ addon:RegisterLocale("deDE", {
     QUEST_NAME        = "Eure Quest",
     QUEST_ROUTE_TIP   = "Klick: Route zu dieser Quest",
     QUEST_NO_SPOT     = "Diese Quest hat keinen Ort, zu dem eine Route führt.",
+    QUEST_ROUTE_MENU  = "Route mit Mapzeroth",
     PICK_CLASS        = "Klassenlehrer",
     PICK_PET          = "Tierausbilder",
     PICK_DEMON        = "Dämonenausbilder",

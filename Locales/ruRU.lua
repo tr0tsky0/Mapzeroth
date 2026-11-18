@@ -194,6 +194,7 @@ addon:RegisterLocale("ruRU", {
     QUEST_NAME        = "Ваше задание",
     QUEST_ROUTE_TIP   = "Щелчок: маршрут к этому заданию",
     QUEST_NO_SPOT     = "У этого задания нет места, к которому можно проложить маршрут.",
+    QUEST_ROUTE_MENU  = "Маршрут через Mapzeroth",
     PICK_CLASS        = "Учитель класса",
     PICK_PET          = "Учитель питомцев",
     PICK_DEMON        = "Учитель демонов",

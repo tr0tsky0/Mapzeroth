@@ -70,7 +70,7 @@ local p = arrow.points[1]
 check(p[1] == "TOPRIGHT" and p[2] == blocks[1] and p[3] == "TOPRIGHT" and p[4] == 0 and p[5] == 0,
       "at the title's right end, where Spoken's box would be")
 check(arrow.level == blocks[1].level + 3, "drawn over the block, as Spoken's box is")
-check(arrow.tex.rotation < 0 and arrow.tex.texture:find("Media\\Arrow$") and arrow.tex.color[1] == 1
+check(arrow.w == QA.BOX and arrow.tex.rotation < 0 and arrow.tex.texture:find("Media\\Arrow$") and arrow.tex.color[1] == 1
       and arrow.tex.color[2] == QA.YELLOW[2], "our arrow, tilted, in the tracker's yellow")
 local back, edges = nil, 0
 for _, t in ipairs(arrow.textures) do

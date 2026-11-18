@@ -5,7 +5,7 @@ local addonName, addon = ...
 --   * a step that casts a spell or uses an item lights the action bar buttons holding it (API.Glow, 1.5);
 --   * a data text, "Mapzeroth: Route", for the strip under the minimap or the data bar: the step the trip is on and the
 --     time left, the steps to come in its tooltip, a click shows or hides the panel (AddDataText, 1.6);
---   * a route arrow on each quest in its quest tracker: a click routes there (Paint on "questrow" and Attach, 1.3).
+--   * "Route with Mapzeroth" in the right-click menu of a quest: a click routes there (AddQuestMenu, 1.11).
 -- The navigator tells it of each update of the trip (OnTrip).
 
 local API = DaylightUI and DaylightUI.API
@@ -119,36 +119,21 @@ local function redrawText()
 end
 
 -- ---------------------------------------------------------------------------------------
--- The quest tracker: a route arrow on each quest (UI/QuestArrow.lua), on its first line below the title, lit while the
--- mouse is anywhere on the quest's row as Daylight UI lights the quest icon then, in the player's Daylight accent.
+-- The quest menu: "Route with Mapzeroth" in the right-click menu of a quest, in the tracker and the quest journal, for
+-- a quest with a spot to route to. A click routes there and starts the trip.
 
-local arrows = setmetatable({}, { __mode = "k" })    -- quest row -> our arrow button on it
-
--- Daylight UI's paint of a quest row (each layout of the tracker). A row with no line below its title (a folded
--- quest) has no arrow.
-function Plugin.PaintQuestRow(row, parts, info)
-    local line = parts and parts.objectives and parts.objectives[1]
-    local questID = info and info.questID
-    local b = arrows[row]
-    if not (line and type(questID) == "number") then
-        if b then b:Hide() end
-        return
-    end
-    if not b then
-        local holder = API.Attach(row)
-        if not holder then return end
-        b = addon.QuestArrow.Make(holder, row)
-        arrows[row] = b
-    end
-    local _, size = line:GetFont()
-    local r, g, bl
-    if type(API.Accent) == "function" then r, g, bl = API.Accent() end
-    addon.QuestArrow.Place(b, questID, "CENTER", line, "TOPLEFT", -addon.QuestArrow.GAP,
-        -(tonumber(size) or addon.QuestArrow.SIZE) / 2, r, g, bl)
+-- Whether the menu shows our row for this quest (Daylight UI's quest facts).
+function Plugin.QuestHasRoute(quest)
+    local questID = quest and quest.questID
+    return type(questID) == "number" and addon:GetQuestTarget(questID) ~= nil
 end
 
-if type(my.Paint) == "function" and type(API.Attach) == "function" then
-    my.Paint("questrow", Plugin.PaintQuestRow)
+if type(my.AddQuestMenu) == "function" then
+    my.AddQuestMenu("route", {
+        label = L["QUEST_ROUTE_MENU"],
+        show = Plugin.QuestHasRoute,
+        onClick = function(quest) addon.QuestArrow.Route(quest and quest.questID) end,
+    })
 end
 
 -- ---------------------------------------------------------------------------------------

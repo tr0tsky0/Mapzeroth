@@ -193,6 +193,7 @@ addon:RegisterLocale("frFR", {
     QUEST_NAME        = "Votre quête",
     QUEST_ROUTE_TIP   = "Clic : itinéraire vers cette quête",
     QUEST_NO_SPOT     = "Cette quête n'a aucun lieu vers lequel tracer un itinéraire.",
+    QUEST_ROUTE_MENU  = "Itinéraire avec Mapzeroth",
     PICK_CLASS        = "Entraîneur de classe",
     PICK_PET          = "Dresseur de familiers",
     PICK_DEMON        = "Dresseur de démons",

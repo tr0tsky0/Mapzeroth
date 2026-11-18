@@ -192,6 +192,7 @@ addon:RegisterLocale("ptBR", {
     QUEST_NAME        = "Sua missão",
     QUEST_ROUTE_TIP   = "Clique: rota até esta missão",
     QUEST_NO_SPOT     = "Esta missão não tem um local para traçar a rota.",
+    QUEST_ROUTE_MENU  = "Rota com Mapzeroth",
     PICK_CLASS        = "Instrutor de classe",
     PICK_PET          = "Instrutor de mascotes",
     PICK_DEMON        = "Instrutor de demônios",

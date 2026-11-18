@@ -1,12 +1,12 @@
 -- The Daylight UI plugin, with a stand-in for DaylightUI.API: nothing without DaylightUI; with it, a step that casts a
 -- spell or uses an item lights the bar buttons holding it (and only those, and puts them out after), and the "Route"
--- data text says the step and time left, redrawn only when that changes.
+-- data text says the step and time left, redrawn only when that changes; quests with a spot get "Route with Mapzeroth"
+-- in their menu.
 
 check(addon.DaylightPlugin == nil, "without DaylightUI there is no plugin")
 
 local slots = {}                    -- button -> what GetActionInfo would say
-local glows, dataTexts, redraws, registered, painters = {}, {}, 0, nil, {}
-local holders = {}                  -- quest row -> its API.Attach holder
+local glows, dataTexts, redraws, registered, questMenus = {}, {}, 0, nil, {}
 local function button(kind, id) local b = {}; slots[b] = { type = kind, id = id, empty = kind == nil }; return b end
 local hearth, teleport, macro, empty = button("item", 6948), button("spell", 3561), button("macro", 6948), button(nil)
 local hearth2 = button("item", 6948)
@@ -14,20 +14,14 @@ local hearth2 = button("item", 6948)
 DaylightUI = {
     RegisterPlugin = function(self, name, spec) registered = { name = name, spec = spec } end,
     API = {
-        major = 1, minor = 9,
+        major = 1, minor = 11,
         For = function(name)
             return {
                 AddDataText = function(key, spec) dataTexts[name .. ":" .. key] = spec; return true end,
                 UpdateDataText = function() redraws = redraws + 1 end,
-                Paint = function(kind, fn) painters[kind] = fn; return true end,
+                AddQuestMenu = function(key, spec) questMenus[name .. ":" .. key] = spec; return true end,
             }
         end,
-        Attach = function(f)
-            if not f.isRow then return nil end
-            holders[f] = holders[f] or { isHolder = true }
-            return holders[f]
-        end,
-        Accent = function() return 0.6, 0.4, 0.9 end,
         Frames = function(kind)
             local list = {}
             if kind == "actionbutton" then for b in pairs(slots) do list[#list + 1] = b end end
@@ -103,75 +97,26 @@ tip.Hint = function(t) tip.hint = t end
 route.tooltip(tip)
 check(tip.lines[1]:find("^Walk to the inn|") and #tip.lines == 4 and tip.hint, "the tooltip has the steps from here on")
 
--- The quest tracker's route arrow: a button on each quest row's holder, beside its first line below the title.
-local paintRow = painters.questrow
-check(paintRow == Plugin.PaintQuestRow, "it paints the quest tracker's rows")
-local made = {}
-local function stubRegion()
-    local r = { shown = true, scripts = {}, points = {} }
-    function r:SetSize(w, h) self.w, self.h = w, h end
-    function r:SetPoint(...) self.points[#self.points + 1] = { ... } end
-    function r:ClearAllPoints() self.points = {} end
-    function r:SetScript(k, fn) self.scripts[k] = fn end
-    function r:SetAlpha(a) self.alpha = a end
-    function r:Show() self.shown = true end
-    function r:Hide() self.shown = false end
-    function r:RegisterForClicks() end
-    function r:SetTexture(t) self.texture = t end
-    function r:SetRotation(a) self.rotation = a end
-    function r:SetVertexColor(...) self.color = { ... } end
-    function r:CreateTexture() return stubRegion() end
-    function r:IsMouseOver() return self.over == true end
-    function r:HookScript(k, fn) self.hooks = self.hooks or {}; self.hooks[k] = fn end
-    return r
-end
-local realCreateFrame = CreateFrame
-CreateFrame = function(kind, name, parent)
-    local b = stubRegion()
-    b.kind, b.parent = kind, parent
-    made[#made + 1] = b
-    return b
-end
-local line = { GetFont = function() return "font", 12 end }
-local rowA = stubRegion()
-rowA.isRow = true
-paintRow(rowA, { objectives = { line } }, { questID = 42 })
-local arrow = made[1]
--- Lit while the mouse is on the row, like the quest icon; moving onto the arrow keeps it lit.
-local dim = arrow.alpha
-check(dim < 1, "dim until the mouse is on its quest")
-rowA.over = true; rowA.hooks.OnEnter()
-check(arrow.alpha == 1, "the mouse on the row lights it")
-arrow.over = true; rowA.hooks.OnLeave(); arrow.scripts.OnEnter(arrow)
-check(arrow.alpha == 1, "and it stays lit going from the row onto the arrow")
-arrow.over = false; arrow.scripts.OnLeave(arrow)
-check(arrow.alpha == 1, "and back onto the row")
-rowA.over = false; rowA.hooks.OnLeave()
-check(arrow.alpha == dim, "off the row it dims again")
-check(#made == 1 and arrow.kind == "Button" and arrow.parent == holders[rowA], "the arrow goes on the row's holder")
-check(arrow.questID == 42 and arrow.shown and arrow.points[1][2] == line and arrow.points[1][3] == "TOPLEFT",
-      "beside the first line below the title, for that row's quest")
-check(arrow.tex.texture:find("Media\\Arrow$") and arrow.tex.rotation < 0 and arrow.tex.color[1] == 0.6,
-      "our arrow, tilted, in the Daylight accent")
-paintRow(rowA, { objectives = { line } }, { questID = 43 })
-check(#made == 1 and arrow.questID == 43, "a row reused for another quest keeps its arrow, now for that quest")
-paintRow(rowA, { objectives = {} }, { questID = 43 })
-check(not arrow.shown, "a folded quest (no line below its title) has none")
-paintRow({}, { objectives = { line } }, { questID = 44 })
-check(#made == 1, "a frame Daylight UI won't attach to gets nothing")
-
--- A click routes to the quest; one with no spot says so.
+-- The quest menu row: "Route with Mapzeroth" for a quest with a spot to route to; a click routes there.
+local row = questMenus["Mapzeroth:route"]
+check(row and row.label == addon.L["QUEST_ROUTE_MENU"] and row.show == Plugin.QuestHasRoute and row.onClick,
+      "it adds Route with Mapzeroth to the quest menu")
+local realTarget = addon.GetQuestTarget
+addon.GetQuestTarget = function(_, id) if id == 42 then return { id = 42 } end end
+check(row.show({ questID = 42, title = "A quest", state = "active" }), "shown for a quest with a spot")
+check(not row.show({ questID = 7 }), "left out for a quest with no spot")
+check(not row.show({}), "left out without a quest id")
+addon.GetQuestTarget = realTarget
 local routed, said
 addon.Panel = addon.Panel or {}
 local realRouteToQuest = addon.Panel.RouteToQuest
 addon.Panel.RouteToQuest = function(_, id) routed = id; return id ~= 7 end
 UIErrorsFrame = { AddMessage = function(_, text) said = text end }
-paintRow(rowA, { objectives = { line } }, { questID = 43 })
-arrow.scripts.OnClick(arrow)
-check(routed == 43 and said == nil, "a click routes to its quest")
+row.onClick({ questID = 42 })
+check(routed == 42 and said == nil, "a click routes to its quest")
 addon.QuestArrow.Route(7)
 check(said == addon.L["QUEST_NO_SPOT"], "a quest with no spot says why nothing happened")
-addon.Panel.RouteToQuest, UIErrorsFrame, CreateFrame = realRouteToQuest, nil, realCreateFrame
+addon.Panel.RouteToQuest, UIErrorsFrame = realRouteToQuest, nil
 
 model = { finished = true, total = 4 }
 check(select(2, Plugin.RouteText()) == addon.L["NAV_ARRIVED"], "at the end it says so")

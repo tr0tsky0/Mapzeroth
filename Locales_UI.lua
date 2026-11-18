@@ -210,6 +210,7 @@ addon:RegisterLocale("enUS", {
     QUEST_NAME        = "Your quest",
     QUEST_ROUTE_TIP   = "Click: route to this quest",
     QUEST_NO_SPOT     = "This quest has no spot to route to.",
+    QUEST_ROUTE_MENU  = "Route with Mapzeroth",
     PICK_CLASS        = "Class Trainer",
     PICK_PET          = "Pet Trainer",
     PICK_DEMON        = "Demon Trainer",

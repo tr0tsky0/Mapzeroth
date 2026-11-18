@@ -1,13 +1,11 @@
 local addonName, addon = ...
 
--- A route arrow on each quest in a quest tracker: Mapzeroth's own arrow, tilted to the upper right (the usual
--- "navigate"). A click routes to the quest and starts the trip; it is dim until the mouse is on its quest, as the
--- tracker lights the quest then.
---   * Daylight UI's tracker (UI/DaylightPlugin.lua): the plain arrow under the quest's icon, beside its first line
---     below the title, where that tracker leaves room.
---   * The game's own tracker (below): the arrow in a box at the title's right end, the look of Spoken's Play box there
---     (the quest log's checkbox: a thin yellow outline on black), left of Spoken's box when it has one for the quest,
---     else in its place. The left side has no room: the quest's map pin is big and glows on the quest you follow.
+-- A route arrow on each quest in the game's own quest tracker: Mapzeroth's own arrow, tilted to the upper right (the
+-- usual "navigate"), in a box at the title's right end, the look of Spoken's Play box there (the quest log's checkbox:
+-- a thin yellow outline on black), left of Spoken's box when it has one for the quest, else in its place. The left side
+-- has no room: the quest's map pin is big and glows on the quest you follow. A click routes to the quest and starts the
+-- trip; the arrow is a little dim until the mouse is on the quest's title, as the tracker lights the title then.
+-- (Daylight UI's tracker has "Route with Mapzeroth" in its quest menu instead: UI/DaylightPlugin.lua.)
 --
 -- The game's tracker is only hooked after the fact (hooksecurefunc, HookScript) and nothing of ours is written on its
 -- frames: the arrows are kept in our own table, so its code never reads anything of ours. No room is made for the
@@ -19,11 +17,9 @@ local L = addon.L
 local QuestArrow = {}
 addon.QuestArrow = QuestArrow
 
--- The two looks. size: the button; glyph: the arrow in it; dim: the arrow's alpha until the mouse is on its quest.
-QuestArrow.PLAIN = { size = 16, glyph = 12, dim = 0.55 }
-QuestArrow.BOX = { size = 14, glyph = 10, dim = 0.95, box = true }
-QuestArrow.SIZE = QuestArrow.PLAIN.glyph
-QuestArrow.GAP = 17                 -- the plain arrow's centre, left of where the line's text starts: under the icon
+QuestArrow.BOX = 14                 -- the button, Spoken's box size
+QuestArrow.GLYPH = 10               -- the arrow in it
+QuestArrow.DIM = 0.95               -- the arrow's alpha until the mouse is on its quest
 QuestArrow.BOX_ATLAS = "QuestLog-icon-ticksquare"     -- the quest log's checkbox, as Spoken's Play box draws it
 -- A light yellow: our arrow is half white, half pale grey, and the tint multiplies with it, so the tracker's own title
 -- yellow (1, 0.82, 0) came out darker than Spoken's Play glyph beside it.
@@ -40,11 +36,10 @@ function QuestArrow.Route(questID)
 end
 
 -- Lit while the mouse is on its quest (its hover frame) or on the arrow. Moving between the two leaves one and enters
--- the other while the mouse is still over one of them, so it stays lit. A box stays; only its arrow dims.
+-- the other while the mouse is still over one of them, so it stays lit. The box stays; only its arrow dims.
 local function light(b)
     local over = b.hover:IsMouseOver() or b:IsMouseOver()
-    local alpha = over and 1 or b.look.dim
-    if b.look.box then b.tex:SetAlpha(alpha) else b:SetAlpha(alpha) end
+    b.tex:SetAlpha(over and 1 or QuestArrow.DIM)
 end
 
 local function hasAtlas(name)
@@ -81,16 +76,15 @@ local function dressBox(b)
     end
 end
 
--- A new arrow button on parent. hover: the frame whose hover lights it (the quest's row, or its title); its own
--- scripts are kept, ours run after them. look: PLAIN (the default) or BOX.
-function QuestArrow.Make(parent, hover, look)
-    look = look or QuestArrow.PLAIN
+-- A new arrow button on parent. hover: the frame whose hover lights it (the quest's title); its own scripts are kept,
+-- ours run after them.
+function QuestArrow.Make(parent, hover)
     local b = CreateFrame("Button", nil, parent)
-    b.hover, b.look = hover, look
-    b:SetSize(look.size, look.size)
-    if look.box then dressBox(b) end
+    b.hover = hover
+    b:SetSize(QuestArrow.BOX, QuestArrow.BOX)
+    dressBox(b)
     b.tex = b:CreateTexture(nil, "ARTWORK")
-    b.tex:SetSize(look.glyph, look.glyph)
+    b.tex:SetSize(QuestArrow.GLYPH, QuestArrow.GLYPH)
     b.tex:SetPoint("CENTER")
     b.tex:SetTexture(TEXTURE, "CLAMP", "CLAMP", "TRILINEAR")
     b.tex:SetRotation(-math.pi / 4)                   -- ours points up: tilted to the right
@@ -162,7 +156,7 @@ function QuestArrow.OnBlock(block)
         return
     end
     if not b then
-        b = QuestArrow.Make(block, block.HeaderButton or block, QuestArrow.BOX)
+        b = QuestArrow.Make(block, block.HeaderButton or block)
         b:SetFrameLevel(block:GetFrameLevel() + 3)
         blockArrows[block] = b
     end

@@ -193,6 +193,7 @@ local strings = {
     QUEST_NAME        = "Tu misión",
     QUEST_ROUTE_TIP   = "Clic: ruta a esta misión",
     QUEST_NO_SPOT     = "Esta misión no tiene un lugar al que trazar una ruta.",
+    QUEST_ROUTE_MENU  = "Ruta con Mapzeroth",
     PICK_CLASS        = "Instructor de clase",
     PICK_PET          = "Instructor de mascotas",
     PICK_DEMON        = "Instructor de demonios",

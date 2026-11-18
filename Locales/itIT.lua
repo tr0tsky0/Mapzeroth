@@ -193,6 +193,7 @@ addon:RegisterLocale("itIT", {
     QUEST_NAME        = "La tua missione",
     QUEST_ROUTE_TIP   = "Clic: percorso verso questa missione",
     QUEST_NO_SPOT     = "Questa missione non ha un luogo verso cui tracciare un percorso.",
+    QUEST_ROUTE_MENU  = "Percorso con Mapzeroth",
     PICK_CLASS        = "Istruttore di classe",
     PICK_PET          = "Istruttore di animali",
     PICK_DEMON        = "Istruttore di demoni",
