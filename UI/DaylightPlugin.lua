@@ -143,7 +143,8 @@ function Plugin.PaintQuestRow(row, parts, info)
     local _, size = line:GetFont()
     local r, g, bl
     if type(API.Accent) == "function" then r, g, bl = API.Accent() end
-    addon.QuestArrow.Place(b, questID, line, "TOPLEFT", -(tonumber(size) or addon.QuestArrow.SIZE) / 2, r, g, bl)
+    addon.QuestArrow.Place(b, questID, "CENTER", line, "TOPLEFT", -addon.QuestArrow.GAP,
+        -(tonumber(size) or addon.QuestArrow.SIZE) / 2, r, g, bl)
 end
 
 if type(my.Paint) == "function" and type(API.Attach) == "function" then

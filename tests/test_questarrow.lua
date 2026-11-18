@@ -1,25 +1,36 @@
 -- The route arrow on the game's own quest tracker (UI/QuestArrow.lua), with a stand-in for its quest module: after each
--- layout every quest block on show gets an arrow beside its first line below the title, for that block's quest; a block
--- with no lines has none; the arrow lights with the title's hover; nothing is written on the game's frames.
+-- layout every quest block on show gets a boxed arrow at its title's right end, where Spoken puts its Play box (under
+-- the item button when there is one), or just left of Spoken's box when it shows one; it lights with the title's
+-- hover; nothing is written on the game's frames.
 
 local QA = addon.QuestArrow
 check(QA, "the quest arrow loads")
 
 local function region()
-    local r = { shown = true, scripts = {}, points = {}, hooks = {} }
-    function r:SetSize() end
+    local r = { shown = true, scripts = {}, points = {}, hooks = {}, level = 5 }
+    function r:SetSize(w, h) self.w, self.h = w, h end
+    function r:SetWidth(w) self.w = w end
+    function r:SetHeight(h) self.h = h end
     function r:SetPoint(...) self.points[#self.points + 1] = { ... } end
+    function r:SetAllPoints() end
     function r:ClearAllPoints() self.points = {} end
     function r:SetScript(k, fn) self.scripts[k] = fn end
     function r:HookScript(k, fn) self.hooks[k] = fn end
     function r:SetAlpha(a) self.alpha = a end
     function r:Show() self.shown = true end
     function r:Hide() self.shown = false end
+    function r:IsShown() return self.shown end
     function r:RegisterForClicks() end
     function r:SetTexture(t) self.texture = t end
+    function r:SetColorTexture(...) self.fill = { ... } end
+    function r:SetAtlas(a) self.atlas = a end
+    function r:SetBlendMode() end
     function r:SetRotation(a) self.rotation = a end
     function r:SetVertexColor(...) self.color = { ... } end
-    function r:CreateTexture() return region() end
+    function r:SetFrameLevel(l) self.level = l end
+    function r:GetFrameLevel() return self.level end
+    function r:CreateTexture(_, layer) local t = region(); t.layer = layer; self.textures = self.textures or {}
+        table.insert(self.textures, t); return t end
     function r:IsMouseOver() return self.over == true end
     return r
 end
@@ -37,60 +48,75 @@ hooksecurefunc = function(t, key, post)
     t[key] = function(...) original(...); post(...) end
 end
 
--- A quest block as the tracker keeps it: its quest's id, its title and title button, its lines by objective key.
-local function block(id, lines)
+-- A quest block as the tracker keeps it: its quest's id, its title button, and the item button on its right edge.
+local function block(id)
     local b = region()
-    b.id, b.used, b.usedLines = id, true, lines or { o1 = {} }
-    b.HeaderText = region()
-    b.HeaderText.GetFont = function() return "font", 12 end
+    b.id, b.used = id, true
     b.HeaderButton = region()
     return b
 end
-local blocks = { block(101), block(102, {}) }
+local blocks = { block(101), block(102) }
 local layouts = 0
 QuestObjectiveTracker = {
-    lineSpacing = 4,
     EndLayout = function() layouts = layouts + 1 end,
     EnumerateActiveBlocks = function(self, fn) for _, b in ipairs(blocks) do fn(b) end end,
 }
 
 QA.HookTracker()
-check(#made == 1, "hooking it places arrows on what is already shown, and only on blocks with lines")
+check(#made == 2, "hooking it places arrows on the quests already shown")
 local arrow = made[1]
 check(arrow.kind == "Button" and arrow.parent == blocks[1] and arrow.questID == 101, "on the quest's block, for its quest")
 local p = arrow.points[1]
-check(p[1] == "CENTER" and p[2] == blocks[1].HeaderText and p[3] == "BOTTOMLEFT" and p[4] == -QA.GAP and p[5] == -10,
-      "under the quest's map pin, level with its first line (4 below the title, half the 12 px font): "
-      .. tostring(p[4]) .. "," .. tostring(p[5]))
-check(arrow.tex.rotation < 0 and arrow.tex.texture:find("Media\\Arrow$"), "our arrow, tilted")
+check(p[1] == "TOPRIGHT" and p[2] == blocks[1] and p[3] == "TOPRIGHT" and p[4] == 0 and p[5] == 0,
+      "at the title's right end, where Spoken's box would be")
+check(arrow.level == blocks[1].level + 3, "drawn over the block, as Spoken's box is")
+check(arrow.tex.rotation < 0 and arrow.tex.texture:find("Media\\Arrow$") and arrow.tex.color[1] == 1
+      and arrow.tex.color[2] == 0.82, "our arrow, tilted, in the tracker's yellow")
+local back, edges = nil, 0
+for _, t in ipairs(arrow.textures) do
+    if t.layer == "BACKGROUND" then back = t elseif t.layer == "BORDER" and t.fill and t.fill[2] == 0.82 then edges = edges + 1 end
+end
+check(back and back.fill[1] == 0 and back.fill[4] == 0.6 and edges == 4,
+      "in a box: black behind, a thin yellow outline (drawn, without the checkbox art)")
 check(blocks[1].mzArrow == nil and blocks[1].arrow == nil, "nothing of ours is written on the game's block")
 
 QuestObjectiveTracker:EndLayout()
-check(layouts == 1 and #made == 1, "the tracker's own layout runs first, and a block keeps its one arrow")
+check(layouts == 1 and #made == 2, "the tracker's own layout runs first, and a block keeps its one arrow")
 QA.HookTracker()
 QuestObjectiveTracker:EndLayout()
 check(layouts == 2, "hooked once only")
 
--- The block is reused for another quest; another loses its lines (an objective done and the list shortened).
+-- An item button on the quest: under it, as Spoken goes. Spoken's box on the quest: ours just left of it.
+local item = region()
+blocks[1].rightEdgeFrame = item
+QuestObjectiveTracker:EndLayout()
+p = arrow.points[1]
+check(p[2] == item and p[3] == "BOTTOMRIGHT" and p[5] == -2, "under the quest's item button")
+QuestOverlayUI = { ShowsTrackerButton = function(_, id) return id == 101 end }
+QuestObjectiveTracker:EndLayout()
+p = arrow.points[1]
+check(p[2] == item and p[4] == -(QA.SPOKEN + QA.SPOKEN_GAP), "left of Spoken's box when it has one for the quest")
+check(made[2].points[1][4] == 0, "in its place when it has none")
+QuestOverlayUI.ShowsTrackerButton = function() error("Spoken changed") end
+QuestObjectiveTracker:EndLayout()
+check(arrow.points[1][4] == 0, "a Spoken that errors is taken as no box")
+QuestOverlayUI = nil
+
+-- The block is reused for another quest, or stops being used.
 blocks[1].id = 205
-blocks[2].usedLines = { o1 = {} }
 QuestObjectiveTracker:EndLayout()
 check(arrow.questID == 205, "a reused block's arrow routes to its new quest")
-check(#made == 2 and made[2].questID == 102, "a block that gains a line gets its arrow")
-blocks[1].usedLines = {}
+blocks[2].used = nil
 QuestObjectiveTracker:EndLayout()
-check(not arrow.shown, "a block with no lines below its title hides its arrow")
-blocks[1].usedLines = { o1 = {} }
-QuestObjectiveTracker:EndLayout()
-check(arrow.shown, "and shows it again")
+check(not made[2].shown, "a block no longer used hides its arrow")
 
--- Lit with the title's hover, as the tracker lights the title.
-local dim = arrow.alpha
-check(dim < 1, "dim until the mouse is on its quest's title")
+-- The arrow dims, the box stays; lit with the title's hover, as the tracker lights the title.
+local dim = arrow.tex.alpha
+check(dim < 1 and arrow.alpha == nil, "the arrow is dim until the mouse is on its quest's title; the box isn't")
 blocks[1].HeaderButton.over = true; blocks[1].HeaderButton.hooks.OnEnter()
-check(arrow.alpha == 1, "the mouse on the title lights it")
+check(arrow.tex.alpha == 1, "the mouse on the title lights it")
 blocks[1].HeaderButton.over = false; blocks[1].HeaderButton.hooks.OnLeave()
-check(arrow.alpha == dim, "off it, dim again")
+check(arrow.tex.alpha == dim, "off it, dim again")
 
 -- A click routes.
 local routed
@@ -104,7 +130,7 @@ local reported
 local realHandler = geterrorhandler
 geterrorhandler = function() return function(err) reported = err end end
 local broken = block(300)
-broken.HeaderText.GetFont = function() error("boom") end
+broken.GetFrameLevel = function() error("boom") end
 table.insert(blocks, 1, broken)
 arrow.questID = nil
 QuestObjectiveTracker:EndLayout()
