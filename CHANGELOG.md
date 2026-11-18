@@ -8,7 +8,8 @@
 - **Route to your quest.** The quest you're following (the one the game's arrow points to) is a pick at the top of the list, after Your Waypoint: Mapzeroth plans the way to it from wherever you are. It can be hidden on the settings page like the other picks.
 - **Route to a new waypoint in one click.** When you place a waypoint on the world map, or click a map pin link in chat, Mapzeroth asks whether to route you there; **Route** plans it and starts you off. **Don't Ask Again** turns it off, and the new setting **Offer a route to new map waypoints** turns it back on.
 - **Your waypoint clears itself on arrival.** Following a route to the waypoint you set on the map now removes it when you get there (unless you've set a different one meanwhile).
-- **Forever: route to any quest from Daylight UI's quest tracker.** Each quest in the tracker has a small arrow under its icon. Click it and Mapzeroth routes you to that quest's objective, or to its hand-in once it's done, and starts you off. It doesn't change which quest you're following.
+- **Route to any quest from the quest tracker.** Each quest in the game's quest tracker has a small arrow under its map pin. Click it and Mapzeroth routes you to that quest's objective, or to its hand-in once it's done, and starts you off. It doesn't change which quest you're following. The arrow brightens when you point at the quest's name.
+- **Forever: the same arrow in Daylight UI's quest tracker**, under each quest's icon, brightening when you point anywhere on the quest.
 - **Forever: the Mapzeroth data text shows in Daylight UI's test mode.** While you lay out your data text slots, it shows a sample (2/5) so you can see where it goes. Update Daylight UI to 1.9.1 or later.
 
 ### Fixed

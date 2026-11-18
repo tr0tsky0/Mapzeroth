@@ -169,7 +169,7 @@ UIErrorsFrame = { AddMessage = function(_, text) said = text end }
 paintRow(rowA, { objectives = { line } }, { questID = 43 })
 arrow.scripts.OnClick(arrow)
 check(routed == 43 and said == nil, "a click routes to its quest")
-Plugin.RouteQuest(7)
+addon.QuestArrow.Route(7)
 check(said == addon.L["QUEST_NO_SPOT"], "a quest with no spot says why nothing happened")
 addon.Panel.RouteToQuest, UIErrorsFrame, CreateFrame = realRouteToQuest, nil, realCreateFrame
 

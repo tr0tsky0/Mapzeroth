@@ -119,64 +119,13 @@ local function redrawText()
 end
 
 -- ---------------------------------------------------------------------------------------
--- The quest tracker: a route arrow on each quest, under its icon beside the first line below the title, where the
--- tracker leaves room (the objectives start further in than the title). A click routes to the quest and starts the trip.
-
-local QUEST_ARROW = 12              -- the arrow's size, in pixels: about the quest icon's
-local QUEST_ARROW_HIT = 16          -- the button around it, a little bigger to hit
-local QUEST_ARROW_GAP = 17          -- the arrow's centre, left of where the line's text starts: under the quest icon
-                                    -- (the tracker's lines start 24 px in, its icon is 13 wide)
-local QUEST_ARROW_DIM = 0.55        -- its alpha until the mouse is on its quest, as the quest icon lights then
-local ARROW_TEXTURE = "Interface\\AddOns\\" .. addonName .. "\\Media\\Arrow"
+-- The quest tracker: a route arrow on each quest (UI/QuestArrow.lua), on its first line below the title, lit while the
+-- mouse is anywhere on the quest's row as Daylight UI lights the quest icon then, in the player's Daylight accent.
 
 local arrows = setmetatable({}, { __mode = "k" })    -- quest row -> our arrow button on it
 
--- A click on a quest's arrow: the route to it, or a word on why there isn't one.
-function Plugin.RouteQuest(questID)
-    if type(questID) ~= "number" then return end
-    if addon.Panel:RouteToQuest(questID) then return end
-    if UIErrorsFrame then UIErrorsFrame:AddMessage(L["QUEST_NO_SPOT"], 1, 0.1, 0.1) end
-end
-
--- Lit while the mouse is anywhere on its quest's row (the arrow included), dim otherwise. Moving between the row and
--- the arrow leaves one and enters the other, but the mouse is still over the row, so it stays lit.
-local function light(b)
-    local over = b.row:IsMouseOver() or b:IsMouseOver()
-    b:SetAlpha(over and 1 or QUEST_ARROW_DIM)
-end
-
-local function makeArrow(row, holder)
-    local b = CreateFrame("Button", nil, holder)
-    b.row = row
-    b:SetSize(QUEST_ARROW_HIT, QUEST_ARROW_HIT)
-    b.tex = b:CreateTexture(nil, "OVERLAY")
-    b.tex:SetSize(QUEST_ARROW, QUEST_ARROW)
-    b.tex:SetPoint("CENTER")
-    b.tex:SetTexture(ARROW_TEXTURE, "CLAMP", "CLAMP", "TRILINEAR")
-    b.tex:SetRotation(-math.pi / 4)                   -- ours points up: tilted to the right, the usual "navigate"
-    b:SetAlpha(QUEST_ARROW_DIM)
-    b:RegisterForClicks("LeftButtonUp")
-    b:SetScript("OnClick", function(self) Plugin.RouteQuest(self.questID) end)
-    b:SetScript("OnEnter", function(self)
-        light(self)
-        if not GameTooltip then return end
-        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-        GameTooltip:SetText(L["PANEL_TITLE"])
-        GameTooltip:AddLine(L["QUEST_ROUTE_TIP"], 1, 1, 1)
-        GameTooltip:Show()
-    end)
-    b:SetScript("OnLeave", function(self)
-        light(self)
-        if GameTooltip then GameTooltip:Hide() end
-    end)
-    -- The row's own hover, added after Daylight UI's (HookScript keeps theirs; they set these once per row).
-    row:HookScript("OnEnter", function() light(b) end)
-    row:HookScript("OnLeave", function() light(b) end)
-    return b
-end
-
--- Daylight UI's paint of a quest row (each layout of the tracker): the arrow placed on its first line below the title,
--- in the player's Daylight accent. A row with no such line (a folded quest) has none.
+-- Daylight UI's paint of a quest row (each layout of the tracker). A row with no line below its title (a folded
+-- quest) has no arrow.
 function Plugin.PaintQuestRow(row, parts, info)
     local line = parts and parts.objectives and parts.objectives[1]
     local questID = info and info.questID
@@ -188,15 +137,13 @@ function Plugin.PaintQuestRow(row, parts, info)
     if not b then
         local holder = API.Attach(row)
         if not holder then return end
-        b = makeArrow(row, holder)
+        b = addon.QuestArrow.Make(holder, row)
         arrows[row] = b
     end
-    b.questID = questID
     local _, size = line:GetFont()
-    b:ClearAllPoints()
-    b:SetPoint("CENTER", line, "TOPLEFT", -QUEST_ARROW_GAP, -(tonumber(size) or QUEST_ARROW) / 2)
-    if type(API.Accent) == "function" then b.tex:SetVertexColor(API.Accent()) end
-    b:Show()
+    local r, g, bl
+    if type(API.Accent) == "function" then r, g, bl = API.Accent() end
+    addon.QuestArrow.Place(b, questID, line, "TOPLEFT", -(tonumber(size) or addon.QuestArrow.SIZE) / 2, r, g, bl)
 end
 
 if type(my.Paint) == "function" and type(API.Attach) == "function" then
