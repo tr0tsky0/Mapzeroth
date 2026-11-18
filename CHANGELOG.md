@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.3.0 (Forever) and 2.0.9 (Retail)
 
 ### Added
 - **Nearest places, grouped.** The list's "Your Nearest Trainers" section is now **Nearest**, in three parts: **Trainers** (class, pet or demon, riding from level 40, weapon, professions), **Vendors** (innkeeper) and **Other** (auction house, bank, stable master for Hunters, flight master). Each routes to the nearest one you can use: your faction's or a neutral one. Hide any of them on the settings page's Picker page, like the other picks. Retail has the innkeeper, stable master and flight master.
