@@ -71,10 +71,10 @@ check(p[1] == "TOPRIGHT" and p[2] == blocks[1] and p[3] == "TOPRIGHT" and p[4] =
       "at the title's right end, where Spoken's box would be")
 check(arrow.level == blocks[1].level + 3, "drawn over the block, as Spoken's box is")
 check(arrow.tex.rotation < 0 and arrow.tex.texture:find("Media\\Arrow$") and arrow.tex.color[1] == 1
-      and arrow.tex.color[2] == 0.82, "our arrow, tilted, in the tracker's yellow")
+      and arrow.tex.color[2] == QA.YELLOW[2], "our arrow, tilted, in the tracker's yellow")
 local back, edges = nil, 0
 for _, t in ipairs(arrow.textures) do
-    if t.layer == "BACKGROUND" then back = t elseif t.layer == "BORDER" and t.fill and t.fill[2] == 0.82 then edges = edges + 1 end
+    if t.layer == "BACKGROUND" then back = t elseif t.layer == "BORDER" and t.fill and t.fill[2] == QA.YELLOW[2] then edges = edges + 1 end
 end
 check(back and back.fill[1] == 0 and back.fill[4] == 0.6 and edges == 4,
       "in a box: black behind, a thin yellow outline (drawn, without the checkbox art)")

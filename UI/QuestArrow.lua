@@ -21,11 +21,13 @@ addon.QuestArrow = QuestArrow
 
 -- The two looks. size: the button; glyph: the arrow in it; dim: the arrow's alpha until the mouse is on its quest.
 QuestArrow.PLAIN = { size = 16, glyph = 12, dim = 0.55 }
-QuestArrow.BOX = { size = 14, glyph = 10, dim = 0.85, box = true }
+QuestArrow.BOX = { size = 14, glyph = 10, dim = 0.95, box = true }
 QuestArrow.SIZE = QuestArrow.PLAIN.glyph
 QuestArrow.GAP = 17                 -- the plain arrow's centre, left of where the line's text starts: under the icon
 QuestArrow.BOX_ATLAS = "QuestLog-icon-ticksquare"     -- the quest log's checkbox, as Spoken's Play box draws it
-QuestArrow.YELLOW = { 1, 0.82, 0 }  -- the tracker's quest titles
+-- A light yellow: our arrow is half white, half pale grey, and the tint multiplies with it, so the tracker's own title
+-- yellow (1, 0.82, 0) came out darker than Spoken's Play glyph beside it.
+QuestArrow.YELLOW = { 1, 0.95, 0.35 }
 QuestArrow.SPOKEN = 14              -- Spoken's Play box on the tracker, and the gap between it and ours
 QuestArrow.SPOKEN_GAP = 4
 local TEXTURE = "Interface\\AddOns\\" .. addonName .. "\\Media\\Arrow"
