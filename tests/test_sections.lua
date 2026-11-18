@@ -124,21 +124,27 @@ end
 
 -- Trainers in order: class, pet or demon, riding, weapon, then professions.
 do
-    local list = group((sectionsFor({ class = "HUNTER", faction = "Alliance", spells = { addon.Professions.ALCHEMY } })), "nearest_trainers")
+    local list = group((sectionsFor({ class = "HUNTER", faction = "Alliance", level = 40, spells = { addon.Professions.ALCHEMY } })), "nearest_trainers")
     local keys = {}
     for _, item in ipairs(list.items) do keys[#keys + 1] = item.key end
     check(table.concat(keys, ",") == "class,pet,riding,weapon,prof_ALCHEMY", "trainers in order: " .. table.concat(keys, ","))
 end
 
--- A riding instructor while they have a riding rank to learn; once they know them all, none.
+-- A riding instructor while they have a riding rank to learn and are old enough for it (Apprentice at 40, Journeyman
+-- at 60); once they know what their level allows, none.
 do
-    check(mage["Riding Trainer"] and #mage["Riding Trainer"].nodeIDs > 0 and mage["Riding Trainer"].key == "riding",
-        "a character who can't ride has a riding trainer pick")
+    local function ridingFor(level, spells)
+        return picks((sectionsFor({ class = "MAGE", faction = "Alliance", level = level, spells = spells })))["Riding Trainer"]
+    end
+    check(not mage["Riding Trainer"] and not ridingFor(39), "below 40, no riding trainer pick")
+    local at40 = ridingFor(40)
+    check(at40 and #at40.nodeIDs > 0 and at40.key == "riding", "at 40, one who can't ride has a riding trainer pick")
+    check(not ridingFor(59, { 33388 }), "with Apprentice Riding, none until 60")
+    check(ridingFor(60, { 33388 }), "at 60 with Apprentice Riding, back for Journeyman")
     local ranks = {}
     for _, skill in ipairs(addon.RidingSkills) do ranks[#ranks + 1] = skill.spellID end
-    check(not picks((sectionsFor({ class = "MAGE", faction = "Alliance", spells = ranks })))["Riding Trainer"],
-        "and one who knows every rank has none")
-    for _, id in ipairs(mage["Riding Trainer"].nodeIDs) do
+    check(not ridingFor(60, ranks), "and one who knows every rank has none")
+    for _, id in ipairs(at40.nodeIDs) do
         local npc = addon.World:GetNode(id).npcs[1]
         check(not npc.faction or npc.faction == "Alliance", "only their faction's riding instructors: " .. id)
     end

@@ -129,9 +129,11 @@ check(bootyRogue and relevant(bootyRogue, { class = "ROGUE", faction = "Alliance
 
 -- 4. Riding and pets.
 local riding = find(function(n) return n.trainer == "RIDING" and n.mapID == 1426 end)
-check(relevant(riding, { class = "MAGE" }), "riding ranks you don't know are worth showing")
-check(relevant(riding, { class = "MAGE", spells = { 33388 } }), "Journeyman Riding still to learn")
-check(not relevant(riding, { class = "MAGE", spells = { 33388, 33391 } }), "both riding ranks known, nothing left")
+check(relevant(riding, { class = "MAGE", level = 40 }), "riding ranks you don't know are worth showing")
+check(not relevant(riding, { class = "MAGE", level = 39 }), "but not before 40, when Apprentice Riding is taught")
+check(relevant(riding, { class = "MAGE", level = 60, spells = { 33388 } }), "Journeyman Riding still to learn")
+check(not relevant(riding, { class = "MAGE", level = 59, spells = { 33388 } }), "though not before 60")
+check(not relevant(riding, { class = "MAGE", level = 60, spells = { 33388, 33391 } }), "both riding ranks known, nothing left")
 local pet = find(function(n) return n.trainer == "PET" and n.city == "stormwind" end)
 check(pet and relevant(pet, { class = "HUNTER" }), "pet trainers are for hunters")
 check(pet and not relevant(pet, { class = "WARLOCK" }), "not warlocks")

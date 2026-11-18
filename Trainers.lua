@@ -11,7 +11,7 @@ local addonName, addon = ...
 --     (addon.PROFESSION_TRAINER_REACH): an Artisan trainer won't talk to an Apprentice (gathering
 --     professions' trainers talk to anyone: addon.GatheringProfessions). So it drops
 --     out once you have outgrown it, and doesn't show until you are close enough;
---   * riding instructor: teaches a riding rank you don't know;
+--   * riding instructor: teaches a riding rank you don't know and are old enough for (RidingSkills' `level`);
 --   * pet trainer: hunters; demon trainer: warlocks.
 -- It works from the spell ids each NPC teaches and from what the player knows.
 --
@@ -60,8 +60,11 @@ local function needFor(node, ctx)
         return true, asSet(addon.ClassWeapons and addon.ClassWeapons[ctx.class])
     end
     if token == "RIDING" then
+        -- Only the ranks they are old enough for (a rank with no level on record: any level).
         local ranks = {}
-        for _, skill in ipairs(addon.RidingSkills or {}) do ranks[skill.spellID] = true end
+        for _, skill in ipairs(addon.RidingSkills or {}) do
+            if not skill.level or not ctx.level or ctx.level >= skill.level then ranks[skill.spellID] = true end
+        end
         return true, ranks
     end
     local firstRank = addon.Professions and addon.Professions[token]

@@ -16,7 +16,9 @@ if addon.RULESET ~= "forever" then return end   -- one addon for both games: thi
 -- they know. So Forever has no flat mount bonus (Modern's Data/Modern/Movement.lua sets one instead of skills).
 addon.DEFAULT_MOUNT_BONUS = nil
 
+-- `level`: the character level a riding instructor teaches it at (the user, 2026-11-17), for the picker's Riding
+-- Trainer pick (Trainers.lua).
 addon.RidingSkills = {
-    { spellID = 33388, bonus = 0.60 }, -- Apprentice Riding (skill 75)
-    { spellID = 33391, bonus = 1.00 }, -- Journeyman Riding (skill 150)
+    { spellID = 33388, bonus = 0.60, level = 40 }, -- Apprentice Riding (skill 75)
+    { spellID = 33391, bonus = 1.00, level = 60 }, -- Journeyman Riding (skill 150)
 }
