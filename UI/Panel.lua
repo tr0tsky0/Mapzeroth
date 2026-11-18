@@ -1435,6 +1435,7 @@ local function hangsFrom(f, target)
     local function walk(region, depth)
         if region == target then return true end
         if not region or depth > 12 or seen[region] or not region.GetNumPoints then return false end
+        if region.IsForbidden and region:IsForbidden() then return false end
         seen[region] = true
         for i = 1, region:GetNumPoints() or 0 do
             local _, rel = region:GetPoint(i)
@@ -1452,6 +1453,9 @@ local function mapNeighbour(map)
     local best, bestRight
     local function consider(f, watchAll)
         if f == ui.frame or type(f) ~= "table" or not f.IsVisible then return end
+        -- A forbidden frame (the game's own secure dialogs, such as Communities') can't be touched at all by addon
+        -- code: even IsVisible on one is an error. IsForbidden is the one call it allows.
+        if f.IsForbidden and f:IsForbidden() then return end
         if watchAll then watch(f) end
         if not f:IsVisible() then return end
         -- Not our own windows (the navigator may be left beside the map), nor tooltips and menus passing by.
@@ -1470,10 +1474,11 @@ local function mapNeighbour(map)
     end
     for _, parent in ipairs({ map, map.BorderFrame or false, map.MiniBorderFrame or false, QuestMapFrame or false }) do
         if type(parent) == "table" and parent.GetChildren then
-            for _, child in ipairs({ parent:GetChildren() }) do consider(child, true) end
+            for _, child in ipairs({ parent:GetChildren() }) do pcall(consider, child, true) end
         end
     end
-    for _, child in ipairs({ UIParent:GetChildren() }) do consider(child, false) end
+    -- Each under pcall: whatever another frame does, opening the map never errors over it.
+    for _, child in ipairs({ UIParent:GetChildren() }) do pcall(consider, child, false) end
     return best, bestRight
 end
 

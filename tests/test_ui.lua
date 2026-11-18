@@ -1733,8 +1733,11 @@ do
     local nav = mock()              -- our navigator, left beside the map
     rect(nav, 1001, 1400, 700, 600)
     nav.GetName = function() return "MapzerothRebuildNavigator" end
+    local forbidden = mock()        -- a secure dialog (Communities'): touching it at all is an error
+    forbidden.IsForbidden = function() return true end
+    forbidden.IsVisible = function() error("Attempt to access forbidden object from code tainted by an AddOn") end
     map.GetChildren = function() return other end
-    screen.GetChildren = function() return far, nav end
+    screen.GetChildren = function() return forbidden, far, nav end
     local frame = addon.Panel:GetFrame()
     frame.GetEffectiveScale = function() return 1 end
     local anchors = {}
