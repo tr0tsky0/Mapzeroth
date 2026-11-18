@@ -188,3 +188,18 @@ check(addon:NodeKindFromID("DOCK_STORMWIND") == "DOCK" and addon:NodeKindFromID(
 check(addon:NodeKindFromID("FLIGHT_TOL_DAGOR_ALLIANCE") == "FLIGHT", "FLIGHT is a flight master with no TaxiNodes id")
 check(addon:NodeKindFromID("BORALUS_DOCK") == nil, "a kind at the end is not read (no Modern id is written that way now)")
 check(addon:NodeKindFromID("DARK_PORTAL_BL") == nil, "a place named for a portal is not a portal")
+
+-- Forever's reagent vendors are named for what they sell: Stormwind has poison-only ones and caster ones.
+do
+    addon:ClearNodeNameCache()
+    local function vendor(rogueOnly)
+        return find(function(n)
+            if n.kind ~= "reagent" or n.city ~= "stormwind" then return false end
+            local c = n.npcs[1].classes
+            return (#c == 1 and c[1] == "ROGUE") == rogueOnly
+        end)
+    end
+    local poison, reagent = addon:GetNodeName(vendor(true)), addon:GetNodeName(vendor(false))
+    check(poison == "Stormwind Poison Vendor" and reagent == "Stormwind Reagent Vendor",
+        "a poison-only place is a Poison Vendor, the rest Reagent Vendors: " .. poison .. ", " .. reagent)
+end

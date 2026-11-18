@@ -74,6 +74,8 @@ addon:RegisterLocale("enUS", {
     NODE_KIND_AUCTION  = "%s Auction House",
     NODE_KIND_BATTLEMASTER = "%s Battlemaster",
     NODE_KIND_STABLE   = "%s Stable Master",
+    NODE_KIND_REAGENT = "%s Reagent Vendor",
+    NODE_KIND_POISON  = "%s Poison Vendor",
     NODE_KIND_ENTRANCE = "%s Entrance",
     NODE_KIND_LEYLINE  = "%s Ley Line",
     NODE_KIND_CONVERGENCE = "%s Elemental Convergence",

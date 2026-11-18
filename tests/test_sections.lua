@@ -114,6 +114,13 @@ do
     order = table.concat(order, ","):gsub("prof_[A-Z]+,", "")
     check(order:find("paste,class,pet,riding,weapon,inn,auction,bank,stable,flight", 1, true),
         "listed in the picker's order: " .. order)
+    check(mageChoices.reagent == addon.L["PICK_REAGENT"] and not mageChoices.poison, "a mage: the reagent vendor, no poison vendor")
+    local rogue = keys(addon.Sections:PickChoices("ROGUE", "Alliance", false))
+    check(rogue.poison == addon.L["PICK_POISON"] and not rogue.reagent, "a rogue: the poison vendor instead")
+    local warrior = keys(addon.Sections:PickChoices("WARRIOR", "Alliance", false))
+    local hunterChoices = keys(addon.Sections:PickChoices("HUNTER", "Alliance", false))
+    check(not warrior.poison and not warrior.reagent and not hunterChoices.reagent and not hunterChoices.poison,
+        "warriors and hunters: neither")
     check(mageChoices.prof_ALCHEMY == "Alchemy Trainer" and mageChoices.prof_MINING, "every profession, had or not")
     check(mageChoices.leyline == addon.L["PICK_LEYLINE"] and not mageChoices.pet and not mageChoices.tomtom,
         "the ley line pick, no pet trainer for a mage, no TomTom without it")
@@ -158,8 +165,9 @@ do
         return s and s.faction
     end
     local vendors = group(sections, "nearest_vendors").items
-    check(#vendors == 1 and vendors[1].name == addon.L["PICK_INN"] and vendors[1].key == "inn" and vendors[1].group == "inn",
-        "Vendors holds the innkeeper pick")
+    check(#vendors == 2 and vendors[1].key == "reagent" and vendors[2].name == addon.L["PICK_INN"] and vendors[2].key == "inn"
+        and vendors[2].group == "inn", "a mage's Vendors: the reagent vendor, then the innkeeper")
+    vendors = { vendors[2] }
     local other = group(sections, "nearest_other").items
     local keys = {}
     for _, item in ipairs(other) do keys[#keys + 1] = item.key end
@@ -190,6 +198,43 @@ do
     end
 end
 
+-- Reagent vendors (Forever's, Wowhead's sellers of class reagents): the Reagent Vendor for the classes with reagents,
+-- the Poison Vendor for rogues (those that sell poison ingredients), of their faction or both's; none for a warrior or
+-- hunter.
+do
+    local function servesClass(id, class, faction)
+        local node = addon.World:GetNode(id)
+        if node.kind ~= "reagent" then return false end
+        for _, npc in ipairs(node.npcs) do
+            local sells = false
+            for _, c in ipairs(npc.classes or {}) do if c == class then sells = true end end
+            if sells and (not npc.faction or npc.faction == faction) then return true end
+        end
+        return false
+    end
+    for _, case in ipairs({ { "MAGE", "Alliance" }, { "PRIEST", "Horde" }, { "WARLOCK", "Alliance" }, { "DRUID", "Horde" } }) do
+        local pick = picks((sectionsFor({ class = case[1], faction = case[2] })))[addon.L["PICK_REAGENT"]]
+        check(pick and pick.key == "reagent" and pick.group == "reagent" and #pick.nodeIDs >= 5,
+            case[1] .. " (" .. case[2] .. ") has a reagent vendor pick")
+        local ok = true
+        for _, id in ipairs(pick and pick.nodeIDs or {}) do ok = ok and servesClass(id, case[1], case[2]) end
+        check(ok, "every one sells them their reagents and serves their faction")
+    end
+    local rogue = sectionsFor({ class = "ROGUE", faction = "Horde" })
+    local poison = picks(rogue)[addon.L["PICK_POISON"]]
+    check(poison and poison.key == "poison" and #poison.nodeIDs >= 5 and not picks(rogue)[addon.L["PICK_REAGENT"]],
+        "a rogue has the poison vendor pick, not the reagent vendor")
+    local vendorKeys = {}
+    for _, item in ipairs(group(rogue, "nearest_vendors").items) do vendorKeys[#vendorKeys + 1] = item.key end
+    check(table.concat(vendorKeys, ",") == "poison,inn", "a rogue's Vendors: poison vendor, innkeeper: " .. table.concat(vendorKeys, ","))
+    local ok = true
+    for _, id in ipairs(poison.nodeIDs) do ok = ok and servesClass(id, "ROGUE", "Horde") end
+    check(ok, "every one sells poison ingredients and serves the Horde")    for _, class in ipairs({ "WARRIOR", "HUNTER" }) do
+        local p = picks((sectionsFor({ class = class, faction = "Alliance" })))
+        check(not p[addon.L["PICK_REAGENT"]] and not p[addon.L["PICK_POISON"]], class .. ": no reagent or poison vendor")
+    end
+end
+
 -- Stable masters for hunters only, of their faction (or both's).
 do
     local hunter = picks((sectionsFor({ class = "HUNTER", faction = "Horde" })))
@@ -205,19 +250,24 @@ end
 -- Each Nearest pick can be turned off on its own; a group left with none isn't there.
 do
     addon.Options:SetShowsPick("inn", false)
+    addon.Options:SetShowsPick("reagent", false)
     addon.Options:SetShowsPick("bank", false)
     local s = sectionsFor({ class = "MAGE", faction = "Alliance" })
     local p = picks(s)
     check(not group(s, "nearest_vendors") and not p[addon.L["PICK_BANK"]] and p[addon.L["PICK_AUCTION"]],
-        "no innkeeper (so no Vendors) and no bank, the auction house stays")
+        "no innkeeper or reagent vendor (so no Vendors) and no bank, the auction house stays")
     addon.Options:SetShowsPick("inn", true)
+    addon.Options:SetShowsPick("reagent", true)
     addon.Options:SetShowsPick("bank", true)
     for _, key in ipairs({ "class", "riding", "weapon", "auction", "bank", "flight" }) do addon.Options:SetShowsPick(key, false) end
     s = sectionsFor({ class = "MAGE", faction = "Alliance" })
     check(group(s, "nearest_vendors") and not group(s, "nearest_trainers") and not group(s, "nearest_other"), "only Vendors left")
     addon.Options:SetShowsPick("inn", false)
+    addon.Options:SetShowsPick("reagent", false)
     check(not section(sectionsFor({ class = "MAGE", faction = "Alliance" }), "nearest"), "and with every pick off, no Nearest")
-    for _, key in ipairs({ "class", "riding", "weapon", "auction", "flight", "inn" }) do addon.Options:SetShowsPick(key, true) end
+    for _, key in ipairs({ "class", "riding", "weapon", "auction", "bank", "flight", "inn", "reagent" }) do
+        addon.Options:SetShowsPick(key, true)
+    end
 end
 
 -- Only the professions they have, by the client's name for each.

@@ -219,6 +219,16 @@ local function resolve(nodeID)
             where = zoneName(node.mapID)
         end
         local pattern = "NODE_KIND_" .. node.kind:upper()
+        -- A reagent vendor place that sells only a rogue's poison ingredients is a poison vendor.
+        if node.kind == "reagent" then
+            local poison, other = false, false
+            for _, npc in ipairs(node.npcs or {}) do
+                for _, token in ipairs(npc.classes or {}) do
+                    if token == "ROGUE" then poison = true else other = true end
+                end
+            end
+            if poison and not other then pattern = "NODE_KIND_POISON" end
+        end
         if not (where and addon:HasString(pattern)) then return nil end
         if node.kind == "trainer" then
             local what = trainerTypeName(node.trainer)

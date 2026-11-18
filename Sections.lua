@@ -9,7 +9,8 @@ local addonName, addon = ...
 --     Trainers           their class trainer (and pet or demon trainer), a riding instructor that teaches a rank they
 --                        don't know, a weapon master that teaches a weapon they can learn and don't have, a trainer
 --                        for each profession they have that still teaches them something
---     Vendors            an innkeeper
+--     Vendors            a reagent vendor (a poison vendor for rogues; neither for classes with no reagents), an
+--                        innkeeper
 --     Other              an auction house, a bank, a stable master (hunters), a flight master
 --                        Inns, banks and auction houses are their faction's settlements' and neutral ones; each pick
 --                        is there only when the dataset has places of its kind (Modern: no trainers, banks or
@@ -71,19 +72,32 @@ local function professionList(only)
     return list
 end
 
--- The service picks (Nearest's Vendors and Other): node kind -> { key, label, group }, in the order listed.
+-- The service picks (Nearest's Vendors and Other): node kind -> { key, label, group }, in the order listed. `class`:
+-- only for that class; `notClass`: for anyone else. A reagent vendor (Forever) sells a rogue poison ingredients, so
+-- for rogues it is the Poison Vendor; for the other classes whose reagents it sells, the Reagent Vendor
+-- (Relevance.lua: which of them sell this class's).
 local SERVICE_PICKS = {
+    { kind = "reagent", key = "reagent", label = "PICK_REAGENT", group = "vendors", notClass = "ROGUE" },
+    { kind = "reagent", key = "poison", label = "PICK_POISON", group = "vendors", class = "ROGUE" },
     { kind = "inn", key = "inn", label = "PICK_INN", group = "vendors" },
     { kind = "auction", key = "auction", label = "PICK_AUCTION", group = "other" },
     { kind = "bank", key = "bank", label = "PICK_BANK", group = "other" },
     { kind = "stable", key = "stable", label = "PICK_STABLE", group = "other", class = "HUNTER" },
 }
 
--- Whether this dataset has a node of `kind` (and `trainer`, for a trainer).
-local function hasKind(kind, trainer)
+local function forClass(service, class)
+    return (not service.class or service.class == class) and (not service.notClass or service.notClass ~= class)
+end
+
+-- Whether this dataset has a node of `kind` (and `trainer`, for a trainer); for a reagent vendor, one that sells
+-- `class` its reagents.
+local function hasKind(kind, trainer, class)
     local found = false
     addon.World:ForEachNode(function(node)
-        if node.kind == kind and (not trainer or node.trainer == trainer) then found = true end
+        if node.kind == kind and (not trainer or node.trainer == trainer)
+            and (kind ~= "reagent" or addon.Relevance:SellsReagentsTo(node, class)) then
+            found = true
+        end
     end)
     return found
 end
@@ -110,7 +124,7 @@ function Sections:PickChoices(class, faction, hasTomTom)
         end
     end
     for _, service in ipairs(SERVICE_PICKS) do
-        if (not service.class or service.class == class) and hasKind(service.kind) then
+        if forClass(service, class) and hasKind(service.kind, nil, class) then
             choices[#choices + 1] = { key = service.key, label = L[service.label] }
         end
     end
@@ -265,13 +279,14 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
         push(trainerPicks, pick(L["PICK_PROFESSION"]:format(profession.name), "trainer", trainers[profession.token],
             "prof_" .. profession.token))
     end
-    -- Inns, banks, auction houses of their faction's settlements and neutral ones; stable masters for hunters, of
-    -- their faction (Relevance). Read from the nodes, not the entries: Modern's inns are their towns' entries.
+    -- Inns, banks, auction houses of their faction's settlements and neutral ones; stable masters for hunters and
+    -- vendors of this class's reagents, of their faction (Relevance). Read from the nodes, not the entries: Modern's
+    -- inns are their towns' entries.
     local services = {}                         -- kind -> node ids, sorted so the pick is the same each time
     addon.World:ForEachNode(function(node)
         local kind = node.kind
         local wanted
-        if kind == "stable" then wanted = addon.Relevance:IsRelevant(node, ctx)
+        if kind == "stable" or kind == "reagent" then wanted = addon.Relevance:IsRelevant(node, ctx)
         elseif kind == "inn" or kind == "bank" or kind == "auction" then wanted = oursAt(node, ctx.faction) end
         if wanted then
             services[kind] = services[kind] or {}
@@ -280,7 +295,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     end)
     for _, service in ipairs(SERVICE_PICKS) do
         local ids = services[service.kind]
-        if ids then
+        if ids and forClass(service, ctx.class) then
             table.sort(ids)
             push(service.group == "vendors" and vendorPicks or otherPicks, pick(L[service.label], service.kind, ids, service.key))
         end

@@ -2,7 +2,10 @@
 
 Points of interest (inns, banks, auction houses) come from Wowhead's Forever
 NPC data (tools/poi_source/*.tsv, produced by tools/wowhead_scrape.js) and from
-in-game captures (tools/poi_source/captured.tsv).
+in-game captures (tools/poi_source/captured.tsv). Reagent vendors
+(reagent_vendors.tsv) are the NPCs that sell class reagents, from those items'
+"Sold by" lists: two more columns give the classes whose reagents each sells and
+the faction it serves (Wowhead's reactions; empty for both).
 
 A settlement is a CITY (a faction capital) or a TOWN (anything else with an
 inn); tools/poi_source/towns.tsv lists them. With no inn, it isn't a town.
@@ -44,12 +47,12 @@ HELD_BACK_MAPS = {2521: "Zephras Isle", 2548: "Riverglades", 1416: "Alterac Moun
 EXTRA_CONTAINERS = {2521: "zephras_isle.zephras_isle"}
 
 KINDS = {"innkeepers.tsv": "inn", "bankers.tsv": "bank", "auctioneers.tsv": "auction",
-         "battlemasters.tsv": "battlemaster", "stable_masters.tsv": "stable"}
+         "battlemasters.tsv": "battlemaster", "stable_masters.tsv": "stable", "reagent_vendors.tsv": "reagent"}
 TRAINER_FILES = ["class_trainers.tsv", "class_trainers_towns.tsv", "class_trainers_worldmap.tsv",
                  "weapon_riding_trainers.tsv", "pet_trainers.tsv", "demon_trainers.tsv",
                  "profession_trainers.tsv"]
 PREFIX = {"inn": "INN", "bank": "BANK", "auction": "AUCTION", "trainer": "TRAINER",
-          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE"}
+          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE", "reagent": "REAGENT"}
 # Ley lines and elemental convergences aren't Mapzeroth data any more: the "Nearest" pick reads them
 # from Skyborne Leyline & Convergence Marker (SLLCM_GetNodes, LeyShare.lua). A capture of one is refused.
 NOT_OURS = {"leyline", "convergence"}
@@ -264,11 +267,16 @@ def load_npcs():
         for line in (SRC / filename).read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
-            npc_id, name, _tag, map_id, _map_name, coords = line.split("\t")
+            cols = line.split("\t")
+            npc_id, name, _tag, map_id, _map_name, coords = cols[:6]
             pts = [tuple(float(v) for v in c.split(",")) for c in coords.split()]
             pos = to_forever(int(map_id), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+            # A reagent vendor: whose reagents it sells ("MAGE,PRIEST"), and the faction it serves.
+            classes = cols[6].split(",") if len(cols) > 6 and cols[6] else []
+            side = cols[7] if len(cols) > 7 and cols[7] in ("Alliance", "Horde") else None
             npcs.append({"kind": kind, "trainer": None, "id": int(npc_id), "label": npc_id,
-                         "captured": False, "map": int(map_id), "pos": pos, "teaches": []})
+                         "captured": False, "map": int(map_id), "pos": pos, "teaches": [],
+                         "classes": classes, "side": side})
     return npcs
 
 
@@ -553,12 +561,15 @@ def main():
             teaches = f"teaches = {{ {', '.join(str(t) for t in m['teaches'])} }}" if m["teaches"] else ""
             ident_part = "" if m["captured"] else f"id = {m['id']}"
             specialty = "specialty = true" if m.get("specialty") else (f"tier = {m['tier']}" if m.get("tier") else "")
-            side = None
+            side = m.get("side")
+            if p["kind"] == "reagent":
+                side = side or (home if home in ("Alliance", "Horde") else None)
             if p["kind"] == "trainer":
                 side = npc_factions.get(m["id"]) if not m["captured"] else None
                 side = side or (home if home in ("Alliance", "Horde") else None)
             faction = f'faction = "{side}"' if side else ""
-            npc_entries.append("{ " + ", ".join(x for x in (ident_part, faction, specialty, teaches) if x) + " }")
+            classes = ("classes = { " + ", ".join(f'"{c}"' for c in m["classes"]) + " }") if m.get("classes") else ""
+            npc_entries.append("{ " + ", ".join(x for x in (ident_part, faction, specialty, classes, teaches) if x) + " }")
         npc_field = f", npcs = {{ {', '.join(npc_entries)} }}" if npc_entries else ""
         area_field = ""
         if p["kind"] == "entrance":
