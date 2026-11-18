@@ -43,6 +43,7 @@ Data\Forever\ClassSpells.lua
 Data\Forever\Game.lua
 Data\Forever\PathFactors.lua
 Data\Forever\Roads.lua
+Data\Forever\Steep.lua
 Data\Forever\CityPaths.lua
 Data\Forever\NodeNames_enUS.lua
 Data\Forever\TownNames_enUS.lua

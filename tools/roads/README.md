@@ -7,6 +7,7 @@ both Forever only:
 |---|---|---|---|
 | Zone roads | `Data/Forever/Roads.lua` | `gen_roads.py` | the game's own terrain (road textures) |
 | Capital streets | `Data/Forever/CityPaths.lua` | `city/gen_city_paths.py` | lines you drew, `city/<city>.json` |
+| Steep ground | `Data/Forever/Steep.lua` | `gen_steep.py` (after `gen_roads.py`) | the game's own terrain (heights) |
 
 After changing either one, run `/mzr dumpgeometry` in game and paste the export over `Data/Forever/Geometry.lua`,
 because walking times between nodes are worked out from the roads.
@@ -109,6 +110,17 @@ It covers Eastern Kingdoms, Kalimdor and Zephras Isle (its own world, instance 2
 Which ground textures count as road is set per continent in `road_textures.json`. That list was made with `autopick.py`
 (it scores each texture by how thin its painted shape is) and `review.py` (it renders the shortlist over the minimap),
 then checked by eye. Lava, cliff edges and riverbanks are thin too, so that check is needed.
+
+## Steep ground
+
+`python tools/roads/gen_steep.py` rebuilds `Steep.lua` from the terrain's heights: ground over `LIMIT` (50) degrees,
+hilltops ringed by it filled in, specks dropped, and a corridor along every road kept clear (so run it after
+`gen_roads.py`). Open ground over steep cells scores `RoadNet.STEEP` (10) times normal open ground in choosing the
+way, so walks go round mountains by road or valley instead of over them. Only the terrain is seen: walls, rocks and
+buildings are models.
+
+`python tools/roads/gen_steep.py --view 31 37 40 45 0` renders those tiles of a continent (here Dun Morogh) with the
+steep cells in red and roads in cyan to `tools/roads/steep_view.png`.
 
 ## In game
 

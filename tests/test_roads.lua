@@ -75,6 +75,62 @@ do
     RoadNet:Reset()
 end
 
+-- Steep ground (RoadSteep, rows of cells from the terrain's heights). Made up here with 10-yd cells from origin
+-- 10000: row r is x from 10000 - 10r down, column c is y from 10000 - 10c down.
+do
+    local shippedSteep = addon.RoadSteep
+    local DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
+    local function num(v)
+        local s = ""
+        while v >= 32 do s = s .. DIGITS:sub(33 + v % 32, 33 + v % 32); v = math.floor(v / 32) end
+        return s .. DIGITS:sub(v + 1, v + 1)
+    end
+    -- Boxes of steep cells: { x from, x to, y from, y to } (x and y in (from, to]).
+    local function grid(boxes)
+        local rows, r0, r1 = {}, math.huge, -math.huge
+        local runs = {}
+        for _, b in ipairs(boxes) do
+            for r = (10000 - b[2]) / 10, (10000 - b[1]) / 10 - 1 do
+                runs[r] = runs[r] or {}
+                table.insert(runs[r], { (10000 - b[4]) / 10, (b[4] - b[3]) / 10 })
+                r0, r1 = math.min(r0, r), math.max(r1, r)
+            end
+        end
+        for r = r0, r1 do
+            local s, prev = "", 0
+            table.sort(runs[r] or {}, function(a, b) return a[1] < b[1] end)
+            for _, run in ipairs(runs[r] or {}) do s = s .. num(run[1] - prev) .. num(run[2]); prev = run[1] + run[2] end
+            rows[#rows + 1] = s
+        end
+        rows.r0 = r0
+        return { cell = 10, origin = 10000, [7] = rows }
+    end
+    -- A steep box north of the bottom road, x 400 to 600 and y 100 to 300, and a second one in the same rows far
+    -- off at y 2000 to 2100 (two runs in a row).
+    addon.RoadSteep = grid({ { 400, 600, 100, 300 }, { 400, 600, 2000, 2100 } })
+    RoadNet:Reset()
+    check(near(RoadNet:SteepYards(7, 500, -500, 500, 500), 200, 5), "200 yd of the line is steep: "
+        .. RoadNet:SteepYards(7, 500, -500, 500, 500))
+    check(near(RoadNet:SteepYards(7, 500, 0, 500, 3000), 300, 5), "both boxes in one row: "
+        .. RoadNet:SteepYards(7, 500, 0, 500, 3000))
+    check(RoadNet:SteepYards(7, 300, -500, 300, 500) == 0, "beside it, none")
+    check(near(RoadNet:SteepYards(7, 300, 0, 700, 400), 200 * math.sqrt(2), 10), "corner to corner: "
+        .. RoadNet:SteepYards(7, 300, 0, 700, 400))
+    -- Up from below the road to above the box: straight (500 yd, 200 of them steep) when the ground is flat; with
+    -- the box, along the road and up past its side.
+    addon.RoadSteep = nil
+    RoadNet:Reset()
+    check(RoadNet:Route(7, 500, -100, 500, 400) == nil, "flat ground: straight up")
+    addon.RoadSteep = grid({ { 400, 600, 100, 300 } })
+    RoadNet:Reset()
+    local round, straight, points = RoadNet:Route(7, 500, -100, 500, 400)
+    check(round and straight == 500 and #points >= 2, "the steep box sends it by the road: " .. tostring(round))
+    local last = points and points[#points]
+    check(last and RoadNet:SteepYards(7, last.x, last.y, 500, 400) < 1, "and off the road clear of the box")
+    addon.RoadSteep = shippedSteep
+    RoadNet:Reset()
+end
+
 -- Two places, through their world positions (stubbed here: x, y as given, all on continent 7).
 local realWorld = TravelGraph.WorldPosition
 TravelGraph.WorldPosition = function(p) return p.wx, p.wy, p.continent end

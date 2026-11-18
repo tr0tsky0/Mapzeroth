@@ -18,6 +18,8 @@ TILE = 533.3333333
 ZONES = {
     "zephras": {"title": "Zephras Isle", "wdt": 7198644, "instance": 2991, "ui_map": 2521,
                 "tiles": (25, 22, 33, 29), "px": 192},
+    "dun_morogh": {"title": "Dun Morogh", "wdt": 775971, "instance": 0, "ui_map": 1426,
+                   "tiles": (31, 40, 36, 44), "px": 192},
 }
 
 SNAP_YD = 25            # a drawn line's end this near a road joins it there
