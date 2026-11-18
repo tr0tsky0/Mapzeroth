@@ -263,6 +263,10 @@ function addon:GetKnownTeleports(ctx)
     local function spellReady(ability)
         return not ability.spellID or (ctx.cooldownRemaining(ability.spellID) or 0) <= 0
     end
+    -- A spell that uses up an item (Forever's mage teleports: a Rune of Teleportation) needs one in the bags.
+    local function hasReagent(ability)
+        return not ability.reagent or ctx.hasItem(ability.reagent)
+    end
     local function itemReady(ability)
         return not ability.itemID or not ctx.itemCooldownRemaining
             or (ctx.itemCooldownRemaining(ability.itemID) or 0) <= 0
@@ -275,6 +279,7 @@ function addon:GetKnownTeleports(ctx)
         return ability.equipCooldown or addon.DEFAULT_EQUIP_SECONDS or 0
     end
     local function add(ability, to, defaultMethod)
+        if not hasReagent(ability) then return end
         if ctx.maxCooldown and (ability.cooldown or 0) > ctx.maxCooldown then return end
         local wait = equipSeconds(ability)
         local source = ability

@@ -353,7 +353,7 @@ end
 -- Mage city teleports: a mage who knows Teleport: Orgrimmar gets there from Stormwind by the spell; one who doesn't,
 -- doesn't. And a shaman's Astral Recall goes to the bound inn like the hearthstone.
 do
-    local mage = makeCtx({ faction = "Horde", class = "MAGE", spells = { 3567 } })
+    local mage = makeCtx({ faction = "Horde", class = "MAGE", spells = { 3567 }, items = { 17031 } })   -- and a rune
     local r = route(mage, "TAXI_2", "CITY_ORGRIMMAR")
     check(r and r.steps[1].method == "teleport" and r.steps[1].to == "CITY_ORGRIMMAR",
         "a mage teleports to Orgrimmar: " .. (r and methods(r) or "nil"))

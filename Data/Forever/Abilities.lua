@@ -41,6 +41,10 @@ addon.Abilities.GroundForms = {
     { spellID = 768, talents = { { spellID = 17002, perRank = 0.15 } }, indoorCapable = true },
 }
 
+-- `reagent` is an item the cast uses up: without one in the bags the ability isn't offered. Of Forever's
+-- abilities only the mage teleports take one (Moonglade, Astral Recall and the forms take none).
+local RUNE_OF_TELEPORTATION = 17031
+
 addon.Abilities.Teleports = {
     -- Druid: Teleport: Moonglade. 10s cast, no cooldown (confirmed live).
     -- Landing spot captured live as TELEPORT_MOONGLADE.
@@ -51,13 +55,13 @@ addon.Abilities.Teleports = {
     -- Mage: the six Classic city teleports (10 s cast, no cooldown, a Rune of Teleportation each). Spell ids are
     -- Classic's, confirmed on Forever (/mzdump spells, 2026-09-24). PROVISIONAL landing:
     -- each city's centre node until the real arrival spot is captured in game (Stormwind's map was redrawn, so
-    -- Classic's spots can't be trusted). Only a mage knows these, so knowing the spell is the check.
-    { spellID = 3561, to = "CITY_STORMWIND", cost = 10, cooldown = 0 },     -- Teleport: Stormwind
-    { spellID = 3562, to = "CITY_IRONFORGE", cost = 10, cooldown = 0 },     -- Teleport: Ironforge
-    { spellID = 3565, to = "CITY_DARNASSUS", cost = 10, cooldown = 0 },     -- Teleport: Darnassus
-    { spellID = 3563, to = "CITY_UNDERCITY", cost = 10, cooldown = 0 },     -- Teleport: Undercity
-    { spellID = 3566, to = "CITY_THUNDER_BLUFF", cost = 10, cooldown = 0 }, -- Teleport: Thunder Bluff
-    { spellID = 3567, to = "CITY_ORGRIMMAR", cost = 10, cooldown = 0 },     -- Teleport: Orgrimmar
+    -- Classic's spots can't be trusted). Only a mage knows these, so knowing the spell (and carrying a rune) is the check.
+    { spellID = 3561, to = "CITY_STORMWIND", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION },     -- Teleport: Stormwind
+    { spellID = 3562, to = "CITY_IRONFORGE", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION },     -- Teleport: Ironforge
+    { spellID = 3565, to = "CITY_DARNASSUS", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION },     -- Teleport: Darnassus
+    { spellID = 3563, to = "CITY_UNDERCITY", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION },     -- Teleport: Undercity
+    { spellID = 3566, to = "CITY_THUNDER_BLUFF", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION }, -- Teleport: Thunder Bluff
+    { spellID = 3567, to = "CITY_ORGRIMMAR", cost = 10, cooldown = 0, reagent = RUNE_OF_TELEPORTATION },     -- Teleport: Orgrimmar
 }
 
 -- The hearthstone takes you to the inn you're bound at, which isn't fixed data: it is

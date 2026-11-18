@@ -77,3 +77,20 @@ do
     check(r2 and r2.steps[1].method == "hearthstone", "and the route's step says so")
     addon.Abilities.Hearthstones = realList
 end
+
+-- 7. A mage teleport uses up a Rune of Teleportation: with none in the bags it isn't offered.
+do
+    local function toStormwind(ctx)
+        for _, entry in ipairs(addon:GetKnownTeleports(ctx)) do
+            if entry.ability.spellID == 3561 then return true end
+        end
+        return false
+    end
+    check(not toStormwind(makeCtx({ class = "MAGE", spells = { 3561 } })), "Teleport: Stormwind without a rune is not offered")
+    check(toStormwind(makeCtx({ class = "MAGE", spells = { 3561 }, items = { 17031 } })), "with a rune it is")
+    for _, t in ipairs(addon.Abilities.Teleports) do
+        if t.spellID >= 3561 and t.spellID <= 3567 then
+            check(t.reagent == 17031, "mage teleport " .. t.spellID .. " needs a rune")
+        end
+    end
+end
