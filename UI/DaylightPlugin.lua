@@ -4,7 +4,8 @@ local addonName, addon = ...
 -- when DaylightUI is loaded, and only through DaylightUI.API (its plugin guide):
 --   * a step that casts a spell or uses an item lights the action bar buttons holding it (API.Glow, 1.5);
 --   * a data text, "Mapzeroth: Route", for the strip under the minimap or the data bar: the step the trip is on and the
---     time left, the steps to come in its tooltip, a click shows or hides the panel (AddDataText, 1.6).
+--     time left, the steps to come in its tooltip, a click shows or hides the panel (AddDataText, 1.6);
+--   * a route arrow on each quest in its quest tracker: a click routes there (Paint on "questrow" and Attach, 1.3).
 -- The navigator tells it of each update of the trip (OnTrip).
 
 local API = DaylightUI and DaylightUI.API
@@ -115,6 +116,80 @@ local function redrawText()
     if now == shown then return end
     shown = now
     my.UpdateDataText("route")
+end
+
+-- ---------------------------------------------------------------------------------------
+-- The quest tracker: a route arrow on each quest, under its icon beside the first line below the title, where the
+-- tracker leaves room (the objectives start further in than the title). A click routes to the quest and starts the trip.
+
+local QUEST_ARROW = 12              -- the arrow's size, in pixels: about the quest icon's
+local QUEST_ARROW_HIT = 16          -- the button around it, a little bigger to hit
+local QUEST_ARROW_GAP = 17          -- the arrow's centre, left of where the line's text starts: under the quest icon
+                                    -- (the tracker's lines start 24 px in, its icon is 13 wide)
+local QUEST_ARROW_DIM = 0.55        -- its alpha until the mouse is on it
+local ARROW_TEXTURE = "Interface\\AddOns\\" .. addonName .. "\\Media\\Arrow"
+
+local arrows = setmetatable({}, { __mode = "k" })    -- quest row -> our arrow button on it
+
+-- A click on a quest's arrow: the route to it, or a word on why there isn't one.
+function Plugin.RouteQuest(questID)
+    if type(questID) ~= "number" then return end
+    if addon.Panel:RouteToQuest(questID) then return end
+    if UIErrorsFrame then UIErrorsFrame:AddMessage(L["QUEST_NO_SPOT"], 1, 0.1, 0.1) end
+end
+
+local function makeArrow(holder)
+    local b = CreateFrame("Button", nil, holder)
+    b:SetSize(QUEST_ARROW_HIT, QUEST_ARROW_HIT)
+    b.tex = b:CreateTexture(nil, "OVERLAY")
+    b.tex:SetSize(QUEST_ARROW, QUEST_ARROW)
+    b.tex:SetPoint("CENTER")
+    b.tex:SetTexture(ARROW_TEXTURE, "CLAMP", "CLAMP", "TRILINEAR")
+    b.tex:SetRotation(-math.pi / 4)                   -- ours points up: tilted to the right, the usual "navigate"
+    b:SetAlpha(QUEST_ARROW_DIM)
+    b:RegisterForClicks("LeftButtonUp")
+    b:SetScript("OnClick", function(self) Plugin.RouteQuest(self.questID) end)
+    b:SetScript("OnEnter", function(self)
+        self:SetAlpha(1)
+        if not GameTooltip then return end
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        GameTooltip:SetText(L["PANEL_TITLE"])
+        GameTooltip:AddLine(L["QUEST_ROUTE_TIP"], 1, 1, 1)
+        GameTooltip:Show()
+    end)
+    b:SetScript("OnLeave", function(self)
+        self:SetAlpha(QUEST_ARROW_DIM)
+        if GameTooltip then GameTooltip:Hide() end
+    end)
+    return b
+end
+
+-- Daylight UI's paint of a quest row (each layout of the tracker): the arrow placed on its first line below the title,
+-- in the player's Daylight accent. A row with no such line (a folded quest) has none.
+function Plugin.PaintQuestRow(row, parts, info)
+    local line = parts and parts.objectives and parts.objectives[1]
+    local questID = info and info.questID
+    local b = arrows[row]
+    if not (line and type(questID) == "number") then
+        if b then b:Hide() end
+        return
+    end
+    if not b then
+        local holder = API.Attach(row)
+        if not holder then return end
+        b = makeArrow(holder)
+        arrows[row] = b
+    end
+    b.questID = questID
+    local _, size = line:GetFont()
+    b:ClearAllPoints()
+    b:SetPoint("CENTER", line, "TOPLEFT", -QUEST_ARROW_GAP, -(tonumber(size) or QUEST_ARROW) / 2)
+    if type(API.Accent) == "function" then b.tex:SetVertexColor(API.Accent()) end
+    b:Show()
+end
+
+if type(my.Paint) == "function" and type(API.Attach) == "function" then
+    my.Paint("questrow", Plugin.PaintQuestRow)
 end
 
 -- ---------------------------------------------------------------------------------------

@@ -192,6 +192,8 @@ addon:RegisterLocale("ruRU", {
     ROUTE_TOUR_UNREAD = "Не удалось прочитать строк: %d.",
     WAYPOINT_NAME     = "Ваша метка",
     QUEST_NAME        = "Ваше задание",
+    QUEST_ROUTE_TIP   = "Щелчок: маршрут к этому заданию",
+    QUEST_NO_SPOT     = "У этого задания нет места, к которому можно проложить маршрут.",
     PICK_CLASS        = "Учитель класса",
     PICK_PET          = "Учитель питомцев",
     PICK_DEMON        = "Учитель демонов",

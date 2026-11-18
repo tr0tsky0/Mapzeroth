@@ -1654,6 +1654,18 @@ function Panel:RouteToWaypoint()
     return true
 end
 
+-- A click on a quest's route arrow (UI/DaylightPlugin.lua): the window comes up with the route to that quest's spot
+-- and the trip starts, as for a map waypoint. False when the quest has no spot we can place.
+function Panel:RouteToQuest(questID)
+    local quest = addon:GetQuestTarget(questID)
+    if not quest then return false end
+    if not (ui and ui.frame:IsShown()) then self:Toggle() end
+    self:ShowRoute(addon.Sections.QuestPick(quest), function(plan)
+        if plan then Panel:StartRoute() end
+    end)
+    return true
+end
+
 -- The quest log changed (an objective done can move the quest's spot): only looked at while the window is up, since
 -- opening it reads everything afresh.
 function Panel:OnQuestLogUpdate()

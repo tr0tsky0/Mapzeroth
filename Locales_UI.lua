@@ -208,6 +208,8 @@ addon:RegisterLocale("enUS", {
     ROUTE_TOUR_UNREAD = "%d pasted lines couldn't be read.",
     WAYPOINT_NAME     = "Your waypoint",
     QUEST_NAME        = "Your quest",
+    QUEST_ROUTE_TIP   = "Click: route to this quest",
+    QUEST_NO_SPOT     = "This quest has no spot to route to.",
     PICK_CLASS        = "Class Trainer",
     PICK_PET          = "Pet Trainer",
     PICK_DEMON        = "Demon Trainer",

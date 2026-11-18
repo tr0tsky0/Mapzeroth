@@ -58,6 +58,14 @@ function Sections.WaypointPick(waypoint)
     return entry
 end
 
+-- The pick for a quest (addon:GetQuestTarget), named by its title.
+function Sections.QuestPick(quest)
+    return {
+        name = quest.title and L["PICK_QUEST_NAMED"]:format(quest.title) or L["PICK_QUEST"], nodeID = quest.id,
+        nodeIDs = { quest.id }, group = "waypoint", relevant = true, pick = true, dest = quest, key = "quest",
+    }
+end
+
 local PET_PICKS = { PET = "PICK_PET", DEMON = "PICK_DEMON" }
 local PET_CLASSES = { HUNTER = "PET", WARLOCK = "DEMON" }
 
@@ -242,10 +250,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     -- The quest the game's arrow points to, named by its title.
     if quest then
         index[quest.id] = { name = addon:GetZoneName(quest.mapID) or "" }
-        top[#top + 1] = {
-            name = quest.title and L["PICK_QUEST_NAMED"]:format(quest.title) or L["PICK_QUEST"], nodeID = quest.id,
-            nodeIDs = { quest.id }, group = "waypoint", relevant = true, pick = true, dest = quest, key = "quest",
-        }
+        top[#top + 1] = Sections.QuestPick(quest)
     end
     -- The nearest ley line or convergence (Skyborne): its places come from SLLCM when it is planned (LeyShare:PlacesFor).
     -- Without SLLCM the row points to it instead (action "sllcm"), until the player dismisses that.

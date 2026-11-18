@@ -190,6 +190,8 @@ addon:RegisterLocale("zhCN", {
     ROUTE_TOUR_UNREAD = "有 %d 行无法读取。",
     WAYPOINT_NAME     = "你的地图标记",
     QUEST_NAME        = "你的任务",
+    QUEST_ROUTE_TIP   = "点击：规划前往此任务的路线",
+    QUEST_NO_SPOT     = "此任务没有可前往的地点。",
     PICK_CLASS        = "职业训练师",
     PICK_PET          = "宠物训练师",
     PICK_DEMON        = "恶魔训练师",

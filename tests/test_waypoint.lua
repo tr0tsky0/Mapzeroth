@@ -110,6 +110,11 @@ C_TaskQuest = { GetQuestZoneID = function() return 1455 end, GetQuestLocation = 
 q = addon:GetQuestTarget()
 check(q and q.mapID == 1455 and math.abs(q.x - 0.7) < 1e-9, "a world quest's own spot first")
 C_TaskQuest = nil
+pins[1453][1].x, pins[1453][1].y = 0.15, 0.15
+local other = addon:GetQuestTarget(999)
+check(other and other.questID == 999 and math.abs(other.x - 0.15) < 1e-9,
+    "any quest by its id, not just the one followed (the tracker's route arrow)")
+check(addon:GetQuestTarget(0) == nil, "quest 0 is none")
 q = addon:GetQuestTarget()
 local withQuest = addon.Sections:Build(entries, ctx, dest, nil, q)
 check(withQuest.top[1].key == "waypoint" and withQuest.top[2].key == "quest" and withQuest.top[2].dest == q

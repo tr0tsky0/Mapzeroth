@@ -190,6 +190,8 @@ addon:RegisterLocale("ptBR", {
     ROUTE_TOUR_UNREAD = "%d linhas coladas não puderam ser lidas.",
     WAYPOINT_NAME     = "Seu ponto de referência",
     QUEST_NAME        = "Sua missão",
+    QUEST_ROUTE_TIP   = "Clique: rota até esta missão",
+    QUEST_NO_SPOT     = "Esta missão não tem um local para traçar a rota.",
     PICK_CLASS        = "Instrutor de classe",
     PICK_PET          = "Instrutor de mascotes",
     PICK_DEMON        = "Instrutor de demônios",

@@ -97,11 +97,13 @@ local function questSpot(questID)
     end
 end
 
--- The quest the player is following (the one the game's arrow points to) as a destination node
--- { id, mapID, x, y, questID, title }, or nil when none is followed or it has no spot we can place.
-function addon:GetQuestTarget()
-    local track = C_SuperTrack
-    local questID = track and track.GetSuperTrackedQuestID and track.GetSuperTrackedQuestID()
+-- A quest as a destination node { id, mapID, x, y, questID, title }, or nil when it has no spot we can place.
+-- questID: the quest; left out, the one the player is following (the one the game's arrow points to).
+function addon:GetQuestTarget(questID)
+    if questID == nil then
+        local track = C_SuperTrack
+        questID = track and track.GetSuperTrackedQuestID and track.GetSuperTrackedQuestID()
+    end
     if not questID or questID == 0 then return nil end
     local mapID, x, y = questSpot(questID)
     local place = mapID and addon:PlaceAt(mapID, x, y, "QUEST")

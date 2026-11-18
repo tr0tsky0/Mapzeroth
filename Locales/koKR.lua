@@ -191,6 +191,8 @@ addon:RegisterLocale("koKR", {
     ROUTE_TOUR_UNREAD = "붙여넣은 %d줄을 읽을 수 없습니다.",
     WAYPOINT_NAME     = "내 지도 표시",
     QUEST_NAME        = "내 퀘스트",
+    QUEST_ROUTE_TIP   = "클릭: 이 퀘스트로 경로 안내",
+    QUEST_NO_SPOT     = "이 퀘스트에는 경로를 안내할 위치가 없습니다.",
     PICK_CLASS        = "직업 상급자",
     PICK_PET          = "소환수 조련사",
     PICK_DEMON        = "악마 상급자",
