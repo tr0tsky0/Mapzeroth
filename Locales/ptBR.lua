@@ -74,6 +74,8 @@ addon:RegisterLocale("ptBR", {
     OPT_TAX_DESC      = "Quanto tempo uma tela de carregamento (portal, teleporte, pedra de regresso ou metrô) conta quando o Mapzeroth calcula o tempo de uma rota.",
     OPT_MAX_COOLDOWN  = "Tempo de recarga máximo",
     OPT_MAX_COOLDOWN_DESC = "Habilidades e itens com tempo de recarga maior que este não são usados nas rotas.",
+    OPT_REAGENT_SAVING = "Economia mínima para gastar um reagente",
+    OPT_REAGENT_SAVING_DESC = "Um feitiço que consome um reagente (a runa de um teleporte de mago) só é usado se economizar pelo menos esse tempo.",
     OPT_SCALE         = "Escala",
     OPT_SCALE_DESC    = "O tamanho do painel ao lado do mapa e da janela de viagem.",
     OPT_THEME         = "Tema",

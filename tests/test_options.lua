@@ -13,7 +13,9 @@ check(addon:MaxCooldownSeconds() == nil, "the top of the range (8+) is no limit 
 O:Set("maxCooldown", 4)
 check(addon:MaxCooldownSeconds() == 4 * 3600, "below it, the limit in seconds")
 O:Set("maxCooldown", 8)
-check(O:Get("nonsense") == nil, "an unknown setting is nil")
+check(O:Get("reagentSaving") == 120, "a reagent is spent for a saving of 2 minutes by default")
+min, max, step = O:Range("reagentSaving")
+check(min == 1 and max == 300 and step == 1, "and that runs 1 s to 5 minutes")check(O:Get("nonsense") == nil, "an unknown setting is nil")
 
 -- Values are forced into range and to whole steps.
 check(O:Set("loadingScreenTax", 30) == 20 and O:Get("loadingScreenTax") == 20, "over the top is clamped to 20")

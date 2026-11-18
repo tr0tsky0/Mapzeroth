@@ -63,7 +63,8 @@ addon.DEFAULT_EQUIP_SECONDS = 0
 -- A spell that uses up a reagent (Forever's mage teleports: a Rune of Teleportation) costs money, so it is only
 -- taken when it saves at least this many seconds over the best route without it: no rune spent teleporting to
 -- Stormwind from Stormwind. Rides on the ability's bias (PlayerAbilities.lua), so the route's time stays true.
-addon.REAGENT_MIN_SAVING = 120
+-- The player can change it (Options.lua: reagentSaving); this is the default.
+addon.DEFAULT_REAGENT_SAVING = 120
 
 -- What an authored walk edge with no cost of its own takes when the distance between its ends can't be
 -- measured (two maps the client won't project onto one another: Oribos and its Ring). The edge says the

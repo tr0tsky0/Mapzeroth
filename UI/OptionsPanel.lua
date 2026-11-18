@@ -347,6 +347,15 @@ function OptionsPanel:Build()
                 return SLIDER_ROW
             end,
             function(y)
+                if not addon:HasReagentAbilities() then return 0 end      -- Forever: mage teleports use up a rune
+                widgets.reagentSaving = sliderRow(box, y, "reagentSaving", L["OPT_REAGENT_SAVING"], L["OPT_REAGENT_SAVING_DESC"],
+                    function(v)
+                        if v < 60 then return L["OPT_SECONDS"]:format(v) end
+                        return L["TIME_MINUTES"]:format(math.floor(v / 60), v % 60)
+                    end)
+                return SLIDER_ROW
+            end,
+            function(y)
                 widgets.assumeFlights = toggleRow(box, y, "assumeFlightsFound", L["OPT_ASSUME_FLIGHTS"], L["OPT_ASSUME_FLIGHTS_DESC"])
                 return TOGGLE_ROW
             end,
@@ -461,6 +470,10 @@ function OptionsPanel:Sync()
     widgets.tax.value:SetText(widgets.tax.format(Options:Get("loadingScreenTax")))
     widgets.cooldown.slider:SetValue(Options:Get("maxCooldown"))
     widgets.cooldown.value:SetText(widgets.cooldown.format(Options:Get("maxCooldown")))
+    if widgets.reagentSaving then
+        widgets.reagentSaving.slider:SetValue(Options:Get("reagentSaving"))
+        widgets.reagentSaving.value:SetText(widgets.reagentSaving.format(Options:Get("reagentSaving")))
+    end
     widgets.scale.slider:SetValue(Options:Get("scale"))
     widgets.scale.value:SetText(widgets.scale.format(Options:Get("scale")))
     if widgets.roads then

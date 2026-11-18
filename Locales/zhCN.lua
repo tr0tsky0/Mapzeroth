@@ -74,6 +74,8 @@ addon:RegisterLocale("zhCN", {
     OPT_TAX_DESC      = "Mapzeroth计算路线时间时，每次载入画面（传送门、传送、炉石或地铁）计入的时长。",
     OPT_MAX_COOLDOWN  = "最长冷却时间",
     OPT_MAX_COOLDOWN_DESC = "冷却时间超过此值的技能和物品不会用于路线。",
+    OPT_REAGENT_SAVING = "消耗材料的最少节省时间",
+    OPT_REAGENT_SAVING_DESC = "消耗材料的法术（法师传送的符文）只有在至少节省这么多时间时才会使用。",
     OPT_SCALE         = "缩放",
     OPT_SCALE_DESC    = "地图旁面板和旅程窗口的大小。",
     OPT_THEME         = "主题",

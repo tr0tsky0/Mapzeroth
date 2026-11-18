@@ -1131,6 +1131,10 @@ local sharing = subPages[addon.L["OPT_SHARING_TITLE"]]
 check(sharing and sharing.parent:GetID() == 42 and sharing.frame == addon.OptionsPanel.sharingFrame,
       "Forever: a Ley line sharing page is registered under Mapzeroth's")
 check(pw.showNavigator and pw.dropTomTom and pw.hideMinimap and pw.roads, "every main-page setting is built")
+-- Forever's mage teleports use up a rune: the least saving to spend one, beside the longest cooldown.
+check(pw.reagentSaving and pw.reagentSaving.value._text == "2m 00s", "Forever: the reagent saving row shows 2 minutes: "
+    .. tostring(pw.reagentSaving and pw.reagentSaving.value._text))
+check(pw.reagentSaving.format(45) == "45 s" and pw.reagentSaving.format(300) == "5m 00s", "under a minute in seconds, else minutes")
 
 -- Sharing ley line sightings (Forever): a normal row without SLLCM; greyed out with the reason in its title with it.
 check(pw.share and pw.share.title:GetText() == "Share ley line sightings" and not pw.share.disabled, "the sharing row is there")

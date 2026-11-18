@@ -76,6 +76,8 @@ addon:RegisterLocale("deDE", {
     OPT_TAX_DESC      = "Wie lange ein Ladebildschirm (Portal, Teleport, Ruhestein oder Tiefenbahn) zählt, wenn Mapzeroth eine Route berechnet.",
     OPT_MAX_COOLDOWN  = "Längste Abklingzeit",
     OPT_MAX_COOLDOWN_DESC = "Fähigkeiten und Gegenstände mit längerer Abklingzeit werden für Routen nicht verwendet.",
+    OPT_REAGENT_SAVING = "Mindestersparnis für Reagenzien",
+    OPT_REAGENT_SAVING_DESC = "Ein Zauber, der ein Reagenz verbraucht (die Rune eines Magierteleports), wird nur verwendet, wenn er mindestens so viel Zeit spart.",
     OPT_SCALE         = "Skalierung",
     OPT_SCALE_DESC    = "Die Größe des Fensters neben der Karte und des Reisefensters.",
     OPT_THEME         = "Design",

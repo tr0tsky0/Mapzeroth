@@ -75,6 +75,8 @@ addon:RegisterLocale("koKR", {
     OPT_TAX_DESC      = "Mapzeroth가 경로 시간을 계산할 때 로딩 화면(차원문, 순간이동, 귀환석, 지하철) 하나를 얼마로 계산할지 정합니다.",
     OPT_MAX_COOLDOWN  = "최대 재사용 대기시간",
     OPT_MAX_COOLDOWN_DESC = "이보다 재사용 대기시간이 긴 능력과 아이템은 경로에 사용하지 않습니다.",
+    OPT_REAGENT_SAVING = "재료 사용 최소 절약 시간",
+    OPT_REAGENT_SAVING_DESC = "재료를 소모하는 주문(마법사 순간이동의 룬)은 최소한 이만큼 시간을 절약할 때만 사용합니다.",
     OPT_SCALE         = "크기",
     OPT_SCALE_DESC    = "지도 옆 패널과 여행 창의 크기입니다.",
     OPT_THEME         = "테마",

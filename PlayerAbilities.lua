@@ -180,6 +180,17 @@ local function isHolidayActive(key)
     return active
 end
 
+-- Does any ability in this game's data use up a reagent? (Forever's mage teleports.) Only then is the
+-- reagentSaving setting shown.
+function addon:HasReagentAbilities()
+    for _, list in pairs(addon.Abilities or {}) do
+        for _, ability in ipairs(type(list) == "table" and list or {}) do
+            if type(ability) == "table" and ability.reagent then return true end
+        end
+    end
+    return false
+end
+
 -- The maxCooldown setting in seconds, or nil at the top of its range: that reads "8+ h", no limit at all.
 function addon:MaxCooldownSeconds()
     local hours = addon.Options:Get("maxCooldown")
@@ -235,6 +246,7 @@ function addon:GetPlayerContext()
         mapArtID = function(mapID) return C_Map and C_Map.GetMapArtID and C_Map.GetMapArtID(mapID) or nil end,
         loadingScreenTax = addon.Options:Get("loadingScreenTax"),
         maxCooldown = addon:MaxCooldownSeconds(),                        -- nil: no limit
+        reagentSaving = addon.Options:Get("reagentSaving"),              -- seconds a reagent spent must save
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
         fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master
     }
@@ -294,7 +306,7 @@ function addon:GetKnownTeleports(ctx)
         local source = ability
         local bias = addon:AbilityBias(ability)
         if ability.reagent and not ctx.reagentFree then
-            bias = bias + (addon.REAGENT_MIN_SAVING or 0)     -- spending a reagent has to be worth it
+            bias = bias + (ctx.reagentSaving or addon.DEFAULT_REAGENT_SAVING or 0)   -- spending a reagent has to be worth it
         end
         if wait then
             source = {}

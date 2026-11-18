@@ -11,7 +11,7 @@
 
 ### Fixed
 - The route behind you could come back on the map and minimap partway along a step, all of it at once. The part you've walked now stays gone, also when you step off the line for a moment.
-- **Forever: mage teleports need a Rune of Teleportation.** Routes no longer offer a city teleport when you have no rune in your bags, and only spend one when it saves at least 2 minutes (no more teleporting to Stormwind while you're in Stormwind). With the Reagent Economy legacy perk no rune is needed.
+- **Forever: mage teleports need a Rune of Teleportation.** Routes no longer offer a city teleport when you have no rune in your bags, and only spend one when it saves enough time (no more teleporting to Stormwind while you're in Stormwind): 2 minutes by default, set by the new setting **Least time saved to spend a reagent** (1 second to 5 minutes), beside Longest cooldown to use. With the Reagent Economy legacy perk no rune is needed.
 
 ### Changed
 - **Forever: ley line sharing matches Skyborne Ley Line & Convergence Marker 1.4.0.** The "Detect nodes on the minimap" setting is gone: since a recent game update, addons can no longer read the minimap's node dots, so only your racial finds nodes now. Two sightings within 70 yards count as the same node (was 60), since the racial reaches about 30 yards either side of one.

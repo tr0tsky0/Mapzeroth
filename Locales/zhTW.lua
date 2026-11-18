@@ -74,6 +74,8 @@ addon:RegisterLocale("zhTW", {
     OPT_TAX_DESC      = "Mapzeroth計算路線時間時，每次載入畫面（傳送門、傳送、爐石或地鐵）計入的時間。",
     OPT_MAX_COOLDOWN  = "最長冷卻時間",
     OPT_MAX_COOLDOWN_DESC = "冷卻時間超過此值的技能和物品不會用於路線。",
+    OPT_REAGENT_SAVING = "消耗材料的最少節省時間",
+    OPT_REAGENT_SAVING_DESC = "消耗材料的法術（法師傳送的符文）只有在至少節省這麼多時間時才會使用。",
     OPT_SCALE         = "縮放",
     OPT_SCALE_DESC    = "地圖旁面板和旅程視窗的大小。",
     OPT_THEME         = "主題",

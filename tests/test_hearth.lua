@@ -95,7 +95,7 @@ do
     end
 end
 
--- 8. A rune costs money, so a teleport that spends one has to save REAGENT_MIN_SAVING over the best route without
+-- 8. A rune costs money, so a teleport that spends one has to save the reagentSaving setting over the best route without
 -- it (a player in Stormwind isn't told to teleport to Stormwind). With the Reagent Economy perk it's free: no rune
 -- needed, and any saving will do. The route's time is the real one either way.
 do
@@ -104,7 +104,7 @@ do
         for k, v in pairs(extra or {}) do o[k] = v end
         return route(makeCtx(o), from, to)
     end
-    local MIN = addon.REAGENT_MIN_SAVING
+    local MIN = addon.DEFAULT_REAGENT_SAVING
     check(MIN and MIN > 0, "a reagent teleport has a minimum saving")
     local withRune = { spells = { 3561 }, items = { 17031 } }
     local perk = { spells = { 3561 }, reagentFree = true }
@@ -116,6 +116,11 @@ do
     local r = plan("TAXI_2", "CITY_STORMWIND", withRune)
     check(r and r.steps[1].method ~= "teleport", "no rune spent teleporting across Stormwind: " .. (r and methods(r) or "nil"))
     check(r and math.abs(r.cost - walk.cost) < 1e-6, "and its time is the walk's")
+    if walk.cost > tele + 1 then
+        -- The setting lowered to 1 s: then even this short a saving is worth a rune.
+        local low = plan("TAXI_2", "CITY_STORMWIND", { spells = { 3561 }, items = { 17031 }, reagentSaving = 1 })
+        check(low and low.steps[1].method == "teleport", "with the setting at 1 s the rune is spent: " .. (low and methods(low) or "nil"))
+    end
     if walk.cost > tele then
         local free = plan("TAXI_2", "CITY_STORMWIND", perk)
         check(free and free.steps[1].method == "teleport", "with the perk the free teleport wins: " .. (free and methods(free) or "nil"))

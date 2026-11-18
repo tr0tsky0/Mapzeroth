@@ -75,6 +75,8 @@ addon:RegisterLocale("itIT", {
     OPT_TAX_DESC      = "Quanto conta una schermata di caricamento (portale, teletrasporto, Pietra del Ritorno o tram) quando Mapzeroth calcola la durata di un percorso.",
     OPT_MAX_COOLDOWN  = "Tempo di recupero massimo",
     OPT_MAX_COOLDOWN_DESC = "Abilità e oggetti con un tempo di recupero più lungo non vengono usati nei percorsi.",
+    OPT_REAGENT_SAVING = "Risparmio minimo per usare un reagente",
+    OPT_REAGENT_SAVING_DESC = "Un incantesimo che consuma un reagente (la runa di un teletrasporto del mago) si usa solo se fa risparmiare almeno questo tempo.",
     OPT_SCALE         = "Scala",
     OPT_SCALE_DESC    = "Le dimensioni del pannello accanto alla mappa e della finestra di viaggio.",
     OPT_THEME         = "Tema",

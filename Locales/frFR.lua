@@ -75,6 +75,8 @@ addon:RegisterLocale("frFR", {
     OPT_TAX_DESC      = "Le temps compté pour un écran de chargement (portail, téléportation, pierre de foyer ou tram) quand Mapzeroth chronomètre un itinéraire.",
     OPT_MAX_COOLDOWN  = "Temps de recharge maximal",
     OPT_MAX_COOLDOWN_DESC = "Les techniques et objets dont le temps de recharge est plus long ne sont pas utilisés dans les itinéraires.",
+    OPT_REAGENT_SAVING = "Gain minimal pour dépenser un composant",
+    OPT_REAGENT_SAVING_DESC = "Un sort qui consomme un composant (la rune d'une téléportation de mage) n'est utilisé que s'il fait gagner au moins ce temps.",
     OPT_SCALE         = "Échelle",
     OPT_SCALE_DESC    = "La taille du panneau à côté de la carte et de la fenêtre de trajet.",
     OPT_THEME         = "Thème",
