@@ -9,8 +9,10 @@ both Forever only:
 | Capital streets | `Data/Forever/CityPaths.lua` | `city/gen_city_paths.py` | lines you drew, `city/<city>.json` |
 | Steep ground | `Data/Forever/Steep.lua` | `gen_steep.py` (after `gen_roads.py`) | the game's own terrain (heights) |
 
-After changing either one, run `/mzr dumpgeometry` in game and paste the export over `Data/Forever/Geometry.lua`,
-because walking times between nodes are worked out from the roads.
+After changing any of them, run `python tools/dump_geometry.py` (about 2 minutes), because walking times between
+nodes are worked out from the roads. It writes `Data/Forever/Geometry.lua` exactly as `/mzr dumpgeometry` would in
+game, placing maps from the game files' own map table. Each map's road factor comes from the walks, and walks without
+a road use the factors already in the file, so after a big change run it twice; the second run settles them.
 
 ## Adding a missing road link in a zone
 
