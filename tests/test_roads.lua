@@ -365,3 +365,45 @@ do
     by = RoadNet:Waypoints({ arathi, alterac, over })
     check(#by == 3, "and so does a border")
 end
+
+-- Hops: two pieces of road that don't join, x 0 to 1000 and x 1300 to 3000 along y = 0. A walk from beside the
+-- first's start to beside the second's end crosses the 300 yd between them on open ground, scored as open ground;
+-- without the hop it could only leave the first piece for the goal, 2000 yd across country.
+do
+    local shippedRoads, shippedSteep = addon.RoadData, addon.RoadSteep
+    addon.RoadData = { [9] = { { 0, 0, 1000, 0 }, { 1300, 0, 3000, 0 } } }
+    addon.RoadSteep = nil
+    RoadNet:Reset()
+    check(RoadNet:HopCount(9) == 1, "one hop between the two pieces: " .. RoadNet:HopCount(9))
+    local len, straight, points = RoadNet:Route(9, 0, -20, 3000, -20)
+    local xs = {}
+    for _, p in ipairs(points or {}) do xs[#xs + 1] = p.x end
+    check(len and len < 3100 and #points >= 3, "along both pieces, hopping the gap: " .. tostring(len) .. " via "
+        .. table.concat(xs, ","))
+    local hopped = false
+    for i = 2, #(points or {}) do
+        if points[i - 1].x == 1000 and points[i].x == 1300 then hopped = true end
+    end
+    check(hopped, "the hop is the straight line from one end to the other")
+    -- A cliff on the gap, x 1050 to 1250 and y -30 to 30: the hop over it scores STEEP times, so a walk to a goal
+    -- off to the side, whose straight line passes the cliff, goes straight instead.
+    local DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
+    local function num(v)
+        local s = ""
+        while v >= 32 do s = s .. DIGITS:sub(33 + v % 32, 33 + v % 32); v = math.floor(v / 32) end
+        return s .. DIGITS:sub(v + 1, v + 1)
+    end
+    local rows = { r0 = 875 }                       -- origin 10000, 10-yd cells: rows 875-894, columns 997-1002
+    for r = 1, 20 do rows[r] = num(997) .. num(6) end
+    addon.RoadSteep = { cell = 10, origin = 10000, [9] = rows }
+    RoadNet:Reset()
+    check(near(RoadNet:SteepYards(9, 1000, 0, 1300, 0), 200, 5), "the cliff is 200 yd of the gap")
+    check(RoadNet:SteepYards(9, 0, -20, 3000, -100) == 0, "the straight line passes it")
+    local hop = RoadNet:Route(9, 0, -20, 3000, -100)
+    check(hop == nil, "so the hop over the cliff isn't taken: " .. tostring(hop))
+    addon.RoadSteep = nil
+    RoadNet:Reset()
+    check(RoadNet:Route(9, 0, -20, 3000, -100), "without the cliff it is")
+    addon.RoadData, addon.RoadSteep = shippedRoads, shippedSteep
+    RoadNet:Reset()
+end

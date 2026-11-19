@@ -293,6 +293,106 @@ function RoadNet:SteepYards(continent, ax, ay, bx, by)
     return steepYards(steepFor(continent), ax, ay, bx, by)
 end
 
+-- Hops: open ground between two pieces of road that don't join. The terrain's roads come in pieces (a road painted
+-- with a texture that isn't on the list, a town's tangle, a bridge that is a model), and a walk can only follow
+-- road that joins up: it would leave one piece for its goal and never reach the next. So from each dead end, the
+-- nearest crossings onto every other piece within HOP yards become hops, at most HOP_PER_PAIR between two pieces,
+-- worked out once per continent with the steep and water yards on them. In the search a hop scores as open ground
+-- does (OFFROAD a yard, more over steep ground and water), so it is only taken where it pays. Its time is its
+-- length (a swim on it isn't timed slower).
+RoadNet.HOP = 400
+local HOP_PER_PAIR = 3
+local EMPTY = {}
+
+local function hopsFor(g, continent)
+    if g.hops ~= nil then return g.hops end
+    local vx, vy, adj = g.vx, g.vy, g.adj
+    local n = #vx
+    local piece, count = {}, 0
+    for i = 1, n do
+        if not piece[i] then
+            count = count + 1
+            piece[i] = count
+            local stack = { i }
+            while #stack > 0 do
+                local u = table.remove(stack)
+                local list = adj[u]
+                for m = 1, #list, 2 do
+                    local v = list[m]
+                    if not piece[v] then piece[v] = count; stack[#stack + 1] = v end
+                end
+            end
+        end
+    end
+    local hops = {}
+    g.hops = hops
+    if count < 2 then return hops end
+    local HOP = RoadNet.HOP
+    local cells = {}
+    for i = 1, n do
+        local key = cellKey(math.floor(vx[i] / HOP), math.floor(vy[i] / HOP))
+        local list = cells[key]
+        if not list then list = {}; cells[key] = list end
+        list[#list + 1] = i
+    end
+    -- From each dead end, the nearest vertex of every other piece in reach.
+    local candidates = {}                            -- piece pair -> { { d, i, j }, ... }
+    for i = 1, n do
+        if #adj[i] == 2 then
+            local cx, cy = math.floor(vx[i] / HOP), math.floor(vy[i] / HOP)
+            local nearestOf = {}
+            for dx = -1, 1 do
+                for dy = -1, 1 do
+                    for _, j in ipairs(cells[cellKey(cx + dx, cy + dy)] or {}) do
+                        if piece[j] ~= piece[i] then
+                            local d = math.sqrt((vx[i] - vx[j]) ^ 2 + (vy[i] - vy[j]) ^ 2)
+                            local was = nearestOf[piece[j]]
+                            if d <= HOP and (not was or d < was[1]) then nearestOf[piece[j]] = { d, i, j } end
+                        end
+                    end
+                end
+            end
+            for p, c in pairs(nearestOf) do
+                local a, b = math.min(p, piece[i]), math.max(p, piece[i])
+                local key = a * (count + 1) + b
+                local list = candidates[key]
+                if not list then list = {}; candidates[key] = list end
+                list[#list + 1] = c
+            end
+        end
+    end
+    local steep, water = steepFor(continent), waterFor(continent)
+    for _, list in pairs(candidates) do
+        table.sort(list, function(p, q) return p[1] < q[1] end)
+        local taken, made = {}, 0
+        for m = 1, #list do
+            if made >= HOP_PER_PAIR then break end
+            local d, i, j = list[m][1], list[m][2], list[m][3]
+            local key = math.min(i, j) * (n + 1) + math.max(i, j)     -- two dead ends facing: one hop, not two
+            if not taken[key] then
+            taken[key] = true
+            made = made + 1
+            local s = steepYards(steep, vx[i], vy[i], vx[j], vy[j])
+            local w = wetYards(water, vx[i], vy[i], vx[j], vy[j])
+            hops[i] = hops[i] or {}
+            hops[j] = hops[j] or {}
+            table.insert(hops[i], { j, d, s, w })
+            table.insert(hops[j], { i, d, s, w })
+            end
+        end
+    end
+    return hops
+end
+
+-- How many hops a continent's roads have (for tests and /mzr).
+function RoadNet:HopCount(continent)
+    local g = graphFor(continent)
+    if not g then return 0 end
+    local total = 0
+    for _, list in pairs(hopsFor(g, continent)) do total = total + #list end
+    return total / 2
+end
+
 -- For tests (a different RoadData, RoadWater or RoadSteep): forget the built graphs.
 function RoadNet:Reset() graphs = {}; waters = {}; steeps = {} end
 
@@ -464,6 +564,7 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
     if not g then return nil end
     if type(continent) == "string" then return streetsOnly(g, ax, ay, bx, by, straight) end
     local vx, vy, adj, sa, sb = g.vx, g.vy, g.adj, g.sa, g.sb
+    local hops = hopsFor(g, continent)
     -- Open ground through water scores WATER times more, and over steep ground STEEP times more: the extra for a
     -- stretch across country.
     local water, steep = waterFor(continent), not flat and steepFor(continent)
@@ -530,6 +631,15 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
                 if du + cost < best then cost = cost + wet(ox, oy, bx, by) end
                 if du + cost < best then best, bestVia, bestExit, bestPoints = du + cost, u, { x = ox, y = oy }, nil end
                 local nd = du + w
+                if not closed[v] and (not dist[v] or nd < dist[v]) and nd < best then
+                    dist[v], prev[v], entry[v] = nd, u, nil
+                    push(heap, nd + h(v), v)
+                end
+            end
+            -- Across open ground onto another piece of road (hopsFor).
+            for _, hop in ipairs(hops[u] or EMPTY) do
+                local v = hop[1]
+                local nd = du + k * hop[2] + (steep and climb * hop[3] or 0) + (water and extra * hop[4] or 0)
                 if not closed[v] and (not dist[v] or nd < dist[v]) and nd < best then
                     dist[v], prev[v], entry[v] = nd, u, nil
                     push(heap, nd + h(v), v)
