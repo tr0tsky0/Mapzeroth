@@ -128,7 +128,7 @@ do
     local last = points and points[#points]
     check(last and RoadNet:SteepYards(7, last.x, last.y, 500, 400) < 1, "and off the road clear of the box")
     -- A way round longer than MAX_DETOUR straight lines isn't taken: the walk forgets the steep ground and is what it
-    -- would be without it (here straight up). The way round the box is under 2.5 lines; capped at 1.2 it goes.
+    -- would be without it (here straight up). The way round the box is within the cap; capped at 1.2 it goes.
     local cap = RoadNet.MAX_DETOUR
     check(round < cap * straight, "the way round is within the cap: " .. round / straight)
     RoadNet.MAX_DETOUR = 1.2

@@ -42,7 +42,7 @@ RoadNet.SWIM = 1.5
 -- be walked up: a yard of it scores STEEP times open ground, so a walk goes round by road or valley. Not forbidden
 -- outright: a line that clips a corner, or a goal on a slope, still gets a way. Time is still the walk's length.
 RoadNet.STEEP = 10
-RoadNet.MAX_DETOUR = 2.5     -- a way round steep ground longer than this many straight lines isn't taken (Route)
+RoadNet.MAX_DETOUR = 4       -- a way round steep ground longer than this many straight lines isn't taken (Route)
 
 local CELL = 250             -- grid cell, yards
 
@@ -679,8 +679,10 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
     end
     -- Steep ground scores high but isn't a wall, so a goal behind a mountain could be reached by any loop short
     -- enough to beat climbing it: one at the Hinterlands' northern rim went round through Alterac and both
-    -- Plaguelands, 2.9 times the straight line. Past MAX_DETOUR the steep ground is left out and the walk is the
-    -- road's way as before it.
+    -- Plaguelands, 2.9 times the straight line (before the Hinterlands' roads joined up). Past MAX_DETOUR the steep
+    -- ground is left out and the walk is the road's way as before it. Not lower: Ashenvale's Darkshore border to its
+    -- Felwood border really is 3.2 lines round by Astranaar (the mountains between can't be crossed), and at 2.5 it
+    -- was drawn straight over them.
     if steep and length > self.MAX_DETOUR * straight then return self:Route(continent, ax, ay, bx, by, k, true) end
     return length, straight, bestPoints
 end

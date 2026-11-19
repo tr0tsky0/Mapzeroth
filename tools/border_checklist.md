@@ -14,7 +14,8 @@ Each row is one guessed crossing point, seen from both sides.
 | The Barrens | 42.0, 94.5 | Thousand Needles | 31.9, 22.3 |
 | The Barrens | 51.5, 79.3 | Dustwallow Marsh | 32.0, 46.3 |
 | Ashenvale | 42.4, 72.5 | Stonetalon Mountains | 77.9, 41.5 | via Talondeep Path tunnel (not zero travel)
-| Ashenvale | 28.0, 12.8 | Darkshore | 37.1, 100.0 |
+| Ashenvale | 28.0, 12.8 | Darkshore | 43.6, 95.1 | east road; was paired with the west crossing's Darkshore end (2026-11-18)
+| Ashenvale | 20.6, 18.4 | Darkshore | 37.1, 100.0 | west, by the Zoram Strand
 | Ashenvale | 55.9, 26.8 | Felwood | 57.0, 98.5 |
 | Ashenvale | 94.5, 47.4 | Azshara | 10.4, 74.5 |
 | Felwood | 65.4, 6.9 | Winterspring | 30.5, 35.4 | via Timbermaw Hold tunnel (not zero travel)

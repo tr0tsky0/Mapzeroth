@@ -68,7 +68,10 @@ Every node and crossing written:
   crossing BORDER_ASHENVALE_TO_STONETALON_MOUNTAINS -> BORDER_STONETALON_MOUNTAINS_TO_ASHENVALE: Ashenvale <-> Stonetalon Mountains (via Talondeep Path tunnel (not zero travel))
   BORDER_ASHENVALE_TO_DARKSHORE: Ashenvale side of the Ashenvale/Darkshore crossing
   BORDER_DARKSHORE_TO_ASHENVALE: Darkshore side of the Darkshore/Ashenvale crossing
-  crossing BORDER_ASHENVALE_TO_DARKSHORE -> BORDER_DARKSHORE_TO_ASHENVALE: Ashenvale <-> Darkshore
+  crossing BORDER_ASHENVALE_TO_DARKSHORE -> BORDER_DARKSHORE_TO_ASHENVALE: Ashenvale <-> Darkshore (east road; was paired with the west crossing's Darkshore end (2026-11-18))
+  BORDER_ASHENVALE_TO_DARKSHORE_2: Ashenvale side of the Ashenvale/Darkshore crossing
+  BORDER_DARKSHORE_TO_ASHENVALE_2: Darkshore side of the Darkshore/Ashenvale crossing
+  crossing BORDER_ASHENVALE_TO_DARKSHORE_2 -> BORDER_DARKSHORE_TO_ASHENVALE_2: Ashenvale <-> Darkshore (west, by the Zoram Strand)
   BORDER_ASHENVALE_TO_FELWOOD: Ashenvale side of the Ashenvale/Felwood crossing
   BORDER_FELWOOD_TO_ASHENVALE: Felwood side of the Felwood/Ashenvale crossing
   crossing BORDER_ASHENVALE_TO_FELWOOD -> BORDER_FELWOOD_TO_ASHENVALE: Ashenvale <-> Felwood
