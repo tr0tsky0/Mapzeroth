@@ -1,5 +1,5 @@
 -- Sharing ley line sightings with Skyborne Ley Line & Convergence Marker (LeyShare.lua): the wire format both addons
--- speak, phase reading, and the nearest-ley-line pick going to a node seen up in the player's phase.
+-- speak (no phases since WoW: Forever's 1.60.1 hotfix), the channel handling, and the nearest-ley-line pick.
 
 useTestDistances()
 addon.World:Build()
@@ -58,14 +58,7 @@ addon.Options:Set("shareSightings", true)
 
 local function reset()
     LS:ResetForTests()
-    MapzerothRebuildDB.sightings, MapzerothRebuildDB.sightingsGone = nil, nil
-    MapzerothRebuildDB.sightingQueries = nil
     sent, timers, delays = {}, {}, {}
-end
-
--- A sighting held in Arathi (another phase): a Q goes out only for a zone with one.
-local function holdOne()
-    MapzerothRebuildDB.sightings = { A = { [1417] = { { phase = "1", x = 0.1, y = 0.1, t = now } } } }
 end
 
 check(LS:Networking(), "a Skyborne with sharing on joins in")
@@ -76,63 +69,37 @@ addon.Options:Set("shareSightings", false)
 check(not LS:Networking(), "nor with sharing off")
 addon.Options:Set("shareSightings", true)
 
--- Phase: the first creature read is used at once; a second kind agreeing confirms it; then a new phase needs two
--- kinds of NPC agreeing; players and pets don't count.
+-- Our own find goes out at once, phase 0 (no phases since Forever's 1.60.1 hotfix), with the cast's time.
 reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-check(LS:Phase() == "3104" and #sent == 0, "no Q in a zone where nothing has been seen (no node list of our own)")
-reset()
-holdOne()
-LS:ReadGUID("Player-1-0ABC")
-check(LS:Phase() == nil, "a player's GUID says nothing")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-local p, tentative = LS:Phase()
-check(p == "3104" and tentative, "the first creature gives the phase, tentatively")
-check(#sent == 1 and sent[1] == "Q:1:A:3104", "and it asks what's known there (a sighting is held in Arathi): " .. tostring(sent[1]))
-LS:ReadGUID("Creature-0-1-2-3104-5678-0002")
-p, tentative = LS:Phase()
-check(p == "3104" and not tentative, "a second kind agreeing confirms it")
-LS:ReadGUID("Creature-0-1-2-4200-1111-0003")
-LS:ReadGUID("Creature-0-1-2-4200-1111-0004")
-check(LS:Phase() == "3104", "one kind of NPC elsewhere isn't enough to move a confirmed phase")
-LS:ReadGUID("Vehicle-0-1-2-4200-2222-0005")
-check(LS:Phase() == "4200", "two kinds are")
-clock = clock + 5
-LS:ReadGUID("Creature-0-1-2-3104-1234-0006")
-LS:ReadGUID("Creature-0-1-2-3104-5678-0007")
+LS:OnConfirmed(1417, 0.48, 0.605, now - 3)
+check(sent[1] == "R:1:A:0:1417:4800:6050:" .. (now - 3), "an own find goes out at once, phase 0: " .. tostring(sent[1]))
+LS:OnConfirmed(1417, 0.2, 0.2, now)
 runTimers()
-check(LS:Phase() == "3104" and #sent == 2, "messages go out 1.25 s apart; a phase is asked about once a session: " .. #sent)
+check(sent[2] == "R:1:A:0:1417:2000:2000:" .. now, "and the next, 1.25 s later")
+check(MapzerothRebuildDB.sightings == nil, "nothing is kept")
 
--- Receiving: R, the same node again (newer kept), a stale one, one from the future, the other faction, a bad version.
+-- A minimap blip (LeyScan.lua) isn't sent again for 10 minutes once we sent that node.
 reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-local function r(x, y, t, fac, v)
-    return ("R:%s:%s:3104:1417:%d:%d:%d"):format(v or "1", fac or "A", x, y, t)
-end
-LS:OnMessage(r(2530, 3000, now - 600))
-LS:OnMessage(r(2540, 3010, now - 60))            -- 2.5 x 1.7 yards off: the same node
-LS:OnMessage(r(4800, 6050, now - 5500))          -- older than 90 minutes
-LS:OnMessage(r(4800, 6050, now + 120))           -- two minutes in the future
-LS:OnMessage(r(4800, 6050, now, "H"))
-LS:OnMessage(r(4800, 6050, now, "A", "2"))
-local held = MapzerothRebuildDB.sightings.A[1417]
-check(#held == 1 and held[1].t == now - 60, "one sighting kept, the newer of the two: " .. #held)
-check(math.abs(held[1].x - 0.254) < 1e-9, "at the newer position")
+addon.Options:Set("detectMinimapNodes", true)
+LS:OnMinimapNode(1417, 0.48, 0.605)
+LS:OnMinimapNode(1417, 0.481, 0.606)
+runTimers()
+check(#sent == 1, "a blip sent once, not again within 10 min: " .. #sent)
+now = now + 601
+LS:OnMinimapNode(1417, 0.48, 0.605)
+runTimers()
+check(#sent == 2, "and again after: " .. #sent)
+now = now - 601
 
--- Same node is under 70 yards (SLLCM 1.4.0): the racial works from up to ~30 yd, so two casts at one node can be 60
--- apart. On another map, so the checks below keep to 1417's sightings.
-local function r2(x, y, t) return ("R:1:A:3104:1418:%d:%d:%d"):format(x, y, t) end
-LS:OnMessage(r2(5000, 5000, now - 50))
-LS:OnMessage(r2(5260, 5000, now - 40))           -- 65 yards east: the same node, the newer kept
-local other = MapzerothRebuildDB.sightings.A[1418]
-check(#other == 1 and other[1].t == now - 40, "sightings 65 yards apart are one node: " .. #other)
-LS:OnMessage(r2(5560, 5000, now - 30))           -- 75 yards on from that: another node
-other = MapzerothRebuildDB.sightings.A[1418]
-check(#other == 2, "75 yards apart are two: " .. #other)
-MapzerothRebuildDB.sightings.A[1418] = nil
+-- What others send is not kept, and a Q is never answered.
+reset()
+local function r(x, y, t) return ("R:1:A:3104:1417:%d:%d:%d"):format(x, y, t) end
+check(LS.OnMessage == nil, "no message handler: nothing heard is kept")
+LS:OnHeard()
+runTimers()
+check(#sent == 0 and MapzerothRebuildDB.sightings == nil, "hearing the channel sends nothing")
 
--- Step two: the pick's places come from SLLCM (SLLCM_GetNodes): two in Arathi. It goes to the node seen up, not the
--- nearer one that wasn't.
+-- The pick's places come from SLLCM (SLLCM_GetNodes): two in Arathi. It goes to the nearest.
 local sllcmNodes = { [1417] = { { 0.253, 0.300 }, { 0.480, 0.605 } } }
 local askedFaction
 function SLLCM_GetNodes(faction)
@@ -145,6 +112,7 @@ function SLLCM_GetNodes(faction)
     return out
 end
 C_Spell = { GetSpellInfo = function(id) return { name = "Profession " .. id } end }   -- a route's steps may name a trainer
+C_TaxiMap = C_TaxiMap or { GetTaxiNodesForMap = function() return {} end }            -- or a flight master
 local playerAt = { 0.47, 0.60 }
 C_Map.GetPlayerMapPosition = function() return CreateVector2D(playerAt[1], playerAt[2]) end
 local WEST, CLOSE = "LEY_A_1417_2530_3000", "LEY_A_1417_4800_6050"
@@ -154,75 +122,16 @@ local both = LS:PlaceIDs(pick)
 check(#both == 2 and both[1] == CLOSE and both[2] == WEST and askedFaction == "Alliance",
     "the pick's places are SLLCM's nodes for our faction, nearest first: " .. table.concat(both, " "))
 check(LS:GetPlace(WEST).name == "map 1417 Ley Line", "named like a ley line")
-local seen, count = LS:SeenAmong(both)
-check(count == 1 and seen[WEST] == 60, "SeenAmong finds the sighted node and its age")
 local session = J:Build(makeCtx({ faction = "Alliance" }), { id = "YOU_ley", mapID = 1417, x = 0.47, y = 0.60 }, J:ExtrasOf(pick))
 local plan = J:PlanEntry(session, pick)
-check(plan and plan.goal == WEST and plan.seenAge == 60, "the route goes to the one seen: " .. tostring(plan and plan.goal))
+check(plan and plan.goal == CLOSE, "the route goes to the nearest: " .. tostring(plan and plan.goal))
 check(plan.steps[#plan.steps].text:find("map 1417 Ley Line", 1, true), "and the step names it: " .. plan.steps[#plan.steps].text)
 local round, trip = J:PlanRoundTrip(session, pick)
-check(round and round.goal == WEST and round.seenAge == 60 and trip.placeChosen, "a round trip too, and keeps to it")
+check(round and round.goal == CLOSE and trip.placeChosen, "a round trip too, and keeps to it")
 check(#J:ExtrasOf(trip) == 2, "the chosen trip still carries the pick's places, for planning again part way")
-LS:ReadGUID("Creature-0-1-2-9999-1-1")
-LS:ReadGUID("Creature-0-1-2-9999-2-1")
-plan = J:PlanEntry(session, pick)
-check(plan.goal == CLOSE and plan.seenAge == nil, "in another phase, the nearest of them all")
 
--- "Not there" (Skyborne Compass's XM / XS): per node and phase the newest report wins, and the pick skips a node
--- reported not there in the player's phase.
+-- The places: SLLCM's 25 nodes nearest the player on their continent, chosen once for a pick.
 reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-runTimers()
-sent = {}
-local function xm(x, y, t) return ("XM:1:A:3104:1417:%d:%d:%d"):format(x, y, t) end
-LS:OnMessage(xm(4800, 6050, now - 30))
-local gone, goneCount = LS:GoneAmong(both)
-check(goneCount == 1 and gone[CLOSE] == 30, "an XM marks the node not there")
-check(LS:SeenAmong(both) == nil, "and it isn't seen")
-plan = J:PlanEntry(session, pick)
-check(plan.goal == WEST and plan.seenAge == nil, "the pick skips it for the next nearest: " .. tostring(plan.goal))
-LS:OnMessage(r(4800, 6050, now - 100))
-check(LS:SeenAmong(both) == nil and LS:GoneAmong(both), "a sighting older than the XM changes nothing")
-LS:OnMessage(r(4800, 6050, now - 10))
-seen = LS:SeenAmong(both)
-check(seen and seen[CLOSE] == 10 and LS:GoneAmong(both) == nil, "a newer sighting ends the not there")
-plan = J:PlanEntry(session, pick)
-check(plan.goal == CLOSE and plan.seenAge == 10, "and the pick goes there again")
-LS:OnMessage(("XS:1:A:3104:1417,4800,6050,%d;1417,2530,3000,%d"):format(now, now))
-gone, goneCount = LS:GoneAmong(both)
-check(goneCount == 2 and LS:SeenAmong(both) == nil, "an XS's entries are not-theres too, and a newer one ends the sighting")
-plan = J:PlanEntry(session, pick)
-check(plan.goal == CLOSE, "with every node not there, the nearest of them all")
-LS:OnMessage(xm(9000, 9000, now))
-check(#LS:NearbyPlaces() == 2, "an XM never adds a place")
-LS:OnMessage(("XM:1:A:3104:1417:4800:6050:%d"):format(now - 5500))
-check(#MapzerothRebuildDB.sightingsGone.A[1417] == 3, "a stale XM isn't kept (two nodes, and the far spot)")
--- An XS doesn't answer a Q's sightings part: our S still goes out.
-LS:OnMessage(r(6000, 2000, now - 5))
-sent, timers = {}, {}
-LS:OnMessage("Q:1:A:3104")
-LS:OnMessage(("XS:1:A:3104:1417,100,100,%d"):format(now))
-runTimers()
-check(#sent == 1 and sent[1]:find("^S:1:A:3104:1417,6000,2000,"), "an XS doesn't cancel our answer: " .. tostring(sent[1]))
--- Continent positions (Skyborne Compass has sent Kalimdor's) move to the zone at that spot.
-local savedInfo, savedEnum = C_Map.GetMapInfo, Enum
-Enum = { UIMapType = { Continent = 2, Zone = 3 } }
-C_Map.GetMapInfo = function(id) return { name = "map " .. id, mapType = id == 1415 and 2 or 3 } end
-C_Map.GetMapInfoAtPosition = function(id, x, y) return id == 1415 and x < 0.9 and { mapID = 1417, mapType = 3 } or nil end
-C_Map.GetMapPosFromWorldPos = function(_, world) return nil, CreateVector2D(world.x / 2500, world.y / 1700) end
-reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-LS:OnMessage(("R:1:A:3104:1415:2530:3000:%d"):format(now))
-LS:OnMessage(("R:1:A:3104:1415:9500:9500:%d"):format(now))
-check(MapzerothRebuildDB.sightings.A[1415] == nil and #MapzerothRebuildDB.sightings.A[1417] == 1,
-    "a continent sighting is kept on the zone there, and one with no zone there is dropped")
-C_Map.GetMapInfo, Enum, C_Map.GetMapInfoAtPosition, C_Map.GetMapPosFromWorldPos = savedInfo, savedEnum, nil, nil
-MapzerothRebuildDB.sightingsGone = nil
-
--- The places: SLLCM's 25 nodes nearest the player on their continent, and any seen up in their phase however far;
--- chosen once for a pick.
-reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 local savedNodes = sllcmNodes
 sllcmNodes = { [1417] = {}, [1418] = { { 0.5, 0.5 } } }      -- 1418 is another continent (each test map is one)
 for i = 1, 30 do sllcmNodes[1417][i] = { 0.02 + i * 0.03, 0.60 } end   -- 75 yards apart, along the player's row
@@ -234,16 +143,10 @@ for _, place in ipairs(places) do
 end
 check(#places == 25 and not onOther, "the 25 nearest on the player's continent: " .. #places)
 check(farthest < 0.40, "and not the farthest five: " .. farthest)
-LS:OnMessage(("R:1:A:3104:1418:5000:5000:%d"):format(now - 120))
-LS:OnMessage(("R:1:A:7777:1417:%d:%d:%d"):format(9800, 9800, now - 30))           -- another phase
-LS:OnMessage(r(4700, 6000, now - 30))                                               -- at one of the 25
-places = LS:NearbyPlaces()
-check(#places == 26 and places[26].id == "LEY_A_1418_5000_5000",
-    "a node seen up in our phase joins them, however far; not one in another phase, nor a second of one there: " .. #places)
 local pick2 = { name = "Nearest Ley Line", pick = true, group = "leyline", nodeIDs = {} }
 local kept = LS:PlacesFor(pick2)
 playerAt = { 0.9, 0.9 }
-check(LS:PlacesFor(pick2) == kept and #LS:PlaceIDs(pick2) == 26, "a pick keeps the places it was given")
+check(LS:PlacesFor(pick2) == kept and #LS:PlaceIDs(pick2) == 25, "a pick keeps the places it was given")
 playerAt = { 0.47, 0.60 }
 sllcmNodes = savedNodes
 UnitFactionGroup = function() return "Horde" end
@@ -265,140 +168,8 @@ UnitRace = function() return "Human", "Human", 1 end
 check(#LS:NearbyPlaces() == 0, "anyone not Skyborne: no places")
 UnitRace = function() return "Skyborne", "Skyborne", 99 end
 
--- Q and S: a Q for a phase we hold is answered after a wait, unless someone else's S comes first.
-reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-sent = {}
-for i = 1, 10 do LS:OnMessage(r(500 + i * 400, 1000, now - i)) end    -- ten nodes 1000 yards apart
-LS:OnMessage("Q:1:A:3104")
-runTimers()
-check(#sent == 2, "ten sightings answer in two messages: " .. #sent)
-local _, entries = sent[1]:match("^S:1:A:3104:(.*)$"):gsub(";", ";")
-check(sent[1]:find("^S:1:A:3104:1417,") and entries == 8 and sent[2]:find("^S:1:A:3104:[^;]+$"),
-    "nine in the first, one in the second: " .. sent[1])
-sent = {}
-local function sEntries(from, to, age)
-    local list = {}
-    for i = from, to do list[#list + 1] = ("1417,%d,1000,%d"):format(500 + i * 400, now - i - (age or 0)) end
-    return table.concat(list, ";")
-end
-LS:OnMessage("Q:1:A:3104")
-LS:OnMessage("S:1:A:3104:" .. sEntries(1, 9))
-LS:OnMessage("S:1:A:3104:" .. sEntries(10, 10))
-runTimers()
-check(#sent == 0, "someone else's answers had all of ours: we stay quiet: " .. tostring(sent[1]))
-LS:OnMessage("Q:1:A:3104")
-LS:OnMessage("S:1:A:3104:" .. sEntries(1, 7))
-runTimers()
-check(#sent == 1 and select(2, sent[1]:gsub(";", ";")) == 2 and sent[1]:find("4100,1000", 1, true),
-    "an answer with only some of them: we send the other three: " .. tostring(sent[1]))
-sent = {}
-LS:OnMessage("Q:1:A:3104")
-LS:OnMessage("S:1:A:3104:" .. sEntries(1, 9, 100) .. ";1417,4500,1000," .. (now - 10))
-runTimers()
-check(#sent == 1 and select(2, sent[1]:gsub(";", ";")) == 8,
-    "an older answer for the same nodes doesn't cover our newer sightings: " .. tostring(sent[1]))
-sent = {}
-LS:OnMessage("Q:1:A:3104")
-LS:OnMessage("S:1:A:3104:1417,2530,3000," .. (now - 5))
-LS:OnMessage("Q:1:A:5555")
-runTimers()
-check(#sent == 2 and not sent[1]:find("2530", 1, true), "a phase we hold nothing for isn't answered: " .. #sent)
-check(#MapzerothRebuildDB.sightings.A[1417] == 11, "the S's entry was kept as a new node")
--- A new Q while ours goes out: that asker missed the parts already sent, so the rest starts over.
-sent = {}
-LS:OnMessage("Q:1:A:3104")
-local first = table.remove(timers)
-first()                                                   -- the wait is over: the first part goes out
-LS:OnMessage("Q:1:A:3104")
-runTimers()
-check(#sent == 3, "nine, then all eleven again for the new asker: " .. #sent)
-
--- How long before answering: 9-15 s holding only others' sightings, 1-8 s holding one of our own (so whoever saw it
--- usually answers). One wait per phase: a Q for another phase doesn't replace it, an S for another doesn't cancel it.
-reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-LS:OnMessage(r(2530, 3000, now - 60))                                   -- someone else's, in 3104
-LS:OnMessage("R:1:A:5555:1417:2530:3000:" .. (now - 60))               -- and in 5555
-runTimers()
-sent, delays = {}, {}
-LS:OnMessage("Q:1:A:3104")
-check(#delays == 1 and delays[1] >= 9 and delays[1] <= 15, "only others' sightings: a 9-15 s wait: " .. tostring(delays[1]))
-LS:OnMessage("Q:1:A:3104")
-check(#delays == 1, "a second Q for the same phase while waiting adds no second answer")
-LS:OnMessage("Q:1:A:5555")
-check(#delays == 2, "a Q for another phase gets its own wait")
-LS:OnMessage("S:1:A:5555:1417,2530,3000," .. (now - 5))
-runTimers()
-check(#sent == 1 and sent[1]:find("^S:1:A:3104:"), "an S for 5555 cancels only 5555's answer: " .. tostring(sent[1]))
-LS:OnConfirmed(1417, 0.48, 0.605, now)                                  -- our own find, in 3104
-runTimers()
-sent, delays = {}, {}
-LS:OnMessage("Q:1:A:3104")
-check(#delays == 1 and delays[1] >= 1 and delays[1] <= 8, "holding our own: a 1-8 s wait: " .. tostring(delays[1]))
-runTimers()
-check(#sent == 1 and sent[1]:find("4800,6050", 1, true), "and the answer carries it: " .. tostring(sent[1]))
-
--- Asking: once a session per phase, and not after the first 90 minutes on the channel.
-reset()
-holdOne()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-runTimers()
-check(#sent == 1 and sent[1] == "Q:1:A:3104", "a new phase is asked about")
-clock = clock + 120
-LS:ReadGUID("Creature-0-1-2-4200-1111-0003")
-LS:ReadGUID("Vehicle-0-1-2-4200-2222-0005")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0006")
-LS:ReadGUID("Creature-0-1-2-3104-5678-0007")
-runTimers()
-check(#sent == 2 and sent[2] == "Q:1:A:4200" and LS:Phase() == "3104",
-    "4200 is asked about once, and back in 3104 minutes later, 3104 isn't again: " .. #sent)
-clock = clock + 5400
-LS:ReadGUID("Creature-0-1-2-6000-1111-0008")
-LS:ReadGUID("Vehicle-0-1-2-6000-2222-0009")
-runTimers()
-check(LS:Phase() == "6000" and #sent == 2, "after 90 minutes on the channel nothing is asked: every R and S since has been heard")
-
--- Someone else's Q for a phase does for ours: we hear its answers. So does one from just before a /reload, for 5 min.
-reset()
-holdOne()
-LS:OnMessage("Q:1:A:3104")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-runTimers()
-check(#sent == 0, "a phase someone else asked about isn't asked about again: " .. tostring(sent[1]))
-LS:ResetForTests()                                  -- a /reload: the session's memory goes, the saved file stays
-now = now + 240
-LS:ReadGUID("Creature-0-1-2-3104-1234-0002")
-runTimers()
-check(#sent == 0, "nor after a /reload 4 minutes later")
-LS:ResetForTests()
-now = now + 120
-LS:ReadGUID("Creature-0-1-2-3104-1234-0003")
-runTimers()
-check(#sent == 1 and sent[1] == "Q:1:A:3104", "but 6 minutes after the last Q it is: " .. tostring(sent[1]))
-LS:ResetForTests()
-now = now + 60
-LS:ReadGUID("Creature-0-1-2-3104-1234-0004")
-runTimers()
-check(#sent == 1, "and our own Q counts the same way after a /reload")
-now = now - 420
-
--- Our own find: before the phase is known it waits, and goes out once it is (in the same zone).
-reset()
-LS:OnConfirmed(1417, 0.48, 0.605, now - 3)
-check(#sent == 0, "no phase yet: nothing sent")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-check(sent[1] == "R:1:A:3104:1417:4800:6050:" .. (now - 3), "sent once the phase is read, with the cast's time: " .. tostring(sent[1]))
-runTimers()
-check(sent[2] == "Q:1:A:3104", "then the question")
-LS:OnConfirmed(1417, 0.2, 0.2, now)
-runTimers()
-check(sent[3] == "R:1:A:3104:1417:2000:2000:" .. now, "with the phase known, at once")
-
 -- Throttled: the message waits and goes again.
 reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-sent = {}
 local refuse = 1
 local realSend = C_ChatInfo.SendAddonMessage
 C_ChatInfo.SendAddonMessage = function(...)
@@ -412,10 +183,6 @@ check(#sent == 1 and sent[1]:find("^R:"), "sent after the pause")
 
 -- InvalidChannel just after joining: retried; still invalid, the channel is revived (/chatwho, then a fresh join).
 reset()
-holdOne()                                           -- so the Q goes out first, as before
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-runTimers()
-sent = {}
 refuse = 4
 local listed, joins = 0, 0
 function ListChannelByName() listed = listed + 1 end
@@ -433,8 +200,6 @@ ListChannelByName, JoinTemporaryChannel = nil, nil
 -- Forever's refusal: no echo within 15 s, or NOT_ALLOWED_IN_CHANNEL, pauses sending for 10 minutes; then the next
 -- message is the probe, and anything heard on the channel ends the pause.
 reset()
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-runTimers()
 sent, echo = {}, false
 LS:OnConfirmed(1417, 0.3, 0.3, now)
 runTimers()
@@ -454,32 +219,13 @@ LS:OnHeard()
 runTimers()
 clock = clock - 601
 
--- With SLLCM loaded, Mapzeroth sends nothing and reads SLLCM's sightings instead.
+-- With SLLCM loaded, Mapzeroth sends nothing: SLLCM does the sharing.
 reset()
 loaded.SkyborneLeyLineConvergenceMarker = true
 check(not LS:Networking() and LS:SllcmLoaded(), "SLLCM loaded: Mapzeroth stays off the channel")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
 LS:OnConfirmed(1417, 0.3, 0.3, now)
 check(#sent == 0, "and sends nothing")
--- SLLCM 0.3.1 keeps them by faction: only this faction's count.
-SkyborneMarkerDB = { crowdReports = {
-    A = { [1417] = { { phase = "3104", x = 0.48, y = 0.605, t = now - 300 } } },
-    H = { [1417] = { { phase = "3104", x = 0.253, y = 0.30, t = now - 30 } } },
-} }
-seen, count = LS:SeenAmong({ WEST, CLOSE })
-check(count == 1 and seen[CLOSE] == 300, "SLLCM's sightings for this faction are what the pick uses")
-SkyborneMarkerDB = { crowdReports = { A = {} } }
-check(LS:SeenAmong({ WEST, CLOSE }) == nil, "none held for this faction: none seen")
--- 0.3.0: one list for both factions, by map.
-SkyborneMarkerDB = { crowdReports = { [1417] = { { phase = "3104", x = 0.48, y = 0.605, t = now - 300 } } } }
-seen, count = LS:SeenAmong({ WEST, CLOSE })
-check(count == 1 and seen[CLOSE] == 300, "SLLCM 0.3.0's single list is still read")
 check(not LS:ShouldAsk(), "and Mapzeroth doesn't ask: SLLCM asks its own question")
-SkyborneMarkerDB = { crowdReports = { A = { [1417] = { { phase = "3104", x = 0.45, y = 0.58, t = now - 30 } } } } }
-local pick3 = { name = "Nearest Ley Line", pick = true, group = "leyline", nodeIDs = {} }
-seen, count = LS:SeenAmong(LS:PlaceIDs(pick3))
-check(#LS:PlaceIDs(pick3) == 3 and count == 1 and seen["LEY_A_1417_4500_5800"] == 30,
-    "a spot only SLLCM's sightings know is one of the pick's places too, and counts as seen")
 loaded.SkyborneLeyLineConvergenceMarker = nil
 
 -- The question is asked once per account, of Skyborne only; either answer settles it.

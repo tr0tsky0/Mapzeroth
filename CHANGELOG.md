@@ -37,6 +37,7 @@
 
 ### Changed
 - **Forever: Daylight UI's quest tracker routes from the quest's right-click menu.** The arrow under each quest's icon is gone; right-click a quest in Daylight UI's tracker or quest journal and choose **Route with Mapzeroth** instead. It's listed only for quests with a spot to route to. Update Daylight UI to 1.9.4.1 or later.
+- **Forever: ley line sharing no longer uses phases.** WoW: Forever's 1.60.1 hotfix hides the layer from addons, so "Nearest Ley Line" and "Nearest Elemental Convergence" now go to the nearest known one, not one seen in your phase, and the "seen in your phase" notes are gone. Shared sightings still reach Skyborne Leyline & Convergence Marker users, who learn new locations from them.
 
 ### Fixed
 - **Forever: walks go round mountains, not over them.** Mapzeroth now knows which ground is too steep to climb, from the game's own terrain, and walks keep to roads and valleys around it. Gol'Bolar Quarry to Ironforge goes up the Ironforge ramp, and walks across the Hinterlands, Wetlands and Ashenvale follow their valleys.

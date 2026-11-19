@@ -19,7 +19,7 @@ local ASK_DELAY = 5             -- seconds after login, so it doesn't land in th
 local ui
 
 -- The wire format, shown as an example in "How it works": a Horde sighting in The Barrens (LeyShare.lua's R message).
-local EXAMPLE = "R:1:H:4417:1413:4521:3087:1791763200"
+local EXAMPLE = "R:1:H:0:1413:4521:3087:1791763200"
 
 -- What sharing does, in detail: the tooltip behind the "How it works" link here and on the settings page.
 function SharePrompt:HowItWorksLines()
@@ -34,9 +34,6 @@ function SharePrompt:HowItWorksLines()
         { " ", "body" },
         { L["SHARE_HOW_USE_HEAD"], "accent" },
         { L["SHARE_HOW_USE"], "body" },
-        { " ", "body" },
-        { L["SHARE_HOW_EXPIRY_HEAD"], "accent" },
-        { L["SHARE_HOW_EXPIRY"], "body" },
         { " ", "body" },
         { L["SHARE_HOW_OFF_HEAD"], "accent" },
         { L["SHARE_HOW_OFF"]:format(L["OPT_SHARE"]), "body" },

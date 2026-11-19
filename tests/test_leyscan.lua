@@ -296,7 +296,7 @@ check(sawVein, "and the other tooltip text it passed")
 check(Scan:Diagnose().scanning, "Diagnose: scanning with GamePadEnable on and no gamepad UI")
 
 ---------------------------------------------------------------------------
--- Sharing a blip: like a racial's sighting, unless this phase has one of that node from the last 10 minutes.
+-- Sharing a blip: like a racial's sighting (phase 0), unless we sent that node in the last 10 minutes.
 ---------------------------------------------------------------------------
 
 LS.OnMinimapNode = realReport
@@ -305,29 +305,17 @@ MapzerothRebuildDB.sightings, MapzerothRebuildDB.sharedNodes = nil, nil
 sent = {}
 local node = { 0.4, 0.6 }
 LS:OnMinimapNode(MAP, node[1], node[2])
-check(#sent == 0, "no phase yet: nothing sent")
-LS:ReadGUID("Creature-0-1-2-3104-1234-0001")
-check(sent[1] == "R:1:A:3104:1417:4000:6000:" .. now, "the blip goes out once the phase is known: " .. tostring(sent[1]))
-check(sent[2] == "Q:1:A:3104", "and the phase is asked about: " .. tostring(sent[2]))
+check(sent[1] == "R:1:A:0:1417:4000:6000:" .. now, "the blip goes out at once: " .. tostring(sent[1]))
 sent = {}
 now = now + 60
 LS:OnMinimapNode(MAP, node[1] + 10 / ZONE_W, node[2])
 check(#sent == 0, "passing it again a minute later sends nothing")
 now = now + 10 * 60
 LS:OnMinimapNode(MAP, node[1], node[2])
-check(#sent == 1 and sent[1]:find("^R:1:A:3104:1417:4000:6000:"), "ten minutes on it goes out again")
+check(#sent == 1 and sent[1]:find("^R:1:A:0:1417:4000:6000:"), "ten minutes on it goes out again")
 sent = {}
 LS:OnMinimapNode(MAP, 0.7, 0.3)
 check(#sent == 1, "another node goes out straight away")
-sent = {}
--- Someone else's sighting counts too.
-LS:OnMessage(("R:1:A:3104:1417:2000:2000:%d"):format(now))
-LS:OnMinimapNode(MAP, 0.2, 0.2)
-check(#sent == 0, "a node someone just reported isn't sent again")
--- And one from another phase doesn't.
-LS:OnMessage(("R:1:A:9999:1417:8000:8000:%d"):format(now))
-LS:OnMinimapNode(MAP, 0.8, 0.8)
-check(#sent == 1, "one reported in another phase is")
 sent = {}
 addon.Options:Set("detectMinimapNodes", false)
 LS:OnMinimapNode(MAP, 0.1, 0.9)
