@@ -42,6 +42,7 @@ RoadNet.SWIM = 1.5
 -- be walked up: a yard of it scores STEEP times open ground, so a walk goes round by road or valley. Not forbidden
 -- outright: a line that clips a corner, or a goal on a slope, still gets a way. Time is still the walk's length.
 RoadNet.STEEP = 10
+RoadNet.MAX_DETOUR = 2.5     -- a way round steep ground longer than this many straight lines isn't taken (Route)
 
 local CELL = 250             -- grid cell, yards
 
@@ -455,7 +456,7 @@ end
 -- yards (A onto the road, along it, off it to B), the straight line's length, and the points to draw between A and
 -- B ({ x, y } each: where it joins the road, along it, where it leaves). nil when no road helps.
 -- `continent`: which graph, a continent or "city:<mapID>" (a city's walk keeps to its streets: streetsOnly).
-function RoadNet:Route(continent, ax, ay, bx, by, k)
+function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
     k = k or self:Offroad()
     local straight = math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
     if straight < self.MIN_WALK then return nil end
@@ -465,7 +466,7 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
     local vx, vy, adj, sa, sb = g.vx, g.vy, g.adj, g.sa, g.sb
     -- Open ground through water scores WATER times more, and over steep ground STEEP times more: the extra for a
     -- stretch across country.
-    local water, steep = waterFor(continent), steepFor(continent)
+    local water, steep = waterFor(continent), not flat and steepFor(continent)
     local extra, climb = k * (self.WATER - 1), k * (self.STEEP - 1)
     local function wet(x1, y1, x2, y2)
         local e = 0
@@ -566,6 +567,11 @@ function RoadNet:Route(continent, ax, ay, bx, by, k)
         local swum = wetYards(water, ax, ay, first.x, first.y) + wetYards(water, last.x, last.y, bx, by)
         length = length + (self.SWIM - 1) * swum
     end
+    -- Steep ground scores high but isn't a wall, so a goal behind a mountain could be reached by any loop short
+    -- enough to beat climbing it: one at the Hinterlands' northern rim went round through Alterac and both
+    -- Plaguelands, 2.9 times the straight line. Past MAX_DETOUR the steep ground is left out and the walk is the
+    -- road's way as before it.
+    if steep and length > self.MAX_DETOUR * straight then return self:Route(continent, ax, ay, bx, by, k, true) end
     return length, straight, bestPoints
 end
 
@@ -621,10 +627,29 @@ function RoadNet:Between(a, b, k)
     if cost then return cost, straight, points, ac, drawOnly end
 end
 
+-- The places a walk goes by: its path without the nodes it only passes on open ground (one container before, at and
+-- after them). The route search picks such a node when two separately worked-out ways through it come a few yards
+-- under the one way past it (Hillsbrad's herbalism trainer, between the Arathi and Alterac borders); walked through,
+-- it is a dog-leg on the map. Kept: the ends, and any place where the ground changes (a border, a gate, indoors, a
+-- spot that isn't a node).
+function RoadNet:Waypoints(path)
+    if not (path and #path > 2) then return path end
+    local out = { path[1] }
+    for i = 2, #path - 1 do
+        local c = containerOf(path[i])
+        local open = c and not addon.World:GetFlag(c, "indoor") and not offRoads(path[i])
+        if not (open and containerOf(out[#out]) == c and containerOf(path[i + 1]) == c) then out[#out + 1] = path[i] end
+    end
+    out[#out + 1] = path[#path]
+    return out
+end
+
 -- The points to draw a walk through, with the road's way put in between each two: the path's own points stay
--- (they are where the step starts, turns and ends), and the road's are { world = { x, y, continent } }.
+-- (they are where the step starts, turns and ends; less those it only passes, Waypoints), and the road's are
+-- { world = { x, y, continent } }.
 function RoadNet:Expand(path)
     if not (addon.RoadData and path and #path >= 2) then return path end
+    path = self:Waypoints(path)
     local out = { path[1] }
     for i = 2, #path do
         local _, _, points, continent = self:Between(path[i - 1], path[i])

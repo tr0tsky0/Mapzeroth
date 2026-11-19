@@ -293,14 +293,19 @@ function Journey:RetimeWalks(steps)
             step.retimed = true
             local priced, drawn = 0, 0
             for i = 2, #path do
-                local a, b = path[i - 1], path[i]
-                local was = TravelGraph:WalkYards(a, b)
+                local was = TravelGraph:WalkYards(path[i - 1], path[i])
                 if not was then priced = nil break end
+                priced = priced + was
+            end
+            -- Drawn as the map draws it: past the nodes it only passes (RoadNet:Waypoints).
+            local by = priced and RoadNet:Waypoints(path) or {}
+            for i = 2, #by do
+                local a, b = by[i - 1], by[i]
+                local was = TravelGraph:WalkYards(a, b)
                 local road, _, _, _, drawOnly = RoadNet:Between(a, b)
                 if drawOnly then road = was end           -- a measured city's walk keeps its measured time
                 local dist = not road and TravelGraph.DistanceProvider(a, b)
-                priced = priced + was
-                drawn = drawn + (road or (dist and dist * TravelGraph.PathFactor(a, b)) or was)
+                drawn = drawn + (road or (dist and dist * TravelGraph.PathFactor(a, b)) or was or 0)
             end
             if priced and priced > 0 then
                 local seconds = step.seconds * drawn / priced

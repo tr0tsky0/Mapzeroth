@@ -192,8 +192,9 @@ end
 -- opts (only /mzr dumpgeometry passes it): `roads` prices a walk by its road (RoadNet:Between) when it has one
 -- worth taking: dtf is then the road's length, with no path factor (the road is the real way), and the road's
 -- length over the straight line is noted per map in opts.ratios (both ends on that map), for the dump's
--- mapFactors. `yieldEvery` yields the running coroutine after that many walk pairs: thousands of A* searches are
--- too long for one frame.
+-- mapFactors. `yieldEvery` yields the running coroutine after that many walk pairs, `yieldMs` once that many
+-- milliseconds have gone since the last yield: thousands of A* searches are too long for one frame, and with steep
+-- ground one search can take a good part of a frame, so the dump yields on time.
 local staticGeometry, staticGeneration
 
 TravelGraph.staticBuildCount = 0    -- for tests: how many times the expensive geometry pass actually ran
@@ -203,6 +204,8 @@ local function buildStaticGeometry(opts)
     opts = opts or {}
     local roads = opts.roads and addon.RoadNet
     local done = 0
+    local clock = debugprofilestop or function() return os.clock() * 1000 end
+    local sliceStart = clock()
     local World = addon.World
     local geometry = {}
 
@@ -235,6 +238,10 @@ local function buildStaticGeometry(opts)
                         end
                         done = done + 1
                         if opts.yieldEvery and done % opts.yieldEvery == 0 then coroutine.yield(done) end
+                        if opts.yieldMs and clock() - sliceStart >= opts.yieldMs then
+                            coroutine.yield(done)
+                            sliceStart = clock()
+                        end
                     end
                     if not leafA then link(a.id, b.id, dtf, "walk") end
                     if not leafB then link(b.id, a.id, dtf, "walk") end

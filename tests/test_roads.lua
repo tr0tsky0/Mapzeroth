@@ -127,6 +127,13 @@ do
     check(round and straight == 500 and #points >= 2, "the steep box sends it by the road: " .. tostring(round))
     local last = points and points[#points]
     check(last and RoadNet:SteepYards(7, last.x, last.y, 500, 400) < 1, "and off the road clear of the box")
+    -- A way round longer than MAX_DETOUR straight lines isn't taken: the walk forgets the steep ground and is what it
+    -- would be without it (here straight up). The way round the box is under 2.5 lines; capped at 1.2 it goes.
+    local cap = RoadNet.MAX_DETOUR
+    check(round < cap * straight, "the way round is within the cap: " .. round / straight)
+    RoadNet.MAX_DETOUR = 1.2
+    check(RoadNet:Route(7, 500, -100, 500, 400) == nil, "past the cap: straight up, as on flat ground")
+    RoadNet.MAX_DETOUR = cap
     addon.RoadSteep = shippedSteep
     RoadNet:Reset()
 end
@@ -338,3 +345,23 @@ TravelGraph.WorldPosition = realWorld
 addon.RoadData = shipped
 addon.GeometryPacked = nil
 RoadNet:Reset()
+
+-- A walk past a node it only passes on open ground goes straight past it: the route search can pick Hillsbrad's
+-- herbalism trainer between the Arathi and Alterac borders (two ways through it a few yards under the one past it),
+-- and drawn through it that is a dog-leg. Ends, borders and places that aren't nodes stay.
+do
+    local World = addon.World
+    World:Build()
+    local arathi = World:GetNode("BORDER_HILLSBRAD_FOOTHILLS_TO_ARATHI_HIGHLANDS")
+    local trainer = World:GetNode("TRAINER_HERBALISM_2390")
+    local alterac = World:GetNode("BORDER_HILLSBRAD_FOOTHILLS_TO_ALTERAC_MOUNTAINS")
+    local over = World:GetNode("BORDER_ALTERAC_MOUNTAINS_TO_HILLSBRAD_FOOTHILLS")
+    check(arathi and trainer and alterac and over, "the Hillsbrad nodes are there")
+    local by = RoadNet:Waypoints({ arathi, trainer, alterac })
+    check(#by == 2 and by[1] == arathi and by[2] == alterac, "the trainer it only passes is left out")
+    local spot = { id = "WAYPOINT_h", mapID = trainer.mapID, x = trainer.x, y = trainer.y }
+    by = RoadNet:Waypoints({ arathi, spot, alterac })
+    check(#by == 3, "a spot that isn't a node stays")
+    by = RoadNet:Waypoints({ arathi, alterac, over })
+    check(#by == 3, "and so does a border")
+end

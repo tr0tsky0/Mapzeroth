@@ -20,6 +20,12 @@ ZONES = {
                 "tiles": (25, 22, 33, 29), "px": 192},
     "dun_morogh": {"title": "Dun Morogh", "wdt": 775971, "instance": 0, "ui_map": 1426,
                    "tiles": (31, 40, 36, 44), "px": 192},
+    # The valley road east from Aerie Peak (Quel'Danil, Skulk Rock, Seradane) isn't painted as road on the terrain.
+    "hinterlands": {"title": "The Hinterlands", "wdt": 775971, "instance": 0, "ui_map": 1425,
+                    "tiles": (34, 29, 42, 34), "px": 192},
+    # Roads painted with no road texture of its own (to Hammerfall, among others).
+    "arathi": {"title": "Arathi Highlands", "wdt": 775971, "instance": 0, "ui_map": 1417,
+               "tiles": (33, 32, 40, 36), "px": 192},
 }
 
 SNAP_YD = 25            # a drawn line's end this near a road joins it there
