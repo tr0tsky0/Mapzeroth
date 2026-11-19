@@ -10,7 +10,7 @@
 
 ### Fixed
 - **Forever: walks go round mountains, not over them.** Mapzeroth now knows which ground is too steep to climb, from the game's own terrain, and walks keep to roads and valleys around it. Gol'Bolar Quarry to Ironforge goes up the Ironforge ramp, and walks across the Hinterlands, Wetlands and Ashenvale follow their valleys.
-- **Forever: more roads.** Added Dun Morogh's trails (the Ironforge ramp and the quarry road) and Desolace's roads. Also added roads the terrain doesn't show: in the Hinterlands, Aerie Peak through the valley to Seradane; in Arathi Highlands, the roads to Hammerfall and more. Walks now also cross short gaps between pieces of road instead of leaving the road for good.
+- **Forever: more roads.** Added Dun Morogh's trails (the Ironforge ramp and the quarry road), Desolace's roads and Swamp of Sorrows' road. Also added roads the terrain doesn't show: in the Hinterlands, Aerie Peak through the valley to Seradane; in Arathi Highlands, the roads to Hammerfall and more. Walks now also cross short gaps between pieces of road instead of leaving the road for good.
 - **Forever: zone crossings.** Ashenvale and Darkshore have two crossings, on the east road and by the Zoram Strand, and these had been mixed up into one. Where two zones' maps put a crossing in slightly different places, the walk now goes across the gap instead of jumping it, and the time includes it.
 - **Forever: tidier walks.** A walk no longer bends through a place it only passes, such as Tarren Mill's herbalism trainer, and no longer loops through other zones to reach a spot behind a ridge.
 
