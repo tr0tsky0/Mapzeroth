@@ -1,26 +1,23 @@
 local addonName, addon = ...
 
 -- Ley line and elemental convergence sightings, shared with Skyborne Ley Line & Convergence Marker (SLLCM, the
--- player's other addon) on its hidden channel. When a Skyborne character's racial confirms a node, where it is and
--- the phase (shard) the player is in go out to everyone on the channel; what others send is kept for 90 minutes, and
--- the "Nearest Ley Line" / "Nearest Elemental Convergence" picks go to a node seen in the player's phase when there
--- is one (Journey:PlanEntry asks SeenAmong). Those picks need SLLCM loaded: the nodes come from its SLLCM_GetNodes.
+-- player's other addon) on its hidden channel. When a Skyborne character's racial confirms a node, where it is and when
+-- go out to everyone on the channel, so SLLCM users learn the location. No phases: WoW: Forever's 1.60.1 hotfix
+-- obfuscates creature GUIDs, so the layer can't be compared between players any more (SLLCM 1.5.0 dropped them too).
+-- Nothing heard is kept: Mapzeroth has no node list of its own, and the "Nearest Ley Line" / "Nearest Elemental
+-- Convergence" picks need SLLCM loaded (the nodes come from its SLLCM_GetNodes).
 --
 -- SLLCM's Comm.lua is the reference; both addons must stay wire-compatible (protocol version "1"):
---   R:1:fac:phase:mapID:x:y:t          one sighting (x, y = map position x 10000, 0-9999; t = GetServerTime())
---   Q:1:fac:phase                      "what do you have for this phase?"
---   S:1:fac:phase:mapID,x,y,t;...      reply to Q, at most MAX_PER_REPLY entries a message
---   XM:1:fac:phase:mapID:x:y:t         "not there": a known node was in someone's minimap range with no blip, at t
---   XS:1:fac:phase:mapID,x,y,t;...     the "not there"s someone holds, in reply to a Q
--- fac is A or H; phase is the zoneUID of creature GUIDs (digits). XM and XS come from Skyborne Compass; like SLLCM, we
--- take them in and never send them. Per node and phase the newest report wins, sighting or "not there". SLLCM's F / L
--- (locations missing from its Data.lua, no phase field) are ignored here.
+--   R:1:fac:phase:mapID:x:y:t          one sighting (x, y = map position x 10000, 0-9999; t = GetServerTime()).
+--                                      phase is sent as 0: older clients still parse it, and never match it
+-- fac is A or H. Everything else on the channel (older clients' Q / S, Skyborne Compass's XM / XS, SLLCM's F / L /
+-- VQ / V) is only proof that the channel carries.
 --
 -- Rules: off until the player says yes (Options "shareSightings", asked once per account by UI/SharePrompt.lua);
--- Skyborne characters only; and when SLLCM itself is loaded, Mapzeroth sends nothing and joins nothing, reading
--- SLLCM's sightings instead (its SavedVariables table, live), so no sighting goes out twice. Nothing here prints.
--- Sightings come from the racial only. OnMinimapNode is for LeyScan.lua, which is out of the .toc since 2026-11-16:
--- Forever gives addons minimap tooltips as secret values, so it finds nothing. Kept in case Blizzard reverts.
+-- Skyborne characters only; and when SLLCM itself is loaded, Mapzeroth sends nothing and joins nothing, so no sighting
+-- goes out twice. Nothing here prints. Sightings come from the racial only. OnMinimapNode is for LeyScan.lua, which is
+-- out of the .toc since 2026-11-16: Forever gives addons minimap tooltips as secret values, so it finds nothing. Kept in
+-- case Blizzard reverts.
 
 local LeyShare = {}
 addon.LeyShare = LeyShare
@@ -28,13 +25,9 @@ addon.LeyShare = LeyShare
 local PREFIX = "SLLCM"
 local CHANNEL_BASE = "SLLCMShare"    -- + A / H
 local VERSION = "1"
-local TTL = 90 * 60                  -- a sighting is dropped this many seconds after it was made (a node was seen up 58+ min)
-local FUTURE = 60                    -- a sighting stamped further ahead than this is refused
-local SAME_YARDS = 70                -- two sightings closer than this (same phase, same map) are the same node: the
-                                     -- racial works from up to ~30 yd, so two casts at one node can be 60 yd apart
-local REPLY_MINE = { 1, 8 }          -- seconds to wait before answering a Q, holding a sighting of our own for its phase
-local REPLY_OTHERS = { 9, 15 }       -- and holding only others' (so the one who saw it usually answers first)
-local MAX_PER_REPLY = 9              -- entries per S message, keeps it under 255 bytes
+local NO_PHASE = "0"                  -- the R's phase field, kept so older clients still parse it
+local SAME_YARDS = 70                -- two places closer than this are the same node: the racial works from up to
+                                     -- ~30 yd, so two casts at one node can be 60 yd apart
 -- Forever's channel allowance is about 10 at once, then ~0.8 a second, and retrying while refused keeps it refusing.
 local SEND_GAP = 1.25
 local THROTTLE_PAUSE = 5
@@ -48,10 +41,6 @@ local PAUSE_SECONDS = 600            -- refused: nothing is sent this long, then
 local ECHO_SECONDS = 15              -- the server echoes our channel messages back: none this long after, it was dropped
 local RECHECK_SECONDS = 3            -- after a notice that we may be out of the channel, look again this much later
 local JOIN_GAP = 5                   -- a join is never sent again sooner than this (a notice and a rejoin racing)
-local CONFIRMATIONS = 2              -- NPC kinds agreeing before a confirmed phase is replaced
-local SCAN_SECONDS = 60              -- re-read nameplates this often (the shard can change while standing still)
-local RESTORE_SECONDS = 300          -- a phase saved at logout or /reload is picked up again only this soon after
-local QUERY_MEMORY = 300             -- a Q for a phase (ours or one heard) from before a /reload still counts this long
 local REJOIN_SECONDS = 60
 local SETTLE_SECONDS, SETTLE_MAX = 3, 30
 local REORDER_SECONDS = 60           -- after joining, game channels arriving above ours get moved below it this long
@@ -61,21 +50,12 @@ local RACIALS = { [1259705] = true, [1259686] = true }   -- Read Ley Line (Allia
 local BUFFS = { 1259691, 1270893 }                        -- Attuned (Alliance), Charged (Horde): 60 min
 local MIN_BUFF = 60
 local CHECK_TRIES, CHECK_GAP = 4, 0.5
--- A minimap blip isn't sent when the node has a sighting from anyone in this phase this recently: a scan passes the
--- same node every 30 yards or minute, and every R reaches the whole faction (SLLCM's scans use the same gap).
+-- A minimap blip isn't sent when we sent that node this recently: a scan passes the same node every 30 yards or
+-- minute, and every R reaches the whole faction (SLLCM's scans use the same gap).
 local MINIMAP_GAP = 10 * 60
 
-local phase              -- the current phase (zoneUID as a string), nil until learned
-local phaseMap           -- the map it was read on
-local tentativeNpc       -- read from one NPC kind only: any other reading replaces it
-local candidates = {}    -- candidates[phase] = { [npcID] = true, n = count }
-local waiting            -- an own sighting made before the phase was known
 local pending            -- a racial whose buff couldn't be read (combat): checked when combat ends
-local asked = {}         -- asked[phase] = true: a Q for it, ours or one heard, has gone out this session
-local joinedAt           -- GetTime() of first joining the channel this session: no Q after TTL seconds on it
-local covering = {}      -- covering[phase] = { mapID, x, y, t, ... } while our answer to a Q for it waits or goes out:
-                         -- what other answers, and our own parts already sent, have covered
-local replying = {}      -- replying[phase] = true while our answer goes out, part by part
+local recent = {}        -- our own sightings sent lately: { { mapID, x, y, t }, ... }, for OnMinimapNode
 local queue, sending = {}, false
 local channelRetries = 0 -- InvalidChannel retries spent on queue[1]
 local pausedUntil        -- GetTime() until which nothing is sent: the server refused our messages on the channel
@@ -84,9 +64,7 @@ local freshened, freshenedAt, freshening = 0, nil, nil    -- channel revives thi
 local whoUntil           -- GetTime() until which a /chatwho answer about our channel is ours, kept out of chat
 local lastJoinAt         -- GetTime() of the last join sent
 local recheckPending     -- a channel notice's look again is due
-local me = {}            -- our own name as senders show it (the server echoes our messages back)
-local worldCache = {}    -- node id -> { x, y, continent }
-local joinStarted, scanning
+local joinStarted
 local reorderUntil       -- GetTime() until which our channel is kept numbered after the game's
 local swapsLeft = 0      -- channel swaps still allowed in that time
 
@@ -129,99 +107,20 @@ function LeyShare:Networking()
     return addon.Options:Get("shareSightings") and skyborne() and not self:SllcmLoaded()
 end
 
--- Whether sightings mean anything here: a Skyborne, sharing through us or through SLLCM.
-local function tracking()
-    return skyborne() and (LeyShare:Networking() or LeyShare:SllcmLoaded())
-end
 
 local function playerMap()
     return C_Map.GetBestMapForUnit("player")
 end
 
 ---------------------------------------------------------------------------
--- Storage: MapzerothRebuildDB.sightings[fac][mapID] = { { phase, x, y, t }, ... } (x, y 0-1). By faction, so
--- an Alliance alt's ley lines are never offered to Horde players. With SLLCM loaded its own table is read instead.
+-- Saved data from before phases went: per-phase sightings, "not there"s, Q times and the saved phase. Also the
+-- sightings at places our data lacked, from before SLLCM_GetNodes.
 ---------------------------------------------------------------------------
 
--- "Not there" reports are kept the same way, in MapzerothRebuildDB.sightingsGone.
-local function ownStore(key)
-    MapzerothRebuildDB = MapzerothRebuildDB or {}
-    local all = MapzerothRebuildDB[key]
-    if type(all) ~= "table" then
-        all = {}
-        MapzerothRebuildDB[key] = all
-    end
-    local tag = factionTag()
-    all[tag] = type(all[tag]) == "table" and all[tag] or {}
-    return all[tag]
-end
-
-local function ownReports() return ownStore("sightings") end
-local function ownGone() return ownStore("sightingsGone") end
--- MapzerothRebuildDB.sightingQueries[fac][phase] = GetServerTime() of the last Q for it, ours or heard, so a
--- /reload doesn't ask again what was just asked.
-local function ownQueries() return ownStore("sightingQueries") end
-
--- SLLCM 0.3.1 keeps them the same way, db.crowdReports[fac][mapID]; 0.3.0 had one list for both factions,
--- crowdReports[mapID], which is still read for anyone on that version (the node match keeps the factions apart).
-local function reports()
-    if LeyShare:SllcmLoaded() then
-        local db = SkyborneMarkerDB
-        local all = type(db) == "table" and type(db.crowdReports) == "table" and db.crowdReports or {}
-        if all.A ~= nil or all.H ~= nil then return type(all[factionTag()]) == "table" and all[factionTag()] or {} end
-        return all
-    end
-    return ownReports()
-end
-
--- The "not there"s: SLLCM 0.4.1+ keeps them in db.crowdGone[fac][mapID] (none before that).
-local function goneReports()
-    if LeyShare:SllcmLoaded() then
-        local db = SkyborneMarkerDB
-        local all = type(db) == "table" and type(db.crowdGone) == "table" and db.crowdGone or {}
-        return type(all[factionTag()]) == "table" and all[factionTag()] or {}
-    end
-    return ownGone()
-end
-
-local function prune(list)
-    local now = GetServerTime()
-    for i = #list, 1, -1 do
-        if now - list[i].t > TTL then table.remove(list, i) end
-    end
-end
-
--- Drop expired sightings and "not there"s, maps left empty, and a whole table once nothing is held (keeps the saved
--- file small).
-local function pruneAll()
-    -- Before SLLCM_GetNodes, sightings at places our data lacked were kept here; SLLCM keeps those now.
-    if MapzerothRebuildDB then MapzerothRebuildDB.sharedNodes = nil end
-    for _, key in ipairs({ "sightings", "sightingsGone" }) do
-        local all = MapzerothRebuildDB and MapzerothRebuildDB[key]
-        if type(all) == "table" then
-            for _, byMap in pairs(all) do
-                for mapID, list in pairs(byMap) do
-                    prune(list)
-                    if #list == 0 then byMap[mapID] = nil end
-                end
-            end
-            for tag, byMap in pairs(all) do
-                if next(byMap) == nil then all[tag] = nil end
-            end
-            if next(all) == nil then MapzerothRebuildDB[key] = nil end
-        end
-    end
-    local queries = MapzerothRebuildDB and MapzerothRebuildDB.sightingQueries
-    if type(queries) == "table" then
-        local now = GetServerTime()
-        for tag, byPhase in pairs(queries) do
-            for p, t in pairs(byPhase) do
-                if now - t > QUERY_MEMORY then byPhase[p] = nil end
-            end
-            if next(byPhase) == nil then queries[tag] = nil end
-        end
-        if next(queries) == nil then MapzerothRebuildDB.sightingQueries = nil end
-    end
+local function forgetOld()
+    local db = MapzerothRebuildDB
+    if type(db) ~= "table" then return end
+    db.sightings, db.sightingsGone, db.sightingQueries, db.sightingPhase, db.sharedNodes = nil, nil, nil, nil, nil
 end
 
 local function worldPos(mapID, x, y)
@@ -255,9 +154,9 @@ end
 ---------------------------------------------------------------------------
 -- Nodes: Mapzeroth has no list of its own. Skyborne Leyline & Convergence Marker's SLLCM_GetNodes gives every place it
 -- knows (its data, self-found, and learned from sightings), so the "Nearest" pick is only offered while SLLCM is
--- loaded. A pick goes to the PLACE_COUNT nodes nearest the player on their continent, plus any seen up in their phase
--- lately, wherever they are. They are put in the graph only when that pick is planned (Journey:ExtrasOf), and held on
--- the pick's entry, so a plan and its replans keep to the same ones (the picker builds a new entry each time it opens).
+-- loaded. A pick goes to the PLACE_COUNT nodes nearest the player on their continent. They are put in the graph only
+-- when that pick is planned (Journey:ExtrasOf), and held on the pick's entry, so a plan and its replans keep to the same
+-- ones (the picker builds a new entry each time it opens).
 ---------------------------------------------------------------------------
 
 local PLACE_COUNT = 25
@@ -334,18 +233,6 @@ function LeyShare:NearbyPlaces()
         local n = nearby[i]
         take(n[2], n[3], n[4], n[5], n[6], n[7])
     end
-    -- Seen up in the player's phase lately: worth going to, however far.
-    if phase then
-        local now = GetServerTime()
-        for mapID, list in pairs(reports()) do
-            for _, r in ipairs(type(list) == "table" and list or {}) do
-                local age = now - (r.t or 0)
-                if r.phase == phase and age <= TTL and age >= -FUTURE and type(r.x) == "number" and type(r.y) == "number" then
-                    take(mapID, r.x, r.y)
-                end
-            end
-        end
-    end
     return places
 end
 
@@ -364,90 +251,6 @@ end
 
 function LeyShare:GetPlace(id)
     return placeByID[id]
-end
-
--- Reports belong on zone maps. Skyborne Compass has been seen sending continent coordinates (Kalimdor, 1414): those
--- move to the zone at that spot, or nil if no zone is there.
-local function onZoneMap(mapID, x, y)
-    local info = C_Map.GetMapInfo(mapID)
-    if not info then return nil end
-    local types = Enum and Enum.UIMapType
-    if not (types and info.mapType == types.Continent) then return mapID, x, y end
-    local zone = C_Map.GetMapInfoAtPosition and C_Map.GetMapInfoAtPosition(mapID, x, y)
-    if not (zone and zone.mapType == types.Zone) then return nil end
-    local ok, continent, world = pcall(C_Map.GetWorldPosFromMapPos, mapID, CreateVector2D(x, y))
-    if not (ok and world) then return nil end
-    local ok2, _, pos = pcall(C_Map.GetMapPosFromWorldPos, continent, world, zone.mapID)
-    if ok2 and pos then return zone.mapID, pos.x, pos.y end
-end
-
--- A heard position on a zone map, fresh enough to keep; nil if not.
-local function valid(mapID, x, y, t)
-    local now = GetServerTime()
-    if not (x >= 0 and x <= 1 and y >= 0 and y <= 1) or t > now + FUTURE or now - t > TTL then return nil end
-    mapID, x, y = onZoneMap(mapID, x, y)
-    if mapID and x >= 0 and x <= 1 and y >= 0 and y <= 1 then return mapID, x, y end
-end
-
--- The entry for the same node in the same phase in a list, and its index.
-local function find(list, p, mapID, x, y)
-    if not list then return nil end
-    prune(list)
-    for i, e in ipairs(list) do
-        if e.phase == p and near(mapID, e.x, e.y, x, y) then return i, e end
-    end
-end
-
--- Keep a sighting (ours or someone else's). Returns true when it was kept: not when "not there" was reported since.
-local function add(p, mapID, x, y, t, mine)
-    mapID, x, y = valid(mapID, x, y, t)
-    if not mapID then return false end
-    local gone = ownGone()
-    local gi, g = find(gone[mapID], p, mapID, x, y)
-    if g then
-        if g.t >= t then return false end                   -- found gone since
-        table.remove(gone[mapID], gi)
-    end
-    local all = ownReports()
-    local list = all[mapID] or {}
-    all[mapID] = list
-    local _, e = find(list, p, mapID, x, y)
-    if e then
-        if t > e.t then e.x, e.y, e.t = x, y, t end
-        if mine then e.mine = true end
-    else
-        list[#list + 1] = { phase = p, x = x, y = y, t = t, mine = mine or nil }
-    end
-    return true
-end
-
--- A "not there" (XM / XS): ends an older sighting of that node in that phase. Never teaches a place.
-local function addGone(p, mapID, x, y, t)
-    mapID, x, y = valid(mapID, x, y, t)
-    if not mapID then return end
-    local all = ownReports()
-    local ri, r = find(all[mapID], p, mapID, x, y)
-    if r then
-        if r.t >= t then return end                         -- seen since
-        table.remove(all[mapID], ri)
-    end
-    local gone = ownGone()
-    local list = gone[mapID] or {}
-    gone[mapID] = list
-    local _, g = find(list, p, mapID, x, y)
-    if g then
-        if t > g.t then g.t = t end
-    else
-        list[#list + 1] = { phase = p, x = x, y = y, t = t }
-    end
-end
-
--- Only zones with a sighting held are worth asking about: the channel holds the whole faction. (Mapzeroth only
--- networks without SLLCM, so it has no node list to go by, and with no pick then it has little use for an answer.)
-local function hasNodes(mapID)
-    if not mapID then return false end
-    local list = ownReports()[mapID]
-    return list ~= nil and #list > 0
 end
 
 ---------------------------------------------------------------------------
@@ -580,225 +383,27 @@ local function coord(v)
     return math.floor(v * 10000 + 0.5)
 end
 
--- Ask once a session per phase, and only in the first TTL (90 minutes) on the channel: every R and S reaches every client
--- whatever its phase, so after that there is nothing from before we joined left to ask for. For the same reason a Q
--- heard from someone else does for us (we hear the answers), and so does one from just before a /reload.
-local function query()
-    if not joinedAt and channelIndex() then joinedAt = GetTime() end
-    if not phase or not hasNodes(phaseMap) or asked[phase] then return end
-    if not joinedAt or GetTime() - joinedAt > TTL then return end
-    asked[phase] = true
-    local queries, now = ownQueries(), GetServerTime()
-    if queries[phase] and now - queries[phase] <= QUERY_MEMORY then return end
-    queries[phase] = now
-    send(("Q:%s:%s:%s"):format(VERSION, factionTag(), phase))
-end
-
-local function broadcast(mapID, x, y, t)
-    add(phase, mapID, x, y, t, true)
-    send(("R:%s:%s:%s:%d:%d:%d:%d"):format(VERSION, factionTag(), phase, mapID, coord(x), coord(y), t))
-end
-
 -- An own sighting, position and server time taken at the cast.
 function LeyShare:OnConfirmed(mapID, x, y, t)
     if not (skyborne() and self:Networking()) then return end
-    if phase then
-        broadcast(mapID, x, y, t)
-    else
-        waiting = { mapID = mapID, x = x, y = y, t = t }
-    end
+    recent[#recent + 1] = { mapID, x, y, t }
+    send(("R:%s:%s:%s:%d:%d:%d:%d"):format(VERSION, factionTag(), NO_PHASE, mapID, coord(x), coord(y), t))
 end
 
--- A node blip found on the minimap (LeyScan.lua), which shows only while the node is up in the player's phase: sent
--- like a racial's sighting, unless this phase has a sighting of it from the last MINIMAP_GAP seconds.
+-- A node blip found on the minimap (LeyScan.lua), which shows only while the node is up: sent like a racial's
+-- sighting, unless we sent that node in the last MINIMAP_GAP seconds.
 function LeyShare:OnMinimapNode(mapID, x, y)
     if not (self:Networking() and addon.Options:Get("detectMinimapNodes")) then return end
     local now = GetServerTime()
-    for _, r in ipairs(ownReports()[mapID] or {}) do
-        if r.phase == phase and now - r.t < MINIMAP_GAP and near(mapID, r.x, r.y, x, y) then return end
-    end
-    self:OnConfirmed(mapID, x, y, now)
-end
-
----------------------------------------------------------------------------
--- Receiving
----------------------------------------------------------------------------
-
--- Whether an answer heard while ours waited, or a part of ours already sent, has this sighting: the same node, at
--- least as recent (a newer sighting of it still goes out after an older answer).
-local function covers(covered, mapID, x, y, t)
-    for i = 1, #covered, 4 do
-        if covered[i] == mapID and covered[i + 3] >= t and near(mapID, covered[i + 1], covered[i + 2], x, y) then
-            return true
-        end
-    end
-    return false
-end
-
-local function cover(covered, mapID, x, y, t)
-    local n = #covered
-    covered[n + 1], covered[n + 2], covered[n + 3], covered[n + 4] = mapID, x, y, t
-end
-
--- One S at a time, each built just before it goes: what another answer had by then is left out, so two answerers
--- starting together don't both send every part, and a first answer holding only some of the phase's nodes doesn't
--- hide the rest. Our own entries go on the covered list too.
-local function sendReply(p)
-    local covered = covering[p]
-    if not covered then return end
-    local entries = {}
-    for mapID, list in pairs(ownReports()) do
-        prune(list)
-        for _, r in ipairs(list) do
-            if #entries < MAX_PER_REPLY and r.phase == p and not covers(covered, mapID, r.x, r.y, r.t) then
-                entries[#entries + 1] = ("%d,%d,%d,%d"):format(mapID, coord(r.x), coord(r.y), r.t)
-                cover(covered, mapID, r.x, r.y, r.t)
-            end
-        end
-    end
-    if #entries == 0 then
-        covering[p], replying[p] = nil, nil
-        return
-    end
-    replying[p] = true
-    send(("S:%s:%s:%s:%s"):format(VERSION, factionTag(), p, table.concat(entries, ";")))
-    C_Timer.After(SEND_GAP, function() sendReply(p) end)
-end
-
--- One entry of an R / S (keep = add) or an XM / XS (keep = addGone); an S entry also goes on `covered`, if given.
-local function addFields(keep, p, mapID, x, y, t, covered)
-    mapID, x, y, t = tonumber(mapID), tonumber(x), tonumber(y), tonumber(t)
-    if not (mapID and x and y and t) then return end
-    keep(p, mapID, x / 10000, y / 10000, t)
-    if covered then
-        local m, cx, cy = valid(mapID, x / 10000, y / 10000, t)
-        if m then cover(covered, m, cx, cy, t) end
-    end
-end
-
--- One message from the channel (sender already known not to be us).
-function LeyShare:OnMessage(text)
-    local kind, v, fac, p, rest = strsplit(":", text, 5)
-    if v ~= VERSION or fac ~= factionTag() or not (p and p:match("^%d+$")) then return end
-    if (kind == "R" or kind == "XM") and rest then
-        local mapID, x, y, t = strsplit(":", rest)
-        addFields(kind == "R" and add or addGone, p, mapID, x, y, t)
-    elseif kind == "Q" then
-        -- We'll hear the answers to it, so we needn't ask about this phase ourselves.
-        asked[p] = true
-        ownQueries()[p] = GetServerTime()
-        -- Answer after a random wait, leaving out what others' answers have by then: a short one when we saw a node
-        -- there ourselves, a longer one when we only heard of it. One answer per phase; a new asker while ours goes
-        -- out missed the parts already sent, so the rest of ours starts over.
-        if replying[p] then
-            wipe(covering[p])
+    for i = #recent, 1, -1 do
+        local r = recent[i]
+        if now - r[4] >= MINIMAP_GAP then
+            table.remove(recent, i)
+        elseif r[1] == mapID and near(mapID, r[2], r[3], x, y) then
             return
         end
-        if covering[p] then return end
-        local held, mine = false, false
-        for _, list in pairs(ownReports()) do
-            for _, r in ipairs(list) do
-                if r.phase == p and GetServerTime() - r.t <= TTL then
-                    held = true
-                    if r.mine then mine = true end
-                end
-            end
-        end
-        if not held then return end
-        local wait = mine and REPLY_MINE or REPLY_OTHERS
-        covering[p] = {}
-        C_Timer.After(wait[1] + math.random() * (wait[2] - wait[1]), function() sendReply(p) end)
-    elseif (kind == "S" or kind == "XS") and rest then
-        -- An XS isn't an answer about sightings: it covers nothing of ours.
-        local covered = kind == "S" and covering[p] or nil
-        for entry in rest:gmatch("[^;]+") do
-            local mapID, x, y, t = strsplit(",", entry)
-            addFields(kind == "S" and add or addGone, p, mapID, x, y, t, covered)
-        end
     end
-end
-
----------------------------------------------------------------------------
--- Phase. Creature GUIDs are Creature-0-server-instance-zoneUID-npcID-spawnUID; zoneUID is the shard, the same for
--- everyone in it. The first reading is used straight away; once a second kind of NPC agrees, replacing it takes
--- CONFIRMATIONS kinds of NPC agreeing on a new one.
----------------------------------------------------------------------------
-
-local function setPhase(p, npcID)
-    local old = phase
-    phase, phaseMap, tentativeNpc = p, playerMap(), npcID
-    wipe(candidates)
-    if p == old then return end
-    if waiting and waiting.mapID == phaseMap then broadcast(waiting.mapID, waiting.x, waiting.y, waiting.t) end
-    waiting = nil
-    query()
-end
-
--- A GUID seen on a unit. Exposed for tests.
-function LeyShare:ReadGUID(guid)
-    if type(guid) ~= "string" then return end
-    local kind, _, _, _, zone, npc = strsplit("-", guid)
-    if kind ~= "Creature" and kind ~= "Vehicle" then return end
-    zone, npc = tonumber(zone), tonumber(npc)
-    if not zone or zone <= 0 or not npc then return end
-    local p = tostring(zone)
-    if p == phase then
-        if tentativeNpc and npc ~= tentativeNpc then tentativeNpc = nil end    -- another kind agrees
-        wipe(candidates)
-    elseif not phase or tentativeNpc then
-        setPhase(p, npc)
-    else
-        local c = candidates[p] or { n = 0 }
-        candidates[p] = c
-        if not c[npc] then c[npc], c.n = true, c.n + 1 end
-        if c.n >= CONFIRMATIONS then setPhase(p) end
-    end
-end
-
--- Players' companions, guardians, totems and battle pets keep the zoneUID they were summoned in, so after their owner
--- changes layer they read as another phase.
-local function petLike(unit)
-    for _, fn in ipairs({ UnitPlayerControlled, UnitIsBattlePetCompanion, UnitIsOtherPlayersBattlePet }) do
-        if type(fn) == "function" then
-            local ok, v = pcall(fn, unit)
-            if ok and clean(v) then return true end
-        end
-    end
-    return false
-end
-
-local function readUnit(unit)
-    if not tracking() or petLike(unit) then return end
-    local ok, guid = pcall(UnitGUID, unit)
-    LeyShare:ReadGUID(ok and clean(guid) or nil)
-end
-
-local function scanNameplates()
-    for i = 1, 40 do
-        local unit = "nameplate" .. i
-        if clean(UnitExists(unit)) then readUnit(unit) end
-    end
-end
-
--- The phase, whether it is still tentative, and the map it was read on (for tests and the dev tools).
-function LeyShare:Phase()
-    return phase, tentativeNpc ~= nil, phaseMap
-end
-
--- Only a real zone change forgets the phase: the events that call this also fire on /reload and at login.
-function LeyShare:OnZone()
-    if playerMap() ~= phaseMap then
-        phase, phaseMap, tentativeNpc, waiting = nil, nil, nil, nil
-        wipe(candidates)
-    end
-    -- After a /reload or a quick relog in the same zone, the saved phase is picked up again, tentatively.
-    local db = MapzerothRebuildDB
-    local saved = db and db.sightingPhase
-    if db then db.sightingPhase = nil end
-    if not phase and type(saved) == "table" and saved.mapID == playerMap()
-            and GetServerTime() - (saved.at or 0) <= RESTORE_SECONDS then
-        phase, phaseMap, tentativeNpc = saved.phase, saved.mapID, -1
-    end
+    self:OnConfirmed(mapID, x, y, now)
 end
 
 ---------------------------------------------------------------------------
@@ -847,57 +452,6 @@ local function checkPending()
     end
 end
 
----------------------------------------------------------------------------
--- Routing (step two): which of a pick's nodes were seen in the player's phase.
----------------------------------------------------------------------------
-
-local function nodeWorld(node)
-    local cached = worldCache[node.id]
-    if cached == nil then
-        local x, y, c = worldPos(node.mapID, node.x, node.y)
-        cached = x and { x, y, c } or false
-        worldCache[node.id] = cached
-    end
-    return cached or nil
-end
-
--- { [nodeID] = seconds since the newest report } for those of `nodeIDs` with a report from `byMap` (sightings or "not
--- there"s) in the player's current phase within TTL, and how many; nil when there are none (or the phase isn't known).
--- nodeIDs are a pick's places (PlaceIDs) or nodes of ours.
-local function reportedAmong(byMap, nodeIDs)
-    if not (phase and tracking()) then return nil end
-    local now, seen, count = GetServerTime(), {}, 0
-    for mapID, list in pairs(byMap) do
-        for _, r in ipairs(list) do
-            local age = now - (r.t or 0)
-            if r.phase == phase and age <= TTL and age >= -FUTURE then
-                local rx, ry, rc = worldPos(mapID, r.x, r.y)
-                for _, id in ipairs(nodeIDs) do
-                    local node = placeByID[id] or addon.World:GetNode(id)
-                    local w = node and node.mapID and nodeWorld(node)
-                    local d = w and yardsApart(rx, ry, rc, w[1], w[2], w[3])
-                    if d and d < SAME_YARDS and (seen[id] == nil or age < seen[id]) then
-                        if seen[id] == nil then count = count + 1 end
-                        seen[id] = math.max(0, age)
-                    end
-                end
-            end
-        end
-    end
-    if count == 0 then return nil end
-    return seen, count
-end
-
--- Those of `nodeIDs` seen up in the player's phase lately: { [nodeID] = seconds since }, and how many; or nil.
-function LeyShare:SeenAmong(nodeIDs)
-    return reportedAmong(reports(), nodeIDs)
-end
-
--- Those of `nodeIDs` whose newest report in the player's phase is "not there" (XM / XS): { [nodeID] = seconds since },
--- and how many; or nil. A sighting since removes the "not there", so a node is never in both.
-function LeyShare:GoneAmong(nodeIDs)
-    return reportedAmong(goneReports(), nodeIDs)
-end
 
 ---------------------------------------------------------------------------
 -- Channel
@@ -967,7 +521,6 @@ end
 
 -- force: join even though the client lists the channel (just left it, and the client may not have caught up).
 join = function(force)
-    if not joinedAt and channelIndex() then joinedAt = GetTime() end      -- on it since about now (joining takes a moment)
     if not LeyShare:Networking() or clean(IsInInstance()) then return end
     if channelIndex() and not force then
         if greyedOut() then freshen("greyed out") end
@@ -983,7 +536,6 @@ join = function(force)
     -- The chat frames pick the channel up a moment after joining.
     C_Timer.After(1, hideFromChat)
     C_Timer.After(5, hideFromChat)
-    C_Timer.After(2, query)
 end
 
 -- The server's word on our channel. NOT_ALLOWED_IN_CHANNEL is it refusing a message we sent (see refused): rejoining
@@ -1057,14 +609,6 @@ local function start(atLogin)
     end)
 end
 
-local function startScanning()
-    if scanning or not tracking() then return end
-    scanning = true
-    C_Timer.NewTicker(SCAN_SECONDS, function()
-        if tracking() then scanNameplates() end
-    end)
-end
-
 -- The player turned sharing on or off (the settings page or the first-run question).
 function LeyShare:OnSettingChanged(on)
     addon.Options:Store("shareAsked", true)
@@ -1072,7 +616,6 @@ function LeyShare:OnSettingChanged(on)
     pausedUntil, awaitingEcho, freshened, freshenedAt, freshening, lastJoinAt = nil, nil, 0, nil, nil, nil
     if on then
         start(false)
-        startScanning()
     else
         wipe(queue)
         if channelIndex() then chatCall(LeaveChannelByName, channelName()) end
@@ -1084,32 +627,18 @@ function LeyShare:ShouldAsk()
     return skyborne() and not addon.Options:Get("shareAsked") and not self:SllcmLoaded()
 end
 
--- How much is held, for the dev tools: sightings, how many in the current phase, messages waiting to go, shared nodes.
+-- How things stand, for the dev tools: whether we network, the channel, messages waiting to go.
 function LeyShare:Stats()
-    local count, here, gone = 0, 0, 0
-    for _, list in pairs(reports()) do
-        for _, r in ipairs(list) do
-            count = count + 1
-            if r.phase == phase then here = here + 1 end
-        end
-    end
-    for _, list in pairs(goneReports()) do gone = gone + #list end
-    return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(), phase = phase,
-             tentative = tentativeNpc ~= nil, held = count, here = here, gone = gone, queued = #queue,
-             greyed = channelIndex() ~= nil and greyedOut(), paused = paused(),
-             revives = freshened }
+    return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(), queued = #queue,
+             greyed = channelIndex() ~= nil and greyedOut(), paused = paused(), revives = freshened }
 end
 
 -- Tests only: forget everything held in memory, and allow this many channel swaps (none if omitted).
 function LeyShare:ResetForTests(swaps)
     reorderUntil, swapsLeft = nil, swaps or 0
-    phase, phaseMap, tentativeNpc, waiting, pending, joinedAt = nil, nil, nil, nil, nil, nil
-    wipe(candidates)
-    wipe(asked)
-    wipe(covering)
-    wipe(replying)
+    pending = nil
+    wipe(recent)
     wipe(queue)
-    wipe(worldCache)
     sending = false
     channelRetries, pausedUntil, awaitingEcho, whoUntil, lastJoinAt, recheckPending = 0, nil, nil, nil, nil, nil
     freshened, freshenedAt, freshening = 0, nil, nil
@@ -1121,27 +650,18 @@ end
 
 local events = CreateFrame("Frame")
 events:RegisterEvent("PLAYER_LOGIN")
-events:RegisterEvent("PLAYER_LOGOUT")
-events:RegisterEvent("PLAYER_ENTERING_WORLD")
-events:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
 events:RegisterEvent("CHAT_MSG_ADDON")
 events:RegisterEvent("CHANNEL_UI_UPDATE")
 events:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 events:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE_USER")
-events:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-events:RegisterEvent("PLAYER_TARGET_CHANGED")
-events:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 events:SetScript("OnEvent", function(_, event, ...)
     if event == "CHAT_MSG_ADDON" then
         if not LeyShare:Networking() then return end
-        local prefix, text, kind, sender = ...
-        prefix, text, kind, sender = clean(prefix), clean(text), clean(kind), clean(sender)
-        if prefix ~= PREFIX or type(text) ~= "string" or type(sender) ~= "string" then return end
-        if kind == "CHANNEL" then LeyShare:OnHeard() end   -- our echo or anyone's: the channel carries
-        sender = Ambiguate(sender, "none")
-        if not me[sender] then LeyShare:OnMessage(text) end
+        local prefix, _, kind = ...
+        -- our echo or anyone's: the channel carries (nothing heard is kept)
+        if clean(prefix) == PREFIX and clean(kind) == "CHANNEL" then LeyShare:OnHeard() end
     elseif event == "CHANNEL_UI_UPDATE" then             -- a channel joined or left (our own swaps fire it too)
         if reorderUntil and GetTime() < reorderUntil then LeyShare:KeepChannelLast() end
     elseif event == "CHAT_MSG_CHANNEL_NOTICE" or event == "CHAT_MSG_CHANNEL_NOTICE_USER" then
@@ -1150,34 +670,16 @@ events:SetScript("OnEvent", function(_, event, ...)
         if type(baseName) == "string" and baseName:lower() == channelName():lower() then
             LeyShare:OnChannelNotice(notice)
         end
-    elseif event == "NAME_PLATE_UNIT_ADDED" then
-        readUnit((...))
-    elseif event == "PLAYER_TARGET_CHANGED" then
-        readUnit("target")
-    elseif event == "UPDATE_MOUSEOVER_UNIT" then
-        readUnit("mouseover")
     elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
         local _, _, spellID = ...
         if RACIALS[spellID] then LeyShare:OnRacialCast() end
     elseif event == "PLAYER_REGEN_ENABLED" then
         checkPending()
-    elseif event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA" then
-        LeyShare:OnZone()
     elseif event == "PLAYER_LOGIN" then
-        pruneAll()
-        -- On Forever, UnitName gives first name and surname apart, and senders show as "First Surname".
-        local name, surname = UnitName("player")
-        if name then me[name] = true end
-        if name and surname and surname ~= "" then me[name .. " " .. surname] = true end
+        forgetOld()
         addon.Options:OnChange(function(key, value)
             if key == "shareSightings" then LeyShare:OnSettingChanged(value) end
         end)
         start(true)
-        startScanning()
-    elseif event == "PLAYER_LOGOUT" then                -- also /reload
-        pruneAll()
-        if MapzerothRebuildDB then
-            MapzerothRebuildDB.sightingPhase = phase and { phase = phase, mapID = phaseMap, at = GetServerTime() } or nil
-        end
     end
 end)

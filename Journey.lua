@@ -586,46 +586,12 @@ function Journey:Plan(session, goalID, banned, backBanned)
     return plan
 end
 
--- A "nearest ley line / convergence" pick's nodes that were seen up in the player's phase in the last 90 minutes (other
--- players' sightings and their own, LeyShare.lua): { nodeIDs, ages by node id }, or nil when none were.
-local function sighted(entry)
-    if not leyPick(entry) then return nil end
-    local goals = goalsOf(entry)
-    local ages = addon.LeyShare:SeenAmong(goals)
-    if not ages then return nil end
-    local ids = {}
-    for _, id in ipairs(goals) do
-        if ages[id] then ids[#ids + 1] = id end
-    end
-    return ids, ages
-end
-
 -- `yield` (optional): called between searches, so a long plan (a tour, MultiRoute.lua) can be spread over several
--- frames (MultiRoute:Run); a plan to one place ignores it. A ley line or convergence pick goes to the nearest one seen
--- up in the player's phase when it can be reached (plan.seenAge: seconds since), else the nearest not reported "not
--- there" there, else the nearest of them all.
+-- frames (MultiRoute:Run); a plan to one place ignores it. A ley line or convergence pick goes to the nearest of its
+-- places (no phases since WoW: Forever's 1.60.1 hotfix, so nothing says which are up for the player).
 function Journey:PlanEntry(session, entry, yield)
     if entry.stops then return addon.MultiRoute:Plan(session, entry, yield) end
-    local seen, ages = sighted(entry)
-    if seen then
-        local plan = self:Plan(session, seen, entry.banned, entry.backBanned)
-        if plan then
-            plan.seenAge = ages[plan.goal]
-            return plan
-        end
-    end
-    -- Then the nearest not reported "not there" in the player's phase (Skyborne Compass's XM / XS, LeyShare.lua).
-    local goals = goalsOf(entry)
-    local gone = leyPick(entry) and addon.LeyShare:GoneAmong(goals)
-    if gone then
-        local open = {}
-        for _, id in ipairs(goals) do
-            if not gone[id] then open[#open + 1] = id end
-        end
-        local plan = #open > 0 and self:Plan(session, open, entry.banned, entry.backBanned)
-        if plan then return plan end
-    end
-    return self:Plan(session, goals, entry.banned, entry.backBanned)       -- the plan, or nil and a hint about a missing flight
+    return self:Plan(session, goalsOf(entry), entry.banned, entry.backBanned)  -- the plan, or nil and a hint about a missing flight
 end
 
 -- A round trip to an entry: to whichever of its places has the quickest way there and back to where the player stands,
@@ -633,15 +599,13 @@ end
 -- planned for: that one place and the abilities each way leaves alone, so the trip can be planned again part way
 -- (Navigation). Nil when no place can be reached and left again.
 function Journey:PlanRoundTrip(session, entry)
-    local seen, ages = sighted(entry)
-    local best = seen and self:RoundTrip(session, seen) or self:RoundTrip(session, goalsOf(entry))
+    local best = self:RoundTrip(session, goalsOf(entry))
     if not best then return nil end
     local trip = {}
     for k, v in pairs(entry) do trip[k] = v end
     trip.nodeID, trip.nodeIDs, trip.banned, trip.backBanned = best.nodeID, { best.nodeID }, best.banned, best.backBanned
     trip.placeChosen = true
     local plan = self:Plan(session, trip.nodeIDs, trip.banned, trip.backBanned)
-    if plan and ages then plan.seenAge = ages[best.nodeID] end
     return plan, plan and trip or nil
 end
 

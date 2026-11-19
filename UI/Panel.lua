@@ -683,13 +683,8 @@ function Panel.TooltipLines(entry, ctx)
     elseif entry.action == "sllcm" then
         return { { entry.name, "title" }, { L["TIP_NEEDS_SLLCM"]:format(addon.SLLCM_NAME), "body" } }
     elseif entry.group == "leyline" or entry.group == "convergence" then
-        local lines = { { entry.pick and entry.where or entry.name, "title" },
-                        { L[entry.group == "leyline" and "TIP_LEYLINE" or "TIP_CONVERGENCE"], "body" } }
-        -- Seen up in the player's phase lately (LeyShare.lua): the pick goes to the nearest of those.
-        local seen, count
-        if entry.pick and addon.LeyShare then seen, count = addon.LeyShare:SeenAmong(addon.LeyShare:PlaceIDs(entry)) end
-        if count then lines[#lines + 1] = { L["TIP_SEEN"]:format(count), "good" } end
-        return lines
+        return { { entry.pick and entry.where or entry.name, "title" },
+                 { L[entry.group == "leyline" and "TIP_LEYLINE" or "TIP_CONVERGENCE"], "body" } }
     elseif entry.group == "trainer" then
         return trainerLines(entry, ctx)
     end
@@ -984,7 +979,6 @@ function Panel:DisplayPlan(entry, plan)
     add(Journey:FareText(plan))
     add(Journey:HintText(plan.hint))
     add(Journey:AssumedText(plan))
-    if plan.seenAge then add(L["ROUTE_SEEN"]:format(math.max(1, math.floor(plan.seenAge / 60 + 0.5)))) end
     ui.routeHint:SetText(table.concat(hints, "\n"))
     layoutSteps()
     ui.start:SetShown(#plan.steps > 0 and not state.pinned and not plan.unaffordable)
