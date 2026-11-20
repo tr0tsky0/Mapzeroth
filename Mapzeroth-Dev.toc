@@ -122,6 +122,7 @@ UI\MinimapButton.lua
 UI\Navigator.lua
 UI\SharePrompt.lua
 UI\WaypointPrompt.lua
+UI\Corpse.lua
 UI\OptionsPanel.lua
 UI\QuestArrow.lua
 UI\DaylightPlugin.lua

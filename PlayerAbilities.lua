@@ -199,7 +199,16 @@ function addon:MaxCooldownSeconds()
     return hours * 3600
 end
 
+-- A ghost's run speed in yards a second (GetUnitSpeed's second answer, the speed it runs at, standing still too), or
+-- nil when the client doesn't say: walking speed then.
+local function ghostSpeed()
+    if type(GetUnitSpeed) ~= "function" then return nil end
+    local ok, _, run = pcall(GetUnitSpeed, "player")
+    if ok and type(run) == "number" and run > 0 then return run end
+end
+
 function addon:GetPlayerContext()
+    local ghost = type(UnitIsGhost) == "function" and UnitIsGhost("player") and true or false
     local _, classToken = UnitClass("player")
     local _, raceToken, raceID = UnitRace("player")
     local inn = addon:GetBoundInnNode()
@@ -249,6 +258,9 @@ function addon:GetPlayerContext()
         reagentSaving = addon.Options:Get("reagentSaving"),              -- seconds a reagent spent must save
         money = GetMoney and GetMoney() or nil,                          -- copper, for what flights cost
         fareFactor = function(nodeID) return addon.FlightKnowledge:FareFactor(nodeID) end,   -- what they pay, per flight master
+        -- Released and running back: a ghost only walks (TravelGraph:Build), at its own run speed.
+        ghost = ghost,
+        ghostSpeed = ghost and ghostSpeed() or nil,
     }
 end
 

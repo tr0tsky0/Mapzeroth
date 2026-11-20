@@ -1737,6 +1737,93 @@ do
     C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
 end
 
+-- A quest newly followed in the tracker (autoQuestRoute): off by default; "ask" brings up the question about it, "on"
+-- starts the route; never the quest already followed at login, nor one the trip goes to.
+do
+    local WP, Nav = addon.WaypointPrompt, addon.Navigation
+    Nav:Stop()
+    local followed = 0
+    local realTrack, realLog, realUiMap = C_SuperTrack, C_QuestLog, GetQuestUiMapID
+    C_SuperTrack = { GetSuperTrackedQuestID = function() return followed end }
+    C_QuestLog = setmetatable({
+        GetQuestsOnMap = function() return { { questID = 123, x = 0.45, y = 0.35 }, { questID = 124, x = 0.5, y = 0.4 },
+                                              { questID = 125, x = 0.55, y = 0.45 } } end,
+        GetTitleForQuestID = function(id) return "Quest " .. id end,
+        IsQuestFlaggedCompleted = function() return false end,
+    }, { __index = realLog })
+    GetQuestUiMapID = function() return 1453 end
+    followed = 123
+    WP:Settle()
+    check(Options:Get("autoQuestRoute") == "off", "off by default")
+    followed = 124
+    WP:OnQuestChanged()
+    check(not WP:IsShown(), "off: nothing happens")
+    Options:Set("autoQuestRoute", "ask")
+    WP:OnQuestChanged()
+    check(not WP:IsShown(), "the same quest isn't asked about once the setting changes")
+    followed = 125
+    WP:OnQuestChanged()
+    check(WP:IsQuestShown() and WP.widgets.text:GetText():find("Quest 125", 1, true), "ask: the question names the quest")
+    WP:OnWaypointChanged()
+    check(WP:IsQuestShown(), "a waypoint event that changes nothing leaves it up")
+    WP:Answer("route")
+    check(state.view == "route" and state.entry.dest and state.entry.dest.questID == 125, "Route: the route to it")
+    check(Nav:IsActive(), "and the trip starts")
+    followed = 0
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    check(not WP:IsShown(), "no question about the quest the trip goes to")
+    Nav:Stop()
+    followed = 123
+    WP:OnQuestChanged()
+    WP:Answer("never")
+    check(Options:Get("autoQuestRoute") == "off", "Don't Ask Again turns it off")
+    Options:Set("autoQuestRoute", "on")
+    followed = 124
+    WP:OnQuestChanged()
+    check(not WP:IsShown() and Nav:IsActive() and state.entry.dest.questID == 124, "on: the route starts without asking")
+    Nav:Stop()
+    Options:Set("autoQuestRoute", "bogus")
+    check(Options:Get("autoQuestRoute") == "off", "a value it doesn't know is the default")
+    check(addon.OptionsPanel.widgets.autoQuest, "the settings page has the choice")
+    C_SuperTrack, C_QuestLog, GetQuestUiMapID = realTrack, realLog, realUiMap
+    WP:Settle()
+end
+
+-- Back to the corpse (UI/Corpse.lua): with routeToCorpse on, releasing routes the ghost to where it died, walking
+-- only; coming back to life ends that trip. Not in an instance.
+do
+    local Corpse, Nav = addon.Corpse, addon.Navigation
+    Nav:Stop()
+    local realTimer, realPos = C_Timer, C_Map.GetPlayerMapPosition
+    C_Timer = { After = function(_, fn) fn() end }
+    local ghost = false
+    UnitIsGhost = function() return ghost end
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.45, 0.35 end } end
+    Corpse:OnDead()
+    C_Map.GetPlayerMapPosition = realPos                     -- the ghost is back at the graveyard
+    ghost = true
+    Corpse:OnReleased()
+    check(not Nav:IsActive(), "off by default: nothing")
+    check(addon.OptionsPanel.widgets.corpse, "the settings page has the switch")
+    Options:Set("routeToCorpse", true)
+    Corpse:OnReleased()
+    check(Nav:IsActive() and state.entry.dest.corpse and math.abs(state.entry.dest.x - 0.45) < 1e-3,
+        "released: the route to where it died")
+    for _, step in ipairs(state.plan and state.plan.steps or {}) do
+        check(step.method == "walk", "a ghost walks: " .. tostring(step.method))
+    end
+    Corpse:OnAlive()
+    check(not Nav:IsActive(), "alive again: the run back is over")
+    IsInInstance = function() return true end
+    Corpse:OnDead()
+    Corpse:OnReleased()
+    check(not Nav:IsActive(), "not from a dungeon")
+    IsInInstance, UnitIsGhost, C_Timer = nil, nil, realTimer
+    Options:Set("routeToCorpse", false)
+end
+
 -- Docked beside the map, the panel goes past any other frame hanging off the map's right edge (another addon's panel
 -- docked there, a side tab), found on the screen rather than by name; not past one elsewhere, nor our own windows.
 do

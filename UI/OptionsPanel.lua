@@ -376,6 +376,16 @@ function OptionsPanel:Build()
                 return TOGGLE_ROW
             end,
             function(y)
+                widgets.autoQuest = dropdownRow(y, "autoQuestRoute", L["OPT_AUTO_QUEST"], L["OPT_AUTO_QUEST_DESC"], {
+                    { id = "off", label = L["OPT_AUTO_OFF"] }, { id = "ask", label = L["OPT_AUTO_ASK"] },
+                    { id = "on", label = L["OPT_AUTO_ON"] } })
+                return TOGGLE_ROW
+            end,
+            function(y)
+                widgets.corpse = toggleRow(box, y, "routeToCorpse", L["OPT_CORPSE"], L["OPT_CORPSE_DESC"])
+                return TOGGLE_ROW
+            end,
+            function(y)
                 widgets.showNavigator = toggleRow(box, y, "showNavigator", L["OPT_SHOW_NAVIGATOR"], L["OPT_SHOW_NAVIGATOR_DESC"])
                 return TOGGLE_ROW
             end,
@@ -494,6 +504,8 @@ function OptionsPanel:Sync()
     widgets.showNavigator:SetValue(Options:Get("showNavigator"))
     widgets.askWaypoint:SetValue(Options:Get("askWaypointRoute"))
     widgets.questRoute:SetValue(Options:Get("questTrackerRoute"))
+    widgets.autoQuest:SetValue(Options:Get("autoQuestRoute"))
+    widgets.corpse:SetValue(Options:Get("routeToCorpse"))
     -- Off while SLLCM is loaded, whatever is saved: Mapzeroth isn't sharing then.
     if widgets.share then widgets.share:SetValue(not widgets.share.disabled and Options:Get("shareSightings")) end
     for _, check in ipairs(widgets.picks or {}) do check:SetChecked(Options:ShowsPick(check.key)) end

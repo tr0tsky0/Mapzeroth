@@ -47,6 +47,7 @@ local iconSources = {}      -- spellID -> { spellID }, one table per form so edg
 -- picture: the spell of the form that sets the speed ({ spellID }), or nil when on foot or on a mount (mounts
 -- get their own picture later: a horse or a wolf).
 function addon:GetGroundSpeed(container, ctx)
+    if ctx.ghost then return ctx.ghostSpeed or addon.WALK_SPEED, nil end      -- no mount or form: the ghost's own run
     local multiplier, winner = bestMultiplier(container, ctx)
     local source
     if winner then

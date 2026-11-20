@@ -424,9 +424,11 @@ end
 -- The cached edge tables for this context's ground speeds, made on first use from the static geometry.
 -- A speed comes with the form behind it (`iconSource`, for the step's picture), so two forms of one speed are
 -- two caches.
-local function edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon)
-    local key = ("%d|%.6f|%s|%.6f|%s"):format(addon.World.generation, outdoorSpeed,
-        outdoorIcon and outdoorIcon.spellID or "", indoorSpeed or 0, indoorIcon and indoorIcon.spellID or "")
+-- walkOnly (a ghost): no fly edges.
+local function edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon, walkOnly)
+    local key = ("%d|%.6f|%s|%.6f|%s|%s"):format(addon.World.generation, outdoorSpeed,
+        outdoorIcon and outdoorIcon.spellID or "", indoorSpeed or 0, indoorIcon and indoorIcon.spellID or "",
+        walkOnly and "w" or "")
     local cached = edgeCaches[key]
     if cached then return cached end
 
@@ -439,7 +441,7 @@ local function edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon)
         for _, e in ipairs(list) do
             local to, dtf, kind = e[1], e[2], e[3]
             if kind == "fly" then
-                edges[#edges + 1] = { from = from, to = to, cost = dtf, method = "fly" }
+                if not walkOnly then edges[#edges + 1] = { from = from, to = to, cost = dtf, method = "fly" } end
             elseif kind == "gate" then
                 edges[#edges + 1] = { from = from, to = to, cost = 0, method = "walk" }
             else
@@ -499,8 +501,10 @@ function TravelGraph:Build(ctx)
     -- a reverse next to an authored one would let the search take the cheaper of the two.
     local facts = factsForWorld()
     local authored = facts.authored
+    -- A ghost walks: no flights, ships, portals, teleports or hearthstone, and no mount (GetGroundSpeed).
+    local ghost = ctx.ghost
     for _, edge in ipairs(addon.Edges or {}) do
-        if addon:MeetsRequirements(edge.requirements, ctx) and not hostile(edge) then
+        if (not ghost or edge.method == "walk") and addon:MeetsRequirements(edge.requirements, ctx) and not hostile(edge) then
             local a, b = World:GetNode(edge.from), World:GetNode(edge.to)
             local cost, icon = edge.cost, nil
             if cost == nil and a and b then
@@ -530,7 +534,7 @@ function TravelGraph:Build(ctx)
     local outdoorSpeed, outdoorIcon = addon:GetGroundSpeed(facts.outdoor, ctx)
     local indoorSpeed, indoorIcon
     if facts.indoor then indoorSpeed, indoorIcon = addon:GetGroundSpeed(facts.indoor, ctx) end
-    for from, edges in pairs(edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon)) do
+    for from, edges in pairs(edgesFor(outdoorSpeed, outdoorIcon, indoorSpeed, indoorIcon, ghost)) do
         local list = adjacency[from]
         if not list then
             list = {}
@@ -541,6 +545,7 @@ function TravelGraph:Build(ctx)
 
     -- Teleports and the like: available from wherever the player stands.
     local anywhere = {}
+    if ghost then return { adjacency = adjacency, anywhere = anywhere } end
     -- Places of the player's own an ability lands at (the spot they bound at when no inn of ours is there, their camp).
     local landings, own = addon:OwnPlaces(ctx), {}
     for _, place in ipairs(landings) do own[place.id] = true end
@@ -601,7 +606,7 @@ function TravelGraph:AddDestination(graph, ctx, dest, start, others)
     -- Flying to it: from any flyable, outdoor node within range, the same rule the fly mesh between
     -- nodes uses -- so "portal to Nordrassil, fly to the waypoint" is a route, and so is a waypoint on
     -- a map none of our nodes are on (walking has no node to start from there).
-    local flyable = not container or (World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor"))
+    local flyable = not ctx.ghost and (not container or (World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor")))
     local flew = false
     if flyable then
         World:ForEachNode(function(node)
@@ -679,7 +684,7 @@ departure = function(adjacency, ctx, start, container)
     -- same rule the fly mesh uses; but only for a flight worth the mount (at least MIN_FLY_SECONDS in the air), or
     -- a short walk would read as "fly".
     local World = addon.World
-    if World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor") then
+    if not ctx.ghost and World:GetFlag(container, "fly") and not World:GetFlag(container, "indoor") then
         local flySpeed = addon.FLY_SPEED
         World:ForEachNode(function(node)
             if isFlyable(node) and insideCity(node) == insideCity(start) then

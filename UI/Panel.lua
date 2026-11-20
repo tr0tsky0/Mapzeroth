@@ -1702,6 +1702,18 @@ function Panel:RouteToQuest(questID)
     return true
 end
 
+-- Released as a ghost (UI/Corpse.lua): the window comes up with the walk back to the corpse and the trip starts.
+-- False when there is no corpse we can place.
+function Panel:RouteToCorpse()
+    local corpse = addon:GetCorpseTarget()
+    if not corpse then return false end
+    if not (ui and ui.frame:IsShown()) then self:Toggle() end
+    self:ShowRoute(addon.Sections.CorpsePick(corpse), function(plan)
+        if plan then Panel:StartRoute() end
+    end)
+    return true
+end
+
 -- Another addon's points (MapzerothAPI.RouteTo, API.lua): the window comes up with the route through them, in the
 -- quickest order, as for pasted /way lines. start: the trip starts once it is planned; otherwise it waits for Start.
 function Panel:RouteToPoints(name, points, start)

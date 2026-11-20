@@ -9,7 +9,8 @@ local addonName, addon = ...
 local Options = {}
 addon.Options = Options
 
--- key -> { default, min, max, step } for numbers; text settings have only a default; on/off ones say boolean.
+-- key -> { default, min, max, step } for numbers; text settings have a default, and `choices` (a set) when only some
+-- values are allowed; on/off ones say boolean.
 local definitions = {
     loadingScreenTax = { default = addon.DEFAULT_LOADING_SCREEN_TAX, min = 0, max = 20, step = 1 },   -- seconds a loading screen costs a route
     maxCooldown = { default = 8, min = 1, max = 8, step = 1 },          -- hours: a longer cooldown isn't routed through; the top (8+) is no limit
@@ -40,6 +41,11 @@ local definitions = {
     -- Quests offer a route: the arrow on each quest in the game's tracker (UI/QuestArrow.lua) and "Route with Mapzeroth"
     -- in Daylight UI's quest menu (UI/DaylightPlugin.lua). Off: neither; Your Quest is still a pick.
     questTrackerRoute = { default = true, boolean = true },
+    -- A quest newly made the one followed in the quest tracker (super-tracked) is routed to (UI/WaypointPrompt.lua):
+    -- "off", "ask" (the question, as for a new waypoint) or "on" (the route starts at once).
+    autoQuestRoute = { default = "off", choices = { off = true, ask = true, on = true } },
+    -- Releasing your spirit routes the ghost back to its corpse (Corpse.lua).
+    routeToCorpse = { default = false, boolean = true },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.
@@ -105,6 +111,7 @@ local function clean(key, value)
     local d = definition(key)
     if not d then return nil end
     if d.boolean then return value and true or false end
+    if d.choices then return d.choices[value] and value or d.default end
     if d.min then
         value = tonumber(value)
         if not value then return d.default end

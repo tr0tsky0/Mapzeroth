@@ -159,3 +159,25 @@ do
     check(found, "with Reagent Economy Teleport: Stormwind needs no rune and carries no minimum saving")
     check(addon.REAGENT_ECONOMY and #addon.REAGENT_ECONOMY > 0, "Forever knows the Reagent Economy perk's spells")
 end
+
+-- A ghost (released, running back to its corpse) only walks: no hearthstone or teleport, flight, ship or portal, and
+-- no mount, at the ghost's own run speed.
+do
+    local ghost = makeCtx({ faction = "Horde", items = { 6948 }, hearthNode = "INN_295", spells = { 33388 } })
+    ghost.ghost, ghost.ghostSpeed = true, 9
+    addon.World:Build()
+    local graph = addon.TravelGraph:Build(ghost)
+    check(#graph.anywhere == 0, "a ghost has nothing usable from anywhere: " .. #graph.anywhere)
+    local other = {}
+    for _, list in pairs(graph.adjacency) do
+        for _, edge in ipairs(list) do
+            if edge.method ~= "walk" then other[edge.method] = true end
+        end
+    end
+    check(next(other) == nil, "and only walks: " .. (next(other) or ""))
+    check(addon:GetGroundSpeed("kalimdor.mulgore", ghost) == 9, "at its own speed, mount or not")
+    local r = route(ghost, "TAXI_23", "INN_295")
+    check(r == nil or methods(r):gsub("walk", ""):gsub(",", "") == "", "a ghost's route walks: " .. (r and methods(r) or "none"))
+    local alive = route(makeCtx({ faction = "Horde", items = { 6948 }, hearthNode = "INN_295" }), "TAXI_23", "INN_295")
+    check(alive and alive.steps[1].method == "hearthstone", "alive again, the hearthstone is back (no stale cache)")
+end

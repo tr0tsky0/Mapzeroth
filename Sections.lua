@@ -66,6 +66,14 @@ function Sections.QuestPick(quest)
     }
 end
 
+-- The pick for the player's corpse (addon:GetCorpseTarget), for the run back as a ghost.
+function Sections.CorpsePick(corpse)
+    return {
+        name = L["PICK_CORPSE"], nodeID = corpse.id, nodeIDs = { corpse.id }, group = "waypoint", relevant = true,
+        pick = true, dest = corpse, key = "corpse",
+    }
+end
+
 local PET_PICKS = { PET = "PICK_PET", DEMON = "PICK_DEMON" }
 local PET_CLASSES = { HUNTER = "PET", WARLOCK = "DEMON" }
 

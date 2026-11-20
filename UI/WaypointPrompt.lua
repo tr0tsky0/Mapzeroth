@@ -5,6 +5,9 @@ local addonName, addon = ...
 -- about the one already set at login, nor one the trip being followed is going to. The setting askWaypointRoute (on
 -- the settings page, and "Don't Ask Again" here) turns it off.
 --
+-- The same question comes for a quest newly followed in the quest tracker (super-tracked) when autoQuestRoute is
+-- "ask"; at "on" the route starts without asking. Don't Ask Again sets it to "off".
+--
 -- All styling goes through addon.Theme. The frame is built on first use, never at load.
 
 local WaypointPrompt = {}
@@ -18,6 +21,7 @@ local SETTLE = 3                -- seconds after login or /reload before a waypo
 
 local ui
 local seen                      -- the id of the waypoint last looked at (asked about, or already there), or nil
+local seenQuest                 -- likewise the quest followed
 local ready = false             -- past login: before that, a waypoint is the one the player already had
 
 local function build()
@@ -37,7 +41,6 @@ local function build()
     ui.title:SetPoint("TOPLEFT", PAD, -PAD)
     ui.title:SetWidth(WIDTH - 2 * PAD)
     ui.title:SetWordWrap(true)
-    ui.title:SetText(L["WAYPOINT_ASK_TITLE"])
 
     ui.text = Theme:Text(frame, "body")
     ui.text:SetPoint("TOPLEFT", ui.title, "BOTTOMLEFT", 0, -12)
@@ -85,29 +88,48 @@ local function place()
     end
 end
 
-function WaypointPrompt:Show(waypoint)
-    if not ui then build() end
-    ui.text:SetText(L["WAYPOINT_ASK_TEXT"]:format(addon:GetZoneName(waypoint.mapID) or "?"))
+local function open(title, text)
+    ui.title:SetText(title)
+    ui.text:SetText(text)
     ui.frame:Show()
     fit()
     place()
+end
+
+function WaypointPrompt:Show(waypoint)
+    if not ui then build() end
+    ui.questID = nil
+    open(L["WAYPOINT_ASK_TITLE"], L["WAYPOINT_ASK_TEXT"]:format(addon:GetZoneName(waypoint.mapID) or "?"))
+end
+
+-- The question about a quest (addon:GetQuestTarget's place, with its title).
+function WaypointPrompt:ShowQuest(quest)
+    if not ui then build() end
+    ui.questID = quest.questID
+    open(L["QUEST_ASK_TITLE"], L["QUEST_ASK_TEXT"]:format(quest.title or L["PICK_QUEST"]))
 end
 
 function WaypointPrompt:IsShown()
     return ui ~= nil and ui.frame:IsShown()
 end
 
+-- Whether the question up is about a quest.
+function WaypointPrompt:IsQuestShown()
+    return self:IsShown() and ui.questID ~= nil
+end
+
 function WaypointPrompt:Hide()
     if ui then ui.frame:Hide() end
 end
 
--- "route": plan it and go; "later": not this waypoint; "never": the setting goes off (the settings page turns it on).
+-- "route": plan it and go; "later": not this one; "never": the setting goes off (the settings page turns it on).
 function WaypointPrompt:Answer(answer)
+    local questID = ui and ui.questID
     self:Hide()
     if answer == "never" then
-        addon.Options:Set("askWaypointRoute", false)
+        if questID then addon.Options:Set("autoQuestRoute", "off") else addon.Options:Set("askWaypointRoute", false) end
     elseif answer == "route" then
-        addon.Panel:RouteToWaypoint()
+        if questID then addon.QuestArrow.Route(questID) else addon.Panel:RouteToWaypoint() end
     end
 end
 
@@ -117,6 +139,12 @@ local function headingThere(id)
     return entry ~= nil and entry.dest ~= nil and entry.dest.id == id
 end
 
+-- Whether it goes to this quest.
+local function headingToQuest(questID)
+    local entry = addon.Navigation:ReplanTarget()
+    return entry ~= nil and entry.dest ~= nil and entry.dest.questID == questID
+end
+
 -- The map waypoint changed (Core.lua, USER_WAYPOINT_UPDATED and SUPER_TRACKING_CHANGED). A new one is asked about; one
 -- cleared, or replaced, takes the question about it away.
 function WaypointPrompt:OnWaypointChanged()
@@ -124,15 +152,40 @@ function WaypointPrompt:OnWaypointChanged()
     local id = waypoint and waypoint.id
     if id == seen then return end
     seen = id
-    self:Hide()
+    if not self:IsQuestShown() then self:Hide() end
     if not (waypoint and ready and addon.Options:Get("askWaypointRoute")) or headingThere(id) then return end
     self:Show(waypoint)
+end
+
+local function trackedQuest()
+    local track = C_SuperTrack
+    local id = track and track.GetSuperTrackedQuestID and track.GetSuperTrackedQuestID()
+    return id ~= 0 and id or nil
+end
+
+-- The quest followed changed (Core.lua, SUPER_TRACKING_CHANGED). A new one is routed to, or asked about, by the
+-- autoQuestRoute setting; one dropped takes the question about it away. A quest with no spot we can place is let be.
+function WaypointPrompt:OnQuestChanged()
+    local questID = trackedQuest()
+    if questID == seenQuest then return end
+    seenQuest = questID
+    if self:IsQuestShown() then self:Hide() end
+    local mode = addon.Options:Get("autoQuestRoute")
+    if not (questID and ready) or mode == "off" or headingToQuest(questID) then return end
+    local quest = addon:GetQuestTarget(questID)
+    if not quest then return end
+    if mode == "on" then
+        addon.Panel:RouteToQuest(questID)
+    else
+        self:ShowQuest(quest)
+    end
 end
 
 -- Login and /reload: the waypoint set then is the one the player already had, so it isn't asked about.
 function WaypointPrompt:Settle()
     local waypoint = addon:GetWaypoint()
     seen = waypoint and waypoint.id
+    seenQuest = trackedQuest()
     ready = true
 end
 

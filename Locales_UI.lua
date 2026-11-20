@@ -111,6 +111,13 @@ addon:RegisterLocale("enUS", {
     OPT_ASK_WAYPOINT_DESC = "When you place a waypoint on the world map, or click a map pin link in chat, Mapzeroth asks whether to route you there. Off: Your Waypoint is still at the top of the list.",
     OPT_QUEST_ROUTE   = "Route buttons on quests",
     OPT_QUEST_ROUTE_DESC = "An arrow on each quest in the quest tracker, and Route with Mapzeroth in Daylight UI's quest menu, route you to that quest. Off: Your Quest is still in the list.",
+    OPT_AUTO_QUEST    = "Route to the quest you follow",
+    OPT_AUTO_QUEST_DESC = "When you pick a quest to follow in the quest tracker, Mapzeroth can ask whether to route you there, or start the route straight away.",
+    OPT_AUTO_OFF      = "Off",
+    OPT_AUTO_ASK      = "Ask",
+    OPT_AUTO_ON       = "On",
+    OPT_CORPSE        = "Route back to your corpse",
+    OPT_CORPSE_DESC   = "When you release your spirit, Mapzeroth starts the walk from the graveyard back to your body. Not inside dungeons.",
     OPT_SECTION_PLANNING = "Planning routes",
     OPT_SECTION_FOLLOWING = "Following a route",
     OPT_SECTION_LOOK  = "Appearance",
@@ -182,6 +189,7 @@ addon:RegisterLocale("enUS", {
     PICK_WAYPOINT     = "Your Waypoint",
     PICK_QUEST        = "Your Quest",
     PICK_QUEST_NAMED  = "Quest: %s",
+    PICK_CORPSE       = "Your Corpse",
     PICK_PASTE        = "Multi-stop Route",
     PICK_TOMTOM       = "Your TomTom Waypoints (%d)",
     PASTE_PROMPT      = "Paste /way lines, one point a line: /way #1 43.8 28.8 Zunta, or with the zone's name: /way Durotar 43.8 28.8 Zunta. Mapzeroth finds the quickest order to visit them all.",
@@ -266,6 +274,9 @@ addon:RegisterLocale("enUS", {
     WAYPOINT_ASK_ROUTE = "Route",
     WAYPOINT_ASK_LATER = "Not Now",
     WAYPOINT_ASK_NEVER = "Don't Ask Again",
+    -- Asked when a quest is picked to follow in the quest tracker (autoQuestRoute "ask"). %s: the quest's title.
+    QUEST_ASK_TITLE   = "Route to your quest?",
+    QUEST_ASK_TEXT    = "Mapzeroth can plan the quickest way to %s and start you on it.",
     -- The "How it works" link on the prompt and the settings page, and the tooltip it shows (UI/SharePrompt.lua).
     -- An example message sits between SHARE_HOW_SENT and SHARE_HOW_SENT_KEY; it is the wire format, not translated.
     SHARE_HOW         = "How it works",
