@@ -287,6 +287,7 @@ addon:RegisterLocale("deDE", {
     MINIMAP_TIP_SETTINGS = "Rechtsklick: Einstellungen",
     MINIMAP_TIP_DRAG     = "Ziehen: Knopf um die Minikarte bewegen",
     CMD_NO_SETTINGS   = "Mapzeroth: Das Einstellungsfenster des Spiels ist hier nicht verfügbar.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: Die Einstellungen lassen sich im Kampf nicht öffnen.",
     GROUP_place       = "Stadt oder Ort",
     KIND_city         = "Stadt",
     KIND_town         = "Ort",

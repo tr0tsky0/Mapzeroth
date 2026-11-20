@@ -286,6 +286,7 @@ addon:RegisterLocale("frFR", {
     MINIMAP_TIP_SETTINGS = "Clic droit : options",
     MINIMAP_TIP_DRAG     = "Glisser : déplacer ce bouton autour de la minicarte",
     CMD_NO_SETTINGS   = "Mapzeroth : la fenêtre des options du jeu n'est pas disponible ici.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth : impossible d'ouvrir les options en combat.",
     GROUP_place       = "Ville ou village",
     KIND_city         = "Ville",
     KIND_town         = "Village",

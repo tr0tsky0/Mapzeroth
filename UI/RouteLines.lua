@@ -289,6 +289,18 @@ local function shrinkFor(mapID)
 end
 RouteLines.ShrinkFor = shrinkFor    -- for tests
 
+-- A plan's pieces on a map, worked out once: the trip's redraws as the player moves (twice a second) and a zoom's
+-- (every frame of it) draw the same ones. Worked out again for another plan or map, or another road setting.
+local pieceCache = {}
+local function piecesFor(plan, mapID)
+    local c, k = pieceCache, addon.RoadNet and addon.RoadNet:Offroad()
+    if not (c.plan == plan and c.mapID == mapID and c.k == k and c.steps == #plan.steps) then
+        c.plan, c.mapID, c.k, c.steps = plan, mapID, k, #plan.steps
+        c.pieces, c.markers = MapRoute:Pieces(plan, mapID)
+    end
+    return c.pieces, c.markers
+end
+
 local function draw(frame, plan, mapID)
     local W, H = frame:GetWidth(), frame:GetHeight()
     if not (W and H and W > 0 and H > 0) then return end
@@ -299,7 +311,7 @@ local function draw(frame, plan, mapID)
     -- Only a trip being followed has a step on now (not a route the panel is only showing).
     state.following = plan == state.plan and state.current ~= nil
     state.moving = state.following and Theme:MotionOn()
-    local pieces, markers = MapRoute:Pieces(plan, mapID)
+    local pieces, markers = piecesFor(plan, mapID)
     -- Where the player is on this map, in yards, to leave out the part of the step behind them (none on a map with
     -- no scale, or one they aren't on).
     local player
@@ -421,9 +433,20 @@ function RouteLines:Init()
     state.hooked = true
     addon.Options:OnChange(function(key) if key == "showRouteOnMap" or key == "roadPreference" then RouteLines:Redraw() end end)
     WorldMapFrame:HookScript("OnShow", function() RouteLines:Redraw() end)
-    for _, method in ipairs({ "OnMapChanged", "OnCanvasScaleChanged" }) do
-        if WorldMapFrame[method] then
-            hooksecurefunc(WorldMapFrame, method, function() RouteLines:Redraw() end)
-        end
+    if WorldMapFrame.OnMapChanged then
+        hooksecurefunc(WorldMapFrame, "OnMapChanged", function() RouteLines:Redraw() end)
+    end
+    -- A zoom changes the scale on every frame it animates, sometimes more than once a frame: one redraw a frame.
+    local pending = false
+    if WorldMapFrame.OnCanvasScaleChanged then
+        hooksecurefunc(WorldMapFrame, "OnCanvasScaleChanged", function()
+            if not (C_Timer and C_Timer.After) then return RouteLines:Redraw() end
+            if pending then return end
+            pending = true
+            C_Timer.After(0, function()
+                pending = false
+                RouteLines:Redraw(true)
+            end)
+        end)
     end
 end

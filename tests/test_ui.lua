@@ -24,6 +24,11 @@ local function mock(isFontString)
             Hide = function(self) self._shown = false end,
             SetShown = function(self, v) self._shown = v and true or false end,
             IsShown = function(self) return self._shown end,
+            -- Shown, and its parent too (the docked panel is the map's child: closing the map hides it).
+            IsVisible = function(self)
+                local p = rawget(self, "_parent")
+                return self._shown and (p == nil or p:IsVisible()) or false
+            end,
             SetScript = function(self, name, fn) self._scripts[name] = fn end,
             HookScript = function(self, name, fn)
                 local before = self._hooks[name]
@@ -875,7 +880,9 @@ check(not state.priced and leyline.eta == nil, "with no time, so opening the win
 SLLCM_GetNodes = nil
 IsPlayerSpell = function() return false end
 
--- A waypoint set on the map is the first pick, on top, and the list follows it being set or cleared.
+-- A waypoint set on the map is the first pick, on top, and the list follows it being set or cleared (with the map
+-- open: the docked window is on screen only then).
+WorldMapFrame._shown = true
 C_Map.HasUserWaypoint = function() return true end
 C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.4, 0.3 end } } end
 addon.Panel:OnWaypointChanged()
@@ -940,9 +947,35 @@ do
     C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.45, 0.35 end } } end
     addon.Panel:OnWaypointChanged()
     check(built == 0 and state.topKey == keyBefore, "a closed window searches no routes for a new waypoint: " .. built)
+    -- Docked, the window stays "shown" when the map closes (it is the map's child): that is closed too.
+    frame:Show()
+    local parent = frame._parent
+    frame._parent = WorldMapFrame
+    WorldMapFrame._shown = false
+    addon.Panel:OnWaypointChanged()
+    addon.Panel:OnQuestLogUpdate()
+    check(built == 0 and state.topKey == keyBefore, "nor does a docked one with the map closed: " .. built)
+    WorldMapFrame._shown, frame._parent = true, parent
     addon.Journey.Build = realBuild
     C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
     frame:Show()
+
+    -- TomTom's waypoints are looked at once a second only while the window is on screen.
+    local realTimer, tickers = C_Timer, {}
+    C_Timer = { NewTicker = function(secs, fn)
+        local t = { fn = fn, Cancel = function(self) self.cancelled = true end }
+        tickers[#tickers + 1] = t
+        return t
+    end }
+    frame._hooks.OnShow()
+    frame._hooks.OnShow()
+    check(#tickers == 1 and not tickers[1].cancelled, "on screen: one ticker, however often it shows")
+    frame._hooks.OnHide()
+    check(tickers[1].cancelled, "off screen: it stops")
+    frame._hooks.OnShow()
+    check(#tickers == 2 and not tickers[2].cancelled, "and starts again when the window comes back")
+    frame._hooks.OnHide()
+    C_Timer = realTimer
     addon.Panel:Query("")
     if state.open.nearest then addon.Panel:Choose(headerIndex("nearest")) end
 end
@@ -1093,6 +1126,16 @@ do
     RouteLines:Follow(walkPlan, 1)              -- the navigator's next update: the same step
     check(start() and math.abs(start() + 225) < 1, "half way along, it starts where the player is: " .. tostring(start()))
     check(RouteLines.state.beacon._shown and stops == 0, "the beacon carries on without starting its swell again")
+    -- Those redraws, and a zoom's, reuse the plan's pieces on this map rather than working them out again.
+    local worked, realPieces = 0, addon.MapRoute.Pieces
+    addon.MapRoute.Pieces = function(...) worked = worked + 1 return realPieces(...) end
+    RouteLines:Follow(walkPlan, 1)
+    RouteLines:Redraw(true)
+    check(worked == 0, "the same plan on the same map: its pieces are kept: " .. worked)
+    RouteLines:Follow(tripPlan, tripStep)
+    check(worked == 1, "another plan: worked out afresh: " .. worked)
+    addon.MapRoute.Pieces = realPieces
+    RouteLines:Follow(walkPlan, 1)
     C_Map.GetPlayerMapPosition = realPos
     RouteLines:Follow(tripPlan, tripStep)
 end

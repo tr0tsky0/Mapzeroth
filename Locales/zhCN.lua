@@ -285,6 +285,7 @@ addon:RegisterLocale("zhCN", {
     MINIMAP_TIP_SETTINGS = "右键点击：设置",
     MINIMAP_TIP_DRAG     = "拖动：沿小地图移动此按钮",
     CMD_NO_SETTINGS   = "Mapzeroth：此处无法使用游戏设置窗口。",
+    CMD_SETTINGS_COMBAT = "Mapzeroth：战斗中无法打开设置。",
     GROUP_place       = "主城或城镇",
     KIND_city         = "主城",
     KIND_town         = "城镇",

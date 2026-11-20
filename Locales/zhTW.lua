@@ -285,6 +285,7 @@ addon:RegisterLocale("zhTW", {
     MINIMAP_TIP_SETTINGS = "右鍵點擊：設定",
     MINIMAP_TIP_DRAG     = "拖曳：沿小地圖移動此按鈕",
     CMD_NO_SETTINGS   = "Mapzeroth：此處無法使用遊戲設定視窗。",
+    CMD_SETTINGS_COMBAT = "Mapzeroth：戰鬥中無法開啟設定。",
     GROUP_place       = "主城或城鎮",
     KIND_city         = "主城",
     KIND_town         = "城鎮",

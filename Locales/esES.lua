@@ -286,6 +286,7 @@ local strings = {
     MINIMAP_TIP_SETTINGS = "Clic derecho: configuración",
     MINIMAP_TIP_DRAG     = "Arrastrar: mover este botón alrededor del minimapa",
     CMD_NO_SETTINGS   = "Mapzeroth: la ventana de configuración del juego no está disponible aquí.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: no se puede abrir la configuración en combate.",
     GROUP_place       = "Ciudad o pueblo",
     KIND_city         = "Ciudad",
     KIND_town         = "Pueblo",

@@ -198,8 +198,9 @@ local function build()
     ui.use:SetPoint("BOTTOMLEFT", PAD, 10)
     ui.use:RegisterForClicks("AnyUp", "AnyDown")
     -- For an "Equip" step the button is not secure (equipping isn't protected): after the click, put the item on.
-    ui.use:SetScript("PostClick", function(self)
-        if self.equipItem then addon.Equipment:Equip(self.equipItem) end
+    -- (Registered for both press and release: equip once, on the release.)
+    ui.use:SetScript("PostClick", function(self, _, down)
+        if self.equipItem and not down then addon.Equipment:Equip(self.equipItem) end
     end)
 
     Navigator:ApplyScale()

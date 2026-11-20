@@ -551,7 +551,9 @@ function OptionsPanel:Register()
     return true
 end
 
+-- False, and "combat" when that's why: the game's settings window can't be opened by an addon in combat.
 function OptionsPanel:Open()
+    if InCombatLockdown and InCombatLockdown() then return false, "combat" end
     if not self:Register() then return false end
     if Settings and Settings.OpenToCategory and self.category then
         Settings.OpenToCategory(self.category:GetID())

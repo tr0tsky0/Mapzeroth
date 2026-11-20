@@ -287,6 +287,7 @@ addon:RegisterLocale("ruRU", {
     MINIMAP_TIP_SETTINGS = "Правый клик: настройки",
     MINIMAP_TIP_DRAG     = "Перетаскивание: двигать кнопку вокруг миникарты",
     CMD_NO_SETTINGS   = "Mapzeroth: окно настроек игры здесь недоступно.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: настройки нельзя открыть в бою.",
     GROUP_place       = "Город или поселение",
     KIND_city         = "Город",
     KIND_town         = "Поселение",

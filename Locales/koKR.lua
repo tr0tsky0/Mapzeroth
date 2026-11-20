@@ -286,6 +286,7 @@ addon:RegisterLocale("koKR", {
     MINIMAP_TIP_SETTINGS = "오른쪽 클릭: 설정",
     MINIMAP_TIP_DRAG     = "끌기: 이 버튼을 미니맵 둘레로 이동",
     CMD_NO_SETTINGS   = "Mapzeroth: 여기서는 게임 설정 창을 사용할 수 없습니다.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: 전투 중에는 설정을 열 수 없습니다.",
     GROUP_place       = "도시 또는 마을",
     KIND_city         = "도시",
     KIND_town         = "마을",

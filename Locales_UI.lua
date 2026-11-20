@@ -311,6 +311,7 @@ addon:RegisterLocale("enUS", {
     MINIMAP_TIP_SETTINGS = "Right-click: settings",
     MINIMAP_TIP_DRAG     = "Drag: move this button around the minimap",
     CMD_NO_SETTINGS   = "Mapzeroth: the game's settings window isn't available here.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: settings can't be opened in combat.",
     GROUP_place       = "Town or city",
     KIND_city         = "City",
     KIND_town         = "Town",

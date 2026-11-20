@@ -116,7 +116,8 @@ SLASH_MAPZEROTH2 = "/mz"
 SlashCmdList["MAPZEROTH"] = function(msg)
     local cmd = msg:match("^(%S+)")
     if cmd == "settings" then
-        if not addon.OptionsPanel:Open() then print(L["CMD_NO_SETTINGS"]) end
+        local ok, why = addon.OptionsPanel:Open()
+        if not ok then print(L[why == "combat" and "CMD_SETTINGS_COMBAT" or "CMD_NO_SETTINGS"]) end
     elseif cmd == nil or cmd == "ui" then
         addon.Panel:Toggle()
     else

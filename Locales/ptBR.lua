@@ -285,6 +285,7 @@ addon:RegisterLocale("ptBR", {
     MINIMAP_TIP_SETTINGS = "Clique direito: configurações",
     MINIMAP_TIP_DRAG     = "Arrastar: mover este botão ao redor do minimapa",
     CMD_NO_SETTINGS   = "Mapzeroth: a janela de configurações do jogo não está disponível aqui.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: não é possível abrir as configurações em combate.",
     GROUP_place       = "Cidade ou vilarejo",
     KIND_city         = "Cidade",
     KIND_town         = "Vilarejo",

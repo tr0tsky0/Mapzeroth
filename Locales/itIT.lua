@@ -286,6 +286,7 @@ addon:RegisterLocale("itIT", {
     MINIMAP_TIP_SETTINGS = "Clic destro: impostazioni",
     MINIMAP_TIP_DRAG     = "Trascina: sposta questo pulsante attorno alla minimappa",
     CMD_NO_SETTINGS   = "Mapzeroth: la finestra delle impostazioni del gioco non è disponibile qui.",
+    CMD_SETTINGS_COMBAT = "Mapzeroth: le impostazioni non si possono aprire in combattimento.",
     GROUP_place       = "Città o villaggio",
     KIND_city         = "Città",
     KIND_town         = "Villaggio",

@@ -8,9 +8,9 @@ local addonName, addon = ...
 --            quickest order (the tour planner), as pasted /way lines are.
 --   name:    the route's title (optional).
 --   options: { start = true } starts the trip as soon as it is planned; otherwise the route waits for Start.
---   Returns true, or false and why ("no points", "bad point N").
+--   Returns true, or false and why ("no points", "bad point N", "too many points": MAX_POINTS at most).
 
-local API = { version = 1 }
+local API = { version = 1, MAX_POINTS = 50 }    -- more stops than that would plan for a very long time
 MapzerothAPI = API
 
 local L = addon.L
@@ -26,6 +26,7 @@ end
 function API.RouteTo(points, name, options)
     if type(points) ~= "table" then return false, "no points" end
     if points.mapID then points = { points } end               -- a single point
+    if #points > API.MAX_POINTS then return false, "too many points" end
     local list = {}
     for i, p in ipairs(points) do
         local point = readPoint(p)

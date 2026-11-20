@@ -102,6 +102,17 @@ local function build(parent)
         if not state.docked or state.detached then Panel:SavePosition() end
     end)
     ui.frame = frame
+    -- TomTom says nothing when its waypoints change: look once a second, only while the window is on screen (docked,
+    -- it hides with the map).
+    ui.startTicker = function()
+        if ui.ticker or not (C_Timer and C_Timer.NewTicker) then return end
+        ui.ticker = C_Timer.NewTicker(TOP_CHECK_SECONDS, function() Panel:RefreshTop() end)
+    end
+    frame:HookScript("OnShow", ui.startTicker)
+    frame:HookScript("OnHide", function()
+        if ui.ticker then ui.ticker:Cancel() end
+        ui.ticker = nil
+    end)
 
     ui.title = Theme:Text(frame, "title")
     ui.title:SetPoint("TOPLEFT", PAD, -PAD)
@@ -354,6 +365,7 @@ local function build(parent)
     Panel:ApplyScale()
     state.dockedHidden = addon.Options:Get("dockedHidden")
     Panel:SetDocked(addon.Options:Get("docked"), true)
+    if frame:IsVisible() then ui.startTicker() end      -- made on screen: no OnShow for that
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -1673,11 +1685,16 @@ function Panel:RefreshTop()
     if ui and ui.frame:IsShown() and state.view == "list" and ui.search:GetText() == "" then self:ShowMenu() end
 end
 
+-- Whether the window is on screen. Docked it is the map's child, so it stays "shown" while the map is closed.
+local function onScreen()
+    return ui and ui.frame:IsVisible() and true or false
+end
+
 -- The player set or cleared their map waypoint, or followed another quest. Only while the window is up: a closed one
 -- is filled afresh when it opens (Refresh), and pricing an open section here plans routes no one sees (the quest
 -- followed changes on every accept and turn-in, in the middle of questing).
 function Panel:OnWaypointChanged()
-    if ui and ui.frame:IsShown() then self:RefreshTop() end
+    if onScreen() then self:RefreshTop() end
 end
 
 -- The answer to the question on a new map waypoint (UI/WaypointPrompt.lua): the window comes up with the route to it,
@@ -1729,7 +1746,7 @@ end
 -- The quest log changed (an objective done can move the quest's spot): only looked at while the window is up, since
 -- opening it reads everything afresh.
 function Panel:OnQuestLogUpdate()
-    if ui and ui.frame:IsShown() then self:RefreshTop() end
+    if onScreen() then self:RefreshTop() end
 end
 
 -- The calendar answered for the first time: holidays can be on now. The open picker lists their routes straight away;
@@ -1820,12 +1837,6 @@ function Panel:Init()
         end
     end)
     WorldMapFrame:HookScript("OnShow", function() Panel:OnMapShown() end)
-    -- TomTom says nothing when its waypoints change: look once a second while the window is up.
-    if C_Timer and C_Timer.NewTicker then
-        C_Timer.NewTicker(TOP_CHECK_SECONDS, function()
-            if ui and ui.frame:IsShown() then Panel:RefreshTop() end
-        end)
-    end
     addon.RouteLines:Init()
     WorldMapFrame:HookScript("OnSizeChanged", function()
         if ui and ui.frame:IsShown() then Panel:Reanchor() end

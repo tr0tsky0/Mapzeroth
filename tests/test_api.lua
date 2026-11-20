@@ -14,6 +14,10 @@ ok, why = MapzerothAPI.RouteTo({})
 check(not ok and why == "no points", "an empty list: no points")
 ok, why = MapzerothAPI.RouteTo({ { mapID = 1453, x = 0.4, y = 0.3 }, { mapID = 1453, x = 45, y = 30 } })
 check(not ok and why == "bad point 2", "coordinates past 1 (0-100 by mistake): " .. tostring(why))
+local many = {}
+for i = 1, MapzerothAPI.MAX_POINTS + 1 do many[i] = { mapID = 1453, x = 0.5, y = 0.5 } end
+ok, why = MapzerothAPI.RouteTo(many)
+check(not ok and why == "too many points", "more than MAX_POINTS: refused before planning")
 ok, why = MapzerothAPI.RouteTo({ { x = 0.4, y = 0.3 } })
 check(not ok and why == "bad point 1", "no map: bad point")
 check(#calls == 0, "nothing reaches the panel when a point is bad")

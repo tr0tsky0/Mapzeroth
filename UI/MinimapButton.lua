@@ -81,7 +81,8 @@ end
 -- What either click does: right opens the settings, anything else the window.
 local function click(mouse)
     if mouse == "RightButton" then
-        if not addon.OptionsPanel:Open() then print(L["CMD_NO_SETTINGS"]) end
+        local ok, why = addon.OptionsPanel:Open()
+        if not ok then print(L[why == "combat" and "CMD_SETTINGS_COMBAT" or "CMD_NO_SETTINGS"]) end
     else
         addon.Panel:Toggle()
     end
