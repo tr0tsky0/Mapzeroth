@@ -2032,3 +2032,28 @@ do
     end
     map._shown = mapShown
 end
+
+-- A zoom redraws the route at once (a redraw put off a frame leaves the markers at the old scale for that frame,
+-- and OpenMap's jumping zoom flashed them huge); more changes in the same frame make one more redraw, next frame.
+do
+    local realTimer, realRedraw = C_Timer, RouteLines.Redraw
+    local timers, redraws = {}, 0
+    C_Timer = { After = function(_, fn) timers[#timers + 1] = fn end }
+    RouteLines.Redraw = function() redraws = redraws + 1 end
+    local zoom = RouteLines.OnZoom
+    do
+        zoom()
+        check(redraws == 1, "the first scale change redraws at once: " .. redraws)
+        zoom()
+        zoom()
+        check(redraws == 1, "more in the same frame wait")
+        for _, fn in ipairs(timers) do fn() end
+        check(redraws == 2, "and make one redraw next frame: " .. redraws)
+        timers = {}
+        zoom()
+        check(redraws == 3, "a change in a later frame redraws at once again")
+        for _, fn in ipairs(timers) do fn() end
+        check(redraws == 3, "with nothing more to catch up")
+    end
+    C_Timer, RouteLines.Redraw = realTimer, realRedraw
+end

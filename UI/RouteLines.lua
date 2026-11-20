@@ -478,6 +478,25 @@ function RouteLines:SetCurrent(index)
     self:Redraw()
 end
 
+-- The map's scale changed (a zoom).
+local zoomBusy, zoomAgain = false, false
+function RouteLines.OnZoom()
+    if not (C_Timer and C_Timer.After) then return RouteLines:Redraw() end
+    if zoomBusy then
+        zoomAgain = true
+        return
+    end
+    zoomBusy = true
+    RouteLines:Redraw(true)
+    C_Timer.After(0, function()
+        zoomBusy = false
+        if zoomAgain then
+            zoomAgain = false
+            RouteLines:Redraw(true)
+        end
+    end)
+end
+
 -- Redraw when the map opens or changes what it shows (another map, a zoom). Nothing is drawn while the map is
 -- closed, so a step reached then has to be drawn on opening, when the map may come up with no change of its own.
 function RouteLines:Init()
@@ -488,17 +507,10 @@ function RouteLines:Init()
     if WorldMapFrame.OnMapChanged then
         hooksecurefunc(WorldMapFrame, "OnMapChanged", function() RouteLines:Redraw() end)
     end
-    -- A zoom changes the scale on every frame it animates, sometimes more than once a frame: one redraw a frame.
-    local pending = false
+    -- A zoom changes the scale on every frame it animates, sometimes more than once a frame. The first change in a
+    -- frame redraws at once: put off to the next frame, the markers keep the old scale for a frame, and a zoom that
+    -- jumps (OpenMap's) flashes them huge. Further changes that frame make one more redraw, next frame.
     if WorldMapFrame.OnCanvasScaleChanged then
-        hooksecurefunc(WorldMapFrame, "OnCanvasScaleChanged", function()
-            if not (C_Timer and C_Timer.After) then return RouteLines:Redraw() end
-            if pending then return end
-            pending = true
-            C_Timer.After(0, function()
-                pending = false
-                RouteLines:Redraw(true)
-            end)
-        end)
+        hooksecurefunc(WorldMapFrame, "OnCanvasScaleChanged", function() RouteLines.OnZoom() end)
     end
 end
