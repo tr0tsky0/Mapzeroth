@@ -35,6 +35,9 @@ ZONES = {
                    "tiles": (25, 26, 35, 32), "px": 160},
     "needles": {"title": "Thousand Needles", "wdt": 782779, "instance": 1, "ui_map": 1441,
                 "tiles": (32, 39, 41, 44), "px": 192},
+    # The road south of Lake Everstill and east to Stonewatch is painted in the ground textures (checked 2026-11-20).
+    "redridge": {"title": "Redridge Mountains", "wdt": 775971, "instance": 0, "ui_map": 1433,
+                 "tiles": (35, 48, 39, 50), "px": 192},
     "silithus": {"title": "Silithus", "wdt": 782779, "instance": 1, "ui_map": 1451,
                  "tiles": (27, 43, 33, 47), "px": 192},
 }
