@@ -1139,6 +1139,29 @@ do
     C_Map.GetPlayerMapPosition = realPos
     RouteLines:Follow(tripPlan, tripStep)
 end
+-- OpenMap stitches every zone into one map over Blizzard's: the route goes above its art, and a point on the zone
+-- beside the one underneath is placed through its API rather than left out.
+do
+    local tripPlan, tripStep = RouteLines.state.plan, RouteLines.state.current
+    local realWorld = C_Map.GetWorldPosFromMapPos
+    C_Map.GetWorldPosFromMapPos = function(_, v) return 0, CreateVector2D(v.x, v.y) end
+    local stitched, asked, callbacks = true, 0, {}
+    OpenMapAPI = { major = 1, version = 4, IsStitched = function() return stitched end,
+        ArtTopLevel = function() return 2100 end,
+        CanvasFromWorldPos = function(_, x, y) asked = asked + 1 return x, y end,
+        RegisterCallback = function(owner, event, fn) callbacks[event] = fn end }
+    local plan = { steps = { { method = "taxi", seconds = 60, text = "Fly",
+        path = { { mapID = 1453, x = 0.5, y = 0.5 }, { mapID = 1429, x = 0.9, y = 0.2 } } } } }
+    RouteLines:Follow(plan, 1)
+    check(asked > 0 and shown() > 0, "stitched, a step onto the next zone is drawn: " .. asked .. ", " .. shown())
+    check(RouteLines.state.frame._level == 2102, "above OpenMap's art: " .. tostring(RouteLines.state.frame._level))
+    check(callbacks.OpenMap_StitchedChanged, "and told when OpenMap stops or starts stitching")
+    stitched = false
+    callbacks.OpenMap_StitchedChanged("OpenMap_StitchedChanged", false)
+    check(shown() == 0 and RouteLines.state.frame._level < 2100, "Blizzard's map again: placed as before (that zone is off this map)")
+    OpenMapAPI, C_Map.GetWorldPosFromMapPos = nil, realWorld
+    RouteLines:Follow(tripPlan, tripStep)
+end
 addon.Options:Set("showRouteOnMap", false)
 check(shown() == 0, "switched off in the settings, the route leaves the map")
 addon.Options:Set("showRouteOnMap", true)

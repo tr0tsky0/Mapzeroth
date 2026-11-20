@@ -7,6 +7,9 @@
 - **Route back to your corpse.** Turn on **Route back to your corpse** and releasing your spirit starts the walk from the graveyard back to your body. Off by default, and not inside dungeons.
 
 ### Fixed
+- **Routes show on OpenMap's world map.** With OpenMap installed, the route was hidden under its map. It now draws on top, and carries on across the zones around the one you're looking at.
+- **The trip window in combat.** When a trip ends or is stopped mid-fight, the window now says it closes when combat ends, instead of turning invisible while still catching clicks.
+- **Settings in combat.** Opening Mapzeroth's settings during a fight now tells you it can't be done in combat.
 - **Forever: the Daylight theme stays picked.** A login without Daylight UI (turned off, or not loaded after an update until the game was restarted) switched Mapzeroth to Modern Dark for good. Your theme is now only changed by picking one on the settings page. If you had Mapzeroth before installing Daylight UI and never picked a theme, you now get the Daylight theme.
 
 ### Changed

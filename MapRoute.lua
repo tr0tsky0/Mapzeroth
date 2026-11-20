@@ -54,12 +54,16 @@ end
 -- A marker only shows where its place is on this map: a route that runs off the map has no end marker where
 -- it leaves, and a step that starts on another map has no dot. Nor does a step that a teleport starts or
 -- ends: its port marker is there.
-function MapRoute:Pieces(plan, mapID)
+-- `project` (optional): how to place a point instead, as Project does (RouteLines' on OpenMap's stitched map).
+function MapRoute:Pieces(plan, mapID, project)
     local pieces, markers = {}, {}
     local steps = plan and plan.steps or {}
     local edges, ports = {}, {}
     local function place(point)
-        if point then return self:Project(point, mapID) end
+        if point then
+            if project then return project(point) end
+            return self:Project(point, mapID)
+        end
     end
     for index, step in ipairs(steps) do
         local style = self:StyleOf(step.method)
@@ -78,7 +82,7 @@ function MapRoute:Pieces(plan, mapID)
                 run = {}
             end
             for _, point in ipairs(self:DrawnPath(step)) do
-                local x, y = self:Project(point, mapID)
+                local x, y = place(point)
                 if x then run[#run + 1] = { x = x, y = y } else offMap = true flush() end
             end
             flush()
@@ -91,7 +95,7 @@ function MapRoute:Pieces(plan, mapID)
     for index = 2, #steps do
         local first = steps[index].path and steps[index].path[1]
         local x, y
-        if first and not ability(index) and not ability(index - 1) then x, y = self:Project(first, mapID) end
+        if first and not ability(index) and not ability(index - 1) then x, y = place(first) end
         if x then markers[#markers + 1] = { kind = "step", index = index, style = self:StyleOf(steps[index].method), x = x, y = y } end
     end
     for _, edge in ipairs(edges) do markers[#markers + 1] = edge end
@@ -99,7 +103,7 @@ function MapRoute:Pieces(plan, mapID)
     local function lastPoint(step)
         local path = step and step.path
         local point = path and path[#path]
-        if point then return self:Project(point, mapID) end
+        return place(point)
     end
     local legs = plan and plan.legs
     if type(legs) == "table" and #legs > 1 then

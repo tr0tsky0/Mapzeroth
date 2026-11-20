@@ -289,14 +289,42 @@ local function shrinkFor(mapID)
 end
 RouteLines.ShrinkFor = shrinkFor    -- for tests
 
+-- OpenMap (another addon) draws every zone stitched into one map over Blizzard's, and the map underneath is only
+-- the zone the view is on. While it does, a point is placed through its API (its docs/api.md): where it is on that
+-- map's canvas, outside 0-1 too, so the route carries on over the zones round it. nil: not loaded, or not stitching.
+local function openMap()
+    local om = OpenMapAPI
+    if type(om) == "table" and om.major == 1 and (om.version or 0) >= 2 and type(om.IsStitched) == "function"
+        and om.IsStitched() then
+        return om
+    end
+end
+RouteLines.OpenMap = openMap              -- for tests
+
+local function stitchedPoint(point)
+    local continent, wx, wy
+    if point.mapID then
+        local ok, c, world = pcall(C_Map.GetWorldPosFromMapPos, point.mapID, CreateVector2D(point.x, point.y))
+        if not (ok and world) then return nil end
+        continent, wx, wy = c, world:GetXY()
+    elseif point.world then
+        continent, wx, wy = point.world.continent, point.world.x, point.world.y
+    end
+    local om = continent and openMap()
+    if not om then return nil end
+    return om.CanvasFromWorldPos(continent, wx, wy)
+end
+
 -- A plan's pieces on a map, worked out once: the trip's redraws as the player moves (twice a second) and a zoom's
--- (every frame of it) draw the same ones. Worked out again for another plan or map, or another road setting.
+-- (every frame of it) draw the same ones. Worked out again for another plan or map, or another road setting, or
+-- when OpenMap starts or stops stitching.
 local pieceCache = {}
 local function piecesFor(plan, mapID)
     local c, k = pieceCache, addon.RoadNet and addon.RoadNet:Offroad()
-    if not (c.plan == plan and c.mapID == mapID and c.k == k and c.steps == #plan.steps) then
-        c.plan, c.mapID, c.k, c.steps = plan, mapID, k, #plan.steps
-        c.pieces, c.markers = MapRoute:Pieces(plan, mapID)
+    local stitched = openMap() ~= nil
+    if not (c.plan == plan and c.mapID == mapID and c.k == k and c.steps == #plan.steps and c.stitched == stitched) then
+        c.plan, c.mapID, c.k, c.steps, c.stitched = plan, mapID, k, #plan.steps, stitched
+        c.pieces, c.markers = MapRoute:Pieces(plan, mapID, stitched and stitchedPoint or nil)
     end
     return c.pieces, c.markers
 end
@@ -317,9 +345,19 @@ local function draw(frame, plan, mapID)
     local player
     if state.following then
         local xs, ys = addon.Navigation.YardsPerUnit(mapID)
-        local pos = xs and C_Map.GetPlayerMapPosition and C_Map.GetPlayerMapPosition(mapID, "player")
         local px, py
-        if pos then px, py = pos:GetXY() end
+        if xs and openMap() then
+            -- Stitched: the player can be on a zone beside the one underneath, so placed as the route's points are.
+            local best = C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player")
+            local pos = best and C_Map.GetPlayerMapPosition and C_Map.GetPlayerMapPosition(best, "player")
+            if pos then
+                local bx, by = pos:GetXY()
+                if bx and not (bx == 0 and by == 0) then px, py = stitchedPoint({ mapID = best, x = bx, y = by }) end
+            end
+        else
+            local pos = xs and C_Map.GetPlayerMapPosition and C_Map.GetPlayerMapPosition(mapID, "player")
+            if pos then px, py = pos:GetXY() end
+        end
         if px and not (px == 0 and py == 0) then player = { x = px * xs, y = py * ys, xs = xs, ys = ys } end
     end
     local count = {}
@@ -376,8 +414,17 @@ function RouteLines:Hide(keepBeacon)
     if state.frame then state.frame:SetScript("OnUpdate", nil) end
 end
 
+-- OpenMap switching between its stitched map and Blizzard's: placed the other way now. Hooked the first time the
+-- map draws (OpenMap can load after us, and after the map).
+local function watchOpenMap()
+    if state.openMapWatched or type(OpenMapAPI) ~= "table" or type(OpenMapAPI.RegisterCallback) ~= "function" then return end
+    state.openMapWatched = true
+    pcall(OpenMapAPI.RegisterCallback, RouteLines, "OpenMap_StitchedChanged", function() RouteLines:Redraw() end)
+end
+
 -- Draw the plan again on the map that is open.
 function RouteLines:Redraw(keepBeacon)
+    watchOpenMap()
     self:Hide(keepBeacon)
     local plan = state.plan or state.preview      -- the trip being followed comes first
     if not plan or not addon.Options:Get("showRouteOnMap") then return end
@@ -386,7 +433,12 @@ function RouteLines:Redraw(keepBeacon)
     local frame = ensureFrame()
     if not frame then return end
     local ok, err = pcall(function()
-        frame:SetFrameLevel(levelAbove(map, frame:GetParent() or canvas()))
+        local level = levelAbove(map, frame:GetParent() or canvas())
+        -- OpenMap's stitched art stands far above the map's own, and covers whatever is under it.
+        local om = openMap()
+        local top = om and type(om.ArtTopLevel) == "function" and om.ArtTopLevel()
+        if type(top) == "number" then level = math.min(math.max(level, top + 2), 9990) end
+        frame:SetFrameLevel(level)
         draw(frame, plan, map:GetMapID())
     end)
     if not ok then
