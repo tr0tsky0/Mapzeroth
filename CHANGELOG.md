@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.1 (Forever) and 2.1.1 (Retail)
+
+### Added
+- **Hide the quest route buttons.** The new setting **Route buttons on quests** (under Following a route) turns off the arrow on each quest in the quest tracker and, on Forever, **Route with Mapzeroth** in Daylight UI's quest menu. Your Quest stays in the list.
+
+### Fixed
+- **Forever: each character keeps its own hearthstone and flight paths.** Characters with the same first name on a realm shared one hearthstone and one list of found flight paths, so routes could hearth to another character's inn or fly from points this one hasn't found. Mapzeroth also now checks the saved hearthstone against the game's, so a bind it missed no longer sends you to the old inn. Flight paths saved before this go to the first of those characters to log in; the others pick theirs up again at the next flight master.
+- **The panel docks against the map again.** Another window that only happened to be near the map's right edge could push the docked panel off to the side of the screen. Now only other addons' panels that are docked to the map move it along.
+
 ## 1.4.0 (Forever) and 2.1.0 (Retail)
 
 ### Added
