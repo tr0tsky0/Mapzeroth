@@ -140,8 +140,18 @@ UnitName = function() return "Soni", "Locksdottir" end
 FK:Reset()
 FK:Load()
 check(FK:IsFound("TAXI_7") == true, "the old key's flights are taken")
-check(MapzerothRebuildDB.flights["Soni Locksdottir-Realm"] and MapzerothRebuildDB.flights["Soni-Realm"] == nil,
+check(MapzerothRebuildDB.flights["Soni Locksdottir"] and MapzerothRebuildDB.flights["Soni-Realm"] == nil,
     "moved to the new key")
+-- Saved with the realm in the key, before the client stopped giving it: moved to the full name.
+MapzerothRebuildDB.flights = { ["Soni Locksdottir-Realm"] = { TAXI_8 = true } }
+MapzerothRebuildDB.fareFactors = { ["Soni Locksdottir-Realm"] = { typical = 0.9, origins = {} } }
+FK:Reset()
+FK:Load()
+check(FK:IsFound("TAXI_8") == true, "the realm key's flights are taken")
+check(MapzerothRebuildDB.flights["Soni Locksdottir"] and MapzerothRebuildDB.flights["Soni Locksdottir-Realm"] == nil,
+    "and moved to the full name")
+check(math.abs(FK:FareFactor() - 0.9) < 1e-6, "and its fare factor")
+MapzerothRebuildDB.fareFactors = nil
 UnitName = function() return "Soni", "Sofaa" end
 FK:Load()
 check(FK:IsFound("TAXI_7") == nil, "another Soni starts with none")

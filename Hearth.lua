@@ -10,20 +10,52 @@ local addonName, addon = ...
 local SNAP_RADIUS = 0.06
 
 -- Who is playing, for the things saved per character (the bind here, found flights in FlightKnowledge.lua).
--- On Forever, UnitName gives the first name and the surname apart, and characters often share a first name, so the
--- key holds both ("Soni Locksdottir-Realm"). Retail gives no second part for the player: its keys are "Name-Realm".
+-- On Forever, UnitName gives the first name and the surname apart. A full name is unique in the region, and the
+-- client no longer tells addons the realm (GetRealmName gives ""), so the key is the full name alone
+-- ("Soni Locksdottir"). Retail gives no second part for the player: its keys are "Name-Realm".
 function addon:CharacterKey()
     local name, surname = UnitName("player")
-    if surname and surname ~= "" then name = (name or "?") .. " " .. surname end
+    if surname and surname ~= "" then return (name or "?") .. " " .. surname end
     return (name or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
 end
 
--- The key before surnames were in it (Forever up to 1.4.0): first name only, so shared by every character with that
--- first name on the realm. Nil where it is the same as CharacterKey.
-function addon:OldCharacterKey()
+local function startsWith(s, prefix)
+    return type(s) == "string" and s:sub(1, #prefix) == prefix
+end
+
+-- Forever keys up to 1.4.1 held the realm ("Soni Locksdottir-Realm", or "Soni Locksdottir-" once the realm read
+-- blank). They are this character's, so the newest of them moves to the key without the realm and the others go.
+function addon:ClaimRealmKey(all)
     local name, surname = UnitName("player")
-    if not (surname and surname ~= "") then return nil end
-    return (name or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
+    if not (all and surname and surname ~= "") then return end
+    local key = addon:CharacterKey()
+    local prefix = key .. "-"
+    local olds = {}
+    for k in pairs(all) do
+        if startsWith(k, prefix) then olds[#olds + 1] = k end
+    end
+    if #olds == 0 then return end
+    if all[key] == nil then
+        local pick = olds[1]
+        for _, k in ipairs(olds) do
+            if k == prefix then pick = k end     -- saved since the realm went blank: newer than any with a realm
+        end
+        all[key] = all[pick]
+    end
+    for _, k in ipairs(olds) do all[k] = nil end
+end
+
+-- The key before surnames were in it (Forever up to 1.4.0): first name and realm ("Soni-Realm"), so shared by every
+-- character with that first name on the realm. The realm can't be read any more, so this is the first such key in
+-- `all` that `accept(value)` takes (any, without it). Nil on Retail, or when there is none.
+function addon:OldCharacterKey(all, accept)
+    local name, surname = UnitName("player")
+    if not (all and surname and surname ~= "") then return nil end
+    local prefix = (name or "?") .. "-"
+    for k, v in pairs(all) do
+        if startsWith(k, prefix) and (not accept or accept(v)) then return k end
+    end
+    return nil
 end
 
 -- Whether a saved bind is the one the game has now: the client's bind name, when it gives one, must match. It doesn't
@@ -43,11 +75,12 @@ function addon:GetBind()
     if not db then return nil end
     local binds = db.hearthstones
     if binds then
+        addon:ClaimRealmKey(binds)
         local own = binds[addon:CharacterKey()]
         if own then return current(own) and own or nil end
-        local oldKey = addon:OldCharacterKey()
+        local oldKey = addon:OldCharacterKey(binds, function(b) return current(b) and b.name end)
         local old = oldKey and binds[oldKey]
-        if old and current(old) and old.name then
+        if old then
             binds[addon:CharacterKey()] = old
             return old
         end

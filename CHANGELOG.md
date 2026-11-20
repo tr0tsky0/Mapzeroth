@@ -1,12 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.5.0 (Forever) and 2.2.0 (Retail)
 
 ### Added
 - **Route to the quest you follow.** The new setting **Route to the quest you follow** (under Following a route) can ask whether to route you to a quest when you pick it to follow in the quest tracker, or start the route straight away. Off by default.
 - **Route back to your corpse.** Turn on **Route back to your corpse** and releasing your spirit starts the walk from the graveyard back to your body. Off by default, and not inside dungeons.
 
 ### Fixed
+- **Forever: your hearthstone and flight paths are remembered again.** A game update stopped telling addons which realm you're on, so Mapzeroth lost track of each character's hearthstone and the flight paths it had seen. They're saved under your full name now, and what was saved before comes back.
 - **Routes show on OpenMap's world map.** With OpenMap installed, the route was hidden under its map. It now draws on top, and carries on across the zones around the one you're looking at.
 - **The trip window in combat.** When a trip ends or is stopped mid-fight, the window now says it closes when combat ends, instead of turning invisible while still catching clicks.
 - **Settings in combat.** Opening Mapzeroth's settings during a fight now tells you it can't be done in combat.

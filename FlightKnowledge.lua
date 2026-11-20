@@ -285,7 +285,8 @@ end
 local function claimOld(field)
     local db = MapzerothRebuildDB
     local all = db and db[field]
-    local key, oldKey = addon:CharacterKey(), addon:OldCharacterKey()
+    addon:ClaimRealmKey(all)
+    local key, oldKey = addon:CharacterKey(), addon:OldCharacterKey(all)
     if all and oldKey and all[key] == nil and all[oldKey] ~= nil then
         all[key], all[oldKey] = all[oldKey], nil
     end
