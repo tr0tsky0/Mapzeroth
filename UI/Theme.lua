@@ -495,11 +495,19 @@ function Theme:Apply()
     end
 end
 
-function Theme:Set(id)
+-- Wear a theme for now, saving nothing (Init's choice at login).
+function Theme:Use(id)
     if not themes[id] then return false end
     current = themes[id]
-    addon.Options:Store("theme", id)
     self:Refresh()
+    return true
+end
+
+-- The player's pick: worn and saved as their choice.
+function Theme:Set(id)
+    if not self:Use(id) then return false end
+    addon.Options:Store("theme", id)
+    addon.Options:Store("themePicked", true)
     return true
 end
 
@@ -509,21 +517,30 @@ function Theme:Refresh()
     self:Apply()
 end
 
--- Choose the saved theme, else a theme marked `preferred`, else the default.
+-- The player's choice when it is loaded, else a theme marked `preferred` (Daylight, with DaylightUI there), else the
+-- default; nothing is saved here, so a choice whose theme isn't loaded this time (DaylightUI off, or missing after
+-- an update until the game restarts) is still the choice next time. Before themePicked was saved, the default was
+-- saved at every login as if chosen: a saved default without themePicked counts as no choice, so DaylightUI
+-- installed later still gets its theme. Any other saved theme was picked.
 function Theme:Init(default)
-    local saved = MapzerothRebuildDB and MapzerothRebuildDB.settings and MapzerothRebuildDB.settings.theme
-    if not themes[saved] then
-        saved = nil
-        for _, id in ipairs(order) do
-            if themes[id].preferred then saved = id end
+    local settings = MapzerothRebuildDB and MapzerothRebuildDB.settings
+    local saved = settings and settings.theme
+    local chosen = saved ~= nil and (settings.themePicked or saved ~= default)
+    local id = chosen and themes[saved] and saved or nil
+    if not id then
+        for _, each in ipairs(order) do
+            if themes[each].preferred then id = each end
         end
     end
-    self:Set(saved or (themes[default] and default) or order[1])
+    self:Use(id or (themes[default] and default) or order[1])
     if not self.listening then
         self.listening = true
-        -- Picking a theme on the settings page changes it live.
+        -- Picking a theme on the settings page changes it live (Options has saved it already).
         addon.Options:OnChange(function(key, value)
-            if key == "theme" and themes[value] then Theme:Set(value) end
+            if key == "theme" and themes[value] then
+                Theme:Use(value)
+                addon.Options:Store("themePicked", true)
+            end
         end)
     end
 end

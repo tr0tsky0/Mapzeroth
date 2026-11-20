@@ -408,7 +408,11 @@ function OptionsPanel:Build()
         } },
         { L["OPT_SECTION_LOOK"], {
             function(y)
-                widgets.theme = dropdownRow(y, "theme", L["OPT_THEME"], L["OPT_THEME_DESC"], themes)
+                -- Through Theme:Set, not Options: the theme worn can differ from the one saved (Theme:Init), so a pick of
+                -- the saved one must still change it and mark it chosen.
+                optionRow(box, y, L["OPT_THEME"], L["OPT_THEME_DESC"])
+                widgets.theme = Theme:Dropdown(box, CONTROL_WIDTH, themes, function(id) Theme:Set(id) end, menuHost)
+                widgets.theme.button:SetPoint("TOPRIGHT", box, "TOPRIGHT", -PAD, -(y + 2))
                 return TOGGLE_ROW
             end,
             function(y)
@@ -494,7 +498,7 @@ function OptionsPanel:Sync()
         widgets.roads.slider:SetValue(Options:Get("roadPreference"))
         widgets.roads.value:SetText(widgets.roads.format(Options:Get("roadPreference")))
     end
-    widgets.theme:SetValue(Options:Get("theme"))
+    widgets.theme:SetValue(Theme:Current() and Theme:Current().id or Options:Get("theme"))
     widgets.routeMap:SetValue(Options:Get("showRouteOnMap"))
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))

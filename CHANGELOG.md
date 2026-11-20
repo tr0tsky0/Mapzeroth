@@ -6,6 +6,9 @@
 - **Route to the quest you follow.** The new setting **Route to the quest you follow** (under Following a route) can ask whether to route you to a quest when you pick it to follow in the quest tracker, or start the route straight away. Off by default.
 - **Route back to your corpse.** Turn on **Route back to your corpse** and releasing your spirit starts the walk from the graveyard back to your body. Off by default, and not inside dungeons.
 
+### Fixed
+- **Forever: the Daylight theme stays picked.** A login without Daylight UI (turned off, or not loaded after an update until the game was restarted) switched Mapzeroth to Modern Dark for good. Your theme is now only changed by picking one on the settings page. If you had Mapzeroth before installing Daylight UI and never picked a theme, you now get the Daylight theme.
+
 ### Changed
 - **Routes planned as a ghost walk.** While you're a ghost, routes leave out flight paths, ships, portals, your hearthstone and mounts.
 

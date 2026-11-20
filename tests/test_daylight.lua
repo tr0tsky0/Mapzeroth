@@ -147,3 +147,25 @@ Theme:Set("daylight")
 MapzerothRebuildDB.settings.theme = "classic"
 Theme:Init("moderndark")
 check(Theme:Current().id == "classic", "a theme the player picked stays picked")
+
+-- Modern Dark saved by an older version at a login (it saved whatever it fell back to, as if picked): DaylightUI
+-- installed since still gets Daylight. Picked from the settings, Modern Dark stays.
+MapzerothRebuildDB = { settings = { theme = "moderndark" } }
+Theme:Init("moderndark")
+check(Theme:Current().id == "daylight", "an unpicked Modern Dark doesn't keep Daylight away: " .. Theme:Current().id)
+check(MapzerothRebuildDB.settings.theme == "moderndark", "and login saves nothing")
+check(Theme:Set("moderndark") and MapzerothRebuildDB.settings.themePicked == true, "picking Modern Dark marks it picked")
+Theme:Init("moderndark")
+check(Theme:Current().id == "moderndark", "then it stays, DaylightUI or not")
+
+-- A login without the picked theme loaded (here a stand-in for Daylight with DaylightUI off, or missing after an
+-- update until a restart) wears another one for now but keeps the choice: it is back at the next login that has it.
+MapzerothRebuildDB = { settings = { theme = "laterlook", themePicked = true } }
+Theme:Init("moderndark")
+check(Theme:Current().id == "daylight", "the picked theme isn't loaded: the preferred one for now")
+check(MapzerothRebuildDB.settings.theme == "laterlook", "the choice is kept: " .. tostring(MapzerothRebuildDB.settings.theme))
+local later = {}
+for k, v in pairs(Theme:Current()) do later[k] = v end
+Theme:Register("laterlook", later)
+Theme:Init("moderndark")
+check(Theme:Current().id == "laterlook", "loaded again: it's worn again")

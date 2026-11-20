@@ -19,6 +19,7 @@ local definitions = {
     scale = { default = 1, min = 0.7, max = 1.5, step = 0.05 },           -- size of our windows
     roadPreference = { default = 3, min = 1, max = 5, step = 1 },          -- walks drawn: 1 across country ... 5 on roads (RoadNet.LEVELS)
     theme = { default = "moderndark" },
+    themePicked = { default = false, boolean = true },                    -- the saved theme is the player's pick (UI/Theme.lua)
     showRouteOnMap = { default = true, boolean = true },                  -- the route drawn on the world map
     showRouteOnMinimap = { default = true, boolean = true },              -- and on the minimap, while following a trip
     -- A flight point Mapzeroth hasn't seen a flight master's window about counts as found (FlightKnowledge.lua). Off on
@@ -146,6 +147,7 @@ function Options:Reset()
         if definition(key) == pickDefinition then picks[#picks + 1] = key end
     end
     for _, key in ipairs(picks) do self:Set(key, true) end
+    self:Store("themePicked", false)            -- back to no choice: the next login starts on the preferred theme
 end
 
 -- fn(key, value) runs after any setting changes.
