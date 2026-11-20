@@ -1074,6 +1074,55 @@ end
 check(tiled, "each a run with its dots or dashes tiled along it from a Media/Line picture")
 check(runs <= 2 * 200, "a few runs, not one per dot: " .. runs)
 check(RouteLines.state.badgesUsed >= 1, "with a marker for the end (and a small square at each step that starts on the map): " .. RouteLines.state.badgesUsed)
+
+-- The markers stand on a frame over the canvas, pinned to it: the canvas' zoom moves them but doesn't size them
+-- (on the canvas they were sized for the zoom of the last redraw, and flashed huge on OpenMap's jumping zoom).
+do
+    local saved = {}
+    for _, k in ipairs({ "frame", "top", "badges", "badgesUsed", "beacon", "beaconAnchor" }) do saved[k] = RouteLines.state[k] end
+    local realCreate, realCanvas = CreateFrame, WorldMapFrame.GetCanvas
+    local holder = mock()
+    holder.GetEffectiveScale = function() return 1 end
+    local canvasFrame = mock()
+    canvasFrame._parent = holder
+    local zoom = 4
+    CreateFrame = function(kind, name, parent)
+        local f = realCreate(kind, name, parent)
+        f._parent = parent
+        f.GetEffectiveScale = function(self)
+            if self._parent == canvasFrame then return zoom end
+            return self._parent and self._parent.GetEffectiveScale and self._parent:GetEffectiveScale() or 1
+        end
+        f.SetScale = function(self, s) self._scale = s end
+        return f
+    end
+    WorldMapFrame.GetCanvas = function() return canvasFrame end
+    RouteLines.state.frame, RouteLines.state.top, RouteLines.state.badges, RouteLines.state.badgesUsed = nil, nil, {}, 0
+    RouteLines.state.beacon, RouteLines.state.beaconAnchor = nil, nil
+    local wasShown, wasOn = WorldMapFrame._shown, addon.Options:Get("showRouteOnMap")
+    WorldMapFrame._shown = true
+    addon.Options:Set("showRouteOnMap", true)
+    addon.Panel:Query("ironforge flight")
+    addon.Panel:Choose(previewIndex)
+    RouteLines:Preview(state.plan)
+    RouteLines.state.error = nil
+    RouteLines:Redraw()
+    local top = RouteLines.state.top
+    check(top and top ~= RouteLines.state.frame and top._parent == holder, "the markers' frame is over the canvas, on the scroll frame: "
+        .. tostring(RouteLines.state.error))
+    local badge = RouteLines.state.badges[1]
+    check(badge and badge._parent == top and badge._shown, "a marker is on it: " .. RouteLines.state.badgesUsed .. " " .. tostring(state.plan) .. " " .. tostring(badge and badge._parent))
+    local before = badge and badge._scale
+    zoom = 0.5
+    RouteLines:Redraw()
+    check(badge and badge._scale == before, "its size doesn't follow the canvas zoom: " .. tostring(before) .. " then " .. tostring(badge and badge._scale))
+    addon.Panel:Query("")
+    RouteLines:Preview(nil)
+    WorldMapFrame._shown = wasShown
+    addon.Options:Set("showRouteOnMap", wasOn)
+    CreateFrame, WorldMapFrame.GetCanvas = realCreate, realCanvas
+    for k, v in pairs(saved) do RouteLines.state[k] = v end
+end
 local inside = true
 for _, line in ipairs(drawn) do
     if line._shown and not (line._from[1] >= 0 and line._from[1] <= 1000 and line._from[2] <= 0 and line._from[2] >= -500) then inside = false end

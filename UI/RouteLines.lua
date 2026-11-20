@@ -84,6 +84,32 @@ local function ensureFrame()
     return frame
 end
 
+-- The markers and the beacon stand on a frame of their own over the canvas, not on it: on the canvas their size
+-- went with the zoom until the next redraw, and a zoom that jumps (OpenMap's) showed them huge for a frame. Here
+-- each is pinned to a point on the canvas (its anchor), so it moves with the map while its size stays put. It
+-- fills the map's scroll frame, which clips it as it does the canvas. Without one, the canvas frame itself.
+local function ensureTop(frame)
+    if state.top then return state.top end
+    local c = canvas()
+    local holder = c and c.GetParent and c:GetParent()
+    if not holder then
+        state.top = frame
+        return frame
+    end
+    local top = CreateFrame("Frame", nil, holder)
+    top:SetAllPoints(holder)
+    state.top = top
+    return top
+end
+
+-- A point on the canvas frame for a marker to be pinned to: (x, y) are the frame's own units from its top left.
+local function pin(region, anchor, frame, x, y)
+    anchor:ClearAllPoints()
+    anchor:SetPoint("CENTER", frame, "TOPLEFT", x, -y)
+    region:ClearAllPoints()
+    region:SetPoint("CENTER", anchor, "CENTER", 0, 0)
+end
+
 -- The map draws its own art (the zone's detail layers, the explored-area overlays) in frames of its own, and a
 -- frame under those is hidden by them. So ours goes just above the highest of them: the map's pins (points of
 -- interest, the player's arrow) are meant to be above the art, so they stay above the route, or at least
@@ -169,7 +195,9 @@ local function acquireBadge(frame)
     state.badgesUsed = state.badgesUsed + 1
     local badge = state.badges[state.badgesUsed]
     if not badge then
-        badge = RouteLines.NewBadge(frame)
+        badge = RouteLines.NewBadge(ensureTop(frame))
+        badge.anchor = frame:CreateTexture(nil, "BACKGROUND")
+        badge.anchor:SetSize(1, 1)
         state.badges[state.badgesUsed] = badge
     end
     badge:Show()
@@ -274,11 +302,11 @@ function RouteLines.CurrentColor(plan, current)
     return Theme:MapColor(LOOK[style] and style or "foot", holiday)
 end
 
-local function drawMarker(frame, marker, unit, W, H)
+-- `scale`: the badge's, on the frame over the canvas (see ensureTop).
+local function drawMarker(frame, marker, scale, W, H)
     local badge = acquireBadge(frame)
-    badge:SetScale(unit)
-    badge:ClearAllPoints()
-    badge:SetPoint("CENTER", frame, "TOPLEFT", (marker.x * W) / unit, (-marker.y * H) / unit)
+    badge:SetScale(scale)
+    pin(badge, badge.anchor, frame, marker.x * W, marker.y * H)
     RouteLines.StyleBadge(badge, marker, state.current, state.holiday)
 end
 
@@ -369,18 +397,22 @@ local function draw(frame, plan, mapID)
         end
         drawPiece(frame, piece, unit, shrink, W, H, seg, t)
     end
-    for _, marker in ipairs(markers) do drawMarker(frame, marker, unit * shrink, W, H) end
+    local top = ensureTop(frame)
+    local scale = unitOf(top) * shrink
+    for _, marker in ipairs(markers) do drawMarker(frame, marker, scale, W, H) end
     -- The beacon, on the first marker where the step being followed ends (none on this map: none shown).
     if state.following then
-        local scale = unit * shrink
         for _, marker in ipairs(markers) do
             if RouteLines.EndsStep(marker, state.current, #plan.steps) then
-                local beacon = state.beacon or Theme:Beacon(frame)
+                local beacon = state.beacon or Theme:Beacon(top)
                 state.beacon = beacon
+                if not state.beaconAnchor then
+                    state.beaconAnchor = frame:CreateTexture(nil, "BACKGROUND")
+                    state.beaconAnchor:SetSize(1, 1)
+                end
                 beacon:SetSize(BEACON, BEACON)
                 beacon:SetScale(scale)
-                beacon:ClearAllPoints()
-                beacon:SetPoint("CENTER", frame, "TOPLEFT", (marker.x * W) / scale, (-marker.y * H) / scale)
+                pin(beacon, state.beaconAnchor, frame, marker.x * W, marker.y * H)
                 beacon:Paint(RouteLines.CurrentColor(plan, state.current))
                 beacon:Show()
                 beacon:SetMoving(state.moving)
@@ -439,6 +471,11 @@ function RouteLines:Redraw(keepBeacon)
         local top = om and type(om.ArtTopLevel) == "function" and om.ArtTopLevel()
         if type(top) == "number" then level = math.min(math.max(level, top + 2), 9990) end
         frame:SetFrameLevel(level)
+        local top = ensureTop(frame)
+        if top ~= frame then
+            top:SetFrameStrata(frame:GetFrameStrata())
+            top:SetFrameLevel(math.min(level + 1, 9999))
+        end
         draw(frame, plan, map:GetMapID())
     end)
     if not ok then
