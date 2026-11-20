@@ -160,6 +160,7 @@ addon:RegisterLocale("koKR", {
     NAV_PORTAL        = "차원문으로 들어가세요",
     NAV_PORTAL_CLICK  = "차원문을 클릭하세요",
     NAV_COMBAT        = "전투 중에는 사용할 수 없습니다",
+    NAV_CLOSES_AFTER_COMBAT = "전투가 끝나면 닫힙니다",
     SECTION_NEAREST   = "가장 가까운 곳",
     SECTION_NEAREST_TRAINERS = "상급자",
     SECTION_NEAREST_VENDORS = "상인",

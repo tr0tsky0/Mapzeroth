@@ -159,6 +159,7 @@ addon:RegisterLocale("zhCN", {
     NAV_PORTAL        = "走进传送门",
     NAV_PORTAL_CLICK  = "点击传送门",
     NAV_COMBAT        = "战斗中无法使用",
+    NAV_CLOSES_AFTER_COMBAT = "战斗结束后关闭",
     SECTION_NEAREST   = "最近的",
     SECTION_NEAREST_TRAINERS = "训练师",
     SECTION_NEAREST_VENDORS = "商人",

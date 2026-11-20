@@ -53,21 +53,39 @@ end
 -- keeps one zoom setting (CVar) for each and changes the one for the mode it is in when the zoom changes,
 -- so: nudge the zoom to a level neither setting has, see which setting followed, and put it back. If neither
 -- did (a client that updates them later), the game's own IsIndoors() decides, and failing that, outdoors.
-local function refreshIndoors()
-    if not (GetCVar and Minimap.SetZoom) then return end
+-- It runs on MINIMAP_UPDATE_ZOOM, and the nudge is itself a zoom change: the event it sets off (at once or a moment
+-- later) must not nudge again, or it would go round for ever. So not while nudging, nor shortly after a nudge while
+-- the zoom and both settings are as that nudge left them (only its own echo then).
+local ECHO_SECONDS = 1
+local nudging, lastNudge = false, nil       -- lastNudge = { at, zoom, outdoor, indoor } as the last nudge left them
+local function refreshIndoors(force)
+    if nudging or not (GetCVar and Minimap.SetZoom) then return end
     local zoom = Minimap:GetZoom()
     local outdoorBefore, indoorBefore = tonumber(GetCVar("minimapZoom")), tonumber(GetCVar("minimapInsideZoom"))
+    local now = GetTime and GetTime() or 0
+    local last = lastNudge
+    if not force and last and now - last.at < ECHO_SECONDS and last.zoom == zoom and last.outdoor == outdoorBefore
+            and last.indoor == indoorBefore then
+        return
+    end
     local target
     for level = 0, 5 do
         if level ~= zoom and level ~= outdoorBefore and level ~= indoorBefore then target = level break end
     end
     local indoors
     if target then
-        Minimap:SetZoom(target)
-        local outdoorAfter, indoorAfter = tonumber(GetCVar("minimapZoom")), tonumber(GetCVar("minimapInsideZoom"))
-        Minimap:SetZoom(zoom)
-        if outdoorAfter ~= outdoorBefore then indoors = false
-        elseif indoorAfter ~= indoorBefore then indoors = true end
+        nudging = true
+        local ok, outdoorAfter, indoorAfter = pcall(function()
+            Minimap:SetZoom(target)
+            local o, i = tonumber(GetCVar("minimapZoom")), tonumber(GetCVar("minimapInsideZoom"))
+            Minimap:SetZoom(zoom)
+            return o, i
+        end)
+        nudging = false
+        lastNudge = { at = now, zoom = Minimap:GetZoom(), outdoor = tonumber(GetCVar("minimapZoom")),
+                      indoor = tonumber(GetCVar("minimapInsideZoom")) }
+        if ok and outdoorAfter ~= outdoorBefore then indoors = false
+        elseif ok and indoorAfter ~= indoorBefore then indoors = true end
     end
     if indoors == nil then indoors = IsIndoors ~= nil and IsIndoors() and true or false end
     state.indoors = indoors
@@ -109,10 +127,10 @@ local function ensureFrame()
             MinimapLines:Update()
         end
     end)
-    frame:SetScript("OnEvent", function() refreshIndoors() end)
+    frame:SetScript("OnEvent", function(_, event) refreshIndoors(event == "ZONE_CHANGED_NEW_AREA") end)
     state.frame = frame
     watchIndoors(state.plan ~= nil)
-    refreshIndoors()
+    refreshIndoors(true)
     return frame
 end
 

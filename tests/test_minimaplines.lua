@@ -231,6 +231,13 @@ minX, maxX, minY, maxY, farthest = extent()
 check(farthest <= 67 + 1e-6, "a shape round in that corner stops at the rim again")
 GetMinimapShape = nil
 
+local clock = 0
+GetTime = function() return clock end
+-- A zoom change the player makes, a while after the last: the nudge's own echo is ignored only just after it.
+local function zoomEvent()
+    clock = clock + 5
+    MinimapLines.state.frame._scripts.OnEvent(nil, "MINIMAP_UPDATE_ZOOM")
+end
 -- The minimap's zoom sets the scale, and indoors it has its own scale.
 MinimapLines:Follow(plan, 1)
 zoom = 5
@@ -239,7 +246,7 @@ minX, maxX, minY, maxY = extent()
 check(math.abs(maxY - 170 / (133 + 1 / 3) * 140) < 0.5 or maxY > 66, "zoomed in, the same 170 yards is many more pixels (past the rim, so cut off): " .. maxY)
 zoom, mode = 1, "indoor"                                 -- indoors: a zoom change moves the indoor setting
 cvars.minimapZoom, cvars.minimapInsideZoom = "3", "1"
-MinimapLines.state.frame._scripts.OnEvent()
+zoomEvent()
 check(MinimapLines.state.indoors == true and zoom == 1, "indoors is found by which setting follows the zoom, and the zoom is put back")
 check(cvars.minimapZoom == "3" and cvars.minimapInsideZoom == "1", "with both settings as they were")
 MinimapLines:Update()
@@ -247,19 +254,41 @@ minX, maxX, minY, maxY = extent()
 check(maxY > 66, "on the indoor scale zoom 1 spans 240 yards, so 170 yards is 99 pixels: cut at the rim " .. maxY)
 zoom, mode = 0, "outdoor"
 cvars.minimapZoom, cvars.minimapInsideZoom = "0", "0"     -- both settings equal, as on the beta: the nudge can't reuse either value
-MinimapLines.state.frame._scripts.OnEvent()
+zoomEvent()
 check(MinimapLines.state.indoors == false and zoom == 0, "outdoors is found the same way, even with both settings equal")
 -- A client that only updates its settings later: neither setting follows, so the game's own answer decides.
 followsAtOnce = false
 IsIndoors = function() return true end
-MinimapLines.state.frame._scripts.OnEvent()
+zoomEvent()
 check(MinimapLines.state.indoors == true, "when neither setting follows, IsIndoors() decides")
 IsIndoors = function() return false end
-MinimapLines.state.frame._scripts.OnEvent()
+zoomEvent()
 check(MinimapLines.state.indoors == false, "either way")
 IsIndoors = nil
-MinimapLines.state.frame._scripts.OnEvent()
+zoomEvent()
 check(MinimapLines.state.indoors == false, "and with no answer at all, outdoors")
+
+-- The nudge is a zoom change too: its event, at once or a moment later, doesn't nudge again (it went round for ever).
+followsAtOnce = true
+zoom, mode = 2, "outdoor"
+cvars.minimapZoom, cvars.minimapInsideZoom = "2", "1"
+local nudges, inner = 0, Minimap.SetZoom
+Minimap.SetZoom = function(self, z)
+    nudges = nudges + 1
+    if nudges > 50 then error("the nudge keeps nudging") end
+    inner(self, z)
+    MinimapLines.state.frame._scripts.OnEvent(nil, "MINIMAP_UPDATE_ZOOM")      -- the event at once
+end
+zoomEvent()
+check(nudges == 2 and zoom == 2, "one nudge and back, the events it fires at once ignored: " .. nudges)
+Minimap.SetZoom = function(self, z) nudges = nudges + 1 inner(self, z) end
+nudges = 0
+clock = clock + 0.2
+MinimapLines.state.frame._scripts.OnEvent(nil, "MINIMAP_UPDATE_ZOOM")      -- the event a moment later
+check(nudges == 0, "and its echo a moment later doesn't nudge again")
+MinimapLines.state.frame._scripts.OnEvent(nil, "ZONE_CHANGED_NEW_AREA")
+check(nudges == 2, "a new zone always looks again")
+Minimap.SetZoom = inner
 followsAtOnce = true
 MinimapLines:Update()
 

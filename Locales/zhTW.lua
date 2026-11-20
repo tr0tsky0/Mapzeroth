@@ -159,6 +159,7 @@ addon:RegisterLocale("zhTW", {
     NAV_PORTAL        = "走進傳送門",
     NAV_PORTAL_CLICK  = "點擊傳送門",
     NAV_COMBAT        = "戰鬥中無法使用",
+    NAV_CLOSES_AFTER_COMBAT = "戰鬥結束後關閉",
     SECTION_NEAREST   = "最近的",
     SECTION_NEAREST_TRAINERS = "訓練師",
     SECTION_NEAREST_VENDORS = "商人",

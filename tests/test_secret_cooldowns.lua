@@ -41,4 +41,17 @@ check(spellCooldown(8690) == 0, "ready out of combat")
 spellAnswer = { startTime = SECRET, duration = SECRET, isEnabled = true }
 check(spellCooldown(8690) == 0, "and still ready once it turns secret")
 
+-- 5. A ghost's run speed can be secret too (unit stats restricted): type() says "number", so a number stands in here,
+-- marked secret; it must not be used (or compared). Walking speed then.
+local SECRET_SPEED = 12.25
+issecretvalue = function(v) return v == SECRET or v == SECRET_SPEED end
+UnitIsGhost = function() return true end
+local speedAnswer = SECRET_SPEED
+GetUnitSpeed = function() return 0, speedAnswer, speedAnswer, speedAnswer end
+local okCtx, ctx = pcall(addon.GetPlayerContext, addon)
+check(okCtx and ctx.ghost and ctx.ghostSpeed == nil, "a secret ghost speed is no answer: " .. tostring(okCtx and ctx.ghostSpeed or ctx))
+speedAnswer = 9
+check(addon:GetPlayerContext().ghostSpeed == 9, "a readable one is used")
+UnitIsGhost, GetUnitSpeed = nil, nil
+
 issecretvalue = nil

@@ -1673,9 +1673,11 @@ function Panel:RefreshTop()
     if ui and ui.frame:IsShown() and state.view == "list" and ui.search:GetText() == "" then self:ShowMenu() end
 end
 
--- The player set or cleared their map waypoint, or followed another quest.
+-- The player set or cleared their map waypoint, or followed another quest. Only while the window is up: a closed one
+-- is filled afresh when it opens (Refresh), and pricing an open section here plans routes no one sees (the quest
+-- followed changes on every accept and turn-in, in the middle of questing).
 function Panel:OnWaypointChanged()
-    self:RefreshTop()
+    if ui and ui.frame:IsShown() then self:RefreshTop() end
 end
 
 -- The answer to the question on a new map waypoint (UI/WaypointPrompt.lua): the window comes up with the route to it,

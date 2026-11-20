@@ -161,6 +161,7 @@ addon:RegisterLocale("ruRU", {
     NAV_PORTAL        = "Войдите в портал",
     NAV_PORTAL_CLICK  = "Нажмите на портал",
     NAV_COMBAT        = "Нельзя использовать в бою",
+    NAV_CLOSES_AFTER_COMBAT = "Закроется после боя",
     SECTION_NEAREST   = "Ближайшее",
     SECTION_NEAREST_TRAINERS = "Учителя",
     SECTION_NEAREST_VENDORS = "Торговцы",

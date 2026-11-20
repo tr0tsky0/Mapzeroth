@@ -200,11 +200,12 @@ function addon:MaxCooldownSeconds()
 end
 
 -- A ghost's run speed in yards a second (GetUnitSpeed's second answer, the speed it runs at, standing still too), or
--- nil when the client doesn't say: walking speed then.
+-- nil when the client doesn't say: walking speed then. Unit stats can come back secret (SecretWhenUnitStatsRestricted
+-- on both clients); type() calls a secret a number, but comparing it is an error, so a secret is no answer.
 local function ghostSpeed()
     if type(GetUnitSpeed) ~= "function" then return nil end
     local ok, _, run = pcall(GetUnitSpeed, "player")
-    if ok and type(run) == "number" and run > 0 then return run end
+    if ok and type(run) == "number" and not isSecret(run) and run > 0 then return run end
 end
 
 function addon:GetPlayerContext()

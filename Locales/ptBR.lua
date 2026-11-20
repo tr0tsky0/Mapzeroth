@@ -159,6 +159,7 @@ addon:RegisterLocale("ptBR", {
     NAV_PORTAL        = "Entre no portal",
     NAV_PORTAL_CLICK  = "Clique no portal",
     NAV_COMBAT        = "Não pode ser usado em combate",
+    NAV_CLOSES_AFTER_COMBAT = "Fecha quando o combate terminar",
     SECTION_NEAREST   = "Mais próximo",
     SECTION_NEAREST_TRAINERS = "Instrutores",
     SECTION_NEAREST_VENDORS = "Vendedores",

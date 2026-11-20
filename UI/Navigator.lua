@@ -31,18 +31,27 @@ local function tripUpdate(model)
 end
 
 -- The window holds a secure button (ui.use), so in combat the game counts the whole window as protected: it can't be
--- shown, hidden, moved or scaled until combat ends (ADDON_ACTION_BLOCKED). In combat a hide only fades it out (SetAlpha
--- is allowed), and the real hide, a show of a hidden window, its placing and its scale wait for PLAYER_REGEN_ENABLED.
+-- shown, hidden, moved or scaled until combat ends (ADDON_ACTION_BLOCKED). The real hide, a show of a hidden window, its
+-- placing and its scale wait for PLAYER_REGEN_ENABLED. A hide in combat leaves the window up, saying it closes when
+-- combat ends: faded out instead, it still took clicks and its button still cast, unseen. (Render leaves it saying so.)
+local function closingNotice()
+    ui.count:SetText("")
+    ui.step:SetText(L["NAV_CLOSES_AFTER_COMBAT"])
+    ui.status:SetText("")
+    ui.left:SetText("")
+    ui.bar:Hide()
+    ui.arrow:Hide()
+    ui.pointing = false
+end
+
 local function setShown(on)
     local frame = ui.frame
     if InCombatLockdown() then
         ui.pending = on
-        if on and not frame:IsShown() then return end          -- shown and placed once combat ends
-        frame:SetAlpha(on and 1 or 0)
-        return
+        if not on and frame:IsShown() then closingNotice() end
+        return                                                  -- a hidden window is shown and placed once combat ends
     end
     ui.pending = nil
-    frame:SetAlpha(1)
     frame:SetShown(on)
 end
 
@@ -287,6 +296,16 @@ function Navigator:Render(model)
     end
 
     local combat = InCombatLockdown()
+    -- Put away in combat (setShown): the trip goes on, the window keeps saying it closes when combat ends.
+    if combat and ui.pending == false then
+        if model.finished then
+            if not ui.arrivedAt then clearReachedWaypoint(model.dest) end
+            ui.arrivedAt = ui.arrivedAt or GetTime()
+            if GetTime() - ui.arrivedAt >= LINGER then self:Stop() return end
+        end
+        tripUpdate(model)
+        return
+    end
     -- A new step, or the end: a theme that can draws the eye to the window (not as the trip first shows).
     local moment = model.finished and "end" or model.index
     if ui.moment ~= nil and moment ~= ui.moment then Theme:Pulse(ui.frame) end

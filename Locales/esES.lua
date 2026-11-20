@@ -160,6 +160,7 @@ local strings = {
     NAV_PORTAL        = "Entra en el portal",
     NAV_PORTAL_CLICK  = "Haz clic en el portal",
     NAV_COMBAT        = "No se puede usar en combate",
+    NAV_CLOSES_AFTER_COMBAT = "Se cierra al terminar el combate",
     SECTION_NEAREST   = "Más cercano",
     SECTION_NEAREST_TRAINERS = "Instructores",
     SECTION_NEAREST_VENDORS = "Vendedores",

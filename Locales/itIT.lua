@@ -160,6 +160,7 @@ addon:RegisterLocale("itIT", {
     NAV_PORTAL        = "Entra nel portale",
     NAV_PORTAL_CLICK  = "Clicca sul portale",
     NAV_COMBAT        = "Non utilizzabile in combattimento",
+    NAV_CLOSES_AFTER_COMBAT = "Si chiude alla fine del combattimento",
     SECTION_NEAREST   = "Più vicino",
     SECTION_NEAREST_TRAINERS = "Istruttori",
     SECTION_NEAREST_VENDORS = "Mercanti",

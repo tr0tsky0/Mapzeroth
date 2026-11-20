@@ -161,6 +161,7 @@ addon:RegisterLocale("deDE", {
     NAV_PORTAL        = "Geht in das Portal",
     NAV_PORTAL_CLICK  = "Klickt auf das Portal",
     NAV_COMBAT        = "Im Kampf nicht möglich",
+    NAV_CLOSES_AFTER_COMBAT = "Schließt sich nach dem Kampf",
     SECTION_NEAREST   = "Am nächsten",
     SECTION_NEAREST_TRAINERS = "Lehrer",
     SECTION_NEAREST_VENDORS = "Händler",

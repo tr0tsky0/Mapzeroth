@@ -612,16 +612,22 @@ for _, name in ipairs({ "Show", "Hide", "SetShown", "ClearAllPoints", "SetScale"
 end
 rawset(nav, "SetAlpha", function(self, a) self._alpha = a end)
 addon.Navigator:Stop()
-check(nav._shown and nav._alpha == 0, "Stop in combat fades the window out without hiding it")
+check(nav._shown and nav._alpha ~= 0 and w.step._text == "Closes when combat ends",
+    "Stop in combat leaves the window up, never invisible, saying it closes after combat: " .. tostring(w.step._text))
 addon.Navigator:ApplyScale()
 nav._scripts.OnDragStart(nav)
 addon.Navigation:Start({ name = "X" }, usePlan)
 addon.Navigator:Show()
-check(nav._alpha == 1, "a trip started in the same fight brings it back")
+check(w.step._text ~= "Closes when combat ends", "a trip started in the same fight shows its step again")
+addon.Navigator:ToggleWindow()
+check(nav._shown and w.step._text == "Closes when combat ends", "put away in combat: the notice")
+addon.Navigator:Tick()
+check(w.step._text == "Closes when combat ends", "and the trip's updates leave the notice up")
+addon.Navigator:ToggleWindow()
 addon.Navigator:Stop()
 InCombatLockdown = function() return false end
 w.events._scripts.OnEvent(w.events, "PLAYER_REGEN_ENABLED")
-check(not nav._shown and nav._alpha == 1, "once combat ends it is hidden for real")
+check(not nav._shown, "once combat ends it is hidden for real")
 InCombatLockdown = function() return true end
 addon.Navigation:Start({ name = "X" }, usePlan)
 addon.Navigator:Show()
@@ -918,6 +924,27 @@ do
     C_Map.HasUserWaypoint = nil
     addon.Panel:Query("")
     addon.Panel:Choose(headerIndex("nearest"))          -- closed again, as the tests below expect
+end
+
+-- With the window closed, a new waypoint (or quest followed) plans nothing: the window is filled afresh when it opens.
+do
+    addon.Panel:Query("")
+    addon.Panel:Choose(headerIndex("nearest"))
+    check(state.open.nearest, "a section is open before the window closes")
+    local frame = addon.Panel:GetFrame()
+    frame:Hide()
+    local built, realBuild = 0, addon.Journey.Build
+    addon.Journey.Build = function(...) built = built + 1 return realBuild(...) end
+    local keyBefore = state.topKey
+    C_Map.HasUserWaypoint = function() return true end
+    C_Map.GetUserWaypoint = function() return { uiMapID = 1453, position = { GetXY = function() return 0.45, 0.35 end } } end
+    addon.Panel:OnWaypointChanged()
+    check(built == 0 and state.topKey == keyBefore, "a closed window searches no routes for a new waypoint: " .. built)
+    addon.Journey.Build = realBuild
+    C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+    frame:Show()
+    addon.Panel:Query("")
+    if state.open.nearest then addon.Panel:Choose(headerIndex("nearest")) end
 end
 
 -- Picks are one line with no time; chosen, the route is one way or a round trip, as picked on the route itself.

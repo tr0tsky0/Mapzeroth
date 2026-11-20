@@ -165,6 +165,7 @@ addon:RegisterLocale("enUS", {
     NAV_PORTAL        = "Walk into the portal",
     NAV_PORTAL_CLICK  = "Click the portal",
     NAV_COMBAT        = "Can't be used in combat",
+    NAV_CLOSES_AFTER_COMBAT = "Closes when combat ends",
 
     -- What sort of place a search result is, shown under its name.
     -- Other words a player types for a weapon skill whose name (from the client) doesn't contain them,
