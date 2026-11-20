@@ -750,7 +750,11 @@ function RoadNet:Waypoints(path)
     for i = 2, #path - 1 do
         local c = containerOf(path[i])
         local open = c and not addon.World:GetFlag(c, "indoor") and not offRoads(path[i])
-        if not (open and containerOf(out[#out]) == c and containerOf(path[i + 1]) == c) then out[#out + 1] = path[i] end
+        -- The walk's end may be a spot that isn't a node (a waypoint): a walk only reaches one from a node of the
+        -- container it lies in, so it counts as in this one (Light's Hope's flight master, on the way to a waypoint).
+        local after = containerOf(path[i + 1])
+        if after == nil and i + 1 == #path then after = c end
+        if not (open and containerOf(out[#out]) == c and after == c) then out[#out + 1] = path[i] end
     end
     out[#out + 1] = path[#path]
     return out

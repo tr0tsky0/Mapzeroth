@@ -197,7 +197,7 @@ Every node and crossing written:
   crossing BORDER_HINTERLANDS_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_HINTERLANDS: The Hinterlands <-> Western Plaguelands
   BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS: Alterac Mountains side of the Alterac Mountains/Western Plaguelands crossing
   BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS: Western Plaguelands side of the Western Plaguelands/Alterac Mountains crossing
-  crossing BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS: Alterac Mountains <-> Western Plaguelands (sides 246 yd apart in the game's map data, walked (not zero travel; 2026-11-19))
+  crossing BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS: Alterac Mountains <-> Western Plaguelands (user, in game, 2026-11-19 (was 80.2, 30.9 / 43.2, 93.8, 246 yd apart))
   BORDER_SILVERPINE_FOREST_TO_TIRISFAL_GLADES: Silverpine Forest side of the Silverpine Forest/Tirisfal Glades crossing
   BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST: Tirisfal Glades side of the Tirisfal Glades/Silverpine Forest crossing
   crossing BORDER_SILVERPINE_FOREST_TO_TIRISFAL_GLADES -> BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST: Silverpine Forest <-> Tirisfal Glades

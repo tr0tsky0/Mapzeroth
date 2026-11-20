@@ -431,8 +431,11 @@ function Pathfinder:CollapseSteps(steps)
             and (step.method == "walk" or step.method == "fly" or (step.method == "taxi" and step.through))
         if joins and step.method == "walk" then
             local World = addon.World
-            joins = not World:IsMilestone(last.to)
-                and World:GetNodeContainer(last.to) == World:GetNodeContainer(step.to)
+            local lastIn, nextIn = World:GetNodeContainer(last.to), World:GetNodeContainer(step.to)
+            -- A spot that isn't a node (a waypoint) has no container, but a walk only ever reaches one from a node of
+            -- the container it lies in: it's in the same one.
+            if nextIn == nil and lastIn ~= nil and not World:GetNode(step.to) then nextIn = lastIn end
+            joins = not World:IsMilestone(last.to) and lastIn == nextIn
         end
         if joins then
             last.to = step.to
