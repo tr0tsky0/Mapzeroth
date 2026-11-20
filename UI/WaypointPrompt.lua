@@ -8,6 +8,9 @@ local addonName, addon = ...
 -- The same question comes for a quest newly followed in the quest tracker (super-tracked) when autoQuestRoute is
 -- "ask"; at "on" the route starts without asking. Don't Ask Again sets it to "off".
 --
+-- With TomTom loaded, releasing your spirit (Corpse.lua, corpseWith "ask") asks who takes you back: Mapzeroth, TomTom or
+-- both, on the same three buttons. The answer is kept in corpseWith; the settings page changes it.
+--
 -- All styling goes through addon.Theme. The frame is built on first use, never at load.
 
 local WaypointPrompt = {}
@@ -88,6 +91,14 @@ local function place()
     end
 end
 
+-- The buttons' words: the waypoint and quest question, or the corpse one.
+local function label(corpse)
+    ui.never.label:SetText(L[corpse and "CORPSE_TOMTOM" or "WAYPOINT_ASK_NEVER"])
+    ui.later.label:SetText(L[corpse and "CORPSE_BOTH" or "WAYPOINT_ASK_LATER"])
+    ui.route.label:SetText(L[corpse and "CORPSE_MAPZEROTH" or "WAYPOINT_ASK_ROUTE"])
+    ui.corpse = corpse or nil
+end
+
 local function open(title, text)
     ui.title:SetText(title)
     ui.text:SetText(text)
@@ -99,6 +110,7 @@ end
 function WaypointPrompt:Show(waypoint)
     if not ui then build() end
     ui.questID = nil
+    label(false)
     open(L["WAYPOINT_ASK_TITLE"], L["WAYPOINT_ASK_TEXT"]:format(addon:GetZoneName(waypoint.mapID) or "?"))
 end
 
@@ -106,7 +118,20 @@ end
 function WaypointPrompt:ShowQuest(quest)
     if not ui then build() end
     ui.questID = quest.questID
+    label(false)
     open(L["QUEST_ASK_TITLE"], L["QUEST_ASK_TEXT"]:format(quest.title or L["PICK_QUEST"]))
+end
+
+-- Who takes the ghost back to its corpse (TomTom loaded).
+function WaypointPrompt:ShowCorpse()
+    if not ui then build() end
+    ui.questID = nil
+    label(true)
+    open(L["CORPSE_ASK_TITLE"], L["CORPSE_ASK_TEXT"])
+end
+
+function WaypointPrompt:IsCorpseShown()
+    return self:IsShown() and ui.corpse == true
 end
 
 function WaypointPrompt:IsShown()
@@ -118,15 +143,24 @@ function WaypointPrompt:IsQuestShown()
     return self:IsShown() and ui.questID ~= nil
 end
 
+-- Whether it is the waypoint question (not a quest's or the corpse's).
+local function waypointShown()
+    return WaypointPrompt:IsShown() and ui.questID == nil and not ui.corpse
+end
+
 function WaypointPrompt:Hide()
     if ui then ui.frame:Hide() end
 end
 
 -- "route": plan it and go; "later": not this one; "never": the setting goes off (the settings page turns it on).
 function WaypointPrompt:Answer(answer)
-    local questID = ui and ui.questID
+    local questID, corpse = ui and ui.questID, ui and ui.corpse
     self:Hide()
-    if answer == "never" then
+    if corpse then
+        local with = answer == "never" and "tomtom" or answer == "later" and "both" or "mapzeroth"
+        addon.Options:Set("corpseWith", with)
+        addon.Corpse:Lead(with)
+    elseif answer == "never" then
         if questID then addon.Options:Set("autoQuestRoute", "off") else addon.Options:Set("askWaypointRoute", false) end
     elseif answer == "route" then
         if questID then addon.QuestArrow.Route(questID) else addon.Panel:RouteToWaypoint() end
@@ -152,7 +186,7 @@ function WaypointPrompt:OnWaypointChanged()
     local id = waypoint and waypoint.id
     if id == seen then return end
     seen = id
-    if not self:IsQuestShown() then self:Hide() end
+    if waypointShown() then self:Hide() end
     if not (waypoint and ready and addon.Options:Get("askWaypointRoute")) or headingThere(id) then return end
     self:Show(waypoint)
 end

@@ -1851,6 +1851,61 @@ do
     Options:Set("routeToCorpse", false)
 end
 
+-- With TomTom loaded (corpseWith): "ask" asks on release and keeps the answer; "tomtom" sets a TomTom waypoint (unless
+-- TomTom's own corpse arrow is on) and no route; "both" does both; coming back to life takes our waypoint away.
+do
+    local Corpse, Nav, WP = addon.Corpse, addon.Navigation, addon.WaypointPrompt
+    Nav:Stop()
+    local realTimer, realPos = C_Timer, C_Map.GetPlayerMapPosition
+    C_Timer = { After = function(_, fn) fn() end }
+    local ghost = true
+    UnitIsGhost = function() return ghost end
+    local added, removed = {}, {}
+    TomTom = { profile = { general = { corpse_arrow = false } },
+        AddWaypoint = function(_, m, x, y, opts) added[#added + 1] = { m, x, y, opts }; return "uid" .. #added end,
+        RemoveWaypoint = function(_, uid) removed[#removed + 1] = uid end }
+    local function die()
+        C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.45, 0.35 end } end
+        Corpse:OnDead()
+        C_Map.GetPlayerMapPosition = realPos
+        ghost = true
+        Corpse:OnReleased()
+    end
+    Options:Set("routeToCorpse", true)
+    check(Options:Get("corpseWith") == "ask", "ask by default")
+    check(addon.OptionsPanel.widgets.corpseWith, "the settings page has the choice")
+    die()
+    check(WP:IsCorpseShown() and not Nav:IsActive() and #added == 0, "ask: the question, nothing started yet")
+    WP:Answer("later")                                          -- Both
+    check(Options:Get("corpseWith") == "both", "the answer is kept")
+    check(Nav:IsActive() and state.entry.dest.corpse, "both: Mapzeroth's route")
+    check(#added == 1 and math.abs(added[1][2] - 0.45) < 1e-3 and added[1][4].persistent == false,
+        "both: a TomTom waypoint at the corpse")
+    ghost = false
+    Corpse:OnAlive()
+    check(not Nav:IsActive() and removed[1] == "uid1", "alive: the route ends and our waypoint goes")
+    Options:Set("corpseWith", "tomtom")
+    die()
+    check(not WP:IsShown() and not Nav:IsActive() and #added == 2, "tomtom: its waypoint, no route")
+    ghost = false
+    Corpse:OnAlive()
+    TomTom.profile.general.corpse_arrow = true
+    die()
+    check(#added == 2 and not Nav:IsActive(), "tomtom with its own corpse arrow on: left to TomTom")
+    ghost = false
+    Corpse:OnAlive()
+    check(#removed == 2, "nothing of ours to take away")
+    Options:Set("corpseWith", "ask")
+    die()
+    WP:Answer("route")                                          -- Mapzeroth
+    check(Options:Get("corpseWith") == "mapzeroth" and Nav:IsActive() and #added == 2, "mapzeroth: the route only")
+    ghost = false
+    Corpse:OnAlive()
+    TomTom, UnitIsGhost, C_Timer = nil, nil, realTimer
+    Options:Set("routeToCorpse", false)
+    Options:Set("corpseWith", "ask")
+end
+
 -- Docked beside the map, the panel goes past any other frame hanging off the map's right edge (another addon's panel
 -- docked there, a side tab), found on the screen rather than by name; not past one elsewhere, nor our own windows.
 do

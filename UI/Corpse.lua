@@ -3,6 +3,10 @@ local addonName, addon = ...
 -- Back to the corpse: with the routeToCorpse setting on, releasing your spirit brings up the route from the graveyard
 -- to where you died and starts it. The ghost only walks (TravelGraph:Build reads ctx.ghost). Coming back to life ends
 -- that trip. A death inside an instance isn't routed: the corpse is in the dungeon, past its entrance.
+--
+-- With TomTom loaded, the corpseWith setting says who takes the ghost back: Mapzeroth's route, TomTom's arrow, or both
+-- ("ask": the question on release, UI/WaypointPrompt.lua). For TomTom, its own corpse waypoint is used when that's on
+-- in TomTom; otherwise we set one through TomTom:AddWaypoint and take it away again once alive.
 
 local Corpse = {}
 addon.Corpse = Corpse
@@ -10,6 +14,7 @@ addon.Corpse = Corpse
 Corpse.DELAY = 1                -- seconds after release: the ghost is at the graveyard (maybe after a loading screen)
 
 local died                      -- where the player died this session: { mapID, x, y }, or nil
+local tomtomUid                 -- the TomTom waypoint we set for the corpse, or nil
 
 local function playerSpot()
     local mapID = C_Map.GetBestMapForUnit("player")
@@ -52,12 +57,34 @@ function Corpse:OnDead()
     died = not inInstance() and playerSpot() or nil
 end
 
+local function tomtomLoaded()
+    return type(TomTom) == "table" and type(TomTom.AddWaypoint) == "function"
+end
+
+-- TomTom's own "set a waypoint when I die" (another addon's setting: read only).
+local function tomtomOwnArrow()
+    local profile = TomTom.profile
+    return type(profile) == "table" and type(profile.general) == "table" and profile.general.corpse_arrow == true
+end
+
+-- Take the ghost back: with = "mapzeroth", "tomtom" or "both".
+function Corpse:Lead(with)
+    if with ~= "tomtom" then addon.Panel:RouteToCorpse() end
+    if with == "mapzeroth" or not tomtomLoaded() or tomtomOwnArrow() or tomtomUid then return end
+    local corpse = addon:GetCorpseTarget()
+    if corpse then
+        tomtomUid = TomTom:AddWaypoint(corpse.mapID, corpse.x, corpse.y,
+            { title = addon.L["PICK_CORPSE"], persistent = false, from = "Mapzeroth" })
+    end
+end
+
 -- Released (PLAYER_ALIVE as a ghost).
 function Corpse:OnReleased()
     if not addon.Options:Get("routeToCorpse") or inInstance() then return end
     C_Timer.After(Corpse.DELAY, function()
         if not (UnitIsGhost and UnitIsGhost("player")) then return end      -- brought back in the meantime
-        addon.Panel:RouteToCorpse()
+        local with = tomtomLoaded() and addon.Options:Get("corpseWith") or "mapzeroth"
+        if with == "ask" then addon.WaypointPrompt:ShowCorpse() else Corpse:Lead(with) end
     end)
 end
 
@@ -65,6 +92,11 @@ end
 function Corpse:OnAlive()
     died = nil
     if headingToCorpse() then addon.Navigation:Stop() end
+    if addon.WaypointPrompt:IsCorpseShown() then addon.WaypointPrompt:Hide() end
+    if tomtomUid then
+        if tomtomLoaded() and type(TomTom.RemoveWaypoint) == "function" then TomTom:RemoveWaypoint(tomtomUid) end
+        tomtomUid = nil
+    end
 end
 
 local events = CreateFrame("Frame")

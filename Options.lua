@@ -47,6 +47,9 @@ local definitions = {
     autoQuestRoute = { default = "off", choices = { off = true, ask = true, on = true } },
     -- Releasing your spirit routes the ghost back to its corpse (Corpse.lua).
     routeToCorpse = { default = false, boolean = true },
+    -- With TomTom loaded, who takes the ghost back (Corpse.lua): "ask" (asked on release, the answer kept), "mapzeroth",
+    -- "tomtom" (its waypoint and arrow) or "both".
+    corpseWith = { default = "ask", choices = { ask = true, mapzeroth = true, tomtom = true, both = true } },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.

@@ -118,6 +118,12 @@ addon:RegisterLocale("enUS", {
     OPT_AUTO_ON       = "On",
     OPT_CORPSE        = "Route back to your corpse",
     OPT_CORPSE_DESC   = "When you release your spirit, Mapzeroth starts the walk from the graveyard back to your body. Not inside dungeons.",
+    OPT_CORPSE_WITH   = "Back to your corpse with TomTom",
+    OPT_CORPSE_WITH_DESC = "With TomTom installed: whether Mapzeroth's route, TomTom's arrow or both take you back to your corpse. Ask asks the first time you release your spirit.",
+    -- Who takes the ghost back, with TomTom installed: the setting's choices and the question's buttons.
+    CORPSE_MAPZEROTH  = "Mapzeroth",
+    CORPSE_TOMTOM     = "TomTom",
+    CORPSE_BOTH       = "Both",
     OPT_SECTION_PLANNING = "Planning routes",
     OPT_SECTION_FOLLOWING = "Following a route",
     OPT_SECTION_LOOK  = "Appearance",
@@ -278,6 +284,9 @@ addon:RegisterLocale("enUS", {
     -- Asked when a quest is picked to follow in the quest tracker (autoQuestRoute "ask"). %s: the quest's title.
     QUEST_ASK_TITLE   = "Route to your quest?",
     QUEST_ASK_TEXT    = "Mapzeroth can plan the quickest way to %s and start you on it.",
+    -- Asked on releasing your spirit when TomTom is installed (corpseWith "ask"); the answer is kept.
+    CORPSE_ASK_TITLE  = "Back to your corpse",
+    CORPSE_ASK_TEXT   = "Which should take you back: Mapzeroth's route, TomTom's arrow, or both? You can change this later in Mapzeroth's settings.",
     -- The "How it works" link on the prompt and the settings page, and the tooltip it shows (UI/SharePrompt.lua).
     -- An example message sits between SHARE_HOW_SENT and SHARE_HOW_SENT_KEY; it is the wire format, not translated.
     SHARE_HOW         = "How it works",
