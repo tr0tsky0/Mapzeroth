@@ -378,6 +378,50 @@ def build(pixels, log, end_gap=END_GAP, gap=GAP):
     return polys
 
 
+def inside(poly, x, y):
+    hit, j = False, len(poly) - 1
+    for i in range(len(poly)):
+        (xi, yi), (xj, yj) = poly[i], poly[j]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
+            hit = not hit
+        j = i
+    return hit
+
+
+def drop_roads(polys, instance, log):
+    """Roads the terrain gives wrongly (riverbanks painted like road): every stretch inside a shape drawn in a zone's
+    <name>_drop.json (links/make_editor.py <name> --drop) goes, splitting a line where it leaves and comes back."""
+    shapes = []
+    for name, zone in link_zones.ZONES.items():
+        path = link_zones.drop_path(name)
+        if zone["instance"] == instance and os.path.exists(path):
+            for line in json.load(open(path, encoding="utf-8")):
+                shape = [link_zones.px_to_world(zone, x, y) for x, y in line]
+                if len(shape) >= 3:
+                    shapes.append(shape)
+    if not shapes:
+        return polys
+
+    def gone(p):
+        return any(inside(s, p[0], p[1]) for s in shapes)
+    out, dropped = [], 0
+    for poly in polys:
+        run = [poly[0]]
+        for a, b in zip(poly, poly[1:]):
+            mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+            if gone(a) or gone(b) or gone(mid):
+                dropped += 1
+                if len(run) >= 2:
+                    out.append(run)
+                run = [b]
+            else:
+                run.append(b)
+        if len(run) >= 2:
+            out.append(run)
+    log("  %d shapes of road to remove: %d segments dropped" % (len(shapes), dropped))
+    return out
+
+
 def add_links(polys, instance, log):
     """Hand-drawn links for this continent, each end snapped onto the nearest road (a point put into that road's
     line when it falls between two of its points), so RoadNet joins them: it joins lines where they share a point."""
@@ -463,6 +507,7 @@ def main():
         log("%s (WDT %d, instance %d)" % (name, wdt_id, instance))
         pixels = continent_skeleton(c, wdt_id, set(allow[str(wdt_id)]["roads"]), log)
         polys = build(pixels, log, **opts)
+        polys = drop_roads(polys, instance, log)
         add_links(polys, instance, log)
         verts = sum(len(p) for p in polys)
         length = sum(Graph.length(p) for p in polys)

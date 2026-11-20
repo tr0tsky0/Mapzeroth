@@ -62,4 +62,4 @@ Each row is one guessed crossing point, seen from both sides.
 | Alterac Mountains | 80.2, 30.9 | Western Plaguelands | 43.2, 93.8 | sides 246 yd apart in the game's map data, walked (not zero travel; 2026-11-19)
 | Silverpine Forest | 67.8, 4.9 | Tirisfal Glades | 53.9, 76.4 |
 | Tirisfal Glades | 85.1, 69.8 | Western Plaguelands | 20.4, 57.2 | sides 352 yd apart in the game's map data, walked (not zero travel; 2026-11-19)
-| Western Plaguelands | 75.5, 49.9 | Eastern Plaguelands | 9.4, 72.5 | sides 365 yd apart in the game's map data, walked (not zero travel; 2026-11-19)
+| Western Plaguelands | 70.9, 50.5 | Eastern Plaguelands | 8.8, 61.4 | the bridge (user, in game, 2026-11-19; was 75.5, 49.9 / 9.4, 72.5, 365 yd apart)

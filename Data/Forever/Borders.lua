@@ -118,8 +118,8 @@ addon.Nodes.Borders = {
     { id = "BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST", container = "easternkingdoms.tirisfal_glades", mapID = 1420, x = 0.5390, y = 0.7640 },
     { id = "BORDER_TIRISFAL_GLADES_TO_WESTERN_PLAGUELANDS", container = "easternkingdoms.tirisfal_glades", mapID = 1420, x = 0.8510, y = 0.6980 },
     { id = "BORDER_WESTERN_PLAGUELANDS_TO_TIRISFAL_GLADES", container = "easternkingdoms.western_plaguelands", mapID = 1422, x = 0.2040, y = 0.5720 },
-    { id = "BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS", container = "easternkingdoms.western_plaguelands", mapID = 1422, x = 0.7550, y = 0.4990 },
-    { id = "BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.0940, y = 0.7250 },
+    { id = "BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS", container = "easternkingdoms.western_plaguelands", mapID = 1422, x = 0.7090, y = 0.5050 },
+    { id = "BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS", container = "easternkingdoms.eastern_plaguelands", mapID = 1423, x = 0.0880, y = 0.6140 },
 }
 
 for _, edge in ipairs({
@@ -178,7 +178,7 @@ for _, edge in ipairs({
     { from = "BORDER_ALTERAC_MOUNTAINS_TO_WESTERN_PLAGUELANDS", to = "BORDER_WESTERN_PLAGUELANDS_TO_ALTERAC_MOUNTAINS", method = "walk" },
     { from = "BORDER_SILVERPINE_FOREST_TO_TIRISFAL_GLADES", to = "BORDER_TIRISFAL_GLADES_TO_SILVERPINE_FOREST", method = "walk", cost = 0 },
     { from = "BORDER_TIRISFAL_GLADES_TO_WESTERN_PLAGUELANDS", to = "BORDER_WESTERN_PLAGUELANDS_TO_TIRISFAL_GLADES", method = "walk" },
-    { from = "BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS", to = "BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS", method = "walk" },
+    { from = "BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS", to = "BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS", method = "walk", cost = 0 },
 }) do
     table.insert(addon.Edges, edge)
 end

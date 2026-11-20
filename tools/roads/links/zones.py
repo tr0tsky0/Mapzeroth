@@ -26,6 +26,17 @@ ZONES = {
     # Roads painted with no road texture of its own (to Hammerfall, among others).
     "arathi": {"title": "Arathi Highlands", "wdt": 775971, "instance": 0, "ui_map": 1417,
                "tiles": (33, 32, 40, 36), "px": 192},
+    # Roads painted in the same textures as the ground around them (no road texture to add; checked 2026-11-19).
+    "epl": {"title": "Eastern Plaguelands", "wdt": 775971, "instance": 0, "ui_map": 1423,
+            "tiles": (36, 25, 44, 30), "px": 192},
+    "wpl": {"title": "Western Plaguelands", "wdt": 775971, "instance": 0, "ui_map": 1422,
+            "tiles": (31, 25, 39, 31), "px": 160},
+    "stonetalon": {"title": "Stonetalon Mountains", "wdt": 782779, "instance": 1, "ui_map": 1442,
+                   "tiles": (25, 26, 35, 32), "px": 160},
+    "needles": {"title": "Thousand Needles", "wdt": 782779, "instance": 1, "ui_map": 1441,
+                "tiles": (32, 39, 41, 44), "px": 192},
+    "silithus": {"title": "Silithus", "wdt": 782779, "instance": 1, "ui_map": 1451,
+                 "tiles": (27, 43, 33, 47), "px": 192},
 }
 
 SNAP_YD = 25            # a drawn line's end this near a road joins it there
@@ -52,3 +63,10 @@ def lines_path(name):
 # shore drawn round, closed back to its start (make_editor.py <name> --water).
 def water_path(name):
     return os.path.join(HERE, name + "_water.json")
+
+
+# Roads to remove: each line in <name>_drop.json is a shape drawn round road the terrain gives wrongly (a riverbank
+# painted like road), closed or not (it's closed back to its start); gen_roads drops every stretch of road inside one
+# (make_editor.py <name> --drop).
+def drop_path(name):
+    return os.path.join(HERE, name + "_drop.json")

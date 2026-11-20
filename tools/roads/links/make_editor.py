@@ -23,7 +23,7 @@ sys.path.insert(0, HERE)
 from casc import Casc                         # noqa: E402
 from adt import Wdt                           # noqa: E402
 import wdc5                                   # noqa: E402
-from zones import ZONES, EDITORS, world_to_px, lines_path, water_path   # noqa: E402
+from zones import ZONES, EDITORS, world_to_px, lines_path, water_path, drop_path   # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(ROADS))
 TEMPLATE = os.path.join(ROADS, "city", "editor_template.html")
@@ -90,16 +90,21 @@ def main(name):
     # --water: the same page for drawing big water's shores (each line round and back to its start), with no roads
     # under it to snap onto.
     water = "--water" in sys.argv
-    path = water_path(name) if water else lines_path(name)
+    # --drop: shapes drawn round roads the terrain gives wrongly (riverbanks painted like road); gen_roads drops every
+    # stretch of road inside one. Today's roads are shown under it, to draw round.
+    drop = "--drop" in sys.argv
+    kind = "_water" if water else "_drop" if drop else ""
+    path = water_path(name) if water else drop_path(name) if drop else lines_path(name)
     seed = open(path, encoding="utf-8").read() if os.path.exists(path) else "[]"
     html = open(TEMPLATE, encoding="utf-8").read()
-    html = (html.replace("__TITLE__", zone["title"] + (" water:" if water else " road links:"))
-            .replace("__NAME__", name + "_water" if water else "links-" + name)
+    title = " water:" if water else " roads to remove (draw round them):" if drop else " road links:"
+    html = (html.replace("__TITLE__", zone["title"] + title)
+            .replace("__NAME__", name + kind if kind else "links-" + name)
             .replace("__SEED__", seed).replace("__MARKERS__", json.dumps(markers(zone, map_region(c, zone["ui_map"]))))
             .replace("__BASE__", "[]" if water else json.dumps(base_lines(zone)))
             .replace("__IMG__", "data:image/png;base64," + base64.b64encode(picture(c, zone)).decode("ascii")))
     os.makedirs(EDITORS, exist_ok=True)
-    out = os.path.join(EDITORS, "editor_%s%s.html" % (name, "_water" if water else ""))
+    out = os.path.join(EDITORS, "editor_%s%s.html" % (name, kind))
     open(out, "w", encoding="utf-8").write(html)
     print(out, len(html) // 1024, "KB")
 

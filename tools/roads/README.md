@@ -27,6 +27,12 @@ adds them to that continent's roads. Zones with an editor are listed in `links/z
 4. Save `.json` to `tools/roads/links/zephras.json` (or ask Claude to read it from the page), then run
    `python tools/roads/gen_roads.py --only 2991`, which rebuilds Zephras alone in a few seconds.
 
+### Roads that shouldn't be there
+
+Some textures on the list also paint riverbanks or odd patches, and these come out as roads. Build the remove page
+with `python tools/roads/links/make_editor.py <zone> --drop` and draw a closed shape round each false road: every
+stretch of road inside one is dropped (`<zone>_drop.json`). Draw only shapes there; links go on the zone's own page.
+
 ### Big water
 
 A big lake that walks shouldn't run straight across: build the water page with

@@ -1,19 +1,29 @@
 Eastern Kingdoms (WDT 775971, instance 0)
-  736 tiles, 238 with road (59s)
-  skeleton 76486 px (271s)
-  traced 1672 edges
-  joined 94 facing ends, 132 ends to nearby road
-  1078 polylines, 5806 points, 159196 yd of road
+  736 tiles, 252 with road (54s)
+  skeleton 80622 px (248s)
+  traced 1780 edges
+  joined 104 facing ends, 153 ends to nearby road
+  6 shapes of road to remove: 113 segments dropped
+  dun_morogh: 1 hand-drawn links, 2 ends joined to road
+  hinterlands: 14 hand-drawn links, 15 ends joined to road
+  arathi: 13 hand-drawn links, 3 ends joined to road
+  epl: 5 hand-drawn links, 6 ends joined to road
+  1173 polylines, 6190 points, 175302 yd of road
 Kalimdor (WDT 782779, instance 1)
-  988 tiles, 222 with road (89s)
-  skeleton 48952 px (192s)
-  traced 732 edges
-  joined 90 facing ends, 98 ends to nearby road
-  374 polylines, 3202 points, 103140 yd of road
+  988 tiles, 242 with road (75s)
+  skeleton 64900 px (188s)
+  traced 1523 edges
+  joined 156 facing ends, 248 ends to nearby road
+  stonetalon: 9 hand-drawn links, 3 ends joined to road
+  needles: 17 hand-drawn links, 3 ends joined to road
+  silithus: 5 hand-drawn links, 0 ends joined to road
+  895 polylines, 5352 points, 168710 yd of road
 Zephras Isle (WDT 7198644, instance 2991)
   72 tiles, 16 with road (2s)
-  skeleton 4338 px (10s)
+  skeleton 4338 px (9s)
   traced 132 edges
   joined 7 facing ends, 25 ends to nearby road
-  84 polylines, 374 points, 10143 yd of road
-wrote Data\Forever\Roads.lua (122 KB) in 477s
+  zephras: 5 hand-drawn links, 3 ends joined to road
+  89 polylines, 388 points, 11076 yd of road
+zephras water: 1 shapes
+wrote Data\Forever\Roads.lua (157 KB) in 454s

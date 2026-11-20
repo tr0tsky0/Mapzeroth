@@ -206,4 +206,4 @@ Every node and crossing written:
   crossing BORDER_TIRISFAL_GLADES_TO_WESTERN_PLAGUELANDS -> BORDER_WESTERN_PLAGUELANDS_TO_TIRISFAL_GLADES: Tirisfal Glades <-> Western Plaguelands (sides 352 yd apart in the game's map data, walked (not zero travel; 2026-11-19))
   BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS: Western Plaguelands side of the Western Plaguelands/Eastern Plaguelands crossing
   BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS: Eastern Plaguelands side of the Eastern Plaguelands/Western Plaguelands crossing
-  crossing BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS -> BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS: Western Plaguelands <-> Eastern Plaguelands (sides 365 yd apart in the game's map data, walked (not zero travel; 2026-11-19))
+  crossing BORDER_WESTERN_PLAGUELANDS_TO_EASTERN_PLAGUELANDS -> BORDER_EASTERN_PLAGUELANDS_TO_WESTERN_PLAGUELANDS: Western Plaguelands <-> Eastern Plaguelands (the bridge (user, in game, 2026-11-19; was 75.5, 49.9 / 9.4, 72.5, 365 yd apart))
