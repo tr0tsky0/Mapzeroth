@@ -134,6 +134,20 @@ check(FK:IsFound("TAXI_7") == nil, "reset forgets")
 FK:Load()
 check(FK:IsFound("TAXI_7") == true and FK:IsFound("TAXI_8") == false, "load restores it")
 
+-- Forever: saved under the first name alone before; the first character with that name to log in takes it, once.
+MapzerothRebuildDB.flights = { ["Soni-Realm"] = { TAXI_7 = true } }
+UnitName = function() return "Soni", "Locksdottir" end
+FK:Reset()
+FK:Load()
+check(FK:IsFound("TAXI_7") == true, "the old key's flights are taken")
+check(MapzerothRebuildDB.flights["Soni Locksdottir-Realm"] and MapzerothRebuildDB.flights["Soni-Realm"] == nil,
+    "moved to the new key")
+UnitName = function() return "Soni", "Sofaa" end
+FK:Load()
+check(FK:IsFound("TAXI_7") == nil, "another Soni starts with none")
+UnitName = function() return "Tester" end
+FK:Load()
+
 -- Where a chosen flight goes: the game's route for the slot the player clicked, as node ids.
 GetTaxiMapID = function() return 1415 end
 C_TaxiMap.GetAllTaxiNodes = function()

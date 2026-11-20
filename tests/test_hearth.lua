@@ -64,6 +64,27 @@ UnitName = function() return "Alice" end
 check(addon:GetBind().name == "Goldshire", "and Alice's is untouched")
 check(MapzerothRebuildDB.hearthstones["Alice-Realm"].name == "Goldshire" and MapzerothRebuildDB.hearthstones["Bob-Realm"].name == "Lakeshire",
     "both are saved under their characters")
+
+-- 5b. Forever: first name and surname apart. Two characters with one first name keep their own binds.
+UnitName = function() return "Soni", "Locksdottir" end
+check(addon:CharacterKey() == "Soni Locksdottir-Realm", "the key holds the surname: " .. addon:CharacterKey())
+check(addon:OldCharacterKey() == "Soni-Realm", "and the old key is the first name alone")
+UnitName = function() return "Alice" end
+check(addon:OldCharacterKey() == nil, "no surname, no old key")
+-- The old shared key held whichever Soni bound last (Menethil); this Soni is bound at Auberdine.
+MapzerothRebuildDB = { hearthstones = { ["Soni-Realm"] = { mapID = 1437, x = 0.1, y = 0.6, name = "Menethil Harbor" } } }
+UnitName = function() return "Soni", "Sofaa" end
+GetBindLocation = function() return "Auberdine" end
+check(addon:GetBind() == nil, "another character's bind under the old key is not taken")
+check(MapzerothRebuildDB.hearthstones["Soni Sofaa-Realm"] == nil, "nor copied")
+UnitName = function() return "Soni", "Locksdottir" end
+GetBindLocation = function() return "Menethil Harbor" end
+check(addon:GetBind() and addon:GetBind().name == "Menethil Harbor", "the old key's bind is taken when its name is ours")
+check(MapzerothRebuildDB.hearthstones["Soni Locksdottir-Realm"], "and saved under the new key")
+-- Bound somewhere else without the event being seen: the saved spot is stale, the client's name wins.
+GetBindLocation = function() return "Auberdine" end
+check(addon:GetBind() == nil, "a saved bind that isn't the client's bind is ignored")
+GetBindLocation = nil
 MapzerothRebuildDB = nil
 
 -- 6. An entry in the Hearthstones list that doesn't say its method is still a hearthstone (Modern's data doesn't).

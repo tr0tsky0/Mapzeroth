@@ -10,18 +10,49 @@ local addonName, addon = ...
 local SNAP_RADIUS = 0.06
 
 -- Who is playing, for the things saved per character (the bind here, found flights in FlightKnowledge.lua).
+-- On Forever, UnitName gives the first name and the surname apart, and characters often share a first name, so the
+-- key holds both ("Soni Locksdottir-Realm"). Retail gives no second part for the player: its keys are "Name-Realm".
 function addon:CharacterKey()
-    return (UnitName("player") or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
+    local name, surname = UnitName("player")
+    if surname and surname ~= "" then name = (name or "?") .. " " .. surname end
+    return (name or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
+end
+
+-- The key before surnames were in it (Forever up to 1.4.0): first name only, so shared by every character with that
+-- first name on the realm. Nil where it is the same as CharacterKey.
+function addon:OldCharacterKey()
+    local name, surname = UnitName("player")
+    if not (surname and surname ~= "") then return nil end
+    return (name or "?") .. "-" .. (GetRealmName and GetRealmName() or "")
+end
+
+-- Whether a saved bind is the one the game has now: the client's bind name, when it gives one, must match. It doesn't
+-- when the bind was saved for another character (the old shared key) or the player bound somewhere without us seeing.
+local function current(bind)
+    if not bind then return false end
+    local now = GetBindLocation and GetBindLocation()
+    return not (now and now ~= "" and bind.name and bind.name ~= "" and bind.name ~= now)
 end
 
 -- The bind is per character (MapzerothRebuildDB.hearthstones). Before that it was one account-wide
--- `hearthstone`, whatever character bound last: it is still the best guess for a character that hasn't
--- bound since (not copied: it may be another character's), and the next bind of any character removes it.
+-- `hearthstone`, whatever character bound last. A bind saved under the old shared key, or the account-wide
+-- one, is only taken when its name is this character's bind, and the next bind of any character removes the
+-- account-wide one.
 function addon:GetBind()
     local db = MapzerothRebuildDB
     if not db then return nil end
-    local own = db.hearthstones and db.hearthstones[addon:CharacterKey()]
-    return own or db.hearthstone
+    local binds = db.hearthstones
+    if binds then
+        local own = binds[addon:CharacterKey()]
+        if own then return current(own) and own or nil end
+        local oldKey = addon:OldCharacterKey()
+        local old = oldKey and binds[oldKey]
+        if old and current(old) and old.name then
+            binds[addon:CharacterKey()] = old
+            return old
+        end
+    end
+    return db.hearthstone and db.hearthstone.name and current(db.hearthstone) and db.hearthstone or nil
 end
 
 function addon:SaveBind(mapID, x, y, name)

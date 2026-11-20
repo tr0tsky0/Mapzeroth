@@ -279,7 +279,21 @@ function FlightKnowledge:Save()
     MapzerothRebuildDB.fareFactors[addon:CharacterKey()] = { typical = fareFactor, origins = origins, flier = faresFlier or nil }
 end
 
+-- What was saved under the old shared key (first name only, Forever up to 1.4.0) moves to this character's key, once:
+-- the first character with that first name to log in takes it. Wrong for another one, its next flight master window
+-- puts it right.
+local function claimOld(field)
+    local db = MapzerothRebuildDB
+    local all = db and db[field]
+    local key, oldKey = addon:CharacterKey(), addon:OldCharacterKey()
+    if all and oldKey and all[key] == nil and all[oldKey] ~= nil then
+        all[key], all[oldKey] = all[oldKey], nil
+    end
+end
+
 function FlightKnowledge:Load()
+    claimOld("flights")
+    claimOld("fareFactors")
     local saved = MapzerothRebuildDB and MapzerothRebuildDB.flights and MapzerothRebuildDB.flights[addon:CharacterKey()]
     found = {}
     for id, value in pairs(saved or {}) do found[id] = value end
