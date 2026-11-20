@@ -407,3 +407,22 @@ do
     addon.RoadData, addon.RoadSteep = shippedRoads, shippedSteep
     RoadNet:Reset()
 end
+
+-- Lake Everstill (Redridge, tools/roads/links/redridge_water.json): a walk from Lakeshire to the road south-west of
+-- the lake went straight across it before the shore was drawn. Now it goes round by road and swims none of it.
+do
+    addon.RoadData = shipped
+    RoadNet:Reset()
+    local ax, ay, bx, by = -9228, -2225, -9492, -2044         -- Lakeshire's north shore; the road south-west of the lake
+    check(RoadNet:WetYards(0, ax, ay, bx, by) > 50, "the straight line crosses Lake Everstill: "
+        .. RoadNet:WetYards(0, ax, ay, bx, by))
+    local len, straight, points = RoadNet:Route(0, ax, ay, bx, by)
+    check(len and points and #points > 0, "the walk goes by road: " .. tostring(len))
+    local wet, px, py = 0, ax, ay
+    for _, p in ipairs(points or {}) do
+        wet = wet + RoadNet:WetYards(0, px, py, p.x, p.y)
+        px, py = p.x, p.y
+    end
+    wet = wet + RoadNet:WetYards(0, px, py, bx, by)
+    check(wet < 10, ("and swims none of the lake: %.0f yd of %s"):format(wet, tostring(len)))
+end

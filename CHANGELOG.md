@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- **Forever: walks in Redridge go round Lake Everstill.** Some walks from Lakeshire to the road south of the lake were drawn straight across the water. They now follow the road round it.
+
 ## 1.5.0 (Forever) and 2.2.0 (Retail)
 
 ### Added
