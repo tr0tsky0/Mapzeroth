@@ -106,6 +106,8 @@ addon:RegisterLocale("frFR", {
     OPT_DROP_TOMTOM_DESC = "Pendant que vous suivez un itinéraire par vos points TomTom, supprimer un point dans TomTom le retire de l'itinéraire et replanifie le reste. Désactivé : l'itinéraire le garde, pour que vous puissiez ranger votre carte une fois en route.",
     OPT_ASK_WAYPOINT  = "Proposer un itinéraire vers les nouveaux points de repère",
     OPT_ASK_WAYPOINT_DESC = "Quand vous placez un point de repère sur la carte du monde, ou cliquez sur un lien de repère dans la discussion, Mapzeroth demande s'il doit vous y guider. Désactivé : Votre point de repère reste en haut de la liste.",
+    OPT_QUEST_ROUTE   = "Boutons d'itinéraire sur les quêtes",
+    OPT_QUEST_ROUTE_DESC = "Une flèche sur chaque quête du suivi de quêtes, et « Itinéraire avec Mapzeroth » dans le menu des quêtes de Daylight UI, vous guident vers cette quête. Désactivé : Votre quête reste dans la liste.",
     OPT_SECTION_PLANNING = "Planifier les itinéraires",
     OPT_SECTION_FOLLOWING = "Suivre un itinéraire",
     OPT_SECTION_LOOK = "Apparence",

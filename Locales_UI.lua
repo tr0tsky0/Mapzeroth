@@ -109,6 +109,8 @@ addon:RegisterLocale("enUS", {
     OPT_DROP_TOMTOM_DESC = "While you follow a route through your TomTom waypoints, deleting one of them in TomTom takes it off the route and plans the rest again. Off: the route keeps it, so you can tidy your map once you're on your way.",
     OPT_ASK_WAYPOINT  = "Offer a route to new map waypoints",
     OPT_ASK_WAYPOINT_DESC = "When you place a waypoint on the world map, or click a map pin link in chat, Mapzeroth asks whether to route you there. Off: Your Waypoint is still at the top of the list.",
+    OPT_QUEST_ROUTE   = "Route buttons on quests",
+    OPT_QUEST_ROUTE_DESC = "An arrow on each quest in the quest tracker, and Route with Mapzeroth in Daylight UI's quest menu, route you to that quest. Off: Your Quest is still in the list.",
     OPT_SECTION_PLANNING = "Planning routes",
     OPT_SECTION_FOLLOWING = "Following a route",
     OPT_SECTION_LOOK  = "Appearance",

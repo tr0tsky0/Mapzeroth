@@ -122,10 +122,10 @@ end
 -- The quest menu: "Route with Mapzeroth" in the right-click menu of a quest, in the tracker and the quest journal, for
 -- a quest with a spot to route to. A click routes there and starts the trip.
 
--- Whether the menu shows our row for this quest (Daylight UI's quest facts).
+-- Whether the menu shows our row for this quest (Daylight UI's quest facts): not while the setting is off.
 function Plugin.QuestHasRoute(quest)
     local questID = quest and quest.questID
-    return type(questID) == "number" and addon:GetQuestTarget(questID) ~= nil
+    return type(questID) == "number" and addon.Options:Get("questTrackerRoute") and addon:GetQuestTarget(questID) ~= nil
 end
 
 if type(my.AddQuestMenu) == "function" then

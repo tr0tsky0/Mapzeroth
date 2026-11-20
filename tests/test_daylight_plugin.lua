@@ -106,6 +106,9 @@ addon.GetQuestTarget = function(_, id) if id == 42 then return { id = 42 } end e
 check(row.show({ questID = 42, title = "A quest", state = "active" }), "shown for a quest with a spot")
 check(not row.show({ questID = 7 }), "left out for a quest with no spot")
 check(not row.show({}), "left out without a quest id")
+addon.Options:Set("questTrackerRoute", false)
+check(not row.show({ questID = 42 }), "left out while the setting is off")
+addon.Options:Set("questTrackerRoute", true)
 addon.GetQuestTarget = realTarget
 local routed, said
 addon.Panel = addon.Panel or {}

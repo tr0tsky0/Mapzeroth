@@ -105,6 +105,8 @@ addon:RegisterLocale("zhTW", {
     OPT_DROP_TOMTOM_DESC = "沿 TomTom 路徑點路線前進時，在 TomTom 中刪除一個路徑點會將其從路線中移除，並重新規劃其餘部分。關閉：路線保留它，這樣你出發後可以整理地圖。",
     OPT_ASK_WAYPOINT  = "為新的地圖標記提供路線",
     OPT_ASK_WAYPOINT_DESC = "當你在世界地圖上放置地圖標記，或點擊聊天中的地圖標記連結時，Mapzeroth 會詢問是否帶你前往。關閉：你的地圖標記仍位於清單頂端。",
+    OPT_QUEST_ROUTE   = "任務上的路線按鈕",
+    OPT_QUEST_ROUTE_DESC = "任務追蹤中每個任務上的箭頭，以及 Daylight UI 任務選單中的「用 Mapzeroth 規劃路線」，會帶你前往該任務。關閉：你的任務仍在列表中。",
     OPT_SECTION_PLANNING = "規劃路線",
     OPT_SECTION_FOLLOWING = "跟隨路線",
     OPT_SECTION_LOOK = "外觀",

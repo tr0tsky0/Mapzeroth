@@ -151,7 +151,7 @@ end
 function QuestArrow.OnBlock(block)
     local b = blockArrows[block]
     local questID = block.id
-    if not (type(questID) == "number" and block.used) then
+    if not (type(questID) == "number" and block.used and addon.Options:Get("questTrackerRoute")) then
         if b then b:Hide() end
         return
     end
@@ -208,6 +208,10 @@ function QuestArrow.FollowSpoken()
     end
     QuestArrow.Refresh()
 end
+
+addon.Options:OnChange(function(key)
+    if key == "questTrackerRoute" then QuestArrow.Refresh() end
+end)
 
 if EventUtil and EventUtil.ContinueOnAddOnLoaded then
     EventUtil.ContinueOnAddOnLoaded("Blizzard_ObjectiveTracker", QuestArrow.HookTracker)

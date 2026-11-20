@@ -105,6 +105,8 @@ addon:RegisterLocale("ptBR", {
     OPT_DROP_TOMTOM_DESC = "Enquanto você segue uma rota pelos seus pontos do TomTom, apagar um deles no TomTom o tira da rota e planeja o resto de novo. Desligado: a rota o mantém, para você limpar o mapa depois de sair.",
     OPT_ASK_WAYPOINT  = "Oferecer rota para novos pontos de referência do mapa",
     OPT_ASK_WAYPOINT_DESC = "Quando você marca um ponto de referência no mapa-múndi, ou clica num link de marcador de mapa no chat, o Mapzeroth pergunta se deve levar você até lá. Desligado: Seu ponto de referência continua no topo da lista.",
+    OPT_QUEST_ROUTE   = "Botões de rota nas missões",
+    OPT_QUEST_ROUTE_DESC = "Uma seta em cada missão no rastreador de missões e \"Rota com Mapzeroth\" no menu de missões do Daylight UI levam você até essa missão. Desligado: Sua missão continua na lista.",
     OPT_SECTION_PLANNING = "Planejar rotas",
     OPT_SECTION_FOLLOWING = "Seguir uma rota",
     OPT_SECTION_LOOK = "Aparência",

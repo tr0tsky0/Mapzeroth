@@ -107,6 +107,8 @@ addon:RegisterLocale("deDE", {
     OPT_DROP_TOMTOM_DESC = "Während Ihr einer Route durch Eure TomTom-Wegpunkte folgt, nimmt das Löschen eines Wegpunkts in TomTom ihn aus der Route und plant den Rest neu. Aus: Die Route behält ihn, damit Ihr Eure Karte unterwegs aufräumen könnt.",
     OPT_ASK_WAYPOINT  = "Route zu neuen Kartenwegpunkten anbieten",
     OPT_ASK_WAYPOINT_DESC = "Wenn Ihr einen Wegpunkt auf der Weltkarte setzt oder im Chat auf einen Kartenmarkierungs-Link klickt, fragt Mapzeroth, ob es Euch dorthin führen soll. Aus: Euer Wegpunkt steht weiterhin oben in der Liste.",
+    OPT_QUEST_ROUTE   = "Routen-Knöpfe an Quests",
+    OPT_QUEST_ROUTE_DESC = "Ein Pfeil an jeder Quest in der Questverfolgung und „Route mit Mapzeroth“ im Questmenü von Daylight UI führen Euch zu dieser Quest. Aus: Eure Quest steht weiterhin in der Liste.",
     OPT_SECTION_PLANNING = "Routen planen",
     OPT_SECTION_FOLLOWING = "Einer Route folgen",
     OPT_SECTION_LOOK = "Aussehen",

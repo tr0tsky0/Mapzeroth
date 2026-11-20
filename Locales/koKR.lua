@@ -106,6 +106,8 @@ addon:RegisterLocale("koKR", {
     OPT_DROP_TOMTOM_DESC = "TomTom 웨이포인트 경로를 따라가는 동안 TomTom에서 웨이포인트를 삭제하면 경로에서 빼고 나머지를 다시 계획합니다. 끔: 경로가 그대로 유지되어, 출발한 뒤 지도를 정리할 수 있습니다.",
     OPT_ASK_WAYPOINT  = "새 지도 표시로 경로 제안",
     OPT_ASK_WAYPOINT_DESC = "세계 지도에 지도 표시를 두거나 대화창의 지도 표시 링크를 누르면, Mapzeroth가 그곳으로 안내할지 묻습니다. 끔: 내 지도 표시는 계속 목록 맨 위에 있습니다.",
+    OPT_QUEST_ROUTE   = "퀘스트 경로 버튼",
+    OPT_QUEST_ROUTE_DESC = "퀘스트 추적기의 각 퀘스트에 있는 화살표와 Daylight UI 퀘스트 메뉴의 'Mapzeroth로 경로 찾기'가 해당 퀘스트로 안내합니다. 끄기: 내 퀘스트는 목록에 계속 표시됩니다.",
     OPT_SECTION_PLANNING = "경로 계획",
     OPT_SECTION_FOLLOWING = "경로 따라가기",
     OPT_SECTION_LOOK = "모양",

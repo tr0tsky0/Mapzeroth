@@ -37,6 +37,9 @@ local definitions = {
     -- A waypoint newly set on the map (placed, or from a map pin link in chat) brings up the question whether to route
     -- there (UI/WaypointPrompt.lua). Off: never asked; Your Waypoint is still the top pick.
     askWaypointRoute = { default = true, boolean = true },
+    -- Quests offer a route: the arrow on each quest in the game's tracker (UI/QuestArrow.lua) and "Route with Mapzeroth"
+    -- in Daylight UI's quest menu (UI/DaylightPlugin.lua). Off: neither; Your Quest is still a pick.
+    questTrackerRoute = { default = true, boolean = true },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.

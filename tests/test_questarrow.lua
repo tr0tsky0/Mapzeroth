@@ -85,6 +85,10 @@ check(layouts == 1 and #made == 2, "the tracker's own layout runs first, and a b
 QA.HookTracker()
 QuestObjectiveTracker:EndLayout()
 check(layouts == 2, "hooked once only")
+addon.Options:Set("questTrackerRoute", false)
+check(not arrow.shown, "the setting off hides the arrows at once")
+addon.Options:Set("questTrackerRoute", true)
+check(arrow.shown, "and on shows them again")
 
 -- An item button on the quest: under it, as Spoken goes. Spoken's box on the quest: ours just left of it.
 local item = region()

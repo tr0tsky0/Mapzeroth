@@ -106,6 +106,8 @@ addon:RegisterLocale("itIT", {
     OPT_DROP_TOMTOM_DESC = "Mentre segui un percorso tra i tuoi punti TomTom, eliminarne uno in TomTom lo toglie dal percorso e ripianifica il resto. Disattivato: il percorso lo mantiene, così puoi riordinare la mappa una volta in viaggio.",
     OPT_ASK_WAYPOINT  = "Offri un percorso verso i nuovi punti di riferimento",
     OPT_ASK_WAYPOINT_DESC = "Quando metti un punto di riferimento sulla mappa del mondo, o clicchi un link di segnaposto in chat, Mapzeroth chiede se portarti lì. Disattivato: Il tuo punto di riferimento resta in cima alla lista.",
+    OPT_QUEST_ROUTE   = "Pulsanti di percorso sulle missioni",
+    OPT_QUEST_ROUTE_DESC = "Una freccia su ogni missione nel tracciamento missioni e «Percorso con Mapzeroth» nel menu missioni di Daylight UI ti portano a quella missione. Disattivato: La tua missione resta nell'elenco.",
     OPT_SECTION_PLANNING = "Pianificare i percorsi",
     OPT_SECTION_FOLLOWING = "Seguire un percorso",
     OPT_SECTION_LOOK = "Aspetto",
