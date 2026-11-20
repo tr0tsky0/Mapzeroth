@@ -1457,7 +1457,10 @@ local function mapNeighbour(map)
     local _, mapRight, mapTop, mapBottom = screenRect(map)
     if not mapRight then return end
     local best, bestRight
-    local function consider(f, watchAll)
+    -- onScreen: one of the screen's frames, which counts only when it is placed from the map (Spoken's panel is). Other
+    -- screen frames can stand near the map's edge without being docked to it: one pushed the panel far off the map on
+    -- Forever, with or without Daylight UI (2026-11-19, which frame wasn't found).
+    local function consider(f, watchAll, onScreen)
         if f == ui.frame or type(f) ~= "table" or not f.IsVisible then return end
         -- A forbidden frame (the game's own secure dialogs, such as Communities') can't be touched at all by addon
         -- code: even IsVisible on one is an error. IsForbidden is the one call it allows.
@@ -1473,7 +1476,7 @@ local function mapNeighbour(map)
         -- Against the map's edge (a little gap, or tucked a little under it), level with the map, reaching past it.
         if left and left >= mapRight - EDGE_IN and left <= mapRight + EDGE_OUT and right > mapRight + 4
             and top > mapBottom and bottom < mapTop and (not bestRight or right > bestRight)
-            and not hangsFrom(f, ui.frame) then
+            and not hangsFrom(f, ui.frame) and not (onScreen and not hangsFrom(f, map)) then
             watch(f)
             best, bestRight = f, right
         end
@@ -1484,7 +1487,7 @@ local function mapNeighbour(map)
         end
     end
     -- Each under pcall: whatever another frame does, opening the map never errors over it.
-    for _, child in ipairs({ UIParent:GetChildren() }) do pcall(consider, child, false) end
+    for _, child in ipairs({ UIParent:GetChildren() }) do pcall(consider, child, false, true) end
     return best, bestRight
 end
 
@@ -1511,6 +1514,7 @@ function Panel:Reanchor()
     frame:ClearAllPoints()
     local overhang = mapChromeOverhang(map)
     local neighbour, neighbourRight = mapNeighbour(map)
+    Panel.dockNeighbour = neighbour                     -- what it last docked past, for the dev tools
     local scale = frame:GetEffectiveScale() or 1
     local screenRight = (UIParent:GetRight() or 0) * (UIParent:GetEffectiveScale() or 1)
     if neighbour then

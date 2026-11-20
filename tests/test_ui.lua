@@ -1775,6 +1775,20 @@ do
     anchors = {}
     addon.Panel:Reanchor()
     check(anchors.TOPLEFT == map and not anchors.LEFT, "back against the map when it closes (the far window and our navigator don't count)")
+    -- A screen frame at the map's edge that isn't placed from the map (the quest tracker): not a neighbour.
+    local tracker = mock()
+    rect(tracker, 1010, 1240, 750, 300)
+    screen.GetChildren = function() return forbidden, far, nav, tracker end
+    anchors = {}
+    addon.Panel:Reanchor()
+    check(anchors.TOPLEFT == map and not anchors.LEFT, "the quest tracker standing near the map's edge doesn't push it out")
+    -- The same frame placed from the map (Spoken: Places' panel on the screen) does.
+    tracker.GetNumPoints = function() return 1 end
+    tracker.GetPoint = function() return "TOPLEFT", map, "TOPRIGHT", 10, 0 end
+    anchors = {}
+    addon.Panel:Reanchor()
+    check(anchors.LEFT == tracker, "a screen frame docked to the map still counts")
+    screen.GetChildren = function() return forbidden, far, nav end
     other._shown = true
     frame.SetPoint = realSetPoint
     map.GetChildren, screen.GetChildren = nil, nil
