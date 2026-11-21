@@ -35,7 +35,7 @@ Each row is one guessed crossing point, seen from both sides.
 | Elwynn Forest | 93.8, 72.1 | Redridge Mountains | 2.8, 72.8 |
 | Duskwood | 8.7, 63.5 | Westfall | 67.2, 62.4 |
 | Duskwood | 93.4, 10.8 | Redridge Mountains | 7.7, 88.3 | sides 170 yd apart in the game's map data, walked (not zero travel; 2026-11-19)
-| Duskwood | 44.4, 97.7 | Stranglethorn Vale | 39.6, 4.3 |
+| Duskwood | 44.5, 87.9 | Stranglethorn Vale | 40.6, 3.4 |
 | Duskwood | 89.8, 40.0 | Deadwind Pass | 31.9, 34.8 |
 | Deadwind Pass | 59.1, 41.6 | Swamp of Sorrows | 2.9, 60.7 |
 | Swamp of Sorrows | 33.3, 74.1 | Blasted Lands | 52.7, 8.5 |
