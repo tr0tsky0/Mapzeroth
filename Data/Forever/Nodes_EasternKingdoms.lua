@@ -71,7 +71,7 @@ addon.Nodes.EasternKingdoms = {
     { id = "DOCK_MENETHIL_THERAMORE", container = "easternkingdoms.wetlands",    mapID = 1437, x = 0.0509, y = 0.6351 }, -- Menethil pier for the Theramore ship (captured live)
     { id = "DOCK_SOUTHSHORE",   container = "easternkingdoms.hillsbrad_foothills", mapID = 1424, x = 0.5053, y = 0.6975 }, -- Southshore Harbor (captured live; the earlier estimate was ~19% off in y)
     { id = "DOCK_STORMWIND",    container = "easternkingdoms.elwynn_forest",       mapID = 1453, x = 0.2255, y = 0.5613 }, -- Stormwind Harbor (captured live; the earlier Atlas-calibrated estimate, 0.3910/0.5082, was well off)
-    { id = "DOCK_BOOTYBAY",     container = "easternkingdoms.stranglethorn_vale",  mapID = 1434, x = 0.3908, y = 0.6673 }, -- Booty Bay Harbor (ESTIMATED)
+    { id = "DOCK_BOOTYBAY",     container = "easternkingdoms.stranglethorn_vale",  mapID = 1434, x = 0.2590, y = 0.7310 }, -- Booty Bay Harbor (user, in game 2026-11-21)
     -- Captured live with `/mzdump here` (exact, not estimated).
     { id = "DOCK_DALARAN",      container = "easternkingdoms.alterac_mountains",  mapID = 1416, x = 0.1262, y = 0.5203 }, -- Dalaran (ship to/from Zephras Isle). Forever's alternate-timeline Dalaran city, on the Alterac Mountains map -- not the Northrend one, no separate city mapID seen
     { id = "PORTAL_DALARAN_STORMWIND", container = "easternkingdoms.alterac_mountains", mapID = 1416, x = 0.1205, y = 0.5636 }, -- Dalaran: "Skyborne Portal to Stormwind" (Skyborne only; one way since the Stormwind side was removed, see Edges.lua)

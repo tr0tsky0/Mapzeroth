@@ -9,6 +9,7 @@
 
 ### Fixed
 - **The corpse run's steps say "Your corpse"** instead of a code name.
+- **Forever: Booty Bay's harbor** is where the boat to Ratchet leaves, not out in the jungle to the north-east.
 - **Forever: Duskwood to Stranglethorn Vale.** Routes through the pass no longer run south into Stranglethorn and back.
 
 ## 1.5.1 (Forever) and 2.2.1 (Retail)
