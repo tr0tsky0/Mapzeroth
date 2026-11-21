@@ -33,9 +33,9 @@ local addonName, addon = ...
 --   preferred    (optional) true: the theme chosen when the player has never picked one.
 --   glow         (optional) function(button, on): lights a main button (primary, or the navigator's action button)
 --                while it is enabled, and puts the light out again; called only when that changes, and with false
---                for every lit button when another theme takes over.
+--                for every lit button when another theme takes over. Left out: no light (Daylight's own look).
 --   pulse        (optional) function(frame): a short light round a frame to draw the eye (Theme:Pulse): the trip
---                window when the step changes, the step's row in the panel.
+--                window when the step changes, the step's row in the panel. Left out: our circling light, 3 seconds.
 -- Files under UI/Themes/ hold the themes we ship. Adding one is adding a file and a TOC line.
 
 local Theme = {}
@@ -97,9 +97,11 @@ function Theme:Current() return current end
 -- set in under them), methodTimes (step times in the colour of how the step travels).
 function Theme:Has(flag) return current ~= nil and current[flag] == true end
 function Theme:List() return order end
--- Draws the eye to a frame for a moment, in a theme that can (its `pulse`); does nothing otherwise.
+-- Draws the eye to a frame for a moment: the theme's `pulse`, or our own circling light (defaultPulse, further down).
+local defaultPulse
 function Theme:Pulse(frame)
-    if frame and current and current.pulse then current.pulse(frame) end
+    if not (frame and current) then return end
+    if current.pulse then current.pulse(frame) else defaultPulse(frame) end
 end
 function Theme:Label(id) return themes[id] and themes[id].label or id end
 
@@ -136,12 +138,28 @@ function Theme:MapColor(name, holiday)
     return self:StyleColor(name)
 end
 
--- The colour the step being followed is drawn in on the map and minimap (map.current), or nil when the theme draws it
--- in its travel style's colour like the rest.
+-- Every route line sits on a near-black casing, over parchment on the world map and terrain on the minimap, so a dark
+-- colour (a deep blue accent) would sink into its casing: lift it toward white until it is at least this bright
+-- (perceived luminance, 0-1), keeping its hue.
+local MIN_LIGHT = 0.6
+function Theme.Legible(r, g, b)
+    local light = 0.299 * r + 0.587 * g + 0.114 * b
+    if light >= MIN_LIGHT then return { r, g, b, 1 } end
+    local t = (MIN_LIGHT - light) / (1 - light)
+    return { r + (1 - r) * t, g + (1 - g) * t, b + (1 - b) * t, 1 }
+end
+
+-- The colour the step being followed is drawn in on the map and minimap: the theme's map.current, else its accent
+-- made legible over the casing, so the step marching stands out from the rest of the route.
 function Theme:CurrentStepColor()
-    local c = current and current.map and current.map.current
-    if c then return c[1], c[2], c[3] end
-    return nil
+    if not current then return nil end
+    local c = current.map and current.map.current
+    if not c then
+        local a = current.colors and current.colors.accent
+        if not a then return nil end
+        c = Theme.Legible(a[1], a[2], a[3])
+    end
+    return c[1], c[2], c[3]
 end
 
 -- Whether to animate the map's route (the marching dots, the beacon). Another addon can say no: Theme.motionOff, a
@@ -360,6 +378,71 @@ local BUTTON_SLOTS = {
     { "SetHighlightTexture", "GetHighlightTexture", "Highlight" },
 }
 
+-- Our own light circling a frame's edge, for every theme without a `pulse` of its own: a short comet in the
+-- theme's accent, a lap every LAP_SECONDS. Left still (hidden) while motion is off (Theme:MotionOn).
+local LAP_SECONDS, TRAIL, DOT = 2.4, 18, 2        -- the comet: TRAIL squares of DOT units, each one DOT behind the last
+local function lightStep(host, elapsed)
+    host.t = (host.t + elapsed) % LAP_SECONDS
+    local w, h = host:GetWidth(), host:GetHeight()
+    if not w or not h or w <= 0 or h <= 0 then return end
+    if host.paintedFor ~= current then                    -- a new theme: its accent
+        host.paintedFor = current
+        local r, g, b = Theme:Color("accent")
+        for i, dot in ipairs(host.dots) do dot:SetVertexColor(r, g, b, 1 - (i - 1) / TRAIL) end
+    end
+    local lap = 2 * (w + h)
+    local head = host.t / LAP_SECONDS * lap
+    for i, dot in ipairs(host.dots) do
+        local d = (head - (i - 1) * DOT) % lap            -- clockwise from the top left corner
+        local x, y
+        if d < w then x, y = d, 0
+        elseif d < w + h then x, y = w, d - w
+        elseif d < 2 * w + h then x, y = 2 * w + h - d, h
+        else x, y = 0, lap - d end
+        dot:ClearAllPoints()
+        dot:SetPoint("CENTER", host, "TOPLEFT", x, -y)
+    end
+end
+
+local function circleLight(frame, key, on)
+    local host = frame[key]
+    if not on then
+        if host then host:Hide() end
+        return
+    end
+    if not Theme:MotionOn() then return end
+    if not host then
+        host = CreateFrame("Frame", nil, frame)
+        host:SetAllPoints()
+        host:EnableMouse(false)
+        host:SetFrameLevel(frame:GetFrameLevel() + 5)
+        host.t, host.dots = 0, {}
+        for i = 1, TRAIL do
+            local dot = host:CreateTexture(nil, "OVERLAY")
+            dot:SetTexture(FLAT)
+            dot:SetBlendMode("ADD")
+            dot:SetSize(DOT, DOT)
+            host.dots[i] = dot
+        end
+        host:SetScript("OnUpdate", lightStep)
+        frame[key] = host
+    end
+    host.paintedFor = nil
+    host:Show()
+end
+
+local PULSE_SECONDS = 3
+defaultPulse = function(frame)                       -- declared before Theme:Pulse
+    local token = {}
+    frame.mzPulseToken = token
+    circleLight(frame, "mzPulseLight", true)
+    if not C_Timer then return end
+    C_Timer.After(PULSE_SECONDS, function()
+        if frame.mzPulseToken ~= token then return end    -- a newer pulse is running: it puts the light out
+        frame.mzPulseToken = nil
+        circleLight(frame, "mzPulseLight", false)
+    end)
+end
 -- A main button under a theme with `glow` is lit while enabled; the theme that lit it puts it out (mzGlowBy).
 local function glowButton(button, on)
     local fn = on and current.glow or nil

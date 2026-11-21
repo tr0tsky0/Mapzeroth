@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- **The step you're following stands out on every theme.** On the world map and minimap it's drawn in the theme's accent colour, as Daylight already did, and when the step changes the trip window and its row light up for a moment.
+
+### Fixed
+- **Forever: Duskwood to Stranglethorn Vale.** Routes through the pass no longer run south into Stranglethorn and back.
+
 ## 1.5.1 (Forever) and 2.2.1 (Retail)
 
 ### Changed
