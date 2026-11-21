@@ -207,6 +207,7 @@ addon:RegisterLocale("itIT", {
     ROUTE_TOUR_UNREAD = "Impossibile leggere %d righe incollate.",
     WAYPOINT_NAME     = "Il tuo punto di riferimento",
     QUEST_NAME        = "La tua missione",
+    CORPSE_NAME       = "Il tuo cadavere",
     QUEST_ROUTE_TIP   = "Clic: percorso verso questa missione",
     QUEST_NO_SPOT     = "Questa missione non ha un luogo verso cui tracciare un percorso.",
     QUEST_ROUTE_MENU  = "Percorso con Mapzeroth",

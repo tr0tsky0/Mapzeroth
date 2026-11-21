@@ -208,6 +208,7 @@ addon:RegisterLocale("deDE", {
     ROUTE_TOUR_UNREAD = "%d eingefügte Zeilen konnten nicht gelesen werden.",
     WAYPOINT_NAME     = "Euer Wegpunkt",
     QUEST_NAME        = "Eure Quest",
+    CORPSE_NAME       = "Eure Leiche",
     QUEST_ROUTE_TIP   = "Klick: Route zu dieser Quest",
     QUEST_NO_SPOT     = "Diese Quest hat keinen Ort, zu dem eine Route führt.",
     QUEST_ROUTE_MENU  = "Route mit Mapzeroth",

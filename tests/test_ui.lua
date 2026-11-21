@@ -1958,6 +1958,36 @@ do
     end
     Corpse:OnAlive()
     check(not Nav:IsActive(), "alive again: the run back is over")
+    -- Dying on the way somewhere: the run back replaces that trip, and coming back to life takes it up again.
+    ghost = false
+    addon.Panel:Query("ironforge flight")
+    for i, r in ipairs(state.results) do if r.group == "flight" then addon.Panel:Choose(i); break end end
+    addon.Panel:StartRoute()
+    local away = Nav:IsActive() and Nav:ReplanTarget()
+    check(away and not (away.dest and away.dest.corpse), "on the way to Ironforge's flight master")
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.45, 0.35 end } end
+    Corpse:OnDead()
+    C_Map.GetPlayerMapPosition = realPos
+    ghost = true
+    Corpse:OnReleased()
+    check(Nav:ReplanTarget().dest and Nav:ReplanTarget().dest.corpse, "released: the run back instead")
+    ghost = false
+    Corpse:OnAlive()
+    check(Nav:IsActive() and Nav:ReplanTarget().nodeID == away.nodeID, "alive again: back on the way there")
+    Corpse:OnAlive()
+    check(Nav:IsActive() and Nav:ReplanTarget().nodeID == away.nodeID, "and a second alive leaves that trip alone")
+    -- The usual way: the run back gets to the corpse (that trip over) before the player comes back to life.
+    C_Map.GetPlayerMapPosition = function() return { GetXY = function() return 0.45, 0.35 end } end
+    Corpse:OnDead()
+    C_Map.GetPlayerMapPosition = realPos
+    ghost = true
+    Corpse:OnReleased()
+    addon.Navigator:Stop()
+    ghost = false
+    Corpse:OnAlive()
+    check(Nav:IsActive() and Nav:ReplanTarget().nodeID == away.nodeID, "got there first: still back on the way")
+    addon.Navigator:Stop()
+    ghost = true
     IsInInstance = function() return true end
     Corpse:OnDead()
     Corpse:OnReleased()

@@ -207,6 +207,7 @@ local strings = {
     ROUTE_TOUR_UNREAD = "No se pudieron leer %d líneas pegadas.",
     WAYPOINT_NAME     = "Tu punto de ruta",
     QUEST_NAME        = "Tu misión",
+    CORPSE_NAME       = "Tu cadáver",
     QUEST_ROUTE_TIP   = "Clic: ruta a esta misión",
     QUEST_NO_SPOT     = "Esta misión no tiene un lugar al que trazar una ruta.",
     QUEST_ROUTE_MENU  = "Ruta con Mapzeroth",

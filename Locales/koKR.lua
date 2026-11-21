@@ -207,6 +207,7 @@ addon:RegisterLocale("koKR", {
     ROUTE_TOUR_UNREAD = "붙여넣은 %d줄을 읽을 수 없습니다.",
     WAYPOINT_NAME     = "내 지도 표시",
     QUEST_NAME        = "내 퀘스트",
+    CORPSE_NAME       = "내 시체",
     QUEST_ROUTE_TIP   = "클릭: 이 퀘스트로 경로 안내",
     QUEST_NO_SPOT     = "이 퀘스트에는 경로를 안내할 위치가 없습니다.",
     QUEST_ROUTE_MENU  = "Mapzeroth로 경로 안내",

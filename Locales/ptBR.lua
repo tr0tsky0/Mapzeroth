@@ -206,6 +206,7 @@ addon:RegisterLocale("ptBR", {
     ROUTE_TOUR_UNREAD = "%d linhas coladas não puderam ser lidas.",
     WAYPOINT_NAME     = "Seu ponto de referência",
     QUEST_NAME        = "Sua missão",
+    CORPSE_NAME       = "Seu corpo",
     QUEST_ROUTE_TIP   = "Clique: rota até esta missão",
     QUEST_NO_SPOT     = "Esta missão não tem um local para traçar a rota.",
     QUEST_ROUTE_MENU  = "Rota com Mapzeroth",

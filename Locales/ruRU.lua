@@ -208,6 +208,7 @@ addon:RegisterLocale("ruRU", {
     ROUTE_TOUR_UNREAD = "Не удалось прочитать строк: %d.",
     WAYPOINT_NAME     = "Ваша метка",
     QUEST_NAME        = "Ваше задание",
+    CORPSE_NAME       = "Ваше тело",
     QUEST_ROUTE_TIP   = "Щелчок: маршрут к этому заданию",
     QUEST_NO_SPOT     = "У этого задания нет места, к которому можно проложить маршрут.",
     QUEST_ROUTE_MENU  = "Маршрут через Mapzeroth",

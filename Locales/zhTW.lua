@@ -206,6 +206,7 @@ addon:RegisterLocale("zhTW", {
     ROUTE_TOUR_UNREAD = "有 %d 行無法讀取。",
     WAYPOINT_NAME     = "你的地圖標記",
     QUEST_NAME        = "你的任務",
+    CORPSE_NAME       = "你的屍體",
     QUEST_ROUTE_TIP   = "點擊：規劃前往此任務的路線",
     QUEST_NO_SPOT     = "此任務沒有可前往的地點。",
     QUEST_ROUTE_MENU  = "使用 Mapzeroth 規劃路線",

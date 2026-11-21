@@ -2,7 +2,8 @@ local addonName, addon = ...
 
 -- Back to the corpse: with the routeToCorpse setting on, releasing your spirit brings up the route from the graveyard
 -- to where you died and starts it. The ghost only walks (TravelGraph:Build reads ctx.ghost). Coming back to life ends
--- that trip. A death inside an instance isn't routed: the corpse is in the dungeon, past its entrance.
+-- that trip, and takes up again the one it replaced. A death inside an instance isn't routed: the corpse is in the
+-- dungeon, past its entrance.
 --
 -- With TomTom loaded, the corpseWith setting says who takes the ghost back: Mapzeroth's route, TomTom's arrow, or both
 -- ("ask": the question on release, UI/WaypointPrompt.lua). For TomTom, its own corpse waypoint is used when that's on
@@ -15,6 +16,7 @@ Corpse.DELAY = 1                -- seconds after release: the ghost is at the gr
 
 local died                      -- where the player died this session: { mapID, x, y }, or nil
 local tomtomUid                 -- the TomTom waypoint we set for the corpse, or nil
+local putAside                  -- the trip the run back replaced: { entry, returnTo }, taken up again once alive
 
 local function playerSpot()
     local mapID = C_Map.GetBestMapForUnit("player")
@@ -69,7 +71,11 @@ end
 
 -- Take the ghost back: with = "mapzeroth", "tomtom" or "both".
 function Corpse:Lead(with)
-    if with ~= "tomtom" then addon.Panel:RouteToCorpse() end
+    if with ~= "tomtom" then
+        local entry, returnTo = addon.Navigation:ReplanTarget()
+        if entry and not (entry.dest and entry.dest.corpse) then putAside = { entry = entry, returnTo = returnTo } end
+        addon.Panel:RouteToCorpse()
+    end
     if with == "mapzeroth" or not tomtomLoaded() or tomtomOwnArrow() or tomtomUid then return end
     local corpse = addon:GetCorpseTarget()
     if corpse then
@@ -88,10 +94,20 @@ function Corpse:OnReleased()
     end)
 end
 
--- Alive again (at the corpse, or a spirit healer): the run back is over.
+-- Alive again (at the corpse, or a spirit healer): the run back is over, and the trip it replaced (if any) carries on,
+-- planned again from here: the run back may still be going (a spirit healer), have got there, or be over. Only a trip
+-- the player started on the way back is left as it is.
 function Corpse:OnAlive()
     died = nil
-    if headingToCorpse() then addon.Navigation:Stop() end
+    local resume = putAside
+    putAside = nil
+    local entry = addon.Navigation:ReplanTarget()                   -- nil once the run back has got there
+    local other = entry ~= nil and not (entry.dest and entry.dest.corpse)
+    if resume and not other then
+        addon.Navigator:Resume(resume.entry, resume.returnTo)
+    elseif headingToCorpse() then
+        addon.Navigation:Stop()
+    end
     if addon.WaypointPrompt:IsCorpseShown() then addon.WaypointPrompt:Hide() end
     if tomtomUid then
         if tomtomLoaded() and type(TomTom.RemoveWaypoint) == "function" then TomTom:RemoveWaypoint(tomtomUid) end

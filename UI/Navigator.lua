@@ -261,6 +261,16 @@ function Navigator:Replan(entry, returnTo)
     if not restart(entry, Journey:PlanFromHere(entry, returnTo)) then self:Stop() end
 end
 
+-- A trip put aside (the run back to the corpse, UI/Corpse.lua) taken up again: planned from here over several frames
+-- (a tour can take a while), unless the trip changed meanwhile. No route from here: the trip stops.
+function Navigator:Resume(entry, returnTo)
+    local before = Navigation:CurrentPlan()
+    addon.MultiRoute:Run(function(yield) return Journey:PlanFromHere(entry, returnTo, yield) end, function(plan)
+        if Navigation:CurrentPlan() ~= before then return end          -- another trip started (or this one stopped)
+        if not restart(entry, plan) then self:Stop() end
+    end)
+end
+
 -- The recalculate button: the rest of the trip planned again from here. If no route can be found from here, the trip
 -- goes on as it was.
 function Navigator:Recalculate()

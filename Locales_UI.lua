@@ -225,6 +225,7 @@ addon:RegisterLocale("enUS", {
     ROUTE_TOUR_UNREAD = "%d pasted lines couldn't be read.",
     WAYPOINT_NAME     = "Your waypoint",
     QUEST_NAME        = "Your quest",
+    CORPSE_NAME       = "Your corpse",
     QUEST_ROUTE_TIP   = "Click: route to this quest",
     QUEST_NO_SPOT     = "This quest has no spot to route to.",
     QUEST_ROUTE_MENU  = "Route with Mapzeroth",

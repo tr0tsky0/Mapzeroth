@@ -207,6 +207,7 @@ addon:RegisterLocale("frFR", {
     ROUTE_TOUR_UNREAD = "%d lignes collées n'ont pas pu être lues.",
     WAYPOINT_NAME     = "Votre point de repère",
     QUEST_NAME        = "Votre quête",
+    CORPSE_NAME       = "Votre cadavre",
     QUEST_ROUTE_TIP   = "Clic : itinéraire vers cette quête",
     QUEST_NO_SPOT     = "Cette quête n'a aucun lieu vers lequel tracer un itinéraire.",
     QUEST_ROUTE_MENU  = "Itinéraire avec Mapzeroth",
