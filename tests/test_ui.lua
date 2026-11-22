@@ -1929,6 +1929,69 @@ do
     Options:Set("autoQuestRoute", "bogus")
     check(Options:Get("autoQuestRoute") == "off", "a value it doesn't know is the default")
     check(addon.OptionsPanel.widgets.autoQuest, "the settings page has the choice")
+
+    -- A quest clicked on the map, and another addon drops a map waypoint on its marker: one question, not two, and
+    -- none when the route to the quest is already on its way.
+    local spot
+    C_Map.HasUserWaypoint = function() return spot ~= nil end
+    C_Map.GetUserWaypoint = function()
+        return spot and { uiMapID = 1453, position = { GetXY = function() return spot[1], spot[2] end } }
+    end
+    Options:Set("askWaypointRoute", true)
+    Options:Set("autoQuestRoute", "ask")
+    followed = 0
+    WP:Settle()
+    followed = 125
+    WP:OnQuestChanged()
+    check(WP:IsQuestShown(), "ask: the quest's question")
+    spot = { 0.552, 0.451 }                               -- on the marker, a few yards off its pin
+    WP:OnWaypointChanged()
+    check(WP:IsQuestShown(), "a waypoint on the quest's marker asks nothing more")
+    followed = 0                                          -- the waypoint takes over the game's arrow
+    WP:OnWaypointChanged()
+    WP:OnQuestChanged()
+    check(WP:IsQuestShown(), "and the quest's question stays up")
+    WP:Answer("later")
+    spot = nil
+    WP:OnWaypointChanged()
+
+    spot = { 0.5, 0.4 }                                   -- the waypoint first this time, then the quest under it
+    WP:OnWaypointChanged()
+    check(WP:IsShown() and not WP:IsQuestShown(), "a waypoint on its own is asked about")
+    followed = 124
+    WP:OnQuestChanged()
+    check(WP:IsShown() and not WP:IsQuestShown(), "the quest at that spot asks nothing more")
+    WP:Answer("later")
+
+    Options:Set("autoQuestRoute", "on")
+    spot, followed = nil, 0
+    WP:OnWaypointChanged()
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    check(Nav:IsActive() and state.entry.dest.questID == 125, "on: the route to the quest starts")
+    spot = { 0.551, 0.449 }
+    WP:OnWaypointChanged()
+    check(not WP:IsShown(), "and the waypoint on its marker isn't asked about")
+    spot = { 0.7, 0.7 }
+    WP:OnWaypointChanged()
+    check(WP:IsShown(), "a waypoint somewhere else still is")
+    WP:Answer("later")
+    Nav:Stop()
+    spot, followed = { 0.5, 0.4 }, 0
+    WP:OnWaypointChanged()
+    WP:OnQuestChanged()
+    check(WP:IsShown() and not WP:IsQuestShown(), "a waypoint asked about")
+    followed = 124
+    WP:OnQuestChanged()
+    check(not WP:IsShown() and Nav:IsActive() and state.entry.dest.questID == 124,
+        "on: the quest under it is routed to, and that question goes")
+    Nav:Stop()
+    spot = nil
+    WP:OnWaypointChanged()
+    C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+    Options:Set("autoQuestRoute", "off")
+
     C_SuperTrack, C_QuestLog, GetQuestUiMapID = realTrack, realLog, realUiMap
     WP:Settle()
 end

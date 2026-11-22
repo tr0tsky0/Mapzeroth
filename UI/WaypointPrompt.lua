@@ -21,11 +21,14 @@ local Theme = addon.Theme
 
 local WIDTH, PAD, BUTTON_W = 420, 16, 124
 local SETTLE = 3                -- seconds after login or /reload before a waypoint counts as new
+local SAME_SPOT = 25            -- yards: a waypoint this close to where we're going (or were just asked) is that place
+local RECENT = 10               -- seconds a quest asked about or routed to still counts, while its route is planned
 
 local ui
 local seen                      -- the id of the waypoint last looked at (asked about, or already there), or nil
 local seenQuest                 -- likewise the quest followed
 local ready = false             -- past login: before that, a waypoint is the one the player already had
+local lastSpot, lastAt          -- the place last asked about or routed to from here, and when (GetTime)
 
 local function build()
     ui = {}
@@ -99,7 +102,13 @@ local function label(corpse)
     ui.corpse = corpse or nil
 end
 
-local function open(title, text)
+local function remember(place)
+    lastSpot, lastAt = place, GetTime()
+end
+
+local function open(title, text, spot)
+    ui.spot = spot
+    if spot then remember(spot) end
     ui.title:SetText(title)
     ui.text:SetText(text)
     ui.frame:Show()
@@ -111,7 +120,7 @@ function WaypointPrompt:Show(waypoint)
     if not ui then build() end
     ui.questID = nil
     label(false)
-    open(L["WAYPOINT_ASK_TITLE"], L["WAYPOINT_ASK_TEXT"]:format(addon:GetZoneName(waypoint.mapID) or "?"))
+    open(L["WAYPOINT_ASK_TITLE"], L["WAYPOINT_ASK_TEXT"]:format(addon:GetZoneName(waypoint.mapID) or "?"), waypoint)
 end
 
 -- The question about a quest (addon:GetQuestTarget's place, with its title).
@@ -119,7 +128,7 @@ function WaypointPrompt:ShowQuest(quest)
     if not ui then build() end
     ui.questID = quest.questID
     label(false)
-    open(L["QUEST_ASK_TITLE"], L["QUEST_ASK_TEXT"]:format(quest.title or L["PICK_QUEST"]))
+    open(L["QUEST_ASK_TITLE"], L["QUEST_ASK_TEXT"]:format(quest.title or L["PICK_QUEST"]), quest)
 end
 
 -- Who takes the ghost back to its corpse (TomTom loaded).
@@ -127,7 +136,7 @@ function WaypointPrompt:ShowCorpse()
     if not ui then build() end
     ui.questID = nil
     label(true)
-    open(L["CORPSE_ASK_TITLE"], L["CORPSE_ASK_TEXT"])
+    open(L["CORPSE_ASK_TITLE"], L["CORPSE_ASK_TEXT"], nil)
 end
 
 function WaypointPrompt:IsCorpseShown()
@@ -167,10 +176,21 @@ function WaypointPrompt:Answer(answer)
     end
 end
 
--- Whether the trip being followed goes to the waypoint with this id.
-local function headingThere(id)
+-- Whether two places ({ mapID, x, y }) are the same spot: within SAME_SPOT yards (a waypoint dropped on a quest's
+-- marker lands near its pin, not on it).
+local function sameSpot(a, b)
+    if not (a and b and a.x and b.x) then return false end
+    if a.mapID == b.mapID and math.abs(a.x - b.x) < 1e-4 and math.abs(a.y - b.y) < 1e-4 then return true end
+    local measure = addon.TravelGraph and addon.TravelGraph.DistanceProvider
+    local yards = measure and measure(a, b)
+    return yards ~= nil and yards <= SAME_SPOT
+end
+
+-- Whether the trip being followed goes to the waypoint with this id, or to its spot.
+local function headingThere(waypoint)
     local entry = addon.Navigation:ReplanTarget()
-    return entry ~= nil and entry.dest ~= nil and entry.dest.id == id
+    local dest = entry and entry.dest
+    return dest ~= nil and (dest.id == waypoint.id or sameSpot(dest, waypoint))
 end
 
 -- Whether it goes to this quest.
@@ -179,15 +199,24 @@ local function headingToQuest(questID)
     return entry ~= nil and entry.dest ~= nil and entry.dest.questID == questID
 end
 
+-- Whether this place was just dealt with here: the question up is about it, or it was asked about or routed to a
+-- moment ago (a quest's route may still be planning when the waypoint on its marker comes in).
+local function justAsked(place)
+    if WaypointPrompt:IsShown() and ui.spot and sameSpot(ui.spot, place) then return true end
+    return lastAt ~= nil and GetTime() - lastAt <= RECENT and sameSpot(lastSpot, place)
+end
+
 -- The map waypoint changed (Core.lua, USER_WAYPOINT_UPDATED and SUPER_TRACKING_CHANGED). A new one is asked about; one
--- cleared, or replaced, takes the question about it away.
+-- cleared, or replaced, takes the question about it away. One where the trip already goes, or on the quest just asked
+-- about or routed to, isn't asked about: that is one question, not two.
 function WaypointPrompt:OnWaypointChanged()
     local waypoint = addon:GetWaypoint()
     local id = waypoint and waypoint.id
     if id == seen then return end
     seen = id
     if waypointShown() then self:Hide() end
-    if not (waypoint and ready and addon.Options:Get("askWaypointRoute")) or headingThere(id) then return end
+    if not (waypoint and ready and addon.Options:Get("askWaypointRoute")) then return end
+    if headingThere(waypoint) or justAsked(waypoint) then return end
     self:Show(waypoint)
 end
 
@@ -198,19 +227,24 @@ local function trackedQuest()
 end
 
 -- The quest followed changed (Core.lua, SUPER_TRACKING_CHANGED). A new one is routed to, or asked about, by the
--- autoQuestRoute setting; one dropped takes the question about it away. A quest with no spot we can place is let be.
+-- autoQuestRoute setting; one dropped takes the question about it away, unless what took its place is a map waypoint on
+-- its marker (an addon setting one where the quest was clicked): that is still the question. A quest with no spot we can
+-- place is let be. At "on" it is routed to even when its spot was just asked about as a waypoint (that question goes);
+-- at "ask" that question is the one asked.
 function WaypointPrompt:OnQuestChanged()
     local questID = trackedQuest()
     if questID == seenQuest then return end
     seenQuest = questID
-    if self:IsQuestShown() then self:Hide() end
+    if self:IsQuestShown() and not (questID == nil and sameSpot(ui.spot, addon:GetWaypoint())) then self:Hide() end
     local mode = addon.Options:Get("autoQuestRoute")
     if not (questID and ready) or mode == "off" or headingToQuest(questID) then return end
     local quest = addon:GetQuestTarget(questID)
     if not quest then return end
     if mode == "on" then
+        if waypointShown() and sameSpot(ui.spot, quest) then self:Hide() end
+        remember(quest)
         addon.Panel:RouteToQuest(questID)
-    else
+    elseif not justAsked(quest) then
         self:ShowQuest(quest)
     end
 end
