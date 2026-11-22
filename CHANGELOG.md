@@ -4,6 +4,7 @@
 
 ### Changed
 - **Forever: ley line sharing no longer uses phases.** WoW: Forever's 1.60.1 hotfix hides the layer from addons, so "Nearest Ley Line" and "Nearest Elemental Convergence" now go to the nearest known one, not one seen in your phase, and the "seen in your phase" notes are gone. Shared sightings still reach Skyborne Leyline & Convergence Marker users, who learn new locations from them.
+- **Forever: ley line sharing joins the overflow channels.** The sharing channel only holds about 200 players, and anyone past that couldn't get in. Like Skyborne Leyline & Convergence Marker 1.6.0, Mapzeroth now moves on to the next of four channels when one is full.
 
 ### Fixed
 - **Forever: walks in Redridge go round Lake Everstill.** Some walks from Lakeshire to the road south of the lake were drawn straight across the water. They now follow the road round it.

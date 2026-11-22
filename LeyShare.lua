@@ -10,7 +10,8 @@ local addonName, addon = ...
 -- SLLCM's Comm.lua is the reference; both addons must stay wire-compatible (protocol version "1"):
 --   R:1:fac:phase:mapID:x:y:t          one sighting (x, y = map position x 10000, 0-9999; t = GetServerTime()).
 --                                      phase is sent as 0: older clients still parse it, and never match it
--- fac is A or H. Everything else on the channel (older clients' Q / S, Skyborne Compass's XM / XS, SLLCM's F / L /
+-- fac is A or H. The channel is SLLCMShareA / SLLCMShareH, with overflow channels A2-A4 / H2-H4 for when it's full
+-- (SLLCM 1.6.0). Everything else on the channel (older clients' Q / S, Skyborne Compass's XM / XS, SLLCM's F / L /
 -- VQ / V) is only proof that the channel carries.
 --
 -- Rules: off until the player says yes (Options "shareSightings", asked once per account by UI/SharePrompt.lua);
@@ -36,7 +37,11 @@ local WHO_WAIT = 4                   -- a greyed-out channel: /chatwho it, and l
 local FRESHEN_WAIT = 2               -- ...still listed: leave it, and join again this many seconds later...
 local FRESHEN_QUICK, FRESHEN_QUICK_GAP = 2, 15   -- ...the first 2 a session at most 15 s apart...
 local FRESHEN_GAP = 120              -- ...the rest at most this often...
-local FRESHEN_MAX = 6                -- ...and this many a session
+local FRESHEN_MAX = 6                -- ...this many a session...
+local FRESHEN_SLOW_GAP = 600         -- ...then at most this often for the rest of it (a block has cleared on the 6th)
+-- Overflow channels: SLLCMShareA, then SLLCMShareA2 ... SLLCMShareA<SLOTS>. Channels look capped at ~200-220 members
+-- (SLLCM, 21 Nov 2026), and a joiner past the cap gets the channel greyed out: on to the next one at once.
+local SLOTS = 4
 local PAUSE_SECONDS = 600            -- refused: nothing is sent this long, then the next message goes as a probe
 local ECHO_SECONDS = 15              -- the server echoes our channel messages back: none this long after, it was dropped
 local RECHECK_SECONDS = 3            -- after a notice that we may be out of the channel, look again this much later
@@ -67,6 +72,7 @@ local recheckPending     -- a channel notice's look again is due
 local joinStarted
 local reorderUntil       -- GetTime() until which our channel is kept numbered after the game's
 local swapsLeft = 0      -- channel swaps still allowed in that time
+local slot = 1           -- which overflow channel we're in (1 = SLLCMShareA); each login starts at the first
 
 -- nil for a secret value (encounters, combat) or a failed read.
 local function clean(v)
@@ -98,8 +104,21 @@ local function factionTag()
     return UnitFactionGroup("player") == "Horde" and "H" or "A"
 end
 
+local function slotName(n)
+    return CHANNEL_BASE .. factionTag() .. (n > 1 and n or "")
+end
+
 local function channelName()
-    return CHANNEL_BASE .. factionTag()
+    return slotName(slot)
+end
+
+-- Which of our overflow channels a channel name is, or nil. Players in different ones don't hear each other.
+local function slotOf(name)
+    if type(name) ~= "string" then return nil end
+    name = name:lower()
+    for n = 1, SLOTS do
+        if name == slotName(n):lower() then return n end
+    end
 end
 
 -- Whether this character joins the channel, sends and receives.
@@ -290,13 +309,31 @@ end
 
 local join -- (below, with the channel)
 
+-- Greyed out: move to overflow channel n. The greyed one is /chatwho'd so the client drops it (it can't be left), and
+-- the next is joined straight away.
+local function moveTo(n)
+    local old = channelName()
+    slot = n
+    whoUntil = GetTime() + WHO_WAIT + 2
+    chatCall(ListChannelByName, old)
+    lastJoinAt = nil
+    join()
+    return true
+end
+
 -- Revive the channel: /chatwho it, which on a greyed-out one makes the client drop it, then join fresh. Still listed
--- after that: leave it and join again. Rate-limited; true if it went out.
+-- after that: leave it and join again. Greyed out (full, it seems) goes on to the next overflow channel at once, and
+-- from the last back to the first at the revive pace. Rate-limited (quick, then every FRESHEN_GAP up to FRESHEN_MAX,
+-- then every FRESHEN_SLOW_GAP); true if it went out.
 local function freshen(why)
+    if why == "greyed out" and slot < SLOTS then return moveTo(slot + 1) end
     local now = GetTime()
-    local gap = freshened < FRESHEN_QUICK and FRESHEN_QUICK_GAP or FRESHEN_GAP
-    if freshened >= FRESHEN_MAX or (freshenedAt and now - freshenedAt < gap) then return false end
-    freshened, freshenedAt, freshening = freshened + 1, now, true
+    local gap = freshened < FRESHEN_QUICK and FRESHEN_QUICK_GAP or freshened < FRESHEN_MAX and FRESHEN_GAP
+        or FRESHEN_SLOW_GAP
+    if freshenedAt and now - freshenedAt < gap then return false end
+    freshened, freshenedAt = freshened + 1, now
+    if why == "greyed out" and SLOTS > 1 then return moveTo(1) end
+    freshening = true
     whoUntil = now + WHO_WAIT + 2
     chatCall(ListChannelByName, channelName())
     C_Timer.After(WHO_WAIT, function()
@@ -535,7 +572,14 @@ join = function(force)
     chatCall(JoinTemporaryChannel, channelName())
     -- The chat frames pick the channel up a moment after joining.
     C_Timer.After(1, hideFromChat)
-    C_Timer.After(5, hideFromChat)
+    -- By then a join the server turned away shows greyed out: on to the next channel.
+    local joined = slot
+    C_Timer.After(5, function()
+        hideFromChat()
+        if LeyShare:Networking() and slot == joined and not freshening and channelIndex() and greyedOut() then
+            freshen("greyed out")
+        end
+    end)
 end
 
 -- The server's word on our channel. NOT_ALLOWED_IN_CHANNEL is it refusing a message we sent (see refused): rejoining
@@ -566,8 +610,7 @@ end
 -- name") stays out of chat for a few seconds after it goes out. A /chatwho of their own later shows.
 local function oursToHide(_, _, ...)
     if not (whoUntil and GetTime() < whoUntil) then return false end
-    local base = clean(select(9, ...))
-    return type(base) == "string" and base:lower() == channelName():lower()
+    return slotOf(clean(select(9, ...))) ~= nil     -- any of ours: a move /chatwho's the one it leaves behind
 end
 if ChatFrame_AddMessageEventFilter then
     ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_LIST", oursToHide)
@@ -585,6 +628,16 @@ local function start(atLogin)
     end
     joinStarted = true
     local function begin()
+        -- After a /reload we may still be in one of our channels: carry on in the lowest that isn't greyed out (a
+        -- fresh login has none, and starts at the first).
+        local list, best = { pcall(GetChannelList) }, nil
+        if list[1] then
+            for i = 2, #list, 3 do
+                local n = slotOf(clean(list[i + 1]))
+                if n and clean(list[i + 2]) ~= true and (not best or n < best) then best = n end
+            end
+        end
+        slot = best or 1
         swapsLeft = MAX_SWAPS
         LeyShare:KeepChannelLast()                     -- still on it from before a /reload, perhaps as /1
         join()
@@ -615,6 +668,7 @@ function LeyShare:OnSettingChanged(on)
     -- A fresh start either way: turning sharing back on is how a player says "try again now".
     pausedUntil, awaitingEcho, freshened, freshenedAt, freshening, lastJoinAt = nil, nil, 0, nil, nil, nil
     if on then
+        if not channelIndex() then slot = 1 end       -- not in one: start again from the first
         start(false)
     else
         wipe(queue)
@@ -629,7 +683,8 @@ end
 
 -- How things stand, for the dev tools: whether we network, the channel, messages waiting to go.
 function LeyShare:Stats()
-    return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(), queued = #queue,
+    return { networking = self:Networking(), sllcm = self:SllcmLoaded(), channel = channelIndex(),
+             channelName = channelName(), queued = #queue,
              greyed = channelIndex() ~= nil and greyedOut(), paused = paused(), revives = freshened }
 end
 
@@ -641,7 +696,7 @@ function LeyShare:ResetForTests(swaps)
     wipe(queue)
     sending = false
     channelRetries, pausedUntil, awaitingEcho, whoUntil, lastJoinAt, recheckPending = 0, nil, nil, nil, nil, nil
-    freshened, freshenedAt, freshening = 0, nil, nil
+    freshened, freshenedAt, freshening, slot = 0, nil, nil, 1
 end
 
 ---------------------------------------------------------------------------
