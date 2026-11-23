@@ -50,7 +50,7 @@ Each row is one guessed crossing point, seen from both sides.
 | Redridge Mountains | 66.54, 18.10 | Riverglades | 25.43, 73.19 | captured on both sides; Redridge's east strip, cut off from the rest of Redridge [subA=east]
 | Redridge Mountains | 95.96, 70.68 | Swamp of Sorrows | 67.22, 0.00 | Redridge's east strip; the Swamp side was captured on the continent map (56.15, 72.74), which is 67.2, -1.2 on the Swamp map, just past its north edge [subA=east]
 | Loch Modan | 19.66, 62.86 | Dun Morogh | 86.22, 51.29 | South Gate; captured at the gate on both sides [areaB=806]
-| Loch Modan | 25.57, 10.39 | Wetlands | 55.65, 84.80 | via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel)
+| Loch Modan | 25.57, 10.39 | Wetlands | 53.9, 70.3 | via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel); walked 172 s over 599 yd straight-line at 7 yd/s (2026-11-22) [factor=2.02]
 | Loch Modan | 16.8, 84.0 | Searing Gorge | 78.4, 16.7 | Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel
 *** | Dun Morogh | 58.4, 17.2 | Wetlands | 16.5, 83.3 | Does Not Exist
 | Wetlands | 51.12, 8.04 | Arathi Highlands | 45.47, 92.91 | Thandol Span; captured on both sides [areaB=880]

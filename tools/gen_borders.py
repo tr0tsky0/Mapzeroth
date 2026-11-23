@@ -12,6 +12,8 @@ Each row is one crossing seen from both zones' own maps:
   * A note containing "not zero travel" marks a crossing with real travel
     inside it (a tunnel): its edge gets no fixed cost, so the engine works the
     cost out from the distance between the two entrances.
+  * [factor=N] on a tunnel gives its edge its own measured path factor
+    (`/mzr walktime` from entrance to entrance) instead of the two zones' average.
   * [subA=name] / [subB=name] puts that side's node in a sub-container of its
     zone (<zone>.name): a part of the zone you can't walk to from the rest.
 
@@ -85,6 +87,10 @@ def parse_checklist():
         subs = dict(re.findall(r"\[sub([AB])=([a-z0-9_]+)\]", row["note"]))
         row["sub_a"], row["sub_b"] = subs.get("A"), subs.get("B")
         row["note"] = re.sub(r"\s*\[sub[AB]=[a-z0-9_]+\]", "", row["note"]).strip()
+        # [factor=2.02]: a tunnel's own measured path factor (walked entrance to entrance).
+        factor = re.search(r"\[factor=([\d.]+)\]", row["note"])
+        row["factor"] = float(factor.group(1)) if factor else None
+        row["note"] = re.sub(r"\s*\[factor=[\d.]+\]", "", row["note"]).strip()
         # "requires quest N" in a note gates the crossing behind that quest.
         quest = re.search(r"requires quest (\d+)", row["note"], re.I)
         row["quest"] = int(quest.group(1)) if quest else None
@@ -157,6 +163,11 @@ def main():
             named.append(f"{nid}: {side} side of the {side}/{other} crossing")
         tunnel = "not zero travel" in row["note"].lower()
         cost = "" if tunnel else ", cost = 0"
+        if row["factor"]:
+            if not tunnel:
+                problems.append(f"{row['a']} / {row['b']}: [factor=] on a zero-travel crossing does nothing")
+            else:
+                cost += f", pathFactor = {row['factor']:g}"
         if row["quest"]:
             cost += f", requirements = {{ quest = {row['quest']} }}"
         note = f"{row['a']} <-> {row['b']}" + (f" ({row['note']})" if row["note"] else "")

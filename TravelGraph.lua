@@ -511,7 +511,8 @@ function TravelGraph:Build(ctx)
                 local dist = TravelGraph.DistanceProvider(a, b)
                 local speed
                 speed, icon = addon:GetGroundSpeed(World:GetNodeContainer(a.id), ctx)
-                cost = dist and (dist * pathFactor(a, b) / speed) or (edge.method == "walk" and addon.UNMEASURED_WALK_SECONDS or nil)
+                -- A tunnel walked in game carries its own factor (Borders.lua's pathFactor); others average the two maps'.
+                cost = dist and (dist * (edge.pathFactor or pathFactor(a, b)) / speed) or (edge.method == "walk" and addon.UNMEASURED_WALK_SECONDS or nil)
             elseif cost and edge.method == "taxi" then
                 cost = cost / addon:GetFlightSpeedMultiplier(ctx)
             end

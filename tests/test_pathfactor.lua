@@ -26,3 +26,13 @@ local r2 = route(ali, c.id, d.id)
 local expected2 = addon.TravelGraph.DistanceProvider(c, d)
     * ((addon.DEFAULT_PATH_FACTOR + (addon.PathFactors[d.mapID] or addon.DEFAULT_PATH_FACTOR)) / 2) / addon.WALK_SPEED
 check(math.abs(r2.cost - expected2) < 1e-6, ("default factor applies: %.1f vs %.1f"):format(r2.cost, expected2))
+
+-- A tunnel walked in game carries its own factor on the edge: Dun Algaz, 172 s over 599 yd (2.02).
+local la, wa = addon.World:GetNode("BORDER_LOCH_MODAN_TO_WETLANDS"), addon.World:GetNode("BORDER_WETLANDS_TO_LOCH_MODAN")
+-- The edge itself, not a route: the fake test distances can make a way round cheaper.
+local r3
+for _, e in ipairs(addon.TravelGraph:Build(ali).adjacency[la.id] or {}) do
+    if e.to == wa.id and e.method == "walk" then r3 = e end
+end
+local expected3 = addon.TravelGraph.DistanceProvider(la, wa) * 2.02 / addon.WALK_SPEED
+check(r3 and math.abs(r3.cost - expected3) < 1e-6, ("Dun Algaz uses its edge factor: %.1f vs %.1f"):format(r3 and r3.cost or -1, expected3))

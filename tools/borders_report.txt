@@ -173,7 +173,7 @@ Every node and crossing written:
   crossing BORDER_LOCH_MODAN_TO_DUN_MOROGH -> BORDER_DUN_MOROGH_TO_LOCH_MODAN: Loch Modan <-> Dun Morogh (South Gate; captured at the gate on both sides)
   BORDER_LOCH_MODAN_TO_WETLANDS: Loch Modan side of the Loch Modan/Wetlands crossing
   BORDER_WETLANDS_TO_LOCH_MODAN: Wetlands side of the Wetlands/Loch Modan crossing
-  crossing BORDER_LOCH_MODAN_TO_WETLANDS -> BORDER_WETLANDS_TO_LOCH_MODAN: Loch Modan <-> Wetlands (via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel))
+  crossing BORDER_LOCH_MODAN_TO_WETLANDS -> BORDER_WETLANDS_TO_LOCH_MODAN: Loch Modan <-> Wetlands (via the Dun Algaz Tunnel, entrance to entrance; the zone changes at its north end, Loch Modan 25.29, 0.12 (not zero travel); walked 172 s over 599 yd straight-line at 7 yd/s (2026-11-22))
   BORDER_LOCH_MODAN_TO_SEARING_GORGE: Loch Modan side of the Loch Modan/Searing Gorge crossing
   BORDER_SEARING_GORGE_TO_LOCH_MODAN: Searing Gorge side of the Searing Gorge/Loch Modan crossing
   crossing BORDER_LOCH_MODAN_TO_SEARING_GORGE -> BORDER_SEARING_GORGE_TO_LOCH_MODAN: Loch Modan <-> Searing Gorge (Via Stonewrought Pass, needs a key; requires quest 3201 ("At Last!" rewards the Key to Searing Gorge, item 5396); not zero travel)
