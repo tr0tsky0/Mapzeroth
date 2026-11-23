@@ -106,6 +106,21 @@ local function costs(session)
     return costsFor(session, nil)
 end
 
+-- Seconds to reach each of `ids` (a set), as { [id] = seconds }: a search that stops once they are all priced, not
+-- one over the whole map (MapzerothAPI.TimeTo). Money is minded as for costsFor.
+function Journey:CostsTo(session, ids)
+    local graph, money = session.graph, session.ctx.money
+    local quickest, fares = addon.Pathfinder:FindCosts(graph, session.start.id, graph.phase, searchOptions(session), ids)
+    if money then
+        for id in pairs(ids) do
+            if (fares[id] or 0) > money then
+                return (addon.Pathfinder:FindCosts(graph, session.start.id, graph.phase, searchOptions(session, money), ids))
+            end
+        end
+    end
+    return quickest
+end
+
 -- Tests only.
 -- Seconds to reach a node, or nil if it can't be reached.
 function Journey:Cost(session, nodeID)

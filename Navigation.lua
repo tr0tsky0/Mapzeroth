@@ -338,6 +338,14 @@ local function advance(sample)
     if active.index > #active.steps then
         active.finished = true
         active.state = nil
+        -- Another addon's trip (MapzerothAPI.RouteTo's onArrive): told once; an error of theirs doesn't stop ours.
+        local entry = active.entry
+        local onArrive = entry and entry.onArrive
+        if onArrive then
+            entry.onArrive = nil
+            local ok, err = pcall(onArrive)
+            if not ok and geterrorhandler then geterrorhandler()(err) end
+        end
     else
         beginStep(sample)
     end
@@ -524,7 +532,8 @@ end
 local function restOfTour(gone)
     local entry = active.entry
     local k = active.legOf[active.index] or #active.legs
-    local rest = { name = entry.name, stops = {}, keep = {}, holiday = entry.holiday, tomtom = entry.tomtom }
+    local rest = { name = entry.name, stops = {}, keep = {}, holiday = entry.holiday, tomtom = entry.tomtom,
+                   onArrive = entry.onArrive }
     local dropped = false
     for i = k, #active.legs do
         local leg = active.legs[i]

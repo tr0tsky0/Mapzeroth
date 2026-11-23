@@ -1729,9 +1729,10 @@ end
 
 -- Another addon's points (MapzerothAPI.RouteTo, API.lua): the window comes up with the route through them, in the
 -- quickest order, as for pasted /way lines. start: the trip starts once it is planned; otherwise it waits for Start.
-function Panel:RouteToPoints(name, points, start)
+function Panel:RouteToPoints(name, points, start, onArrive)
     if not (ui and ui.frame:IsShown()) then self:Toggle() end
     local entry = addon.MultiRoute:Entry(name, points)
+    entry.onArrive = onArrive                         -- called by Navigation when this trip ends there
     self:ShowRoute(entry, start and function(plan)
         if plan then Panel:StartRoute() end
     end or nil)
