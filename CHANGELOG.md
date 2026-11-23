@@ -11,6 +11,8 @@
 
 - **Back on your way after a corpse run.** If you were following a route when you died, coming back to life picks it up again, planned from where you are.
 
+- **Fewer repeat questions.** A map waypoint on or next to where you're already going, or on a quest you were just asked about, isn't asked about again, and the same goes the other way round.
+
 ### Fixed
 - **The corpse run's steps say "Your corpse"** instead of a code name.
 - **Forever: Booty Bay's and Ratchet's harbors** are where the boat between them docks. Both were placed well away from the water.
