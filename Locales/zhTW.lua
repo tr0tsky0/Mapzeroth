@@ -101,6 +101,8 @@ addon:RegisterLocale("zhTW", {
     OPT_MINIMAP_UNAVAILABLE = "此用戶端的小地圖無法顯示路線。",
     OPT_HIDE_MINIMAP  = "隱藏小地圖按鈕",
     OPT_HIDE_MINIMAP_DESC = "隱藏小地圖上的 Mapzeroth 按鈕。仍可用 /mapzeroth 開啟視窗。",
+    OPT_HIDE_MAP_BUTTON = "隱藏地圖按鈕",
+    OPT_HIDE_MAP_BUTTON_DESC = "隱藏世界地圖角落的 Mapzeroth 按鈕。/mapzeroth 仍可開啟視窗。",
     OPT_DROP_TOMTOM   = "移除在 TomTom 中刪除的站點",
     OPT_DROP_TOMTOM_DESC = "沿 TomTom 路徑點路線前進時，在 TomTom 中刪除一個路徑點會將其從路線中移除，並重新規劃其餘部分。關閉：路線保留它，這樣你出發後可以整理地圖。",
     OPT_ASK_WAYPOINT  = "為新的地圖標記提供路線",

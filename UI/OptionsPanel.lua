@@ -435,6 +435,10 @@ function OptionsPanel:Build()
                 widgets.hideMinimap = toggleRow(box, y, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
                 return TOGGLE_ROW
             end,
+            function(y)
+                widgets.hideMapButton = toggleRow(box, y, "hideMapButton", L["OPT_HIDE_MAP_BUTTON"], L["OPT_HIDE_MAP_BUTTON_DESC"])
+                return TOGGLE_ROW
+            end,
         } },
     }
     local y = FIRST_ROW
@@ -510,6 +514,7 @@ function OptionsPanel:Sync()
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
     widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
     widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
+    widgets.hideMapButton:SetValue(Options:Get("hideMapButton"))
     widgets.dropTomTom:SetValue(Options:Get("dropRemovedTomTom"))
     widgets.showNavigator:SetValue(Options:Get("showNavigator"))
     widgets.askWaypoint:SetValue(Options:Get("askWaypointRoute"))

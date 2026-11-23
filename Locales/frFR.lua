@@ -102,6 +102,8 @@ addon:RegisterLocale("frFR", {
     OPT_MINIMAP_UNAVAILABLE = "La minicarte de ce client ne peut pas afficher l'itinéraire.",
     OPT_HIDE_MINIMAP  = "Masquer le bouton de la minicarte",
     OPT_HIDE_MINIMAP_DESC = "Masque le bouton Mapzeroth de la minicarte. /mapzeroth ouvre toujours la fenêtre.",
+    OPT_HIDE_MAP_BUTTON = "Masquer le bouton de la carte",
+    OPT_HIDE_MAP_BUTTON_DESC = "Masque le bouton Mapzeroth dans le coin de la carte du monde. /mapzeroth ouvre toujours la fenêtre.",
     OPT_DROP_TOMTOM   = "Retirer les arrêts supprimés de TomTom",
     OPT_DROP_TOMTOM_DESC = "Pendant que vous suivez un itinéraire par vos points TomTom, supprimer un point dans TomTom le retire de l'itinéraire et replanifie le reste. Désactivé : l'itinéraire le garde, pour que vous puissiez ranger votre carte une fois en route.",
     OPT_ASK_WAYPOINT  = "Proposer un itinéraire vers les nouveaux points de repère",

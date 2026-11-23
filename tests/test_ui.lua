@@ -475,6 +475,57 @@ check(not inCompartment() and #AddonCompartmentFrame.registeredAddons == 1 and r
 AddonCompartmentFrame = nil
 addon.Panel:SetDocked(true)
 
+-- The map button: built with the panel, shown unless hidden, and its clicks are the minimap button's.
+local mapButton = addon.MapButton
+check(mapButton.button, "the map button is built when the panel attaches to the map")
+check(mapButton.button:IsShown(), "and shows by default")
+addon.Options:Set("hideMapButton", true)
+check(not mapButton.button:IsShown(), "the Hide Map Button setting hides it")
+addon.Options:Set("hideMapButton", false)
+check(mapButton.button:IsShown(), "and turning it off brings it back")
+do
+    local toggles, settings = 0, 0
+    local realToggle, realOpen = addon.Panel.Toggle, addon.OptionsPanel.Open
+    addon.Panel.Toggle = function() toggles = toggles + 1 end
+    addon.OptionsPanel.Open = function() settings = settings + 1 return true end
+    mapButton.button._scripts.OnClick(mapButton.button, "LeftButton")
+    mapButton.button._scripts.OnClick(mapButton.button, "RightButton")
+    addon.Panel.Toggle, addon.OptionsPanel.Open = realToggle, realOpen
+    check(toggles == 1 and settings == 1, "left-click shows or hides the panel, right-click opens the settings")
+end
+-- Where it goes: a rectangle in screen units, top-left of the canvas at (100, 800).
+do
+    local function rect(l, t, w, h, extra)
+        local f = { IsVisible = function() return true end, GetEffectiveScale = function() return 1 end,
+            GetLeft = function() return l end, GetTop = function() return t end,
+            GetRight = function() return l + w end, GetBottom = function() return t - h end,
+            GetWidth = function() return w end, GetNumPoints = function() return 0 end }
+        for k, v in pairs(extra or {}) do f[k] = v end
+        return f
+    end
+    local canvas, own = rect(100, 800, 1000, 700), rect(0, 0, 31, 31)
+    local Slot = mapButton.Slot
+    local x, y = Slot(canvas, {}, own)
+    check(x == 6 and y == -6, "an empty corner: ours sits in it")
+    local other = rect(106, 794, 24, 24)                          -- another addon's round button in the corner
+    x, y = Slot(canvas, { other, canvas, own }, own)
+    check(math.abs(x - (118 - 15.5 - 100)) < 1e-9 and y == -(800 - 770 + 2), "under another's button, centred on it: " .. x .. "," .. y)
+    local second = rect(108, 766, 20, 20)                         -- one stacked under that
+    x, y = Slot(canvas, { second, other }, own)
+    check(y == -(800 - 746 + 2), "under the lowest of a stack")
+    local dropdown = rect(102, 800, 160, 30)                      -- the floor dropdown: wide, so ours keeps the inset
+    x, y = Slot(canvas, { dropdown }, own)
+    check(x == 6 and y == -32, "under the floor dropdown, at the corner's inset")
+    check(select(2, Slot(canvas, { rect(600, 790, 24, 24), rect(104, 400, 24, 24) }, own)) == -6,
+        "buttons away from the corner don't count")
+    local hidden = rect(106, 794, 24, 24, { IsVisible = function() return false end })
+    check(select(2, Slot(canvas, { hidden }, own)) == -6, "nor hidden ones")
+    local follower = rect(106, 794, 24, 24, { GetNumPoints = function() return 1 end, GetPoint = function() return "TOP", own end })
+    check(select(2, Slot(canvas, { follower }, own)) == -6, "nor one stacked under ours: no leapfrogging")
+    local broken = rect(106, 794, 24, 24, { GetLeft = function() error("forbidden") end })
+    check(select(2, Slot(canvas, { broken, other }, own)) == -32, "a frame that errors is skipped")
+end
+
 -- Shift-click on a place: it goes into chat (ChatShare.lua), and the route isn't opened.
 addon.Panel:Query("ironforge flight")
 do

@@ -102,6 +102,8 @@ addon:RegisterLocale("koKR", {
     OPT_MINIMAP_UNAVAILABLE = "이 클라이언트의 미니맵에는 경로를 표시할 수 없습니다.",
     OPT_HIDE_MINIMAP  = "미니맵 버튼 숨기기",
     OPT_HIDE_MINIMAP_DESC = "미니맵의 Mapzeroth 버튼을 숨깁니다. /mapzeroth로는 계속 창을 열 수 있습니다.",
+    OPT_HIDE_MAP_BUTTON = "지도 버튼 숨기기",
+    OPT_HIDE_MAP_BUTTON_DESC = "세계 지도 모서리의 Mapzeroth 버튼을 숨깁니다. /mapzeroth로는 계속 창을 열 수 있습니다.",
     OPT_DROP_TOMTOM   = "TomTom에서 삭제한 경유지 빼기",
     OPT_DROP_TOMTOM_DESC = "TomTom 웨이포인트 경로를 따라가는 동안 TomTom에서 웨이포인트를 삭제하면 경로에서 빼고 나머지를 다시 계획합니다. 끔: 경로가 그대로 유지되어, 출발한 뒤 지도를 정리할 수 있습니다.",
     OPT_ASK_WAYPOINT  = "새 지도 표시로 경로 제안",

@@ -119,6 +119,7 @@ UI\LinkPopup.lua
 AboutPage.lua
 UI\Panel.lua
 UI\MinimapButton.lua
+UI\MapButton.lua
 UI\Navigator.lua
 UI\SharePrompt.lua
 UI\WaypointPrompt.lua

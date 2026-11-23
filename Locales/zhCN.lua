@@ -101,6 +101,8 @@ addon:RegisterLocale("zhCN", {
     OPT_MINIMAP_UNAVAILABLE = "此客户端的小地图无法显示路线。",
     OPT_HIDE_MINIMAP  = "隐藏小地图按钮",
     OPT_HIDE_MINIMAP_DESC = "隐藏小地图上的 Mapzeroth 按钮。仍可用 /mapzeroth 打开窗口。",
+    OPT_HIDE_MAP_BUTTON = "隐藏地图按钮",
+    OPT_HIDE_MAP_BUTTON_DESC = "隐藏世界地图角落的 Mapzeroth 按钮。/mapzeroth 仍可打开窗口。",
     OPT_DROP_TOMTOM   = "移除在 TomTom 中删除的站点",
     OPT_DROP_TOMTOM_DESC = "沿 TomTom 路径点路线前进时，在 TomTom 中删除一个路径点会将其从路线中移除，并重新规划其余部分。关闭：路线保留它，这样你出发后可以清理地图。",
     OPT_ASK_WAYPOINT  = "为新的地图标记提供路线",

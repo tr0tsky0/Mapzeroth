@@ -29,6 +29,7 @@ local definitions = {
     dockedHidden = { default = false, boolean = true },                   -- docked, the player hid it: the map opens without it, after a reload too
     hideSllcmHint = { default = false, boolean = true },                  -- the picker's pointer to Skyborne Ley Line & Convergence Marker, dismissed (UI/Panel.lua)
     hideMinimapButton = { default = false, boolean = true },              -- the button on the minimap rim (UI/MinimapButton.lua)
+    hideMapButton = { default = false, boolean = true },                  -- the button in the world map's corner (UI/MapButton.lua)
     roundTrip = { default = false, boolean = true },                      -- routes are there and back to here (UI/Panel.lua's choice on a route)
     -- A TomTom waypoints tour being followed drops a stop whose waypoint was deleted in TomTom (UI/Navigator.lua). Off:
     -- players also delete waypoints just to tidy the map once they're on their way.

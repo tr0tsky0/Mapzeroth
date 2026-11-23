@@ -103,6 +103,8 @@ addon:RegisterLocale("ruRU", {
     OPT_MINIMAP_UNAVAILABLE = "Миникарта этого клиента не может показать маршрут.",
     OPT_HIDE_MINIMAP  = "Скрыть кнопку у миникарты",
     OPT_HIDE_MINIMAP_DESC = "Скрывает кнопку Mapzeroth у миникарты. Команда /mapzeroth по-прежнему открывает окно.",
+    OPT_HIDE_MAP_BUTTON = "Скрыть кнопку на карте",
+    OPT_HIDE_MAP_BUTTON_DESC = "Скрывает кнопку Mapzeroth в углу карты мира. /mapzeroth по-прежнему открывает окно.",
     OPT_DROP_TOMTOM   = "Убирать точки, удалённые в TomTom",
     OPT_DROP_TOMTOM_DESC = "Пока вы следуете маршруту по точкам TomTom, удаление точки в TomTom убирает её из маршрута, и остальное планируется заново. Выкл.: маршрут её сохраняет, и можно убрать точки с карты уже в пути.",
     OPT_ASK_WAYPOINT  = "Предлагать маршрут к новым меткам на карте",

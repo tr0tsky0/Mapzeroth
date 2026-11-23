@@ -101,6 +101,8 @@ addon:RegisterLocale("ptBR", {
     OPT_MINIMAP_UNAVAILABLE = "O minimapa deste cliente não pode mostrar a rota.",
     OPT_HIDE_MINIMAP  = "Ocultar o botão do minimapa",
     OPT_HIDE_MINIMAP_DESC = "Oculta o botão do Mapzeroth no minimapa. /mapzeroth ainda abre a janela.",
+    OPT_HIDE_MAP_BUTTON = "Ocultar o botão do mapa",
+    OPT_HIDE_MAP_BUTTON_DESC = "Oculta o botão do Mapzeroth no canto do mapa-múndi. /mapzeroth continua abrindo a janela.",
     OPT_DROP_TOMTOM   = "Remover paradas apagadas do TomTom",
     OPT_DROP_TOMTOM_DESC = "Enquanto você segue uma rota pelos seus pontos do TomTom, apagar um deles no TomTom o tira da rota e planeja o resto de novo. Desligado: a rota o mantém, para você limpar o mapa depois de sair.",
     OPT_ASK_WAYPOINT  = "Oferecer rota para novos pontos de referência do mapa",

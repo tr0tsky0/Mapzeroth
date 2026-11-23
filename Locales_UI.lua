@@ -105,6 +105,8 @@ addon:RegisterLocale("enUS", {
     OPT_MINIMAP_UNAVAILABLE = "This client's minimap can't show the route.",
     OPT_HIDE_MINIMAP  = "Hide minimap button",
     OPT_HIDE_MINIMAP_DESC = "Hides the Mapzeroth button on the minimap. /mapzeroth still opens the window.",
+    OPT_HIDE_MAP_BUTTON = "Hide map button",
+    OPT_HIDE_MAP_BUTTON_DESC = "Hides the Mapzeroth button in the world map's corner. /mapzeroth still opens the window.",
     OPT_DROP_TOMTOM   = "Drop stops removed from TomTom",
     OPT_DROP_TOMTOM_DESC = "While you follow a route through your TomTom waypoints, deleting one of them in TomTom takes it off the route and plans the rest again. Off: the route keeps it, so you can tidy your map once you're on your way.",
     OPT_ASK_WAYPOINT  = "Offer a route to new map waypoints",

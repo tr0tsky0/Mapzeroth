@@ -103,6 +103,8 @@ addon:RegisterLocale("deDE", {
     OPT_MINIMAP_UNAVAILABLE = "Die Minikarte dieses Clients kann die Route nicht anzeigen.",
     OPT_HIDE_MINIMAP  = "Minikarten-Knopf verbergen",
     OPT_HIDE_MINIMAP_DESC = "Verbirgt den Mapzeroth-Knopf an der Minikarte. /mapzeroth öffnet das Fenster weiterhin.",
+    OPT_HIDE_MAP_BUTTON = "Weltkarten-Knopf verbergen",
+    OPT_HIDE_MAP_BUTTON_DESC = "Verbirgt den Mapzeroth-Knopf in der Ecke der Weltkarte. /mapzeroth öffnet das Fenster weiterhin.",
     OPT_DROP_TOMTOM   = "Aus TomTom entfernte Stopps weglassen",
     OPT_DROP_TOMTOM_DESC = "Während Ihr einer Route durch Eure TomTom-Wegpunkte folgt, nimmt das Löschen eines Wegpunkts in TomTom ihn aus der Route und plant den Rest neu. Aus: Die Route behält ihn, damit Ihr Eure Karte unterwegs aufräumen könnt.",
     OPT_ASK_WAYPOINT  = "Route zu neuen Kartenwegpunkten anbieten",

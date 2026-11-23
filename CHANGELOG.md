@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- **A Mapzeroth button on the world map.** It sits in the map's top-left corner, below any other addon's buttons already there. Left-click shows or hides the Mapzeroth window, right-click opens the settings, and it can be hidden in the settings.
+
 ### Changed
 - **The step you're following stands out on every theme.** On the world map and minimap it's drawn in the theme's accent colour, as Daylight already did, and when the step changes the trip window and its row light up for a moment.
 

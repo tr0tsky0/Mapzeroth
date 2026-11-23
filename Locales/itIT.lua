@@ -102,6 +102,8 @@ addon:RegisterLocale("itIT", {
     OPT_MINIMAP_UNAVAILABLE = "La minimappa di questo client non può mostrare il percorso.",
     OPT_HIDE_MINIMAP  = "Nascondi il pulsante della minimappa",
     OPT_HIDE_MINIMAP_DESC = "Nasconde il pulsante di Mapzeroth sulla minimappa. /mapzeroth apre comunque la finestra.",
+    OPT_HIDE_MAP_BUTTON = "Nascondi il pulsante della mappa",
+    OPT_HIDE_MAP_BUTTON_DESC = "Nasconde il pulsante di Mapzeroth nell'angolo della mappa del mondo. /mapzeroth apre comunque la finestra.",
     OPT_DROP_TOMTOM   = "Togli le tappe rimosse da TomTom",
     OPT_DROP_TOMTOM_DESC = "Mentre segui un percorso tra i tuoi punti TomTom, eliminarne uno in TomTom lo toglie dal percorso e ripianifica il resto. Disattivato: il percorso lo mantiene, così puoi riordinare la mappa una volta in viaggio.",
     OPT_ASK_WAYPOINT  = "Offri un percorso verso i nuovi punti di riferimento",

@@ -1832,6 +1832,7 @@ function Panel:Init()
     end)
     WorldMapFrame:HookScript("OnShow", function() Panel:OnMapShown() end)
     addon.RouteLines:Init()
+    addon.MapButton:Init()
     WorldMapFrame:HookScript("OnSizeChanged", function()
         if ui and ui.frame:IsShown() then Panel:Reanchor() end
     end)
