@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.6.0 (Forever) and 2.3.0 (Retail)
 
 ### Added
 - **A Mapzeroth button on the world map.** It sits in the map's top-left corner, below any other addon's buttons already there. Left-click shows or hides the Mapzeroth window, right-click opens the settings, and it can be hidden in the settings.
