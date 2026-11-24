@@ -29,6 +29,7 @@ local seen                      -- the id of the waypoint last looked at (asked 
 local seenQuest                 -- likewise the quest followed
 local ready = false             -- past login: before that, a waypoint is the one the player already had
 local lastSpot, lastAt          -- the place last asked about or routed to from here, and when (GetTime)
+local following                 -- { questID, spot }: the quest a trip was started to, carried on to its next spot
 
 local function build()
     ui = {}
@@ -235,6 +236,7 @@ function WaypointPrompt:OnQuestChanged()
     local questID = trackedQuest()
     if questID == seenQuest then return end
     seenQuest = questID
+    if following and following.questID ~= questID then following = nil end   -- another quest (or none): that one is let go
     if self:IsQuestShown() and not (questID == nil and sameSpot(ui.spot, addon:GetWaypoint())) then self:Hide() end
     local mode = addon.Options:Get("autoQuestRoute")
     if not (questID and ready) or mode == "off" or headingToQuest(questID) then return end
@@ -247,6 +249,44 @@ function WaypointPrompt:OnQuestChanged()
     elseif not justAsked(quest) then
         self:ShowQuest(quest)
     end
+end
+
+-- A trip started from the panel (Panel:StartRoute; its entry). One to a quest is followed on: when that quest's spot
+-- moves (an objective done, the hand-in next) the route goes on to the new spot (OnQuestSpotChanged). Any other trip
+-- ends that, but the run back to the corpse, which takes the quest trip up again after (Corpse.lua).
+function WaypointPrompt:OnTripStarted(entry)
+    local dest = entry and entry.dest
+    if dest and dest.corpse then return end
+    if dest and dest.questID then
+        following = { questID = dest.questID, spot = dest }
+    else
+        following = nil
+    end
+end
+
+-- The trip was stopped by the player (Navigator:Stop on the way, not on arriving): a quest's stops being followed on.
+function WaypointPrompt:OnTripStopped(entry)
+    local dest = entry and entry.dest
+    if following and dest and dest.questID == following.questID then following = nil end
+end
+
+-- The quest log or its map markers changed (Core.lua, QUEST_LOG_UPDATE and QUEST_POI_UPDATE). The quest followed on,
+-- still the one tracked, whose spot is now somewhere else: routed to there, whether the trip to its last spot has got
+-- there or is still on the way. A trip going somewhere else is let be (the corpse run: the quest trip comes back
+-- after it). A quest with no spot just now waits for the next change.
+function WaypointPrompt:OnQuestSpotChanged()
+    if not (following and ready) then return end
+    if trackedQuest() ~= following.questID then
+        following = nil
+        return
+    end
+    local entry = addon.Navigation:ReplanTarget()
+    if entry and not (entry.dest and entry.dest.questID == following.questID) then return end
+    local quest = addon:GetQuestTarget(following.questID)
+    if not quest or sameSpot(quest, following.spot) then return end
+    following.spot = quest
+    remember(quest)
+    addon.Panel:RouteToQuest(following.questID)
 end
 
 -- Login and /reload: the waypoint set then is the one the player already had, so it isn't asked about.

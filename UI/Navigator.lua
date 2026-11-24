@@ -491,6 +491,8 @@ function Navigator:Stop()
         ui.arrivedAt = nil
         running(false)
     end
+    local onTheWay = Navigation:ReplanTarget()         -- nil once it has got there: stopped by the player otherwise
+    if onTheWay and addon.WaypointPrompt then addon.WaypointPrompt:OnTripStopped(onTheWay) end
     Navigation:Stop()
     addon.Equipment:Sync(nil)
     if addon.RouteLines then addon.RouteLines:Follow(nil) end

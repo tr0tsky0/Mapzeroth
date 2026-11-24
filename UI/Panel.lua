@@ -1358,6 +1358,7 @@ end
 function Panel:StartRoute()
     if not (state.plan and state.entry and #state.plan.steps > 0) then return end
     addon.Navigation:Start(state.planned or state.entry, state.plan)
+    addon.WaypointPrompt:OnTripStarted(state.entry)     -- a quest's trip goes on to its next spot
     state.pinned = true
     ui.start:SetShown(false)
     showTripChoice()

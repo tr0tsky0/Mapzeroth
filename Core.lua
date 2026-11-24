@@ -29,6 +29,7 @@ frame:RegisterEvent("UI_INFO_MESSAGE")
 pcall(frame.RegisterEvent, frame, "USER_WAYPOINT_UPDATED")
 pcall(frame.RegisterEvent, frame, "SUPER_TRACKING_CHANGED")
 frame:RegisterEvent("QUEST_LOG_UPDATE")
+pcall(frame.RegisterEvent, frame, "QUEST_POI_UPDATE")
 pcall(frame.RegisterEvent, frame, "CALENDAR_UPDATE_EVENT_LIST")
 frame:SetScript("OnEvent", function(_, event, ...)
     if event == "ADDON_LOADED" then
@@ -56,8 +57,9 @@ frame:SetScript("OnEvent", function(_, event, ...)
         addon.WaypointPrompt:OnWaypointChanged()
         if event == "SUPER_TRACKING_CHANGED" then addon.WaypointPrompt:OnQuestChanged() end
         return
-    elseif event == "QUEST_LOG_UPDATE" then
-        addon.Panel:OnQuestLogUpdate()
+    elseif event == "QUEST_LOG_UPDATE" or event == "QUEST_POI_UPDATE" then
+        if event == "QUEST_LOG_UPDATE" then addon.Panel:OnQuestLogUpdate() end
+        addon.WaypointPrompt:OnQuestSpotChanged()
         return
     elseif event == "CALENDAR_UPDATE_EVENT_LIST" then
         -- The calendar has loaded (or changed): what holidays are on can be asked now. The first answer can come after

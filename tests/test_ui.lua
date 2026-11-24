@@ -1936,11 +1936,12 @@ do
     local WP, Nav = addon.WaypointPrompt, addon.Navigation
     Nav:Stop()
     local followed = 0
+    local q125 = { 0.55, 0.45 }                           -- where quest 125's marker is (moved when an objective is done)
     local realTrack, realLog, realUiMap = C_SuperTrack, C_QuestLog, GetQuestUiMapID
     C_SuperTrack = { GetSuperTrackedQuestID = function() return followed end }
     C_QuestLog = setmetatable({
         GetQuestsOnMap = function() return { { questID = 123, x = 0.45, y = 0.35 }, { questID = 124, x = 0.5, y = 0.4 },
-                                              { questID = 125, x = 0.55, y = 0.45 } } end,
+                                              { questID = 125, x = q125[1], y = q125[2] } } end,
         GetTitleForQuestID = function(id) return "Quest " .. id end,
         IsQuestFlaggedCompleted = function() return false end,
     }, { __index = realLog })
@@ -2041,6 +2042,67 @@ do
     spot = nil
     WP:OnWaypointChanged()
     C_Map.HasUserWaypoint, C_Map.GetUserWaypoint = nil, nil
+
+    -- A quest routed to is followed on: its marker moving (the objective done, the hand-in next) routes to the new
+    -- spot, after the trip got there or on the way; not once another quest is tracked, nor after Stop on the way.
+    local function arrive()
+        for i = 1, 40 do
+            local entry = Nav:ReplanTarget()
+            if not entry then break end
+            local d = entry.dest
+            Nav:Update({ mapID = d.mapID, x = d.x, y = d.y, now = i * 30 })
+        end
+    end
+    local function destX() local e = Nav:ReplanTarget(); return e and e.dest and e.dest.x end
+    Options:Set("autoQuestRoute", "on")
+    followed = 0
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    check(Nav:IsActive() and destX() and math.abs(destX() - 0.55) < 1e-6, "follow: the route to the quest")
+    arrive()
+    check(Nav:ReplanTarget() == nil, "follow: got there")
+    WP:OnQuestSpotChanged()
+    check(Nav:ReplanTarget() == nil, "follow: a quest log change that moves nothing plans nothing")
+    q125[1], q125[2] = 0.40, 0.60                         -- 10/10: hand in somewhere else
+    WP:OnQuestSpotChanged()
+    check(destX() and math.abs(destX() - 0.40) < 1e-6, "follow: the marker moved, on to the hand-in")
+    q125[1], q125[2] = 0.42, 0.62                         -- moved again while on the way
+    WP:OnQuestSpotChanged()
+    check(destX() and math.abs(destX() - 0.42) < 1e-6, "follow: and on the way too")
+    addon.Navigator:Stop()                                -- the player stops it on the way
+    q125[1], q125[2] = 0.30, 0.30
+    WP:OnQuestSpotChanged()
+    check(not Nav:IsActive(), "follow: stopped on the way, it isn't followed on")
+    -- Arrived (the trip ends on its own, Navigator:Stop after it lingers), then another quest is tracked.
+    Options:Set("autoQuestRoute", "ask")
+    followed = 0
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    WP:Answer("route")
+    check(Nav:IsActive(), "follow: routed from the question")
+    arrive()
+    addon.Navigator:Stop()
+    q125[1], q125[2] = 0.35, 0.65
+    WP:OnQuestSpotChanged()
+    check(destX() and math.abs(destX() - 0.35) < 1e-6, "follow: after the window closed on arriving, still followed")
+    arrive()
+    Options:Set("autoQuestRoute", "off")
+    followed = 124
+    WP:OnQuestChanged()
+    q125[1], q125[2] = 0.55, 0.45
+    WP:OnQuestSpotChanged()
+    check(Nav:ReplanTarget() == nil, "follow: another quest tracked, it isn't followed on")
+    -- Another trip started instead (a place picked in the panel): that ends it too.
+    followed = 125
+    WP:OnTripStarted({ dest = { questID = 125, mapID = 1453, x = 0.55, y = 0.45 } })
+    WP:OnTripStarted({ dest = { mapID = 1453, x = 0.1, y = 0.1 } })
+    q125[1], q125[2] = 0.40, 0.60
+    WP:OnQuestSpotChanged()
+    check(Nav:ReplanTarget() == nil, "follow: another trip started, it isn't followed on")
+    Nav:Stop()
+    q125[1], q125[2] = 0.55, 0.45
     Options:Set("autoQuestRoute", "off")
 
     C_SuperTrack, C_QuestLog, GetQuestUiMapID = realTrack, realLog, realUiMap
