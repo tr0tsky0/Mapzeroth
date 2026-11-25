@@ -8,8 +8,13 @@ local addonName, addon = ...
 if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
 
 addon:RegisterLocale("enUS", {
+    NODE_INSTANCE_ALCAZ_PRISON = "Alcaz Prison",
+    NODE_INSTANCE_BLACKMAW_HOLD = "Blackmaw Hold",
+    NODE_INSTANCE_THE_SHAPERS_TERRACE = "The Shaper's Terrace",
     NODE_INSTANCE_CITY_OF_DALARAN = "City of Dalaran",
     NODE_INSTANCE_EXCAVATION_SITE_WETLANDS = "Excavation Site: Wetlands",
+    NODE_INSTANCE_KROLDOK_STRONGHOLD = "Krol'dok Stronghold",
     NODE_INSTANCE_RUINS_OF_LORDAERON = "Ruins of Lordaeron",
+    NODE_INSTANCE_THE_DROWNED_CITY = "The Drowned City",
     NODE_INSTANCE_THE_HALL_OF_THANES = "The Hall of Thanes",
 })
