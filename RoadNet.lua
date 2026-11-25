@@ -259,31 +259,45 @@ local function steepRow(s, r)
     return row
 end
 
-local function isSteep(s, x, y)
-    local row = steepRow(s, math.floor((s.origin - x) / s.cell))
-    if not row then return false end
-    local c = math.floor((s.origin - y) / s.cell)
-    local lo, hi = 1, #row / 2                       -- the last run starting at or before c
-    if c < row[1] then return false end
-    while lo < hi do
-        local mid = math.floor((lo + hi + 1) / 2)
-        if row[2 * mid - 1] <= c then lo = mid else hi = mid - 1 end
-    end
-    return c < row[2 * lo]
-end
-
 -- Yards of the straight line from (ax, ay) to (bx, by) over steep ground: sampled every cell, and on a long line at
--- most STEEP_SAMPLES times (a thin cliff band can slip between them, a mountain can't).
+-- most STEEP_SAMPLES times (a thin cliff band can slip between them, a mountain can't). The road search asks this
+-- for a line from every road point it reaches, so it is written as one loop: a sample's row (its runs, decoded once)
+-- is kept while the next samples fall in it, and the cell is found in the row by halving. `atMost` (optional): the
+-- search only needs to know whether the line has more steep yards than that, so it stops counting once it has (the
+-- answer is then more than atMost, not the full count).
 local STEEP_SAMPLES = 100
-local function steepYards(s, ax, ay, bx, by)
+local floor = math.floor
+local function steepYards(s, ax, ay, bx, by, atMost)
     if not s then return 0 end
     local len = math.sqrt((bx - ax) ^ 2 + (by - ay) ^ 2)
-    local n = math.min(math.ceil(len / s.cell), STEEP_SAMPLES)
+    local cell, origin, decoded = s.cell, s.origin, s.decoded
+    local n = math.min(math.ceil(len / cell), STEEP_SAMPLES)
     if n < 1 then return 0 end
+    local enough = atMost and atMost * n / len or n     -- hits past this many say "more than atMost"
     local hits = 0
     local dx, dy = (bx - ax) / n, (by - ay) / n
+    local lastR, row, runs
     for i = 0, n - 1 do
-        if isSteep(s, ax + dx * (i + 0.5), ay + dy * (i + 0.5)) then hits = hits + 1 end
+        local r = floor((origin - (ax + dx * (i + 0.5))) / cell)
+        if r ~= lastR then
+            lastR, row = r, decoded[r]
+            if row == nil then row = steepRow(s, r) end
+            runs = row and #row / 2
+        end
+        if row then
+            local c = floor((origin - (ay + dy * (i + 0.5))) / cell)
+            if c >= row[1] then
+                local lo, hi = 1, runs                   -- the last run starting at or before c
+                while lo < hi do
+                    local mid = floor((lo + hi + 1) / 2)
+                    if row[2 * mid - 1] <= c then lo = mid else hi = mid - 1 end
+                end
+                if c < row[2 * lo] then
+                    hits = hits + 1
+                    if hits > enough then break end
+                end
+            end
+        end
     end
     return hits / n * len
 end
@@ -394,7 +408,7 @@ function RoadNet:HopCount(continent)
 end
 
 -- For tests (a different RoadData, RoadWater or RoadSteep): forget the built graphs.
-function RoadNet:Reset() graphs = {}; waters = {}; steeps = {} end
+function RoadNet:Reset() graphs = {}; waters = {}; steeps = {}; self:ClearRoutes() end
 
 -- Every segment with some part within `radius` of (x, y) (by grid cell: a few more, never fewer).
 local function segmentsNear(g, x, y, radius)
@@ -556,8 +570,29 @@ end
 -- yards (A onto the road, along it, off it to B), the straight line's length, and the points to draw between A and
 -- B ({ x, y } each: where it joins the road, along it, where it leaves). nil when no road helps.
 -- `continent`: which graph, a continent or "city:<mapID>" (a city's walk keeps to its streets: streetsOnly).
+-- Each answer is kept (by its ends, k and flat) until Reset: a plan times its walks along the road and the map then
+-- draws the same walks, and a long one can take a tenth of a second. Callers must not change the points they get.
+local routes, routeCount = {}, 0
+local MAX_ROUTES = 4000
+local route
 function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
     k = k or self:Offroad()
+    local key = table.concat({ tostring(continent), ax, ay, bx, by, k, flat and 1 or 0 }, ",")
+    local hit = routes[key]
+    if hit then
+        if not hit[1] then return nil end
+        return hit[1], hit[2], hit[3]
+    end
+    local length, straight, points = route(self, continent, ax, ay, bx, by, k, flat)
+    if routeCount >= MAX_ROUTES then routes, routeCount = {}, 0 end
+    routes[key] = { length or false, straight, points }
+    routeCount = routeCount + 1
+    return length, straight, points
+end
+
+function RoadNet:ClearRoutes() routes, routeCount = {}, 0 end
+
+route = function(self, continent, ax, ay, bx, by, k, flat)
     local straight = math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2)
     if straight < self.MIN_WALK then return nil end
     local g = graphFor(continent)
@@ -569,10 +604,17 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
     -- stretch across country.
     local water, steep = waterFor(continent), not flat and steepFor(continent)
     local extra, climb = k * (self.WATER - 1), k * (self.STEEP - 1)
-    local function wet(x1, y1, x2, y2)
+    -- `room` (optional): the most the extra can be for the way being tried to still win. Past it the steep ground
+    -- isn't counted to the end (the way loses either way, and the answer is then more than room): most lines tried
+    -- from the road towards B lose, and counting their steep ground was nearly all of a long walk's time.
+    local function wet(x1, y1, x2, y2, room)
         local e = 0
         if water then e = extra * wetYards(water, x1, y1, x2, y2) end
-        if steep then e = e + climb * steepYards(steep, x1, y1, x2, y2) end
+        if steep then
+            local left = room and (room - e) / climb + 0.01   -- yards of steep ground; a hair over, so a cut answer is clearly over
+            if left and left < 0 then return e end
+            e = e + climb * steepYards(steep, x1, y1, x2, y2, left)
+        end
         return e
     end
     local direct = k * straight + wet(ax, ay, bx, by)
@@ -591,7 +633,9 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
             local qx, qy, cost, along = join(k, ax, ay, vx[from], vy[from], vx[to], vy[to])
             local L = cost - k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2)     -- road from the join to `to`
             local onto = k * math.sqrt((ax - qx) ^ 2 + (ay - qy) ^ 2)
-            local wetIn = (onto < best) and wet(ax, ay, qx, qy) or 0   -- any way that joins here costs at least `onto`
+            -- Any way that joins here costs at least `onto`. wetIn goes on the way along the road (which must stay under
+            -- direct) and on the one leaving again on this stretch (under best): it needs counting up to the larger room.
+            local wetIn = (onto < best) and wet(ax, ay, qx, qy, math.max(direct - cost, best - onto)) or 0
             cost = cost + wetIn
             if cost < direct and (not dist[to] or cost < dist[to]) then
                 dist[to], entry[to], prev[to] = cost, { x = qx, y = qy }, nil
@@ -604,7 +648,7 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
             if outFromStart > along then
                 local total = onto + wetIn + (outFromStart - along)
                     + k * math.sqrt((bx - ox) ^ 2 + (by - oy) ^ 2)
-                if total < best then total = total + wet(ox, oy, bx, by) end
+                if total < best then total = total + wet(ox, oy, bx, by, best - total) end
                 if total < best then
                     best, bestVia, bestExit = total, nil, nil
                     bestPoints = { { x = qx, y = qy }, { x = ox, y = oy } }
@@ -621,14 +665,14 @@ function RoadNet:Route(continent, ax, ay, bx, by, k, flat)
             closed[u] = true
             local du = dist[u]
             local off = du + k * h(u)
-            if off < best then off = off + wet(vx[u], vy[u], bx, by) end
+            if off < best then off = off + wet(vx[u], vy[u], bx, by, best - off) end
             if off < best then best, bestVia, bestExit, bestPoints = off, u, nil, nil end
             local list = adj[u]
             for n = 1, #list, 2 do
                 local v, w = list[n], list[n + 1]
                 -- Leaving part way along u -> v.
                 local ox, oy, cost = join(k, bx, by, vx[v], vy[v], vx[u], vy[u])
-                if du + cost < best then cost = cost + wet(ox, oy, bx, by) end
+                if du + cost < best then cost = cost + wet(ox, oy, bx, by, best - du - cost) end
                 if du + cost < best then best, bestVia, bestExit, bestPoints = du + cost, u, { x = ox, y = oy }, nil end
                 local nd = du + w
                 if not closed[v] and (not dist[v] or nd < dist[v]) and nd < best then

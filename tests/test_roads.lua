@@ -45,6 +45,19 @@ check(RoadNet:Route(8, 0, 0, 1000, 0) == nil, "no roads on a continent without d
 road = RoadNet:Route(7, 200, 0, 1800, 0)
 check(near(road, 1600), "straight along two lines that meet: " .. tostring(road))
 check(near((RoadNet:Nearest(7, 500, 30)), 30), "the nearest road is 30 yd off")
+-- A route is kept: asked again (a plan times a walk, then the map draws it) it is the same answer, not worked out
+-- again; by k too, and a walk with no road is kept as such. Reset forgets them.
+do
+    local _, _, first = RoadNet:Route(7, 0, -10, 1500, 400)
+    local len2, _, again = RoadNet:Route(7, 0, -10, 1500, 400)
+    check(again == first and near(len2, expect, 0.01), "the same walk again is the kept answer")
+    local _, _, otherK = RoadNet:Route(7, 0, -10, 1500, 400, 1.25)
+    check(otherK ~= first, "another k is its own route")
+    check(RoadNet:Route(7, 5000, 5000, 6000, 5000) == nil, "no road, kept as none")
+    RoadNet:Reset()
+    local _, _, fresh = RoadNet:Route(7, 0, -10, 1500, 400)
+    check(fresh ~= first, "Reset forgets kept routes")
+end
 
 -- Big water (RoadWater, a hand-drawn shore): a lake inside the L, x and y 200 to 800, and a pond out east. Across
 -- it a yard scores WATER (3) times open ground, and takes SWIM (1.5) times as long.
@@ -132,8 +145,10 @@ do
     local cap = RoadNet.MAX_DETOUR
     check(round < cap * straight, "the way round is within the cap: " .. round / straight)
     RoadNet.MAX_DETOUR = 1.2
+    RoadNet:ClearRoutes()                -- routes are kept, and the game never changes the cap: forget them here
     check(RoadNet:Route(7, 500, -100, 500, 400) == nil, "past the cap: straight up, as on flat ground")
     RoadNet.MAX_DETOUR = cap
+    RoadNet:ClearRoutes()
     addon.RoadSteep = shippedSteep
     RoadNet:Reset()
 end
@@ -312,6 +327,11 @@ do
         ("a walk drawn by the road takes the road's yards: %.1f s"):format(steps[1].seconds))
     check(steps[2].seconds == 50, "a flight keeps its time")
     check(addon.Journey:RetimeWalks(steps) == 0, "a step is timed again only once")
+    -- In a plan (MultiRoute's yield) each road route lets a frame go by if the frame's time is up.
+    local yields = 0
+    steps = { { method = "walk", seconds = 100, path = { from, to } } }
+    addon.Journey:RetimeWalks(steps, function() yields = yields + 1 end)
+    check(yields == 1, "the planner may yield after each walk's road route: " .. yields)
 
     addon.Options:Set("roadPreference", 1)                  -- drawn straight across
     steps = { { method = "walk", seconds = 100, path = { from, to } } }

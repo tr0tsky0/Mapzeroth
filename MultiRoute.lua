@@ -256,12 +256,12 @@ local function heading(number, leg)
     return L["ROUTE_STOP_HEADING"]:format(number, leg.name)
 end
 
--- Puts a tour's legs together as one plan.
-local function assemble(session, legs, dropped)
+-- Puts a tour's legs together as one plan. `yield` goes on to the walks' road routes, which can be long.
+local function assemble(session, legs, dropped, yield)
     local Journey = addon.Journey
     local plan = { cost = 0, fare = 0, steps = {}, raw = {}, legs = legs, dropped = dropped, money = session.ctx.money }
     for _, leg in ipairs(legs) do
-        leg.cost = leg.cost + Journey:RetimeWalks(leg.steps)      -- timed as the walks are drawn (once per step)
+        leg.cost = leg.cost + Journey:RetimeWalks(leg.steps, yield)      -- timed as the walks are drawn (once per step)
         plan.cost = plan.cost + leg.cost
         plan.fare = plan.fare + (leg.fare or 0)
         for _, step in ipairs(leg.steps) do plan.steps[#plan.steps + 1] = step end
@@ -308,7 +308,7 @@ function MultiRoute:Plan(session, entry, yield)
         leg.heading = heading(first.number or 1, leg)
         local legs = { leg }
         for _, kept in ipairs(entry.keep) do legs[#legs + 1] = kept end
-        return assemble(session, legs, {})
+        return assemble(session, legs, {}, yield)
     end
 
     -- 1. The time between every two places, without the one-use abilities. Each search stops once it has priced every
@@ -454,7 +454,7 @@ function MultiRoute:Plan(session, entry, yield)
         end
     end
     if #legs == 0 then return nil end
-    return assemble(session, legs, dropped)
+    return assemble(session, legs, dropped, yield)
 end
 
 -- Runs work(yield) a little at a time, so a long plan doesn't freeze the game (or run past the client's time limit for

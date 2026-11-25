@@ -297,8 +297,9 @@ end
 -- at the middle "Walking routes" setting; the player may have it keep to roads more or less than that, and the map
 -- draws the walk their way (RoadNet). So once a plan is chosen, each walk step is timed again for the way drawn: its
 -- seconds scaled by the yards drawn over the yards it was priced at. Returns the seconds added to the steps (less
--- than 0 when shorter), to put on the plan's total. A step is only timed again once.
-function Journey:RetimeWalks(steps)
+-- than 0 when shorter), to put on the plan's total. A step is only timed again once. `yield` (optional, MultiRoute's)
+-- is called after each road route, so a plan with long walks is spread over frames (one took 324 ms in one, 2026-11-24).
+function Journey:RetimeWalks(steps, yield)
     local RoadNet, TravelGraph = addon.RoadNet, addon.TravelGraph
     if not (RoadNet and addon.RoadData) then return 0 end
     local added = 0
@@ -318,6 +319,7 @@ function Journey:RetimeWalks(steps)
                 local a, b = by[i - 1], by[i]
                 local was = TravelGraph:WalkYards(a, b)
                 local road, _, _, _, drawOnly = RoadNet:Between(a, b)
+                if yield then yield() end
                 if drawOnly then road = was end           -- a measured city's walk keeps its measured time
                 local dist = not road and TravelGraph.DistanceProvider(a, b)
                 drawn = drawn + (road or (dist and dist * TravelGraph.PathFactor(a, b)) or was or 0)
