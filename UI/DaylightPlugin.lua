@@ -5,7 +5,8 @@ local addonName, addon = ...
 --   * a step that casts a spell or uses an item lights the action bar buttons holding it (API.Glow, 1.5);
 --   * a data text, "Mapzeroth: Route", for the strip under the minimap or the data bar: the step the trip is on and the
 --     time left, the steps to come in its tooltip, a click shows or hides the panel (AddDataText, 1.6);
---   * "Route with Mapzeroth" in the right-click menu of a quest: a click routes there (AddQuestMenu, 1.11).
+--   * "Route with Mapzeroth" in the right-click menu of a quest: a click routes there (AddQuestMenu, 1.11);
+--   * the navigator window fades with the rest of the UI on a flight path (RegisterFade).
 -- The navigator tells it of each update of the trip (OnTrip).
 
 local API = DaylightUI and DaylightUI.API
@@ -133,6 +134,21 @@ if type(my.AddQuestMenu) == "function" then
         label = L["QUEST_ROUTE_MENU"],
         show = Plugin.QuestHasRoute,
         onClick = function(quest) addon.QuestArrow.Route(quest and quest.questID) end,
+    })
+end
+
+-- ---------------------------------------------------------------------------------------
+-- The fade: the navigator window joins Daylight UI's fade engine. No fade choices of its own (Daylight's default,
+-- never), so it only goes with the whole UI: "Fade everything on a flight path", back on mouseover.
+
+if type(my.RegisterFade) == "function" then
+    local none = {}
+    my.RegisterFade({
+        key = "navigator",
+        frames = function()
+            local ui = addon.Navigator and addon.Navigator.widgets
+            return ui and ui.frame and { ui.frame } or none
+        end,
     })
 end
 

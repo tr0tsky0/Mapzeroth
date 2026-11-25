@@ -6,7 +6,7 @@
 check(addon.DaylightPlugin == nil, "without DaylightUI there is no plugin")
 
 local slots = {}                    -- button -> what GetActionInfo would say
-local glows, dataTexts, redraws, registered, questMenus = {}, {}, 0, nil, {}
+local glows, dataTexts, redraws, registered, questMenus, fades = {}, {}, 0, nil, {}, {}
 local function button(kind, id) local b = {}; slots[b] = { type = kind, id = id, empty = kind == nil }; return b end
 local hearth, teleport, macro, empty = button("item", 6948), button("spell", 3561), button("macro", 6948), button(nil)
 local hearth2 = button("item", 6948)
@@ -20,6 +20,7 @@ DaylightUI = {
                 AddDataText = function(key, spec) dataTexts[name .. ":" .. key] = spec; return true end,
                 UpdateDataText = function() redraws = redraws + 1 end,
                 AddQuestMenu = function(key, spec) questMenus[name .. ":" .. key] = spec; return true end,
+                RegisterFade = function(def) fades[name .. ":" .. def.key] = def; return true end,
             }
         end,
         Frames = function(kind)
@@ -43,6 +44,19 @@ check(registered and registered.name == "Mapzeroth" and registered.spec.addon ==
       "it registers as Mapzeroth, its details from the dev build's TOC")
 local route = dataTexts["Mapzeroth:route"]
 check(route and route.label == "Mapzeroth" and route.text and route.tooltip and route.click, "it adds the Route data text")
+
+-- The navigator window joins Daylight's fade with no choices of its own (never fades but with the whole UI). Its
+-- frame is built on first use: nothing to fade before that.
+local fade = fades["Mapzeroth:navigator"]
+check(fade and fade.scope == nil and fade.path == nil, "the navigator registers a fade with Daylight's defaults")
+local savedNav = addon.Navigator
+addon.Navigator = nil
+check(#fade.frames() == 0, "no navigator yet: no frames")
+local navFrame = {}
+addon.Navigator = { widgets = { frame = navFrame } }
+local list = fade.frames()
+check(#list == 1 and list[1] == navFrame, "once built, the navigator window fades")
+addon.Navigator = savedNav
 
 -- The trip, as Navigation would have it.
 local model, plan
