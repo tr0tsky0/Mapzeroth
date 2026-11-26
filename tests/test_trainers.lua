@@ -168,3 +168,33 @@ local herbs = find(function(n) return n.trainer == "HERBALISM" and n.city == "st
 check(relevant(herbs, { class = "MAGE", spells = { 2366, 2368 }, skills = { HERBALISM = 76 } }), "a Journeyman herbalist at 76 still sees the herbalism trainers")
 local firstAid = find(function(n) return n.trainer == "FIRSTAID" and n.city == "dalaran" end)
 check(relevant(firstAid, { class = "MAGE", spells = { 3273 }, skills = { FIRSTAID = 30 } }), "an Apprentice first aider at 30 still sees the first aid trainers")
+-- A Journeyman fisher has nothing left to learn from any trainer: Brannock (Feathermoon), whose Wowhead page lists
+-- no ranks, mustn't show as "unknown".
+local brannock = find(function(n) return n.id == "TRAINER_FISHING_7946" end)
+check(brannock and not relevant(brannock, { class = "MAGE", faction = "Alliance", spells = { 7620, 7731 }, skills = { FISHING = 142 } }),
+    "a Journeyman fisher doesn't see Brannock")
+
+-- Ranks no trainer teaches: Cooking, First Aid and Fishing's Expert is a book, their Artisan a quest.
+do
+    local function rel(id, overrides) return addon.Relevance:IsRelevant(addon.World:GetNode(id), makeCtx(overrides)) end
+    local journeyman = { 2550, 3102 }
+    check(rel("BOOK_COOKING_3955", { faction = "Alliance", spells = journeyman, skills = { COOKING = 146 } }),
+        "a Journeyman cook at 146 is sent to Shandrina for the Expert book")
+    check(not rel("BOOK_COOKING_3955", { faction = "Alliance", spells = journeyman, skills = { COOKING = 100 } }), "not below 125")
+    check(not rel("BOOK_COOKING_3955", { faction = "Alliance", spells = { 2550 }, skills = { COOKING = 146 } }), "not an Apprentice")
+    check(not rel("BOOK_COOKING_12033", { faction = "Alliance", spells = journeyman, skills = { COOKING = 146 } }), "not to the Horde's Wulan")
+    check(not rel("BOOK_COOKING_3955", { faction = "Alliance", spells = { 2550, 3102, 3413 }, skills = { COOKING = 146 } }), "not once they know Expert")
+    check(not rel("BOOK_COOKING_3955", { faction = "Alliance" }), "not without cooking")
+    check(rel("BOOK_FISHING_2626", { faction = "Horde", spells = { 7620, 7731 }, skills = { FISHING = 142 } }), "Old Man Heming sells to both")
+    local expert = { 2550, 3102, 3413 }
+    check(rel("RANKQUEST_COOKING_8125", { level = 40, spells = expert, skills = { COOKING = 225 } }), "an Expert cook at 225 and 40 is sent to Dirge")
+    check(not rel("RANKQUEST_COOKING_8125", { level = 34, spells = expert, skills = { COOKING = 225 } }), "not below level 35")
+    check(not rel("RANKQUEST_COOKING_8125", { level = 40, spells = expert, skills = { COOKING = 224 } }), "not below 225")
+    check(not rel("RANKQUEST_COOKING_8125", { level = 40, spells = journeyman, skills = { COOKING = 225 } }), "not before Expert")
+    -- Knowing Expert doesn't bring the Journeyman trainers back.
+    local cook = find(function(n) return n.trainer == "COOKING" and n.city == "stormwind" end)
+    check(not relevant(cook, { spells = expert, skills = { COOKING = 160 } }), "an Expert cook has no use for a trainer")
+end
+-- A book or quest place is named after who to talk to.
+check(addon:GetNodeName("BOOK_FISHING_2626") == "Old Man Heming", "the Booty Bay fishing book is Old Man Heming: " .. tostring(addon:GetNodeName("BOOK_FISHING_2626")))
+check(addon:GetNodeName("RANKQUEST_COOKING_8125") == "Dirge Quikcleave", "the Gadgetzan cooking quest is Dirge Quikcleave")

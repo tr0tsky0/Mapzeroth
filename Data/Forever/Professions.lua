@@ -27,20 +27,20 @@ addon.Professions = {
 -- player too far below its top rank: Trainers.lua). tools/gen_pois.py reads this too.
 addon.GatheringProfessions = { HERBALISM = true, MINING = true, SKINNING = true }
 
--- Every rank spell we've seen a trainer teach, lowest rank first (Apprentice, Journeyman,
+-- Every rank spell a trainer, book or quest gives, lowest rank first (Apprentice, Journeyman,
 -- Expert, Artisan). A player "has" a profession if they know its first rank, and their
--- rank is the highest of these they know. Only ranks some trainer teaches are listed:
--- Cooking, First Aid, Fishing and Enchanting have higher ranks (from books and quests)
--- that no trainer teaches, so they are missing here and don't need to be.
+-- rank is the highest of these they know. Cooking, First Aid and Fishing's Expert comes from a
+-- book and Artisan from a quest (Pois.lua's "book" and "rankquest" places). Enchanting's Artisan
+-- (a trainer inside Uldaman) isn't listed.
 -- tools/gen_pois.py reads this table too, so keep it one entry per line.
 addon.ProfessionRanks = {
     ALCHEMY        = { 2259, 3101, 3464, 11611 },
     BLACKSMITHING  = { 2018, 3100, 3538, 9785 },
-    COOKING        = { 2550, 3102 },
+    COOKING        = { 2550, 3102, 3413, 18260 },
     ENCHANTING     = { 7411, 7412, 7413 },
     ENGINEERING    = { 4036, 4037, 4038, 12656 },
-    FIRSTAID       = { 3273, 3274 },
-    FISHING        = { 7620, 7731 },
+    FIRSTAID       = { 3273, 3274, 7924, 10846 },
+    FISHING        = { 7620, 7731, 7732, 18248 },
     HERBALISM      = { 2366, 2368, 3570, 11993 },
     LEATHERWORKING = { 2108, 3104, 3811, 10662 },
     MINING         = { 2575, 2576, 3564, 10248 },

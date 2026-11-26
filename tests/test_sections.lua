@@ -477,3 +477,23 @@ do
     check(found[1] and found[1].nodeID == "MANKRIKS_WIFE", "searching finds her")
     check(addon.L["NODE_MANKRIKS_WIFE"] == "Mankrik's Wife", "by her name")
 end
+
+-- A profession whose next rank no trainer teaches: its pick goes to the book's vendors or the quest's giver instead.
+do
+    local function cooking(overrides)
+        for _, item in ipairs(allPicks((sectionsFor(overrides)))) do
+            if item.key == "prof_COOKING" then return item end
+        end
+    end
+    local trainer = cooking({ faction = "Alliance", spells = { 2550 }, skills = { COOKING = 60 } })
+    check(trainer and trainer.group == "trainer" and trainer.name == addon.L["PICK_PROFESSION"]:format("Cooking"), "an Apprentice cook: the trainer")
+    local book = cooking({ faction = "Alliance", spells = { 2550, 3102 }, skills = { COOKING = 146 } })
+    check(book and book.group == "book" and book.name == addon.L["PICK_PROF_BOOK"]:format("Cooking")
+        and #book.nodeIDs == 1 and book.nodeIDs[1] == "BOOK_COOKING_3955", "a Journeyman at 146: the book, from Shandrina")
+    check(not cooking({ faction = "Alliance", spells = { 2550, 3102 }, skills = { COOKING = 120 } }), "at 120, nothing yet")
+    local quest = cooking({ faction = "Alliance", level = 40, spells = { 2550, 3102, 3413 }, skills = { COOKING = 230 } })
+    check(quest and quest.group == "rankquest" and quest.name == addon.L["PICK_PROF_QUEST"]:format("Cooking"), "an Expert at 230: the quest")
+    check(not cooking({ faction = "Alliance", level = 40, spells = { 2550, 3102, 3413, 18260 }, skills = { COOKING = 260 } }), "an Artisan: nothing")
+    local tip = addon.Panel.TooltipLines(book, makeCtx({}))
+    check(tip and tip[2][1] == addon.L["TIP_PROF_BOOK"]:format("Cooking"), "the tooltip says what it's for")
+end

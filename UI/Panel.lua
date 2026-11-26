@@ -687,6 +687,13 @@ function Panel.TooltipLines(entry, ctx)
                  { L[entry.group == "leyline" and "TIP_LEYLINE" or "TIP_CONVERGENCE"], "body" } }
     elseif entry.group == "trainer" then
         return trainerLines(entry, ctx)
+    elseif entry.group == "book" or entry.group == "rankquest" then
+        -- Where a profession's next rank comes from when no trainer teaches it. A pick's profession is its places'.
+        local node = addon.World:GetNode(entry.nodeID)
+        local profession = node and addon:GetTrainerTypeName(node.trainer)
+        if not profession then return nil end
+        return { { entry.name, "title" },
+                 { L[entry.group == "book" and "TIP_PROF_BOOK" or "TIP_PROF_QUEST"]:format(profession), "body" } }
     end
 end
 

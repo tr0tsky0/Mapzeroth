@@ -8,7 +8,8 @@ local addonName, addon = ...
 --   Nearest              picks in three sections of their own (one with nothing in it isn't there):
 --     Trainers           their class trainer (and pet or demon trainer), a riding instructor that teaches a rank they
 --                        don't know, a weapon master that teaches a weapon they can learn and don't have, a trainer
---                        for each profession they have that still teaches them something
+--                        for each profession they have that still teaches them something (else, for Cooking, First
+--                        Aid and Fishing, where the next rank's book is sold or quest given)
 --     Vendors            a reagent vendor (a poison vendor for rogues; neither for classes with no reagents), an
 --                        innkeeper
 --     Other              an auction house, a bank, a stable master (hunters), a flight master
@@ -229,6 +230,7 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     local byExpansion = addon.PICKER_LAYOUT == "expansions"
     local flights, cities, towns, dungeons, raids = {}, {}, {}, {}, {}
     local trainers, tokens = {}, {}            -- token -> node ids of trainers worth going to
+    local sources = {}                         -- token -> { group = "book" | "rankquest", ids } (no trainer has the rank)
     local index = {}
     for _, entry in ipairs(entries) do
         if entry.group == "flight" then
@@ -240,6 +242,11 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
                 tokens[#tokens + 1] = entry.trainer
             end
             table.insert(trainers[entry.trainer], entry.nodeID)
+            index[entry.nodeID] = entry
+        elseif (entry.group == "book" or entry.group == "rankquest") and entry.relevant and entry.trainer then
+            -- Where the next rank of a profession comes from when no trainer teaches it: one kind at a time.
+            sources[entry.trainer] = sources[entry.trainer] or { group = entry.group, ids = {} }
+            table.insert(sources[entry.trainer].ids, entry.nodeID)
             index[entry.nodeID] = entry
         elseif entry.group == "place" and entry.relevant and not byExpansion then
             table.insert(entry.kind == "city" and cities or towns, entry)
@@ -285,12 +292,20 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     end
     if trainers.RIDING then push(trainerPicks, pick(L["PICK_RIDING"], "trainer", trainers.RIDING, "riding")) end
     if trainers.WEAPON then push(trainerPicks, pick(L["PICK_WEAPON"], "trainer", trainers.WEAPON, "weapon")) end
-    -- One pick per profession they have, in alphabetical order of the client's name for it.
+    -- One pick per profession they have, in alphabetical order of the client's name for it: its trainer, or when no
+    -- trainer teaches the next rank, where its book is sold or its quest given (the same setting hides either).
     local have = {}
     for _, token in ipairs(tokens) do have[token] = true end
+    for token in pairs(sources) do have[token] = true end
     for _, profession in ipairs(professionList(have)) do
-        push(trainerPicks, pick(L["PICK_PROFESSION"]:format(profession.name), "trainer", trainers[profession.token],
-            "prof_" .. profession.token))
+        local token, source = profession.token, sources[profession.token]
+        if trainers[token] then
+            push(trainerPicks, pick(L["PICK_PROFESSION"]:format(profession.name), "trainer", trainers[token], "prof_" .. token))
+        else
+            table.sort(source.ids)
+            push(trainerPicks, pick(L[source.group == "book" and "PICK_PROF_BOOK" or "PICK_PROF_QUEST"]:format(profession.name),
+                source.group, source.ids, "prof_" .. token))
+        end
     end
     -- Inns, banks, auction houses of their faction's settlements and neutral ones; stable masters for hunters and
     -- vendors of this class's reagents, of their faction (Relevance). Read from the nodes, not the entries: Modern's

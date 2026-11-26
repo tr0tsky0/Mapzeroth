@@ -150,6 +150,21 @@ function Trainers:RelevantNPCs(node, ctx)
     return result
 end
 
+-- A rank no trainer teaches (Cooking, First Aid and Fishing's Expert and Artisan): a place selling its book
+-- (kind "book") or giving its quest ("rankquest"). Worth going to when it gives the player's next rank, they have
+-- the skill and level it needs (`skill`, `level`; a skill the client can't tell: no gate), and an NPC there
+-- serves their faction.
+function Trainers:IsRankSourceRelevant(node, ctx)
+    local eligible, wanted, gate = needFor(node, ctx)
+    if not (eligible and gate) then return false end
+    if node.skill and gate.skill and gate.skill < node.skill then return false end
+    if node.level and ctx.level and ctx.level < node.level then return false end
+    for _, npc in ipairs(node.npcs or {}) do
+        if serves(npc, ctx) and npc.teaches and teachesUnknown(npc, ctx, wanted) then return true end
+    end
+    return false
+end
+
 -- True if this place is worth showing this player by default.
 function Trainers:IsRelevant(node, ctx)
     if node.kind ~= "trainer" then return true end

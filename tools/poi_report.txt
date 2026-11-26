@@ -8,7 +8,7 @@ Held back (unconfirmed new Forever content; confirm in game and capture with `/m
   Riverglades: 3 reagent NPC(s)
   a continent map (no exact position): 1 trainer NPC(s)
 
-100 places outside any city or town (starter areas and the like), which keep a zone-based name:
+104 places outside any city or town (starter areas and the like), which keep a zone-based name:
   DEMON trainer on map 1411 at (40.6, 68.4)
   WARRIOR trainer on map 1411 at (42.8, 69.4)
   HUNTER trainer on map 1411 at (42.8, 69.2)
@@ -32,6 +32,7 @@ Held back (unconfirmed new Forever content; confirm in game and capture with `/m
   HUNTER trainer on map 1412 at (44.2, 75.8)
   SHAMAN trainer on map 1412 at (45.0, 76.0)
   MAGE trainer on map 1412 at (35.7, 30.1)
+  FIRSTAID trainer on map 1417 at (27.0, 58.8)
   reagent on map 1417 at (27.0, 58.8)
   LEATHERWORKING trainer on map 1417 at (28.2, 45.0)
   LEATHERWORKING trainer on map 1418 at (62.5, 57.5)
@@ -89,6 +90,7 @@ Held back (unconfirmed new Forever content; confirm in game and capture with `/m
   ENCHANTING trainer on map 1438 at (36.8, 34.2)
   FISHING trainer on map 1438 at (55.8, 93.5)
   SKINNING trainer on map 1438 at (42.0, 50.0)
+  COOKING trainer on map 1440 at (49.5, 67.0)
   FISHING trainer on map 1440 at (10.8, 33.5)
   PET trainer on map 1440 at (18.0, 60.0)
   HUNTER trainer on map 1440 at (50.0, 67.8)
@@ -99,6 +101,8 @@ Held back (unconfirmed new Forever content; confirm in game and capture with `/m
   HUNTER trainer on map 1440 at (18.0, 59.8)
   LEATHERWORKING trainer on map 1443 at (55.2, 56.2)
   LEATHERWORKING trainer on map 1444 at (89.4, 46.5)
+  FIRSTAID trainer on map 1445 at (36.5, 30.5)
+  FISHING trainer on map 1445 at (58.5, 60.0)
   reagent on map 1445 at (36.5, 30.5)
   LEATHERWORKING trainer on map 1447 at (37.5, 65.5)
   PET trainer on map 1448 at (62.2, 24.2)

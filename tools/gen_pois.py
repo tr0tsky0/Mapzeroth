@@ -52,7 +52,11 @@ TRAINER_FILES = ["class_trainers.tsv", "class_trainers_towns.tsv", "class_traine
                  "weapon_riding_trainers.tsv", "pet_trainers.tsv", "demon_trainers.tsv",
                  "profession_trainers.tsv"]
 PREFIX = {"inn": "INN", "bank": "BANK", "auction": "AUCTION", "trainer": "TRAINER",
-          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE", "reagent": "REAGENT"}
+          "battlemaster": "BATTLEMASTER", "stable": "STABLE", "entrance": "ENTRANCE", "reagent": "REAGENT",
+          "book": "BOOK", "rankquest": "RANKQUEST"}
+# Where a profession rank no trainer teaches comes from (rank_sources.tsv, from Wowhead Forever's item and quest
+# pages): a vendor of the rank's book (kind "book") or the giver of the rank's quest (kind "rankquest").
+RANK_SOURCE_KINDS = {"book": "book", "quest": "rankquest"}
 # Ley lines and elemental convergences aren't Mapzeroth data any more: the "Nearest" pick reads them
 # from Skyborne Leyline & Convergence Marker (SLLCM_GetNodes, LeyShare.lua). A capture of one is refused.
 NOT_OURS = {"leyline", "convergence"}
@@ -280,6 +284,25 @@ def load_npcs():
     return npcs
 
 
+def load_rank_sources():
+    """tools/poi_source/rank_sources.tsv: id, name, what (tag or quest), uiMap, map name, coords, profession,
+    book|quest, the rank spell it gives, the skill it needs, the level it needs (or empty), the faction it serves
+    (empty: both)."""
+    npcs = []
+    for line in (SRC / "rank_sources.tsv").read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        cols = line.split("\t")
+        npc_id, name, _what, map_id, _map_name, coords, token, source, spell, skill, level, side = cols[:12]
+        pts = [tuple(float(v) for v in c.split(",")) for c in coords.split()]
+        pos = to_forever(int(map_id), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+        npcs.append({"kind": RANK_SOURCE_KINDS[source], "trainer": token, "id": int(npc_id), "label": npc_id,
+                     "captured": False, "map": int(map_id), "pos": pos, "teaches": [int(spell)],
+                     "side": side or None, "skill": int(skill), "level": int(level) if level else None,
+                     "name": name})
+    return npcs
+
+
 def load_trainers():
     trainers, skipped = [], collections.Counter()
     for filename in TRAINER_FILES:
@@ -300,6 +323,10 @@ def load_trainers():
             tier = None
             if kind in PROFESSION_TOKENS and kind not in GATHERING and not specialty:
                 tier = TITLE_TIERS.get(tag.split(" ")[0].lower())
+            # A plain profession trainer whose Wowhead page lists no ranks (Brannock, Katoom, Lui'Mala) teaches
+            # what every other one does; left empty, the addon shows it to everyone as "unknown".
+            if not teaches and kind in PROFESSION_TOKENS and not specialty and not tier:
+                teaches = captured_teaches(kind)
             trainers.append({"kind": "trainer", "trainer": kind, "id": int(npc_id), "label": npc_id,
                              "captured": False, "map": int(map_id), "pos": pos, "teaches": teaches,
                              "specialty": specialty, "tier": tier})
@@ -489,6 +516,7 @@ def main():
     npcs = load_npcs()
     trainers, skipped_tags = load_trainers()
     npcs += trainers
+    npcs += load_rank_sources()
     settlements = load_settlements()
     fms = load_flight_masters()
     npcs += load_captured(settlements)
@@ -527,7 +555,7 @@ def main():
         if same_map:
             taxi[key] = min(same_map, key=lambda f: dist(f["pos"], t["pos"]))["id"]
 
-    unassigned, out_nodes, counts = [], [], collections.Counter()
+    unassigned, out_nodes, counts, npc_names = [], [], collections.Counter(), []
     used_ids = set()
     for p in sorted(places, key=lambda p: (p["map"], p["kind"], p["label"])):
         if p["standalone"]:
@@ -571,6 +599,10 @@ def main():
             classes = ("classes = { " + ", ".join(f'"{c}"' for c in m["classes"]) + " }") if m.get("classes") else ""
             npc_entries.append("{ " + ", ".join(x for x in (ident_part, faction, specialty, classes, teaches) if x) + " }")
         npc_field = f", npcs = {{ {', '.join(npc_entries)} }}" if npc_entries else ""
+        if p["kind"] in RANK_SOURCE_KINDS.values():
+            lead = p["members"][0]             # one source's NPCs at a place need the same skill and level
+            npc_field += f", skill = {lead['skill']}" + (f", level = {lead['level']}" if lead["level"] else "")
+            npc_names.append((ident, " / ".join(m["name"] for m in p["members"])))   # named after who to talk to
         area_field = ""
         if p["kind"] == "entrance":
             area = next((m.get("area") for m in p["members"] if m.get("area")), None)
@@ -641,6 +673,7 @@ def main():
         "--",
         "-- English names for cities and towns that have no flight master to take a name from.",
         "-- Move one out of here by giving it an `area` id whose client name matches.",
+        "-- Also the NPCs at a profession's book and quest places (NODE_<id>), which are named after them.",
         "",
         "local addonName, addon = ...",
         "if addon.RULESET ~= \"forever\" then return end   -- one addon for both games: this data is Forever's (Constants.lua)",
@@ -650,6 +683,8 @@ def main():
     for key, t in sorted(settlements.items()):
         if key not in taxi and not t.get("area"):
             strings.append(f'    {"CITY" if t["type"] == "city" else "TOWN"}_{key.upper()} = "{t["name"]}",')
+    for ident, name in sorted(npc_names):
+        strings.append(f'    NODE_{ident} = "{name}",')
     strings += ["})", ""]
     (ROOT / "Data" / "Forever" / "TownNames_enUS.lua").write_text("\n".join(strings), encoding="utf-8")
 

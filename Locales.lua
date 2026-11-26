@@ -85,6 +85,9 @@ addon:RegisterLocale("enUS", {
     NODE_KIND_SETTLEMENT = "%s",
     -- First %s is the settlement (or zone), second is what it trains.
     NODE_KIND_TRAINER  = "%s %s Trainer",
+    -- The same for where a profession's next rank comes from when no trainer teaches it: its book's vendor, its quest's giver.
+    NODE_KIND_BOOK     = "%s %s Book",
+    NODE_KIND_RANKQUEST = "%s %s Quest",
 
     -- Trainer types that aren't a class (class names come from the client).
     TRAINER_WEAPON     = "Weapon",

@@ -10,6 +10,8 @@ addon.Relevance = Relevance
 function Relevance:IsRelevant(node, ctx)
     if node.kind == "trainer" then
         return addon.Trainers:IsRelevant(node, ctx)
+    elseif node.kind == "book" or node.kind == "rankquest" then
+        return addon.Trainers:IsRankSourceRelevant(node, ctx)
     elseif node.kind == "leyline" then
         -- Alliance Skyborne only: the ones who can Read Ley Line.
         return ctx.faction == "Alliance" and addon.LeyLineSpell ~= nil and ctx.knowsSpell(addon.LeyLineSpell)

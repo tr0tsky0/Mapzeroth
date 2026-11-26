@@ -231,7 +231,7 @@ local function resolve(nodeID)
             if poison and not other then pattern = "NODE_KIND_POISON" end
         end
         if not (where and addon:HasString(pattern)) then return nil end
-        if node.kind == "trainer" then
+        if node.kind == "trainer" or node.kind == "book" or node.kind == "rankquest" then
             local what = trainerTypeName(node.trainer)
             return what and L[pattern]:format(where, what) or nil
         end

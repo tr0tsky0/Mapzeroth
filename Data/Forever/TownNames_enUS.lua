@@ -2,6 +2,7 @@
 --
 -- English names for cities and towns that have no flight master to take a name from.
 -- Move one out of here by giving it an `area` id whose client name matches.
+-- Also the NPCs at a profession's book and quest places (NODE_<id>), which are named after them.
 
 local addonName, addon = ...
 if addon.RULESET ~= "forever" then return end   -- one addon for both games: this data is Forever's (Constants.lua)
@@ -15,4 +16,13 @@ addon:RegisterLocale("enUS", {
     TOWN_LAKESHIRE = "Lakeshire",
     TOWN_LIGHTS_HOPE_CHAPEL = "Light's Hope Chapel",
     TOWN_RAZOR_HILL = "Razor Hill",
+    NODE_BOOK_COOKING_12033 = "Wulan",
+    NODE_BOOK_COOKING_3955 = "Shandrina",
+    NODE_BOOK_FIRSTAID_13476 = "Balai Lok'Wein",
+    NODE_BOOK_FIRSTAID_2805 = "Deneb Walker",
+    NODE_BOOK_FISHING_2626 = "Old Man Heming",
+    NODE_RANKQUEST_COOKING_8125 = "Dirge Quikcleave",
+    NODE_RANKQUEST_FIRSTAID_12920 = "Doctor Gregory Victor",
+    NODE_RANKQUEST_FIRSTAID_12939 = "Doctor Gustaf VanHowzen",
+    NODE_RANKQUEST_FISHING_12919 = "Nat Pagle",
 })

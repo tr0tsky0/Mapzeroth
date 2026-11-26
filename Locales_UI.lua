@@ -235,6 +235,8 @@ addon:RegisterLocale("enUS", {
     PICK_PET          = "Pet Trainer",
     PICK_DEMON        = "Demon Trainer",
     PICK_PROFESSION   = "%s Trainer",
+    PICK_PROF_BOOK    = "%s Book",
+    PICK_PROF_QUEST   = "%s Quest",
     PICK_WEAPON       = "Weapon Trainer",
     PICK_STABLE       = "Stable Master",
     PICK_REAGENT      = "Reagent Vendor",
@@ -268,6 +270,8 @@ addon:RegisterLocale("enUS", {
     TIP_CLASS_NEXT    = "More at level %d",
     TIP_CLASS_COST    = "Cost: %s",
     TIP_LEYLINE       = "A potential ley line: one can appear here, but it may not be up right now.",
+    TIP_PROF_BOOK     = "Sells the book for your next %s rank.",
+    TIP_PROF_QUEST    = "Gives the quest for your next %s rank.",
     TIP_CONVERGENCE   = "A potential elemental convergence: one can appear here, but it may not be up right now.",
     -- Sharing sightings (LeyShare.lua, UI/SharePrompt.lua). The addon's name stays in English.
     DISCORD_TITLE     = "Mapzeroth on Discord",
