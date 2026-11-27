@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.7.0 (Forever) and 2.4.0 (Retail)
+
+### Added
+- **Distances in yards or metres.** A new setting under Look. It changes the distance in the trip window and, on Retail, the distance under the game's waypoint marker. It starts on metres unless your game is in English outside Europe.
+- **Quest routes carry on.** A route to a quest goes on to the quest's next spot by itself when the quest moves on, for example from the area where you gather to the hand-in. Tracking another quest, starting another trip or pressing Stop on the way ends it.
+- **Forever: the five new dungeons.** Alcaz Prison, Blackmaw Hold, The Shaper's Terrace, Krol'dok Stronghold and The Drowned City are in the picker, with their level ranges.
+- **Forever: profession books and quests in Nearest.** When no trainer can teach your next Cooking, First Aid or Fishing rank, Nearest takes you to whoever can: the Expert book vendor or the Artisan quest giver, named after the NPC.
+
+### Changed
+- **Daylight UI: the trip window fades with the rest of the UI**, for example while on a flight path, if you've set Daylight to do that. Daylight's flight timer also covers the trip's time left in flight.
+- **Forever: smoother routing along roads.** Re-planning walks no longer causes a brief freeze, and the routes are the same as before.
+- **Forever: ley line sharing joins the overflow channels.** A sharing channel holds about 200 players. Like Skyborne Leyline & Convergence Marker, Mapzeroth now moves on to the next of four channels when one is full.
+- **Forever: your ley line sightings survive a sharing pause.** A sighting made while the sharing channel isn't working is kept (the newest 5) and sent once the channel is back.
+
+### Fixed
+- **Translated clients showed the distance in yards but labelled it metres.** It now says yards, or shows real metres if you pick them.
+- **Forever: Dun Algaz between Loch Modan and the Wetlands** now ends at the tunnel mouth and takes the real walking time, about 3 minutes instead of 30 seconds.
+- **Forever: some profession trainers counted as wrong for everyone**, for example Brannock at Feathermoon showing as every Journeyman fisher's nearest. Trainers with no listed ranks now get the usual ones.
+
 ## 1.6.0 (Forever) and 2.3.0 (Retail)
 
 ### Added
