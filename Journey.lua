@@ -70,9 +70,14 @@ end
 -- known (ctx.money, copper) the search only takes routes whose flights it covers, and picks the
 -- quickest of those. With no money known, fares are only reported.
 -- `banned`: abilities not to use (a set keyed by Pathfinder.AbilityKey), when part of the trip has spent them.
-local function searchOptions(session, budget, banned)
-    return { fareFactor = session.ctx.fareFactor or 1, budget = budget, banned = banned }
+local function searchOptions(session, budget, banned, methods)
+    return { fareFactor = session.ctx.fareFactor or 1, budget = budget, banned = banned, methods = methods }
 end
+
+-- The player's own way about: on foot, riding or flying, through doors and phases; no teleports, hearthstone,
+-- portals, boats or flights. A pick with `ownWay` (Nearest Flight Master) is the nearest this way, and only falls back
+-- to every way when none can be reached like this.
+local OWN_WAY = { walk = true, fly = true, transition = true, phaseswitch = true }
 
 local function banKey(banned)
     local keys = {}
@@ -81,19 +86,21 @@ local function banKey(banned)
     return table.concat(keys, ",")
 end
 
-local function costsFor(session, banned)
+local function costsFor(session, banned, methods)
     session.costCache = session.costCache or {}
-    local cacheKey = banKey(banned)
+    local cacheKey = banKey(banned) .. (methods and "|own" or "")
     if session.costCache[cacheKey] then return session.costCache[cacheKey] end
     local money = session.ctx.money
-    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, nil, banned))
+    local quickest, fares = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase,
+        searchOptions(session, nil, banned, methods))
     local result = quickest
     if money then
         -- The exact search that keeps every trade of time against fare is dearer, so it only runs when some
         -- place's quickest route is one the player can't pay for (and then covers the whole map at once).
         for _, fare in pairs(fares) do
             if fare > money then
-                result = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase, searchOptions(session, money, banned))
+                result = addon.Pathfinder:FindCosts(session.graph, session.start.id, session.graph.phase,
+                    searchOptions(session, money, banned, methods))
                 break
             end
         end
@@ -133,14 +140,22 @@ local function goalsOf(entry)
     return entry.nodeIDs or { entry.nodeID }
 end
 
--- The cheapest of several nodes to reach, and its cost ("nearest ley line").
-function Journey:Nearest(session, nodeIDs)
-    local best, bestCost
-    for _, id in ipairs(nodeIDs) do
-        local cost = costs(session)[id]
-        if cost and (not bestCost or cost < bestCost) then best, bestCost = id, cost end
+-- The cheapest of several nodes to reach, and its cost ("nearest ley line"). ownWay: the cheapest the player's own
+-- way (OWN_WAY) when any can be reached so.
+function Journey:Nearest(session, nodeIDs, ownWay)
+    local function cheapest(found)
+        local best, bestCost
+        for _, id in ipairs(nodeIDs) do
+            local cost = found[id]
+            if cost and (not bestCost or cost < bestCost) then best, bestCost = id, cost end
+        end
+        return best, bestCost
     end
-    return best, bestCost
+    if ownWay then
+        local best, bestCost = cheapest(costsFor(session, nil, OWN_WAY))
+        if best then return best, bestCost end
+    end
+    return cheapest(costs(session))
 end
 
 -- The route there and back. "Back" is to where the player stands now (a destination added to the graph the
@@ -525,12 +540,13 @@ end
 -- reaches to where the player started, without those abilities.
 -- The search for one leg, fromID to goalID: the quickest route, and the quickest the player can pay for (the same
 -- one unless the quickest's fares are more than their money; nil when nothing is within it). Nil when there's no way.
-local function searchLeg(session, fromID, goalID, banned)
+local function searchLeg(session, fromID, goalID, banned, methods)
     local graph, money = session.graph, session.ctx.money
-    local fastest = addon.Pathfinder:FindPath(graph, fromID, goalID, graph.phase, searchOptions(session, nil, banned))
+    local fastest = addon.Pathfinder:FindPath(graph, fromID, goalID, graph.phase, searchOptions(session, nil, banned, methods))
     if not fastest then return nil end
     if money and fastest.fare > money then
-        return fastest, addon.Pathfinder:FindPath(graph, fromID, goalID, graph.phase, searchOptions(session, money, banned))
+        return fastest, addon.Pathfinder:FindPath(graph, fromID, goalID, graph.phase,
+            searchOptions(session, money, banned, methods))
     end
     return fastest, fastest
 end
@@ -575,9 +591,10 @@ function Journey:Legs(plan)
     end
 end
 
-function Journey:Plan(session, goalID, banned, backBanned)
+-- methods (optional): only these edge methods on the way there (OWN_WAY for an `ownWay` pick).
+function Journey:Plan(session, goalID, banned, backBanned, methods)
     local money = session.ctx.money
-    local fastest, chosen = searchLeg(session, session.start.id, goalID, banned)
+    local fastest, chosen = searchLeg(session, session.start.id, goalID, banned, methods)
     if not fastest then return nil, missingFlightHint(session, goalID) end
     local result = chosen or fastest
     local plan = { cost = result.cost, steps = readableSteps(result, session), goal = result.goal,
@@ -608,6 +625,10 @@ end
 -- places (no phases since WoW: Forever's 1.60.1 hotfix, so nothing says which are up for the player).
 function Journey:PlanEntry(session, entry, yield)
     if entry.stops then return addon.MultiRoute:Plan(session, entry, yield) end
+    if entry.ownWay then
+        local plan = self:Plan(session, goalsOf(entry), entry.banned, entry.backBanned, OWN_WAY)
+        if plan then return plan end                    -- else none can be reached that way: every way
+    end
     return self:Plan(session, goalsOf(entry), entry.banned, entry.backBanned)  -- the plan, or nil and a hint about a missing flight
 end
 
@@ -616,12 +637,22 @@ end
 -- planned for: that one place and the abilities each way leaves alone, so the trip can be planned again part way
 -- (Navigation). Nil when no place can be reached and left again.
 function Journey:PlanRoundTrip(session, entry)
-    local best = self:RoundTrip(session, goalsOf(entry))
-    if not best then return nil end
     local trip = {}
     for k, v in pairs(entry) do trip[k] = v end
-    trip.nodeID, trip.nodeIDs, trip.banned, trip.backBanned = best.nodeID, { best.nodeID }, best.banned, best.backBanned
     trip.placeChosen = true
+    if entry.ownWay then
+        -- The nearest the player's own way, there that way (no ability spent on it), and back by any way.
+        local id = self:Nearest(session, goalsOf(entry), true)
+        if id then
+            trip.nodeID, trip.nodeIDs, trip.banned, trip.backBanned = id, { id }, nil, {}
+            local plan = self:PlanEntry(session, trip)
+            if plan and plan.back then return plan, trip end
+        end
+    end
+    local best = self:RoundTrip(session, goalsOf(entry))
+    if not best then return nil end
+    trip.nodeID, trip.nodeIDs, trip.banned, trip.backBanned = best.nodeID, { best.nodeID }, best.banned, best.backBanned
+    trip.ownWay = nil                                   -- the place was chosen over every way
     local plan = self:Plan(session, trip.nodeIDs, trip.banned, trip.backBanned)
     return plan, plan and trip or nil
 end

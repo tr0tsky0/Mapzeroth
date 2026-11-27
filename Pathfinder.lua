@@ -288,7 +288,8 @@ local function run(graph, startID, initialPhase, opts, visit)
     -- (opts.banned: abilities already spent on this trip, by Pathfinder.AbilityKey, which the search won't use.)
     -- An ability's bias (addon:AbilityBias, a sliver of a second) rides on the label's time, so of two routes
     -- that are otherwise as quick the one spending the better ability wins; `bias` remembers it, to take it out.
-    for _, ability in ipairs(graph.anywhere or {}) do
+    -- (opts.methods: a set of edge methods, the only ones taken; then no ability from anywhere either.)
+    for _, ability in ipairs(not opts.methods and graph.anywhere or {}) do
         local banned = opts.banned and opts.banned[Pathfinder.AbilityKey(ability.source)]
         local state = not banned and nextPhaseState(startState, { to = ability.to, overridesPhase = ability.source.overridesPhase })
         if state then
@@ -329,8 +330,9 @@ local function run(graph, startID, initialPhase, opts, visit)
             label.done = true
             if visit(label) then return label end
             local labelPK = label.pk
+            local methods = opts.methods
             for _, step in ipairs(graph.adjacency[label.id] or {}) do
-                local state = nextPhaseState(label.state, step)
+                local state = (not methods or methods[step.method]) and nextPhaseState(label.state, step)
                 if state then
                     local pk = state == label.state and labelPK or phaseKey(state)
                     if step.method ~= "taxi" and not label.origin then
@@ -356,6 +358,7 @@ end
 -- would sell for a destination when clicked at a flight master, not the best plan); fareFactor = the
 -- player's fare discount (1 for none); budget = copper the player has: the route is then the quickest
 -- whose flights they can pay for (nil ignores fares); banned = a set of abilities not to use (see run).
+-- methods = a set of edge methods, the only ones the route may take (and no ability from anywhere), nil for all.
 -- Returns { cost = seconds, fare = copper the flights cost, goal = the node reached, steps = { {from,
 -- to, cost, method, source}, ... } } or nil when no goal can be reached.
 function Pathfinder:FindPath(graph, startID, goalID, initialPhase, opts)

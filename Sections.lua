@@ -330,7 +330,9 @@ function Sections:Build(entries, ctx, waypoint, tomtomCount, quest)
     end
     if #flights > 0 then
         table.sort(flights)
-        push(otherPicks, pick(L["PICK_FLIGHT"], "flight", flights, "flight"))
+        local flightPick = pick(L["PICK_FLIGHT"], "flight", flights, "flight")
+        flightPick.ownWay = true                       -- the nearest without teleporting (Journey's OWN_WAY)
+        push(otherPicks, flightPick)
     end
     -- What the player turned off on the settings page.
     local function shown(list)
@@ -443,7 +445,7 @@ function Sections:Price(sections, session)
         for _, child in ipairs(section.children or {}) do self:Price({ child, index = sections.index }, session) end
         for _, item in ipairs(section.items) do
             if not item.pick and not section.untimed then
-                item.eta = select(2, addon.Journey:Nearest(session, item.nodeIDs or { item.nodeID }))
+                item.eta = select(2, addon.Journey:Nearest(session, item.nodeIDs or { item.nodeID }, item.ownWay))
             end
         end
         if not section.picks and not section.untimed then
