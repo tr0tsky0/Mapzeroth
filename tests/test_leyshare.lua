@@ -197,6 +197,59 @@ check(listed == 1 and #sent == 1 and sent[1]:find("^R:"), "three retries, a revi
 C_ChatInfo.SendAddonMessage = realSend
 ListChannelByName, JoinTemporaryChannel = nil, nil
 
+-- A greyed-out channel (full, it seems: ~200 members): on to SLLCMShareA2 at once, then A3 and A4; from the last back
+-- to the first at the revive pace. The one left behind is /chatwho'd, which makes the client drop it.
+local chans, full, joinedNames = {}, {}, {}      -- the client's list (name = greyed out), the channels that are full
+local function overflow(fullOnes)
+    reset()
+    chans, full, joinedNames = { SLLCMShareA = true }, {}, {}
+    for _, name in ipairs(fullOnes) do full[name] = true end
+end
+local savedChannelName = GetChannelName
+function GetChannelName(name) return chans[name] ~= nil and 5 or 0 end
+function GetChannelList()
+    local out = {}
+    for name, grey in pairs(chans) do out[#out + 1] = 5; out[#out + 1] = name; out[#out + 1] = grey end
+    return unpack(out)
+end
+function ListChannelByName(name) if chans[name] then chans[name] = nil end end
+function JoinTemporaryChannel(name) joinedNames[#joinedNames + 1] = name; chans[name] = full[name] or false end
+overflow({ "SLLCMShareA", "SLLCMShareA2" })
+LS:OnChannelNotice("SUSPENDED")
+runTimers()
+check(LS:Stats().channelName == "SLLCMShareA3" and table.concat(joinedNames, " ") == "SLLCMShareA2 SLLCMShareA3"
+    and chans.SLLCMShareA == nil and chans.SLLCMShareA2 == nil,
+    "greyed out: on through the full ones to A3, the greyed ones dropped: " .. table.concat(joinedNames, " "))
+LS:OnConfirmed(1417, 0.3, 0.3, now)
+runTimers()
+check(#sent == 1, "and sends there")
+overflow({ "SLLCMShareA", "SLLCMShareA2", "SLLCMShareA3", "SLLCMShareA4" })
+LS:OnChannelNotice("SUSPENDED")
+runTimers()
+check(table.concat(joinedNames, " ") == "SLLCMShareA2 SLLCMShareA3 SLLCMShareA4 SLLCMShareA SLLCMShareA2 SLLCMShareA3 SLLCMShareA4",
+    "all full: back to the first once, then it waits for the revive pace: " .. table.concat(joinedNames, " "))
+full.SLLCMShareA = nil
+clock = clock + 16
+LS:OnChannelNotice("SUSPENDED")
+runTimers()
+check(LS:Stats().channelName == "SLLCMShareA" and chans.SLLCMShareA == false, "later, the first lets us in again")
+clock = clock - 16
+-- A channel joined a moment ago shows greyed out until the server answers (SLLCM 1.6.1): not taken for full then.
+overflow({})
+chans = {}
+LS:OnChannelNotice("YOU_LEFT")
+timers[#timers]()                                    -- the recheck: not in the channel, so it joins
+check(table.concat(joinedNames, " ") == "SLLCMShareA", "joined the first: " .. table.concat(joinedNames, " "))
+chans.SLLCMShareA = true                             -- the server hasn't answered yet
+LS:OnChannelNotice("SUSPENDED")
+timers[#timers]()                                    -- a recheck 3 s on, inside the 5 s
+check(LS:Stats().channelName == "SLLCMShareA" and #joinedNames == 1, "a fresh join isn't judged while it settles")
+chans.SLLCMShareA = false                            -- the server lets us in
+runTimers()
+check(LS:Stats().channelName == "SLLCMShareA" and #joinedNames == 1, "and stays once it has: " .. table.concat(joinedNames, " "))
+GetChannelName, GetChannelList, ListChannelByName, JoinTemporaryChannel = savedChannelName, nil, nil, nil
+LS:ResetForTests()
+
 -- Forever's refusal: no echo within 15 s, or NOT_ALLOWED_IN_CHANNEL, pauses sending for 10 minutes; then the next
 -- message is the probe, and anything heard on the channel ends the pause.
 reset()
@@ -204,12 +257,15 @@ sent, echo = {}, false
 LS:OnConfirmed(1417, 0.3, 0.3, now)
 runTimers()
 check(LS:Stats().paused, "no echo: paused")
+check(LS:Stats().held == 1, "the unheard sighting is held: " .. LS:Stats().held)
 LS:OnConfirmed(1417, 0.4, 0.4, now)
 runTimers()
-check(#sent == 1, "nothing goes while paused")
+check(#sent == 1 and LS:Stats().held == 2, "nothing goes while paused; that one is held too")
 clock = clock + 601
 LS:OnConfirmed(1417, 0.5, 0.5, now)
-check(#sent == 2, "ten minutes on, the next is the probe")
+check(#sent == 2 and sent[2] == "R:1:A:0:1417:3000:3000:" .. now,
+    "ten minutes on, the held ones go first, the oldest as the probe: " .. tostring(sent[2]))
+check(LS:Stats().held == 0, "none held once they're on their way")
 echo = true
 LS:OnHeard()
 check(not LS:Stats().paused, "heard: not paused")
@@ -217,6 +273,30 @@ LS:OnChannelNotice("NOT_ALLOWED_IN_CHANNEL")
 check(LS:Stats().paused, "the server's refusal notice pauses too")
 LS:OnHeard()
 runTimers()
+clock = clock - 601
+
+-- A held sighting too old for receivers (90 min) by the time the channel carries is dropped; turning sharing off
+-- forgets the rest.
+reset()
+sent, echo = {}, false
+LS:OnConfirmed(1417, 0.3, 0.3, now - 90 * 60 + 30)
+runTimers()
+check(LS:Stats().paused and LS:Stats().held == 1, "an old one held")
+clock = clock + 601
+echo = true
+LS:OnConfirmed(1417, 0.6, 0.6, now)
+runTimers()
+check(#sent == 2 and sent[2] == "R:1:A:0:1417:6000:6000:" .. now, "the old one is dropped, the new one goes: " .. #sent)
+echo = false
+LS:OnChannelNotice("NOT_ALLOWED_IN_CHANNEL")
+LS:OnConfirmed(1417, 0.7, 0.7, now)
+check(LS:Stats().held >= 1, "held while paused")
+addon.Options:Set("shareSightings", false)
+LS:OnSettingChanged(false)
+check(LS:Stats().held == 0, "sharing off forgets them")
+addon.Options:Set("shareSightings", true)
+echo = true
+LS:ResetForTests()
 clock = clock - 601
 
 -- With SLLCM loaded, Mapzeroth sends nothing: SLLCM does the sharing.
