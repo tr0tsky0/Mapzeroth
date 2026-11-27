@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- **Nearest Flight Master is the nearest one on foot or mount.** It no longer picks one past a hearthstone or teleport. If none can be reached without one, it still finds the quickest.
+
 ## 1.7.0 (Forever) and 2.4.0 (Retail)
 
 ### Added
