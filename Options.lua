@@ -9,6 +9,15 @@ local addonName, addon = ...
 local Options = {}
 addon.Options = Options
 
+-- Distances in metres unless the client is English outside Europe (region 3): an English client in Europe is as
+-- likely Scandinavian or Dutch as British.
+local function defaultUnits()
+    local locale = GetLocale and GetLocale()
+    if locale ~= "enUS" and locale ~= "enGB" then return "metres" end
+    if GetCurrentRegion and GetCurrentRegion() == 3 then return "metres" end
+    return "yards"
+end
+
 -- key -> { default, min, max, step } for numbers; text settings have a default, and `choices` (a set) when only some
 -- values are allowed; on/off ones say boolean.
 local definitions = {
@@ -52,6 +61,7 @@ local definitions = {
     -- "tomtom" (its waypoint and arrow) or "both".
     corpseWith = { default = "ask", choices = { ask = true, mapzeroth = true, tomtom = true, both = true } },
     stepMarkers = { default = "icon" },                                   -- a route step shows how it travels: "icon" (a picture) or "chip" (a coloured bar)
+    units = { default = defaultUnits(), choices = { yards = true, metres = true } },   -- distances shown (UI/Navigator.lua)
     -- Ley line and convergence sightings shared with Skyborne Ley Line & Convergence Marker's users (LeyShare.lua):
     -- off until the player says yes to the question (UI/SharePrompt.lua), asked once per account.
     shareSightings = { default = false, boolean = true },

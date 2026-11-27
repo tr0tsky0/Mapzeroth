@@ -432,6 +432,11 @@ function OptionsPanel:Build()
                 return TOGGLE_ROW
             end,
             function(y)
+                widgets.units = dropdownRow(y, "units", L["OPT_UNITS"], L["OPT_UNITS_DESC"],
+                    { { id = "yards", label = L["OPT_UNITS_YARDS"] }, { id = "metres", label = L["OPT_UNITS_METRES"] } })
+                return TOGGLE_ROW
+            end,
+            function(y)
                 widgets.hideMinimap = toggleRow(box, y, "hideMinimapButton", L["OPT_HIDE_MINIMAP"], L["OPT_HIDE_MINIMAP_DESC"])
                 return TOGGLE_ROW
             end,
@@ -513,6 +518,7 @@ function OptionsPanel:Sync()
     widgets.routeMinimap:SetValue(Options:Get("showRouteOnMinimap"))
     widgets.assumeFlights:SetValue(Options:Get("assumeFlightsFound"))
     widgets.stepMarkers:SetValue(Options:Get("stepMarkers"))
+    widgets.units:SetValue(Options:Get("units"))
     widgets.hideMinimap:SetValue(Options:Get("hideMinimapButton"))
     widgets.hideMapButton:SetValue(Options:Get("hideMapButton"))
     widgets.dropTomTom:SetValue(Options:Get("dropRemovedTomTom"))

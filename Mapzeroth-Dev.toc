@@ -122,6 +122,7 @@ UI\Panel.lua
 UI\MinimapButton.lua
 UI\MapButton.lua
 UI\Navigator.lua
+UI\PinDistance.lua
 UI\SharePrompt.lua
 UI\WaypointPrompt.lua
 UI\Corpse.lua

@@ -24,6 +24,16 @@ local LINGER = 5                -- seconds "arrived" stays up before the window 
 
 local ui
 
+local METRES_PER_YARD = 0.9144
+
+-- "N yards" or "N metres", by the "units" setting.
+local function distanceText(yards)
+    if addon.Options:Get("units") == "metres" then
+        return L["NAV_DISTANCE_METRES"]:format(math.floor(yards * METRES_PER_YARD + 0.5))
+    end
+    return L["NAV_DISTANCE"]:format(math.floor(yards + 0.5))
+end
+
 -- Each update of the trip goes to the panel, and to the Daylight UI plugin when that is loaded (nil: no trip now).
 local function tripUpdate(model)
     addon.Panel:OnTripUpdate(model)
@@ -364,7 +374,7 @@ function Navigator:Render(model)
     local status, showBar, showUse = "", false, false
     if model.kind == "walk" then
         ui.pointing = true          -- Point turns the arrow and counts the yards down between updates
-        if model.distance then status = L["NAV_DISTANCE"]:format(math.floor(model.distance + 0.5)) end
+        if model.distance then status = distanceText(model.distance) end
     elseif model.kind == "flight" then
         status = model.phase == "flying" and L["NAV_FLYING"] or L["NAV_WAIT_FLIGHT"]
         if model.overrun then status = L["NAV_LONGER"] end
@@ -408,7 +418,7 @@ function Navigator:Point()
     if not (ui and ui.pointing) then return end
     local distance, heading = Navigation:Pointer()
     if heading and ui.arrow:IsShown() then ui.arrow:SetRotation(heading) end
-    if distance then ui.status:SetText(L["NAV_DISTANCE"]:format(math.floor(distance + 0.5))) end
+    if distance then ui.status:SetText(distanceText(distance)) end
 end
 
 -- One update: read where the player is, move the trip on, redraw.
