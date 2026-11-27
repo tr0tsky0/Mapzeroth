@@ -30,6 +30,10 @@ local seenQuest                 -- likewise the quest followed
 local ready = false             -- past login: before that, a waypoint is the one the player already had
 local lastSpot, lastAt          -- the place last asked about or routed to from here, and when (GetTime)
 local following                 -- { questID, spot }: the quest a trip was started to, carried on to its next spot
+local waiting                   -- { questID, mode, at }: a quest picked before the game has its spot (just accepted)
+local handedInAt                -- when the quest followed on was handed in (GetTime): the next one picked carries on
+local WAIT = 30                 -- seconds a picked quest with no spot yet is waited for
+local CHAIN = 120               -- seconds after a hand-in that the next quest picked is routed to as that one was
 
 local function build()
     ui = {}
@@ -236,12 +240,43 @@ function WaypointPrompt:OnQuestChanged()
     local questID = trackedQuest()
     if questID == seenQuest then return end
     seenQuest = questID
-    if following and following.questID ~= questID then following = nil end   -- another quest (or none): that one is let go
+    -- Another quest: that one is let go. None for a moment (the game can drop the pick as a step changes) keeps it,
+    -- so the same quest picked again still goes on.
+    if following and questID and following.questID ~= questID then
+        -- Picked before the log said the last one was handed in: still the next of the chain.
+        local log = C_QuestLog
+        if log and log.IsQuestFlaggedCompleted and log.IsQuestFlaggedCompleted(following.questID) then
+            handedInAt = GetTime()
+        end
+        following = nil
+    end
+    if waiting and questID and waiting.questID ~= questID then waiting = nil end
+    -- The quest followed on, picked again: routed on only if its spot has moved.
+    if following and questID then self:OnQuestSpotChanged() return end
     if self:IsQuestShown() and not (questID == nil and sameSpot(ui.spot, addon:GetWaypoint())) then self:Hide() end
     local mode = addon.Options:Get("autoQuestRoute")
+    -- The next quest of a chain, picked soon after the one followed on was handed in: routed to as that one was.
+    if questID and handedInAt then
+        if GetTime() - handedInAt <= CHAIN then mode = "on" end
+        handedInAt = nil
+    end
     if not (questID and ready) or mode == "off" or headingToQuest(questID) then return end
+    self:PickQuest(questID, mode)
+end
+
+-- Routes to (mode "on") or asks about ("ask") a quest just picked. One the game has no spot for yet (a quest just
+-- accepted: its marker comes a moment later) waits for it (OnQuestSpotChanged, and a look again shortly).
+function WaypointPrompt:PickQuest(questID, mode)
     local quest = addon:GetQuestTarget(questID)
-    if not quest then return end
+    if not quest then
+        waiting = { questID = questID, mode = mode, at = GetTime() }
+        if C_Timer then
+            C_Timer.After(1, function() WaypointPrompt:OnQuestSpotChanged() end)
+            C_Timer.After(3, function() WaypointPrompt:OnQuestSpotChanged() end)
+        end
+        return
+    end
+    waiting = nil
     if mode == "on" then
         if waypointShown() and sameSpot(ui.spot, quest) then self:Hide() end
         remember(quest)
@@ -264,6 +299,10 @@ function WaypointPrompt:OnTripStarted(entry)
     end
 end
 
+-- The quest followed on and the spot last routed to ({ questID, spot }), or nil; the quest waiting for its spot; when
+-- the one followed was handed in. For tests and /mzr questfollow.
+function WaypointPrompt:Following() return following, waiting, handedInAt end
+
 -- The trip was stopped by the player (Navigator:Stop on the way, not on arriving): a quest's stops being followed on.
 function WaypointPrompt:OnTripStopped(entry)
     local dest = entry and entry.dest
@@ -275,11 +314,26 @@ end
 -- there or is still on the way. A trip going somewhere else is let be (the corpse run: the quest trip comes back
 -- after it). A quest with no spot just now waits for the next change.
 function WaypointPrompt:OnQuestSpotChanged()
-    if not (following and ready) then return end
-    if trackedQuest() ~= following.questID then
+    if not ready then return end
+    -- A quest picked before its spot was known: routed to (or asked about) once it is, while it is still the one picked.
+    if waiting then
+        local w = waiting
+        if trackedQuest() ~= w.questID or GetTime() - w.at > WAIT then
+            waiting = nil
+        elseif addon:GetQuestTarget(w.questID) then
+            self:PickQuest(w.questID, w.mode)
+        end
+    end
+    if not following then return end
+    local log = C_QuestLog
+    if log and log.GetLogIndexForQuestID and not log.GetLogIndexForQuestID(following.questID) then
+        -- Handed in: the next quest picked carries on (OnQuestChanged). Abandoned: that's the end of it.
+        if log.IsQuestFlaggedCompleted and log.IsQuestFlaggedCompleted(following.questID) then handedInAt = GetTime() end
         following = nil
         return
     end
+    -- Not picked just now: waits (another quest picked lets it go, OnQuestChanged).
+    if trackedQuest() ~= following.questID then return end
     local entry = addon.Navigation:ReplanTarget()
     if entry and not (entry.dest and entry.dest.questID == following.questID) then return end
     local quest = addon:GetQuestTarget(following.questID)

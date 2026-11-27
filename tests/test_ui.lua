@@ -2088,6 +2088,21 @@ do
     WP:OnQuestSpotChanged()
     check(destX() and math.abs(destX() - 0.35) < 1e-6, "follow: after the window closed on arriving, still followed")
     arrive()
+    -- The pick dropped for a moment as the step changes (none tracked), then the same quest again: still followed on.
+    followed = 0
+    WP:OnQuestChanged()
+    q125[1], q125[2] = 0.45, 0.55
+    WP:OnQuestSpotChanged()
+    check(Nav:ReplanTarget() == nil, "follow: nothing picked just now, it waits")
+    followed = 125
+    WP:OnQuestChanged()
+    check(destX() and math.abs(destX() - 0.45) < 1e-6, "follow: picked again, on to its new spot")
+    arrive()
+    followed = 0
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    check(Nav:ReplanTarget() == nil and not WP:IsShown(), "follow: picked again where it already was: nothing new")
     Options:Set("autoQuestRoute", "off")
     followed = 124
     WP:OnQuestChanged()
@@ -2104,6 +2119,46 @@ do
     Nav:Stop()
     q125[1], q125[2] = 0.55, 0.45
     Options:Set("autoQuestRoute", "off")
+
+    -- A chain (seen in game, quests 1243 -> 1244): the quest followed on is handed in at its NPC, the pick goes, and the
+    -- next quest is picked before the game has a spot for it. It waits for one, then routes, autoQuestRoute off or not.
+    local inLog, q126 = { [125] = true }, nil
+    local onMap = C_QuestLog.GetQuestsOnMap
+    C_QuestLog.GetLogIndexForQuestID = function(id) return inLog[id] and 1 or nil end
+    C_QuestLog.IsQuestFlaggedCompleted = function(id) return id == 125 and not inLog[125] end
+    C_QuestLog.GetQuestsOnMap = function()
+        local list = onMap()
+        if q126 then list[#list + 1] = { questID = 126, x = q126[1], y = q126[2] } end
+        return list
+    end
+    Options:Set("autoQuestRoute", "on")
+    followed = 0
+    WP:OnQuestChanged()
+    followed = 125
+    WP:OnQuestChanged()
+    check(Nav:IsActive(), "chain: routed to the first quest")
+    arrive()
+    addon.Navigator:Stop()
+    Options:Set("autoQuestRoute", "off")
+    inLog[125] = nil                                      -- handed in
+    followed = 0
+    WP:OnQuestChanged()
+    WP:OnQuestSpotChanged()
+    inLog[126], followed = true, 126                      -- the next one, accepted: no spot yet
+    WP:OnQuestChanged()
+    check(not Nav:IsActive() and select(2, WP:Following()) ~= nil, "chain: the next quest waits for its spot")
+    q126 = { 0.2, 0.3 }
+    WP:OnQuestSpotChanged()
+    check(destX() and math.abs(destX() - 0.2) < 1e-6, "chain: its spot came, routed there (setting off)")
+    check(WP:Following() and WP:Following().questID == 126, "chain: and that one is followed on in turn")
+    Nav:Stop()
+    -- Abandoned instead of handed in: the next quest picked is left to the setting (off: nothing).
+    inLog[126] = nil
+    WP:OnQuestSpotChanged()
+    followed = 124
+    WP:OnQuestChanged()
+    check(not Nav:IsActive() and not WP:IsShown(), "chain: after an abandon, the next pick is the setting's")
+    C_QuestLog.GetQuestsOnMap = onMap
 
     C_SuperTrack, C_QuestLog, GetQuestUiMapID = realTrack, realLog, realUiMap
     WP:Settle()
